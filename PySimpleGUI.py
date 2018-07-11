@@ -1309,7 +1309,7 @@ def MsgBoxOKCancel(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=Non
 # Like MsgBox but presents Yes and No buttons        #
 # Returns True if Yes was pressed else False         #
 # ===================================================#
-def YesNoBox(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=None, Font=None):
+def MsgBoxYesNo(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=None, Font=None):
     result = MsgBox(*args,ButtonType=MSG_BOX_YES_NO, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
     return result
 
@@ -1586,7 +1586,7 @@ def ScrolledTextBox(*args, ButtonColor=None, YesNo=False, AutoClose=False, AutoC
 #    True/False, path                                                    #
 #     (True if Submit was pressed, false otherwise)                      #
 # ---------------------------------------------------------------------- #
-def GetPathBox(Title, Message, DefaultPath='', ButtonColor=None, Size=DEFAULT_ELEMENT_SIZE):
+def GetPathBox(Title, Message, DefaultPath='', ButtonColor=None, Size=(None,None)):
     with FlexForm(Title, AutoSizeText=True, ButtonColor=ButtonColor) as form:
         layout = [[Text(Message,AutoSizeText=True)],
                   [InputText(DefaultText=DefaultPath, Size=Size), FolderBrowse()],
@@ -1602,10 +1602,10 @@ def GetPathBox(Title, Message, DefaultPath='', ButtonColor=None, Size=DEFAULT_EL
 # ============================== GetFileBox =========#
 # Like the Get folder box but for files              #
 # ===================================================#
-def GetFileBox(Title, Message, DefaultPath='',FileTypes=(("ALL Files", "*.*"),), ButtonColor=None):
+def GetFileBox(Title, Message, DefaultPath='',FileTypes=(("ALL Files", "*.*"),), ButtonColor=None, Size=(None,None)):
     with FlexForm(Title, AutoSizeText=True, ButtonColor=ButtonColor) as form:
         layout = [[Text(Message,AutoSizeText=True)],
-                  [InputText(DefaultText=DefaultPath), FileBrowse(FileTypes=FileTypes)],
+                  [InputText(DefaultText=DefaultPath, Size=Size), FileBrowse(FileTypes=FileTypes)],
                   [Submit(), Cancel()]]
 
         (button, input_values) = form.LayoutAndShow(layout)
@@ -1616,14 +1616,13 @@ def GetFileBox(Title, Message, DefaultPath='',FileTypes=(("ALL Files", "*.*"),),
             return True, path
 
 
-
 # ============================== GetTextBox =========#
 # Get a single line of text                          #
 # ===================================================#
-def GetTextBox(Title, Message, Default='', ButtonColor=None):
+def GetTextBox(Title, Message, Default='', ButtonColor=None, Size=(None, None)):
     with FlexForm(Title, AutoSizeText=True, ButtonColor=ButtonColor) as form:
         layout = [[Text(Message,AutoSizeText=True)],
-                  [InputText(DefaultText=Default)],
+                  [InputText(DefaultText=Default, Size=Size)],
                   [Submit(), Cancel()]]
 
         (button, input_values) = form.LayoutAndShow(layout)
