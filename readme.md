@@ -84,45 +84,46 @@ PySimpleGUI can be broken down into 2 types of API's:
     SG.MsgBox('Variable number of parameters example', my_variable, second_variable, "etc")
 
 Each new item begins on a new line in the Message Box
+
   ![variablearguments](https://user-images.githubusercontent.com/13696193/42598375-022bc51e-852a-11e8-8f77-4d664ae1a560.jpg)
-  
+
 #### Optional Parameters to a Function Call
- 
+
 This feature of the Python language is utilized ***heavily*** as a method of customizing forms and part of forms.  Rather than requiring the programmer to specify every possible option for a widget, instead only the options the caller wants to override are specified.
 
-Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't have to be specified on each and every call.  
+Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't have to be specified on each and every call.
 
-    def MsgBox(*args, 
-               ButtonColor=None, 
-               ButtonType=MSG_BOX_OK,  
-               AutoClose=False, 
-               AutoCloseDuration=None, 
-               Icon=DEFAULT_WINDOW_ICON, 
+    def MsgBox(*args,
+               ButtonColor=None,
+               ButtonType=MSG_BOX_OK,
+               AutoClose=False,
+               AutoCloseDuration=None,
+               Icon=DEFAULT_WINDOW_ICON,
                LineWidth=MESSAGE_BOX_LINE_WIDTH,
                Font=None):
 
 If the caller wanted to change the button color to be black on yellow, the call would look something like this:
 
-    SG.MsgBox('This box has a custom button color',   
+    SG.MsgBox('This box has a custom button color',
               ButtonColor=('black', 'yellow'))
 
 ![custombuttoncolor](https://user-images.githubusercontent.com/13696193/42599212-84f3fe2e-852c-11e8-8a60-4aad669a1fd6.jpg)
 
-### High Level API Calls  
+### High Level API Calls
 
-The classic "input a value, print result" example.  
-Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.  
-This code prompts user to input a line of text and then displays that text in a messages box:  
-  
-    import PySimpleGUI_local as SG    
-        
-    rc = SG.GetTextBox('Title', 'Please input something')    
-    SG.MsgBox('Results', 'The value returned from GetTextBox', rc)  
-  
-![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)  
-  
-![MsgBox](https://user-images.githubusercontent.com/13696193/42592929-1c7361ae-8519-11e8-8adc-411c1afee69f.jpg)  
-  
+The classic "input a value, print result" example.
+Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.
+This code prompts user to input a line of text and then displays that text in a messages box:
+
+    import PySimpleGUI_local as SG
+
+    rc = SG.GetTextBox('Title', 'Please input something')
+    SG.MsgBox('Results', 'The value returned from GetTextBox', rc)
+
+![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
+
+![MsgBox](https://user-images.githubusercontent.com/13696193/42592929-1c7361ae-8519-11e8-8adc-411c1afee69f.jpg)
+
 #### Message Boxes
 In addition to MsgBox, you'll find a several API calls that are shortcuts to common messages boxes.  You can achieve similar results by calling MsgBox with the correct parameters.
 
@@ -131,6 +132,7 @@ The differences tend to be the number and types of buttons.   Here are the calls
     import PySimpleGUI as SG
 
   `SG.MsgBoxOK('This is an OK MsgBox')`
+
   ![msgboxok](https://user-images.githubusercontent.com/13696193/42599852-8dd6914e-852e-11e8-888f-f133d787210b.jpg)
 
     SG.MsgBoxOKCancel('This is an OK Cancel MsgBox')
@@ -158,9 +160,9 @@ Take a moment to look at that last one.  It's such a simple API call and yet the
 
 #### High Level User Input
 
-There are 3 very basic user input high-level function calls.  It's expected that for most applications, a custom input form will be created. 
+There are 3 very basic user input high-level function calls.  It's expected that for most applications, a custom input form will be created.
  - GetTextBox
- - GetFileBox 
+ - GetFileBox
  - GetFolderBox
 
  `submit_clicked, value = SG.GetTextBox('Title', 'Please enter anything')`
@@ -184,10 +186,10 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
 
 # COPY THIS DESIGN PATTERN!
 
-    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:  
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
-                     [SG.InputText(), SG.FileBrowse()],  
-                     [SG.Submit(), SG.Cancel()]]  
+    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:
+        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+                     [SG.InputText(), SG.FileBrowse()],
+                     [SG.Submit(), SG.Cancel()]]
         (button, (source_filename, )) = form.LayoutAndShow(form_rows)
 
 This context manager contains all of the code needed to specify, show and retrieve results for this form:
@@ -195,21 +197,21 @@ This context manager contains all of the code needed to specify, show and retrie
 
 It's important to use the "with" context manager.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
 
-You will use this design pattern or code template for all of your "normal" (blocking) types of input forms.  
+You will use this design pattern or code template for all of your "normal" (blocking) types of input forms.
 
-PySimpleGUI's goal with the API is to be easy on the programmer.  An attempt was made to make the program's code visually match the window on the screen.  The way this is done is that a GUI is broken up into "Rows".  Then each row is broke up into "Elements" or "Widgets".  Each element is specified by names such as Text, Button, Checkbox, etc. 
+PySimpleGUI's goal with the API is to be easy on the programmer.  An attempt was made to make the program's code visually match the window on the screen.  The way this is done is that a GUI is broken up into "Rows".  Then each row is broke up into "Elements" or "Widgets".  Each element is specified by names such as Text, Button, Checkbox, etc.
 
 Some elements are shortcuts, again meant to make it easy on the programmer.  Rather than writing a `Button`, with  name = "Submit", etc, the caller simply writes `Submit`.
 
 Going through each line of code
 
-    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:  
-This creates a new form, storing it in the variable `form`.  
+    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:
+This creates a new form, storing it in the variable `form`.
 
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
+        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
 The next few rows of code lay out the rows of elements in the window to be displayed.  The variable `form_rows` holds our entire GUI window.   The first row of this form has a Text element.  These simply display text on the form.
 
-                     [SG.InputText(), SG.FileBrowse()],  
+                     [SG.InputText(), SG.FileBrowse()],
 Now we're on the second row of the form.  On this row there are 2 elements.  The first is an `Input` field.  It's a place the user can enter `strings`.  The second element is a `File Browse Button`.  A file or folder browse button will always fill in the text field to it's left unless otherwise specified.  In this example, the File Browse Button will interact with the `InputText` field to its left.
 
 				    [SG.Submit(), SG.Cancel()]]
