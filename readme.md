@@ -84,6 +84,7 @@ PySimpleGUI can be broken down into 2 types of API's:
     SG.MsgBox('Variable number of parameters example', my_variable, second_variable, "etc")
 
 Each new item begins on a new line in the Message Box
+
   ![variablearguments](https://user-images.githubusercontent.com/13696193/42598375-022bc51e-852a-11e8-8f77-4d664ae1a560.jpg)
   
 #### Optional Parameters to a Function Call
@@ -221,37 +222,37 @@ This is the code that **displays** the form, collects the information and return
 
 ## Return values
 
-   Return information from FlexForm, SG's primary form builder interface, is in this format:
-
-    (button, (value1, value2, ...))
-
-Don't forget all those ()'s of your values won't be coreectly assigned.
-
-If you have a SINGLE value being returned, it is written this way:
-
-    (button, (value1,))
-
-Forgetting the comma will mess you up but good
+   Return information from FlexForm, SG's primary form builder interface, is in this format:  
+      
+    (button, (value1, value2, ...))  
+  
+Don't forget all those ()'s of your values won't be coreectly assigned.  
+  
+If you have a SINGLE value being returned, it is written this way:  
+  
+    (button, (value1,))  
+  
+Forgetting the comma will mess you up but good  
 
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
 
-    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:
-        layout = [[Text('Here they all are!', Size=(30,1), Font=("Helvetica", 25), TextColor='red')],
-                  [Text('Here is some text with font sizing', Font=("Helvetica", 15))],
-                  [InputText()],
-                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', Default=True)],
-                  [Radio('My first Radio!', "RADIO1", Default=True), Radio('My second checkbox!', "RADIO1")],
-                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', Scale=(2, 10))],
-                  [InputCombo(['choice 1', 'choice 2'], Size=(20, 3))],
-                  [Text('_'  * 90, Size=(60, 1))],
-                  [Text('Choose Source and Destination Folders', Size=(35,1))],
-                  [Text('Source Folder', Size=(15, 1), AutoSizeText=False), InputText('Source'), FolderBrowse()],
-                  [Text('Destination Folder', Size=(15, 1), AutoSizeText=False), InputText('Dest'), FolderBrowse()],
-                  [SimpleButton('Your Button with any text you want')],
-                  [SimpleButton('Big Text', Size=(12,1), Font=("Helvetica", 20))],
-                  [Submit(), Cancel()]]
-
+    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:  
+        layout = [[Text('Here they all are!', Size=(30,1), Font=("Helvetica", 25), TextColor='red')],  
+                  [Text('Here is some text with font sizing', Font=("Helvetica", 15))],  
+                  [InputText()],  
+                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', Default=True)],  
+                  [Radio('My first Radio!', "RADIO1", Default=True), Radio('My second checkbox!', "RADIO1")],  
+                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', Scale=(2, 10))],  
+                  [InputCombo(['choice 1', 'choice 2'], Size=(20, 3))],  
+                  [Text('_'  * 90, Size=(60, 1))],  
+                  [Text('Choose Source and Destination Folders', Size=(35,1))],  
+                  [Text('Source Folder', Size=(15, 1), AutoSizeText=False), InputText('Source'), FolderBrowse()],  
+                  [Text('Destination Folder', Size=(15, 1), AutoSizeText=False), InputText('Dest'), FolderBrowse()],  
+                  [SimpleButton('Your Button with any text you want')],  
+                  [SimpleButton('Big Text', Size=(12,1), Font=("Helvetica", 20))],  
+                  [Submit(), Cancel()]]  
+      
         (button, (values)) = form.LayoutAndShow(layout)
 
 
@@ -267,26 +268,26 @@ Clicking Submit caused the form call to return and the call to MsgBox is made to
 ![results](https://user-images.githubusercontent.com/13696193/42604952-502f64e6-8543-11e8-8045-bc10d38c5fd4.jpg)
 
 
-## Built With
-
-
-## Contributing
-
-A MikeTheWatchGuy production... entirely responsible for this code
-
-## Versioning
-
-1.0.9 - July 10, 2018 - Initial Release
-
-
-## Authors
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
+## Built With  
+  
+  
+## Contributing  
+  
+A MikeTheWatchGuy production... entirely responsible for this code  
+  
+## Versioning  
+  
+1.0.9 - July 10, 2018 - Initial Release  
+      
+  
+## Authors  
+  
+  
+## License  
+  
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details  
+  
+## Acknowledgments  
+  
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
 
