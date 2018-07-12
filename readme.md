@@ -36,6 +36,7 @@ The customization power comes from the form/dialog box builder that enables user
 
   
 An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
+
 ![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
 
 
