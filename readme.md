@@ -132,6 +132,7 @@ The differences tend to be the number and types of buttons.   Here are the calls
     import PySimpleGUI as SG
 
   `SG.MsgBoxOK('This is an OK MsgBox')`
+  
   ![msgboxok](https://user-images.githubusercontent.com/13696193/42599852-8dd6914e-852e-11e8-888f-f133d787210b.jpg)
 
     SG.MsgBoxOKCancel('This is an OK Cancel MsgBox')
