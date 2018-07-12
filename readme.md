@@ -6,8 +6,10 @@ This really is a simple GUI, but also powerfully customizable.
 ![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
 
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??    
+
+With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a much more pleasant experience than opening a dos Window.
   
-Python itself doesn't have a simple solution... nor did the *many* GUI packages I tried.  Most tried to do TOO MUCH, making it impossible for users to get started quickly.  Others were just plain broken, requiring multiple files or other packages that were missing.
+Python itself doesn't have a simple GUI solution... nor did the *many* GUI packages I tried.  Most tried to do TOO MUCH, making it impossible for users to get started quickly.  Others were just plain broken, requiring multiple files or other packages that were missing.
   
 The PySimpleGUI solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI. 
   
@@ -15,26 +17,29 @@ You can add a GUI to your command line with a single line of code.  With 3 or 4 
   
 The customization power comes from the form/dialog box builder that enables users to experience all of the normal GUI widgets without having to write a lot of code.  
   
-Features of PySimpleGUI include:  
-    Text  
-    Single Line Input  
-    Buttons including these types:  
-   File Browse  
-   Folder Browse  
-   Non-closing return  
-   Close form  
-    Checkboxes  
-    Radio Buttons  
-    Icons  
-    Multi-line Text Input  
-    Scroll-able Output      
-    Progress Bar  
-    Async/Non-Blocking Windows  
-    Tabbed forms
-    Persistent Windows  
-    Redirect Python Output/Errors to scrolling Window  
-    'Higher level' APIs (e.g. MessageBox, YesNobox, ...)  
+
+> Features of PySimpleGUI include:  
+>     Text  
+>     Single Line Input  
+>     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form  
+>     Checkboxes  
+>     Radio Buttons  
+>     Icons  
+>     Multi-line Text Input  
+>     Scroll-able Output      
+>     Progress Bar  
+>     Async/Non-Blocking Windows  
+>     Tabbed forms
+>     Persistent Windows  
+>     Redirect Python Output/Errors to scrolling Window  
+>     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
+
   
+An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
+![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
+
+
+
   
 ## Getting Started with PySimpleGUI  
   
@@ -156,11 +161,11 @@ The differences tend to be the number and types of buttons.   Here are the calls
 
 ![scrolledtextbox](https://user-images.githubusercontent.com/13696193/42600800-a44f4562-8531-11e8-8c21-51dd70316879.jpg)
 
-Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing text scrolling past on your display, you can capture that text and present it in a scrolled interface.
+Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`. 
 
 #### High Level User Input
 
-There are 3 very basic user input high-level function calls.  It's expected that for most applications, a custom input form will be created. 
+There are 3 very basic user input high-level function calls.  It's expected that for most applications, a custom input form will be created. If you need only 1 value, then perhaps one of these high level functions will work.
  - GetTextBox
  - GetFileBox 
  - GetFolderBox
@@ -179,12 +184,13 @@ There are 3 very basic user input high-level function calls.  It's expected that
 
 
 
-### Custom Form API Calls
+# Custom Form API Calls
+
 This is the FUN part of the programming of this GUI.  In order to really get the most out of the API, you should be using an IDE that supports auto complete or will show you the definition of the function.  This will make customizing go  smoother.
 
 It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.   Let's start with a basic Browse for a file and do something with it.
 
-# COPY THIS DESIGN PATTERN!
+## COPY THIS DESIGN PATTERN!
 
     with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:  
         form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
@@ -231,9 +237,14 @@ Don't forget all those ()'s of your values won't be coreectly assigned.
   
 If you have a SINGLE value being returned, it is written this way:  
   
-    (button, (value1,))  
-  
-Forgetting the comma will mess you up but good  
+    (button, (value1,)) = form.LayoutAndShow(form_rows)
+ Another way of parsing the return values is to store the list of values into a variable that is then referenced.
+
+     (button, (value)) = form.LayoutAndShow(form_rows)  
+     value1 = values[0]
+     value2 = values[1]
+     ...
+     
 
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
@@ -265,9 +276,75 @@ This is a somewhat complex form with quite a bit of custom sizing to make things
 
 ![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
 
-Clicking Submit caused the form call to return and the call to MsgBox is made to display the results.
+Clicking the Submit button caused the form call to return.  The call to MsgBox resulted in this dialog box.
 ![results](https://user-images.githubusercontent.com/13696193/42604952-502f64e6-8543-11e8-8045-bc10d38c5fd4.jpg)
 
+One important aspect of this example is the return codes:
+
+    (button, (values)) = form.LayoutAndShow(layout)
+The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
+
+You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes.  These return `bool`.  
+
+
+
+# Building Custom Forms
+You will find it much easier to write code using PySimpleGUI is you use features that show you documentation about the API call you are making.  In PyCharm 2 commands are helpful.
+
+> Control-Q (when cursor is on function name) brings up a box with the
+> function definition 
+> Control-P (when cursor inside function call "()")
+> shows a list of parameters and their default values
+
+## Synchronous Forms
+The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI form/dialog box.
+You've already seen a number of examples above that use blocking forms.  Anytime you see a context manager used (see the `with` statement) it's most likely a blocking form.  You can examine the show calls to be sure.  If the form is a non-blocking form, it must indicate that in the call to `form.show`.
+
+NON-BLOCKING form call:
+
+		    form.Show(NonBlocking=True)
+
+### Beginning a Form
+The first step is to create the form object using the desired form customization.
+
+    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:  
+Let's go through the options available when creating a form.
+
+    def __init__(self, title, 
+        DefaultElementSize=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
+        AutoSizeText=DEFAULT_AUTOSIZE_TEXT,
+        Scale=(None, None),
+        Size=(None, None),
+        Location=(None, None),
+        ButtonColor=None,Font=None,
+        ProgressBarColor=(None,None),
+        IsTabbedForm=False,
+        BorderDepth=None,
+        AutoClose=False,
+        AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME,
+        Icon=DEFAULT_WINDOW_ICON):
+    
+
+#### Sizes
+Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
+
+Sizes can be set at the element level, or in this case, the size variables apply to all elements in the form.  Setting `Size=(20,1)` in the form creation call will set all elements in the form to that size.
+In addition to `size` there is a `scale` option.  Scale will take the Element's size and scale it up or down depending on the scale value.  `scale=(1,1)` doesn't change the Element's size.  `scale=(2,1)` will set the Element's size to be twice as wide as the size setting.
+
+#### FlexForm - form-level variables overview
+A summary of the variables that can be changed when a FlexForm is created
+
+>         DefaultElementSize - set default size for all elements in the form
+>         AutoSizeText - true/false autosizing turned on / off
+>         Scale - set scale value for all elements
+>         ButtonColor - default button color (foreground, background)
+>         Font - font name and size for all text items
+>         ProgressBarColor - progress bar colors
+>         IsTabbedForm - true/false indicates form is a tabbed or normal form
+>         BorderDepth - style setting for buttons, input fields
+>         AutoClose - true/false indicates if form will automatically close
+>         AutoCloseDuration - how long in seconds before closing form
+>         Icon - filename for icon that's displayed on the window on taskbar
 
 ## Built With  
   
@@ -291,4 +368,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments  
   
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+
+
+
+
 
