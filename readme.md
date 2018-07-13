@@ -478,6 +478,9 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
     Output(Scale=(None, None),
            Size=(None, None))
 
+> Scale - How much to scale size of element
+> Size - Size of element (width, height) in characters
+
 ###  Input Elements
   These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `Size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
   
@@ -490,7 +493,14 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
                     Scale=(None, None),
                     Size=(None, None),
                     AutoSizeText=None)
+
+> DefaultText - Text initially shown in the input box
+> Scale - Amount size is scaled by
+> Size - (width, height) of element in characters
+> AutoSizeText - Bool.  True is element should be sized to fit text
+
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`
+
 
 #### Combo Element
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
@@ -504,10 +514,34 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
                Size=(None, None),
                AutoSizeText=None)
 
+> Values  Choices to be displayed. List of strings
+> Scale - Amount to scale size by
+>  Size - (width, height) of element in characters
+>  AutoSizeText - Bool. True if size should fit the text length
+
 #### Radio Button Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
+    layout =  [[SG.Radio('My first Radio!', "RADIO1", Default=True), SG.Radio('My second radio!', "RADIO1")]]
 
+![radio element](https://user-images.githubusercontent.com/13696193/42705705-327b4b6c-86a2-11e8-81a7-740e57646ba8.jpg)
+
+     Radio(Text,
+           GroupID,
+           Default=False,
+           Scale=(None, None),
+           Size=(None, None),
+           AutoSizeText=None,
+           Font=None)
+
+
+> Text - Text to display next to button
+> GroupID - Variable to groups together multiple Radio Buttons. Can be any value
+> Default - Bool.  Initial state
+> Scale - Amount to scale size of element
+> Size - (width, height) size of element in characters
+> AutoSizeText - Bool.  True if should size width to fit text
+> Font - Font type and size for text display
 
 #### Checkbox Element
 #### Spin Element
