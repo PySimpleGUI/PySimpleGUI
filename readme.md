@@ -15,6 +15,7 @@ The PySimpleGUI solution is focused on the ***developer***.  How can the desired
   
 You can add a GUI to your command line with a single line of code.  With 3 or 4 lines of code you can add a fully customized GUI.  And for you Machine Learning folks out there, a **single line** progress meter call that you can drop into any loop.
 
+
 ![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
 
 
@@ -209,6 +210,7 @@ Here's the one-line Progress Meter in action!
         SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
 
 That line of code resulted in this window popping up and updating.
+
 ![progress meter 5](https://user-images.githubusercontent.com/13696193/42696912-a5c958b8-8687-11e8-9a7d-a390a465407a.jpg)
 
 A meter AND fun statistics to watch while your machine grinds away, all for the price of 1 line of code.
@@ -436,13 +438,17 @@ The default font setting is
 
     ("Helvetica", 10)
 
-**Colos** in PySimpleGUI are always in this format:
+**Color** in PySimpleGUI are always in this format:
 
     (foreground, background)
 
 The values foreground and background can be the color names or the hex value formatted as a string:
 
     "#RRGGBB"
+
+**AutoSizeText**
+A `True` value for `AutoSizeText`, when placed on any Element, indicates that the width of the Element should be shrunk do the width of the text.  This is particularly useful with `Buttons` as fixed-width buttons are somewhat crude looking.  The default value is `False`.  You will often see this setting on FlexForm definitions.
+
 
 ####  Multiline Text Element
 
@@ -461,6 +467,16 @@ This Element doubles as both an input and output Element.  The `DefaultText` opt
 >Scale - Element's scale
 >Size - Element's size
 >AutoSizeText - Bool. Change width to match size of text
+
+#### Output Element
+Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  More on this later.
+
+    form.AddRow(gg.Output(Size=(100,20)))
+
+![output element](https://user-images.githubusercontent.com/13696193/42704820-5446959c-869f-11e8-849e-047ea280387a.jpg)
+
+    Output(Scale=(None, None),
+           Size=(None, None))
 
 ###  Input Elements
   These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `Size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
@@ -488,6 +504,17 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
                Size=(None, None),
                AutoSizeText=None)
 
+#### Radio Button Element
+Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
+
+
+
+#### Checkbox Element
+#### Spin Element
+#### Button Element
+#### ProgressBar
+#### Output
+#### UberForm
 
 ## Contributing  
   
@@ -515,3 +542,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments  
   
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+
