@@ -8,152 +8,19 @@ This really is a simple GUI, but also powerfully customizable.
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??    
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
-
+  
 Python itself doesn't have a simple GUI solution... nor did the *many* GUI packages I tried.  Most tried to do TOO MUCH, making it impossible for users to get started quickly.  Others were just plain broken, requiring multiple files or other packages that were missing.
-
-The PySimpleGUI solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.
-
+  
+The PySimpleGUI solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI. 
+  
 You can add a GUI to your command line with a single line of code.  With 3 or 4 lines of code you can add a fully customized GUI.  And for you Machine Learning folks out there, a **single line** progress meter call that you can drop into any loop.
+
 
 ![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
 
 
- The customization is via the form/dialog box builder that enables users to experience all of the normal GUI widgets without having to write a lot of code.
-
-
-<<<<<<< HEAD
-    Features of PySimpleGUI include:
-        Text
-        Single Line Input
-        Buttons including these types:
-            File Browse
-            Folder Browse
-            Non-closing return
-            Close form
-        Checkboxes
-        Radio Buttons
-        Icons
-        Multi-line Text Input
-        Scroll-able Output
-        Progress Bar
-        Async/Non-Blocking Windows
-        Tabbed forms
-        Persistent Windows
-        Redirect Python Output/Errors to scrolling Window
-        'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
-=======
-
-> Features of PySimpleGUI include:  
->     Text  
->     Single Line Input  
->     Buttons including these types:      
->         File Browse
->         Folder Browse
->         Non-closing return
->         Close form  
->     Checkboxes  
->     Radio Buttons  
->     Icons  
->     Multi-line Text Input  
->     Scroll-able Output      
->     Progress Bar  
->     Async/Non-Blocking Windows  
->     Tabbed forms
->     Persistent Windows  
->     Redirect Python Output/Errors to scrolling Window  
->     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
-
+ The customization is via the form/dialog box builder that enables users to experience all of the normal GUI widgets without having to write a lot of code.  
   
-> Features of PySimpleGUI include:
->     Text
->     Single Line Input
->     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form
->     Checkboxes
->     Radio Buttons
->     Icons
->     Multi-line Text Input
->     Scroll-able Output
->     Progress Bar
->     Async/Non-Blocking Windows
->     Tabbed forms
->     Persistent Windows
->     Redirect Python Output/Errors to scrolling Window
->     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
->>>>>>> 46e56434a39bcd98d4683aa3da3a3126999e6f13
-
-
-An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
-
-![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
-
-
-## Getting Started with PySimpleGUI
-
-### Installing
-
-    pip install PySimpleGUI
- or
-Simply download the file - PySimpleGUI.py and import it into your code
-
-
-### Prerequisites
-
-Python 3
-tkinter
-
-Should run on all Python platforms that have tkinter running on them.  Has been thoroughly tested on Windows.  While not tested elsewhere, should work on Linux, Mac, Pi, etc.
-
-### Using
-
-To us in your code, simply import....
- `import PySimpleGUI as SG`
-
-Then use either "high level" API calls or build your own forms.
-
-    SG.MsgBox('This is my first message box')
-![simple msgbox](https://user-images.githubusercontent.com/13696193/42597824-1749b160-8528-11e8-9114-374bf9731b30.jpg)
-
-Yes, it's just that easy to have a window appear on the screen using Python.
-
-## APIs
-
-PySimpleGUI can be broken down into 2 types of API's:
- * High Level single call functions
- * Custom form functions
-
-
-### Python Language Features
-
- There are a couple of Python language features that PySimpleGUI utilizes heavily that should be understood first...
- * Variable number of arguments to a function call
- * Optional parameters to a function call
-
-#### Variable Number of Arguments
-
- The "High Level" API calls that *output* values take a variable number of arguments so that they match a "print" statement as much as possible.  The idea is to make it simple for the programmer to output as many items as desired and in any format.  The user need not convert the variables to be output into the strings.  The PySimpleGUI functions do that for the user.
-
-    SG.MsgBox('Variable number of parameters example', my_variable, second_variable, "etc")
-
-Each new item begins on a new line in the Message Box
-
-  ![variablearguments](https://user-images.githubusercontent.com/13696193/42598375-022bc51e-852a-11e8-8f77-4d664ae1a560.jpg)
-
-#### Optional Parameters to a Function Call
-
-This feature of the Python language is utilized ***heavily*** as a method of customizing forms and part of forms.  Rather than requiring the programmer to specify every possible option for a widget, instead only the options the caller wants to override are specified.
-
-Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't have to be specified on each and every call.
-
-<<<<<<< HEAD
-    def MsgBox(*args,
-               ButtonColor=None,
-               ButtonType=MSG_BOX_OK,
-               AutoClose=False,
-               AutoCloseDuration=None,
-               Icon=DEFAULT_WINDOW_ICON,
-               LineWidth=MESSAGE_BOX_LINE_WIDTH,
-               Font=None):
-=======
 
     Features of PySimpleGUI include:  
         Text  
@@ -176,30 +43,99 @@ Here is the function definition for the MsgBox function. The details aren't impo
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
 
   
->>>>>>> 46e56434a39bcd98d4683aa3da3a3126999e6f13
+An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
+
+![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
+
+  
+## Getting Started with PySimpleGUI  
+  
+### Installing  
+  
+    pip install PySimpleGUI  
+ or  
+Simply download the file - PySimpleGUI.py and import it into your code  
+  
+  
+### Prerequisites  
+  
+Python 3  
+tkinter  
+  
+Should run on all Python platforms that have tkinter running on them.  Has been thoroughly tested on Windows.  While not tested elsewhere, should work on Linux, Mac, Pi, etc.  
+  
+### Using
+
+To us in your code, simply import....
+ `import PySimpleGUI as SG`  
+
+Then use either "high level" API calls or build your own forms.  
+
+    SG.MsgBox('This is my first message box')
+![simple msgbox](https://user-images.githubusercontent.com/13696193/42597824-1749b160-8528-11e8-9114-374bf9731b30.jpg)
+
+Yes, it's just that easy to have a window appear on the screen using Python.
+
+## APIs
+  
+PySimpleGUI can be broken down into 2 types of API's:  
+ * High Level single call functions  
+ * Custom form functions  
+   
+
+### Python Language Features
+
+ There are a couple of Python language features that PySimpleGUI utilizes heavily that should be understood first...
+ * Variable number of arguments to a function call  
+ * Optional parameters to a function call
+ 
+#### Variable Number of Arguments
+
+ The "High Level" API calls that *output* values take a variable number of arguments so that they match a "print" statement as much as possible.  The idea is to make it simple for the programmer to output as many items as desired and in any format.  The user need not convert the variables to be output into the strings.  The PySimpleGUI functions do that for the user.
+     
+    SG.MsgBox('Variable number of parameters example', my_variable, second_variable, "etc")
+
+Each new item begins on a new line in the Message Box
+
+  ![variablearguments](https://user-images.githubusercontent.com/13696193/42598375-022bc51e-852a-11e8-8f77-4d664ae1a560.jpg)
+  
+#### Optional Parameters to a Function Call
+ 
+This feature of the Python language is utilized ***heavily*** as a method of customizing forms and part of forms.  Rather than requiring the programmer to specify every possible option for a widget, instead only the options the caller wants to override are specified.
+
+Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't have to be specified on each and every call.  
+
+    def MsgBox(*args, 
+               ButtonColor=None, 
+               ButtonType=MSG_BOX_OK,  
+               AutoClose=False, 
+               AutoCloseDuration=None, 
+               Icon=DEFAULT_WINDOW_ICON, 
+               LineWidth=MESSAGE_BOX_LINE_WIDTH,
+               Font=None):
 
 If the caller wanted to change the button color to be black on yellow, the call would look something like this:
 
-    SG.MsgBox('This box has a custom button color',
+    SG.MsgBox('This box has a custom button color',   
               ButtonColor=('black', 'yellow'))
 
 ![custombuttoncolor](https://user-images.githubusercontent.com/13696193/42599212-84f3fe2e-852c-11e8-8a60-4aad669a1fd6.jpg)
 
-### High Level API Calls
+### High Level API Calls  
 
-The classic "input a value, print result" example.
-Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.
-This code prompts user to input a line of text and then displays that text in a messages box:
-
-    import PySimpleGUI_local as SG
-
-    rc = SG.GetTextBox('Title', 'Please input something')
-    SG.MsgBox('Results', 'The value returned from GetTextBox', rc)
-
-![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
-
-![MsgBox](https://user-images.githubusercontent.com/13696193/42592929-1c7361ae-8519-11e8-8adc-411c1afee69f.jpg)
-
+The classic "input a value, print result" example.  
+Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.  
+This code prompts user to input a line of text and then displays that text in a messages box:  
+  
+    import PySimpleGUI_local as SG    
+        
+    rc = SG.GetTextBox('Title', 'Please input something')    
+    SG.MsgBox('Results', 'The value returned from GetTextBox', rc)  
+  
+![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)  
+  
+![MsgBox](https://user-images.githubusercontent.com/13696193/42592929-1c7361ae-8519-11e8-8adc-411c1afee69f.jpg)  
+  
 #### Message Boxes
 In addition to MsgBox, you'll find a several API calls that are shortcuts to common messages boxes.  You can achieve similar results by calling MsgBox with the correct parameters.
 
@@ -208,7 +144,7 @@ The differences tend to be the number and types of buttons.   Here are the calls
     import PySimpleGUI as SG
 
   `SG.MsgBoxOK('This is an OK MsgBox')`
-
+  
   ![msgboxok](https://user-images.githubusercontent.com/13696193/42599852-8dd6914e-852e-11e8-888f-f133d787210b.jpg)
 
     SG.MsgBoxOKCancel('This is an OK Cancel MsgBox')
@@ -232,13 +168,13 @@ The differences tend to be the number and types of buttons.   Here are the calls
 
 ![scrolledtextbox](https://user-images.githubusercontent.com/13696193/42600800-a44f4562-8531-11e8-8c21-51dd70316879.jpg)
 
-Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`.
+Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`. 
 
 #### High Level User Input
 
 There are 3 very basic user input high-level function calls.  It's expected that for most applications, a custom input form will be created. If you need only 1 value, then perhaps one of these high level functions will work.
  - GetTextBox
- - GetFileBox
+ - GetFileBox 
  - GetFolderBox
 
  `submit_clicked, value = SG.GetTextBox('Title', 'Please enter anything')`
@@ -256,7 +192,6 @@ There are 3 very basic user input high-level function calls.  It's expected that
 #### Progress Meter!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
 ![progress meter 3](https://user-images.githubusercontent.com/13696193/42696332-dca3ca6e-8685-11e8-846b-6bee8362ee5f.jpg)
-<<<<<<< HEAD
 
     EasyProgressMeter(Title,
                       CurrentValue,
@@ -269,35 +204,19 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
                       Scale=(None, None),
                       BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
 
-=======
-
-    EasyProgressMeter(Title,
-                      CurrentValue,
-                      MaxValue,
-                      *args,
-                      Orientation=None,
-                      BarColor=DEFAULT_PROGRESS_BAR_COLOR,
-                      ButtonColor=None,
-                      Size=DEFAULT_PROGRESS_BAR_SIZE,
-                      Scale=(None, None),
-                      BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
-
->>>>>>> 46e56434a39bcd98d4683aa3da3a3126999e6f13
 Here's the one-line Progress Meter in action!
 
-    for i in range(1,10000):
+    for i in range(1,10000):  
         SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
 
 That line of code resulted in this window popping up and updating.
+
 ![progress meter 5](https://user-images.githubusercontent.com/13696193/42696912-a5c958b8-8687-11e8-9a7d-a390a465407a.jpg)
 
 A meter AND fun statistics to watch while your machine grinds away, all for the price of 1 line of code.
-<<<<<<< HEAD
-With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`.
+With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`. 
 
     if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'): break
-=======
->>>>>>> 46e56434a39bcd98d4683aa3da3a3126999e6f13
 
 # Custom Form API Calls
 
@@ -307,10 +226,10 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
 
 ## COPY THIS DESIGN PATTERN!
 
-    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
-                     [SG.InputText(), SG.FileBrowse()],
-                     [SG.Submit(), SG.Cancel()]]
+    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:  
+        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
+                     [SG.InputText(), SG.FileBrowse()],  
+                     [SG.Submit(), SG.Cancel()]]  
         (button, (source_filename, )) = form.LayoutAndShow(form_rows)
 
 This context manager contains all of the code needed to specify, show and retrieve results for this form:
@@ -318,23 +237,23 @@ This context manager contains all of the code needed to specify, show and retrie
 
 It's important to use the "with" context manager.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
 
-You will use this design pattern or code template for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.
+You will use this design pattern or code template for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  
 
 > Copy, Paste, Run.
 
-PySimpleGUI's goal with the API is to be easy on the programmer.  An attempt was made to make the program's code visually match the window on the screen.  The way this is done is that a GUI is broken up into "Rows".  Then each row is broke up into "Elements" or "Widgets".  Each element is specified by names such as Text, Button, Checkbox, etc.
+PySimpleGUI's goal with the API is to be easy on the programmer.  An attempt was made to make the program's code visually match the window on the screen.  The way this is done is that a GUI is broken up into "Rows".  Then each row is broke up into "Elements" or "Widgets".  Each element is specified by names such as Text, Button, Checkbox, etc. 
 
 Some elements are shortcuts, again meant to make it easy on the programmer.  Rather than writing a `Button`, with  name = "Submit", etc, the caller simply writes `Submit`.
 
 Going through each line of code
 
-    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:
-This creates a new form, storing it in the variable `form`.
+    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:  
+This creates a new form, storing it in the variable `form`.  
 
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
 The next few rows of code lay out the rows of elements in the window to be displayed.  The variable `form_rows` holds our entire GUI window.   The first row of this form has a Text element.  These simply display text on the form.
 
-                     [SG.InputText(), SG.FileBrowse()],
+                     [SG.InputText(), SG.FileBrowse()],  
 Now we're on the second row of the form.  On this row there are 2 elements.  The first is an `Input` field.  It's a place the user can enter `strings`.  The second element is a `File Browse Button`.  A file or folder browse button will always fill in the text field to it's left unless otherwise specified.  In this example, the File Browse Button will interact with the `InputText` field to its left.
 
 				    [SG.Submit(), SG.Cancel()]]
@@ -346,42 +265,42 @@ This is the code that **displays** the form, collects the information and return
 
 ## Return values
 
-   Return information from FlexForm, SG's primary form builder interface, is in this format:
-
-    (button, (value1, value2, ...))
-
-Don't forget all those ()'s of your values won't be coreectly assigned.
-
-If you have a SINGLE value being returned, it is written this way:
-
+   Return information from FlexForm, SG's primary form builder interface, is in this format:  
+      
+    (button, (value1, value2, ...))  
+  
+Don't forget all those ()'s of your values won't be coreectly assigned.  
+  
+If you have a SINGLE value being returned, it is written this way:  
+  
     (button, (value1,)) = form.LayoutAndShow(form_rows)
  Another way of parsing the return values is to store the list of values into a variable that is then referenced.
 
-     (button, (value)) = form.LayoutAndShow(form_rows)
+     (button, (value)) = form.LayoutAndShow(form_rows)  
      value1 = values[0]
      value2 = values[1]
      ...
-
+     
 
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
 
-    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:
-        layout = [[Text('Here they all are!', Size=(30,1), Font=("Helvetica", 25), TextColor='red')],
-                  [Text('Here is some text with font sizing', Font=("Helvetica", 15))],
-                  [InputText()],
-                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', Default=True)],
-                  [Radio('My first Radio!', "RADIO1", Default=True), Radio('My second checkbox!', "RADIO1")],
-                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', Scale=(2, 10))],
-                  [InputCombo(['choice 1', 'choice 2'], Size=(20, 3))],
-                  [Text('_'  * 90, Size=(60, 1))],
-                  [Text('Choose Source and Destination Folders', Size=(35,1))],
-                  [Text('Source Folder', Size=(15, 1), AutoSizeText=False), InputText('Source'), FolderBrowse()],
-                  [Text('Destination Folder', Size=(15, 1), AutoSizeText=False), InputText('Dest'), FolderBrowse()],
-                  [SimpleButton('Your Button with any text you want')],
-                  [SimpleButton('Big Text', Size=(12,1), Font=("Helvetica", 20))],
-                  [Submit(), Cancel()]]
-
+    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:  
+        layout = [[Text('Here they all are!', Size=(30,1), Font=("Helvetica", 25), TextColor='red')],  
+                  [Text('Here is some text with font sizing', Font=("Helvetica", 15))],  
+                  [InputText()],  
+                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', Default=True)],  
+                  [Radio('My first Radio!', "RADIO1", Default=True), Radio('My second checkbox!', "RADIO1")],  
+                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', Scale=(2, 10))],  
+                  [InputCombo(['choice 1', 'choice 2'], Size=(20, 3))],  
+                  [Text('_'  * 90, Size=(60, 1))],  
+                  [Text('Choose Source and Destination Folders', Size=(35,1))],  
+                  [Text('Source Folder', Size=(15, 1), AutoSizeText=False), InputText('Source'), FolderBrowse()],  
+                  [Text('Destination Folder', Size=(15, 1), AutoSizeText=False), InputText('Dest'), FolderBrowse()],  
+                  [SimpleButton('Your Button with any text you want')],  
+                  [SimpleButton('Big Text', Size=(12,1), Font=("Helvetica", 20))],  
+                  [Submit(), Cancel()]]  
+      
         (button, (values)) = form.LayoutAndShow(layout)
 
 
@@ -397,12 +316,11 @@ Clicking the Submit button caused the form call to return.  The call to MsgBox r
 ![results](https://user-images.githubusercontent.com/13696193/42604952-502f64e6-8543-11e8-8045-bc10d38c5fd4.jpg)
 
 One important aspect of this example is the return codes:
-<<<<<<< HEAD
 
     (button, (values)) = form.LayoutAndShow(layout)
 The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
 
-You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
+You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.  
 
 
 
@@ -410,7 +328,7 @@ You can see in the MsgBox that the values returned are a list.  Each input field
 You will find it much easier to write code using PySimpleGUI is you use features that show you documentation about the API call you are making.  In PyCharm 2 commands are helpful.
 
 > Control-Q (when cursor is on function name) brings up a box with the
-> function definition
+> function definition 
 > Control-P (when cursor inside function call "()")
 > shows a list of parameters and their default values
 
@@ -425,10 +343,10 @@ NON-BLOCKING form call:
 ### Beginning a Form
 The first step is to create the form object using the desired form customization.
 
-    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:
+    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:  
 Let's go through the options available when creating a form.
 
-    def __init__(self, title,
+    def __init__(self, title, 
         DefaultElementSize=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
         AutoSizeText=DEFAULT_AUTOSIZE_TEXT,
         Scale=(None, None),
@@ -441,7 +359,7 @@ Let's go through the options available when creating a form.
         AutoClose=False,
         AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME,
         Icon=DEFAULT_WINDOW_ICON):
-
+    
 
 #### Sizes
 Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
@@ -472,18 +390,18 @@ A summary of the variables that can be changed when a FlexForm is created
 ## Elements
 "Elements" are the building blocks used to create forms.  Some GUI APIs use the term Widget to describe these graphic elements.
 
->     Text
->     Single Line Input
->     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form
->     Checkboxes
->     Radio Buttons
->     Multi-line Text Input
->     Scroll-able Output
->     Progress Bar
->     Async/Non-Blocking Windows
+>     Text  
+>     Single Line Input  
+>     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form  
+>     Checkboxes  
+>     Radio Buttons  
+>     Multi-line Text Input  
+>     Scroll-able Output      
+>     Progress Bar  
+>     Async/Non-Blocking Windows  
 >     Tabbed forms
->     Persistent Windows
->     Redirect Python Output/Errors to scrolling Window
+>     Persistent Windows  
+>     Redirect Python Output/Errors to scrolling Window  
 >     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
 
 
@@ -495,15 +413,15 @@ Building a form is simply making lists of Elements.  Each list is a row in the o
 The code is a crude representation of the GUI, laid out in text.
 ####  Text Element
 
-    layout = [[SG.Text('This is what a Text Element looks like')]]
+    layout = [[SG.Text('This is what a Text Element looks like')]]   
 
-
+ 
  ![textelem](https://user-images.githubusercontent.com/13696193/42670173-4c1fcb40-8627-11e8-851a-5a9ee4672320.jpg)
 
 
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
 
-    Text(Text,
+    Text(Text, 
         Scale=(None, None),
         Size=(None, None),
         AutoSizeText=None,
@@ -520,13 +438,17 @@ The default font setting is
 
     ("Helvetica", 10)
 
-**Colos** in PySimpleGUI are always in this format:
+**Color** in PySimpleGUI are always in this format:
 
     (foreground, background)
 
 The values foreground and background can be the color names or the hex value formatted as a string:
 
     "#RRGGBB"
+
+**AutoSizeText**
+A `True` value for `AutoSizeText`, when placed on any Element, indicates that the width of the Element should be shrunk do the width of the text.  This is particularly useful with `Buttons` as fixed-width buttons are somewhat crude looking.  The default value is `False`.  You will often see this setting on FlexForm definitions.
+
 
 ####  Multiline Text Element
 
@@ -546,9 +468,19 @@ This Element doubles as both an input and output Element.  The `DefaultText` opt
 >Size - Element's size
 >AutoSizeText - Bool. Change width to match size of text
 
+#### Output Element
+Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  More on this later.
+
+    form.AddRow(gg.Output(Size=(100,20)))
+
+![output element](https://user-images.githubusercontent.com/13696193/42704820-5446959c-869f-11e8-849e-047ea280387a.jpg)
+
+    Output(Scale=(None, None),
+           Size=(None, None))
+
 ###  Input Elements
   These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `Size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
-
+  
 #### Text Input Element
 
     layout = [[SG.InputText('Default text')]]
@@ -564,247 +496,50 @@ Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
     layout = [[SG.InputCombo(['choice 1', 'choice 2'])]]
-
+    
 ![combo](https://user-images.githubusercontent.com/13696193/42694431-631c4108-8680-11e8-8e99-c1a642734464.jpg)
 
-    InputCombo(Values,
+    InputCombo(Values, 
                Scale=(None, None),
                Size=(None, None),
                AutoSizeText=None)
 
+#### Radio Button Element
+Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
-## Contributing
 
-A MikeTheWatchGuy production... entirely responsible for this code
 
-## Versioning
+#### Checkbox Element
+#### Spin Element
+#### Button Element
+#### ProgressBar
+#### Output
+#### UberForm
 
-1.0.9  -   July 10, 2018 - Initial Release
-1.0.21 - July 13, 2018 - Readme updates
-
-  ## Code Condition
-> Make it run
+## Contributing  
+  
+A MikeTheWatchGuy production... entirely responsible for this code  
+  
+## Versioning  
+  
+1.0.9  -   July 10, 2018 - Initial Release  
+1.0.21 - July 13, 2018 - Readme updates 
+      
+  ## Code Condition  
+> Make it run 
 > Make it right
 >  Make it fast
 
 It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor on hiding implementation details, naming conventions, PEP 8.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
-
-## Authors
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
-=======
-
-    (button, (values)) = form.LayoutAndShow(layout)
-The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
-
-You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
-
-
-
-# Building Custom Forms
-You will find it much easier to write code using PySimpleGUI is you use features that show you documentation about the API call you are making.  In PyCharm 2 commands are helpful.
-
-> Control-Q (when cursor is on function name) brings up a box with the
-> function definition
-> Control-P (when cursor inside function call "()")
-> shows a list of parameters and their default values
-
-## Synchronous Forms
-The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI form/dialog box.
-You've already seen a number of examples above that use blocking forms.  Anytime you see a context manager used (see the `with` statement) it's most likely a blocking form.  You can examine the show calls to be sure.  If the form is a non-blocking form, it must indicate that in the call to `form.show`.
-
-NON-BLOCKING form call:
-
-		    form.Show(NonBlocking=True)
-
-### Beginning a Form
-The first step is to create the form object using the desired form customization.
-
-    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:
-Let's go through the options available when creating a form.
-
-    def __init__(self, title,
-        DefaultElementSize=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
-        AutoSizeText=DEFAULT_AUTOSIZE_TEXT,
-        Scale=(None, None),
-        Size=(None, None),
-        Location=(None, None),
-        ButtonColor=None,Font=None,
-        ProgressBarColor=(None,None),
-        IsTabbedForm=False,
-        BorderDepth=None,
-        AutoClose=False,
-        AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME,
-        Icon=DEFAULT_WINDOW_ICON):
-
-
-#### Sizes
-Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
-
-The default Element size for PySimpleGUI is `(45,1)`.
-
-Sizes can be set at the element level, or in this case, the size variables apply to all elements in the form.  Setting `Size=(20,1)` in the form creation call will set all elements in the form to that size.
-
-In addition to `size` there is a `scale` option.  Scale will take the Element's size and scale it up or down depending on the scale value.  `scale=(1,1)` doesn't change the Element's size.  `scale=(2,1)` will set the Element's size to be twice as wide as the size setting.
-
-
-#### FlexForm - form-level variables overview
-A summary of the variables that can be changed when a FlexForm is created
-
->         DefaultElementSize - set default size for all elements in the form
->         AutoSizeText - true/false autosizing turned on / off
->         Scale - set scale value for all elements
->         ButtonColor - default button color (foreground, background)
->         Font - font name and size for all text items
->         ProgressBarColor - progress bar colors
->         IsTabbedForm - true/false indicates form is a tabbed or normal form
->         BorderDepth - style setting for buttons, input fields
->         AutoClose - true/false indicates if form will automatically close
->         AutoCloseDuration - how long in seconds before closing form
->         Icon - filename for icon that's displayed on the window on taskbar
-
-
-## Elements
-"Elements" are the building blocks used to create forms.  Some GUI APIs use the term Widget to describe these graphic elements.
-
->     Text
->     Single Line Input
->     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form
->     Checkboxes
->     Radio Buttons
->     Multi-line Text Input
->     Scroll-able Output
->     Progress Bar
->     Async/Non-Blocking Windows
->     Tabbed forms
->     Persistent Windows
->     Redirect Python Output/Errors to scrolling Window
->     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
-
-
-### Output Elements
-Building a form is simply making lists of Elements.  Each list is a row in the overall GUI dialog box.  The definition looks something like this:
-
-    layout = [ [row 1 element, row 1 element],
-               [row 2 element, row 2 element, row 2 element] ]
-The code is a crude representation of the GUI, laid out in text.
-####  Text Element
-
-    layout = [[SG.Text('This is what a Text Element looks like')]]
-
-
- ![textelem](https://user-images.githubusercontent.com/13696193/42670173-4c1fcb40-8627-11e8-851a-5a9ee4672320.jpg)
-
-
-The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
-
-    Text(Text,
-        Scale=(None, None),
-        Size=(None, None),
-        AutoSizeText=None,
-        Font=None,
-        TextColor=None)
-
-Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.
-
-**Fonts** in PySimpleGUI are always in this format:
-
-    (font_name, point_size)
-
-The default font setting is
-
-    ("Helvetica", 10)
-
-**Colos** in PySimpleGUI are always in this format:
-
-    (foreground, background)
-
-The values foreground and background can be the color names or the hex value formatted as a string:
-
-    "#RRGGBB"
-
-####  Multiline Text Element
-
-    layout = [[SG.Multiline('This is what a Multi-line Text Element looks like', Size=(45,5))]]
-![multiline text](https://user-images.githubusercontent.com/13696193/42670464-0824c754-8629-11e8-9741-6ed08f924618.jpg)
-This Element doubles as both an input and output Element.  The `DefaultText` optional parameter is used to indicate what to output to the window.
-
-    Multiline(DefaultText='',
-			  EnterSubmits = False,
-			  Scale=(None, None),
-              Size=(None, None),
-		      AutoSizeText=None)
-
-> DefaultText - Text to display in the text box
->EnterSubmits - Bool. If True, pressing Enter key submits form
->Scale - Element's scale
->Size - Element's size
->AutoSizeText - Bool. Change width to match size of text
-
-###  Input Elements
-  These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `Size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
-
-#### Text Input Element
-
-    layout = [[SG.InputText('Default text')]]
-![inputtext](https://user-images.githubusercontent.com/13696193/42693515-610a716c-867d-11e8-9a00-7e7fcf771230.jpg)
-
-      def InputText(DefaultText = '',
-                    Scale=(None, None),
-                    Size=(None, None),
-                    AutoSizeText=None)
-Shorthand functions that are equivalent to `InputText` are `Input` and `In`
-
-#### Combo Element
-Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
-
-    layout = [[SG.InputCombo(['choice 1', 'choice 2'])]]
-
-![combo](https://user-images.githubusercontent.com/13696193/42694431-631c4108-8680-11e8-8e99-c1a642734464.jpg)
-
-    InputCombo(Values,
-               Scale=(None, None),
-               Size=(None, None),
-               AutoSizeText=None)
-
-
-## Contributing
-
-A MikeTheWatchGuy production... entirely responsible for this code
-
-## Versioning
-
-
-1.0.9  - July 10, 2018 - Initial Release
-1.0.20 - July 13, 2018 - Readme file updates
-
-  ## Code Condition
-> Make it run
-> Make it right
->  Make it fast
-
-It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor on hiding implementation details, naming conventions, PEP 8.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
-
-## Authors
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
+  
+## Authors  
+  
+  
+## License  
+  
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details  
+  
+## Acknowledgments  
+  
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
 
-
-
-
-
->>>>>>> 46e56434a39bcd98d4683aa3da3a3126999e6f13
