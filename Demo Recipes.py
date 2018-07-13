@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI_local as g
 
 def SourceDestFolders():
     with g.FlexForm('Demo Source / Destination Folders', AutoSizeText=True) as form:
@@ -35,7 +35,7 @@ def Everything():
 
         (button, (values)) = form.LayoutAndShow(layout)
 
-    g.MsgBox('Title', 'Typical message box', 'The results of the form are a lot of data!  Get ready... ', 'The button clicked was "{}"'.format(button), 'The values are', values)
+    g.MsgBox('Title', 'Typical message box', 'The results of the form are a lot of data!  Get ready... ', 'The button clicked was "{}"'.format(button), 'The values are', values, AutoClose=True)
 
 # example of an Asynchronous form
 def ChatBot():
@@ -55,9 +55,9 @@ def ChatBot():
     print('Exiting the chatbot....')
 
 def main():
-    SourceDestFolders()
+    # SourceDestFolders()
     Everything()
-    ChatBot()
+    # ChatBot()
 
 if __name__ == '__main__':
     main()

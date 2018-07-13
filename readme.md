@@ -327,10 +327,8 @@ You can see in the MsgBox that the values returned are a list.  Each input field
 # Building Custom Forms
 You will find it much easier to write code using PySimpleGUI is you use features that show you documentation about the API call you are making.  In PyCharm 2 commands are helpful.
 
-> Control-Q (when cursor is on function name) brings up a box with the
-> function definition 
-> Control-P (when cursor inside function call "()")
-> shows a list of parameters and their default values
+    Control-Q (when cursor is on function name) brings up a box with the function definition
+    Control-P (when cursor inside function call "()") shows a list of parameters and their default values
 
 ## Synchronous Forms
 The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI form/dialog box.
@@ -343,10 +341,10 @@ NON-BLOCKING form call:
 ### Beginning a Form
 The first step is to create the form object using the desired form customization.
 
-    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:  
+    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:
 Let's go through the options available when creating a form.
 
-    def __init__(self, title, 
+    def __init__(self, title,
         DefaultElementSize=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
         AutoSizeText=DEFAULT_AUTOSIZE_TEXT,
         Scale=(None, None),
@@ -359,7 +357,7 @@ Let's go through the options available when creating a form.
         AutoClose=False,
         AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME,
         Icon=DEFAULT_WINDOW_ICON):
-    
+
 
 #### Sizes
 Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
@@ -374,35 +372,39 @@ In addition to `size` there is a `scale` option.  Scale will take the Element's 
 #### FlexForm - form-level variables overview
 A summary of the variables that can be changed when a FlexForm is created
 
->         DefaultElementSize - set default size for all elements in the form
->         AutoSizeText - true/false autosizing turned on / off
->         Scale - set scale value for all elements
->         ButtonColor - default button color (foreground, background)
->         Font - font name and size for all text items
->         ProgressBarColor - progress bar colors
->         IsTabbedForm - true/false indicates form is a tabbed or normal form
->         BorderDepth - style setting for buttons, input fields
->         AutoClose - true/false indicates if form will automatically close
->         AutoCloseDuration - how long in seconds before closing form
->         Icon - filename for icon that's displayed on the window on taskbar
+         DefaultElementSize - set default size for all elements in the form
+         AutoSizeText - true/false autosizing turned on / off
+         Scale - set scale value for all elements
+         ButtonColor - default button color (foreground, background)
+         Font - font name and size for all text items
+         ProgressBarColor - progress bar colors
+         IsTabbedForm - true/false indicates form is a tabbed or normal form
+         BorderDepth - style setting for buttons, input fields
+         AutoClose - true/false indicates if form will automatically close
+         AutoCloseDuration - how long in seconds before closing form
+         Icon - filename for icon that's displayed on the window on taskbar
 
 
 ## Elements
 "Elements" are the building blocks used to create forms.  Some GUI APIs use the term Widget to describe these graphic elements.
 
->     Text  
->     Single Line Input  
->     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form  
->     Checkboxes  
->     Radio Buttons  
->     Multi-line Text Input  
->     Scroll-able Output      
->     Progress Bar  
->     Async/Non-Blocking Windows  
->     Tabbed forms
->     Persistent Windows  
->     Redirect Python Output/Errors to scrolling Window  
->     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
+     Text
+     Single Line Input
+     Buttons including these types:
+         File Browse
+         Folder Browse
+         Non-closing return
+         Close form
+     Checkboxes
+     Radio Buttons
+     Multi-line Text Input
+     Scroll-able Output
+     Progress Bar
+     Async/Non-Blocking Windows
+     Tabbed forms
+     Persistent Windows
+     Redirect Python Output/Errors to scrolling Window
+     "Higher level" APIs (e.g. MessageBox, YesNobox, ...)
 
 
 ### Output Elements
@@ -413,15 +415,15 @@ Building a form is simply making lists of Elements.  Each list is a row in the o
 The code is a crude representation of the GUI, laid out in text.
 ####  Text Element
 
-    layout = [[SG.Text('This is what a Text Element looks like')]]   
+    layout = [[SG.Text('This is what a Text Element looks like')]]
 
- 
+
  ![textelem](https://user-images.githubusercontent.com/13696193/42670173-4c1fcb40-8627-11e8-851a-5a9ee4672320.jpg)
 
 
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
 
-    Text(Text, 
+    Text(Text,
         Scale=(None, None),
         Size=(None, None),
         AutoSizeText=None,
@@ -462,11 +464,13 @@ This Element doubles as both an input and output Element.  The `DefaultText` opt
               Size=(None, None),
 		      AutoSizeText=None)
 
-> DefaultText - Text to display in the text box
->EnterSubmits - Bool. If True, pressing Enter key submits form
->Scale - Element's scale
->Size - Element's size
->AutoSizeText - Bool. Change width to match size of text
+.
+
+    DefaultText - Text to display in the text box
+    EnterSubmits - Bool. If True, pressing Enter key submits form
+    Scale - Element's scale
+    Size - Element's size
+    AutoSizeText - Bool. Change width to match size of text
 
 #### Output Element
 Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  More on this later.
@@ -477,10 +481,14 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 
     Output(Scale=(None, None),
            Size=(None, None))
+.
+
+     Scale - How much to scale size of element
+     Size - Size of element (width, height) in characters
 
 ###  Input Elements
   These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `Size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
-  
+
 #### Text Input Element
 
     layout = [[SG.InputText('Default text')]]
@@ -490,22 +498,59 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
                     Scale=(None, None),
                     Size=(None, None),
                     AutoSizeText=None)
+.
+
+     DefaultText - Text initially shown in the input box
+     Scale - Amount size is scaled by
+     Size - (width, height) of element in characters
+     AutoSizeText - Bool.  True is element should be sized to fit text
+
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`
+
 
 #### Combo Element
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
     layout = [[SG.InputCombo(['choice 1', 'choice 2'])]]
-    
+
 ![combo](https://user-images.githubusercontent.com/13696193/42694431-631c4108-8680-11e8-8e99-c1a642734464.jpg)
 
-    InputCombo(Values, 
+    InputCombo(Values,
                Scale=(None, None),
                Size=(None, None),
                AutoSizeText=None)
+.
+
+     Values  Choices to be displayed. List of strings
+     Scale - Amount to scale size by
+     Size - (width, height) of element in characters
+     AutoSizeText - Bool. True if size should fit the text length
 
 #### Radio Button Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
+
+    layout =  [[SG.Radio('My first Radio!', "RADIO1", Default=True), SG.Radio('My second radio!', "RADIO1")]]
+
+![radio element](https://user-images.githubusercontent.com/13696193/42705705-327b4b6c-86a2-11e8-81a7-740e57646ba8.jpg)
+
+     Radio(Text,
+           GroupID,
+           Default=False,
+           Scale=(None, None),
+           Size=(None, None),
+           AutoSizeText=None,
+           Font=None)
+
+.
+
+     Text - Text to display next to button
+     GroupID - Groups together multiple Radio Buttons. Can be any value
+     Default - Bool.  Initial state
+     Scale - Amount to scale size of element
+     Size - (width, height) size of element in characters
+     AutoSizeText - Bool.  True if should size width to fit text
+     Font - Font type and size for text display
+
 
 
 
@@ -516,30 +561,33 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
 #### Output
 #### UberForm
 
-## Contributing  
-  
-A MikeTheWatchGuy production... entirely responsible for this code  
-  
-## Versioning  
-  
-1.0.9  -   July 10, 2018 - Initial Release  
-1.0.21 - July 13, 2018 - Readme updates 
-      
-  ## Code Condition  
-> Make it run 
-> Make it right
->  Make it fast
+## Contributing
+
+A MikeTheWatchGuy production... entirely responsible for this code
+
+## Versioning
+
+1.0.9  -   July 10, 2018 - Initial Release
+1.0.21 - July 13, 2018 - Readme updates
+
+  ## Code Condition
+
+    Make it run
+    Make it right
+    Make it fast
 
 It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor on hiding implementation details, naming conventions, PEP 8.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
-  
-## Authors  
-  
-  
-## License  
-  
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details  
-  
-## Acknowledgments  
-  
+
+## Authors
+
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+
+
 
