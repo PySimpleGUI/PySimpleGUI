@@ -31,7 +31,8 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#
                (YELLOWS[0], GREENS[3]), (YELLOWS[0], BLUES[2]))
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[0])    # (Text, Background) or (Color "on", Color) as a way to remember
 # DEFAULT_BUTTON_COLOR = (GREENS[3], TANS[0])    # Foreground, Background (None, None) == System Default
-DEFAULT_BUTTON_COLOR = (YELLOWS[0], GREENS[4])    # Foreground, Background (None, None) == System Default
+# DEFAULT_BUTTON_COLOR = (YELLOWS[0], GREENS[4])    # Foreground, Background (None, None) == System Default
+DEFAULT_BUTTON_COLOR = ('white', 'black')    # Foreground, Background (None, None) == System Default
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[2])    # Foreground, Background (None, None) == System Default
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
 DEFAULT_CANCEL_BUTTON_COLOR = (GREENS[3], TANS[0])
@@ -1221,7 +1222,7 @@ def _GetNumLinesNeeded(text, max_line_width):
 # ===================================================#
 def MsgBox(*args, ButtonColor=None, ButtonType=MSG_BOX_OK,  AutoClose=False, AutoCloseDuration=None, Icon=DEFAULT_WINDOW_ICON, LineWidth=MESSAGE_BOX_LINE_WIDTH, Font=None):
     '''
-
+    Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
     :param ButtonColor:
     :param ButtonType:
@@ -1232,10 +1233,13 @@ def MsgBox(*args, ButtonColor=None, ButtonType=MSG_BOX_OK,  AutoClose=False, Aut
     :param Font:
     :return:
     '''
-    if not args: return
-    with FlexForm(args[0], AutoSizeText=True,  ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Icon=Icon, Font=Font) as form:
+    if not args:
+        args_to_print = ['']
+    else:
+        args_to_print = args
+    with FlexForm(args_to_print[0], AutoSizeText=True,  ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Icon=Icon, Font=Font) as form:
         max_line_total, total_lines = 0,0
-        for message in args:
+        for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
             # if not isinstance(message, str): message = str(message)
             message = str(message)
@@ -1273,6 +1277,15 @@ def MsgBox(*args, ButtonColor=None, ButtonType=MSG_BOX_OK,  AutoClose=False, Aut
 # Lazy function. Same as calling MsgBox with parms   #
 # ===================================================#
 def MsgBoxAutoClose(*args, ButtonColor=None,AutoClose=True, AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME, Font=None):
+    '''
+    Display a standard MsgBox that will automatically close after a specified amount of time
+    :param args:
+    :param ButtonColor:
+    :param AutoClose:
+    :param AutoCloseDuration:
+    :param Font:
+    :return:
+    '''
     MsgBox(*args, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
     return
 
@@ -1281,13 +1294,31 @@ def MsgBoxAutoClose(*args, ButtonColor=None,AutoClose=True, AutoCloseDuration=DE
 # Like MsgBox but presents RED BUTTONS               #
 # ===================================================#
 def MsgBoxError(*args, ButtonColor=DEFAULT_ERROR_BUTTON_COLOR,AutoClose=False, AutoCloseDuration=None, Font=None):
+    '''
+    Display a MsgBox with a red button
+    :param args:
+    :param ButtonColor:
+    :param AutoClose:
+    :param AutoCloseDuration:
+    :param Font:
+    :return:
+    '''
     MsgBox(*args, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
     return
 
 # ==============================  MsgBoxCancel  =====#
-# Like MsgBox but presents RED BUTTONS               #
+#                                                    #
 # ===================================================#
 def MsgBoxCancel(*args,ButtonColor=DEFAULT_CANCEL_BUTTON_COLOR,AutoClose=False, AutoCloseDuration=None, Font=None):
+    '''
+    Display a MsgBox with a single "Cancel" button.
+    :param args:
+    :param ButtonColor:
+    :param AutoClose:
+    :param AutoCloseDuration:
+    :param Font:
+    :return:
+    '''
     MsgBox(*args, ButtonType=MSG_BOX_CANCELLED, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
     return
 
@@ -1295,13 +1326,31 @@ def MsgBoxCancel(*args,ButtonColor=DEFAULT_CANCEL_BUTTON_COLOR,AutoClose=False, 
 # Like MsgBox but only 1 button                      #
 # ===================================================#
 def MsgBoxOK(*args,ButtonColor=('white', 'black'),AutoClose=False, AutoCloseDuration=None, Font=None):
+    '''
+    Display a MsgBox with a single buttoned labelled "OK"
+    :param args:
+    :param ButtonColor:
+    :param AutoClose:
+    :param AutoCloseDuration:
+    :param Font:
+    :return:
+    '''
     MsgBox(*args, ButtonType=MSG_BOX_OK, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
     return
 
-# ==============================  MsgBoxCancel  =====#
-# Like MsgBox but presents RED BUTTONS               #
+# ==============================  MsgBoxOKCancel ====#
+# Like MsgBox but presents OK and Cancel buttons     #
 # ===================================================#
 def MsgBoxOKCancel(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=None, Font=None):
+    '''
+    Display MsgBox with 2 buttons, "OK" and "Cancel"
+    :param args:
+    :param ButtonColor:
+    :param AutoClose:
+    :param AutoCloseDuration:
+    :param Font:
+    :return:
+    '''
     result = MsgBox(*args, ButtonType=MSG_BOX_OK_CANCEL, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
     return result
 
@@ -1310,6 +1359,15 @@ def MsgBoxOKCancel(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=Non
 # Returns True if Yes was pressed else False         #
 # ===================================================#
 def MsgBoxYesNo(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=None, Font=None):
+    '''
+    Display MsgBox with 2 buttons, "Yes" and "No"
+    :param args:
+    :param ButtonColor:
+    :param AutoClose:
+    :param AutoCloseDuration:
+    :param Font:
+    :return:
+    '''
     result = MsgBox(*args,ButtonType=MSG_BOX_YES_NO, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
     return result
 

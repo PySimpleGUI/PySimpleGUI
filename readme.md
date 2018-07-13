@@ -21,21 +21,25 @@ You can add a GUI to your command line with a single line of code.  With 3 or 4 
  The customization is via the form/dialog box builder that enables users to experience all of the normal GUI widgets without having to write a lot of code.
 
 
-> Features of PySimpleGUI include:
->     Text
->     Single Line Input
->     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form
->     Checkboxes
->     Radio Buttons
->     Icons
->     Multi-line Text Input
->     Scroll-able Output
->     Progress Bar
->     Async/Non-Blocking Windows
->     Tabbed forms
->     Persistent Windows
->     Redirect Python Output/Errors to scrolling Window
->     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
+    Features of PySimpleGUI include:
+        Text
+        Single Line Input
+        Buttons including these types:
+            File Browse
+            Folder Browse
+            Non-closing return
+            Close form
+        Checkboxes
+        Radio Buttons
+        Icons
+        Multi-line Text Input
+        Scroll-able Output
+        Progress Bar
+        Async/Non-Blocking Windows
+        Tabbed forms
+        Persistent Windows
+        Redirect Python Output/Errors to scrolling Window
+        'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
 
 
 An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
@@ -198,6 +202,19 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
                       Size=DEFAULT_PROGRESS_BAR_SIZE,
                       Scale=(None, None),
                       BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
+
+Here's the one-line Progress Meter in action!
+
+    for i in range(1,10000):
+        SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
+
+That line of code resulted in this window popping up and updating.
+![progress meter 5](https://user-images.githubusercontent.com/13696193/42696912-a5c958b8-8687-11e8-9a7d-a390a465407a.jpg)
+
+A meter AND fun statistics to watch while your machine grinds away, all for the price of 1 line of code.
+With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`.
+
+    if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'): break
 
 # Custom Form API Calls
 
@@ -478,7 +495,8 @@ A MikeTheWatchGuy production... entirely responsible for this code
 
 ## Versioning
 
-1.0.9 - July 10, 2018 - Initial Release
+1.0.9  -   July 10, 2018 - Initial Release
+1.0.21 - July 13, 2018 - Readme updates
 
   ## Code Condition
 > Make it run
@@ -497,8 +515,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
-
-
-
-
-
