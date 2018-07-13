@@ -19,7 +19,7 @@ def SourceDestFolders():
 
 def Everything():
     with g.FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(40,1)) as form:
-        layout = [[g.Text('All graphic widgets in one form!', Size=(30,1), Font=("Helvetica", 25))],
+        layout = [[g.Text('All graphic widgets in one form!', Size=(30,1), Font=("Helvetica", 25), TextColor='blue')],
               [g.Text('Here is some text.... and a place to enter text')],
               [g.InputText()],
               [g.Checkbox('My first checkbox!'), g.Checkbox('My second checkbox!', Default=True)],
@@ -30,7 +30,7 @@ def Everything():
               [g.Text('Choose Source and Destination Folders', Size=(35,1))],
               [g.Text('Source Folder', Size=(15, 1), AutoSizeText=False), g.InputText('Source'), g.FolderBrowse()],
               [g.Text('Destination Folder', Size=(15, 1), AutoSizeText=False), g.InputText('Dest'), g.FolderBrowse()],
-              [g.SimpleButton('Your very own button')],
+              [g.SimpleButton('Your very own button', ButtonColor=('white', 'green'))],
               [g.Submit(), g.Cancel()]]
 
         (button, (values)) = form.LayoutAndShow(layout)
