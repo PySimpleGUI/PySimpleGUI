@@ -7,7 +7,7 @@ This really is a simple GUI, but also powerfully customizable.
 
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??    
 
-With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a much more pleasant experience than opening a dos Window.
+With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
   
 Python itself doesn't have a simple GUI solution... nor did the *many* GUI packages I tried.  Most tried to do TOO MUCH, making it impossible for users to get started quickly.  Others were just plain broken, requiring multiple files or other packages that were missing.
   
@@ -329,8 +329,12 @@ Let's go through the options available when creating a form.
 #### Sizes
 Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
 
+The default Element size for PySimpleGUI is `(45,1)`.
+
 Sizes can be set at the element level, or in this case, the size variables apply to all elements in the form.  Setting `Size=(20,1)` in the form creation call will set all elements in the form to that size.
+
 In addition to `size` there is a `scale` option.  Scale will take the Element's size and scale it up or down depending on the scale value.  `scale=(1,1)` doesn't change the Element's size.  `scale=(2,1)` will set the Element's size to be twice as wide as the size setting.
+
 
 #### FlexForm - form-level variables overview
 A summary of the variables that can be changed when a FlexForm is created
@@ -347,9 +351,96 @@ A summary of the variables that can be changed when a FlexForm is created
 >         AutoCloseDuration - how long in seconds before closing form
 >         Icon - filename for icon that's displayed on the window on taskbar
 
-## Built With  
-  
-  
+
+## Elements
+"Elements" are the building blocks used to create forms.  Some GUI APIs use the term Widget to describe these graphic elements.
+
+>     Text  
+>     Single Line Input  
+>     Buttons including these types:      File Browse      Folder Browse      Non-closing return      Close form  
+>     Checkboxes  
+>     Radio Buttons  
+>     Multi-line Text Input  
+>     Scroll-able Output      
+>     Progress Bar  
+>     Async/Non-Blocking Windows  
+>     Tabbed forms
+>     Persistent Windows  
+>     Redirect Python Output/Errors to scrolling Window  
+>     'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
+
+
+### Output Elements
+Building a form is simply making lists of Elements.  Each list is a row in the overall GUI dialog box.  The definition looks something like this:
+
+    layout = [ [row 1 element, row 1 element],
+               [row 2 element, row 2 element, row 2 element] ]
+The code is a crude representation of the GUI, laid out in text.
+####  Text Element
+
+    layout = [[SG.Text('This is what a Text Element looks like')]]   
+
+ 
+ ![textelem](https://user-images.githubusercontent.com/13696193/42670173-4c1fcb40-8627-11e8-851a-5a9ee4672320.jpg)
+
+
+The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
+
+    Text(Text, 
+        Scale=(None, None),
+        Size=(None, None),
+        AutoSizeText=None,
+        Font=None,
+        TextColor=None)
+
+Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.
+
+**Fonts** in PySimpleGUI are always in this format:
+
+    (font_name, point_size)
+
+The default font setting is
+
+    ("Helvetica", 10)
+
+**Colos** in PySimpleGUI are always in this format:
+
+    (foreground, background)
+
+The values foreground and background can be the color names or the hex value formatted as a string:
+
+    "#RRGGBB"
+
+####  Multiline Text Element
+
+    layout = [[SG.Multiline('This is what a Multi-line Text Element looks like', Size=(45,5))]]
+![multiline text](https://user-images.githubusercontent.com/13696193/42670464-0824c754-8629-11e8-9741-6ed08f924618.jpg)
+This Element doubles as both an input and output Element.  The `DefaultText` optional parameter is used to indicate what to output to the window.
+
+    Multiline(DefaultText='',
+			  EnterSubmits = False,
+			  Scale=(None, None),
+              Size=(None, None),
+		      AutoSizeText=None)
+
+> DefaultText - Text to display in the text box
+>EnterSubmits - Bool. If True, pressing Enter key submits form
+>Scale - Element's scale
+>Size - Element's size
+>AutoSizeText - Bool. Change width to match size of text
+
+###  Input Elements
+  These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `Size` is specified in the Element).
+#### Text Input Element
+
+    layout = [[SG.InputText('Default text')]]
+![inputtext](https://user-images.githubusercontent.com/13696193/42693515-610a716c-867d-11e8-9a00-7e7fcf771230.jpg)
+
+      def InputText(DefaultText = '',
+                    Scale=(None, None),
+                    Size=(None, None),
+                    AutoSizeText=None)
+
 ## Contributing  
   
 A MikeTheWatchGuy production... entirely responsible for this code  
@@ -369,3 +460,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments  
   
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+
+
+
