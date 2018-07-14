@@ -243,7 +243,7 @@ class Checkbox(Element):
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, Values, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None, InitialValue=None):
+    def __init__(self, Values, InitialValue=None, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None):
         self.Values = Values
         self.DefaultValue = InitialValue
         self.TKSpinBox = None
@@ -288,6 +288,7 @@ class Text(Element):
         self.DisplayText = Text
         self.TextColor = TextColor if TextColor else 'black'
         # self.Font = Font if Font else DEFAULT_FONT
+        # i=1/0
         super().__init__(TEXT, Scale, Size, AutoSizeText, Font=Font if Font else DEFAULT_FONT)
         return
 
@@ -409,12 +410,12 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, ButtonType=CLOSES_WIN, Target=(None, None), Text ='', FileTypes=(("ALL Files", "*.*"),), Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
+    def __init__(self, ButtonType=CLOSES_WIN, Target=(None, None), ButtonText='', FileTypes=(("ALL Files", "*.*"),), Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
         self.BType = ButtonType
         self.FileTypes = FileTypes
         self.TKButton = None
         self.Target = Target
-        self.Text = Text
+        self.ButtonText = ButtonText
         self.ButtonColor = ButtonColor if ButtonColor else DEFAULT_BUTTON_COLOR
         self.UserData = None
         super().__init__(BUTTON, Scale, Size, AutoSizeText, Font=Font)
@@ -432,6 +433,8 @@ class Button(Element):
                 target[1] = self.Position[1] + target[1]
         strvar = None
         if target[0] != None:
+            if target[0] < 0:
+                target = [self.Position[0] + target[0], target[1]]
             target_element = self.ParentForm.GetElementAtLocation(target)
             try:
                 strvar = target_element.TKStringVar
@@ -751,46 +754,46 @@ def T(DisplayText, Scale=(None, None), Size=(None, None), AutoSizeText=None, Fon
     return Text(DisplayText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, Font=Font, TextColor=TextColor)
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(Target=(ThisRow, -1), DisplayText='Browse', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(BROWSE_FOLDER, Target=Target, Text=DisplayText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def FolderBrowse(Target=(ThisRow, -1), ButtonText='Browse', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
+    return Button(BROWSE_FOLDER, Target=Target, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(Target=(ThisRow, -1), FileTypes=(("ALL Files", "*.*"),),ButtonText='Browse',Scale=(None, None),Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(BROWSE_FILE, Target, Text=ButtonText, FileTypes=FileTypes, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+    return Button(BROWSE_FILE, Target, ButtonText=ButtonText, FileTypes=FileTypes, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(ButtonText='Submit', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, Text=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(ButtonText='OK', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, Text=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(ButtonText='Ok', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, Text=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(ButtonText='Cancel', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
-    return Button(CLOSES_WIN, Text=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
+    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(ButtonText='Yes', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, Text=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(ButtonText='No', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, Text=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def SimpleButton(Text, Scale=(None, None),Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
-    return Button(CLOSES_WIN, Text=Text, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
+def SimpleButton(ButtonText, Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
+    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
 def ReadFormButton(ButtonText, Scale=(None, None),Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
-    return Button(READ_FORM, Text=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
+    return Button(READ_FORM, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
 
 #------------------------------------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  ------- #
@@ -875,7 +878,7 @@ def BuildResults(form):
                 input_values.append(value)
             elif element.Type == BUTTON:
                 if results[row_num][col_num] is True:
-                    button_pressed_text = element.Text
+                    button_pressed_text = element.ButtonText
                     results[row_num][col_num] = False
             elif element.Type == INPUT_COMBO:
                 value=element.TKStringVar.get()
@@ -979,7 +982,7 @@ def ConvertFlexToTK(MyFlexForm):
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == BUTTON:
                 element.Location = (row_num, col_num)
-                btext = element.Text
+                btext = element.ButtonText
                 btype = element.BType
                 if auto_size_text is False: width=element_size[0]
                 else: width = 0
