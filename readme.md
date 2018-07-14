@@ -451,6 +451,9 @@ The values foreground and background can be the color names or the hex value for
 **AutoSizeText**
 A `True` value for `AutoSizeText`, when placed on any Element, indicates that the width of the Element should be shrunk do the width of the text.  This is particularly useful with `Buttons` as fixed-width buttons are somewhat crude looking.  The default value is `False`.  You will often see this setting on FlexForm definitions.
 
+**Shorthand functions**
+The shorthand functions for `Text` are `Txt` and `T`
+
 
 ####  Multiline Text Element
 
@@ -463,7 +466,6 @@ This Element doubles as both an input and output Element.  The `DefaultText` opt
 			  Scale=(None, None),
               Size=(None, None),
 		      AutoSizeText=None)
-
 .
 
     DefaultText - Text to display in the text box
@@ -552,11 +554,135 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
      Font - Font type and size for text display
 
 
-
-
 #### Checkbox Element
+Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
+
+    layout =  [[SG.Checkbox('My first Checkbox!', Default=True), SG.Checkbox('My second Checkbox!')]]
+
+![checkbox element](https://user-images.githubusercontent.com/13696193/42717015-655d73d2-86cc-11e8-9c69-3c810f48e578.jpg)
+
+
+    Checkbox(Text,
+             Default=False,
+             Scale=(None, None),
+             Size=(None, None),
+             AutoSizeText=None,
+             Font=None):
+.
+
+     Text - Text to display next to checkbox
+     Default - Bool.  Initial state
+     Scale - Amount to scale size of element
+     Size - (width, height) size of element in characters
+     AutoSizeText - Bool.  True if should size width to fit text
+     Font - Font type and size for text display
+
+
 #### Spin Element
+An up/down spinner control.  The valid values are passed in as a list.
+
+    layout =  [[SG.Spin([i for i in range(1,11)], InitialValue=1), SG.Text('Volume level')]]
+
+![spin element](https://user-images.githubusercontent.com/13696193/42717231-8ddb51d4-86cd-11e8-827a-75f2237477fa.jpg)
+
+    Spin(Values,
+         InitialValue=None,
+         Scale=(None, None),
+         Size=(None, None),
+         AutoSizeText=None,
+         Font=None)
+.
+
+     Values - List of valid values
+     InitialValue - String with initial value
+     Scale - Amount to scale size of element
+     Size - (width, height) size of element in characters
+     AutoSizeText - Bool.  True if should size width to fit text
+     Font - Font type and size for text display
+
 #### Button Element
+Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it but Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
+
+The Types of buttons include:
+* Folder Browse
+* File Browse
+* Close Form
+* Read Form
+
+
+ Close Form - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close Form" buttons.  They cause the input values to be read and then the form is closed, returning the values to the caller.
+
+Folder Browse - When clicked a folder browse dialog box is opened.  The results of the Folder Browse dialog box are written into one of the input fields of the form.
+
+File Browse - Same as the Folder Browse except rather than choosing a folder, a single file is chosen.
+
+Read Form - This is an async form button that will read a snapshot of all of the input fields, but does not close the form after it's clicked.
+
+While it's possible to build forms using the Button Element directly, you should never need to do that.  There are pre-made buttons and shortcuts that will make life much easier.  The most basic Button element call to use is `SimpleButton`
+
+    SimpleButton(Text,
+                 Scale=(None, None),
+                 Size=(None, None),
+                 AutoSizeText=None,
+                 ButtonColor=None,
+                 Font=None)
+
+Pre-made buttons include:
+
+    OK
+    Ok
+    Submit
+    Cancel
+    Yes
+    No
+    FileBrowse
+    FolderBrowse
+'
+    layout =  [[SG.OK(), SG.Cancel()]]
+
+![ok cancel](https://user-images.githubusercontent.com/13696193/42717733-1803f584-86d1-11e8-9223-36b782971b9f.jpg)
+
+The FileBrowse and FolderBrowse buttons both fill-in values into a text input field somewhere on the form.  The location of the TextInput element is specified by the `Target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
+
+The default value for `Target` is `(ThisRow, -1)`.   ThisRow is a special value that tells the GUI to use the same row as the button.  The Y-value of -1 means the field one value to the left of the button.  For a File or Folder Browse button, the field that it fills are generally to the left of the button is most cases.
+
+Let's examine this form as an example:
+
+![button target example](https://user-images.githubusercontent.com/13696193/42718075-b4dcb61e-86d3-11e8-904c-d709dd364108.jpg)
+
+The `InputText` element is located at (1,0)... row 1, column 0.  The `Browse` button is located at position (2,0).  The Target for the button could be any of these values:
+
+    Target = (1,0)
+    Target = (-1,0)
+The code for the entire form could be:
+
+    layout =  [[SG.T('Source Folder')],
+               [SG.In()],
+               [SG.FolderBrowse(Target=(-1,0)), SG.OK()]]
+
+**Custom Buttons**
+If you want to define your own button, you will generally do this with the Button Element `SimpleButton`.
+
+layout =  [[SG.SimpleButton('My Button')]]
+
+![singlebutton](https://user-images.githubusercontent.com/13696193/42718281-9453deca-86d5-11e8-83c7-4b6d33720858.jpg)
+
+All buttons can have their text changed by changing the `ButtonText` variable.
+
+**File Types**
+The `FileBrowse` button has an additional setting named `FileTypes`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
+
+    FileTypes=(("ALL Files", "*.*"),)
+
+This code produces a form where the Browse button only shows files of type .TXT
+
+    layout =  [[SG.In() ,SG.FileBrowse(FileTypes=(("Text Files", "*.txt"),))]]
+
+  ***The ENTER key***
+       The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.  Keep this in mind when designing forms.
+
+
+
 #### ProgressBar
 #### Output
 #### UberForm
@@ -588,6 +714,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
-
-
-
