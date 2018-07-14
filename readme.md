@@ -637,7 +637,7 @@ Pre-made buttons include:
     No
     FileBrowse
     FolderBrowse
-'
+.
     layout =  [[SG.OK(), SG.Cancel()]]
 
 ![ok cancel](https://user-images.githubusercontent.com/13696193/42717733-1803f584-86d1-11e8-9223-36b782971b9f.jpg)
@@ -681,11 +681,78 @@ This code produces a form where the Browse button only shows files of type .TXT
   ***The ENTER key***
        The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.  Keep this in mind when designing forms.
 
-
-
 #### ProgressBar
+The `ProgressBar` element is used to build custom Progress Bar forms.  It is HIGHLY recommended that you use the functions that provide a complete progress meter solution for you.  Progress Meters are not easy to work with because the forms have to be non-blocking and they are tricky to debug.
+
+The "easiest" way to get progress meters into your code is to use the `EasyProgessMeter` API.  This consists of a pair of functions, `EasyProgessMeter` and `EasyProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
+You've already seen EasyProgressMeter calls presented earlier in this readme.
+
+    SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
+
+If you want a bit more customization of your meter, then you can go up 1 level and use the calls to `ProgressMeter` and `ProgressMeterUpdate`
+
+You setup the progress meter by calling
+
+    my_meter = ProgressMeter(Title,
+    					     MaxValue,
+    					     *args,
+    					     Orientation=None,
+    					     BarColor=DEFAULT_PROGRESS_BAR_COLOR,
+    					     ButtonColor=None,
+    					     Size=DEFAULT_PROGRESS_BAR_SIZE,
+    					     Scale=(None, None),
+    					     BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
+Then to update the bar within your loop
+
+    return_code = ProgressMeterUpdate(my_meter,
+                                     Value,
+                                     *args):
+Putting it all together you get this design pattern
+
+    my_meter = SG.ProgressMeter('Meter Title', 100000, Orientation='Vert')
+
+    for i in range(0, 100000):
+        SG.ProgressMeterUpdate(my_meter, i+1, 'Some variable', 'Another variable')
+
+The final way of using a Progress Meter with PySimpleGUI is to build a custom form with a `ProgressBar` Element in the form.  You will need to run your form as a non-blocking form.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
+
+
 #### Output
-#### UberForm
+The Output Element is a re-direction of Stdout.  Anything "printed" will be displayed in this element.
+
+    Output(Scale=(None, None),
+           Size=(None, None))
+
+Here's a complete solution for a chat-window using an Async form with an Output Element
+
+    import PySimpleGUI as g
+
+    with g.FlexForm('Chat Window', AutoSizeText=True, DefaultElementSize=(30, 2)) as form:
+        form.AddRow(g.Text('This is where standard out is being routed', Size=[40,1]))
+        form.AddRow(g.Output(Size=(80, 20)))
+        form.AddRow(g.Multiline(Size=(70, 5), EnterSubmits=True), g.ReadFormButton('SEND', ButtonColor=(g.YELLOWS[0], g.BLUES[0])), g.SimpleButton('EXIT', ButtonColor=(g.YELLOWS[0], g.GREENS[0])))
+
+        # ---===--- Loop taking in user input and printing it --- #
+      while True:
+            (button, value) = form.Read()
+            if button == 'SEND':
+                print(value)
+            else:
+                print('Exiting the form now')
+                break
+
+
+#### Tabbed Forms
+Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
+
+     results = ShowTabbedForm('Title for the form',
+                              (form,layout,'Tab 1 label'),
+                              (form2,layout2, 'Tab 2 label'))
+
+Each of the tabs of the form is in fact a form.  The same steps are taken to create the form as before.  A `FlexForm` is created, then rows are filled with Elements, and finally the form is shown.  When calling `ShowTabbedForm`, each form is passed in as a tuple.  The tuple has  the format:  `(the form, the rows, a label shown on the tab)`
+
+## Asynchronous (Non-Blocking) Forms
+
 
 ## Contributing
 
@@ -714,3 +781,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+
+
