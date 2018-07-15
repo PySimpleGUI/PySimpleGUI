@@ -66,6 +66,25 @@ def HashManuallyBuiltGUI():
     else:
         SG.MsgBoxError('Display A Hash in PySimpleGUI', '* Cancelled *')
 
+def HashManuallyBuiltGUINonContext():
+    # -------  Form design ------- #
+    form = SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True)
+    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+                     [SG.InputText(), SG.FileBrowse()],
+                     [SG.Submit(), SG.Cancel()]]
+    (button, (source_filename, )) = form.LayoutAndShow(form_rows)
+
+    if button == 'Submit':
+        if source_filename != '':
+            hash_sha1 = compute_sha1_hash_for_file(source_filename).upper()
+            hash_sha256 = compute_sha256_hash_for_file(source_filename).upper()
+            SG.MsgBox( 'Display A Hash in PySimpleGUI', 'The SHA-1 Hash for the file\n', source_filename, hash_sha1, 'SHA-256 is', hash_sha256, LineWidth=75)
+        else: SG.MsgBoxError('Display A Hash in PySimpleGUI', 'Illegal filename')
+    else:
+        SG.MsgBoxError('Display A Hash in PySimpleGUI', '* Cancelled *')
+
+
+
 
 # ---------------------------------------------------------------------- #
 #   Compute and display SHA1 hash                                        #
@@ -80,7 +99,7 @@ def HashMostCompactGUI():
 
     # -------  OUTPUT GUI results portion  ------- #
     if rc == True:
-        hash = compute_sha1_hash_for_file(source_filename).upper()
+        hash = compute_sha1_hash_for_file(source_filename)
         SG.MsgBox('Display Hash - Compact GUI', 'The SHA-1 Hash for the file\n', source_filename, hash)
     else:
         SG.MsgBox('Display Hash - Compact GUI', '* Cancelled *')
@@ -90,8 +109,9 @@ def HashMostCompactGUI():
 #  Our main calls two GUIs that act identically but use different calls  #
 # ---------------------------------------------------------------------- #
 def main():
-    # HashMostCompactGUI()
-    HashManuallyBuiltGUI()
+    HashManuallyBuiltGUINonContext()
+    HashMostCompactGUI()
+
 
 # ====____====____==== Pseudo-MAIN program ====____====____==== #
 # This is our main-alike piece of code                          #

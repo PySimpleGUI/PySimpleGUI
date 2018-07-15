@@ -18,7 +18,7 @@ DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in
 DEFAULT_AUTOSIZE_TEXT = False
 DEFAULT_FONT = ("Helvetica", 10)
 
-DEFAULT_BORDER_WIDTH = 7
+DEFAULT_BORDER_WIDTH = 6
 DEFAULT_AUTOCLOSE_TIME = 3              # time in seconds to show an autoclose form
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 #################### COLOR STUFF ####################
@@ -973,11 +973,13 @@ def ConvertFlexToTK(MyFlexForm):
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 stringvar.set(display_text)
+                if auto_size_text:
+                    width = 0
                 tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, textvariable=stringvar, width=width, height=height, justify=tk.LEFT, bd=border_depth, fg=element.TextColor)
                 # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure( anchor=tk.NW, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
+                tktext_label.configure(anchor=tk.NW, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
                 tktext_label.pack(side=tk.LEFT)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == BUTTON:
@@ -1240,20 +1242,23 @@ def MsgBox(*args, ButtonColor=None, ButtonType=MSG_BOX_OK,  AutoClose=False, Aut
         args_to_print = ['']
     else:
         args_to_print = args
-    with FlexForm(args_to_print[0], AutoSizeText=True,  ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Icon=Icon, Font=Font) as form:
+    with FlexForm(args_to_print[0], AutoSizeText=True, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Icon=Icon, Font=Font) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
             # if not isinstance(message, str): message = str(message)
             message = str(message)
-            message_wrapped = textwrap.fill(message, LineWidth)
+            if message.count('\n'):
+                message_wrapped = message
+            else:
+                message_wrapped = textwrap.fill(message, LineWidth)
             message_wrapped_lines = message_wrapped.count('\n')+1
             longest_line_len = max([len(l) for l in message.split('\n')])
             width_used = min(longest_line_len, LineWidth)
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
-            form.AddRow(Text(message_wrapped, Size=(width_used, height), AutoSizeText=True),)
+            form.AddRow(Text(message_wrapped, AutoSizeText=True))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
