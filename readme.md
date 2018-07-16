@@ -1,6 +1,8 @@
 
 # PySimpleGUI
 
+[note - if you are using version 1.x, you'll need to change all of your options variables in the SDK calls so that they are lower case.  Sorry for this change, but this change was required]
+
 This really is a simple GUI, but also powerfully customizable.
 
 ![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
