@@ -777,6 +777,10 @@ def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_text=N
 def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
     return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
 
+# -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
+def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
+
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
     return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
@@ -792,8 +796,8 @@ def SimpleButton(button_text, scale=(None, None), size=(None, None), auto_size_t
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(button_text, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, Font=None):
-    return Button(READ_FORM, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=Font)
+def ReadFormButton(button_text, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    return Button(READ_FORM, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
 
 #------------------------------------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  ------- #
@@ -1302,17 +1306,17 @@ def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_durati
 # ==============================  MsgBoxError   =====#
 # Like MsgBox but presents RED BUTTONS               #
 # ===================================================#
-def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False, auto_close_duration=None, Font=None):
+def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False, auto_close_duration=None, font=None):
     '''
     Display a MsgBox with a red button
     :param args:
     :param button_color:
     :param auto_close:
     :param auto_close_duration:
-    :param Font:
+    :param font:
     :return:
     '''
-    MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=Font)
+    MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
 # ==============================  MsgBoxCancel  =====#
