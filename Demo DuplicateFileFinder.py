@@ -1,6 +1,5 @@
 import hashlib
 import os
-import win32clipboard
 import PySimpleGUI as gg
 
 
@@ -10,15 +9,13 @@ import PySimpleGUI as gg
 def FindDuplicatesFilesInFolder(path):
     shatab = []
     total = 0
-    small = (1024)
     small_count, dup_count, error_count = 0,0,0
     pngdir = path
     if not os.path.exists(path):
-        gg.MsgBox('De-Dupe', '** Folder doesn\'t exist***', path)
+        gg.MsgBox('Duplicate Finder', '** Folder doesn\'t exist***', path)
         return
     pngfiles = os.listdir(pngdir)
     total_files = len(pngfiles)
-    not_cancelled = True
     for idx, f in enumerate(pngfiles):
         if not gg.EasyProgressMeter('Counting Duplicates', idx+1, total_files, 'Counting Duplicate Files'):
             break
@@ -32,6 +29,7 @@ def FindDuplicatesFilesInFolder(path):
         m.update(x)
         f_sha = m.digest()
         if f_sha in shatab:
+            # uncomment next line to remove duplicate files
             # os.remove(fname)
             dup_count += 1
             continue
@@ -50,9 +48,9 @@ def FindDuplicatesFilesInFolder(path):
 if __name__ == '__main__':
 
     source_folder = None
-    rc, source_folder = gg.GetPathBox('DeDuplicate a Folder\'s image files', 'Enter path to folder you wish to find duplicates in')
+    rc, source_folder = gg.GetPathBox('Duplicate Finder - Count number of duplicate files', 'Enter path to folder you wish to find duplicates in')
     if rc is True and source_folder is not None:
         FindDuplicatesFilesInFolder(source_folder)
     else:
-        gg.MsgBox('Cancelling', '*** Cancelling ***')
+        gg.MsgBoxCancel('Cancelling', '*** Cancelling ***')
     exit(0)

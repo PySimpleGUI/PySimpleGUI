@@ -15,24 +15,21 @@ def HowDoI():
     :return: never returns
     '''
     # -------  Make a new FlexForm  ------- #
-    form = SG.FlexForm('How Do I ??', AutoSizeText=True, DefaultElementSize=(30, 2), Icon=DEFAULT_ICON)
-    form.AddRow(SG.Text('Ask and your answer will appear here....', Size=(40, 1)))
-    form.AddRow(SG.Output(Size=(90, 20)))
-    form.AddRow(SG.Multiline(Size=(90, 5), EnterSubmits=True),
-                SG.ReadFormButton('SEND', ButtonColor=(SG.YELLOWS[0], SG.BLUES[0])),
-                SG.SimpleButton('EXIT', ButtonColor=(SG.YELLOWS[0], SG.GREENS[0])))
+    form = SG.FlexForm('How Do I ??', auto_size_text=True, default_element_size=(30, 2), icon=DEFAULT_ICON)
+    form.AddRow(SG.Text('Ask and your answer will appear here....', size=(40, 1)))
+    form.AddRow(SG.Output(size=(90, 20)))
+    form.AddRow(SG.Multiline(size=(90, 5), enter_submits=True),
+                SG.ReadFormButton('SEND', button_color=(SG.YELLOWS[0], SG.BLUES[0])),
+                SG.SimpleButton('EXIT', button_color=(SG.YELLOWS[0], SG.GREENS[0])))
 
-    # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
+    # ---===--- Loop taking in user input and using it to query HowDoI --- #
     while True:
         (button, value) = form.Read()
         if button == 'SEND':
-            command = value[0][:-1]
-            QueryHowDoI(command)
+            QueryHowDoI(value[0][:-1])      # send string without carriage return on end
         else:
-            print(button, 'pressed')
-            break
+            break           # exit button clicked
 
-    print('Exiting the app now')
     exit(69)
 
 def QueryHowDoI(Query):

@@ -51,7 +51,7 @@ def compute_sha256_hash_for_file(filename):
 # ---------------------------------------------------------------------- #
 def HashManuallyBuiltGUI():
     # -------  Form design ------- #
-    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:
+    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
         form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [SG.InputText(), SG.FileBrowse()],
                      [SG.Submit(), SG.Cancel()]]
@@ -61,14 +61,14 @@ def HashManuallyBuiltGUI():
         if source_filename != '':
             hash_sha1 = compute_sha1_hash_for_file(source_filename).upper()
             hash_sha256 = compute_sha256_hash_for_file(source_filename).upper()
-            SG.MsgBox( 'Display A Hash in PySimpleGUI', 'The SHA-1 Hash for the file\n', source_filename, hash_sha1, 'SHA-256 is', hash_sha256, LineWidth=75)
+            SG.MsgBox( 'Display A Hash in PySimpleGUI', 'The SHA-1 Hash for the file\n', source_filename, hash_sha1, 'SHA-256 is', hash_sha256, line_width=75)
         else: SG.MsgBoxError('Display A Hash in PySimpleGUI', 'Illegal filename')
     else:
         SG.MsgBoxError('Display A Hash in PySimpleGUI', '* Cancelled *')
 
 def HashManuallyBuiltGUINonContext():
     # -------  Form design ------- #
-    form = SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True)
+    form = SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
     form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [SG.InputText(), SG.FileBrowse()],
                      [SG.Submit(), SG.Cancel()]]
@@ -78,7 +78,7 @@ def HashManuallyBuiltGUINonContext():
         if source_filename != '':
             hash_sha1 = compute_sha1_hash_for_file(source_filename).upper()
             hash_sha256 = compute_sha256_hash_for_file(source_filename).upper()
-            SG.MsgBox( 'Display A Hash in PySimpleGUI', 'The SHA-1 Hash for the file\n', source_filename, hash_sha1, 'SHA-256 is', hash_sha256, LineWidth=75)
+            SG.MsgBox( 'Display A Hash in PySimpleGUI', 'The SHA-1 Hash for the file\n', source_filename, hash_sha1, 'SHA-256 is', hash_sha256, line_width=75)
         else: SG.MsgBoxError('Display A Hash in PySimpleGUI', 'Illegal filename')
     else:
         SG.MsgBoxError('Display A Hash in PySimpleGUI', '* Cancelled *')

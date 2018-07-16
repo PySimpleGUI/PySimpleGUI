@@ -120,13 +120,13 @@ MSG_BOX_OK = 0
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    def __init__(self, Type, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None):
-        self.Size = Size
-        self.Type = Type
-        self.AutoSizeText = AutoSizeText
-        self.Scale = Scale
+    def __init__(self, type, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+        self.Size = size
+        self.Type = type
+        self.AutoSizeText = auto_size_text
+        self.Scale = scale
         self.Pad = DEFAULT_ELEMENT_PADDING
-        self.Font = Font
+        self.Font = font
 
         self.TKStringVar = None
         self.TKIntVar = None
@@ -161,9 +161,9 @@ class Element():
 # ---------------------------------------------------------------------- #
 class InputText(Element):
 
-    def __init__(self, DefaultText = '', Scale=(None, None), Size=(None, None), AutoSizeText=None):
-        self.DefaultText = DefaultText
-        super().__init__(INPUT_TEXT, Scale, Size, AutoSizeText)
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None):
+        self.DefaultText = default_text
+        super().__init__(INPUT_TEXT, scale, size, auto_size_text)
         return
 
     def ReturnKeyHandler(self, event):
@@ -183,10 +183,10 @@ class InputText(Element):
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
 
-    def __init__(self, Values, Scale=(None, None), Size=(None, None), AutoSizeText=None):
-        self.Values = Values
+    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None):
+        self.Values = values
         self.TKComboBox = None
-        super().__init__(INPUT_COMBO, Scale, Size, AutoSizeText)
+        super().__init__(INPUT_COMBO, scale, size, auto_size_text)
         return
 
     def __del__(self):
@@ -200,13 +200,13 @@ class InputCombo(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    def __init__(self, Text, GroupID, Default=False, Scale=(None, None), Size=(None, None), AutoSizeText=None,Font=None):
-        self.InitialState = Default
-        self.Text = Text
+    def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+        self.InitialState = default
+        self.Text = text
         self.TKRadio = None
-        self.GroupID = GroupID
+        self.GroupID = group_id
         self.Value = None
-        super().__init__(INPUT_RADIO, Scale, Size, AutoSizeText, Font)
+        super().__init__(INPUT_RADIO, scale, size, auto_size_text, font)
         return
 
     def __del__(self):
@@ -220,13 +220,13 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, Text, Default=False, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None):
-        self.Text = Text
-        self.InitialState = Default
+    def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+        self.Text = text
+        self.InitialState = default
         self.Value = None
         self.TKCheckbox = None
 
-        super().__init__(INPUT_CHECKBOX, Scale, Size, AutoSizeText, Font)
+        super().__init__(INPUT_CHECKBOX, scale, size, auto_size_text, font)
         return
 
     def __del__(self):
@@ -243,11 +243,11 @@ class Checkbox(Element):
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, Values, InitialValue=None, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None):
-        self.Values = Values
-        self.DefaultValue = InitialValue
+    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+        self.Values = values
+        self.DefaultValue = initial_value
         self.TKSpinBox = None
-        super().__init__(INPUT_SPIN, Scale, Size, AutoSizeText, Font=Font)
+        super().__init__(INPUT_SPIN, scale, size, auto_size_text, font=font)
         return
 
     def __del__(self):
@@ -261,10 +261,10 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, DefaultText='', EnterSubmits = False, Scale=(None, None), Size=(None, None), AutoSizeText=None):
-        self.DefaultText = DefaultText
-        self.EnterSubmits = EnterSubmits
-        super().__init__(INPUT_MULTILINE, Scale, Size, AutoSizeText)
+    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None):
+        self.DefaultText = default_text
+        self.EnterSubmits = enter_submits
+        super().__init__(INPUT_MULTILINE, scale, size, auto_size_text)
         return
 
     def ReturnKeyHandler(self, event):
@@ -284,12 +284,12 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, Text, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None, TextColor=None):
-        self.DisplayText = Text
-        self.TextColor = TextColor if TextColor else 'black'
+    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None):
+        self.DisplayText = text
+        self.TextColor = text_color if text_color else 'black'
         # self.Font = Font if Font else DEFAULT_FONT
         # i=1/0
-        super().__init__(TEXT, Scale, Size, AutoSizeText, Font=Font if Font else DEFAULT_FONT)
+        super().__init__(TEXT, scale, size, auto_size_text, font=font if font else DEFAULT_FONT)
         return
 
     def Update(self, NewValue):
@@ -307,41 +307,41 @@ class Text(Element):
 # ---------------------------------------------------------------------- #
 
 class TKProgressBar():
-    def __init__(self, root, Max, Length=400, Width=20, Highlightt=0, Relief='sunken', Borderwidth=4, Orientation='horizontal', BarColor=DEFAULT_PROGRESS_BAR_COLOR):
-        self.Length = Length
-        self.Width = Width
-        self.Max = Max
-        self.Orientation = Orientation
+    def __init__(self, root, max, length=400, width=20, highlightt=0, relief='sunken', border_width=4, orientation='horizontal', BarColor=DEFAULT_PROGRESS_BAR_COLOR):
+        self.Length = length
+        self.Width = width
+        self.Max = max
+        self.Orientation = orientation
         self.Count = None
         self.PriorCount = 0
-        if Orientation[0].lower() == 'h':
-            self.TKCanvas = tk.Canvas(root, width=Length, height=Width, highlightt=Highlightt, relief=Relief, borderwidth=Borderwidth)
-            self.TKRect = self.TKCanvas.create_rectangle(0, 0, -(Length * 1.5), Width * 1.5, fill=BarColor[0], tags='bar')
+        if orientation[0].lower() == 'h':
+            self.TKCanvas = tk.Canvas(root, width=length, height=width, highlightt=highlightt, relief=relief, borderwidth=border_width)
+            self.TKRect = self.TKCanvas.create_rectangle(0, 0, -(length * 1.5), width * 1.5, fill=BarColor[0], tags='bar')
             # self.canvas.pack(padx='10')
         else:
-            self.TKCanvas = tk.Canvas(root, width=Width, height=Length, highlightt=Highlightt, relief=Relief, borderwidth=Borderwidth)
-            self.TKRect = self.TKCanvas.create_rectangle(Width * 1.5, 2 * Length + 40, 0, Length * .5, fill=BarColor[0], tags='bar')
+            self.TKCanvas = tk.Canvas(root, width=width, height=length, highlightt=highlightt, relief=relief, borderwidth=border_width)
+            self.TKRect = self.TKCanvas.create_rectangle(width * 1.5, 2 * length + 40, 0, length * .5, fill=BarColor[0], tags='bar')
             # self.canvas.pack()
 
-    def Update(self,Count):
-        if Count > self.Max: return
+    def Update(self, count):
+        if count > self.Max: return
         if self.Orientation[0].lower() == 'h':
             try:
-                if Count != self.PriorCount:
-                    delta = Count - self.PriorCount
+                if count != self.PriorCount:
+                    delta = count - self.PriorCount
                     self.TKCanvas.move(self.TKRect, delta*(self.Length / self.Max), 0)
                 if 0: self.TKCanvas.update()
             except:
                 return False            # the window was closed by the user on us
         else:
             try:
-                if Count != self.PriorCount:
-                    delta = Count - self.PriorCount
+                if count != self.PriorCount:
+                    delta = count - self.PriorCount
                     self.TKCanvas.move(self.TKRect, 0, delta*(-self.Length / self.Max))
                 if 0: self.TKCanvas.update()
             except:
                 return False            # the window was closed by the user on us
-        self.PriorCount = Count
+        self.PriorCount = count
         return True
 
     def __del__(self):
@@ -395,9 +395,9 @@ in the text pane.'''
         sys.stdout = self.previous_stdout
 
 class Output(Element):
-    def __init__(self, Scale=(None, None), Size=(None, None)):
+    def __init__(self, scale=(None, None), size=(None, None)):
         self.TKOut = None
-        super().__init__(OUTPUT, Scale, Size)
+        super().__init__(OUTPUT, scale, size)
 
     def __del__(self):
         try:
@@ -410,15 +410,15 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, ButtonType=CLOSES_WIN, Target=(None, None), ButtonText='', FileTypes=(("ALL Files", "*.*"),), Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
-        self.BType = ButtonType
-        self.FileTypes = FileTypes
+    def __init__(self, button_type=CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+        self.BType = button_type
+        self.FileTypes = file_types
         self.TKButton = None
-        self.Target = Target
-        self.ButtonText = ButtonText
-        self.ButtonColor = ButtonColor if ButtonColor else DEFAULT_BUTTON_COLOR
+        self.Target = target
+        self.ButtonText = button_text
+        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.UserData = None
-        super().__init__(BUTTON, Scale, Size, AutoSizeText, Font=Font)
+        super().__init__(BUTTON, scale, size, auto_size_text, font=font)
         return
 
     # -------  Button Callback  ------- #
@@ -493,22 +493,22 @@ class Button(Element):
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
-    def __init__(self, MaxValue, Orientation=None, Target=(None,None), Scale=(None, None), Size=(None, None), AutoSizeText=None, BarColor=(None,None), Style=None, BorderWidth=None, Relief=None):
-        self.MaxValue = MaxValue
+    def __init__(self, max_value, orientation=None, target=(None, None), scale=(None, None), size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, broder_width=None, relief=None):
+        self.MaxValue = max_value
         self.TKProgressBar = None
         self.Cancelled = False
         self.NotRunning = True
-        self.Orientation = Orientation if Orientation else DEFAULT_METER_ORIENTATION
-        self.BarColor = BarColor
-        self.BarStyle = Style if Style else DEFAULT_PROGRESS_BAR_STYLE
-        self.Target = Target
-        self.BorderWidth = BorderWidth if BorderWidth else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
-        self.Relief = Relief if Relief else DEFAULT_PROGRESS_BAR_RELIEF
+        self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
+        self.BarColor = bar_color
+        self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
+        self.Target = target
+        self.BorderWidth = broder_width if broder_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+        self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(PROGRESS_BAR, Scale, Size, AutoSizeText)
+        super().__init__(PROGRESS_BAR, scale, size, auto_size_text)
         return
 
-    def UpdateBar(self, CurrentCount):
+    def UpdateBar(self, current_count):
         if self.ParentForm.TKrootDestroyed:
             return False
         target = self.Target
@@ -519,7 +519,7 @@ class ProgressBar(Element):
         # update the progress bar counter
         # self.TKProgressBar['value'] = self.CurrentValue
 
-        self.TKProgressBar.Update(CurrentCount)
+        self.TKProgressBar.Update(current_count)
         try:
             self.ParentForm.TKroot.update()
         except:
@@ -538,8 +538,8 @@ class ProgressBar(Element):
 #                       Row CLASS                                           #
 # ------------------------------------------------------------------------- #
 class Row():
-    def __init__(self, AutoSizeText = None):
-        self.AutoSizeText = AutoSizeText        # Setting to override the form's policy on autosizing.
+    def __init__(self, auto_size_text = None):
+        self.AutoSizeText = auto_size_text        # Setting to override the form's policy on autosizing.
         self.Elements = []              # List of Elements in this Rrow
         return
 
@@ -563,44 +563,44 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, DefaultElementSize=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), AutoSizeText=DEFAULT_AUTOSIZE_TEXT, Scale=(None, None),Size=(None, None), Location=(None, None), ButtonColor=None, Font=None, ProgressBarColor=(None,None), IsTabbedForm=False,BorderDepth=None, AutoClose=False, AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME, Icon=DEFAULT_WINDOW_ICON):
-        self.AutoSizeText = AutoSizeText
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=DEFAULT_AUTOSIZE_TEXT, scale=(None, None), size=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
+        self.AutoSizeText = auto_size_text
         self.Title = title
         self.Rows = []                     # a list of ELEMENTS for this row
-        self.DefaultElementSize = DefaultElementSize
-        self.Size = Size
-        self.Scale = Scale
-        self.Location = Location
-        self.ButtonColor = ButtonColor if ButtonColor else DEFAULT_BUTTON_COLOR
-        self.IsTabbedForm = IsTabbedForm
+        self.DefaultElementSize = default_element_size
+        self.Size = size
+        self.Scale = scale
+        self.Location = location
+        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.IsTabbedForm = is_tabbed_form
         self.ParentWindow = None
-        self.Font = Font if Font else DEFAULT_FONT
+        self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
-        self.BorderDepth = BorderDepth
-        self.WindowIcon = Icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
-        self.AutoClose = AutoClose
+        self.BorderDepth = border_depth
+        self.WindowIcon = icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
+        self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
         self.TKrootDestroyed = False
         self.TKAfterID = None
-        self.ProgressBarColor = ProgressBarColor
-        self.AutoCloseDuration = AutoCloseDuration
+        self.ProgressBarColor = progress_bar_color
+        self.AutoCloseDuration = auto_close_duration
         self.UberParent = None
         self.RootNeedsDestroying = False
         self.Shown = False
         self.ReturnValues = None
 
     # ------------------------- Add ONE Row to Form ------------------------- #
-    def AddRow(self, *args,AutoSizeText=None):
+    def AddRow(self, *args, auto_size_text=None):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)               # number of existing rows is our row number
         CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = Row(AutoSizeText)                      # start with a blank row and build up
+        CurrentRow = Row(auto_size_text)                      # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
             CurrentRow.Elements.append(element)
-        CurrentRow.AutoSizeText = AutoSizeText
+        CurrentRow.AutoSizeText = auto_size_text
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
@@ -615,26 +615,26 @@ class FlexForm:
         return self.ReturnValues
 
     # ------------------------- ShowForm   THIS IS IT! ------------------------- #
-    def Show(self, NonBlocking=False):
+    def Show(self, non_blocking=False):
         self.Shown = True
         # Compute num rows & num cols (it'll come in handy debugging)
         self.NumRows = len(self.Rows)
         self.NumCols = max(len(row.Elements) for row in self.Rows)
-        self.NonBlocking=NonBlocking
+        self.NonBlocking=non_blocking
 
         # -=-=-=-=-=-=-=-=- RUN the GUI -=-=-=-=-=-=-=-=- ##
         StartupTK(self)
         return self.ReturnValues
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
-    def SetIcon(self, Icon):
-        self.WindowIcon = Icon
+    def SetIcon(self, icon):
+        self.WindowIcon = icon
         try:
-            self.TKroot.iconbitmap(Icon)
+            self.TKroot.iconbitmap(icon)
         except: pass
 
-    def GetElementAtLocation(self,Location):
-        (row_num,col_num) = Location
+    def GetElementAtLocation(self, location):
+        (row_num,col_num) = location
         row = self.Rows[row_num]
         element = row.Elements[col_num]
         return element
@@ -720,8 +720,8 @@ class UberForm():
         self.TKroot = None
         self.TKrootDestroyed = False
 
-    def AddForm(self, Form):
-        self.FormList.append(Form)
+    def AddForm(self, form):
+        self.FormList.append(form)
 
     def Close(self):
         self.FormReturnValues = []
@@ -740,60 +740,60 @@ class UberForm():
 # ====================================================================== #
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
-def In(DefaultText = '', Scale=(None, None), Size=(None, None), AutoSizeText=None):
-    return InputText(DefaultText=DefaultText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText)
+def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text)
 
-def Input(DefaultText = '', Scale=(None, None), Size=(None, None), AutoSizeText=None):
-    return InputText(DefaultText=DefaultText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText)
+def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text)
 
 # -------------------------  TEXT Element lazy functions  ------------------------- #
-def Txt(DisplayText, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None, TextColor=None):
-    return Text(DisplayText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, Font=Font, TextColor=TextColor)
+def Txt(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None):
+    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color)
 
-def T(DisplayText, Scale=(None, None), Size=(None, None), AutoSizeText=None, Font=None, TextColor=None):
-    return Text(DisplayText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, Font=Font, TextColor=TextColor)
+def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None):
+    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color)
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(Target=(ThisRow, -1), ButtonText='Browse', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(BROWSE_FOLDER, Target=Target, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
+    return Button(BROWSE_FOLDER, target=target, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse(Target=(ThisRow, -1), FileTypes=(("ALL Files", "*.*"),),ButtonText='Browse',Scale=(None, None),Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(BROWSE_FILE, Target, ButtonText=ButtonText, FileTypes=FileTypes, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
+    return Button(BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
-def Submit(ButtonText='Submit', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
-def OK(ButtonText='OK', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Ok(ButtonText='Ok', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
-def Cancel(ButtonText='Cancel', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
-    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
+def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Yes(ButtonText='Yes', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def No(ButtonText='No', Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None):
-    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor)
+def No(button_text='No', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def SimpleButton(ButtonText, Scale=(None, None), Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
-    return Button(CLOSES_WIN, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
+def SimpleButton(button_text, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(ButtonText, Scale=(None, None),Size=(None, None), AutoSizeText=None, ButtonColor=None, Font=None):
-    return Button(READ_FORM, ButtonText=ButtonText, Scale=Scale, Size=Size, AutoSizeText=AutoSizeText, ButtonColor=ButtonColor, Font=Font)
+def ReadFormButton(button_text, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, Font=None):
+    return Button(READ_FORM, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=Font)
 
 #------------------------------------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  ------- #
@@ -843,8 +843,8 @@ def DecodeRadioRowCol(RadValue):
     col = RadValue%1000
     return row,col
 
-def EncodeRadioRowCol(Row, Col):
-    RadValue = Row*1000 + Col
+def EncodeRadioRowCol(row, col):
+    RadValue = row * 1000 + col
     return RadValue
 
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
@@ -1066,7 +1066,7 @@ def ConvertFlexToTK(MyFlexForm):
                     bar_color = element.BarColor
                 else:
                     bar_color = DEFAULT_PROGRESS_BAR_COLOR
-                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, Orientation=direction, BarColor=bar_color, Borderwidth=element.BorderWidth, Relief=element.Relief)
+                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief)
                 s = ttk.Style()
                 element.TKProgressBar.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
@@ -1131,14 +1131,14 @@ def ConvertFlexToTK(MyFlexForm):
     return
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def ShowTabbedForm(Title, *args,AutoClose=False, AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME,FavIcon=DEFAULT_WINDOW_ICON):
+def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, fav_icon=DEFAULT_WINDOW_ICON):
     global _my_windows
 
     uber = UberForm()
     root = tk.Tk()
     uber.TKroot = root
-    if Title is not None:
-        root.title(Title)
+    if title is not None:
+        root.title(title)
     if not len(args):
         ('******************* SHOW TABBED FORMS ERROR .... no arguments')
         return
@@ -1160,8 +1160,8 @@ def ShowTabbedForm(Title, *args,AutoClose=False, AutoCloseDuration=DEFAULT_AUTOC
         uber.FormReturnValues.append(form.ReturnValues)
 
     # dangerous??  or clever? use the final form as a callback for autoclose
-    id = root.after(AutoCloseDuration*1000, form.AutoCloseAlarmCallback) if AutoClose else 0
-    icon = FavIcon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
+    id = root.after(auto_close_duration * 1000, form.AutoCloseAlarmCallback) if auto_close else 0
+    icon = fav_icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
     try: uber.TKroot.iconbitmap(icon)
     except: pass
 
@@ -1172,31 +1172,31 @@ def ShowTabbedForm(Title, *args,AutoClose=False, AutoCloseDuration=DEFAULT_AUTOC
     return uber.FormReturnValues
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def StartupTK(MyFlexForm):
+def StartupTK(my_flex_form):
     global _my_windows
 
     ow = _my_windows.NumOpenWindows
     root = tk.Tk() if not ow else tk.Toplevel()
     _my_windows.NumOpenWindows += 1
 
-    MyFlexForm.TKroot = root
+    my_flex_form.TKroot = root
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
-    ConvertFlexToTK(MyFlexForm)
-    MyFlexForm.SetIcon(MyFlexForm.WindowIcon)
+    ConvertFlexToTK(my_flex_form)
+    my_flex_form.SetIcon(my_flex_form.WindowIcon)
 
-    if MyFlexForm.AutoClose:
-        duration = DEFAULT_AUTOCLOSE_TIME if MyFlexForm.AutoCloseDuration is None else MyFlexForm.AutoCloseDuration
-        MyFlexForm.TKAfterID = root.after(duration*1000, MyFlexForm.AutoCloseAlarmCallback)
-    if MyFlexForm.NonBlocking:
-        MyFlexForm.TKroot.protocol("WM_WINDOW_DESTROYED", MyFlexForm.OnClosingCallback())
+    if my_flex_form.AutoClose:
+        duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
+        my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form.AutoCloseAlarmCallback)
+    if my_flex_form.NonBlocking:
+        my_flex_form.TKroot.protocol("WM_WINDOW_DESTROYED", my_flex_form.OnClosingCallback())
         pass
     else:       # it's a blocking form
-        MyFlexForm.TKroot.mainloop()
+        my_flex_form.TKroot.mainloop()
         _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)       # decrement if not 0
-        if MyFlexForm.RootNeedsDestroying:
-            MyFlexForm.TKroot.destroy()
-            MyFlexForm.RootNeedsDestroying = False
+        if my_flex_form.RootNeedsDestroying:
+            my_flex_form.TKroot.destroy()
+            my_flex_form.RootNeedsDestroying = False
 
     return
 
@@ -1225,24 +1225,24 @@ def _GetNumLinesNeeded(text, max_line_width):
 # Exits via an OK button2 press                      #
 # Returns nothing                                    #
 # ===================================================#
-def MsgBox(*args, ButtonColor=None, ButtonType=MSG_BOX_OK,  AutoClose=False, AutoCloseDuration=None, Icon=DEFAULT_WINDOW_ICON, LineWidth=MESSAGE_BOX_LINE_WIDTH, Font=None):
+def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, icon=DEFAULT_WINDOW_ICON, line_width=MESSAGE_BOX_LINE_WIDTH, font=None):
     '''
     Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
-    :param ButtonColor:
-    :param ButtonType:
-    :param AutoClose:
-    :param AutoCloseDuration:
-    :param Icon:
-    :param LineWidth:
-    :param Font:
+    :param button_color:
+    :param button_type:
+    :param auto_close:
+    :param auto_close_duration:
+    :param icon:
+    :param line_width:
+    :param font:
     :return:
     '''
     if not args:
         args_to_print = ['']
     else:
         args_to_print = args
-    with FlexForm(args_to_print[0], AutoSizeText=True, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Icon=Icon, Font=Font) as form:
+    with FlexForm(args_to_print[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -1251,32 +1251,33 @@ def MsgBox(*args, ButtonColor=None, ButtonType=MSG_BOX_OK,  AutoClose=False, Aut
             if message.count('\n'):
                 message_wrapped = message
             else:
-                message_wrapped = textwrap.fill(message, LineWidth)
+                message_wrapped = textwrap.fill(message, line_width)
             message_wrapped_lines = message_wrapped.count('\n')+1
             longest_line_len = max([len(l) for l in message.split('\n')])
-            width_used = min(longest_line_len, LineWidth)
+            width_used = min(longest_line_len, line_width)
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
-            form.AddRow(Text(message_wrapped, AutoSizeText=True))
+            form.AddRow(Text(message_wrapped, auto_size_text=True))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
         pad =1
         # show either an OK or Yes/No depending on paramater
-        if ButtonType is MSG_BOX_YES_NO:
-            form.AddRow(Text('', Size=(pad,1), AutoSizeText=False), Yes(ButtonColor=ButtonColor), No(ButtonColor=ButtonColor))
+        if button_type is MSG_BOX_YES_NO:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(button_color=button_color), No(
+                button_color=button_color))
             (button_text, values) = form.Show()
             return button_text == 'Yes'
-        elif ButtonType is MSG_BOX_CANCELLED:
-            form.AddRow(Text('', Size=(pad,1), AutoSizeText=False), SimpleButton('Cancelled', ButtonColor=ButtonColor))
-        elif ButtonType is MSG_BOX_ERROR:
-            form.AddRow(Text('', Size=(pad,1), AutoSizeText=False), SimpleButton('ERROR', Size=(5,1), ButtonColor=ButtonColor))
-        elif ButtonType is MSG_BOX_OK_CANCEL:
-            form.AddRow(Text('', Size=(pad,1), AutoSizeText=False), SimpleButton('OK', Size=(5,1), ButtonColor=ButtonColor),
-                        SimpleButton('Cancel', Size=(5, 1), ButtonColor=ButtonColor))
+        elif button_type is MSG_BOX_CANCELLED:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('Cancelled', button_color=button_color))
+        elif button_type is MSG_BOX_ERROR:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('ERROR', size=(5, 1), button_color=button_color))
+        elif button_type is MSG_BOX_OK_CANCEL:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color),
+                        SimpleButton('Cancel', size=(5, 1), button_color=button_color))
         else:
-            form.AddRow(Text('', Size=(pad,1), AutoSizeText=False), SimpleButton('OK', Size=(5,1), ButtonColor=ButtonColor))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color))
 
         button, values = form.Show()
     return button
@@ -1284,99 +1285,99 @@ def MsgBox(*args, ButtonColor=None, ButtonType=MSG_BOX_OK,  AutoClose=False, Aut
 # ==============================  MsgBoxAutoClose====#
 # Lazy function. Same as calling MsgBox with parms   #
 # ===================================================#
-def MsgBoxAutoClose(*args, ButtonColor=None,AutoClose=True, AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME, Font=None):
+def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, font=None):
     '''
     Display a standard MsgBox that will automatically close after a specified amount of time
     :param args:
-    :param ButtonColor:
-    :param AutoClose:
-    :param AutoCloseDuration:
-    :param Font:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
     :return:
     '''
-    MsgBox(*args, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
+    MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
 
 # ==============================  MsgBoxError   =====#
 # Like MsgBox but presents RED BUTTONS               #
 # ===================================================#
-def MsgBoxError(*args, ButtonColor=DEFAULT_ERROR_BUTTON_COLOR,AutoClose=False, AutoCloseDuration=None, Font=None):
+def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False, auto_close_duration=None, Font=None):
     '''
     Display a MsgBox with a red button
     :param args:
-    :param ButtonColor:
-    :param AutoClose:
-    :param AutoCloseDuration:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
     :param Font:
     :return:
     '''
-    MsgBox(*args, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
+    MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=Font)
     return
 
 # ==============================  MsgBoxCancel  =====#
 #                                                    #
 # ===================================================#
-def MsgBoxCancel(*args,ButtonColor=DEFAULT_CANCEL_BUTTON_COLOR,AutoClose=False, AutoCloseDuration=None, Font=None):
+def MsgBoxCancel(*args, button_color=DEFAULT_CANCEL_BUTTON_COLOR, auto_close=False, auto_close_duration=None, font=None):
     '''
     Display a MsgBox with a single "Cancel" button.
     :param args:
-    :param ButtonColor:
-    :param AutoClose:
-    :param AutoCloseDuration:
-    :param Font:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
     :return:
     '''
-    MsgBox(*args, ButtonType=MSG_BOX_CANCELLED, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
+    MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
 # ==============================  MsgBoxOK      =====#
 # Like MsgBox but only 1 button                      #
 # ===================================================#
-def MsgBoxOK(*args,ButtonColor=('white', 'black'),AutoClose=False, AutoCloseDuration=None, Font=None):
+def MsgBoxOK(*args, button_color=('white', 'black'), auto_close=False, auto_close_duration=None, font=None):
     '''
     Display a MsgBox with a single buttoned labelled "OK"
     :param args:
-    :param ButtonColor:
-    :param AutoClose:
-    :param AutoCloseDuration:
-    :param Font:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
     :return:
     '''
-    MsgBox(*args, ButtonType=MSG_BOX_OK, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
+    MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
 # ==============================  MsgBoxOKCancel ====#
 # Like MsgBox but presents OK and Cancel buttons     #
 # ===================================================#
-def MsgBoxOKCancel(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=None, Font=None):
+def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
     '''
     Display MsgBox with 2 buttons, "OK" and "Cancel"
     :param args:
-    :param ButtonColor:
-    :param AutoClose:
-    :param AutoCloseDuration:
-    :param Font:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
     :return:
     '''
-    result = MsgBox(*args, ButtonType=MSG_BOX_OK_CANCEL, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
+    result = MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return result
 
 # ====================================  YesNoBox=====#
 # Like MsgBox but presents Yes and No buttons        #
 # Returns True if Yes was pressed else False         #
 # ===================================================#
-def MsgBoxYesNo(*args,ButtonColor=None,AutoClose=False, AutoCloseDuration=None, Font=None):
+def MsgBoxYesNo(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
     '''
     Display MsgBox with 2 buttons, "Yes" and "No"
     :param args:
-    :param ButtonColor:
-    :param AutoClose:
-    :param AutoCloseDuration:
-    :param Font:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
     :return:
     '''
-    result = MsgBox(*args,ButtonType=MSG_BOX_YES_NO, ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration, Font=Font)
+    result = MsgBox(*args, button_type=MSG_BOX_YES_NO, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return result
 
 # ==============================  PROGRESS METER ========================================== #
@@ -1400,52 +1401,52 @@ def ConvertArgsToSingleString(*args):
 
 # ============================== ProgressMeter  =====#
 # ===================================================#
-def ProgressMeter(Title, MaxValue, *args, Orientation=None, BarColor=DEFAULT_PROGRESS_BAR_COLOR, ButtonColor=None,Size=DEFAULT_PROGRESS_BAR_SIZE, Scale=(None, None), BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
+def ProgressMeter(title, max_value, *args, Orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
     '''
     Create and show a form on tbe caller's behalf.
-    :param Title:
-    :param MaxValue:
+    :param title:
+    :param max_value:
     :param args: ANY number of arguments the caller wants to display
     :param Orientation:
-    :param BarColor:
-    :param Size:
-    :param Scale:
+    :param bar_color:
+    :param size:
+    :param scale:
     :param Style:
     :param StyleOffset:
     :return: ProgressBar object that is in the form
     '''
     orientation = DEFAULT_METER_ORIENTATION if Orientation is None else Orientation
     target = (0,0) if orientation[0].lower() == 'h' else (0,1)
-    bar2 = ProgressBar(MaxValue, Orientation=orientation, Size=Size, BarColor=BarColor, Scale=Scale, Target=target, BorderWidth=BorderWidth)
-    form = FlexForm(Title, AutoSizeText=True)
+    bar2 = ProgressBar(max_value, orientation=orientation, size=size, bar_color=bar_color, scale=scale, target=target, broder_width=border_width)
+    form = FlexForm(title, auto_size_text=True)
 
     # Form using a horizontal bar
     if orientation[0].lower() == 'h':
         single_line_message, width, height = ConvertArgsToSingleString(*args)
         bar2.TextToDisplay = single_line_message
-        bar2.MaxValue = MaxValue
+        bar2.MaxValue = max_value
         bar2.CurrentValue = 0
-        form.AddRow(Text(single_line_message,Size=(width+20, height+3), AutoSizeText=True))
+        form.AddRow(Text(single_line_message, size=(width + 20, height + 3), auto_size_text=True))
         form.AddRow((bar2))
-        form.AddRow((Cancel(ButtonColor=ButtonColor)))
+        form.AddRow((Cancel(button_color=button_color)))
     else:
         single_line_message, width, height = ConvertArgsToSingleString(*args)
         bar2.TextToDisplay = single_line_message
-        bar2.MaxValue = MaxValue
+        bar2.MaxValue = max_value
         bar2.CurrentValue = 0
-        form.AddRow(bar2, Text(single_line_message,Size=(width+20, height+3), AutoSizeText=True))
-        form.AddRow((Cancel(ButtonColor=ButtonColor)))
+        form.AddRow(bar2, Text(single_line_message, size=(width + 20, height + 3), auto_size_text=True))
+        form.AddRow((Cancel(button_color=button_color)))
 
     form.NonBlocking = True
-    form.Show(NonBlocking = True)
+    form.Show(non_blocking= True)
     return bar2
 
 # ============================== ProgressMeterUpdate  =====#
-def ProgressMeterUpdate(bar, Value, *args):
+def ProgressMeterUpdate(bar, value, *args):
     '''
     Update the progress meter for a form
     :param form: class ProgressBar
-    :param Value: int
+    :param value: int
     :return: True if not cancelled, OK....False if Error
     '''
     global  _my_windows
@@ -1455,9 +1456,9 @@ def ProgressMeterUpdate(bar, Value, *args):
 
 
     bar.TextToDisplay = message
-    bar.CurrentValue = Value
-    rc = bar.UpdateBar(Value)
-    if Value >= bar.MaxValue or not rc:
+    bar.CurrentValue = value
+    rc = bar.UpdateBar(value)
+    if value >= bar.MaxValue or not rc:
         bar.BarExpired = True
         bar.ParentForm.Close()
     if bar.ParentForm.RootNeedsDestroying:
@@ -1474,12 +1475,12 @@ def ProgressMeterUpdate(bar, Value, *args):
 # ============================== EASY PROGRESS METER ========================================== #
 # class to hold the easy meter info (a global variable essentialy)
 class EasyProgressMeterDataClass():
-    def __init__(self, Title='', CurrentValue=1, MaxValue=10, StartTime=None, StatMessages=()):
-        self.Title = Title
-        self.CurrentValue = CurrentValue
-        self.MaxValue = MaxValue
-        self.StartTime = StartTime
-        self.StatMessages = StatMessages
+    def __init__(self, title='', current_value=1, max_value=10, start_time=None, stat_messages=()):
+        self.Title = title
+        self.CurrentValue = current_value
+        self.MaxValue = max_value
+        self.StartTime = start_time
+        self.StatMessages = stat_messages
         self.ParentForm = None
         self.MeterID = None
 
@@ -1514,18 +1515,18 @@ class EasyProgressMeterDataClass():
 
 
 # ============================== EasyProgressMeter  =====#
-def EasyProgressMeter(Title, CurrentValue, MaxValue,*args, Orientation=None, BarColor=DEFAULT_PROGRESS_BAR_COLOR, ButtonColor=None, Size=DEFAULT_PROGRESS_BAR_SIZE, Scale=(None, None),BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
+def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
     '''
     A ONE-LINE progress meter. Add to your code where ever you need a meter. No need for a second
     function call before your loop. You've got enough code to write!
-    :param Title: Title will be shown on the window
-    :param CurrentValue: Current count of your items
-    :param MaxValue: Max value your count will ever reach. This indicates it should be closed
+    :param title: Title will be shown on the window
+    :param current_value: Current count of your items
+    :param max_value: Max value your count will ever reach. This indicates it should be closed
     :param args:  VARIABLE number of arguements... you request it, we'll print it no matter what the item!
-    :param Orientation:
-    :param BarColor:
-    :param Size:
-    :param Scale:
+    :param orientation:
+    :param bar_color:
+    :param size:
+    :param scale:
     :param Style:
     :param StyleOffset:
     :return: False if should stop the meter
@@ -1536,34 +1537,34 @@ def EasyProgressMeter(Title, CurrentValue, MaxValue,*args, Orientation=None, Bar
     EasyProgressMeter.EasyProgressMeterData = getattr(EasyProgressMeter, 'EasyProgressMeterData', EasyProgressMeterDataClass())
     # if no meter currently running
     if EasyProgressMeter.EasyProgressMeterData.MeterID is None:           # Starting a new meter
-        if int(CurrentValue) >= int(MaxValue):
+        if int(current_value) >= int(max_value):
             return False
         del(EasyProgressMeter.EasyProgressMeterData)
-        EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass(Title, 1, int(MaxValue), datetime.datetime.utcnow(), [])
+        EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
         EasyProgressMeter.EasyProgressMeterData.ComputeProgressStats()
         message = "\n".join([line for line in EasyProgressMeter.EasyProgressMeterData.StatMessages])
-        EasyProgressMeter.EasyProgressMeterData.MeterID = ProgressMeter(Title, int(MaxValue), message, *args, Orientation=Orientation, BarColor=BarColor, Size=Size, Scale=Scale, ButtonColor=ButtonColor,BorderWidth=BorderWidth)
+        EasyProgressMeter.EasyProgressMeterData.MeterID = ProgressMeter(title, int(max_value), message, *args, Orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=border_width)
         EasyProgressMeter.EasyProgressMeterData.ParentForm = EasyProgressMeter.EasyProgressMeterData.MeterID.ParentForm
         return True
     # if exactly the same values as before, then ignore.
-    if EasyProgressMeter.EasyProgressMeterData.MaxValue == MaxValue and EasyProgressMeter.EasyProgressMeterData.CurrentValue == CurrentValue:
+    if EasyProgressMeter.EasyProgressMeterData.MaxValue == max_value and EasyProgressMeter.EasyProgressMeterData.CurrentValue == current_value:
         return True
-    if EasyProgressMeter.EasyProgressMeterData.MaxValue != int(MaxValue):
+    if EasyProgressMeter.EasyProgressMeterData.MaxValue != int(max_value):
         EasyProgressMeter.EasyProgressMeterData.MeterID = None
         EasyProgressMeter.EasyProgressMeterData.ParentForm = None
         del(EasyProgressMeter.EasyProgressMeterData)
         EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass()            # setup a new progress meter
         return True         # HAVE to return TRUE or else the new meter will thing IT is failing when it hasn't
-    EasyProgressMeter.EasyProgressMeterData.CurrentValue = int(CurrentValue)
-    EasyProgressMeter.EasyProgressMeterData.MaxValue = int(MaxValue)
+    EasyProgressMeter.EasyProgressMeterData.CurrentValue = int(current_value)
+    EasyProgressMeter.EasyProgressMeterData.MaxValue = int(max_value)
     EasyProgressMeter.EasyProgressMeterData.ComputeProgressStats()
     message = ''
     for line in EasyProgressMeter.EasyProgressMeterData.StatMessages:
         message = message + str(line) + '\n'
     message = "\n".join(EasyProgressMeter.EasyProgressMeterData.StatMessages)
-    rc = ProgressMeterUpdate(EasyProgressMeter.EasyProgressMeterData.MeterID, CurrentValue,*args, message  )
+    rc = ProgressMeterUpdate(EasyProgressMeter.EasyProgressMeterData.MeterID, current_value, *args, message)
     # if counter >= max then the progress meter is all done. Indicate none running
-    if CurrentValue >= EasyProgressMeter.EasyProgressMeterData.MaxValue or not rc:
+    if current_value >= EasyProgressMeter.EasyProgressMeterData.MaxValue or not rc:
         EasyProgressMeter.EasyProgressMeterData.MeterID = None
         del(EasyProgressMeter.EasyProgressMeterData)
         EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass()            # setup a new progress meter
@@ -1571,11 +1572,11 @@ def EasyProgressMeter(Title, CurrentValue, MaxValue,*args, Orientation=None, Bar
     return rc           # return whatever the update told us
 
 
-def EasyProgressMeterCancel(Title, *args):
+def EasyProgressMeterCancel(title, *args):
     EasyProgressMeter.EasyProgressMeterData = getattr(EasyProgressMeter, 'EasyProgressMeterData', EasyProgressMeterDataClass())
     if EasyProgressMeter.EasyProgressMeterData.MeterID is not None:
         # tell the normal meter update that we're at max value which will close the meter
-        rc = EasyProgressMeter(Title, EasyProgressMeter.EasyProgressMeterData.MaxValue, EasyProgressMeter.EasyProgressMeterData.MaxValue, ' *** CANCELLING ***', 'Caller requested a cancel', *args)
+        rc = EasyProgressMeter(title, EasyProgressMeter.EasyProgressMeterData.MaxValue, EasyProgressMeter.EasyProgressMeterData.MaxValue, ' *** CANCELLING ***', 'Caller requested a cancel', *args)
         return rc
     return True
 
@@ -1609,10 +1610,10 @@ def GetComplimentaryHex(color):
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def ScrolledTextBox(*args, ButtonColor=None, YesNo=False, AutoClose=False, AutoCloseDuration=None, Height=None):
+def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, height=None):
     if not args: return
-    with FlexForm(args[0], AutoSizeText=True,  ButtonColor=ButtonColor, AutoClose=AutoClose, AutoCloseDuration=AutoCloseDuration) as form:
-        max_line_total, max_line_width, total_lines, height = 0,0,0,0
+    with FlexForm(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration) as form:
+        max_line_total, max_line_width, total_lines, height_computed = 0,0,0,0
         complete_output = ''
         for message in args:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -1623,21 +1624,21 @@ def ScrolledTextBox(*args, ButtonColor=None, YesNo=False, AutoClose=False, AutoC
             max_line_total = max(max_line_total, width_used)
             max_line_width = MESSAGE_BOX_LINE_WIDTH
             lines_needed = _GetNumLinesNeeded(message, width_used)
-            height += lines_needed
+            height_computed += lines_needed
             complete_output += message + '\n'
             total_lines += lines_needed
-        height = MAX_SCROLLED_TEXT_BOX_HEIGHT if height > MAX_SCROLLED_TEXT_BOX_HEIGHT else height
-        if Height:
-            height = Height
-        form.AddRow(Multiline(complete_output, Size=(max_line_width, height)), AutoSizeText=True)
+        height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
+        if height:
+            height_computed = height
+        form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)), auto_size_text=True)
         pad = max_line_total-15 if max_line_total > 15 else 1
         # show either an OK or Yes/No depending on paramater
-        if YesNo:
-            form.AddRow(Text('', Size=(pad,1), AutoSizeText=False), Yes(), No())
+        if yes_no:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
             (button_text, values) = form.Show()
             return button_text == 'Yes'
         else:
-            form.AddRow(Text('', Size=(pad,1), AutoSizeText=False), SimpleButton('OK', Size=(5,1), ButtonColor=ButtonColor))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color))
         form.Show()
 
 
@@ -1652,10 +1653,10 @@ def ScrolledTextBox(*args, ButtonColor=None, YesNo=False, AutoClose=False, AutoC
 #    True/False, path                                                    #
 #     (True if Submit was pressed, false otherwise)                      #
 # ---------------------------------------------------------------------- #
-def GetPathBox(Title, Message, DefaultPath='', ButtonColor=None, Size=(None,None)):
-    with FlexForm(Title, AutoSizeText=True, ButtonColor=ButtonColor) as form:
-        layout = [[Text(Message,AutoSizeText=True)],
-                  [InputText(DefaultText=DefaultPath, Size=Size), FolderBrowse()],
+def GetPathBox(title, message, default_path='', button_color=None, size=(None, None)):
+    with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=default_path, size=size), FolderBrowse()],
                   [Submit(), Cancel()]]
 
         (button, input_values) = form.LayoutAndShow(layout)
@@ -1668,10 +1669,10 @@ def GetPathBox(Title, Message, DefaultPath='', ButtonColor=None, Size=(None,None
 # ============================== GetFileBox =========#
 # Like the Get folder box but for files              #
 # ===================================================#
-def GetFileBox(Title, Message, DefaultPath='',FileTypes=(("ALL Files", "*.*"),), ButtonColor=None, Size=(None,None)):
-    with FlexForm(Title, AutoSizeText=True, ButtonColor=ButtonColor) as form:
-        layout = [[Text(Message,AutoSizeText=True)],
-                  [InputText(DefaultText=DefaultPath, Size=Size), FileBrowse(FileTypes=FileTypes)],
+def GetFileBox(title, message, default_path='', file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
+    with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=default_path, size=size), FileBrowse(file_types=file_types)],
                   [Submit(), Cancel()]]
 
         (button, input_values) = form.LayoutAndShow(layout)
@@ -1685,10 +1686,10 @@ def GetFileBox(Title, Message, DefaultPath='',FileTypes=(("ALL Files", "*.*"),),
 # ============================== GetTextBox =========#
 # Get a single line of text                          #
 # ===================================================#
-def GetTextBox(Title, Message, Default='', ButtonColor=None, Size=(None, None)):
-    with FlexForm(Title, AutoSizeText=True, ButtonColor=ButtonColor) as form:
-        layout = [[Text(Message,AutoSizeText=True)],
-                  [InputText(DefaultText=Default, Size=Size)],
+def GetTextBox(title, message, Default='', button_color=None, size=(None, None)):
+    with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=Default, size=size)],
                   [Submit(), Cancel()]]
 
         (button, input_values) = form.LayoutAndShow(layout)
@@ -1701,21 +1702,21 @@ def GetTextBox(Title, Message, Default='', ButtonColor=None, Size=(None, None)):
 # ============================== SetGlobalIcon ======#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetGlobalIcon(Icon):
+def SetGlobalIcon(icon):
     global _my_windows
 
     try:
-        with open(Icon, 'r') as icon_file:
+        with open(icon, 'r') as icon_file:
             pass
     except:
         raise FileNotFoundError
 
-    _my_windows.user_defined_icon = Icon
+    _my_windows.user_defined_icon = icon
     return True
 
 
-# ============================== SetGlobalIcon ======#
-# Sets the icon to be used by default                #
+# ============================== SetButtonColor =====#
+# Sets the defaul button color                       #
 # ===================================================#
 def SetButtonColor(foreground, background):
     global DEFAULT_BUTTON_COLOR

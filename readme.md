@@ -1,69 +1,69 @@
 
-# PySimpleGUI  
-  
-This really is a simple GUI, but also powerfully customizable.  
+# PySimpleGUI
+
+This really is a simple GUI, but also powerfully customizable.
 
 ![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
 
-I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??    
+I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
-  
+
 Python itself doesn't have a simple GUI solution... nor did the *many* GUI packages I tried.  Most tried to do TOO MUCH, making it impossible for users to get started quickly.  Others were just plain broken, requiring multiple files or other packages that were missing.
-  
-The PySimpleGUI solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI. 
-  
+
+The PySimpleGUI solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.
+
 You can add a GUI to your command line with a single line of code.  With 3 or 4 lines of code you can add a fully customized GUI.  And for you Machine Learning folks out there, a **single line** progress meter call that you can drop into any loop.
 
 
 ![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
 
 
- The customization is via the form/dialog box builder that enables users to experience all of the normal GUI widgets without having to write a lot of code.  
-  
+ The customization is via the form/dialog box builder that enables users to experience all of the normal GUI widgets without having to write a lot of code.
 
-    Features of PySimpleGUI include:  
-        Text  
-        Single Line Input  
-        Buttons including these types:      
+
+    Features of PySimpleGUI include:
+        Text
+        Single Line Input
+        Buttons including these types:
             File Browse
             Folder Browse
             Non-closing return
-            Close form  
-        Checkboxes  
-        Radio Buttons  
-        Icons  
-        Multi-line Text Input  
-        Scroll-able Output      
-        Progress Bar  
-        Async/Non-Blocking Windows  
+            Close form
+        Checkboxes
+        Radio Buttons
+        Icons
+        Multi-line Text Input
+        Scroll-able Output
+        Progress Bar
+        Async/Non-Blocking Windows
         Tabbed forms
-        Persistent Windows  
-        Redirect Python Output/Errors to scrolling Window  
+        Persistent Windows
+        Redirect Python Output/Errors to scrolling Window
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
 
-  
+
 An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
 
 ![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
 
-  
-## Getting Started with PySimpleGUI  
-  
-### Installing  
-  
-    pip install PySimpleGUI  
- or  
-Simply download the file - PySimpleGUI.py and import it into your code  
-  
-  
-### Prerequisites  
-  
-Python 3  
-tkinter  
-  
-Should run on all Python platforms that have tkinter running on them.  Has been thoroughly tested on Windows.  While not tested elsewhere, should work on Linux, Mac, Pi, etc.  
-  
+
+## Getting Started with PySimpleGUI
+
+### Installing
+
+    pip install PySimpleGUI
+ or
+Simply download the file - PySimpleGUI.py and import it into your code
+
+
+### Prerequisites
+
+Python 3
+tkinter
+
+Should run on all Python platforms that have tkinter running on them.  Has been thoroughly tested on Windows.  While not tested elsewhere, should work on Linux, Mac, Pi, etc.
+
 ### Using
 
 To use in your code, simply import....
@@ -106,18 +106,18 @@ This feature of the Python language is utilized ***heavily*** as a method of cus
 Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't have to be specified on each and every call.
 
     def MsgBox(*args,
-               ButtonColor=None,
-               ButtonType=MSG_BOX_OK,
-               AutoClose=False,
-               AutoCloseDuration=None,
-               Icon=DEFAULT_WINDOW_ICON,
-               LineWidth=MESSAGE_BOX_LINE_WIDTH,
-               Font=None):
+               button_color=None,
+               button_type=MSG_BOX_OK,
+               auto_close=False,
+               auto_close_duration=None,
+               icon=DEFAULT_WINDOW_ICON,
+               line_width=MESSAGE_BOX_LINE_WIDTH,
+               font=None):
 
 If the caller wanted to change the button color to be black on yellow, the call would look something like this:
 
     SG.MsgBox('This box has a custom button color',
-              ButtonColor=('black', 'yellow'))
+              button_color=('black', 'yellow'))
 
 ![custombuttoncolor](https://user-images.githubusercontent.com/13696193/42599212-84f3fe2e-852c-11e8-8a60-4aad669a1fd6.jpg)
 
@@ -194,15 +194,15 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
 ![progress meter 3](https://user-images.githubusercontent.com/13696193/42696332-dca3ca6e-8685-11e8-846b-6bee8362ee5f.jpg)
 
     EasyProgressMeter(Title,
-                      CurrentValue,
-                      MaxValue,
+                      current_value,
+                      max_value,
                       *args,
-                      Orientation=None,
-                      BarColor=DEFAULT_PROGRESS_BAR_COLOR,
-                      ButtonColor=None,
-                      Size=DEFAULT_PROGRESS_BAR_SIZE,
-                      Scale=(None, None),
-                      BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
+                      orientation=None,
+                      bar_color=DEFAULT_PROGRESS_BAR_COLOR,
+                      button_color=None,
+                      size=DEFAULT_PROGRESS_BAR_SIZE,
+                      scale=(None, None),
+                      border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
 
 Here's the one-line Progress Meter in action!
 
@@ -226,7 +226,7 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
 
 ## COPY THIS DESIGN PATTERN!
 
-    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:
+    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
         form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [SG.InputText(), SG.FileBrowse()],
                      [SG.Submit(), SG.Cancel()]]
@@ -247,7 +247,7 @@ Some elements are shortcuts, again meant to make it easy on the programmer.  Rat
 
 Going through each line of code
 
-    with SG.FlexForm('SHA-1 & 256 Hash', AutoSizeText=True) as form:
+    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
 This creates a new form, storing it in the variable `form`.
 
         form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
@@ -285,20 +285,20 @@ If you have a SINGLE value being returned, it is written this way:
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
 
-    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:
-        layout = [[Text('Here they all are!', Size=(30,1), Font=("Helvetica", 25), TextColor='red')],
-                  [Text('Here is some text with font sizing', Font=("Helvetica", 15))],
+    with FlexForm('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as form:
+        layout = [[Text('Here they all are!', size=(30,1), font=("Helvetica", 25), text_color='red')],
+                  [Text('Here is some text with font sizing', font=("Helvetica", 15))],
                   [InputText()],
-                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', Default=True)],
-                  [Radio('My first Radio!', "RADIO1", Default=True), Radio('My second checkbox!', "RADIO1")],
-                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', Scale=(2, 10))],
-                  [InputCombo(['choice 1', 'choice 2'], Size=(20, 3))],
-                  [Text('_'  * 90, Size=(60, 1))],
-                  [Text('Choose Source and Destination Folders', Size=(35,1))],
-                  [Text('Source Folder', Size=(15, 1), AutoSizeText=False), InputText('Source'), FolderBrowse()],
-                  [Text('Destination Folder', Size=(15, 1), AutoSizeText=False), InputText('Dest'), FolderBrowse()],
+                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', default=True)],
+                  [Radio('My first Radio!', "RADIO1", default=True), Radio('My second checkbox!', "RADIO1")],
+                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', scale=(2, 10))],
+                  [InputCombo(['choice 1', 'choice 2'], size=(20, 3))],
+                  [Text('_'  * 90, size=(60, 1))],
+                  [Text('Choose Source and Destination Folders', size=(35,1))],
+                  [Text('Source Folder', size=(15, 1), auto_size_text=False), InputText('Source'), FolderBrowse()],
+                  [Text('Destination Folder', size=(15, 1), auto_size_text=False), InputText('Dest'), FolderBrowse()],
                   [SimpleButton('Your Button with any text you want')],
-                  [SimpleButton('Big Text', Size=(12,1), Font=("Helvetica", 20))],
+                  [SimpleButton('Big Text', size=(12,1), font=("Helvetica", 20))],
                   [Submit(), Cancel()]]
 
         (button, (values)) = form.LayoutAndShow(layout)
@@ -306,7 +306,7 @@ This code utilizes as many of the elements in one form as possible.
 
 
 
-        MsgBox('Results', 'You clicked {}'.format(button),'The values returned from form', values , Font = ("Helvetica", 15))
+        MsgBox('Results', 'You clicked {}'.format(button),'The values returned from form', values , font = ("Helvetica", 15))
 
 This is a somewhat complex form with quite a bit of custom sizing to make things line up well.  This is code you only have to write once.  When looking at the code, remember that what you're seeing is a list of lists.  Each row contains a list of Graphical Elements that are used to create the form.
 
@@ -336,27 +336,27 @@ You've already seen a number of examples above that use blocking forms.  Anytime
 
 NON-BLOCKING form call:
 
-		    form.Show(NonBlocking=True)
+		    form.Show(non_blocking=True)
 
 ### Beginning a Form
 The first step is to create the form object using the desired form customization.
 
-    with FlexForm('Everything bagel', AutoSizeText=True, DefaultElementSize=(30,1)) as form:
+    with FlexForm('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as form:
 Let's go through the options available when creating a form.
 
     def __init__(self, title,
-        DefaultElementSize=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
-        AutoSizeText=DEFAULT_AUTOSIZE_TEXT,
-        Scale=(None, None),
-        Size=(None, None),
-        Location=(None, None),
-        ButtonColor=None,Font=None,
-        ProgressBarColor=(None,None),
-        IsTabbedForm=False,
-        BorderDepth=None,
-        AutoClose=False,
-        AutoCloseDuration=DEFAULT_AUTOCLOSE_TIME,
-        Icon=DEFAULT_WINDOW_ICON):
+        default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
+        auto_size_text=DEFAULT_AUTOSIZE_TEXT,
+        scale=(None, None),
+        size=(None, None),
+        location=(None, None),
+        button_color=None,Font=None,
+        progress_bar_color=(None,None),
+        is_tabbed_form=False,
+        border_depth=None,
+        auto_close=False,
+        auto_close_duration=DEFAULT_AUTOCLOSE_TIME,
+        icon=DEFAULT_WINDOW_ICON):
 
 
 #### Sizes
@@ -364,25 +364,25 @@ Note several variables that deal with "size".  Element sizes are measured in cha
 
 The default Element size for PySimpleGUI is `(45,1)`.
 
-Sizes can be set at the element level, or in this case, the size variables apply to all elements in the form.  Setting `Size=(20,1)` in the form creation call will set all elements in the form to that size.
+Sizes can be set at the element level, or in this case, the size variables apply to all elements in the form.  Setting `size=(20,1)` in the form creation call will set all elements in the form to that size.
 
-In addition to `size` there is a `scale` option.  Scale will take the Element's size and scale it up or down depending on the scale value.  `scale=(1,1)` doesn't change the Element's size.  `scale=(2,1)` will set the Element's size to be twice as wide as the size setting.
+In addition to `size` there is a `scale` option.  `scale` will take the Element's size and scale it up or down depending on the scale value.  `scale=(1,1)` doesn't change the Element's size.  `scale=(2,1)` will set the Element's size to be twice as wide as the size setting.
 
 
 #### FlexForm - form-level variables overview
 A summary of the variables that can be changed when a FlexForm is created
 
-         DefaultElementSize - set default size for all elements in the form
-         AutoSizeText - true/false autosizing turned on / off
-         Scale - set scale value for all elements
-         ButtonColor - default button color (foreground, background)
-         Font - font name and size for all text items
-         ProgressBarColor - progress bar colors
-         IsTabbedForm - true/false indicates form is a tabbed or normal form
-         BorderDepth - style setting for buttons, input fields
-         AutoClose - true/false indicates if form will automatically close
-         AutoCloseDuration - how long in seconds before closing form
-         Icon - filename for icon that's displayed on the window on taskbar
+         default_element_size - set default size for all elements in the form
+         auto_size_text- true/false autosizing turned on / off
+         scale - set scale value for all elements
+         button_color- default button color (foreground, background)
+         font - font name and size for all text items
+         progress_bar_color - progress bar colors
+         is_tabbed_form - true/false indicates form is a tabbed or normal form
+         border_depth - style setting for buttons, input fields
+         auto_close - true/false indicates if form will automatically close
+         auto_close_duration - how long in seconds before closing form
+         icon - filename for icon that's displayed on the window on taskbar
 
 
 ## Elements
@@ -424,11 +424,11 @@ The code is a crude representation of the GUI, laid out in text.
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
 
     Text(Text,
-        Scale=(None, None),
-        Size=(None, None),
-        AutoSizeText=None,
-        Font=None,
-        TextColor=None)
+        scale=(None, None),
+        size=(None, None),
+        auto_size_text=None,
+        font=None,
+        text_color=None)
 
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.
 
@@ -448,8 +448,8 @@ The values foreground and background can be the color names or the hex value for
 
     "#RRGGBB"
 
-**AutoSizeText**
-A `True` value for `AutoSizeText`, when placed on any Element, indicates that the width of the Element should be shrunk do the width of the text.  This is particularly useful with `Buttons` as fixed-width buttons are somewhat crude looking.  The default value is `False`.  You will often see this setting on FlexForm definitions.
+**auto_size_text**
+A `True` value for `auto_size_text`, when placed on any Element, indicates that the width of the Element should be shrunk do the width of the text.  This is particularly useful with `Buttons` as fixed-width buttons are somewhat crude looking.  The default value is `False`.  You will often see this setting on FlexForm definitions.
 
 **Shorthand functions**
 The shorthand functions for `Text` are `Txt` and `T`
@@ -457,55 +457,55 @@ The shorthand functions for `Text` are `Txt` and `T`
 
 ####  Multiline Text Element
 
-    layout = [[SG.Multiline('This is what a Multi-line Text Element looks like', Size=(45,5))]]
+    layout = [[SG.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
 ![multiline text](https://user-images.githubusercontent.com/13696193/42670464-0824c754-8629-11e8-9741-6ed08f924618.jpg)
 This Element doubles as both an input and output Element.  The `DefaultText` optional parameter is used to indicate what to output to the window.
 
-    Multiline(DefaultText='',
-			  EnterSubmits = False,
-			  Scale=(None, None),
-              Size=(None, None),
-		      AutoSizeText=None)
+    Multiline(default_text='',
+			  enter_submits = False,
+			  scale=(None, None),
+              size=(None, None),
+		      auto_size_text=None)
 .
 
-    DefaultText - Text to display in the text box
-    EnterSubmits - Bool. If True, pressing Enter key submits form
-    Scale - Element's scale
-    Size - Element's size
-    AutoSizeText - Bool. Change width to match size of text
+    default_text - Text to display in the text box
+    enter_submits - Bool. If True, pressing Enter key submits form
+    scale - Element's scale
+    size - Element's size
+    auto_size_text - Bool. Change width to match size of text
 
 #### Output Element
 Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  More on this later.
 
-    form.AddRow(gg.Output(Size=(100,20)))
+    form.AddRow(gg.Output(size=(100,20)))
 
 ![output element](https://user-images.githubusercontent.com/13696193/42704820-5446959c-869f-11e8-849e-047ea280387a.jpg)
 
-    Output(Scale=(None, None),
-           Size=(None, None))
+    Output(scale=(None, None),
+           size=(None, None))
 .
 
-     Scale - How much to scale size of element
-     Size - Size of element (width, height) in characters
+     scale  - How much to scale size of element
+     size - Size of element (width, height) in characters
 
 ###  Input Elements
-  These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `Size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
+  These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
 
 #### Text Input Element
 
     layout = [[SG.InputText('Default text')]]
 ![inputtext](https://user-images.githubusercontent.com/13696193/42693515-610a716c-867d-11e8-9a00-7e7fcf771230.jpg)
 
-      def InputText(DefaultText = '',
-                    Scale=(None, None),
-                    Size=(None, None),
-                    AutoSizeText=None)
+      def InputText(default_text = '',
+                    scale=(None, None),
+                    size=(None, None),
+                    auto_size_text=None)
 .
 
-     DefaultText - Text initially shown in the input box
-     Scale - Amount size is scaled by
-     Size - (width, height) of element in characters
-     AutoSizeText - Bool.  True is element should be sized to fit text
+     default_text - Text initially shown in the input box
+     scale - Amount size is scaled by
+     size - (width, height) of element in characters
+     auto_size_text- Bool.  True is element should be sized to fit text
 
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 
@@ -517,88 +517,88 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
 
 ![combo](https://user-images.githubusercontent.com/13696193/42694431-631c4108-8680-11e8-8e99-c1a642734464.jpg)
 
-    InputCombo(Values,
-               Scale=(None, None),
-               Size=(None, None),
-               AutoSizeText=None)
+    InputCombo(values,
+               scale=(None, None),
+               size=(None, None),
+               auto_size_text=None)
 .
 
-     Values  Choices to be displayed. List of strings
-     Scale - Amount to scale size by
-     Size - (width, height) of element in characters
-     AutoSizeText - Bool. True if size should fit the text length
+     values - Choices to be displayed. List of strings
+     scale - Amount to scale size by
+     size - (width, height) of element in characters
+     auto_size_text - Bool. True if size should fit the text length
 
 #### Radio Button Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
-    layout =  [[SG.Radio('My first Radio!', "RADIO1", Default=True), SG.Radio('My second radio!', "RADIO1")]]
+    layout =  [[SG.Radio('My first Radio!', "RADIO1", default=True), SG.Radio('My second radio!', "RADIO1")]]
 
 ![radio element](https://user-images.githubusercontent.com/13696193/42705705-327b4b6c-86a2-11e8-81a7-740e57646ba8.jpg)
 
-     Radio(Text,
-           GroupID,
-           Default=False,
-           Scale=(None, None),
-           Size=(None, None),
-           AutoSizeText=None,
-           Font=None)
+     Radio(text,
+           group_id,
+           default=False,
+           scale=(None, None),
+           size=(None, None),
+           auto_size_text=None,
+           font=None)
 
 .
 
-     Text - Text to display next to button
-     GroupID - Groups together multiple Radio Buttons. Can be any value
-     Default - Bool.  Initial state
-     Scale - Amount to scale size of element
-     Size - (width, height) size of element in characters
-     AutoSizeText - Bool.  True if should size width to fit text
-     Font - Font type and size for text display
+     text - Text to display next to button
+     group_id - Groups together multiple Radio Buttons. Can be any value
+     default - Bool.  Initial state
+     scale - Amount to scale size of element
+     size- (width, height) size of element in characters
+     auto_size_text - Bool.  True if should size width to fit text
+     font - Font type and size for text display
 
 
 #### Checkbox Element
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
 
-    layout =  [[SG.Checkbox('My first Checkbox!', Default=True), SG.Checkbox('My second Checkbox!')]]
+    layout =  [[SG.Checkbox('My first Checkbox!', default=True), SG.Checkbox('My second Checkbox!')]]
 
 ![checkbox element](https://user-images.githubusercontent.com/13696193/42717015-655d73d2-86cc-11e8-9c69-3c810f48e578.jpg)
 
 
-    Checkbox(Text,
-             Default=False,
-             Scale=(None, None),
-             Size=(None, None),
-             AutoSizeText=None,
-             Font=None):
+    Checkbox(text,
+             default=False,
+             scale=(None, None),
+             size=(None, None),
+             auto_size_text=None,
+             font=None):
 .
 
-     Text - Text to display next to checkbox
-     Default - Bool.  Initial state
-     Scale - Amount to scale size of element
-     Size - (width, height) size of element in characters
-     AutoSizeText - Bool.  True if should size width to fit text
-     Font - Font type and size for text display
+     text - Text to display next to checkbox
+     default- Bool.  Initial state
+     scale - Amount to scale size of element
+     size - (width, height) size of element in characters
+     auto_size_text- Bool.  True if should size width to fit text
+     font- Font type and size for text display
 
 
 #### Spin Element
 An up/down spinner control.  The valid values are passed in as a list.
 
-    layout =  [[SG.Spin([i for i in range(1,11)], InitialValue=1), SG.Text('Volume level')]]
+    layout =  [[SG.Spin([i for i in range(1,11)], initial_value=1), SG.Text('Volume level')]]
 
 ![spin element](https://user-images.githubusercontent.com/13696193/42717231-8ddb51d4-86cd-11e8-827a-75f2237477fa.jpg)
 
-    Spin(Values,
-         InitialValue=None,
-         Scale=(None, None),
-         Size=(None, None),
-         AutoSizeText=None,
-         Font=None)
+    Spin(values,
+         intiial_value=None,
+         scale=(None, None),
+         size=(None, None),
+         auto_size_text=None,
+         font=None)
 .
 
-     Values - List of valid values
-     InitialValue - String with initial value
-     Scale - Amount to scale size of element
-     Size - (width, height) size of element in characters
-     AutoSizeText - Bool.  True if should size width to fit text
-     Font - Font type and size for text display
+     values - List of valid values
+     initial_value - String with initial value
+     scale - Amount to scale size of element
+     size - (width, height) size of element in characters
+     auto_size_text - Bool.  True if should size width to fit text
+     font - Font type and size for text display
 
 #### Button Element
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it but Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
@@ -620,12 +620,12 @@ Read Form - This is an async form button that will read a snapshot of all of the
 
 While it's possible to build forms using the Button Element directly, you should never need to do that.  There are pre-made buttons and shortcuts that will make life much easier.  The most basic Button element call to use is `SimpleButton`
 
-    SimpleButton(Text,
-                 Scale=(None, None),
-                 Size=(None, None),
-                 AutoSizeText=None,
-                 ButtonColor=None,
-                 Font=None)
+    SimpleButton(text,
+                 scale=(None, None),
+                 size=(None, None),
+                 auto_size_text=None,
+                 button_color=None,
+                 font=None)
 
 Pre-made buttons include:
 
@@ -667,16 +667,16 @@ layout =  [[SG.SimpleButton('My Button')]]
 
 ![singlebutton](https://user-images.githubusercontent.com/13696193/42718281-9453deca-86d5-11e8-83c7-4b6d33720858.jpg)
 
-All buttons can have their text changed by changing the `ButtonText` variable.
+All buttons can have their text changed by changing the `button_text` variable.
 
 **File Types**
-The `FileBrowse` button has an additional setting named `FileTypes`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
+The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
 
     FileTypes=(("ALL Files", "*.*"),)
 
 This code produces a form where the Browse button only shows files of type .TXT
 
-    layout =  [[SG.In() ,SG.FileBrowse(FileTypes=(("Text Files", "*.txt"),))]]
+    layout =  [[SG.In() ,SG.FileBrowse(file_types=(("Text Files", "*.txt"),))]]
 
   ***The ENTER key***
        The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.  Keep this in mind when designing forms.
@@ -693,23 +693,23 @@ If you want a bit more customization of your meter, then you can go up 1 level a
 
 You setup the progress meter by calling
 
-    my_meter = ProgressMeter(Title,
-    					     MaxValue,
+    my_meter = ProgressMeter(title,
+    					     max_value,
     					     *args,
-    					     Orientation=None,
-    					     BarColor=DEFAULT_PROGRESS_BAR_COLOR,
-    					     ButtonColor=None,
-    					     Size=DEFAULT_PROGRESS_BAR_SIZE,
-    					     Scale=(None, None),
-    					     BorderWidth=DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
+    					     orientantion=None,
+    					     bar_color=DEFAULT_PROGRESS_BAR_COLOR,
+    					     button_color=None,
+    					     size=DEFAULT_PROGRESS_BAR_SIZE,
+    					     scale=(None, None),
+    					     border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
 Then to update the bar within your loop
 
     return_code = ProgressMeterUpdate(my_meter,
-                                     Value,
+                                     value,
                                      *args):
 Putting it all together you get this design pattern
 
-    my_meter = SG.ProgressMeter('Meter Title', 100000, Orientation='Vert')
+    my_meter = SG.ProgressMeter('Meter Title', 100000, orentation='Vert')
 
     for i in range(0, 100000):
         SG.ProgressMeterUpdate(my_meter, i+1, 'Some variable', 'Another variable')
@@ -720,17 +720,17 @@ The final way of using a Progress Meter with PySimpleGUI is to build a custom fo
 #### Output
 The Output Element is a re-direction of Stdout.  Anything "printed" will be displayed in this element.
 
-    Output(Scale=(None, None),
-           Size=(None, None))
+    Output(scale=(None, None),
+           size=(None, None))
 
 Here's a complete solution for a chat-window using an Async form with an Output Element
 
     import PySimpleGUI as g
 
-    with g.FlexForm('Chat Window', AutoSizeText=True, DefaultElementSize=(30, 2)) as form:
-        form.AddRow(g.Text('This is where standard out is being routed', Size=[40,1]))
-        form.AddRow(g.Output(Size=(80, 20)))
-        form.AddRow(g.Multiline(Size=(70, 5), EnterSubmits=True), g.ReadFormButton('SEND', ButtonColor=(g.YELLOWS[0], g.BLUES[0])), g.SimpleButton('EXIT', ButtonColor=(g.YELLOWS[0], g.GREENS[0])))
+    with g.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
+        form.AddRow(g.Text('This is where standard out is being routed', size=[40,1]))
+        form.AddRow(g.Output(size=(80, 20)))
+        form.AddRow(g.Multiline(size=(70, 5), enter_submits=True), g.ReadFormButton('SEND', button_color=(g.YELLOWS[0], g.BLUES[0])), g.SimpleButton('EXIT', button_color=(g.YELLOWS[0], g.GREENS[0])))
 
         # ---===--- Loop taking in user input and printing it --- #
       while True:
@@ -773,9 +773,11 @@ While not an "issue" this is a *stern warning*
 A MikeTheWatchGuy production... entirely responsible for this code.... unless it causes you trouble in which case I'm not at all responsible.
 
 ## Versioning
-
-1.0.9  -   July 10, 2018 - Initial Release
-1.0.21 - July 13, 2018 - Readme updates
+|Version | Description |
+|--|--|
+| 1.0.9   | July 10, 2018 - Initial Release |
+| 1.0.21 | July 13, 2018 - Readme updates  |
+| 2.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
 
   ## Code Condition
 
