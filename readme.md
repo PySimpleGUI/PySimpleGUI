@@ -1,11 +1,13 @@
 
 # PySimpleGUI
 
-[note - if you are using version 1.x, you'll need to change all of your options variables in the SDK calls so that they are lower case.  Sorry for this change, but this change was required]
-
 This really is a simple GUI, but also powerfully customizable.
 
-![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
+    import PySimpleGUI as SG
+
+    SG.MsgBox('My Message Box', 'This is the shortest GUI program ever!')
+
+![snap0102](https://user-images.githubusercontent.com/13696193/42781058-1d28d9fa-8913-11e8-847e-5c2afc16ca4c.jpg)
 
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
@@ -13,15 +15,14 @@ With a simple GUI, it becomes practical to "associate" .py files with the python
 
 Python itself doesn't have a simple GUI solution... nor did the *many* GUI packages I tried.  Most tried to do TOO MUCH, making it impossible for users to get started quickly.  Others were just plain broken, requiring multiple files or other packages that were missing.
 
-The PySimpleGUI solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.
+The `PySimpleGUI` solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
 
-You can add a GUI to your command line with a single line of code.  With 3 or 4 lines of code you can add a fully customized GUI.  And for you Machine Learning folks out there, a **single line** progress meter call that you can drop into any loop.
+You can add a GUI to your command line with a single line of code.  With 3 or 4 lines of code you can add a fully customized GUI.  And for you Machine Learning folks out there, a **single line** progress meter call that you can drop into any loop to get a graphic like this one:
 
 
 ![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
 
 
- The customization is via the form/dialog box builder that enables users to experience all of the normal GUI widgets without having to write a lot of code.
 
 
     Features of PySimpleGUI include:
@@ -76,7 +77,7 @@ Then use either "high level" API calls or build your own forms.
     SG.MsgBox('This is my first message box')
 ![simple msgbox](https://user-images.githubusercontent.com/13696193/42597824-1749b160-8528-11e8-9114-374bf9731b30.jpg)
 
-Yes, it's just that easy to have a window appear on the screen using Python.
+Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom form appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
 ## APIs
 
@@ -166,11 +167,15 @@ The differences tend to be the number and types of buttons.   Here are the calls
 
 ![msgbox autoclose](https://user-images.githubusercontent.com/13696193/42599855-8e147572-852e-11e8-8c23-7ec771909062.jpg)
 
-    SG.ScrolledTextBox(my_text, Height=10)
+    SG.ScrolledTextBox(my_text, height=10)
 
 ![scrolledtextbox](https://user-images.githubusercontent.com/13696193/42600800-a44f4562-8531-11e8-8c21-51dd70316879.jpg)
 
-Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`.
+Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`.   Your code could contain a line like:
+
+    sprint(f'My variables values include x={x}', f'y={y}')
+
+This becomes a debug print of sorts that will route to a scrolled window.
 
 #### High Level User Input
 
@@ -195,7 +200,7 @@ There are 3 very basic user input high-level function calls.  It's expected that
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
 ![progress meter 3](https://user-images.githubusercontent.com/13696193/42696332-dca3ca6e-8685-11e8-846b-6bee8362ee5f.jpg)
 
-    EasyProgressMeter(Title,
+    EasyProgressMeter(title,
                       current_value,
                       max_value,
                       *args,
@@ -218,7 +223,8 @@ That line of code resulted in this window popping up and updating.
 A meter AND fun statistics to watch while your machine grinds away, all for the price of 1 line of code.
 With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`.
 
-    if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'): break
+    if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'):
+	    break
 
 # Custom Form API Calls
 
@@ -243,11 +249,13 @@ You will use this design pattern or code template for all of your "normal" (bloc
 
 > Copy, Paste, Run.
 
-PySimpleGUI's goal with the API is to be easy on the programmer.  An attempt was made to make the program's code visually match the window on the screen.  The way this is done is that a GUI is broken up into "Rows".  Then each row is broke up into "Elements" or "Widgets".  Each element is specified by names such as Text, Button, Checkbox, etc.
+PySimpleGUI's goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
 
-Some elements are shortcuts, again meant to make it easy on the programmer.  Rather than writing a `Button`, with  name = "Submit", etc, the caller simply writes `Submit`.
+Forms are represented as Python lists.  There are 2 lists in particular.  One is a list of rows that form up a GUI screen.  The other is a list of Elements (or Widgets) on each row.  Each Elements is specified by names such as Text, Button, Checkbox, etc.
 
-Going through each line of code
+Some elements are shortcuts, again meant to make it easy on the programmer.  Rather than writing a `Button`, with  name = "Submit", etc, the caller can simply writes `Submit`.  Some examples include: `Text` has a short-cut function named `T`.  `TextInput` has `In`.   See each API call for the shortcuts.
+
+Going through each line of code in the above form will help explain how to use this design patter.  Copy, modify and run it!
 
     with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
 This creates a new form, storing it in the variable `form`.
@@ -327,7 +335,7 @@ You can see in the MsgBox that the values returned are a list.  Each input field
 
 
 # Building Custom Forms
-You will find it much easier to write code using PySimpleGUI is you use features that show you documentation about the API call you are making.  In PyCharm 2 commands are helpful.
+You will find it much easier to write code using PySimpleGUI if you use an IDE such as PyCharm.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
 
     Control-Q (when cursor is on function name) brings up a box with the function definition
     Control-P (when cursor inside function call "()") shows a list of parameters and their default values
@@ -344,9 +352,10 @@ NON-BLOCKING form call:
 The first step is to create the form object using the desired form customization.
 
     with FlexForm('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as form:
-Let's go through the options available when creating a form.
 
-    def __init__(self, title,
+This is the definition of the FlexForm object:
+
+    def FlexForm(title,
         default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
         auto_size_text=DEFAULT_AUTOSIZE_TEXT,
         scale=(None, None),
@@ -764,6 +773,7 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 
 ## Fun Stuff
 
+
 ## Known Issues
 While not an "issue" this is a *stern warning*
 **Do not attempt** to call `PySimpleGUI` from multiple threads!  It's `tkinter` based and `tkinter`  has issues with multiple threads
@@ -799,5 +809,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+
+
 
 
