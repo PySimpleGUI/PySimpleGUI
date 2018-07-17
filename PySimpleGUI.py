@@ -686,6 +686,10 @@ class FlexForm:
         self.RootNeedsDestroying = True
         return results
 
+    def CloseNonBlockingForm(self):
+        self.TKroot.destroy()
+        _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+
     def OnClosingCallback(self):
         return
 
@@ -694,7 +698,7 @@ class FlexForm:
 
     def __exit__(self, *a):
         self.__del__()
-        return self
+        return False
 
     def __del__(self):
         for row in self.Rows:
