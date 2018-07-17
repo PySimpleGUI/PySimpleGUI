@@ -11,9 +11,11 @@ This really is a simple GUI, but also powerfully customizable.
 
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
+There are a number of 'easy to use' Python GUIs, but they're quite limiting.  PySimpleGUI tried to take the best of packages like `EasyGUI`(no longer maintained) and `WxSimpleGUI` (a great package, but was too limited for my application).   `PySimpleGUI` provides similar single-call-message-box solutions as you'll see.
 
-Python itself doesn't have a simple GUI solution... nor did the *many* GUI packages I tried.  Most tried to do TOO MUCH, making it impossible for users to get started quickly.  Others were just plain broken, requiring multiple files or other packages that were missing.
+GUI Packages with more functionality, like QT and WxPython, require configuring and can take a ***week*** to get *reasonably familiar* with the interfaces.
+
+With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
 The `PySimpleGUI` solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
 
@@ -236,8 +238,8 @@ With a little trickery you can provide a way to break out of your loop using the
 This is the FUN part of the programming of this GUI.  In order to really get the most out of the API, you should be using an IDE that supports auto complete or will show you the definition of the function.  This will make customizing go  smoother.
 
 It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.   Let's start with a basic Browse for a file and do something with it.
-
-## COPY THIS DESIGN PATTERN!
+# Copy these design patterns!
+## Pattern 1 - With Context Manager
 
     with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
         form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
@@ -245,12 +247,12 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
                      [SG.Submit(), SG.Cancel()]]
         (button, (source_filename, )) = form.LayoutAndShow(form_rows)
 
-## COPY this non-context manager design pattern TOO
+## Pattern 2 - No Context Manager
 
-        form = SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
-                     [SG.InputText(), SG.FileBrowse()],
-                     [SG.Submit(), SG.Cancel()]]
+    form = SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
+    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+                 [SG.InputText(), SG.FileBrowse()],
+                 [SG.Submit(), SG.Cancel()]]
     (button, (source_filename,)) = form.LayoutAndShow(form_rows)
 
 
@@ -792,6 +794,10 @@ Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
 Each of the tabs of the form is in fact a form.  The same steps are taken to create the form as before.  A `FlexForm` is created, then rows are filled with Elements, and finally the form is shown.  When calling `ShowTabbedForm`, each form is passed in as a tuple.  The tuple has  the format:  `(the form, the rows, a label shown on the tab)`
 
 ## Asynchronous (Non-Blocking) Forms
+While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.
+
+
+##
 
 ## Sample Applications
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
@@ -832,20 +838,23 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 1.0.21 | July 13, 2018 - Readme updates  |
 | 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
 
-  ## Code Condition
+## Code Condition
 
     Make it run
     Make it right
     Make it fast
 
-It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor on hiding implementation details, naming conventions, PEP 8.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
+It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor for PEP 8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
+
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
 
 ## Authors
-
+MikeTheWatchGuy
 
 ## License
 
 This project is limited to non-commercial applications.  If you wish to use it commercially, please contact one of the authors.
+For non-commercial individual, the GNU Lesser General Public License (LGPL 3)  applies.
 
 ## Acknowledgments
 
