@@ -50,7 +50,7 @@ An example of many widgets used on a single form.  A little further down you'll 
 
 ![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
 
-
+  -----
 ## Getting Started with PySimpleGUI
 
 ### Installing
@@ -79,6 +79,7 @@ Then use either "high level" API calls or build your own forms.
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom form appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
+---
 ## APIs
 
 PySimpleGUI can be broken down into 2 types of API's:
@@ -123,6 +124,7 @@ If the caller wanted to change the button color to be black on yellow, the call 
               button_color=('black', 'yellow'))
 
 ![custombuttoncolor](https://user-images.githubusercontent.com/13696193/42599212-84f3fe2e-852c-11e8-8a60-4aad669a1fd6.jpg)
+---
 
 ### High Level API Calls
 
@@ -214,7 +216,7 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
 Here's the one-line Progress Meter in action!
 
     for i in range(1,10000):
-        SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
+        SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message')
 
 That line of code resulted in this window popping up and updating.
 
@@ -226,6 +228,9 @@ With a little trickery you can provide a way to break out of your loop using the
     if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'):
 	    break
 
+***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
+
+---
 # Custom Form API Calls
 
 This is the FUN part of the programming of this GUI.  In order to really get the most out of the API, you should be using an IDE that supports auto complete or will show you the definition of the function.  This will make customizing go  smoother.
@@ -240,20 +245,26 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
                      [SG.Submit(), SG.Cancel()]]
         (button, (source_filename, )) = form.LayoutAndShow(form_rows)
 
-This context manager contains all of the code needed to specify, show and retrieve results for this form:
+## COPY this non-context manager design pattern TOO
+
+        form = SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
+        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+                     [SG.InputText(), SG.FileBrowse()],
+                     [SG.Submit(), SG.Cancel()]]
+    (button, (source_filename,)) = form.LayoutAndShow(form_rows)
+
+
+These 2 design patters both produce this custom form:
+
 ![sha hash](https://user-images.githubusercontent.com/13696193/42603149-a56acf3a-853a-11e8-91de-771efd3a65a8.jpg)
 
-It's important to use the "with" context manager.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
+It's important to use the "with" context manager so that resources are freed as quickly as possible, using the currently executing thread.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
 
-You will use this design pattern or code template for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.
+The second design pattern is not context manager based. There are times when the context manager hides errors.  If you are struggling with an unknown error, try modifying the code to run without a context manager.
 
-> Copy, Paste, Run.
+You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
-PySimpleGUI's goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
-
-Forms are represented as Python lists.  There are 2 lists in particular.  One is a list of rows that form up a GUI screen.  The other is a list of Elements (or Widgets) on each row.  Each Elements is specified by names such as Text, Button, Checkbox, etc.
-
-Some elements are shortcuts, again meant to make it easy on the programmer.  Rather than writing a `Button`, with  name = "Submit", etc, the caller can simply writes `Submit`.  Some examples include: `Text` has a short-cut function named `T`.  `TextInput` has `In`.   See each API call for the shortcuts.
+### Line by line explanation
 
 Going through each line of code in the above form will help explain how to use this design patter.  Copy, modify and run it!
 
@@ -271,7 +282,20 @@ Now we're on the second row of the form.  On this row there are 2 elements.  The
 The last line of the `form_rows` variable assignment contains a Submit and a Cancel Button.  These are buttons that will cause a form to return its value to the caller.
 
         (button, (source_filename, )) = form.LayoutAndShow(form_rows)
-This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field.
+This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field
+
+---
+### Design Goals
+> Copy, Paste, Run.
+
+`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
+
+Forms are represented as Python lists.  There are 2 lists in particular.  One is a list of rows that form up a GUI screen.  The other is a list of Elements (or Widgets) on each row.  Each Elements is specified by names such as Text, Button, Checkbox, etc.
+
+Some elements are shortcuts, meant to make it easy on the programmer who will write less code using them.  Rather than writing a `Button`, with  `button_name = "Submit"`, etc, the caller can simply writes `Submit`.  Some examples include: `Text` has a short-cut function named `T`.  `TextInput` has `In`.   See each API call for the shortcuts.
+
+
+---
 
 ## Return values
 
@@ -279,19 +303,22 @@ This is the code that **displays** the form, collects the information and return
 
     (button, (value1, value2, ...))
 
-Don't forget all those ()'s of your values won't be coreectly assigned.
+Each of the Elements that are Input Elements will have a value in the list of return values.  You can unpack your GUI directly into the variables you want to use.
+
+    (button, (filename, folder1, folder2, should_overwrite) = form.LayoutAndShow(form_rows)
+
 
 If you have a SINGLE value being returned, it is written this way:
 
     (button, (value1,)) = form.LayoutAndShow(form_rows)
- Another way of parsing the return values is to store the list of values into a variable that is then referenced.
+ Another way of parsing the return values is to store the list of values into a variable representing the list of values.
 
-     (button, (value)) = form.LayoutAndShow(form_rows)
-     value1 = values[0]
-     value2 = values[1]
+     (button, (value_list)) = form.LayoutAndShow(form_rows)
+     value1 = value_list[0]
+     value2 = value_list[1]
      ...
 
-
+---
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
 
@@ -313,9 +340,6 @@ This code utilizes as many of the elements in one form as possible.
 
         (button, (values)) = form.LayoutAndShow(layout)
 
-
-
-
         MsgBox('Results', 'You clicked {}'.format(button),'The values returned from form', values , font = ("Helvetica", 15))
 
 This is a somewhat complex form with quite a bit of custom sizing to make things line up well.  This is code you only have to write once.  When looking at the code, remember that what you're seeing is a list of lists.  Each row contains a list of Graphical Elements that are used to create the form.
@@ -325,15 +349,13 @@ This is a somewhat complex form with quite a bit of custom sizing to make things
 Clicking the Submit button caused the form call to return.  The call to MsgBox resulted in this dialog box.
 ![results](https://user-images.githubusercontent.com/13696193/42604952-502f64e6-8543-11e8-8045-bc10d38c5fd4.jpg)
 
-One important aspect of this example is the return codes:
 
     (button, (values)) = form.LayoutAndShow(layout)
-The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
+**`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
 
 You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
 
-
-
+---
 # Building Custom Forms
 You will find it much easier to write code using PySimpleGUI if you use an IDE such as PyCharm.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
 
@@ -690,24 +712,30 @@ This code produces a form where the Browse button only shows files of type .TXT
     layout =  [[SG.In() ,SG.FileBrowse(file_types=(("Text Files", "*.txt"),))]]
 
   ***The ENTER key***
-       The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.  Keep this in mind when designing forms.
+       The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.
 
+
+---
 #### ProgressBar
 The `ProgressBar` element is used to build custom Progress Bar forms.  It is HIGHLY recommended that you use the functions that provide a complete progress meter solution for you.  Progress Meters are not easy to work with because the forms have to be non-blocking and they are tricky to debug.
 
-The "easiest" way to get progress meters into your code is to use the `EasyProgessMeter` API.  This consists of a pair of functions, `EasyProgessMeter` and `EasyProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
+The **easiest** way to get progress meters into your code is to use the `EasyProgessMeter` API.  This consists of a pair of functions, `EasyProgessMeter` and `EasyProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
 You've already seen EasyProgressMeter calls presented earlier in this readme.
 
     SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
 
-If you want a bit more customization of your meter, then you can go up 1 level and use the calls to `ProgressMeter` and `ProgressMeterUpdate`
+The return value for `EasyProgressMeter` is:
+`True` if meter updated correctly
+`False` if user clicked the Cancel button, closed the form, or vale reached the max value.
+**Customized Progress Bar**
+If you want a bit more customization of your meter, then you can go up 1 level and use the calls to `ProgressMeter` and `ProgressMeterUpdate`.  These APIs behave like an object we're all used to.  First you create the `ProgressMeter` object, then you call the `Update` method to update it.
 
 You setup the progress meter by calling
 
     my_meter = ProgressMeter(title,
     					     max_value,
     					     *args,
-    					     orientantion=None,
+    		d			     orientantion=None,
     					     bar_color=DEFAULT_PROGRESS_BAR_COLOR,
     					     button_color=None,
     					     size=DEFAULT_PROGRESS_BAR_SIZE,
@@ -724,6 +752,7 @@ Putting it all together you get this design pattern
 
     for i in range(0, 100000):
         SG.ProgressMeterUpdate(my_meter, i+1, 'Some variable', 'Another variable')
+
 
 The final way of using a Progress Meter with PySimpleGUI is to build a custom form with a `ProgressBar` Element in the form.  You will need to run your form as a non-blocking form.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
 
@@ -772,7 +801,19 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 `Demo HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program could forever change how you code. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.
 
 ## Fun Stuff
+Here are some things to try if you're bored or want to further customize
 
+**Random colors**
+To set a button or text to a random color, use the string `'random'` as the color value.  You can also call `PySimpleGUI.GetRandomColor`.
+To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and that color's compliment.
+sprint
+Call `PySimpleGUI.sprint` to "print" to a scrolled Text Box.  This is simply a function pointing to
+
+**Task Bar Icon**
+Call `PySimpleGUI.SetGlobalIcon` to change the icon shown on the Windows Task Bar and on the program's Task Bar in the upper left corner.
+
+**Button Color**
+To change the button color globally call `PySimpleGUI.SetButtonColor`.  Removes need to specify in every form or button call if you have a single button color for all buttons.
 
 ## Known Issues
 While not an "issue" this is a *stern warning*
@@ -789,7 +830,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 |--|--|
 | 1.0.9   | July 10, 2018 - Initial Release |
 | 1.0.21 | July 13, 2018 - Readme updates  |
-| 2.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
+| 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
 
   ## Code Condition
 
@@ -804,7 +845,7 @@ It's a recipe for success if done right.  PySimpleGUI has completed the "Make it
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is limited to non-commercial applications.  If you wish to use it commercially, please contact one of the authors.
 
 ## Acknowledgments
 
