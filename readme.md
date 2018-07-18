@@ -387,7 +387,6 @@ This is the definition of the FlexForm object:
         default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
         auto_size_text=DEFAULT_AUTOSIZE_TEXT,
         scale=(None, None),
-        size=(None, None),
         location=(None, None),
         button_color=None,Font=None,
         progress_bar_color=(None,None),
@@ -396,6 +395,20 @@ This is the definition of the FlexForm object:
         auto_close=False,
         auto_close_duration=DEFAULT_AUTOCLOSE_TIME,
         icon=DEFAULT_WINDOW_ICON):
+
+Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
+
+	    default_element_size - Size of elements in form in characters (width, height)
+	    auto_size_text - Bool. True is elements should size themselves according to contents
+	    scale - Set size of element to be a multiple of the Element size
+	    location - Location to place window in pixels
+	    button_color - Default color for buttons (foreground, background). Can be text or hex
+	    progress_bar_color - Foreground and background colors for progress bars
+	    is_tabbed_form - Bool. If True then form is a tabbed form
+	    border_depth - Amount of 'bezel' to put on input boxes, buttons, etc.
+	    auto_close - Bool.  If True form will autoclose
+	    auto_close_duration - Duration in seconds before form closes
+	    icon - .ICO file that will appear on the Task Bar and end of Title Bar
 
 
 #### Sizes
@@ -790,7 +803,7 @@ Here's a complete solution for a chat-window using an Async form with an Output 
                 break
 
 
-#### Tabbed Forms
+## Tabbed Forms
 Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
 
      results = ShowTabbedForm('Title for the form',
@@ -799,11 +812,47 @@ Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
 
 Each of the tabs of the form is in fact a form.  The same steps are taken to create the form as before.  A `FlexForm` is created, then rows are filled with Elements, and finally the form is shown.  When calling `ShowTabbedForm`, each form is passed in as a tuple.  The tuple has  the format:  `(the form, the rows, a label shown on the tab)`
 
+## Global Settings
+**Global Settings**
+You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
+
+    SetOptions(icon=None,
+               button_color=(None,None),
+               element_size=(None,None),
+               margins=(None,None),
+               element_padding=(None,None),
+               auto_size_text=None,
+               font=None, border_width=None,
+               autoclose_time=None,
+               message_box_line_width=None,
+               progress_meter_border_depth=None):
+
+Explanation of parameters
+
+	          icon - filename of icon used for taskbar and title bar
+	          button_color - button color (foreground, background)
+	          element_size - element size (width, height) in characters
+	          margins - tkinter margins around outsize
+	          element_padding - tkinter padding around each element
+	          auto_size_text - autosize the elements to fit their text
+	          font - font used for elements
+	          border_width - amount of bezel or border around sunken or raised elements
+	          autoclose_time - time in seconds for autoclose boxes
+	          message_box_line_width - number of characers in a line of text in message boxes
+	          progress_meter_border_depth - amount of border around raised or lowered progress meters
+
+
+These settings apply to all forms `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the Form-level being the highest and the Element-level the lowest.  Thus the levels are:
+
+ - Form level
+ - Row level
+ - Element level
+
+Each lower level overrides the settings of the higher level
+
 ## Asynchronous (Non-Blocking) Forms
 While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.
 
-
-##
 
 ## Sample Applications
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
@@ -824,31 +873,11 @@ sprint
 **sprint**
 Call `sprint` with as many parameters as you want and it'll print them all out in a `ScrolledTextBox`.  This is simply a function pointing to `PySimpleGUI.ScrolledTextBox`.
 
-**Global Settings**
-You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
+---
+## Known Issues
+While not an "issue" this is a ***stern warning***
 
-    SetOptions(icon=None,
-               default_button_color=(None,None),
-               default_element_size=(None,None),
-               default_margins=(None,None),
-               default_element_padding=(None,None),
-               default_auto_size_text=None,
-               default_font=None,
-               default_border_width=None,
-               default_autoclose_time=None)
-
-These settings apply to all forms following the call to `SetOptions`.
-
-
-**Task Bar Icon**
-Call `PySimpleGUI.SetGlobalIcon` to change the icon shown on the Windows Task Bar and on the program's Task Bar in the upper left corner.
-
-**Button Color**
-To change the button color globally call `PySimpleGUI.SetButtonColor`.  Removes need to specify in every form or button call if you have a single button color for all buttons.
-
-       ## Known Issues
-While not an "issue" this is a *stern warning*
-**Do not attempt** to call `PySimpleGUI` from multiple threads!  It's `tkinter` based and `tkinter`  has issues with multiple threads
+## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
 
 **Progress Meters** - the visual graphic portion of the meter may be off.  May return to the native tkinter progress meter solution in the future.  Right now a "custom" progress meter is used.  On the bright side, the statistics shown are extremely accurate and can tell you something about the performance of your code.
 
@@ -873,7 +902,7 @@ It's a recipe for success if done right.  PySimpleGUI has completed the "Make it
 
 While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
 
-## Authors  
+## Authors
 MikeTheWatchGuy
 
 ## License
