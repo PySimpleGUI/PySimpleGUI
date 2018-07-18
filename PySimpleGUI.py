@@ -9,7 +9,6 @@ import datetime
 import sys
 import textwrap
 
-
 # ----====----====----==== Constants the use CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = ''
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
@@ -18,7 +17,7 @@ DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in
 DEFAULT_AUTOSIZE_TEXT = False
 DEFAULT_FONT = ("Helvetica", 10)
 
-DEFAULT_BORDER_WIDTH = 6
+DEFAULT_BORDER_WIDTH = 4
 DEFAULT_AUTOCLOSE_TIME = 3              # time in seconds to show an autoclose form
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 #################### COLOR STUFF ####################
@@ -42,8 +41,8 @@ DEFAULT_PROGRESS_BAR_COLOR = (GREENS[3], GREENS[3])     # a nice green progress 
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[1], BLUES[1])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[0], BLUES[0])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
-DEFAULT_PROGRESS_BAR_SIZE = (30,25)         # Size of Progress Bar (characters for length, pixels for width)
-DEFAULT_PROGRESS_BAR_BORDER_WIDTH=8
+DEFAULT_PROGRESS_BAR_SIZE = (35,25)         # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_BORDER_WIDTH=2
 DEFAULT_PROGRESS_BAR_RELIEF = tk.SUNKEN
 DEFAULT_PROGRESS_BAR_STYLE = 'default'
 DEFAULT_METER_ORIENTATION = 'Horizontal'
@@ -495,7 +494,7 @@ class Button(Element):
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
-    def __init__(self, max_value, orientation=None, target=(None, None), scale=(None, None), size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, broder_width=None, relief=None):
+    def __init__(self, max_value, orientation=None, target=(None, None), scale=(None, None), size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None):
         self.MaxValue = max_value
         self.TKProgressBar = None
         self.Cancelled = False
@@ -504,7 +503,7 @@ class ProgressBar(Element):
         self.BarColor = bar_color
         self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
         self.Target = target
-        self.BorderWidth = broder_width if broder_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+        self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         super().__init__(PROGRESS_BAR, scale, size, auto_size_text)
@@ -565,12 +564,11 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=DEFAULT_AUTOSIZE_TEXT, scale=(None, None), size=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=DEFAULT_AUTOSIZE_TEXT, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
         self.AutoSizeText = auto_size_text
         self.Title = title
         self.Rows = []                     # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
-        self.Size = size
         self.Scale = scale
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
@@ -1123,7 +1121,6 @@ def ConvertFlexToTK(MyFlexForm):
     screen_width = master.winfo_screenwidth()               # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
-        loc = MyFlexForm.Location
         x,y = MyFlexForm.Location
     else:
         master.update_idletasks()  # don't forget
@@ -1236,7 +1233,7 @@ def _GetNumLinesNeeded(text, max_line_width):
 # Exits via an OK button2 press                      #
 # Returns nothing                                    #
 # ===================================================#
-def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, icon=DEFAULT_WINDOW_ICON, line_width=MESSAGE_BOX_LINE_WIDTH, font=None):
+def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None):
     '''
     Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
@@ -1253,6 +1250,10 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
         args_to_print = ['']
     else:
         args_to_print = args
+    if line_width != None:
+        local_line_width = line_width
+    else:
+        local_line_width = MESSAGE_BOX_LINE_WIDTH
     with FlexForm(args_to_print[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
@@ -1262,10 +1263,10 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
             if message.count('\n'):
                 message_wrapped = message
             else:
-                message_wrapped = textwrap.fill(message, line_width)
+                message_wrapped = textwrap.fill(message, local_line_width)
             message_wrapped_lines = message_wrapped.count('\n')+1
             longest_line_len = max([len(l) for l in message.split('\n')])
-            width_used = min(longest_line_len, line_width)
+            width_used = min(longest_line_len, local_line_width)
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
@@ -1412,13 +1413,13 @@ def ConvertArgsToSingleString(*args):
 
 # ============================== ProgressMeter  =====#
 # ===================================================#
-def ProgressMeter(title, max_value, *args, Orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
+def ProgressMeter(title, max_value, *args, orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
     '''
     Create and show a form on tbe caller's behalf.
     :param title:
     :param max_value:
     :param args: ANY number of arguments the caller wants to display
-    :param Orientation:
+    :param orientation:
     :param bar_color:
     :param size:
     :param scale:
@@ -1426,13 +1427,14 @@ def ProgressMeter(title, max_value, *args, Orientation=None, bar_color=DEFAULT_P
     :param StyleOffset:
     :return: ProgressBar object that is in the form
     '''
-    orientation = DEFAULT_METER_ORIENTATION if Orientation is None else Orientation
-    target = (0,0) if orientation[0].lower() == 'h' else (0,1)
-    bar2 = ProgressBar(max_value, orientation=orientation, size=size, bar_color=bar_color, scale=scale, target=target, broder_width=border_width)
+    local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
+    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
+    target = (0,0) if local_orientation[0].lower() == 'h' else (0,1)
+    bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color, scale=scale, target=target, border_width=local_border_width)
     form = FlexForm(title, auto_size_text=True)
 
     # Form using a horizontal bar
-    if orientation[0].lower() == 'h':
+    if local_orientation[0].lower() == 'h':
         single_line_message, width, height = ConvertArgsToSingleString(*args)
         bar2.TextToDisplay = single_line_message
         bar2.MaxValue = max_value
@@ -1445,7 +1447,7 @@ def ProgressMeter(title, max_value, *args, Orientation=None, bar_color=DEFAULT_P
         bar2.TextToDisplay = single_line_message
         bar2.MaxValue = max_value
         bar2.CurrentValue = 0
-        form.AddRow(bar2, Text(single_line_message, size=(width + 20, height + 3), auto_size_text=True))
+        form.AddRow(bar2, Text(single_line_message, size=(width +20, height + 3), auto_size_text=True))
         form.AddRow((Cancel(button_color=button_color)))
 
     form.NonBlocking = True
@@ -1526,7 +1528,7 @@ class EasyProgressMeterDataClass():
 
 
 # ============================== EasyProgressMeter  =====#
-def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
+def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
     '''
     A ONE-LINE progress meter. Add to your code where ever you need a meter. No need for a second
     function call before your loop. You've got enough code to write!
@@ -1542,6 +1544,7 @@ def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, 
     :param StyleOffset:
     :return: False if should stop the meter
     '''
+    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if not border_width else border_width
     # STATIC VARIABLE!
     # This is a very clever form of static variable using a function attribute
     # If the variable doesn't yet exist, then it will create it and initialize with the 3rd parameter
@@ -1554,7 +1557,7 @@ def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, 
         EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
         EasyProgressMeter.EasyProgressMeterData.ComputeProgressStats()
         message = "\n".join([line for line in EasyProgressMeter.EasyProgressMeterData.StatMessages])
-        EasyProgressMeter.EasyProgressMeterData.MeterID = ProgressMeter(title, int(max_value), message, *args, Orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=border_width)
+        EasyProgressMeter.EasyProgressMeterData.MeterID = ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=local_border_width)
         EasyProgressMeter.EasyProgressMeterData.ParentForm = EasyProgressMeter.EasyProgressMeterData.MeterID.ParentForm
         return True
     # if exactly the same values as before, then ignore.
@@ -1728,8 +1731,9 @@ def SetGlobalIcon(icon):
 # ============================== SetOptions =========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetOptions(icon=None, default_button_color=(None,None), default_element_size=(None,None), default_margins=(None,None), default_element_padding=(None,None),
-               default_auto_size_text=None, default_font=None, default_border_width=None, default_autoclose_time=None):
+def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), margins=(None,None), element_padding=(None,None),
+               auto_size_text=None, font=None, border_width=None, autoclose_time=None, message_box_line_width=None,
+               progress_meter_border_depth=None):
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
     global DEFAULT_ELEMENT_PADDING  # Padding between elements (row, col) in pixels
@@ -1738,7 +1742,8 @@ def SetOptions(icon=None, default_button_color=(None,None), default_element_size
     global DEFAULT_BORDER_WIDTH
     global DEFAULT_AUTOCLOSE_TIME
     global DEFAULT_BUTTON_COLOR
-
+    global MESSAGE_BOX_LINE_WIDTH
+    global DEFAULT_PROGRESS_BAR_BORDER_WIDTH
     global _my_windows
 
     if icon:
@@ -1749,31 +1754,35 @@ def SetOptions(icon=None, default_button_color=(None,None), default_element_size
             raise FileNotFoundError
         _my_windows.user_defined_icon = icon
 
-    if default_button_color != (None,None):
-        DEFAULT_BUTTON_COLOR = (default_button_color[0], default_button_color[1])
+    if button_color != (None,None):
+        DEFAULT_BUTTON_COLOR = (button_color[0], button_color[1])
 
-    if default_element_size != (None,None):
-        DEFAULT_ELEMENT_SIZE = default_element_size
+    if element_size != (None,None):
+        DEFAULT_ELEMENT_SIZE = element_size
 
-    if default_margins != (None,None):
-        DEFAULT_MARGINS = default_margins
+    if margins != (None,None):
+        DEFAULT_MARGINS = margins
 
-    if default_element_padding != (None,None):
-        DEFAULT_ELEMENT_PADDING = default_element_padding
+    if element_padding != (None,None):
+        DEFAULT_ELEMENT_PADDING = element_padding
 
-    if default_auto_size_text:
-        DEFAULT_AUTOSIZE_TEXT = default_auto_size_text
+    if auto_size_text:
+        DEFAULT_AUTOSIZE_TEXT = auto_size_text
 
-    if default_font !=None:
-        DEFAULT_FONT = default_font
+    if font !=None:
+        DEFAULT_FONT = font
 
-    if default_border_width != None:
-        DEFAULT_BORDER_WIDTH = default_border_width
+    if border_width != None:
+        DEFAULT_BORDER_WIDTH = border_width
 
-    if default_autoclose_time != None:
-        DEFAULT_AUTOCLOSE_TIME = default_autoclose_time
+    if autoclose_time != None:
+        DEFAULT_AUTOCLOSE_TIME = autoclose_time
 
+    if message_box_line_width != None:
+        MESSAGE_BOX_LINE_WIDTH = message_box_line_width
 
+    if progress_meter_border_depth != None:
+        DEFAULT_PROGRESS_BAR_BORDER_WIDTH = progress_meter_border_depth
 
     return True
 
