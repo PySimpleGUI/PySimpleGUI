@@ -891,6 +891,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 1.0.9   | July 10, 2018 - Initial Release |
 | 1.0.21 | July 13, 2018 - Readme updates  |
 | 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
+| 2.1.1 | July 18, 2018 - Global settings exposed, fixes
 
 ## Code Condition
 
@@ -906,7 +907,7 @@ While the internals to PySimpleGUI are a tad sketchy, the public interfaces into
 MikeTheWatchGuy
 
 ## License
-
+  
 This project is limited to non-commercial applications.  If you wish to use it commercially, please contact one of the authors.
 For non-commercial individual, the GNU Lesser General Public License (LGPL 3)  applies.
 
