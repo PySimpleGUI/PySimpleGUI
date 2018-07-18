@@ -157,12 +157,13 @@ class Element():
             pass
 
 # ---------------------------------------------------------------------- #
-#                           Input Class                                 #
+#                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
 
-    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None):
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char=''):
         self.DefaultText = default_text
+        self.PasswordCharacter = password_char
         super().__init__(INPUT_TEXT, scale, size, auto_size_text)
         return
 
@@ -175,6 +176,7 @@ class InputText(Element):
                     if element.BType == CLOSES_WIN or element.BType == READ_FORM:
                         element.ButtonCallBack()
                         return
+
     def __del__(self):
         super().__del__()
 
@@ -1011,7 +1013,7 @@ def ConvertFlexToTK(MyFlexForm):
                 tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, foreground=bc[0], background=bc[1], bd=border_depth)
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
-                tkbutton.configure(wraplength=wraplen, font=font)  # set wrap to width of widget
+                tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
                 if not focus_set and btype == CLOSES_WIN:
                     focus_set = True
@@ -1023,7 +1025,8 @@ def ConvertFlexToTK(MyFlexForm):
                 default_text = element.DefaultText
                 element.TKStringVar = tk.StringVar()
                 element.TKStringVar.set(default_text)
-                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font)
+                show = element.PasswordCharacter if element.PasswordCharacter else ""
+                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
                 element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 if not focus_set:
@@ -1718,8 +1721,60 @@ def SetGlobalIcon(icon):
             pass
     except:
         raise FileNotFoundError
-
     _my_windows.user_defined_icon = icon
+    return True
+
+
+# ============================== SetOptions =========#
+# Sets the icon to be used by default                #
+# ===================================================#
+def SetOptions(icon=None, default_button_color=(None,None), default_element_size=(None,None), default_margins=(None,None), default_element_padding=(None,None),
+               default_auto_size_text=None, default_font=None, default_border_width=None, default_autoclose_time=None):
+    global DEFAULT_ELEMENT_SIZE
+    global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
+    global DEFAULT_ELEMENT_PADDING  # Padding between elements (row, col) in pixels
+    global DEFAULT_AUTOSIZE_TEXT
+    global DEFAULT_FONT
+    global DEFAULT_BORDER_WIDTH
+    global DEFAULT_AUTOCLOSE_TIME
+    global DEFAULT_BUTTON_COLOR
+
+    global _my_windows
+
+    if icon:
+        try:
+            with open(icon, 'r') as icon_file:
+                pass
+        except:
+            raise FileNotFoundError
+        _my_windows.user_defined_icon = icon
+
+    if default_button_color != (None,None):
+        DEFAULT_BUTTON_COLOR = (default_button_color[0], default_button_color[1])
+
+    if default_element_size != (None,None):
+        DEFAULT_ELEMENT_SIZE = default_element_size
+
+    if default_margins != (None,None):
+        DEFAULT_MARGINS = default_margins
+
+    if default_element_padding != (None,None):
+        DEFAULT_ELEMENT_PADDING = default_element_padding
+
+    if default_auto_size_text:
+        DEFAULT_AUTOSIZE_TEXT = default_auto_size_text
+
+    if default_font !=None:
+        DEFAULT_FONT = default_font
+
+    if default_border_width != None:
+        DEFAULT_BORDER_WIDTH = default_border_width
+
+    if default_autoclose_time != None:
+        DEFAULT_AUTOCLOSE_TIME = default_autoclose_time
+
+
+
     return True
 
 
