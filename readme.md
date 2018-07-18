@@ -77,7 +77,7 @@ To use in your code, simply import....
 Then use either "high level" API calls or build your own forms.
 
     SG.MsgBox('This is my first message box')
-![simple msgbox](https://user-images.githubusercontent.com/13696193/42597824-1749b160-8528-11e8-9114-374bf9731b30.jpg)
+![snap0103](https://user-images.githubusercontent.com/13696193/42844641-a04bb798-89e1-11e8-8a37-50ddd9905772.jpg)
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom form appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
@@ -99,17 +99,18 @@ PySimpleGUI can be broken down into 2 types of API's:
 
  The "High Level" API calls that *output* values take a variable number of arguments so that they match a "print" statement as much as possible.  The idea is to make it simple for the programmer to output as many items as desired and in any format.  The user need not convert the variables to be output into the strings.  The PySimpleGUI functions do that for the user.
 
-    SG.MsgBox('Variable number of parameters example', my_variable, second_variable, "etc")
+    SG.MsgBox('Variable number of parameters example', var1, var2, "etc")
 
 Each new item begins on a new line in the Message Box
 
-  ![variablearguments](https://user-images.githubusercontent.com/13696193/42598375-022bc51e-852a-11e8-8f77-4d664ae1a560.jpg)
+  ![snap0104](https://user-images.githubusercontent.com/13696193/42844739-ebea22ac-89e1-11e8-8dd1-e61441325701.jpg)
+
 
 #### Optional Parameters to a Function Call
 
-This feature of the Python language is utilized ***heavily*** as a method of customizing forms and part of forms.  Rather than requiring the programmer to specify every possible option for a widget, instead only the options the caller wants to override are specified.
+This feature of the Python language is utilized ***heavily*** as a method of customizing forms and form Elements.  Rather than requiring the programmer to specify every possible option for a widget, instead only the options the caller wants to override are specified.
 
-Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't have to be specified on each and every call.
+Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't *have* to be specified on each and every call.
 
     def MsgBox(*args,
                button_color=None,
@@ -125,7 +126,10 @@ If the caller wanted to change the button color to be black on yellow, the call 
     SG.MsgBox('This box has a custom button color',
               button_color=('black', 'yellow'))
 
-![custombuttoncolor](https://user-images.githubusercontent.com/13696193/42599212-84f3fe2e-852c-11e8-8a60-4aad669a1fd6.jpg)
+
+![snap0105](https://user-images.githubusercontent.com/13696193/42844830-2d7e8b9a-89e2-11e8-8ef4-5af9e36f30f3.jpg)
+
+
 ---
 
 ### High Level API Calls
@@ -534,13 +538,15 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
       def InputText(default_text = '',
                     scale=(None, None),
                     size=(None, None),
-                    auto_size_text=None)
+                    auto_size_text=None,
+                    password_char='')
 .
 
      default_text - Text initially shown in the input box
      scale - Amount size is scaled by
      size - (width, height) of element in characters
      auto_size_text- Bool.  True is element should be sized to fit text
+     password_char - Character that will be used to replace each entered character. Setting to a value indicates this field is a password entry field
 
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 
@@ -811,9 +817,28 @@ Here are some things to try if you're bored or want to further customize
 
 **Random colors**
 To set a button or text to a random color, use the string `'random'` as the color value.  You can also call `PySimpleGUI.GetRandomColor`.
-To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and that color's compliment.
+To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and
+that color's compliment.
 sprint
-Call `PySimpleGUI.sprint` to "print" to a scrolled Text Box.  This is simply a function pointing to
+
+**sprint**
+Call `sprint` with as many parameters as you want and it'll print them all out in a `ScrolledTextBox`.  This is simply a function pointing to `PySimpleGUI.ScrolledTextBox`.
+
+**Global Settings**
+You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
+
+    SetOptions(icon=None,
+               default_button_color=(None,None),
+               default_element_size=(None,None),
+               default_margins=(None,None),
+               default_element_padding=(None,None),
+               default_auto_size_text=None,
+               default_font=None,
+               default_border_width=None,
+               default_autoclose_time=None)
+
+These settings apply to all forms following the call to `SetOptions`.
+
 
 **Task Bar Icon**
 Call `PySimpleGUI.SetGlobalIcon` to change the icon shown on the Windows Task Bar and on the program's Task Bar in the upper left corner.
@@ -821,7 +846,7 @@ Call `PySimpleGUI.SetGlobalIcon` to change the icon shown on the Windows Task Ba
 **Button Color**
 To change the button color globally call `PySimpleGUI.SetButtonColor`.  Removes need to specify in every form or button call if you have a single button color for all buttons.
 
-## Known Issues
+       ## Known Issues
 While not an "issue" this is a *stern warning*
 **Do not attempt** to call `PySimpleGUI` from multiple threads!  It's `tkinter` based and `tkinter`  has issues with multiple threads
 
@@ -848,7 +873,7 @@ It's a recipe for success if done right.  PySimpleGUI has completed the "Make it
 
 While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
 
-## Authors
+## Authors  
 MikeTheWatchGuy
 
 ## License
@@ -859,6 +884,7 @@ For non-commercial individual, the GNU Lesser General Public License (LGPL 3)  a
 ## Acknowledgments
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+
 
 
 
