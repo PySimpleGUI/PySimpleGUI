@@ -1,8 +1,10 @@
 import PySimpleGUI as SG
 import subprocess
+import howdoi
 
-# CHANGE THIS LINE OF CODE!  Point it to the howdoi.py file that is in the howdoi code you download from github
-HOW_DO_I_COMMAND = 'python C:\\Python\\PycharmProjects\\GitHub\\howdoi\\howdoi\\howdoi.py'
+# Test this command in a dos window if you are having trouble.
+HOW_DO_I_COMMAND =  'python -m howdoi.howdoi'
+
 # if you want an icon on your taskbar for this gui, then change this line of code to point to the ICO file
 DEFAULT_ICON = 'E:\\TheRealMyDocs\\Icons\\QuestionMark.ico'
 
@@ -18,7 +20,7 @@ def HowDoI():
     form = SG.FlexForm('How Do I ??', auto_size_text=True, default_element_size=(30, 2), icon=DEFAULT_ICON)
     form.AddRow(SG.Text('Ask and your answer will appear here....', size=(40, 1)))
     form.AddRow(SG.Output(size=(90, 20)))
-    form.AddRow(SG.Multiline(size=(90, 5), enter_submits=True),
+    form.AddRow(SG.Multiline(size=(85, 5), enter_submits=True),
                 SG.ReadFormButton('SEND', button_color=(SG.YELLOWS[0], SG.BLUES[0])),
                 SG.SimpleButton('EXIT', button_color=(SG.YELLOWS[0], SG.GREENS[0])))
 
