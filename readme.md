@@ -1,4 +1,4 @@
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
 # PySimpleGUI
 
 This really is a simple GUI, but also powerfully customizable.
