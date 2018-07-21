@@ -16,9 +16,10 @@ DEFAULT_MARGINS = (10,5)                # Margins for each LEFT/RIGHT margin is 
 DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in pixels
 DEFAULT_AUTOSIZE_TEXT = False
 DEFAULT_FONT = ("Helvetica", 10)
-
+DEFAULT_TEXT_JUSTIFICATION = 'left'
 DEFAULT_BORDER_WIDTH = 4
 DEFAULT_AUTOCLOSE_TIME = 3              # time in seconds to show an autoclose form
+DEFAULT_DEBUG_WINDOW_SIZE = (80,20)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 #################### COLOR STUFF ####################
 BLUES = ("#082567","#0A37A3","#00345B")
@@ -89,17 +90,18 @@ READ_FORM = 7
 
 # -------------------------  Element types  ------------------------- #
 # class ElementType(Enum):
-TEXT = 1
-INPUT_TEXT = 20
-INPUT_COMBO = 21
-INPUT_RADIO = 5
-INPUT_MULTILINE = 7
-INPUT_CHECKBOX = 8
-INPUT_SPIN = 9
-BUTTON = 3
-OUTPUT = 300
-PROGRESS_BAR = 200
-BLANK = 100
+ELEM_TYPE_TEXT = 1
+ELEM_TYPE_INPUT_TEXT = 20
+ELEM_TYPE_INPUT_COMBO = 21
+ELEM_TYPE_INPUT_RADIO = 5
+ELEM_TYPE_INPUT_MULTILINE = 7
+ELEM_TYPE_INPUT_CHECKBOX = 8
+ELEM_TYPE_INPUT_SPIN = 9
+ELEM_TYPE_BUTTON = 3
+ELEM_TYPE_IMAGE = 30
+ELEM_TYPE_OUTPUT = 300
+ELEM_TYPE_PROGRESS_BAR = 200
+ELEM_TYPE_BLANK = 100
 
 # -------------------------  MsgBox Buttons Types  ------------------------- #
 MSG_BOX_YES_NO = 1
@@ -131,6 +133,7 @@ class Element():
         self.TKIntVar = None
         self.TKText = None
         self.TKEntry = None
+        self.TKImage = None
 
         self.ParentForm=None
         self.TextInputDefault = None
@@ -163,7 +166,7 @@ class InputText(Element):
     def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char=''):
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
-        super().__init__(INPUT_TEXT, scale, size, auto_size_text)
+        super().__init__(ELEM_TYPE_INPUT_TEXT, scale, size, auto_size_text)
         return
 
     def ReturnKeyHandler(self, event):
@@ -171,7 +174,7 @@ class InputText(Element):
         # search through this form and find the first button that will exit the form
         for row in MyForm.Rows:
             for element in row.Elements:
-                if element.Type == BUTTON:
+                if element.Type == ELEM_TYPE_BUTTON:
                     if element.BType == CLOSES_WIN or element.BType == READ_FORM:
                         element.ButtonCallBack()
                         return
@@ -187,7 +190,7 @@ class InputCombo(Element):
     def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None):
         self.Values = values
         self.TKComboBox = None
-        super().__init__(INPUT_COMBO, scale, size, auto_size_text)
+        super().__init__(ELEM_TYPE_INPUT_COMBO, scale, size, auto_size_text)
         return
 
     def __del__(self):
@@ -207,7 +210,7 @@ class Radio(Element):
         self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
-        super().__init__(INPUT_RADIO, scale, size, auto_size_text, font)
+        super().__init__(ELEM_TYPE_INPUT_RADIO, scale, size, auto_size_text, font)
         return
 
     def __del__(self):
@@ -227,7 +230,7 @@ class Checkbox(Element):
         self.Value = None
         self.TKCheckbox = None
 
-        super().__init__(INPUT_CHECKBOX, scale, size, auto_size_text, font)
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale, size, auto_size_text, font)
         return
 
     def __del__(self):
@@ -248,7 +251,7 @@ class Spin(Element):
         self.Values = values
         self.DefaultValue = initial_value
         self.TKSpinBox = None
-        super().__init__(INPUT_SPIN, scale, size, auto_size_text, font=font)
+        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font)
         return
 
     def __del__(self):
@@ -265,7 +268,7 @@ class Multiline(Element):
     def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None):
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
-        super().__init__(INPUT_MULTILINE, scale, size, auto_size_text)
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale, size, auto_size_text)
         return
 
     def ReturnKeyHandler(self, event):
@@ -273,7 +276,7 @@ class Multiline(Element):
         # search through this form and find the first button that will exit the form
         for row in MyForm.Rows:
             for element in row.Elements:
-                if element.Type == BUTTON:
+                if element.Type == ELEM_TYPE_BUTTON:
                     if element.BType == CLOSES_WIN or element.BType == READ_FORM:
                         element.ButtonCallBack()
                         return
@@ -285,12 +288,13 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None):
+    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
         self.DisplayText = text
         self.TextColor = text_color if text_color else 'black'
+        self.Justification = justification if justification else DEFAULT_TEXT_JUSTIFICATION
         # self.Font = Font if Font else DEFAULT_FONT
         # i=1/0
-        super().__init__(TEXT, scale, size, auto_size_text, font=font if font else DEFAULT_FONT)
+        super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, font=font if font else DEFAULT_FONT)
         return
 
     def Update(self, NewValue):
@@ -394,11 +398,12 @@ in the text pane.'''
 
     def __del__(self):
         sys.stdout = self.previous_stdout
+        sys.stderr = self.previous_stderr
 
 class Output(Element):
     def __init__(self, scale=(None, None), size=(None, None)):
         self.TKOut = None
-        super().__init__(OUTPUT, scale, size)
+        super().__init__(ELEM_TYPE_OUTPUT, scale, size)
 
     def __del__(self):
         try:
@@ -419,7 +424,7 @@ class Button(Element):
         self.ButtonText = button_text
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.UserData = None
-        super().__init__(BUTTON, scale, size, auto_size_text, font=font)
+        super().__init__(ELEM_TYPE_BUTTON, scale, size, auto_size_text, font=font)
         return
 
     # -------  Button Callback  ------- #
@@ -478,7 +483,7 @@ class Button(Element):
         # search through this form and find the first button that will exit the form
         for row in MyForm.Rows:
             for element in row.Elements:
-                if element.Type == BUTTON:
+                if element.Type == ELEM_TYPE_BUTTON:
                     if element.BType == CLOSES_WIN or element.BType == READ_FORM:
                         element.ButtonCallBack()
                         return
@@ -506,7 +511,7 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(PROGRESS_BAR, scale, size, auto_size_text)
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, scale, size, auto_size_text)
         return
 
     def UpdateBar(self, current_count):
@@ -524,7 +529,7 @@ class ProgressBar(Element):
         try:
             self.ParentForm.TKroot.update()
         except:
-            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+            # _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
             return False
         return True
 
@@ -534,6 +539,20 @@ class ProgressBar(Element):
         except:
             pass
         super().__del__()
+
+# ---------------------------------------------------------------------- #
+#                           Image                                        #
+# ---------------------------------------------------------------------- #
+class Image(Element):
+    def __init__(self, filename, scale=(None, None), size=(None, None), auto_size_text=None):
+        self.Filename = filename
+        super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, auto_size_text=auto_size_text)
+        return
+
+    def __del__(self):
+        super().__del__()
+
+
 
 # ------------------------------------------------------------------------- #
 #                       Row CLASS                                           #
@@ -589,6 +608,7 @@ class FlexForm:
         self.RootNeedsDestroying = False
         self.Shown = False
         self.ReturnValues = None
+        self.ResultsBuilt = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args, auto_size_text=None):
@@ -663,31 +683,37 @@ class FlexForm:
             self.TKroot.mainloop()
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
+                _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
         return(BuildResults(self))
 
-    def OutputFlush(self, Message=''):
-        if self.TKrootDestroyed: return None
+    def Refresh(self, Message=''):
+        if self.TKrootDestroyed:
+            return None
         if Message:
             print(Message)
         try:
             self.TKroot.update()
         except:
             self.TKrootDestroyed = True
+            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
         return(BuildResults(self))
 
     def Close(self):
         try:
             self.TKroot.update()
         except: pass
-        results = BuildResults(self)
+        if not self.NonBlocking:
+            results = BuildResults(self)
         if self.TKrootDestroyed:
-            return results
+            return None
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
-        return results
+        return None
 
     def CloseNonBlockingForm(self):
-        self.TKroot.destroy()
+        try:
+            self.TKroot.destroy()
+        except: pass
         _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
 
     def OnClosingCallback(self):
@@ -735,6 +761,7 @@ class UberForm():
         if not self.TKrootDestroyed:
             self.TKrootDestroyed = True
             self.TKroot.destroy()
+            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
 
     def __del__(self):
         return
@@ -750,12 +777,21 @@ def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=N
 def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None):
     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text)
 
-# -------------------------  TEXT Element lazy functions  ------------------------- #
-def Txt(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None):
-    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color)
+# -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
+def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None):
+    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
 
-def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None):
-    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color)
+def DropDown(values, scale=(None, None), size=(None, None), auto_size_text=None):
+    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
+
+def Drop(values, scale=(None, None), size=(None, None), auto_size_text=None):
+    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
+# -------------------------  TEXT Element lazy functions  ------------------------- #
+def Txt(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
+    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
+
+def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
+    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
@@ -815,28 +851,30 @@ def InitializeResults(form):
     for row_num,row in enumerate(form.Rows):
         r = []
         for element in row.Elements:
-            if element.Type == TEXT:
+            if element.Type == ELEM_TYPE_TEXT:
                 r.append(None)
-            elif element.Type == INPUT_TEXT:
+            if element.Type == ELEM_TYPE_IMAGE:
+                r.append(None)
+            elif element.Type == ELEM_TYPE_INPUT_TEXT:
                 r.append(element.TextInputDefault)
                 return_vals.append(None)
-            elif element.Type == INPUT_MULTILINE:
+            elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 r.append(element.TextInputDefault)
                 return_vals.append(None)
-            elif element.Type == BUTTON:
+            elif element.Type == ELEM_TYPE_BUTTON:
                 r.append(False)
-            elif element.Type == PROGRESS_BAR:
+            elif element.Type == ELEM_TYPE_PROGRESS_BAR:
                 r.append(None)
-            elif element.Type == INPUT_CHECKBOX:
+            elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                 r.append(element.InitialState)
                 return_vals.append(element.InitialState)
-            elif element.Type == INPUT_RADIO:
+            elif element.Type == ELEM_TYPE_INPUT_RADIO:
                 r.append(element.InitialState)
                 return_vals.append(element.InitialState)
-            elif element.Type == INPUT_COMBO:
+            elif element.Type == ELEM_TYPE_INPUT_COMBO:
                 r.append(element.TextInputDefault)
                 return_vals.append(None)
-            elif element.Type == INPUT_SPIN:
+            elif element.Type == ELEM_TYPE_INPUT_SPIN:
                 r.append(element.TextInputDefault)
                 return_vals.append(None)
         results.append(r)
@@ -870,39 +908,40 @@ def BuildResults(form):
     input_values = []
     for row_num,row in enumerate(form.Rows):
         for col_num, element in enumerate(row.Elements):
-            if element.Type == INPUT_TEXT:
+            if element.Type == ELEM_TYPE_INPUT_TEXT:
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
-            elif element.Type == INPUT_CHECKBOX:
+            elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                 value=element.TKIntVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value != 0)
-            elif element.Type == INPUT_RADIO:
+            elif element.Type == ELEM_TYPE_INPUT_RADIO:
                 RadVar=element.TKIntVar.get()
                 this_rowcol = EncodeRadioRowCol(row_num,col_num)
                 value = RadVar == this_rowcol
                 results[row_num][col_num] = value
                 input_values.append(value)
-            elif element.Type == BUTTON:
+            elif element.Type == ELEM_TYPE_BUTTON:
                 if results[row_num][col_num] is True:
                     button_pressed_text = element.ButtonText
                     results[row_num][col_num] = False
-            elif element.Type == INPUT_COMBO:
+            elif element.Type == ELEM_TYPE_INPUT_COMBO:
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
-            elif element.Type == INPUT_SPIN:
+            elif element.Type == ELEM_TYPE_INPUT_SPIN:
                 try:
                     value=element.TKStringVar.get()
                 except:
                     value = 0
                 results[row_num][col_num] = value
                 input_values.append(value)
-            elif element.Type == INPUT_MULTILINE:
+            elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 try:
                     value=element.TKText.get(1.0, tk.END)
-                    element.TKText.delete('1.0', tk.END)
+                    if not form.NonBlocking:
+                        element.TKText.delete('1.0', tk.END)
                 except:
                     value = None
                 results[row_num][col_num] = value
@@ -964,7 +1003,7 @@ def ConvertFlexToTK(MyFlexForm):
                 element_size = (int(element_size[0] * MyFlexForm.Scale[0]), int(element_size[1] * MyFlexForm.Scale[1]))
             # -------------------------  TEXT element  ------------------------- #
             element_type = element.Type
-            if element_type == TEXT:
+            if element_type == ELEM_TYPE_TEXT:
                 display_text = element.DisplayText         # text to display
                 if auto_size_text is False:
                     width, height=element_size
@@ -983,14 +1022,16 @@ def ConvertFlexToTK(MyFlexForm):
                 stringvar.set(display_text)
                 if auto_size_text:
                     width = 0
-                tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, textvariable=stringvar, width=width, height=height, justify=tk.LEFT, bd=border_depth, fg=element.TextColor)
+                justify = tk.LEFT if element.Justification == 'left' else tk.CENTER if element.Justification == 'center' else tk.RIGHT
+                anchor = tk.NW if element.Justification == 'left' else tk.N if element.Justification == 'center' else tk.NE
+                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth, fg=element.TextColor)
                 # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure(anchor=tk.NW, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
+                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
                 tktext_label.pack(side=tk.LEFT)
             # -------------------------  BUTTON element  ------------------------- #
-            elif element_type == BUTTON:
+            elif element_type == ELEM_TYPE_BUTTON:
                 element.Location = (row_num, col_num)
                 btext = element.ButtonText
                 btype = element.BType
@@ -1019,7 +1060,7 @@ def ConvertFlexToTK(MyFlexForm):
                     element.TKButton.focus_set()
                     MyFlexForm.TKroot.focus_force()
             # -------------------------  INPUT (Single Line) element  ------------------------- #
-            elif element_type == INPUT_TEXT:
+            elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
                 element.TKStringVar = tk.StringVar()
                 element.TKStringVar.set(default_text)
@@ -1031,7 +1072,7 @@ def ConvertFlexToTK(MyFlexForm):
                     focus_set = True
                     element.TKEntry.focus_set()
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
-            elif element_type == INPUT_COMBO:
+            elif element_type == ELEM_TYPE_INPUT_COMBO:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False: width=element_size[0]
                 else: width = max_line_len
@@ -1041,7 +1082,7 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 element.TKCombo.current(0)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
-            elif element_type == INPUT_MULTILINE:
+            elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
                 width, height = element_size
                 element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
@@ -1053,7 +1094,7 @@ def ConvertFlexToTK(MyFlexForm):
                     focus_set = True
                     element.TKText.focus_set()
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
-            elif element_type == INPUT_CHECKBOX:
+            elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 element.TKIntVar = tk.IntVar()
@@ -1061,7 +1102,7 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font)
                 element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  PROGRESS BAR element  ------------------------- #
-            elif element_type == PROGRESS_BAR:
+            elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
                 width = element_size[0]
                 fnt = tkinter.font.Font()
@@ -1079,7 +1120,7 @@ def ConvertFlexToTK(MyFlexForm):
                 s = ttk.Style()
                 element.TKProgressBar.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
-            elif element_type == INPUT_RADIO:
+            elif element_type == ELEM_TYPE_INPUT_RADIO:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 ID = element.GroupID
@@ -1097,7 +1138,7 @@ def ConvertFlexToTK(MyFlexForm):
                                                        variable=element.TKIntVar, value=value, bd=border_depth, font=font)
                 element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
-            elif element_type == INPUT_SPIN:
+            elif element_type == ELEM_TYPE_INPUT_SPIN:
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.TKStringVar = tk.StringVar()
@@ -1106,9 +1147,21 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
                 element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  OUTPUT element  ------------------------- #
-            elif element_type == OUTPUT:
+            elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
                 element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth)
+                element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                # -------------------------  IMAGE Box element  ------------------------- #
+            elif element_type == ELEM_TYPE_IMAGE:
+                photo = tk.PhotoImage(file=element.Filename)
+                if element_size == (None, None) or element_size == None or element_size == MyFlexForm.DefaultElementSize:
+                    width, height = photo.width(), photo.height()
+                else:
+                    width, height = element_size
+                tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
+                tktext_label.image = photo
+                # tktext_label.configure(anchor=tk.NW, image=photo)
+                tktext_label.pack(side=tk.LEFT)
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         tk_row_frame.grid(row=row_num+2, sticky=tk.W, padx=DEFAULT_MARGINS[0])
@@ -1619,8 +1672,65 @@ def GetComplimentaryHex(color):
     comp_color = 0xFFFFFF ^ color
     # convert the color back to hex by prefixing a #
     comp_color = "#%06X" % comp_color
-    # return the result
     return comp_color
+
+
+
+# ========================  EasyPrint           =====#
+# ===================================================#
+_easy_print_data = None     # global variable... I'm cheating
+
+class DebugWin():
+    def __init__(self, size=(None, None)):
+        # Show a form that's a running counter
+        win_size = size if size !=(None, None) else DEFAULT_DEBUG_WINDOW_SIZE
+        self.form = FlexForm('Debug Window', auto_size_text=True, font=('Courier New', 12))
+        self.output_element = Output(size=win_size)
+        self.form_rows = [[Text('EasyPrint Output')],
+                     [self.output_element],
+                     [Quit()]]
+        self.form.AddRows(self.form_rows)
+        self.form.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
+        return
+
+    def Print(self, *args, end=None, sep=None):
+        sepchar = sep if sep is not None else ' '
+        endchar = end if end is not None else '\n'
+        print(*args, sep=sepchar, end=endchar)
+        # for a in args:
+        #     msg = str(a)
+        #     print(msg, end="", sep=sepchar)
+        #     print(1, 2, 3, sep='-')
+        # if end is None:
+        #     print("")
+        self.form.Refresh()
+
+    def Close(self):
+        self.form.CloseNonBlockingForm()
+        self.form.__del__()
+
+def Print(*args, size=(None,None), end=None, sep=None):
+    EasyPrint(*args, size=size, end=end, sep=sep)
+
+def PrintClose():
+    EasyPrintClose()
+
+def eprint(*args, size=(None,None), end=None, sep=None):
+    EasyPrint(*args, size=size, end=end, sep=sep)
+
+def EasyPrint(*args, size=(None,None), end=None, sep=None):
+    if 'easy_print_data' not in EasyPrint.__dict__:     # use a function property to save DebugWin object (static variable)
+        EasyPrint.easy_print_data = DebugWin(size=size)
+    if EasyPrint.easy_print_data is None:
+        EasyPrint.easy_print_data = DebugWin(size=size)
+    EasyPrint.easy_print_data.Print(*args, end=end, sep=sep)
+
+def EasyPrintClose():
+    if 'easy_print_data' in EasyPrint.__dict__:
+        if EasyPrint.easy_print_data is not None:
+            EasyPrint.easy_print_data.Close()
+        EasyPrint.easy_print_data = None
+        # del EasyPrint.easy_print_data
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
@@ -1733,7 +1843,7 @@ def SetGlobalIcon(icon):
 # ===================================================#
 def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), margins=(None,None), element_padding=(None,None),
                auto_size_text=None, font=None, border_width=None, autoclose_time=None, message_box_line_width=None,
-               progress_meter_border_depth=None):
+               progress_meter_border_depth=None, text_justification=None, debug_win_size=(None,None)):
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
     global DEFAULT_ELEMENT_PADDING  # Padding between elements (row, col) in pixels
@@ -1744,6 +1854,8 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     global DEFAULT_BUTTON_COLOR
     global MESSAGE_BOX_LINE_WIDTH
     global DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+    global DEFAULT_TEXT_JUSTIFICATION
+    global DEFAULT_DEBUG_WINDOW_SIZE
     global _my_windows
 
     if icon:
@@ -1784,16 +1896,15 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     if progress_meter_border_depth != None:
         DEFAULT_PROGRESS_BAR_BORDER_WIDTH = progress_meter_border_depth
 
+    if text_justification != None:
+        DEFAULT_TEXT_JUSTIFICATION = text_justification
+
+    if debug_win_size != (None,None):
+        DEFAULT_DEBUG_WINDOW_SIZE = debug_win_size
+
     return True
 
 
-# ============================== SetButtonColor =====#
-# Sets the defaul button color                       #
-# ===================================================#
-def SetButtonColor(foreground, background):
-    global DEFAULT_BUTTON_COLOR
-
-    DEFAULT_BUTTON_COLOR = (foreground, background)
 
 
 # ============================== sprint ======#

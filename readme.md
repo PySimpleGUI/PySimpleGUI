@@ -1,4 +1,4 @@
-
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)
 # PySimpleGUI
 
 This really is a simple GUI, but also powerfully customizable.
@@ -9,23 +9,23 @@ This really is a simple GUI, but also powerfully customizable.
 
 ![snap0102](https://user-images.githubusercontent.com/13696193/42781058-1d28d9fa-8913-11e8-847e-5c2afc16ca4c.jpg)
 
+Add a Progress Meter to your code with ONE LINE of code
+
+    EasyProgressMeter('My meter title', current_value, max value)
+
+![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
+
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they're quite limiting.  PySimpleGUI tried to take the best of packages like `EasyGUI`(no longer maintained) and `WxSimpleGUI` (a great package, but was too limited for my application).   `PySimpleGUI` provides similar single-call-message-box solutions as you'll see.
+There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`(no longer maintained) and `WxSimpleGUI` (a great package, but limited).   The difference between these and PySimpleGUI is that in addition to getting those simple Message Boxes you also get the ability to make your own forms that are highly customizeable.
+
+Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.
 
 GUI Packages with more functionality, like QT and WxPython, require configuring and can take a ***week*** to get *reasonably familiar* with the interfaces.
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
 The `PySimpleGUI` solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
-
-You can add a GUI to your command line with a single line of code.  With 3 or 4 lines of code you can add a fully customized GUI.  And for you Machine Learning folks out there, a **single line** progress meter call that you can drop into any loop to get a graphic like this one:
-
-
-![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
-
-
-
 
     Features of PySimpleGUI include:
         Text
@@ -241,6 +241,12 @@ With a little trickery you can provide a way to break out of your loop using the
 
 This is the FUN part of the programming of this GUI.  In order to really get the most out of the API, you should be using an IDE that supports auto complete or will show you the definition of the function.  This will make customizing go  smoother.
 
+This first section on custom forms is for your typical, blocking, non-persistant form.  By this I mean, when you "show" the form, the function will not return until the user has clicked a button or closed the window.  When this happens, the form's window will be automatically closed.
+
+Two other types of forms exist.
+1. Persistent form - rather than closing on button clicks, the show form function returns and the form continues to be visible.  This is good for applications like a chat window.
+2. Asynchronous form - the trickiest of the lot. Great care must be exercised.  Examples are an MP3 player or status dashboard.  Async forms are updated (refreshed) on a periodic basis.
+
 It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.   Let's start with a basic Browse for a file and do something with it.
 # Copy these design patterns!
 ## Pattern 1 - With Context Manager
@@ -249,7 +255,7 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
         form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [SG.InputText(), SG.FileBrowse()],
                      [SG.Submit(), SG.Cancel()]]
-        (button, (source_filename, )) = form.LayoutAndShow(form_rows)
+        button, (source_filename, ) = form.LayoutAndShow(form_rows)
 
 ## Pattern 2 - No Context Manager
 
@@ -257,7 +263,7 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
     form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
                  [SG.InputText(), SG.FileBrowse()],
                  [SG.Submit(), SG.Cancel()]]
-    (button, (source_filename,)) = form.LayoutAndShow(form_rows)
+    button, (source_filename,) = form.LayoutAndShow(form_rows)
 
 
 These 2 design patters both produce this custom form:
@@ -266,7 +272,7 @@ These 2 design patters both produce this custom form:
 
 It's important to use the "with" context manager so that resources are freed as quickly as possible, using the currently executing thread.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
 
-The second design pattern is not context manager based. There are times when the context manager hides errors.  If you are struggling with an unknown error, try modifying the code to run without a context manager.
+The second design pattern is not context manager based.  If you are struggling with an unknown error, try modifying the code to run without a context manager.   To do so, you simple remove the with, stick the form on the front of that statement, and un-indent the with-block code.
 
 You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
@@ -277,17 +283,17 @@ Going through each line of code in the above form will help explain how to use t
     with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
 This creates a new form, storing it in the variable `form`.
 
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
 The next few rows of code lay out the rows of elements in the window to be displayed.  The variable `form_rows` holds our entire GUI window.   The first row of this form has a Text element.  These simply display text on the form.
 
-                     [SG.InputText(), SG.FileBrowse()],
+    [SG.InputText(), SG.FileBrowse()],
 Now we're on the second row of the form.  On this row there are 2 elements.  The first is an `Input` field.  It's a place the user can enter `strings`.  The second element is a `File Browse Button`.  A file or folder browse button will always fill in the text field to it's left unless otherwise specified.  In this example, the File Browse Button will interact with the `InputText` field to its left.
 
-				    [SG.Submit(), SG.Cancel()]]
+	[SG.Submit(), SG.Cancel()]]
 
 The last line of the `form_rows` variable assignment contains a Submit and a Cancel Button.  These are buttons that will cause a form to return its value to the caller.
 
-        (button, (source_filename, )) = form.LayoutAndShow(form_rows)
+    (button, (source_filename, )) = form.LayoutAndShow(form_rows)
 This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field
 
 ---
@@ -480,7 +486,16 @@ The most basic element is the Text element.  It simply displays text.  Many of t
         size=(None, None),
         auto_size_text=None,
         font=None,
-        text_color=None)
+        text_color=None,
+        justification=None)
+.
+
+    Text - The text that's displayed
+    size - Element's size
+    auto_size_text - Bool. Change width to match size of text
+    font - Font name and size to use
+    text_color - text color
+    justification - Justification for the text. String - 'left', 'right', 'center'
 
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.
 
@@ -814,7 +829,7 @@ Each of the tabs of the form is in fact a form.  The same steps are taken to cre
 
 ## Global Settings
 **Global Settings**
-You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
+Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
 
     SetOptions(icon=None,
                button_color=(None,None),
@@ -825,7 +840,8 @@ You can set the global settings using the function `PySimpleGUI.SetOptions`.  Ea
                font=None, border_width=None,
                autoclose_time=None,
                message_box_line_width=None,
-               progress_meter_border_depth=None):
+               progress_meter_border_depth=None,
+               text_justification=None):
 
 Explanation of parameters
 
@@ -840,6 +856,7 @@ Explanation of parameters
 	          autoclose_time - time in seconds for autoclose boxes
 	          message_box_line_width - number of characers in a line of text in message boxes
 	          progress_meter_border_depth - amount of border around raised or lowered progress meters
+	          text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
 
 
 These settings apply to all forms `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the Form-level being the highest and the Element-level the lowest.  Thus the levels are:
@@ -851,7 +868,55 @@ These settings apply to all forms `SetOptions`.  The Row options and Element opt
 Each lower level overrides the settings of the higher level
 
 ## Asynchronous (Non-Blocking) Forms
-While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.
+So you want to be a wizard do ya?  Well go boldly!  While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.  With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.refresh` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
+When do you use a non-blocking form? A couple of examples are
+* A media file player like an MP3 player
+* A status dashboard that's periodically updated
+* Progress Meters - when you want to make your own progress meters
+* Output using print to a scrolled text element. Good for debugging.
+
+We're going to build an app that does the latter.  It's going to update our form with a running clock.
+
+The basic flow and functions you will be calling are:
+Setup
+
+    form = FlexForm()
+    form.AddRows(form_rows)
+    form.Show(non_blocking = True)
+
+Periodic refresh
+
+    form.Refresh()
+If you need to close the form
+
+    form.CloseNonBlockingForm()
+
+Rather than the usual `form.LayoutAndShow()` call, we're manually adding the rows (doing the layout) and then showing the form.  After the form is shown, you simply call `form.Refresh()` every now and then.
+
+When you are ready to close the form (assuming the form wasn't closed by the user or a button click) you simply call `form.CloseNonBlockingForm()`
+
+**Example - Running timer that updates**
+We're going to make a form and update one of the elements of that form every .01 seconds.  Here's the entire code to do that.
+
+    with SG.FlexForm('Running Timer', auto_size_text=True) as form:
+        output_element = SG.Text('', size=(8, 2), font=('Helvetica', 20))
+        form_rows = [[SG.Text('Non-blocking GUI with updates')],
+                     [output_element],
+                     [SG.SimpleButton('Quit')]]
+
+        form.AddRows(form_rows)
+        form.Show(non_blocking=True)
+        for i in range(1, 100):
+            output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i/100), 60), i%100))
+            rc = form.Refresh()
+            if rc is None or rc[0] == 'Quit':
+                break
+        time.sleep(.01)
+        else:
+            form.CloseNonBlockingForm()
+What we have here is the same sequence of function calls as in the description.  Get a form, add rows to it, show the form, and then refresh it every now and then.
+The new thing in this example is the call use of the Update method for the Text Element.  The first thing we do inside the loop is "update" the text element that we made earlier.  This changes the value of the text field on the form.  The new value will be displayed when `form.Refreshu()` is called.  That's it... this example follows the async design pattern well.
+
 
 
 ## Sample Applications
@@ -874,12 +939,14 @@ sprint
 Call `sprint` with as many parameters as you want and it'll print them all out in a `ScrolledTextBox`.  This is simply a function pointing to `PySimpleGUI.ScrolledTextBox`.
 
 ---
-## Known Issues
+# Known Issues
 While not an "issue" this is a ***stern warning***
 
 ## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
 
 **Progress Meters** - the visual graphic portion of the meter may be off.  May return to the native tkinter progress meter solution in the future.  Right now a "custom" progress meter is used.  On the bright side, the statistics shown are extremely accurate and can tell you something about the performance of your code.
+**Async Forms** - these include the 'easy' forms (EasyProgressMeter and EasyPrint/Print). If you start overlapping having Async forms open with normal forms then things get a littler squirrelly.  Still tracking down the issues and am making it more solid every day possible.  You'll know there's an issue when you see blank form.
+**EasyPrint** - EasyPrint is a new feature that's pretty awesome.  You print and the output goes to a window, with a scroll bar, that you can copy and paste from.  Being a new feature, it's got some potential problems.  There are known interaction problems with other GUI windows.  For example, closing a Print window can also close other windows you have open.  For now, don't close your debug print window until other windows are closed too.
 
 ## Contributing
 
@@ -892,6 +959,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 1.0.21 | July 13, 2018 - Readme updates  |
 | 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
 | 2.1.1 | July 18, 2018 - Global settings exposed, fixes
+| 2.2.0| July 20, 2018 - Image Elements, Print output
 
 ## Code Condition
 
@@ -907,7 +975,7 @@ While the internals to PySimpleGUI are a tad sketchy, the public interfaces into
 MikeTheWatchGuy
 
 ## License
-  
+
 This project is limited to non-commercial applications.  If you wish to use it commercially, please contact one of the authors.
 For non-commercial individual, the GNU Lesser General Public License (LGPL 3)  applies.
 
@@ -915,7 +983,28 @@ For non-commercial individual, the GNU Lesser General Public License (LGPL 3)  a
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
 
+## How Do I
+Finally, I must thank the fine folks at How Do I.
+https://github.com/gleitz/howdoi
+Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**
+Here are the steps to run that application
 
+    Install howdoi:
+          pip install howdoi
+    Test your install:
+          python -m howdoi howdoi.py
+    To run it:
+          Python HowDoI.py
+
+The pip command is all there is to the setup.
+
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
+For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
+![snap0109](https://user-images.githubusercontent.com/13696193/42916444-4199b16c-8ad3-11e8-8423-d12e61a58d3d.jpg)
+
+In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
+
+The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 
 
 
