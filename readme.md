@@ -40,6 +40,8 @@ The `PySimpleGUI` solution is focused on the ***developer***.  How can the desir
             Close form
         Checkboxes
         Radio Buttons
+        Listbox
+        Slider
         Icons
         Multi-line Text Input
         Scroll-able Output
@@ -1082,10 +1084,11 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
 | 2.1.1 | July 18, 2018 - Global settings exposed, fixes
 | 2.2.0| July 20, 2018 - Image Elements, Print output
-| 2.3.0 | July XX, 2018 - Changed form.Read return codes, Slider Elements, Listbox element. Renamed some methods but left legacy calls in place for now.
+| 2.3.0 | July 23, 2018 - Changed form.Read return codes, Slider Elements, Listbox element. Renamed some methods but left legacy calls in place for now.
+| 2.4.0 | July XX, 2018 - Planned release.  Will have button images.
 
 ### Release Notes
-2.3 - Sliders, Listbox's and Image elements (oh my!)  This Readme is being updated with Listbox and Image elements.  If you want to use them, they behave as one would expect.  Note use of pixels in some parameters.
+2.3 - Sliders, Listbox's and Image elements (oh my!)
 
 If using Progress Meters, avoid cancelling them when you have another window open.  It could lead to future windows being blank. It's being worked on.
 
