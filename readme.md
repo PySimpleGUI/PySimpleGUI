@@ -1,4 +1,4 @@
-![logo01 2](https://user-images.githubusercontent.com/13696193/43081788-6b373d42-8e60-11e8-8f86-3ef0f01e54b5.png)
+![logo01 2 _2](https://user-images.githubusercontent.com/13696193/43082437-1252511a-8e62-11e8-9150-fc227cc56cfe.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
 # PySimpleGUI  
