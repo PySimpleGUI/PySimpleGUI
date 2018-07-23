@@ -1,4 +1,6 @@
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
+![logo01 2](https://user-images.githubusercontent.com/13696193/43081788-6b373d42-8e60-11e8-8f86-3ef0f01e54b5.png)
+
+](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
 # PySimpleGUI
 
 This really is a simple GUI, but also powerfully customizable.
@@ -17,7 +19,7 @@ Add a Progress Meter to your code with ONE LINE of code
 
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`(no longer maintained) and `WxSimpleGUI` (a great package, but limited).   The difference between these and PySimpleGUI is that in addition to getting those simple Message Boxes you also get the ability to make your own forms that are highly customizeable.
+There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`(no longer maintained) and `WxSimpleGUI` (a great package, but limited).   The primary difference between these and PySimpleGUI is that in addition to getting those simple Message Boxes you also get the ability to make your own forms that are highly customizeable.  Don't like the standard Message Box? Then make your own!
 
 Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.
 
@@ -40,17 +42,35 @@ The `PySimpleGUI` solution is focused on the ***developer***.  How can the desir
         Icons
         Multi-line Text Input
         Scroll-able Output
+        Images
         Progress Bar
         Async/Non-Blocking Windows
         Tabbed forms
         Persistent Windows
-        Redirect Python Output/Errors to scrolling Window
+        Redirect Python Output/Errors to scrolling window
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
+        Single-Line-Of-Coide Proress Bar & Debug Print
 
 
 An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
 
 ![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
+
+---
+### Design Goals
+> Copy, Paste, Run.
+
+`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
+
+ Be Pythonic... Python's lists in particular worked out really well:
+ - Forms are represented as Python lists.
+	 - A form is a list of rows
+   - A row is a list of elements
+- Return values are a list
+
+ Each Elements is specified by names such as Text, Button, Checkbox, etc.
+
+Some elements have shortcuts, meant to make it easy on the programmer who will write less code using them.  Rather than writing calling `Button`, with  `button_name = "Submit"` will create a button with the text 'Submit' on it,  Other examples include shortening the name of the function.  `Text` is shorted to `Txt` or `T`.    See each API call for the shortcuts.
 
   -----
 ## Getting Started with PySimpleGUI
@@ -296,15 +316,6 @@ The last line of the `form_rows` variable assignment contains a Submit and a Can
     (button, (source_filename, )) = form.LayoutAndShow(form_rows)
 This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field
 
----
-### Design Goals
-> Copy, Paste, Run.
-
-`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
-
-Forms are represented as Python lists.  There are 2 lists in particular.  One is a list of rows that form up a GUI screen.  The other is a list of Elements (or Widgets) on each row.  Each Elements is specified by names such as Text, Button, Checkbox, etc.
-
-Some elements are shortcuts, meant to make it easy on the programmer who will write less code using them.  Rather than writing a `Button`, with  `button_name = "Submit"`, etc, the caller can simply writes `Submit`.  Some examples include: `Text` has a short-cut function named `T`.  `TextInput` has `In`.   See each API call for the shortcuts.
 
 
 ---
@@ -347,7 +358,7 @@ This code utilizes as many of the elements in one form as possible.
                   [Text('Source Folder', size=(15, 1), auto_size_text=False), InputText('Source'), FolderBrowse()],
                   [Text('Destination Folder', size=(15, 1), auto_size_text=False), InputText('Dest'), FolderBrowse()],
                   [SimpleButton('Your Button with any text you want')],
-                  [SimpleButton('Big Text', size=(12,1), font=("Helvetica", 20))],
+                  [SimpleButton('Big Text', size=(12,1), font=("Helvetica", 20))],  
                   [Submit(), Cancel()]]
 
         (button, (values)) = form.LayoutAndShow(layout)
@@ -771,7 +782,7 @@ You setup the progress meter by calling
     my_meter = ProgressMeter(title,
     					     max_value,
     					     *args,
-    		d			     orientantion=None,
+    					     orientantion=None,
     					     bar_color=DEFAULT_PROGRESS_BAR_COLOR,
     					     button_color=None,
     					     size=DEFAULT_PROGRESS_BAR_SIZE,
@@ -869,11 +880,20 @@ Each lower level overrides the settings of the higher level
 
 ## Asynchronous (Non-Blocking) Forms
 So you want to be a wizard do ya?  Well go boldly!  While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.  With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.refresh` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
+
 When do you use a non-blocking form? A couple of examples are
 * A media file player like an MP3 player
 * A status dashboard that's periodically updated
 * Progress Meters - when you want to make your own progress meters
 * Output using print to a scrolled text element. Good for debugging.
+
+Word of warning... version 2.2, the currently released, and upcoming version 2.3 differ in the return code for the `Refresh` call.  Previously the function returned 2 values, except when the form is closed using the "X" which returned a single value of `None`.  The *new* way is that Refresh always returns 2 values.  If the user closed the form with the "X" then the return values will be None, None.  You will want to key off the second value to catch this case.
+The proper code to check if the user has exited the form will be a polling-loop that looks something like this:
+
+    while True:
+    	button, values = form.Refresh()
+    	if values is None or button == 'Quit':
+    		break
 
 We're going to build an app that does the latter.  It's going to update our form with a running clock.
 
@@ -908,22 +928,32 @@ We're going to make a form and update one of the elements of that form every .01
         form.Show(non_blocking=True)
         for i in range(1, 100):
             output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i/100), 60), i%100))
-            rc = form.Refresh()
-            if rc is None or rc[0] == 'Quit':
+            button, values = form.Refresh()
+            if values is None or button == 'Quit':
                 break
-        time.sleep(.01)
+	        time.sleep(.01)
         else:
             form.CloseNonBlockingForm()
+
 What we have here is the same sequence of function calls as in the description.  Get a form, add rows to it, show the form, and then refresh it every now and then.
-The new thing in this example is the call use of the Update method for the Text Element.  The first thing we do inside the loop is "update" the text element that we made earlier.  This changes the value of the text field on the form.  The new value will be displayed when `form.Refreshu()` is called.  That's it... this example follows the async design pattern well.
+
+The new thing in this example is the call use of the Update method for the Text Element.  The first thing we do inside the loop is "update" the text element that we made earlier.  This changes the value of the text field on the form.  The new value will be displayed when `form.Refresh()` is called.
+
+Note the `else` statement on the for loop.  This is needed because we're about to exit the loop while the form is still open.  The user has not closed the form using the X nor a button so it's up to the caller to close the form using `CloseNonBlockingForm`.
+
+That's it... this example follows the async design pattern well.
 
 
 
 ## Sample Applications
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
+
 `Demo DisplayHash1and256.py` - Demonstrates using High Level API calls to get a filename
+
 `Demo DupliucateFileFinder.py` - Demonstrates High Level API to get a folder & Easy Progress Meter to show progress of the file scanning
+
 `Demo Recipes.py` - Three sample forms including an asynchronous form
+
 `Demo HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program could forever change how you code. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.
 
 ## Fun Stuff
@@ -945,7 +975,9 @@ While not an "issue" this is a ***stern warning***
 ## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
 
 **Progress Meters** - the visual graphic portion of the meter may be off.  May return to the native tkinter progress meter solution in the future.  Right now a "custom" progress meter is used.  On the bright side, the statistics shown are extremely accurate and can tell you something about the performance of your code.
+
 **Async Forms** - these include the 'easy' forms (EasyProgressMeter and EasyPrint/Print). If you start overlapping having Async forms open with normal forms then things get a littler squirrelly.  Still tracking down the issues and am making it more solid every day possible.  You'll know there's an issue when you see blank form.
+
 **EasyPrint** - EasyPrint is a new feature that's pretty awesome.  You print and the output goes to a window, with a scroll bar, that you can copy and paste from.  Being a new feature, it's got some potential problems.  There are known interaction problems with other GUI windows.  For example, closing a Print window can also close other windows you have open.  For now, don't close your debug print window until other windows are closed too.
 
 ## Contributing
@@ -960,6 +992,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
 | 2.1.1 | July 18, 2018 - Global settings exposed, fixes
 | 2.2.0| July 20, 2018 - Image Elements, Print output
+| 2.3.0 | July XX, 2018 - Changed form.Read return codes, Slider Elements, Listbox element
 
 ## Code Condition
 
@@ -971,13 +1004,15 @@ It's a recipe for success if done right.  PySimpleGUI has completed the "Make it
 
 While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
 
+Please log bugs and suggestions in the GitHub!  It will only make the code stronger and better in the end, a good thing for us all, right?
+
 ## Authors
 MikeTheWatchGuy
 
 ## License
 
 This project is limited to non-commercial applications.  If you wish to use it commercially, please contact one of the authors.
-For non-commercial individual, the GNU Lesser General Public License (LGPL 3)  applies.
+For non-commercial individuals, the GNU Lesser General Public License (LGPL 3)  applies.
 
 ## Acknowledgments
 
@@ -1005,6 +1040,7 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
 
 
 
