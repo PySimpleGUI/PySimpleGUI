@@ -1,12 +1,12 @@
-![logo01 2 _2](https://user-images.githubusercontent.com/13696193/43082229-8b7343b6-8e61-11e8-90d4-808e1cb694ef.png)
+![logo01 2](https://user-images.githubusercontent.com/13696193/43081788-6b373d42-8e60-11e8-8f86-3ef0f01e54b5.png)
 
-](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
-# PySimpleGUI
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
+# PySimpleGUI  
+  
+This really is a simple GUI, but also powerfully customizable.  
 
-This really is a simple GUI, but also powerfully customizable.
-
-    import PySimpleGUI as SG
-
+    import PySimpleGUI as SG  
+      
     SG.MsgBox('My Message Box', 'This is the shortest GUI program ever!')
 
 ![snap0102](https://user-images.githubusercontent.com/13696193/42781058-1d28d9fa-8913-11e8-847e-5c2afc16ca4c.jpg)
@@ -14,10 +14,10 @@ This really is a simple GUI, but also powerfully customizable.
 Add a Progress Meter to your code with ONE LINE of code
 
     EasyProgressMeter('My meter title', current_value, max value)
-
+    
 ![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
 
-I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
+I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??    
 
 There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`(no longer maintained) and `WxSimpleGUI` (a great package, but limited).   The primary difference between these and PySimpleGUI is that in addition to getting those simple Message Boxes you also get the ability to make your own forms that are highly customizeable.  Don't like the standard Message Box? Then make your own!
 
@@ -28,30 +28,30 @@ GUI Packages with more functionality, like QT and WxPython, require configuring 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
 The `PySimpleGUI` solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
-
-    Features of PySimpleGUI include:
-        Text
-        Single Line Input
-        Buttons including these types:
+  
+    Features of PySimpleGUI include:  
+        Text  
+        Single Line Input  
+        Buttons including these types:      
             File Browse
             Folder Browse
             Non-closing return
-            Close form
-        Checkboxes
-        Radio Buttons
-        Icons
-        Multi-line Text Input
-        Scroll-able Output
-        Images
-        Progress Bar
-        Async/Non-Blocking Windows
+            Close form  
+        Checkboxes  
+        Radio Buttons  
+        Icons  
+        Multi-line Text Input  
+        Scroll-able Output   
+        Images   
+        Progress Bar  
+        Async/Non-Blocking Windows  
         Tabbed forms
-        Persistent Windows
-        Redirect Python Output/Errors to scrolling window
+        Persistent Windows  
+        Redirect Python Output/Errors to scrolling window  
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
         Single-Line-Of-Coide Proress Bar & Debug Print
 
-
+  
 An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
 
 ![all widgets](https://user-images.githubusercontent.com/13696193/42604818-adb1dd5c-8542-11e8-94cb-575881590f21.jpg)
@@ -60,41 +60,41 @@ An example of many widgets used on a single form.  A little further down you'll 
 ### Design Goals
 > Copy, Paste, Run.
 
-`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
+`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.  
 
  Be Pythonic... Python's lists in particular worked out really well:
- - Forms are represented as Python lists.
+ - Forms are represented as Python lists.   
 	 - A form is a list of rows
    - A row is a list of elements
 - Return values are a list
 
- Each Elements is specified by names such as Text, Button, Checkbox, etc.
+ Each Elements is specified by names such as Text, Button, Checkbox, etc. 
 
 Some elements have shortcuts, meant to make it easy on the programmer who will write less code using them.  Rather than writing calling `Button`, with  `button_name = "Submit"` will create a button with the text 'Submit' on it,  Other examples include shortening the name of the function.  `Text` is shorted to `Txt` or `T`.    See each API call for the shortcuts.
 
   -----
-## Getting Started with PySimpleGUI
-
-### Installing
-
-    pip install PySimpleGUI
- or
-Simply download the file - PySimpleGUI.py and import it into your code
-
-
-### Prerequisites
-
-Python 3
-tkinter
-
-Should run on all Python platforms that have tkinter running on them.  Has been thoroughly tested on Windows.  While not tested elsewhere, should work on Linux, Mac, Pi, etc.
-
+## Getting Started with PySimpleGUI  
+  
+### Installing  
+  
+    pip install PySimpleGUI  
+ or  
+Simply download the file - PySimpleGUI.py and import it into your code  
+  
+  
+### Prerequisites  
+  
+Python 3  
+tkinter  
+  
+Should run on all Python platforms that have tkinter running on them.  Has been thoroughly tested on Windows.  While not tested elsewhere, should work on Linux, Mac, Pi, etc.  
+  
 ### Using
 
 To use in your code, simply import....
- `import PySimpleGUI as SG`
+ `import PySimpleGUI as SG`  
 
-Then use either "high level" API calls or build your own forms.
+Then use either "high level" API calls or build your own forms.  
 
     SG.MsgBox('This is my first message box')
 ![snap0103](https://user-images.githubusercontent.com/13696193/42844641-a04bb798-89e1-11e8-8a37-50ddd9905772.jpg)
@@ -103,70 +103,70 @@ Yes, it's just that easy to have a window appear on the screen using Python.  Wi
 
 ---
 ## APIs
-
-PySimpleGUI can be broken down into 2 types of API's:
- * High Level single call functions
- * Custom form functions
-
+  
+PySimpleGUI can be broken down into 2 types of API's:  
+ * High Level single call functions  
+ * Custom form functions  
+   
 
 ### Python Language Features
 
  There are a couple of Python language features that PySimpleGUI utilizes heavily that should be understood first...
- * Variable number of arguments to a function call
+ * Variable number of arguments to a function call  
  * Optional parameters to a function call
-
+ 
 #### Variable Number of Arguments
 
  The "High Level" API calls that *output* values take a variable number of arguments so that they match a "print" statement as much as possible.  The idea is to make it simple for the programmer to output as many items as desired and in any format.  The user need not convert the variables to be output into the strings.  The PySimpleGUI functions do that for the user.
-
+     
     SG.MsgBox('Variable number of parameters example', var1, var2, "etc")
 
 Each new item begins on a new line in the Message Box
 
   ![snap0104](https://user-images.githubusercontent.com/13696193/42844739-ebea22ac-89e1-11e8-8dd1-e61441325701.jpg)
 
-
+  
 #### Optional Parameters to a Function Call
-
+ 
 This feature of the Python language is utilized ***heavily*** as a method of customizing forms and form Elements.  Rather than requiring the programmer to specify every possible option for a widget, instead only the options the caller wants to override are specified.
 
-Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't *have* to be specified on each and every call.
+Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't *have* to be specified on each and every call.  
 
-    def MsgBox(*args,
-               button_color=None,
-               button_type=MSG_BOX_OK,
-               auto_close=False,
-               auto_close_duration=None,
-               icon=DEFAULT_WINDOW_ICON,
+    def MsgBox(*args, 
+               button_color=None, 
+               button_type=MSG_BOX_OK,  
+               auto_close=False, 
+               auto_close_duration=None, 
+               icon=DEFAULT_WINDOW_ICON, 
                line_width=MESSAGE_BOX_LINE_WIDTH,
                font=None):
 
 If the caller wanted to change the button color to be black on yellow, the call would look something like this:
 
-    SG.MsgBox('This box has a custom button color',
+    SG.MsgBox('This box has a custom button color',   
               button_color=('black', 'yellow'))
-
+              
 
 ![snap0105](https://user-images.githubusercontent.com/13696193/42844830-2d7e8b9a-89e2-11e8-8ef4-5af9e36f30f3.jpg)
 
 
 ---
 
-### High Level API Calls
+### High Level API Calls  
 
-The classic "input a value, print result" example.
-Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.
-This code prompts user to input a line of text and then displays that text in a messages box:
-
-    import PySimpleGUI_local as SG
-
-    rc = SG.GetTextBox('Title', 'Please input something')
-    SG.MsgBox('Results', 'The value returned from GetTextBox', rc)
-
-![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
-
-![MsgBox](https://user-images.githubusercontent.com/13696193/42592929-1c7361ae-8519-11e8-8adc-411c1afee69f.jpg)
-
+The classic "input a value, print result" example.  
+Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.  
+This code prompts user to input a line of text and then displays that text in a messages box:  
+  
+    import PySimpleGUI_local as SG    
+        
+    rc = SG.GetTextBox('Title', 'Please input something')    
+    SG.MsgBox('Results', 'The value returned from GetTextBox', rc)  
+  
+![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)  
+  
+![MsgBox](https://user-images.githubusercontent.com/13696193/42592929-1c7361ae-8519-11e8-8adc-411c1afee69f.jpg)  
+  
 #### Message Boxes
 In addition to MsgBox, you'll find a several API calls that are shortcuts to common messages boxes.  You can achieve similar results by calling MsgBox with the correct parameters.
 
@@ -175,7 +175,7 @@ The differences tend to be the number and types of buttons.   Here are the calls
     import PySimpleGUI as SG
 
   `SG.MsgBoxOK('This is an OK MsgBox')`
-
+  
   ![msgboxok](https://user-images.githubusercontent.com/13696193/42599852-8dd6914e-852e-11e8-888f-f133d787210b.jpg)
 
     SG.MsgBoxOKCancel('This is an OK Cancel MsgBox')
@@ -209,7 +209,7 @@ This becomes a debug print of sorts that will route to a scrolled window.
 
 There are 3 very basic user input high-level function calls.  It's expected that for most applications, a custom input form will be created. If you need only 1 value, then perhaps one of these high level functions will work.
  - GetTextBox
- - GetFileBox
+ - GetFileBox 
  - GetFolderBox
 
  `submit_clicked, value = SG.GetTextBox('Title', 'Please enter anything')`
@@ -241,7 +241,7 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
 
 Here's the one-line Progress Meter in action!
 
-    for i in range(1,10000):
+    for i in range(1,10000):  
         SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message')
 
 That line of code resulted in this window popping up and updating.
@@ -249,10 +249,10 @@ That line of code resulted in this window popping up and updating.
 ![progress meter 5](https://user-images.githubusercontent.com/13696193/42696912-a5c958b8-8687-11e8-9a7d-a390a465407a.jpg)
 
 A meter AND fun statistics to watch while your machine grinds away, all for the price of 1 line of code.
-With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`.
+With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`. 
 
     if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'):
-	    break
+	    break 
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
 
@@ -271,17 +271,17 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
 # Copy these design patterns!
 ## Pattern 1 - With Context Manager
 
-    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
-                     [SG.InputText(), SG.FileBrowse()],
-                     [SG.Submit(), SG.Cancel()]]
+    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:  
+        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
+                     [SG.InputText(), SG.FileBrowse()],  
+                     [SG.Submit(), SG.Cancel()]]  
         button, (source_filename, ) = form.LayoutAndShow(form_rows)
 
 ## Pattern 2 - No Context Manager
 
-    form = SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
-    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
-                 [SG.InputText(), SG.FileBrowse()],
+    form = SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)  
+    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
+                 [SG.InputText(), SG.FileBrowse()],  
                  [SG.Submit(), SG.Cancel()]]
     button, (source_filename,) = form.LayoutAndShow(form_rows)
 
@@ -300,13 +300,13 @@ You will use these design patterns or code templates for all of your "normal" (b
 
 Going through each line of code in the above form will help explain how to use this design patter.  Copy, modify and run it!
 
-    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
-This creates a new form, storing it in the variable `form`.
+    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:  
+This creates a new form, storing it in the variable `form`.  
 
-    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],  
 The next few rows of code lay out the rows of elements in the window to be displayed.  The variable `form_rows` holds our entire GUI window.   The first row of this form has a Text element.  These simply display text on the form.
 
-    [SG.InputText(), SG.FileBrowse()],
+    [SG.InputText(), SG.FileBrowse()],  
 Now we're on the second row of the form.  On this row there are 2 elements.  The first is an `Input` field.  It's a place the user can enter `strings`.  The second element is a `File Browse Button`.  A file or folder browse button will always fill in the text field to it's left unless otherwise specified.  In this example, the File Browse Button will interact with the `InputText` field to its left.
 
 	[SG.Submit(), SG.Cancel()]]
@@ -322,45 +322,45 @@ This is the code that **displays** the form, collects the information and return
 
 ## Return values
 
-   Return information from FlexForm, SG's primary form builder interface, is in this format:
-
-    (button, (value1, value2, ...))
-
+   Return information from FlexForm, SG's primary form builder interface, is in this format:  
+      
+    (button, (value1, value2, ...))  
+  
 Each of the Elements that are Input Elements will have a value in the list of return values.  You can unpack your GUI directly into the variables you want to use.
 
     (button, (filename, folder1, folder2, should_overwrite) = form.LayoutAndShow(form_rows)
 
-
-If you have a SINGLE value being returned, it is written this way:
-
+  
+If you have a SINGLE value being returned, it is written this way:  
+  
     (button, (value1,)) = form.LayoutAndShow(form_rows)
  Another way of parsing the return values is to store the list of values into a variable representing the list of values.
 
-     (button, (value_list)) = form.LayoutAndShow(form_rows)
+     (button, (value_list)) = form.LayoutAndShow(form_rows)  
      value1 = value_list[0]
      value2 = value_list[1]
      ...
-
+     
 ---
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
 
-    with FlexForm('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as form:
-        layout = [[Text('Here they all are!', size=(30,1), font=("Helvetica", 25), text_color='red')],
-                  [Text('Here is some text with font sizing', font=("Helvetica", 15))],
-                  [InputText()],
-                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', default=True)],
-                  [Radio('My first Radio!', "RADIO1", default=True), Radio('My second checkbox!', "RADIO1")],
-                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', scale=(2, 10))],
-                  [InputCombo(['choice 1', 'choice 2'], size=(20, 3))],
-                  [Text('_'  * 90, size=(60, 1))],
-                  [Text('Choose Source and Destination Folders', size=(35,1))],
-                  [Text('Source Folder', size=(15, 1), auto_size_text=False), InputText('Source'), FolderBrowse()],
-                  [Text('Destination Folder', size=(15, 1), auto_size_text=False), InputText('Dest'), FolderBrowse()],
-                  [SimpleButton('Your Button with any text you want')],
+    with FlexForm('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as form:  
+        layout = [[Text('Here they all are!', size=(30,1), font=("Helvetica", 25), text_color='red')],  
+                  [Text('Here is some text with font sizing', font=("Helvetica", 15))],  
+                  [InputText()],  
+                  [Checkbox('My first checkbox!'), Checkbox('My second checkbox!', default=True)],  
+                  [Radio('My first Radio!', "RADIO1", default=True), Radio('My second checkbox!', "RADIO1")],  
+                  [Multiline(DefaultText='This is the DEFAULT text should you decide not to type anything', scale=(2, 10))],  
+                  [InputCombo(['choice 1', 'choice 2'], size=(20, 3))],  
+                  [Text('_'  * 90, size=(60, 1))],  
+                  [Text('Choose Source and Destination Folders', size=(35,1))],  
+                  [Text('Source Folder', size=(15, 1), auto_size_text=False), InputText('Source'), FolderBrowse()],  
+                  [Text('Destination Folder', size=(15, 1), auto_size_text=False), InputText('Dest'), FolderBrowse()],  
+                  [SimpleButton('Your Button with any text you want')],  
                   [SimpleButton('Big Text', size=(12,1), font=("Helvetica", 20))],  
-                  [Submit(), Cancel()]]
-
+                  [Submit(), Cancel()]]  
+      
         (button, (values)) = form.LayoutAndShow(layout)
 
         MsgBox('Results', 'You clicked {}'.format(button),'The values returned from form', values , font = ("Helvetica", 15))
@@ -376,13 +376,13 @@ Clicking the Submit button caused the form call to return.  The call to MsgBox r
     (button, (values)) = form.LayoutAndShow(layout)
 **`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
 
-You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
+You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.  
 
 ---
 # Building Custom Forms
 You will find it much easier to write code using PySimpleGUI if you use an IDE such as PyCharm.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
 
-    Control-Q (when cursor is on function name) brings up a box with the function definition
+    Control-Q (when cursor is on function name) brings up a box with the function definition 
     Control-P (when cursor inside function call "()") shows a list of parameters and their default values
 
 ## Synchronous Forms
@@ -396,11 +396,11 @@ NON-BLOCKING form call:
 ### Beginning a Form
 The first step is to create the form object using the desired form customization.
 
-    with FlexForm('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as form:
+    with FlexForm('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as form:  
 
 This is the definition of the FlexForm object:
 
-    def FlexForm(title,
+    def FlexForm(title, 
         default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
         auto_size_text=DEFAULT_AUTOSIZE_TEXT,
         scale=(None, None),
@@ -412,7 +412,7 @@ This is the definition of the FlexForm object:
         auto_close=False,
         auto_close_duration=DEFAULT_AUTOCLOSE_TIME,
         icon=DEFAULT_WINDOW_ICON):
-
+       
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
 
 	    default_element_size - Size of elements in form in characters (width, height)
@@ -457,22 +457,22 @@ A summary of the variables that can be changed when a FlexForm is created
 ## Elements
 "Elements" are the building blocks used to create forms.  Some GUI APIs use the term Widget to describe these graphic elements.
 
-     Text
-     Single Line Input
-     Buttons including these types:
+     Text  
+     Single Line Input  
+     Buttons including these types:      
          File Browse
          Folder Browse
          Non-closing return
-         Close form
-     Checkboxes
-     Radio Buttons
-     Multi-line Text Input
-     Scroll-able Output
-     Progress Bar
-     Async/Non-Blocking Windows
+         Close form  
+     Checkboxes  
+     Radio Buttons  
+     Multi-line Text Input  
+     Scroll-able Output      
+     Progress Bar  
+     Async/Non-Blocking Windows  
      Tabbed forms
-     Persistent Windows
-     Redirect Python Output/Errors to scrolling Window
+     Persistent Windows  
+     Redirect Python Output/Errors to scrolling Window  
      "Higher level" APIs (e.g. MessageBox, YesNobox, ...)
 
 
@@ -484,15 +484,15 @@ Building a form is simply making lists of Elements.  Each list is a row in the o
 The code is a crude representation of the GUI, laid out in text.
 ####  Text Element
 
-    layout = [[SG.Text('This is what a Text Element looks like')]]
+    layout = [[SG.Text('This is what a Text Element looks like')]]   
 
-
+ 
  ![textelem](https://user-images.githubusercontent.com/13696193/42670173-4c1fcb40-8627-11e8-851a-5a9ee4672320.jpg)
 
 
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
 
-    Text(Text,
+    Text(Text, 
         scale=(None, None),
         size=(None, None),
         auto_size_text=None,
@@ -568,7 +568,7 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 
 ###  Input Elements
   These make up the majority of the form definition.  Optional variables at the Element level override the Form level values (e.g. `size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
-
+  
 #### Text Input Element
 
     layout = [[SG.InputText('Default text')]]
@@ -594,10 +594,10 @@ Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
     layout = [[SG.InputCombo(['choice 1', 'choice 2'])]]
-
+    
 ![combo](https://user-images.githubusercontent.com/13696193/42694431-631c4108-8680-11e8-8e99-c1a642734464.jpg)
 
-    InputCombo(values,
+    InputCombo(values, 
                scale=(None, None),
                size=(None, None),
                auto_size_text=None)
@@ -635,7 +635,7 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
 
 
 #### Checkbox Element
-Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
+Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked. 
 
     layout =  [[SG.Checkbox('My first Checkbox!', default=True), SG.Checkbox('My second Checkbox!')]]
 
@@ -665,7 +665,7 @@ An up/down spinner control.  The valid values are passed in as a list.
 
 ![spin element](https://user-images.githubusercontent.com/13696193/42717231-8ddb51d4-86cd-11e8-827a-75f2237477fa.jpg)
 
-    Spin(values,
+    Spin(values, 
          intiial_value=None,
          scale=(None, None),
          size=(None, None),
@@ -679,7 +679,7 @@ An up/down spinner control.  The valid values are passed in as a list.
      size - (width, height) size of element in characters
      auto_size_text - Bool.  True if should size width to fit text
      font - Font type and size for text display
-
+     
 #### Button Element
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it but Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
@@ -691,9 +691,9 @@ The Types of buttons include:
 
 
  Close Form - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close Form" buttons.  They cause the input values to be read and then the form is closed, returning the values to the caller.
-
-Folder Browse - When clicked a folder browse dialog box is opened.  The results of the Folder Browse dialog box are written into one of the input fields of the form.
-
+    
+Folder Browse - When clicked a folder browse dialog box is opened.  The results of the Folder Browse dialog box are written into one of the input fields of the form. 
+    
 File Browse - Same as the Folder Browse except rather than choosing a folder, a single file is chosen.
 
 Read Form - This is an async form button that will read a snapshot of all of the input fields, but does not close the form after it's clicked.
@@ -706,7 +706,7 @@ While it's possible to build forms using the Button Element directly, you should
                  auto_size_text=None,
                  button_color=None,
                  font=None)
-
+                 
 Pre-made buttons include:
 
     OK
@@ -722,7 +722,7 @@ Pre-made buttons include:
 
 ![ok cancel](https://user-images.githubusercontent.com/13696193/42717733-1803f584-86d1-11e8-9223-36b782971b9f.jpg)
 
-The FileBrowse and FolderBrowse buttons both fill-in values into a text input field somewhere on the form.  The location of the TextInput element is specified by the `Target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
+The FileBrowse and FolderBrowse buttons both fill-in values into a text input field somewhere on the form.  The location of the TextInput element is specified by the `Target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.  
 
 The default value for `Target` is `(ThisRow, -1)`.   ThisRow is a special value that tells the GUI to use the same row as the button.  The Y-value of -1 means the field one value to the left of the button.  For a File or Folder Browse button, the field that it fills are generally to the left of the button is most cases.
 
@@ -736,30 +736,30 @@ The `InputText` element is located at (1,0)... row 1, column 0.  The `Browse` bu
     Target = (-1,0)
 The code for the entire form could be:
 
-    layout =  [[SG.T('Source Folder')],
-               [SG.In()],
+    layout =  [[SG.T('Source Folder')],  
+               [SG.In()],  
                [SG.FolderBrowse(Target=(-1,0)), SG.OK()]]
 
 **Custom Buttons**
 If you want to define your own button, you will generally do this with the Button Element `SimpleButton`.
-
+  
 layout =  [[SG.SimpleButton('My Button')]]
 
 ![singlebutton](https://user-images.githubusercontent.com/13696193/42718281-9453deca-86d5-11e8-83c7-4b6d33720858.jpg)
 
-All buttons can have their text changed by changing the `button_text` variable.
+All buttons can have their text changed by changing the `button_text` variable. 
 
 **File Types**
-The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
+The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is 
 
     FileTypes=(("ALL Files", "*.*"),)
-
+    
 This code produces a form where the Browse button only shows files of type .TXT
 
     layout =  [[SG.In() ,SG.FileBrowse(file_types=(("Text Files", "*.txt"),))]]
 
   ***The ENTER key***
-       The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.
+       The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right. 
 
 
 ---
@@ -770,7 +770,7 @@ The **easiest** way to get progress meters into your code is to use the `EasyPro
 You've already seen EasyProgressMeter calls presented earlier in this readme.
 
     SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
-
+    
 The return value for `EasyProgressMeter` is:
 `True` if meter updated correctly
 `False` if user clicked the Cancel button, closed the form, or vale reached the max value.
@@ -779,25 +779,25 @@ If you want a bit more customization of your meter, then you can go up 1 level a
 
 You setup the progress meter by calling
 
-    my_meter = ProgressMeter(title,
+    my_meter = ProgressMeter(title, 
     					     max_value,
     					     *args,
-    					     orientantion=None,
-    					     bar_color=DEFAULT_PROGRESS_BAR_COLOR,
+    					     orientantion=None, 
+    					     bar_color=DEFAULT_PROGRESS_BAR_COLOR, 
     					     button_color=None,
-    					     size=DEFAULT_PROGRESS_BAR_SIZE,
-    					     scale=(None, None),
+    					     size=DEFAULT_PROGRESS_BAR_SIZE, 
+    					     scale=(None, None), 
     					     border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
 Then to update the bar within your loop
 
     return_code = ProgressMeterUpdate(my_meter,
-                                     value,
+                                     value, 
                                      *args):
 Putting it all together you get this design pattern
 
-    my_meter = SG.ProgressMeter('Meter Title', 100000, orentation='Vert')
-
-    for i in range(0, 100000):
+    my_meter = SG.ProgressMeter('Meter Title', 100000, orentation='Vert')  
+      
+    for i in range(0, 100000):  
         SG.ProgressMeterUpdate(my_meter, i+1, 'Some variable', 'Another variable')
 
 
@@ -813,26 +813,26 @@ The Output Element is a re-direction of Stdout.  Anything "printed" will be disp
 Here's a complete solution for a chat-window using an Async form with an Output Element
 
     import PySimpleGUI as g
-
-    with g.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
-        form.AddRow(g.Text('This is where standard out is being routed', size=[40,1]))
-        form.AddRow(g.Output(size=(80, 20)))
-        form.AddRow(g.Multiline(size=(70, 5), enter_submits=True), g.ReadFormButton('SEND', button_color=(g.YELLOWS[0], g.BLUES[0])), g.SimpleButton('EXIT', button_color=(g.YELLOWS[0], g.GREENS[0])))
-
-        # ---===--- Loop taking in user input and printing it --- #
-      while True:
-            (button, value) = form.Read()
-            if button == 'SEND':
-                print(value)
-            else:
-                print('Exiting the form now')
+    
+    with g.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:  
+        form.AddRow(g.Text('This is where standard out is being routed', size=[40,1]))  
+        form.AddRow(g.Output(size=(80, 20)))  
+        form.AddRow(g.Multiline(size=(70, 5), enter_submits=True), g.ReadFormButton('SEND', button_color=(g.YELLOWS[0], g.BLUES[0])), g.SimpleButton('EXIT', button_color=(g.YELLOWS[0], g.GREENS[0])))  
+      
+        # ---===--- Loop taking in user input and printing it --- #  
+      while True:  
+            (button, value) = form.Read()  
+            if button == 'SEND':  
+                print(value)  
+            else:  
+                print('Exiting the form now')  
                 break
-
+                
 
 ## Tabbed Forms
 Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
 
-     results = ShowTabbedForm('Title for the form',
+     results = ShowTabbedForm('Title for the form', 
                               (form,layout,'Tab 1 label'),
                               (form2,layout2, 'Tab 2 label'))
 
@@ -842,21 +842,21 @@ Each of the tabs of the form is in fact a form.  The same steps are taken to cre
 **Global Settings**
 Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
 
-    SetOptions(icon=None,
+    SetOptions(icon=None, 
                button_color=(None,None),
-               element_size=(None,None),
-               margins=(None,None),
-               element_padding=(None,None),
+               element_size=(None,None), 
+               margins=(None,None), 
+               element_padding=(None,None),  
                auto_size_text=None,
-               font=None, border_width=None,
-               autoclose_time=None,
-               message_box_line_width=None,
+               font=None, border_width=None, 
+               autoclose_time=None, 
+               message_box_line_width=None,  
                progress_meter_border_depth=None,
                text_justification=None):
 
 Explanation of parameters
 
-	          icon - filename of icon used for taskbar and title bar
+	          icon - filename of icon used for taskbar and title bar 
 	          button_color - button color (foreground, background)
 	          element_size - element size (width, height) in characters
 	          margins - tkinter margins around outsize
@@ -869,7 +869,7 @@ Explanation of parameters
 	          progress_meter_border_depth - amount of border around raised or lowered progress meters
 	          text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
 
-
+               
 These settings apply to all forms `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the Form-level being the highest and the Element-level the lowest.  Thus the levels are:
 
  - Form level
@@ -878,7 +878,7 @@ These settings apply to all forms `SetOptions`.  The Row options and Element opt
 
 Each lower level overrides the settings of the higher level
 
-## Asynchronous (Non-Blocking) Forms
+## Asynchronous (Non-Blocking) Forms  
 So you want to be a wizard do ya?  Well go boldly!  While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.  With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.refresh` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
 
 When do you use a non-blocking form? A couple of examples are
@@ -911,30 +911,30 @@ If you need to close the form
 
     form.CloseNonBlockingForm()
 
-Rather than the usual `form.LayoutAndShow()` call, we're manually adding the rows (doing the layout) and then showing the form.  After the form is shown, you simply call `form.Refresh()` every now and then.
+Rather than the usual `form.LayoutAndShow()` call, we're manually adding the rows (doing the layout) and then showing the form.  After the form is shown, you simply call `form.Refresh()` every now and then. 
 
 When you are ready to close the form (assuming the form wasn't closed by the user or a button click) you simply call `form.CloseNonBlockingForm()`
 
 **Example - Running timer that updates**
 We're going to make a form and update one of the elements of that form every .01 seconds.  Here's the entire code to do that.
 
-    with SG.FlexForm('Running Timer', auto_size_text=True) as form:
-        output_element = SG.Text('', size=(8, 2), font=('Helvetica', 20))
-        form_rows = [[SG.Text('Non-blocking GUI with updates')],
-                     [output_element],
-                     [SG.SimpleButton('Quit')]]
-
-        form.AddRows(form_rows)
-        form.Show(non_blocking=True)
-        for i in range(1, 100):
-            output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i/100), 60), i%100))
-            button, values = form.Refresh()
-            if values is None or button == 'Quit':
-                break
-	        time.sleep(.01)
-        else:
+    with SG.FlexForm('Running Timer', auto_size_text=True) as form:  
+        output_element = SG.Text('', size=(8, 2), font=('Helvetica', 20))  
+        form_rows = [[SG.Text('Non-blocking GUI with updates')],  
+                     [output_element],  
+                     [SG.SimpleButton('Quit')]]  
+      
+        form.AddRows(form_rows)  
+        form.Show(non_blocking=True)  
+        for i in range(1, 100):  
+            output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i/100), 60), i%100))  
+            button, values = form.Refresh()  
+            if values is None or button == 'Quit':  
+                break  
+	        time.sleep(.01)  
+        else:  
             form.CloseNonBlockingForm()
-
+            
 What we have here is the same sequence of function calls as in the description.  Get a form, add rows to it, show the form, and then refresh it every now and then.
 
 The new thing in this example is the call use of the Update method for the Text Element.  The first thing we do inside the loop is "update" the text element that we made earlier.  This changes the value of the text field on the form.  The new value will be displayed when `form.Refresh()` is called.
@@ -954,19 +954,19 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 
 `Demo Recipes.py` - Three sample forms including an asynchronous form
 
-`Demo HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program could forever change how you code. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.
+`Demo HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program could forever change how you code. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.  
 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize
 
 **Random colors**
 To set a button or text to a random color, use the string `'random'` as the color value.  You can also call `PySimpleGUI.GetRandomColor`.
-To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and
+To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and 
 that color's compliment.
 sprint
 
 **sprint**
-Call `sprint` with as many parameters as you want and it'll print them all out in a `ScrolledTextBox`.  This is simply a function pointing to `PySimpleGUI.ScrolledTextBox`.
+Call `sprint` with as many parameters as you want and it'll print them all out in a `ScrolledTextBox`.  This is simply a function pointing to `PySimpleGUI.ScrolledTextBox`.  
 
 ---
 # Known Issues
@@ -980,12 +980,12 @@ While not an "issue" this is a ***stern warning***
 
 **EasyPrint** - EasyPrint is a new feature that's pretty awesome.  You print and the output goes to a window, with a scroll bar, that you can copy and paste from.  Being a new feature, it's got some potential problems.  There are known interaction problems with other GUI windows.  For example, closing a Print window can also close other windows you have open.  For now, don't close your debug print window until other windows are closed too.
 
-## Contributing
-
+## Contributing  
+  
 A MikeTheWatchGuy production... entirely responsible for this code.... unless it causes you trouble in which case I'm not at all responsible.
-
-## Versioning
-|Version | Description |
+  
+## Versioning  
+|Version | Description |  
 |--|--|
 | 1.0.9   | July 10, 2018 - Initial Release |
 | 1.0.21 | July 13, 2018 - Readme updates  |
@@ -993,35 +993,35 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.1.1 | July 18, 2018 - Global settings exposed, fixes
 | 2.2.0| July 20, 2018 - Image Elements, Print output
 | 2.3.0 | July XX, 2018 - Changed form.Read return codes, Slider Elements, Listbox element
+      
+## Code Condition  
 
-## Code Condition
-
-    Make it run
-    Make it right
+    Make it run  
+    Make it right  
     Make it fast
 
-It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor for PEP 8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
+It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor for PEP 8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.  
 
-While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part. 
 
 Please log bugs and suggestions in the GitHub!  It will only make the code stronger and better in the end, a good thing for us all, right?
-
-## Authors
+  
+## Authors  
 MikeTheWatchGuy
-
-## License
-
+  
+## License  
+  
 This project is limited to non-commercial applications.  If you wish to use it commercially, please contact one of the authors.
 For non-commercial individuals, the GNU Lesser General Public License (LGPL 3)  applies.
-
-## Acknowledgments
-
+  
+## Acknowledgments  
+  
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
 
 ## How Do I
 Finally, I must thank the fine folks at How Do I.
 https://github.com/gleitz/howdoi
-Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**
+Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**  
 Here are the steps to run that application
 
     Install howdoi:
@@ -1031,7 +1031,7 @@ Here are the steps to run that application
     To run it:
           Python HowDoI.py
 
-The pip command is all there is to the setup.
+The pip command is all there is to the setup.  
 
 The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
