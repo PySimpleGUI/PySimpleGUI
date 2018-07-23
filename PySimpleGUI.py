@@ -17,7 +17,7 @@ DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in
 DEFAULT_AUTOSIZE_TEXT = False
 DEFAULT_FONT = ("Helvetica", 10)
 DEFAULT_TEXT_JUSTIFICATION = 'left'
-DEFAULT_BORDER_WIDTH = 4
+DEFAULT_BORDER_WIDTH = 1
 DEFAULT_AUTOCLOSE_TIME = 3              # time in seconds to show an autoclose form
 DEFAULT_DEBUG_WINDOW_SIZE = (80,20)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
@@ -32,7 +32,8 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[0])    # (Text, Background) or (Color "on", Color) as a way to remember
 # DEFAULT_BUTTON_COLOR = (GREENS[3], TANS[0])    # Foreground, Background (None, None) == System Default
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], GREENS[4])    # Foreground, Background (None, None) == System Default
-DEFAULT_BUTTON_COLOR = ('white', 'black')    # Foreground, Background (None, None) == System Default
+DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
+# DEFAULT_BUTTON_COLOR = ('white', 'black')    # Foreground, Background (None, None) == System Default
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[2])    # Foreground, Background (None, None) == System Default
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
 DEFAULT_CANCEL_BUTTON_COLOR = (GREENS[3], TANS[0])
@@ -43,21 +44,35 @@ DEFAULT_PROGRESS_BAR_COLOR = (GREENS[3], GREENS[3])     # a nice green progress 
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[0], BLUES[0])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
 DEFAULT_PROGRESS_BAR_SIZE = (35,25)         # Size of Progress Bar (characters for length, pixels for width)
-DEFAULT_PROGRESS_BAR_BORDER_WIDTH=2
+DEFAULT_PROGRESS_BAR_BORDER_WIDTH=1
 DEFAULT_PROGRESS_BAR_RELIEF = tk.SUNKEN
 DEFAULT_PROGRESS_BAR_STYLE = 'default'
 DEFAULT_METER_ORIENTATION = 'Horizontal'
+DEFAULT_SLIDER_ORIENTATION = 'vertical'
+DEFAULT_SLIDER_BORDER_WIDTH=1
+DEFAULT_SLIDER_RELIEF = tk.SUNKEN
+
+DEFAULT_LISTBOX_SELECT_MODE = tk.SINGLE
+SELECT_MODE_MULTIPLE = tk.MULTIPLE
+LISTBOX_SELECT_MODE_MULTIPLE = 'multiple'
+SELECT_MODE_BROWSE = tk.BROWSE
+LISTBOX_SELECT_MODE_BROWSE = 'browse'
+SELECT_MODE_EXTENDED = tk.EXTENDED
+LISTBOX_SELECT_MODE_EXTENDED = 'extended'
+SELECT_MODE_SINGLE = tk.SINGLE
+LISTBOX_SELECT_MODE_SINGLE = 'single'
+
 # DEFAULT_METER_ORIENTATION = 'Vertical'
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777         # magic number
 # Progress Bar Relief Choices
 # -relief
-RAISED='raised'
-SUNKEN='sunken'
-FLAT='flat'
-RIDGE='ridge'
-GROOVE='groove'
-SOLID = 'solid'
+RELIEF_RAISED= 'raised'
+RELIEF_SUNKEN= 'sunken'
+RELIEF_FLAT= 'flat'
+RELIEF_RIDGE= 'ridge'
+RELIEF_GROOVE= 'groove'
+RELIEF_SOLID = 'solid'
 
 PROGRESS_BAR_STYLES = ('default','winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 # DEFAULT_WINDOW_ICON = ''
@@ -99,6 +114,8 @@ ELEM_TYPE_INPUT_CHECKBOX = 8
 ELEM_TYPE_INPUT_SPIN = 9
 ELEM_TYPE_BUTTON = 3
 ELEM_TYPE_IMAGE = 30
+ELEM_TYPE_INPUT_SLIDER = 10
+ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
 ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
@@ -199,6 +216,37 @@ class InputCombo(Element):
         except:
             pass
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Combo                                        #
+# ---------------------------------------------------------------------- #
+class Listbox(Element):
+
+    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+        self.Values = values
+        self.TKListBox = None
+        if select_mode == LISTBOX_SELECT_MODE_BROWSE:
+            self.SelectMode = SELECT_MODE_BROWSE
+        elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
+            self.SelectMode = SELECT_MODE_EXTENDED
+        elif select_mode == LISTBOX_SELECT_MODE_MULTIPLE:
+            self.SelectMode = SELECT_MODE_MULTIPLE
+        elif select_mode == LISTBOX_SELECT_MODE_SINGLE:
+            self.SelectMode = SELECT_MODE_SINGLE
+        else:
+            self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font)
+        return
+
+    def __del__(self):
+        try:
+            self.TKListBox.__del__()
+        except:
+            pass
+        super().__del__()
+
+
 
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
@@ -361,11 +409,6 @@ class TKProgressBar():
 #   New Type of Widget that's a Text Widget in disguise                  #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
-    ''' Demonstrate python interpreter output in Tkinter Text widget
-type python expression in the entry, hit DoIt and see the results
-in the text pane.'''
-    # previous_stderr = None
-    # previous_stdout = None
     def __init__(self, parent, width, height, bd):
         tk.Frame.__init__(self, parent)
         self.output = tk.Text(parent, width=width, height=height, bd=bd)
@@ -552,6 +595,23 @@ class Image(Element):
     def __del__(self):
         super().__del__()
 
+# ---------------------------------------------------------------------- #
+#                           Slider                                       #
+# ---------------------------------------------------------------------- #
+class Slider(Element):
+    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None):
+        self.TKScale = None
+        self.Range = (1,10) if range == (None, None) else range
+        self.DefaultValue = 5 if default_value is None else default_value
+        self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
+        self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
+        self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
+        super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font)
+        return
+
+    def __del__(self):
+        super().__del__()
+
 
 
 # ------------------------------------------------------------------------- #
@@ -629,9 +689,17 @@ class FlexForm:
         for row in rows:
             self.AddRow(*row)
 
-    def LayoutAndShow(self,rows):
+    def Layout(self,rows):
         self.AddRows(rows)
-        self.Show()
+
+    def LayoutAndShow(self,rows, non_blocking=False):
+        self.AddRows(rows)
+        self.Show(non_blocking=non_blocking)
+        return self.ReturnValues
+
+    def LayoutAndRead(self,rows, non_blocking=False):
+        self.AddRows(rows)
+        self.Show(non_blocking=non_blocking)
         return self.ReturnValues
 
     # ------------------------- ShowForm   THIS IS IT! ------------------------- #
@@ -676,27 +744,41 @@ class FlexForm:
             pass
 
     def Read(self):
-        if self.TKrootDestroyed: return None
-        if not self.TKrootDestroyed and not self.Shown:
+        if self.TKrootDestroyed:
+            return None, None
+        if not self.Shown:
             self.Show()
-        elif not self.TKrootDestroyed:
+        else:
             self.TKroot.mainloop()
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
-        return(BuildResults(self))
+        return BuildResults(self)
 
-    def Refresh(self, Message=''):
+    def ReadNonBlocking(self, Message=''):
         if self.TKrootDestroyed:
-            return None
+            return None, None
         if Message:
             print(Message)
         try:
-            self.TKroot.update()
+            rc = self.TKroot.update()
         except:
             self.TKrootDestroyed = True
             _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
-        return(BuildResults(self))
+        return BuildResults(self)
+
+    # LEGACY version of ReadNonBlocking
+    def Refresh(self, Message=''):
+        if self.TKrootDestroyed:
+            return None, None
+        if Message:
+            print(Message)
+        try:
+            rc = self.TKroot.update()
+        except:
+            self.TKrootDestroyed = True
+            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+        return BuildResults(self)
 
     def Close(self):
         try:
@@ -874,8 +956,14 @@ def InitializeResults(form):
             elif element.Type == ELEM_TYPE_INPUT_COMBO:
                 r.append(element.TextInputDefault)
                 return_vals.append(None)
+            elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
+                r.append(None)
+                return_vals.append(None)
             elif element.Type == ELEM_TYPE_INPUT_SPIN:
-                r.append(element.TextInputDefault)
+                r.append(element.DefaultValue)
+                return_vals.append(None)
+            elif element.Type == ELEM_TYPE_INPUT_SLIDER:
+                r.append(element.DefaultValue)
                 return_vals.append(None)
         results.append(r)
     form.Results=results
@@ -930,9 +1018,21 @@ def BuildResults(form):
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
+            elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
+                items=element.TKListbox.curselection()
+                value = [element.Values[int(item)] for item in items]
+                results[row_num][col_num] = value
+                input_values.append(value)
             elif element.Type == ELEM_TYPE_INPUT_SPIN:
                 try:
                     value=element.TKStringVar.get()
+                except:
+                    value = 0
+                results[row_num][col_num] = value
+                input_values.append(value)
+            elif element.Type == ELEM_TYPE_INPUT_SLIDER:
+                try:
+                    value=element.TKIntVar.get()
                 except:
                     value = 0
                 results[row_num][col_num] = value
@@ -947,7 +1047,7 @@ def BuildResults(form):
                 results[row_num][col_num] = value
                 input_values.append(value)
 
-    return_value = (button_pressed_text,input_values)
+    return_value = button_pressed_text,input_values
     form.ReturnValues = return_value
     form.ResultsBuilt = True
     return return_value
@@ -957,6 +1057,8 @@ def BuildResults(form):
 # =====================================   TK CODE STARTS HERE ====================================================== #
 # ------------------------------------------------------------------------------------------------------------------ #
 def ConvertFlexToTK(MyFlexForm):
+    def CharWidthInPixels():
+        return tkinter.font.Font().measure('A')  # single character width
     master = MyFlexForm.TKroot
     # only set title on non-tabbed forms
     if not MyFlexForm.IsTabbedForm:
@@ -1081,6 +1183,18 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKCombo['values'] = element.Values
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 element.TKCombo.current(0)
+            # -------------------------  LISTBOX (Drop Down) element  ------------------------- #
+            elif element_type == ELEM_TYPE_INPUT_LISTBOX:
+                max_line_len = max([len(str(l)) for l in element.Values])
+                if auto_size_text is False: width=element_size[0]
+                else: width = max_line_len
+
+                element.TKStringVar = tk.StringVar()
+                element.TKListbox= tk.Listbox(tk_row_frame, height=element_size[1], width=width, selectmode=element.SelectMode, font=font)
+                for item in element.Values:
+                    element.TKListbox.insert(tk.END, item)
+                element.TKListbox.selection_set(0,0)
+                element.TKListbox.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
@@ -1162,6 +1276,21 @@ def ConvertFlexToTK(MyFlexForm):
                 tktext_label.image = photo
                 # tktext_label.configure(anchor=tk.NW, image=photo)
                 tktext_label.pack(side=tk.LEFT)
+                # -------------------------  SLIDER Box element  ------------------------- #
+            elif element_type == ELEM_TYPE_INPUT_SLIDER:
+                slider_length = element_size[0] * CharWidthInPixels()
+                slider_width = element_size[1]
+                element.TKIntVar = tk.IntVar()
+                element.TKIntVar.set(element.DefaultValue)
+                if element.Orientation[0] == 'v':
+                    range_from = element.Range[1]
+                    range_to = element.Range[0]
+                else:
+                    range_from = element.Range[0]
+                    range_to = element.Range[1]
+                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
+                # tktext_label.configure(anchor=tk.NW, image=photo)
+                tkscale.pack(side=tk.LEFT)
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         tk_row_frame.grid(row=row_num+2, sticky=tk.W, padx=DEFAULT_MARGINS[0])
@@ -1520,7 +1649,6 @@ def ProgressMeterUpdate(bar, value, *args):
     if bar.BarExpired: return False
     message, w, h = ConvertArgsToSingleString(*args)
 
-
     bar.TextToDisplay = message
     bar.CurrentValue = value
     rc = bar.UpdateBar(value)
@@ -1529,8 +1657,8 @@ def ProgressMeterUpdate(bar, value, *args):
         bar.ParentForm.Close()
     if bar.ParentForm.RootNeedsDestroying:
         try:
-            bar.ParentForm.TKroot.destroy()
             _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+            bar.ParentForm.TKroot.destroy()
         except: pass
         bar.ParentForm.RootNeedsDestroying = False
         bar.ParentForm.__del__()
@@ -1841,9 +1969,12 @@ def SetGlobalIcon(icon):
 # ============================== SetOptions =========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), margins=(None,None), element_padding=(None,None),
-               auto_size_text=None, font=None, border_width=None, autoclose_time=None, message_box_line_width=None,
+def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), margins=(None,None),
+               element_padding=(None,None),auto_size_text=None, font=None, border_width=None,
+               slider_border_width=None, slider_relief=None, slider_orientation=None,
+               autoclose_time=None, message_box_line_width=None,
                progress_meter_border_depth=None, text_justification=None, debug_win_size=(None,None)):
+
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
     global DEFAULT_ELEMENT_PADDING  # Padding between elements (row, col) in pixels
@@ -1856,6 +1987,9 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     global DEFAULT_PROGRESS_BAR_BORDER_WIDTH
     global DEFAULT_TEXT_JUSTIFICATION
     global DEFAULT_DEBUG_WINDOW_SIZE
+    global DEFAULT_SLIDER_BORDER_WIDTH
+    global DEFAULT_SLIDER_RELIEF
+    global DEFAULT_SLIDER_ORIENTATION
     global _my_windows
 
     if icon:
@@ -1896,6 +2030,15 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     if progress_meter_border_depth != None:
         DEFAULT_PROGRESS_BAR_BORDER_WIDTH = progress_meter_border_depth
 
+    if slider_border_width != None:
+        DEFAULT_SLIDER_BORDER_WIDTH = slider_border_width
+
+    if slider_orientation != None:
+        DEFAULT_SLIDER_ORIENTATION = slider_orientation
+
+    if slider_relief != None:
+        DEFAULT_SLIDER_RELIEF = slider_relief
+
     if text_justification != None:
         DEFAULT_TEXT_JUSTIFICATION = text_justification
 
@@ -1904,12 +2047,21 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
 
     return True
 
-
-
-
-# ============================== sprint ======#
+# ============================== sprint ======#fddddddddddddddddddddddd
 # Is identical to the Scrolled Text Box       #
 # Provides a crude 'print' mechanism but in a #
 # GUI environment                             #
 # ============================================#
 sprint=ScrolledTextBox
+
+# Converts an object's contents into a nice printable string.  Great for dumping debug data
+def ObjToString_old(obj):
+    return str(obj.__class__) + '\n' + '\n'.join(
+        (repr(item) + ' = ' + repr(obj.__dict__[item]) for item in sorted(obj.__dict__)))
+
+def ObjToString(obj, extra='    '):
+    return str(obj.__class__) + '\n' + '\n'.join(
+        (extra + (str(item) + ' = ' +
+                  (ObjToString(obj.__dict__[item], extra + '    ') if hasattr(obj.__dict__[item], '__dict__') else str(
+                      obj.__dict__[item])))
+         for item in sorted(obj.__dict__)))
