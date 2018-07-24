@@ -925,6 +925,14 @@ Three parameters are used for button images.
     image_size - Size of image file in pixels
     image_subsample - Amount to divide the size by.  2 means your image will be 1/2 the size.  3 means 1/3
 
+Here's an example form made with button images.
+![media file player](https://user-images.githubusercontent.com/13696193/43161977-9ee7cace-8f57-11e8-8ff8-3ea24b69dab9.jpg)
+
+You'll find the source code in the file Demo Media Player.  Here is what the button calls look like to create media player form
+
+    sg.ReadFormButton('Pause', button_color=sg.TRANSPARENT_BUTTON,
+                      image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0)
+
 This is one you'll have to experiment with at this point.  Not up for an exhaustive explanation.
 
 
