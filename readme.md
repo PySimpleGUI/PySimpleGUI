@@ -1,5 +1,6 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
+
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
 # PySimpleGUI
   (Ver 2.4)
