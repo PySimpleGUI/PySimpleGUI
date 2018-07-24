@@ -262,7 +262,9 @@ There are 3 very basic user input high-level function calls.  It's expected that
 
 #### Progress Meter!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
+
 ![progress meter 3](https://user-images.githubusercontent.com/13696193/42696332-dca3ca6e-8685-11e8-846b-6bee8362ee5f.jpg)
+
 
     EasyProgressMeter(title,
                       current_value,
