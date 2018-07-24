@@ -1023,9 +1023,18 @@ Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
 
      results = ShowTabbedForm('Title for the form',
                               (form,layout,'Tab 1 label'),
-                              (form2,layout2, 'Tab 2 label'))
+                              (form2,layout2, 'Tab 2 label'), ...)
 
-Each of the tabs of the form is in fact a form.  The same steps are taken to create the form as before.  A `FlexForm` is created, then rows are filled with Elements, and finally the form is shown.  When calling `ShowTabbedForm`, each form is passed in as a tuple.  The tuple has  the format:  `(the form, the rows, a label shown on the tab)`
+Each of the tabs of the form is in fact a form.  The same steps are taken to create the form as before.  A `FlexForm` is created, then rows are filled with Elements, and finally the form is shown.  When calling `ShowTabbedForm`, each form is passed in as a tuple.  The tuple has  the format:  `(the form, the rows, a string shown on the tab)`
+
+Results are returned as a list of lists.  For each form you'll get a list that's in the same format as a normal form. A single tab's values would be:
+
+    (button, (values))
+
+Recall that values is a list as well.  Multiple tabs in the form would return like this:
+
+    ((button1, (values1)), (button2, (values2))
+
 
 ## Global Settings
 **Global Settings**
@@ -1305,3 +1314,4 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
