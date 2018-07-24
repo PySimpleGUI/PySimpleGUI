@@ -24,11 +24,11 @@ There are a number of 'easy to use' Python GUIs, but they're **very** limiting. 
 
 Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.
 
-GUI Packages with more functionality, like QT and WxPython, require configuring and can take a ***week*** to get *reasonably familiar* with the interfaces.
+GUI Packages with more functionality, like QT and WxPython, require configuring and can take a ***week*** to get *reasonably familiar* with the interfaces.  Clearly there needs to be a middle ground between forms with 1 or two input fields and a full-blown GUI.  You'll be making your own custom forms with PySimpleGUI within minutes, even Async forms.
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
-The `PySimpleGUI` solution is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
+The `PySimpleGUI` package is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
 
     Features of PySimpleGUI include:
         Text
@@ -55,9 +55,42 @@ The `PySimpleGUI` solution is focused on the ***developer***.  How can the desir
         Single-Line-Of-Coide Proress Bar & Debug Print
 
 
-An example of many widgets used on a single form.  A little further down you'll find the FIFTEEN lines of code required to create this complex form.
+An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Copy and paste into a temp file and it'll run, presenting you with the screen you see.
 
 ![everything example](https://user-images.githubusercontent.com/13696193/43097412-0a4652aa-8e8a-11e8-8e09-939484e3c568.jpg)
+
+Here is the code that produced the above screenshot.
+
+    import PySimpleGUI as SG
+
+    with SG.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
+        layout = [
+            [SG.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
+            [SG.Text('Here is some text.... and a place to enter text')],
+            [SG.InputText()],
+            [SG.Checkbox('My first checkbox!'), SG.Checkbox('My second checkbox!', default=True)],
+            [SG.Radio('My first Radio!     ', "RADIO1", default=True), SG.Radio('My second Radio!', "RADIO1")],
+            [SG.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
+                          scale=(2, 10))],
+            [SG.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
+             SG.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
+            [SG.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
+             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
+             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
+             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
+            [SG.Text('_'  * 100, size=(70, 1))],
+            [SG.Text('Choose Source and Destination Folders', size=(35, 1))],
+            [SG.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), SG.InputText('Source'), SG.FolderBrowse()],
+            [SG.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), SG.InputText('Dest'),
+             SG.FolderBrowse()],
+            [SG.Submit(), SG.Cancel(), SG.SimpleButton('Customized', button_color=('white', 'green'))]
+             ]
+
+    button, values = form.LayoutAndRead(layout)
+
+ **A note on screen shots**
+You will see a number of different styles of buttons, data entry fields, etc, in this readme. They were all made with the same SDK, the only difference is in the settings that are specified on a per-element, row, form, or global basis.  One setting in particular, border_width, can make a big difference on the look of the form.  Some of the screenshots had a border_width of 6, others a value of 1.
+
 
 ---
 ### Design Goals
@@ -258,6 +291,33 @@ With a little trickery you can provide a way to break out of your loop using the
 	    break
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
+#### Debug Output
+Another call in the 'Easy' families of APIs is `EasyPrint`.  It will output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick a 'print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement
+
+    print = SG.EasyPrint
+
+at the top of your code.
+There are a number of names for the same EasyPrint function.  `Print` is one of the better ones to use as it's easy to remember.   It is simply `print` with a capital P.
+
+    import PySimpleGUI as SG
+
+    for i in range(100):
+        SG.Print(i)
+
+![snap0125](https://user-images.githubusercontent.com/13696193/43114979-a696189e-8ecf-11e8-83c7-473fcf0ccc66.jpg)
+Or if you didn't want to change your code:
+
+    import PySimpleGUI as SG
+
+    print=SG.Print
+    for i in range(100):
+        print(i)
+
+Just like the standard print call, `EasyPrint` supports the `sep` and `end` keyword arguments.  Other names that can be used to call `EasyPrint` include Print, `eprint`,   If you want to close the window, call the function `EasyPrintClose`.
+
+A word of caution.  There are known problems when multiple PySimpleGUI windows are opened, particularly if the user closes them in an unusual way.  Not a reason to stay away from using it.  Just something to keep in mind if you encounter a problem.
+
+You can change the size of the debug window using the `SetOptions` call with the `debug_win_size` parameter.
 
 ---
 # Custom Form API Calls
@@ -327,19 +387,25 @@ This is the code that **displays** the form, collects the information and return
 
    Return information from FlexForm, SG's primary form builder interface, is in this format:
 
-    (button, (value1, value2, ...))
+    button, (value1, value2, ...)
 
 Each of the Elements that are Input Elements will have a value in the list of return values.  You can unpack your GUI directly into the variables you want to use.
 
-    (button, (filename, folder1, folder2, should_overwrite) = form.LayoutAndShow(form_rows)
+    button, (filename, folder1, folder2, should_overwrite) = form.LayoutAndShow(form_rows)
 
+  Or, you can unpack the return results separately.
+
+    button, values = form.LayoutAndShow(form_rows)
+    filename, folder1, folder2, should_overwrite = values
 
 If you have a SINGLE value being returned, it is written this way:
 
-    (button, (value1,)) = form.LayoutAndShow(form_rows)
+    button, (value1,) = form.LayoutAndShow(form_rows)
+
+
  Another way of parsing the return values is to store the list of values into a variable representing the list of values.
 
-     (button, (value_list)) = form.LayoutAndShow(form_rows)
+     button, value_list = form.LayoutAndShow(form_rows)
      value1 = value_list[0]
      value2 = value_list[1]
      ...
@@ -373,8 +439,6 @@ This code utilizes as many of the elements in one form as possible.
 
          button, values = form.LayoutAndRead(layout)
 
-         MsgBox('Results', 'You clicked {}'.format(button),'The values returned from form', values , font = ("Helvetica", 15))
-
 This is a somewhat complex form with quite a bit of custom sizing to make things line up well.  This is code you only have to write once.  When looking at the code, remember that what you're seeing is a list of lists.  Each row contains a list of Graphical Elements that are used to create the form.
 
 ![everything example](https://user-images.githubusercontent.com/13696193/43097412-0a4652aa-8e8a-11e8-8e09-939484e3c568.jpg)
@@ -383,8 +447,6 @@ Clicking the Submit button caused the form call to return.  The call to MsgBox r
 ![results 2](https://user-images.githubusercontent.com/13696193/43097502-44e3ed32-8e8a-11e8-9a51-2b8af0b1a682.jpg)
 
 
-
-    (button, (values)) = form.LayoutAndShow(layout)
 **`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
 
 You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
@@ -628,6 +690,11 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
 #### Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
+    layout = [[SG.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
+
+![snap0130](https://user-images.githubusercontent.com/13696193/43115859-2fbf0646-8ed3-11e8-9979-bbee8eaebfab.jpg)
+
+
 	    Listbox(values,
 			    select_mode=None,
 			    scale=(None, None),
@@ -658,6 +725,10 @@ The `select_mode` option can be a string or a constant value defined as a variab
 #### Slider Element
 Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
 
+    layout = [[SG.Slider(range=(1,500), default_value=222, size=(20,15), orientation='horizontal', font=('Helvetica', 12))]]
+
+![snap0129](https://user-images.githubusercontent.com/13696193/43115741-e1cb52c8-8ed2-11e8-80bb-0e99ae846ec1.jpg)
+
 	    Slider(range=(None,None),
 	           default_value=None,
 	           orientation=None,
@@ -682,10 +753,6 @@ Sliders have a couple of slider-specific settings as well as appearance settings
 		scale - Amount to scale size by
 	    size - (width, height) of element in characters
 	    auto_size_text - Bool. True if size should fit the text
-
-
-
-
 
 #### Radio Button Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
@@ -1085,7 +1152,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.1.1 | July 18, 2018 - Global settings exposed, fixes
 | 2.2.0| July 20, 2018 - Image Elements, Print output
 | 2.3.0 | July 23, 2018 - Changed form.Read return codes, Slider Elements, Listbox element. Renamed some methods but left legacy calls in place for now.
-| 2.4.0 | July XX, 2018 - Planned release.  Will have button images.
+| 2.4.0 | July XX, 2018 - Planned release.  Button images.
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -1119,8 +1186,7 @@ MikeTheWatchGuy
 
 ## License
 
-This project is limited to non-commercial applications.  If you wish to use it commercially, please contact one of the authors.
-For non-commercial individuals, the GNU Lesser General Public License (LGPL 3)  applies.
+GNU Lesser General Public License (LGPL 3)
 
 ## Acknowledgments
 
@@ -1148,6 +1214,9 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
+
+
 
 
 
