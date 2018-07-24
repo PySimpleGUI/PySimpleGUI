@@ -37,12 +37,16 @@ DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, No
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[2])    # Foreground, Background (None, None) == System Default
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
 DEFAULT_CANCEL_BUTTON_COLOR = (GREENS[3], TANS[0])
-BarColor=()
 # DEFAULT_PROGRESS_BAR_COLOR = (GREENS[2], GREENS[0])     # a nice green progress bar
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[3], GREENS[3])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[1], BLUES[1])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[0], BLUES[0])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
+
+# A transparent button is simply one that matches the background
+TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')
+#--------------------------------------------------------------------------------
+
 DEFAULT_PROGRESS_BAR_SIZE = (35,25)         # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH=1
 DEFAULT_PROGRESS_BAR_RELIEF = tk.SUNKEN
@@ -459,14 +463,18 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    def __init__(self, button_type=CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None,None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
         self.BType = button_type
         self.FileTypes = file_types
         self.TKButton = None
         self.Target = target
         self.ButtonText = button_text
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.ImageFilename = image_filename
+        self.ImageSize = image_size
+        self.ImageSubsample = image_subsample
         self.UserData = None
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         super().__init__(ELEM_TYPE_BUTTON, scale, size, auto_size_text, font=font)
         return
 
@@ -913,13 +921,13 @@ def No(button_text='No', scale=(None, None), size=(None, None), auto_size_text=N
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def SimpleButton(button_text, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
+def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    return Button(CLOSES_WIN, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample, button_text=button_text,border_width=border_width, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(button_text, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
-    return Button(READ_FORM, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
+def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    return Button(READ_FORM, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample,border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
 
 #------------------------------------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  ------- #
@@ -1151,9 +1159,20 @@ def ConvertFlexToTK(MyFlexForm):
                     bc = DEFAULT_BUTTON_COLOR
                 if bc == 'Random' or bc == 'random':
                     bc = GetRandomColorPair()
+                border_depth = element.BorderWidth
                 tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, foreground=bc[0], background=bc[1], bd=border_depth)
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
+                if element.ImageFilename:
+                    photo = tk.PhotoImage(file=element.ImageFilename)
+                    if element.ImageSize != (None, None):
+                        width, height = element.ImageSize
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                    else:
+                        width, height = photo.width(), photo.height()
+                    tkbutton.config(image=photo, width=width, height=height)
+                    tkbutton.image = photo
                 tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
                 if not focus_set and btype == CLOSES_WIN:
@@ -1757,7 +1776,8 @@ def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, 
     for line in EasyProgressMeter.EasyProgressMeterData.StatMessages:
         message = message + str(line) + '\n'
     message = "\n".join(EasyProgressMeter.EasyProgressMeterData.StatMessages)
-    rc = ProgressMeterUpdate(EasyProgressMeter.EasyProgressMeterData.MeterID, current_value, *args, message)
+    args= args + (message,)
+    rc = ProgressMeterUpdate(EasyProgressMeter.EasyProgressMeterData.MeterID, current_value, *args)
     # if counter >= max then the progress meter is all done. Indicate none running
     if current_value >= EasyProgressMeter.EasyProgressMeterData.MaxValue or not rc:
         EasyProgressMeter.EasyProgressMeterData.MeterID = None
