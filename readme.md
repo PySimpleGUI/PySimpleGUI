@@ -5,8 +5,9 @@
 # PySimpleGUI
   (Ver 2.4)
 
-This really is a simple GUI, but also powerfully customizable.
+Super-simple GUI to grasp... Powerfully customizable.
 
+Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry Pi with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Look no further, you've found your GUI package.
 
     import PySimpleGUI as sg
 
