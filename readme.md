@@ -1,16 +1,19 @@
+
 ![logo01 2 _2](https://user-images.githubusercontent.com/13696193/43082437-1252511a-8e62-11e8-9150-fc227cc56cfe.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
-# PySimpleGUI  
-  (Ver 2.3)
+# PySimpleGUI
+  (Ver 2.4)
 
 This really is a simple GUI, but also powerfully customizable.
 
-    import PySimpleGUI as SG
 
-    SG.MsgBox('My Message Box', 'This is the shortest GUI program ever!')
+    import PySimpleGUI as sg
 
-![snap0102](https://user-images.githubusercontent.com/13696193/42781058-1d28d9fa-8913-11e8-847e-5c2afc16ca4c.jpg)
+    sg.MsgBox('Hello From PySimpleGUI!', 'This is the shortest GUI program ever!')
+
+
+![snap0136](https://user-images.githubusercontent.com/13696193/43162494-33095ece-8f59-11e8-86de-b6d8bcc5a52f.jpg)
 
 Add a Progress Meter to your code with ONE LINE of code
 
@@ -18,9 +21,13 @@ Add a Progress Meter to your code with ONE LINE of code
 
 ![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
 
+Or how about a media player GUI with custom buttons... in 30 lines of code.
+
+![media file player](https://user-images.githubusercontent.com/13696193/43161977-9ee7cace-8f57-11e8-8ff8-3ea24b69dab9.jpg)
+
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`(no longer maintained) and `WxSimpleGUI` (a great package, but limited).   The primary difference between these and PySimpleGUI is that in addition to getting those simple Message Boxes you also get the ability to make your own forms that are highly customizeable.  Don't like the standard Message Box? Then make your own!
+There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited.   The primary difference between these and PySimpleGUI is that in addition to getting the simple Message Boxes you also get the ability to make your own forms that are highly customizeable.  Don't like the standard Message Box? Then make your own!
 
 Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.
 
@@ -100,7 +107,7 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 
  Be Pythonic... Python's lists in particular worked out really well:
  - Forms are represented as Python lists.
-	 - A form is a list of rows
+    - A form is a list of rows
    - A row is a list of elements
 - Return values are a list
 
@@ -290,7 +297,7 @@ A meter AND fun statistics to watch while your machine grinds away, all for the 
 With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`.
 
     if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'):
-	    break
+       break
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
 #### Debug Output
@@ -336,24 +343,27 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
 # Copy these design patterns!
 ## Pattern 1 - With Context Manager
 
-    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
-        form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
-                     [SG.InputText(), SG.FileBrowse()],
-                     [SG.Submit(), SG.Cancel()]]
-        button, (source_filename, ) = form.LayoutAndShow(form_rows)
+
+    with sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
+        form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
+                     [sg.InputText(), sg.FileBrowse()],
+                     [sg.Submit(), sg.Cancel()]]
+        button, (source_filename,) = form.LayoutAndRead(form_rows)
 
 ## Pattern 2 - No Context Manager
 
-    form = SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
-    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
-                 [SG.InputText(), SG.FileBrowse()],
-                 [SG.Submit(), SG.Cancel()]]
-    button, (source_filename,) = form.LayoutAndShow(form_rows)
+
+    form = sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
+    form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
+                 [sg.InputText(), sg.FileBrowse()],
+                 [sg.Submit(), sg.Cancel()]]
+    button, (source_filename,) = form.LayoutAndRead(form_rows)
+
 
 
 These 2 design patters both produce this custom form:
 
-![sha hash](https://user-images.githubusercontent.com/13696193/42603149-a56acf3a-853a-11e8-91de-771efd3a65a8.jpg)
+![snap0134](https://user-images.githubusercontent.com/13696193/43162410-e7775466-8f58-11e8-8d6a-da4772c00dd8.jpg)
 
 It's important to use the "with" context manager so that resources are freed as quickly as possible, using the currently executing thread.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
 
@@ -374,11 +384,11 @@ The next few rows of code lay out the rows of elements in the window to be displ
     [SG.InputText(), SG.FileBrowse()],
 Now we're on the second row of the form.  On this row there are 2 elements.  The first is an `Input` field.  It's a place the user can enter `strings`.  The second element is a `File Browse Button`.  A file or folder browse button will always fill in the text field to it's left unless otherwise specified.  In this example, the File Browse Button will interact with the `InputText` field to its left.
 
-	[SG.Submit(), SG.Cancel()]]
+   [SG.Submit(), SG.Cancel()]]
 
 The last line of the `form_rows` variable assignment contains a Submit and a Cancel Button.  These are buttons that will cause a form to return its value to the caller.
 
-    (button, (source_filename, )) = form.LayoutAndShow(form_rows)
+    (button, (source_filename, )) = form.LayoutAndRead(form_rows)
 This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field
 
 
@@ -393,21 +403,21 @@ This is the code that **displays** the form, collects the information and return
 
 Each of the Elements that are Input Elements will have a value in the list of return values.  You can unpack your GUI directly into the variables you want to use.
 
-    button, (filename, folder1, folder2, should_overwrite) = form.LayoutAndShow(form_rows)
+    button, (filename, folder1, folder2, should_overwrite) = form.LayoutAndRead(form_rows)
 
   Or, you can unpack the return results separately.
 
-    button, values = form.LayoutAndShow(form_rows)
+    button, values = form.LayoutAndRead(form_rows)
     filename, folder1, folder2, should_overwrite = values
 
 If you have a SINGLE value being returned, it is written this way:
 
-    button, (value1,) = form.LayoutAndShow(form_rows)
+    button, (value1,) = form.LayoutAndRead(form_rows)
 
 
  Another way of parsing the return values is to store the list of values into a variable representing the list of values.
 
-     button, value_list = form.LayoutAndShow(form_rows)
+     button, value_list = form.LayoutAndRead(form_rows)
      value1 = value_list[0]
      value2 = value_list[1]
      ...
@@ -466,7 +476,7 @@ You've already seen a number of examples above that use blocking forms.  Anytime
 
 NON-BLOCKING form call:
 
-		    form.Show(non_blocking=True)
+          form.Show(non_blocking=True)
 
 ### Beginning a Form
 The first step is to create the form object using the desired form customization.
@@ -490,17 +500,17 @@ This is the definition of the FlexForm object:
 
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
 
-	    default_element_size - Size of elements in form in characters (width, height)
-	    auto_size_text - Bool. True is elements should size themselves according to contents
-	    scale - Set size of element to be a multiple of the Element size
-	    location - Location to place window in pixels
-	    button_color - Default color for buttons (foreground, background). Can be text or hex
-	    progress_bar_color - Foreground and background colors for progress bars
-	    is_tabbed_form - Bool. If True then form is a tabbed form
-	    border_depth - Amount of 'bezel' to put on input boxes, buttons, etc.
-	    auto_close - Bool.  If True form will autoclose
-	    auto_close_duration - Duration in seconds before form closes
-	    icon - .ICO file that will appear on the Task Bar and end of Title Bar
+       default_element_size - Size of elements in form in characters (width, height)
+       auto_size_text - Bool. True is elements should size themselves according to contents
+       scale - Set size of element to be a multiple of the Element size
+       location - Location to place window in pixels
+       button_color - Default color for buttons (foreground, background). Can be text or hex
+       progress_bar_color - Foreground and background colors for progress bars
+       is_tabbed_form - Bool. If True then form is a tabbed form
+       border_depth - Amount of 'bezel' to put on input boxes, buttons, etc.
+       auto_close - Bool.  If True form will autoclose
+       auto_close_duration - Duration in seconds before form closes
+       icon - .ICO file that will appear on the Task Bar and end of Title Bar
 
 
 #### Sizes
@@ -621,10 +631,10 @@ The shorthand functions for `Text` are `Txt` and `T`
 This Element doubles as both an input and output Element.  The `DefaultText` optional parameter is used to indicate what to output to the window.
 
     Multiline(default_text='',
-			  enter_submits = False,
-			  scale=(None, None),
+           enter_submits = False,
+           scale=(None, None),
               size=(None, None),
-		      auto_size_text=None)
+            auto_size_text=None)
 .
 
     default_text - Text to display in the text box
@@ -697,30 +707,30 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
 ![snap0130](https://user-images.githubusercontent.com/13696193/43115859-2fbf0646-8ed3-11e8-9979-bbee8eaebfab.jpg)
 
 
-	    Listbox(values,
-			    select_mode=None,
-			    scale=(None, None),
-			    size=(None, None),
-			    auto_size_text=None,
-			    font=None)
+       Listbox(values,
+             select_mode=None,
+             scale=(None, None),
+             size=(None, None),
+             auto_size_text=None,
+             font=None)
 .
 
-	 values - Choices to be displayed. List of strings
-	 select_mode - Defines how to list is to operate.
+    values - Choices to be displayed. List of strings
+    select_mode - Defines how to list is to operate.
          Choices include constants or strings:
          Constants version:
-		 LISTBOX_SELECT_MODE_BROWSE
-		 LISTBOX_SELECT_MODE_EXTENDED
-		 LISTBOX_SELECT_MODE_MULTIPLE
-		 LISTBOX_SELECT_MODE_SINGLE - the default
-		 Strings version:
-		 'browse'
-		 'extended'
-		 'multiple'
-		 'single'
-	 scale - Amount to scale size by
-	 size - (width, height) of element in characters
-	 auto_size_text - Bool. True if size should fit the text length
+       LISTBOX_SELECT_MODE_BROWSE
+       LISTBOX_SELECT_MODE_EXTENDED
+       LISTBOX_SELECT_MODE_MULTIPLE
+       LISTBOX_SELECT_MODE_SINGLE - the default
+       Strings version:
+       'browse'
+       'extended'
+       'multiple'
+       'single'
+    scale - Amount to scale size by
+    size - (width, height) of element in characters
+    auto_size_text - Bool. True if size should fit the text length
 
 The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
 
@@ -731,30 +741,30 @@ Sliders have a couple of slider-specific settings as well as appearance settings
 
 ![snap0129](https://user-images.githubusercontent.com/13696193/43115741-e1cb52c8-8ed2-11e8-80bb-0e99ae846ec1.jpg)
 
-	    Slider(range=(None,None),
-	           default_value=None,
-	           orientation=None,
-	           border_width=None,
-	           relief=None,
-	           scale=(None, None),
-	           size=(None, None),
-	           font=None):
+       Slider(range=(None,None),
+              default_value=None,
+              orientation=None,
+              border_width=None,
+              relief=None,
+              scale=(None, None),
+              size=(None, None),
+              font=None):
 .
 
-		range - (min, max) slider's range
-		default_value - default setting (within range)
-		orientation - 'horizontal' or 'vertical' ('h' or 'v' work)
-		border_width - how deep the widget looks
-		relief - relief style. Values are same as progress meter relief values.  Can be a constant or a string:
-			RELIEF_RAISED= 'raised'
-			RELIEF_SUNKEN= 'sunken'
-			RELIEF_FLAT= 'flat'
-			RELIEF_RIDGE= 'ridge'
-			RELIEF_GROOVE= 'groove'
-			RELIEF_SOLID = 'solid'
-		scale - Amount to scale size by
-	    size - (width, height) of element in characters
-	    auto_size_text - Bool. True if size should fit the text
+      range - (min, max) slider's range
+      default_value - default setting (within range)
+      orientation - 'horizontal' or 'vertical' ('h' or 'v' work)
+      border_width - how deep the widget looks
+      relief - relief style. Values are same as progress meter relief values.  Can be a constant or a string:
+         RELIEF_RAISED= 'raised'
+         RELIEF_SUNKEN= 'sunken'
+         RELIEF_FLAT= 'flat'
+         RELIEF_RIDGE= 'ridge'
+         RELIEF_GROOVE= 'groove'
+         RELIEF_SOLID = 'solid'
+      scale - Amount to scale size by
+       size - (width, height) of element in characters
+       auto_size_text - Bool. True if size should fit the text
 
 #### Radio Button Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
@@ -897,6 +907,26 @@ layout =  [[SG.SimpleButton('My Button')]]
 
 All buttons can have their text changed by changing the `button_text` variable.
 
+**Button Images**
+Now this is an exciting feature not found in many simplified packages.... images on buttons!  You can make a pretty spiffy user interface with the help of a few button images.
+
+Your button images need to be in PNG or GIF format.  When you make a button with an image, set the button background to the same color as the background.  There's a button color TRANSPARENT_BUTTON that you can set your button color to.
+
+This example comes from the `Demo Media Player.py` example program.  Because it's a non-blocking button, it's defined as `ReadFormButton`.  You also put images on blocking buttons by using `SimpleButton`.
+
+
+    sg.ReadFormButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
+                       image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0)
+
+Three parameters are used for button images.
+
+    image_filename - Filename. Can be a relative path
+    image_size - Size of image file in pixels
+    image_subsample - Amount to divide the size by.  2 means your image will be 1/2 the size.  3 means 1/3
+
+This is one you'll have to experiment with at this point.  Not up for an exhaustive explanation.
+
+
 **File Types**
 The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
 
@@ -928,14 +958,14 @@ If you want a bit more customization of your meter, then you can go up 1 level a
 You setup the progress meter by calling
 
     my_meter = ProgressMeter(title,
-    					     max_value,
-    					     *args,
-    					     orientantion=None,
-    					     bar_color=DEFAULT_PROGRESS_BAR_COLOR,
-    					     button_color=None,
-    					     size=DEFAULT_PROGRESS_BAR_SIZE,
-    					     scale=(None, None),
-    					     border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
+                        max_value,
+                        *args,
+                        orientantion=None,
+                        bar_color=DEFAULT_PROGRESS_BAR_COLOR,
+                        button_color=None,
+                        size=DEFAULT_PROGRESS_BAR_SIZE,
+                        scale=(None, None),
+                        border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
 Then to update the bar within your loop
 
     return_code = ProgressMeterUpdate(my_meter,
@@ -968,17 +998,15 @@ Here's a complete solution for a chat-window using an Async form with an Output 
                         [SG.Output(size=(80, 20))],
                         [SG.Multiline(size=(70, 5), enter_submits=True), SG.ReadFormButton('SEND', button_color=(SG.YELLOWS[0], SG.BLUES[0])), SG.SimpleButton('EXIT', button_color=(SG.YELLOWS[0], SG.GREENS[0]))]]
             # notice this is NOT the usual LayoutAndRead call because you don't yet want to read the form
-	        # if you call LayoutAndRead from here, then you will miss the first button click
-	        form.Layout(layout)
+           # if you call LayoutAndRead from here, then you will miss the first button click
+           form.Layout(layout)
             # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
-	        while True:
+           while True:
                 button, value = form.Read()
                 if button == 'SEND':
                     print(value)
                 else:
                     break
-
-
 
 
 ## Tabbed Forms
@@ -1013,22 +1041,22 @@ Let's have some fun customizing!  Make PySimpleGUI look the way you want it to l
 
 Explanation of parameters
 
-	          icon - filename of icon used for taskbar and title bar
-	          button_color - button color (foreground, background)
-	          element_size - element size (width, height) in characters
-	          margins - tkinter margins around outsize
-	          element_padding - tkinter padding around each element
-	          auto_size_text - autosize the elements to fit their text
-	          font - font used for elements
-	          border_width - amount of bezel or border around sunken or raised elements
-	          slider_border_width - changes the way sliders look
-	          slider_relief - changes the way sliders look
-	          slider_orientation - changes orientation of slider
-	          autoclose_time - time in seconds for autoclose boxes
-	          message_box_line_width - number of characers in a line of text in message boxes
-	          progress_meter_border_depth - amount of border around raised or lowered progress meters
-	          text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
-	          debug_win_size - size of the Print output window
+             icon - filename of icon used for taskbar and title bar
+             button_color - button color (foreground, background)
+             element_size - element size (width, height) in characters
+             margins - tkinter margins around outsize
+             element_padding - tkinter padding around each element
+             auto_size_text - autosize the elements to fit their text
+             font - font used for elements
+             border_width - amount of bezel or border around sunken or raised elements
+             slider_border_width - changes the way sliders look
+             slider_relief - changes the way sliders look
+             slider_orientation - changes orientation of slider
+             autoclose_time - time in seconds for autoclose boxes
+             message_box_line_width - number of characers in a line of text in message boxes
+             progress_meter_border_depth - amount of border around raised or lowered progress meters
+             text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
+             debug_win_size - size of the Print output window
 
 
 These settings apply to all forms `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the Form-level being the highest and the Element-level the lowest.  Thus the levels are:
@@ -1052,18 +1080,20 @@ Word of warning... version 2.2, the currently released, and upcoming version 2.3
 The proper code to check if the user has exited the form will be a polling-loop that looks something like this:
 
     while True:
-    	button, values = form.ReadNonBlocking()
-    	if values is None or button == 'Quit':
-    		break
+       button, values = form.ReadNonBlocking()
+       if values is None or button == 'Quit':
+          break
 
 We're going to build an app that does the latter.  It's going to update our form with a running clock.
 
 The basic flow and functions you will be calling are:
 Setup
 
-    form = FlexForm()
-    form.AddRows(form_rows)
-    form.Show(non_blocking = True)
+
+	form = FlexForm()
+	form_rows = .....
+	form.LayoutAndRead(form_rows, non_blocking=True)
+
 
 Periodic refresh
 
@@ -1072,29 +1102,45 @@ If you need to close the form
 
     form.CloseNonBlockingForm()
 
-Rather than the usual `form.LayoutAndShow()` call, we're manually adding the rows (doing the layout) and then showing the form.  After the form is shown, you simply call `form.ReadNonBlocking()` every now and then.
+Rather than the usual `form.LayoutAndRead()` call, we're manually adding the rows (doing the layout) and then showing the form.  After the form is shown, you simply call `form.ReadNonBlocking()` every now and then.
 
 When you are ready to close the form (assuming the form wasn't closed by the user or a button click) you simply call `form.CloseNonBlockingForm()`
 
 **Example - Running timer that updates**
-We're going to make a form and update one of the elements of that form every .01 seconds.  Here's the entire code to do that.
+See the sample code on the GitHub named Demo Media Player for another example of Async Forms.  We're going to make a form and update one of the elements of that form every .01 seconds.    Here's the entire code to do that.
 
-    with SG.FlexForm('Running Timer', auto_size_text=True) as form:
-        output_element = SG.Text('', size=(8, 2), font=('Helvetica', 20))
-        form_rows = [[SG.Text('Non-blocking GUI with updates')],
-                     [output_element],
-                     [SG.SimpleButton('Quit')]]
 
-        form.AddRows(form_rows)
-        form.Show(non_blocking=True)
-        for i in range(1, 100):
-            output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i/100), 60), i%100))
-            button, values = form.ReadNonBlocking()
-            if values is None or button == 'Quit':
-                break
-	        time.sleep(.01)
-        else:
-            form.CloseNonBlockingForm()
+    import PySimpleGUI as sg
+    import time
+
+    # form that doesn't block
+    # Make a form, but don't use context manager
+    form = sg.FlexForm('Running Timer', auto_size_text=True)
+    # Create a text element that will be updated with status information on the GUI itself
+    output_element = sg.Text('', size=(8, 2), font=('Helvetica', 20))
+    # Create the rows
+    form_rows = [[sg.Text('Non-blocking GUI with updates')],
+                 [output_element],
+                 [sg.SimpleButton('Quit')]]
+    # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
+    form.LayoutAndRead(form_rows, non_blocking=True)
+
+    #
+    # Some place later in your code...
+    # You need to perform a ReadNonBlocking on your form every now and then or
+    # else it won't refresh
+    #
+
+    for i in range(1, 1000):
+        output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i / 100), 60), i % 100))
+        button, values = form.ReadNonBlocking()
+        if values is None or button == 'Quit':
+            break
+        time.sleep(.01)
+    else:
+        form.CloseNonBlockingForm()
+
+
 
 What we have here is the same sequence of function calls as in the description.  Get a form, add rows to it, show the form, and then refresh it every now and then.
 
@@ -1126,8 +1172,42 @@ To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns 
 that color's compliment.
 sprint
 
-**sprint**
-Call `sprint` with as many parameters as you want and it'll print them all out in a `ScrolledTextBox`.  This is simply a function pointing to `PySimpleGUI.ScrolledTextBox`.
+**Debug Output**
+Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
+
+For a fun time, add this line to the top of your script
+
+    import PySimpleGUI as sg
+    print = sg.Print
+
+
+**Look and Feel**
+Dial in the look and feel that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
+
+**ObjToString**
+Ever wanted to easily display an objects contents easily?  Use ObjToString to get a nicely formatted recursive walk of your objects.
+This statement:
+
+    print(sg.ObjToSting(x))
+
+And this was the output
+
+    <class '__main__.X'>
+        abc = abc
+        attr12 = 12
+        c = <class '__main__.C'>
+            b = <class '__main__.B'>
+                a = <class '__main__.A'>
+                    attr1 = 1
+                    attr2 = 2
+                    attr3 = three
+                attr10 = 10
+                attrx = x
+
+You'll quickly wonder how you ever coded without it.
+
+
+
 
 ---
 # Known Issues
@@ -1154,17 +1234,17 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.1.1 | July 18, 2018 - Global settings exposed, fixes
 | 2.2.0| July 20, 2018 - Image Elements, Print output
 | 2.3.0 | July 23, 2018 - Changed form.Read return codes, Slider Elements, Listbox element. Renamed some methods but left legacy calls in place for now.
-| 2.4.0 | July XX, 2018 - Planned release.  Button images.
+| 2.4.0 | July 24, 2018 - Button images. Fixes so can run on Raspberry Pi
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
 
 If using Progress Meters, avoid cancelling them when you have another window open.  It could lead to future windows being blank. It's being worked on.
 
+New debug printing capability.  `sg.Print`
+
 ### Upcoming
 Make suggestions people!  Future release features
-
-Button images.  Ability to replace boring rectangular buttons with your own images.
 
 Columns.  How multiple columns would be specified in the SDK interface are still being designed.
 
@@ -1216,11 +1296,3 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
-
-
-
-
-
-
-
-
