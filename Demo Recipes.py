@@ -156,7 +156,6 @@ def main():
     Everything_NoContextManager()
     Everything()
     ChatBot()
-    Everything()
     ProgressMeter()
     SourceDestFolders()
     ChatBot()
