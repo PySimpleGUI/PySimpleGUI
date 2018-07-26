@@ -29,16 +29,23 @@ YELLOWS = ("#F3FB62", "#F0F595")
 TANS = ("#FFF9D5","#F4EFCF","#DDD8BA")
 NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#000000'), (YELLOWS[0], PURPLES[1]),
                (YELLOWS[0], GREENS[3]), (YELLOWS[0], BLUES[2]))
+
+COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
+DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
+DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
+DEFAULT_CANCEL_BUTTON_COLOR = (GREENS[3], TANS[0])
+DEFAULT_BACKGROUND_COLOR = None
+DEFAULT_ELEMENT_BACKGROUND_COLOR = None
+DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR = None
+DEFAULT_TEXT_COLOR = 'black'
+DEFAULT_INPUT_ELEMENTS_COLOR = COLOR_SYSTEM_DEFAULT
+DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[0])    # (Text, Background) or (Color "on", Color) as a way to remember
 # DEFAULT_BUTTON_COLOR = (GREENS[3], TANS[0])    # Foreground, Background (None, None) == System Default
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], GREENS[4])    # Foreground, Background (None, None) == System Default
-DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
 # DEFAULT_BUTTON_COLOR = ('white', 'black')    # Foreground, Background (None, None) == System Default
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[2])    # Foreground, Background (None, None) == System Default
-DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
-DEFAULT_CANCEL_BUTTON_COLOR = (GREENS[3], TANS[0])
 # DEFAULT_PROGRESS_BAR_COLOR = (GREENS[2], GREENS[0])     # a nice green progress bar
-DEFAULT_PROGRESS_BAR_COLOR = (GREENS[3], GREENS[3])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[1], BLUES[1])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[0], BLUES[0])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
@@ -46,10 +53,19 @@ DEFAULT_PROGRESS_BAR_COLOR = (GREENS[3], GREENS[3])     # a nice green progress 
 # A transparent button is simply one that matches the background
 TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')
 #--------------------------------------------------------------------------------
+# Progress Bar Relief Choices
+RELIEF_RAISED= 'raised'
+RELIEF_SUNKEN= 'sunken'
+RELIEF_FLAT= 'flat'
+RELIEF_RIDGE= 'ridge'
+RELIEF_GROOVE= 'groove'
+RELIEF_SOLID = 'solid'
 
-DEFAULT_PROGRESS_BAR_SIZE = (35,25)         # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')     # a nice green progress bar
+DEFAULT_PROGRESS_BAR_SIZE = (35,20)         # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH=1
-DEFAULT_PROGRESS_BAR_RELIEF = tk.SUNKEN
+DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
+PROGRESS_BAR_STYLES = ('default','winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 DEFAULT_PROGRESS_BAR_STYLE = 'default'
 DEFAULT_METER_ORIENTATION = 'Horizontal'
 DEFAULT_SLIDER_ORIENTATION = 'vertical'
@@ -69,16 +85,8 @@ LISTBOX_SELECT_MODE_SINGLE = 'single'
 # DEFAULT_METER_ORIENTATION = 'Vertical'
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777         # magic number
-# Progress Bar Relief Choices
-# -relief
-RELIEF_RAISED= 'raised'
-RELIEF_SUNKEN= 'sunken'
-RELIEF_FLAT= 'flat'
-RELIEF_RIDGE= 'ridge'
-RELIEF_GROOVE= 'groove'
-RELIEF_SOLID = 'solid'
 
-PROGRESS_BAR_STYLES = ('default','winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
+
 # DEFAULT_WINDOW_ICON = ''
 MESSAGE_BOX_LINE_WIDTH = 60
 
@@ -142,7 +150,7 @@ MSG_BOX_OK = 0
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    def __init__(self, type, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+    def __init__(self, type, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -159,6 +167,7 @@ class Element():
         self.ParentForm=None
         self.TextInputDefault = None
         self.Position = (0,0)       # Default position Row 0, Col 0
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
         return
 
     def __del__(self):
@@ -184,10 +193,11 @@ class Element():
 # ---------------------------------------------------------------------- #
 class InputText(Element):
 
-    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char=''):
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None):
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
-        super().__init__(ELEM_TYPE_INPUT_TEXT, scale, size, auto_size_text)
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg)
         return
 
     def ReturnKeyHandler(self, event):
@@ -208,10 +218,11 @@ class InputText(Element):
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
 
-    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None):
+    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
         self.Values = values
         self.TKComboBox = None
-        super().__init__(ELEM_TYPE_INPUT_COMBO, scale, size, auto_size_text)
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg)
         return
 
     def __del__(self):
@@ -227,7 +238,7 @@ class InputCombo(Element):
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
 
-    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
         self.Values = values
         self.TKListBox = None
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
@@ -240,7 +251,8 @@ class Listbox(Element):
             self.SelectMode = SELECT_MODE_SINGLE
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font)
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg)
         return
 
     def __del__(self):
@@ -256,13 +268,13 @@ class Listbox(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+    def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, font=None):
         self.InitialState = default
         self.Text = text
         self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
-        super().__init__(ELEM_TYPE_INPUT_RADIO, scale, size, auto_size_text, font)
+        super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color)
         return
 
     def __del__(self):
@@ -276,13 +288,13 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+    def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
         self.Text = text
         self.InitialState = default
         self.Value = None
         self.TKCheckbox = None
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale, size, auto_size_text, font)
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color)
         return
 
     def __del__(self):
@@ -299,11 +311,12 @@ class Checkbox(Element):
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None):
+    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
         self.Values = values
         self.DefaultValue = initial_value
         self.TKSpinBox = None
-        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font)
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg)
         return
 
     def __del__(self):
@@ -317,10 +330,11 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None):
+    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale, size, auto_size_text)
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg)
         return
 
     def ReturnKeyHandler(self, event):
@@ -340,13 +354,17 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
+    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, background_color=None,justification=None):
         self.DisplayText = text
-        self.TextColor = text_color if text_color else 'black'
+        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification if justification else DEFAULT_TEXT_JUSTIFICATION
+        if background_color is None:
+            bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
+        else:
+            bg = background_color
         # self.Font = Font if Font else DEFAULT_FONT
         # i=1/0
-        super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, font=font if font else DEFAULT_FONT)
+        super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT)
         return
 
     def Update(self, NewValue):
@@ -364,7 +382,7 @@ class Text(Element):
 # ---------------------------------------------------------------------- #
 
 class TKProgressBar():
-    def __init__(self, root, max, length=400, width=20, highlightt=0, relief='sunken', border_width=4, orientation='horizontal', BarColor=DEFAULT_PROGRESS_BAR_COLOR):
+    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE, relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH, orientation='horizontal', BarColor=DEFAULT_PROGRESS_BAR_COLOR):
         self.Length = length
         self.Width = width
         self.Max = max
@@ -372,39 +390,35 @@ class TKProgressBar():
         self.Count = None
         self.PriorCount = 0
         if orientation[0].lower() == 'h':
-            self.TKCanvas = tk.Canvas(root, width=length, height=width, highlightt=highlightt, relief=relief, borderwidth=border_width)
-            self.TKRect = self.TKCanvas.create_rectangle(0, 0, -(length * 1.5), width * 1.5, fill=BarColor[0], tags='bar')
+            s = ttk.Style()
+            s.theme_use(style)
+            s.configure("my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style='my.Horizontal.TProgressbar', length=length, orient=tk.HORIZONTAL, mode='determinate')
+            # self.TKCanvas = tk.Canvas(root, width=length, height=width, highlightt=highlightt, relief=relief, borderwidth=border_width)
+            # self.TKRect = self.TKCanvas.create_rectangle(0, 0, -(length * 1.5), width * 1.5, fill=BarColor[0], tags='bar')
             # self.canvas.pack(padx='10')
         else:
-            self.TKCanvas = tk.Canvas(root, width=width, height=length, highlightt=highlightt, relief=relief, borderwidth=border_width)
-            self.TKRect = self.TKCanvas.create_rectangle(width * 1.5, 2 * length + 40, 0, length * .5, fill=BarColor[0], tags='bar')
+            # s = ttk.Style()
+            # s.theme_use('clam')
+            # s.configure('Vertical.mycolor.progbar', forground=BarColor[0], background=BarColor[1])
+            s = ttk.Style()
+            s.theme_use(style)
+            s.configure("my.Vertical.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            self.TKProgressBarForReal = ttk.Progressbar(root,  maximum=self.Max, style='my.Vertical.TProgressbar', length=length, orient=tk.VERTICAL, mode='determinate')
+            # self.TKCanvas = tk.Canvas(root, width=width, height=length, highlightt=highlightt, relief=relief, borderwidth=border_width)
+            # self.TKRect = self.TKCanvas.create_rectangle(width * 1.5, 2 * length + 40, 0, length * .5, fill=BarColor[0], tags='bar')
             # self.canvas.pack()
 
     def Update(self, count):
-        if count > self.Max: return
-        if self.Orientation[0].lower() == 'h':
-            try:
-                if count != self.PriorCount:
-                    delta = count - self.PriorCount
-                    self.TKCanvas.move(self.TKRect, delta*(self.Length / self.Max), 0)
-                if 0: self.TKCanvas.update()
-            except:
-                return False            # the window was closed by the user on us
-        else:
-            try:
-                if count != self.PriorCount:
-                    delta = count - self.PriorCount
-                    self.TKCanvas.move(self.TKRect, 0, delta*(-self.Length / self.Max))
-                if 0: self.TKCanvas.update()
-            except:
-                return False            # the window was closed by the user on us
-        self.PriorCount = count
+        if count > self.Max: return False
+        try:
+            self.TKProgressBarForReal['value'] = count
+        except: return False
         return True
 
     def __del__(self):
         try:
-            self.TKCanvas.__del__()
-            self.TKRect.__del__()
+            self.TKProgressBarForReal.__del__()
         except:
             pass
 
@@ -413,14 +427,15 @@ class TKProgressBar():
 #   New Type of Widget that's a Text Widget in disguise                  #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
-    def __init__(self, parent, width, height, bd):
+    def __init__(self, parent, width, height, bd, background_color=None):
         tk.Frame.__init__(self, parent)
         self.output = tk.Text(parent, width=width, height=height, bd=bd)
-
+        if background_color and background_color != COLOR_SYSTEM_DEFAULT:
+            self.output.configure(background=background_color)
         self.vsb = tk.Scrollbar(parent, orient="vertical", command=self.output.yview)
-        self.vsb.pack(side="right", fill="y")
         self.output.configure(yscrollcommand=self.vsb.set)
         self.output.pack(side="left", fill="both", expand=True)
+        self.vsb.pack(side="left", fill="y")
         self.previous_stdout = sys.stdout
         self.previous_stderr = sys.stderr
 
@@ -448,9 +463,10 @@ class TKOutput(tk.Frame):
         sys.stderr = self.previous_stderr
 
 class Output(Element):
-    def __init__(self, scale=(None, None), size=(None, None)):
+    def __init__(self, scale=(None, None), size=(None, None), background_color=None):
         self.TKOut = None
-        super().__init__(ELEM_TYPE_OUTPUT, scale, size)
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg)
 
     def __del__(self):
         try:
@@ -607,14 +623,14 @@ class Image(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None):
+    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None):
         self.TKScale = None
         self.Range = (1,10) if range == (None, None) else range
         self.DefaultValue = 5 if default_value is None else default_value
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
-        super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font)
+        super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color)
         return
 
     def __del__(self):
@@ -651,7 +667,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=DEFAULT_AUTOSIZE_TEXT, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=DEFAULT_AUTOSIZE_TEXT, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
         self.AutoSizeText = auto_size_text
         self.Title = title
         self.Rows = []                     # a list of ELEMENTS for this row
@@ -659,6 +675,7 @@ class FlexForm:
         self.Scale = scale
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
         self.IsTabbedForm = is_tabbed_form
         self.ParentWindow = None
         self.Font = font if font else DEFAULT_FONT
@@ -1139,6 +1156,8 @@ def ConvertFlexToTK(MyFlexForm):
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
                 tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
+                if element.BackgroundColor is not None:
+                    tktext_label.configure(background=element.BackgroundColor)
                 tktext_label.pack(side=tk.LEFT)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -1188,6 +1207,8 @@ def ConvertFlexToTK(MyFlexForm):
                 show = element.PasswordCharacter if element.PasswordCharacter else ""
                 element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKEntry.configure(background=element.BackgroundColor)
                 element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 if not focus_set:
                     focus_set = True
@@ -1198,11 +1219,27 @@ def ConvertFlexToTK(MyFlexForm):
                 if auto_size_text is False: width=element_size[0]
                 else: width = max_line_len
                 element.TKStringVar = tk.StringVar()
+                if element.BackgroundColor  and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    combostyle = ttk.Style()
+                    try:
+                        combostyle.theme_create('combostyle',
+                                                settings={'TCombobox':
+                                                              {'configure':
+                                                                   {'selectbackground': element.BackgroundColor,
+                                                                    'fieldbackground':  element.BackgroundColor,
+                                                                    'background':  element.BackgroundColor}
+                                                               }})
+                    except: pass
+                    # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
+                    combostyle.theme_use('combostyle')
                 element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar,font=font )
+                # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
+                # if element.BackgroundColor is not None:
+                #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 element.TKCombo.current(0)
-            # -------------------------  LISTBOX (Drop Down) element  ------------------------- #
+            # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False: width=element_size[0]
@@ -1213,13 +1250,21 @@ def ConvertFlexToTK(MyFlexForm):
                 for item in element.Values:
                     element.TKListbox.insert(tk.END, item)
                 element.TKListbox.selection_set(0,0)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKListbox.configure(background=element.BackgroundColor)
+                # vsb = tk.Scrollbar(tk_row_frame, orient="vertical", command=element.TKListbox.yview)
+                # element.TKListbox.configure(yscrollcommand=vsb.set)
                 element.TKListbox.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                # vsb.pack(side=tk.LEFT, fill='y')
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
                 width, height = element_size
                 element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
                 element.TKText.insert(1.0, default_text)                    # set the default text
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKText.configure(background=element.BackgroundColor)
+                    element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element.ReturnKeyHandler)
@@ -1233,6 +1278,8 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKIntVar = tk.IntVar()
                 element.TKIntVar.set(default_value)
                 element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font)
+                if element.BackgroundColor is not None:
+                    element.TKCheckbutton.configure(background=element.BackgroundColor)
                 element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
@@ -1249,9 +1296,9 @@ def ConvertFlexToTK(MyFlexForm):
                     bar_color = element.BarColor
                 else:
                     bar_color = DEFAULT_PROGRESS_BAR_COLOR
-                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief)
-                s = ttk.Style()
-                element.TKProgressBar.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief, style=element.BarStyle )
+                # element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief)
+                element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 width = 0 if auto_size_text else element_size[0]
@@ -1269,7 +1316,9 @@ def ConvertFlexToTK(MyFlexForm):
                     element.TKIntVar.set(value)
                 element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                        variable=element.TKIntVar, value=value, bd=border_depth, font=font)
-                element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.BackgroundColor is not None:
+                    element.TKRadio.configure(background=element.BackgroundColor)
+                element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
                 width, height = element_size
@@ -1278,11 +1327,13 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKSpinBox = tk.Spinbox(tk_row_frame, values=element.Values, textvariable=element.TKStringVar, width=width, bd=border_depth)
                 element.TKStringVar.set(element.DefaultValue)
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKSpinBox.configure(background=element.BackgroundColor)
                 element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth)
+                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor)
                 element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -1309,10 +1360,15 @@ def ConvertFlexToTK(MyFlexForm):
                     range_to = element.Range[1]
                 tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
                 # tktext_label.configure(anchor=tk.NW, image=photo)
+                if element.BackgroundColor is not None:
+                    tkscale.configure(background=element.BackgroundColor)
+                    tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 tkscale.pack(side=tk.LEFT)
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         tk_row_frame.grid(row=row_num+2, sticky=tk.W, padx=DEFAULT_MARGINS[0])
+        if MyFlexForm.BackgroundColor is not None:
+            tk_row_frame.configure(background=MyFlexForm.BackgroundColor)
         if not MyFlexForm.IsTabbedForm:
             MyFlexForm.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
         else: MyFlexForm.ParentWindow.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
@@ -1351,11 +1407,26 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
     if not len(args):
         ('******************* SHOW TABBED FORMS ERROR .... no arguments')
         return
+    if DEFAULT_BACKGROUND_COLOR:
+        framestyle = ttk.Style()
+        try:
+            framestyle.theme_create('framestyle', parent='alt',
+                                settings={'TFrame':
+                                              {'configure':
+                                                   {'background': DEFAULT_BACKGROUND_COLOR,
+                                                    }}})
+        except: pass
+        # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
+        # framestyle.theme_use('framestyle')
     tab_control = ttk.Notebook(root)
     for num,x in enumerate(args):
         form, rows, tab_name = x
         form.AddRows(rows)
+
+        if DEFAULT_BACKGROUND_COLOR:
+            framestyle.theme_use('framestyle')
         tab = ttk.Frame(tab_control)  # Create tab 1
+        # s.configure("my.Frame.TFrame", background=DEFAULT_BACKGROUND_COLOR)
         tab_control.add(tab, text=tab_name)  # Add tab 1
         # tab_control.configure(text='new text')
         tab_control.grid(row=0, sticky=tk.W)
@@ -1386,6 +1457,8 @@ def StartupTK(my_flex_form):
 
     ow = _my_windows.NumOpenWindows
     root = tk.Tk() if not ow else tk.Toplevel()
+    if my_flex_form.BackgroundColor is not None:
+        root.configure(background=my_flex_form.BackgroundColor)
     _my_windows.NumOpenWindows += 1
 
     my_flex_form.TKroot = root
@@ -1604,7 +1677,7 @@ def ConvertArgsToSingleString(*args):
         # if not isinstance(message, str): message = str(message)
         message = str(message)
         longest_line_len = max([len(l) for l in message.split('\n')])
-        width_used = min(longest_line_len, MESSAGE_BOX_LINE_WIDTH)
+        width_used = max(longest_line_len, width_used)
         max_line_total = max(max_line_total, width_used)
         lines_needed = _GetNumLinesNeeded(message, width_used)
         total_lines += lines_needed
@@ -1631,7 +1704,7 @@ def ProgressMeter(title, max_value, *args, orientation=None, bar_color=DEFAULT_P
     local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
     target = (0,0) if local_orientation[0].lower() == 'h' else (0,1)
-    bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color, scale=scale, target=target, border_width=local_border_width)
+    bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color, scale=scale, target=target, border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
     form = FlexForm(title, auto_size_text=True)
 
     # Form using a horizontal bar
@@ -1640,7 +1713,7 @@ def ProgressMeter(title, max_value, *args, orientation=None, bar_color=DEFAULT_P
         bar2.TextToDisplay = single_line_message
         bar2.MaxValue = max_value
         bar2.CurrentValue = 0
-        form.AddRow(Text(single_line_message, size=(width + 20, height + 3), auto_size_text=True))
+        form.AddRow(Text(single_line_message, size=(width, height + 3), auto_size_text=True))
         form.AddRow((bar2))
         form.AddRow((Cancel(button_color=button_color)))
     else:
@@ -1648,7 +1721,7 @@ def ProgressMeter(title, max_value, *args, orientation=None, bar_color=DEFAULT_P
         bar2.TextToDisplay = single_line_message
         bar2.MaxValue = max_value
         bar2.CurrentValue = 0
-        form.AddRow(bar2, Text(single_line_message, size=(width +20, height + 3), auto_size_text=True))
+        form.AddRow(bar2, Text(single_line_message, size=(width, height + 3), auto_size_text=True))
         form.AddRow((Cancel(button_color=button_color)))
 
     form.NonBlocking = True
@@ -1993,7 +2066,11 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
                element_padding=(None,None),auto_size_text=None, font=None, border_width=None,
                slider_border_width=None, slider_relief=None, slider_orientation=None,
                autoclose_time=None, message_box_line_width=None,
-               progress_meter_border_depth=None, text_justification=None, debug_win_size=(None,None)):
+               progress_meter_border_depth=None, progress_meter_style=None,
+               progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None,
+               text_justification=None, background_color=None, element_background_color=None,
+               text_element_background_color=None, input_elements_background_color=None,
+               scrollbar_color=None, text_color=None, debug_win_size=(None,None)):
 
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
@@ -2005,11 +2082,21 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     global DEFAULT_BUTTON_COLOR
     global MESSAGE_BOX_LINE_WIDTH
     global DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+    global DEFAULT_PROGRESS_BAR_STYLE
+    global DEFAULT_PROGRESS_BAR_RELIEF
+    global DEFAULT_PROGRESS_BAR_COLOR
+    global DEFAULT_PROGRESS_BAR_SIZE
     global DEFAULT_TEXT_JUSTIFICATION
     global DEFAULT_DEBUG_WINDOW_SIZE
     global DEFAULT_SLIDER_BORDER_WIDTH
     global DEFAULT_SLIDER_RELIEF
     global DEFAULT_SLIDER_ORIENTATION
+    global DEFAULT_BACKGROUND_COLOR
+    global DEFAULT_INPUT_ELEMENTS_COLOR
+    global DEFAULT_ELEMENT_BACKGROUND_COLOR
+    global DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
+    global DEFAULT_SCROLLBAR_COLOR
+    global DEFAULT_TEXT_COLOR
     global _my_windows
 
     if icon:
@@ -2050,6 +2137,18 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     if progress_meter_border_depth != None:
         DEFAULT_PROGRESS_BAR_BORDER_WIDTH = progress_meter_border_depth
 
+    if progress_meter_style != None:
+        DEFAULT_PROGRESS_BAR_STYLE = progress_meter_style
+
+    if progress_meter_relief != None:
+        DEFAULT_PROGRESS_BAR_RELIEF = progress_meter_relief
+
+    if progress_meter_color != None:
+        DEFAULT_PROGRESS_BAR_COLOR = progress_meter_color
+
+    if progress_meter_size != None:
+        DEFAULT_PROGRESS_BAR_SIZE = progress_meter_size
+
     if slider_border_width != None:
         DEFAULT_SLIDER_BORDER_WIDTH = slider_border_width
 
@@ -2062,12 +2161,30 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     if text_justification != None:
         DEFAULT_TEXT_JUSTIFICATION = text_justification
 
+    if background_color != None:
+        DEFAULT_BACKGROUND_COLOR = background_color
+
+    if text_element_background_color != None:
+        DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR = text_element_background_color
+
+    if input_elements_background_color != None:
+        DEFAULT_INPUT_ELEMENTS_COLOR = input_elements_background_color
+
+    if element_background_color != None:
+        DEFAULT_ELEMENT_BACKGROUND_COLOR = element_background_color
+
     if debug_win_size != (None,None):
         DEFAULT_DEBUG_WINDOW_SIZE = debug_win_size
 
+    if text_color != None:
+        DEFAULT_TEXT_COLOR = text_color
+
+    if scrollbar_color != None:
+        DEFAULT_SCROLLBAR_COLOR = scrollbar_color
+
     return True
 
-# ============================== sprint ======#fddddddddddddddddddddddd
+# ============================== sprint ======#
 # Is identical to the Scrolled Text Box       #
 # Provides a crude 'print' mechanism but in a #
 # GUI environment                             #

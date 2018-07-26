@@ -3,7 +3,7 @@
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
 # PySimpleGUI
-  (Ver 2.4)
+  (Ver 2.5)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
@@ -16,13 +16,22 @@ Looking to take your Python code from the world of command lines and into the co
 
 ![snap0136](https://user-images.githubusercontent.com/13696193/43162494-33095ece-8f59-11e8-86de-b6d8bcc5a52f.jpg)
 
-Add a Progress Meter to your code with ONE LINE of code
+  Build beautiful customized forms that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve the real problems.  Do you really want to plod through the mountains of code required to program tkinter?
+
+![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
+
+Perhaps you're looking for a way to interact with your Raspberry Pi in a more friendly way.  The is the same form as above, except shown on a Pi.
+
+![snap0153](https://user-images.githubusercontent.com/13696193/43261051-5838b356-90a9-11e8-96cc-e8a4860d0464.jpg)
+
+
+In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this into any of your `for` loops and get a nice meter like this:
 
     EasyProgressMeter('My meter title', current_value, max value)
 
 ![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
 
-Or how about a media player GUI with custom buttons... in 30 lines of code.
+You can build an async media player GUI with custom buttons in 30 lines of code.
 
 ![media file player](https://user-images.githubusercontent.com/13696193/43161977-9ee7cace-8f57-11e8-8ff8-3ea24b69dab9.jpg)
 
@@ -112,9 +121,6 @@ You will see a number of different styles of buttons, data entry fields, etc, in
    - A row is a list of elements
 - Return values are a list
 
- Each Elements is specified by names such as Text, Button, Checkbox, etc.
-
-Some elements have shortcuts, meant to make it easy on the programmer who will write less code using them.  Rather than writing calling `Button`, with  `button_name = "Submit"` will create a button with the text 'Submit' on it,  Other examples include shortening the name of the function.  `Text` is shorted to `Txt` or `T`.    See each API call for the shortcuts.
 
   -----
 ## Getting Started with PySimpleGUI
@@ -1035,27 +1041,64 @@ Recall that values is a list as well.  Multiple tabs in the form would return li
 
     ((button1, (values1)), (button2, (values2))
 
+  ## Colors ##
+Starting in version 2.5 you can change the background colors for the window and the Elements.
+
+Your forms can go from this:
+![snap0155](https://user-images.githubusercontent.com/13696193/43273879-a9fdc10a-90cb-11e8-8c20-4f6a244ebe2f.jpg)
+
+
+to this... with one function call...
+
+![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
+
+
+
+While you can do it on an element by element or form level basis, the easiest way, by far, is a call to `SetOptions`.
+
+Be aware that once you change these options they are changed for the rest of your program's execution.  All of your forms will have that look and feel, until you change it to something else (which could be the system default colors.
+
+This call sets all of the different color options.
+
+    SetOptions(background_color='#9FB8AD',
+               text_element_background_color='#9FB8AD',
+               element_background_color='#9FB8AD',
+               scrollbar_color=None,
+               input_elements_background_color='#F7F3EC',
+               progress_meter_color = ('green', 'blue')
+               button_color=('white','#475841'))
+
+
 
 ## Global Settings
 **Global Settings**
 Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
 
-    SetOptions(icon=None,
-               button_color=(None,None),
-               element_size=(None,None),
-               margins=(None,None),
-               element_padding=(None,None),
-               auto_size_text=None,
-               font=None,
-               border_width=None,
-               slider_border_width=None,
-               slider_relief=None,
-               slider_orientation=None,
-               autoclose_time=None,
-               message_box_line_width=None,
-               progress_meter_border_depth=None,
-               text_justification=None,
-               debug_win_size=(None,None):
+    SetOptions(icon=None
+			   button_color=(None,None)
+			   element_size=(None,None),
+			   margins=(None,None),
+			   element_padding=(None,None)
+			   auto_size_text=None
+			   font=None
+			   border_width=None
+               slider_border_width=None
+               slider_relief=None
+               slider_orientation=None
+               autoclose_time=None
+               message_box_line_width=None
+               progress_meter_border_depth=None
+               progress_meter_style=None
+               progress_meter_relief=None
+               progress_meter_color=None
+               progress_meter_size=None
+               text_justification=None
+               background_color=None
+               element_background_color=None
+               text_element_background_color=None
+               input_elements_background_color=None
+               scrollbar_color=None, text_color=None
+               debug_win_size=(None,None)
 
 Explanation of parameters
 
@@ -1073,6 +1116,16 @@ Explanation of parameters
              autoclose_time - time in seconds for autoclose boxes
              message_box_line_width - number of characers in a line of text in message boxes
              progress_meter_border_depth - amount of border around raised or lowered progress meters
+             progress_meter_style - style of progress meter as defined by tkinter
+             progress_meter_relief - relief style
+             progress_meter_color - color of the bar and background of progress meters
+             progress_meter_size - size in (characters, pixels)
+             background_color - Color of the main window's background
+             element_background_color - Background color of the elements
+             text_element_background_color - Text element background color
+             input_elements_background_color - Input fields background color
+             scrollbar_color - Color for scrollbars (may not always work)
+             text_color - Text element default text color
              text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
              debug_win_size - size of the Print output window
 
@@ -1083,7 +1136,7 @@ These settings apply to all forms `SetOptions`.  The Row options and Element opt
  - Row level
  - Element level
 
-Each lower level overrides the settings of the higher level
+Each lower level overrides the settings of the higher level.  Once settings have been changed, they remain changed for the duration of the program (unless changed again).
 
 ## Asynchronous (Non-Blocking) Forms
 So you want to be a wizard do ya?  Well go boldly!  While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.  With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.ReadNonBlocking` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
@@ -1173,13 +1226,13 @@ That's it... this example follows the async design pattern well.
 ## Sample Applications
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
 
+`Demo Recipes.py` - Sample forms for all major form types and situations. This is the place to get your code template from.  Includes asynchronous forms, etc.
+
 `Demo DisplayHash1and256.py` - Demonstrates using High Level API calls to get a filename
 
 `Demo DupliucateFileFinder.py` - Demonstrates High Level API to get a folder & Easy Progress Meter to show progress of the file scanning
 
-`Demo Recipes.py` - Three sample forms including an asynchronous form
-
-`Demo HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program could forever change how you code. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.
+`Demo HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program could forever change how you code. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.  If anyone wants to help me package this application up, I could use a hand.
 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize
@@ -1253,6 +1306,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.2.0| July 20, 2018 - Image Elements, Print output
 | 2.3.0 | July 23, 2018 - Changed form.Read return codes, Slider Elements, Listbox element. Renamed some methods but left legacy calls in place for now.
 | 2.4.0 | July 24, 2018 - Button images. Fixes so can run on Raspberry Pi
+| 2.5.0 | July 26, 2018 - Colors. Listbox scrollbar. tkinter Progress Bar instead of homegrown.
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -1261,12 +1315,15 @@ If using Progress Meters, avoid cancelling them when you have another window ope
 
 New debug printing capability.  `sg.Print`
 
+2.5 Discovered issue with scroll bar on `Output` elements.  The bar will match size of ROW not the size of the element.  Normally you never notice this due to where on a form the `Output` element goes.
+
+Listboxes are still without scrollwheels. The mouse can drag to see more items.  The mouse scrollwheel will also scroll the list and will `page up` and `page down` keys.
+
 ### Upcoming
 Make suggestions people!  Future release features
 
 Columns.  How multiple columns would be specified in the SDK interface are still being designed.
 
-Progress Meters - Replace custom meter with tkinter meter.
 
 
 ## Code Condition
