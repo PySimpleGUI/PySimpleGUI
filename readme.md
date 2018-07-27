@@ -3,7 +3,7 @@
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
 # PySimpleGUI
-  (Ver 2.5)
+  (Ver 2.6)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
@@ -22,7 +22,7 @@ Looking to take your Python code from the world of command lines and into the co
 
 Perhaps you're looking for a way to interact with your Raspberry Pi in a more friendly way.  The is the same form as above, except shown on a Pi.
 
-![snap0153](https://user-images.githubusercontent.com/13696193/43261051-5838b356-90a9-11e8-96cc-e8a4860d0464.jpg)
+![raspberry pi](https://user-images.githubusercontent.com/13696193/43298356-9cfe9008-9123-11e8-9612-14649a2f6c7f.jpg)
 
 
 In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this into any of your `for` loops and get a nice meter like this:
@@ -494,7 +494,8 @@ This is the definition of the FlexForm object:
 
     def FlexForm(title,
         default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
-        auto_size_text=DEFAULT_AUTOSIZE_TEXT,
+        auto_size_text=None,
+        auto_size_buttons=None,
         scale=(None, None),
         location=(None, None),
         button_color=None,Font=None,
@@ -508,7 +509,8 @@ This is the definition of the FlexForm object:
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
 
        default_element_size - Size of elements in form in characters (width, height)
-       auto_size_text - Bool. True is elements should size themselves according to contents
+       auto_size_text - Bool. True if elements should size themselves according to contents
+       auto_size_buttons - Bool. True if button elements should size themselves according to their text label
        scale - Set size of element to be a multiple of the Element size
        location - Location to place window in pixels
        button_color - Default color for buttons (foreground, background). Can be text or hex
@@ -868,7 +870,7 @@ While it's possible to build forms using the Button Element directly, you should
     SimpleButton(text,
                  scale=(None, None),
                  size=(None, None),
-                 auto_size_text=None,
+                 auto_size_button=None,
                  button_color=None,
                  font=None)
 
@@ -906,13 +908,13 @@ The code for the entire form could be:
                [SG.FolderBrowse(Target=(-1,0)), SG.OK()]]
 
 **Custom Buttons**
-If you want to define your own button, you will generally do this with the Button Element `SimpleButton`.
+Not all buttons are created equal.  A button that closes a form is different that a button that returns from the form without closing it.  If you want to define your own button, you will generally do this with the Button Element `SimpleButton`, which closes the form when clicked.
 
 layout =  [[SG.SimpleButton('My Button')]]
 
 ![singlebutton](https://user-images.githubusercontent.com/13696193/42718281-9453deca-86d5-11e8-83c7-4b6d33720858.jpg)
 
-All buttons can have their text changed by changing the `button_text` variable.
+All buttons can have their text changed by changing the `button_text` variable in the button call.  It is this text that is returned when a form is read.  This text will be what tells you which button is called so make it unique.  Most of the convenience buttons (Submit, Cancel, Yes, etc) are all SimpleButtons.  The two that are not are `FileBrowse` and `FolderBrowse`.  They clearly do not close the form. Instead they bring up a file or folder browser dialog box.
 
 **Button Images**
 Now this is an exciting feature not found in many simplified packages.... images on buttons!  You can make a pretty spiffy user interface with the help of a few button images.
@@ -932,6 +934,7 @@ Three parameters are used for button images.
     image_subsample - Amount to divide the size by.  2 means your image will be 1/2 the size.  3 means 1/3
 
 Here's an example form made with button images.
+
 ![media file player](https://user-images.githubusercontent.com/13696193/43161977-9ee7cace-8f57-11e8-8ff8-3ea24b69dab9.jpg)
 
 You'll find the source code in the file Demo Media Player.  Here is what the button calls look like to create media player form
@@ -1080,6 +1083,7 @@ Let's have some fun customizing!  Make PySimpleGUI look the way you want it to l
 			   margins=(None,None),
 			   element_padding=(None,None)
 			   auto_size_text=None
+			   auto_size_buttons=None
 			   font=None
 			   border_width=None
                slider_border_width=None
@@ -1108,6 +1112,7 @@ Explanation of parameters
              margins - tkinter margins around outsize
              element_padding - tkinter padding around each element
              auto_size_text - autosize the elements to fit their text
+             auto_size_buttons - autosize the buttons to fit their text
              font - font used for elements
              border_width - amount of bezel or border around sunken or raised elements
              slider_border_width - changes the way sliders look
@@ -1307,6 +1312,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.3.0 | July 23, 2018 - Changed form.Read return codes, Slider Elements, Listbox element. Renamed some methods but left legacy calls in place for now.
 | 2.4.0 | July 24, 2018 - Button images. Fixes so can run on Raspberry Pi
 | 2.5.0 | July 26, 2018 - Colors. Listbox scrollbar. tkinter Progress Bar instead of homegrown.
+| 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -1321,6 +1327,8 @@ Listboxes are still without scrollwheels. The mouse can drag to see more items. 
 
 ### Upcoming
 Make suggestions people!  Future release features
+
+Auto Sized Buttons - Rather than using the default setting for TEXT fields, broke out button sizing into it's own setting. Makes much more sense. Reduces the amount of code.
 
 Columns.  How multiple columns would be specified in the SDK interface are still being designed.
 
@@ -1338,12 +1346,30 @@ While the internals to PySimpleGUI are a tad sketchy, the public interfaces into
 
 Please log bugs and suggestions in the GitHub!  It will only make the code stronger and better in the end, a good thing for us all, right?
 
+## Design
+
+A moment about the design-spirit of `PySimpleGUI`.  From the beginning, this package was meant to take advantage of Python's capabilities with the goal of programming ease.
+
+**Single File**
+While not the best programming practice, the implementation resulted in a single file solution.  Only one file is needed, PySimpleGUI.py.  You can post this file, email it, and easily import it using one statement.
+
+**Functions as objects**
+In Python, functions behave just like classes. When you're placing a Text Element into your form, you may be sometimes calling a function and other times declaring an object.  If you use the word Text, then you're getting an object.  If you're using `Txt`, then you're calling a function that returns a `Text` object.
+
+**Lists**
+It seemed quite natural to use Python's powerful list constructs when possible.
+
+
+
+
+
+
 ## Authors
 MikeTheWatchGuy
 
 ## License
 
-GNU Lesser General Public License (LGPL 3)
+GNU Lesser General Public License (LGPL 3) +
 
 ## Acknowledgments
 
