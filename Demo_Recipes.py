@@ -28,12 +28,12 @@ def MachineLearningGUI():
               [sg.Text('q', size=(15, 1)), sg.In(default_text='ff', size=(10, 1)), sg.Text('ngram', size=(15, 1)), sg.In(default_text='5', size=(10, 1))],
               [sg.Text('l', size=(15, 1)), sg.In(default_text='0.4', size=(10, 1)), sg.Text('Layers', size=(15, 1)), sg.Drop(values=('BatchNorm', 'other'),auto_size_text=True)],
               [sg.Text('_' * 100, size=(65, 1))],
-              [sg.Text('Flags', font=('Helvetica', 13))],
+              [sg.Text('Flags', font=('Helvetica', 15), justification='left')],
               [sg.Checkbox('Normalize', size=(12, 1), default=True), sg.Checkbox('Verbose', size=(20, 1))],
               [sg.Checkbox('Cluster', size=(12, 1)), sg.Checkbox('Flush Output', size=(20, 1), default=True)],
               [sg.Checkbox('Write Results', size=(12, 1)), sg.Checkbox('Keep Intermediate Data', size=(20, 1))],
               [sg.Text('_' * 100, size=(65, 1))],
-              [sg.Text('Loss Functions', font=('Helvetica', 13))],
+              [sg.Text('Loss Functions', font=('Helvetica', 15), justification='left')],
               [sg.Radio('Cross-Entropy', 'loss', size=(12, 1)), sg.Radio('Logistic', 'loss', default=True, size=(12, 1))],
               [sg.Radio('Hinge', 'loss', size=(12, 1)), sg.Radio('Huber', 'loss', size=(12, 1))],
               [sg.Radio('Kullerback', 'loss', size=(12, 1)), sg.Radio('MAE(L1)', 'loss', size=(12, 1))],
@@ -192,13 +192,12 @@ def main():
     sg.SetOptions(background_color='#9FB8AD', text_element_background_color='#9FB8AD',  element_background_color='#9FB8AD', scrollbar_color=None, input_elements_background_color='#F7F3EC', button_color=('white','#475841'), border_width=0, slider_border_width=0, progress_meter_border_depth=0)
 
     MachineLearningGUI()
+
     Everything_NoContextManager()
 
     # sg.SetOptions(background_color='#B89FB6', text_element_background_color='#B89FB6',  element_background_color='#B89FB6',   button_color=('white','#7E6C92'), text_color='#3F403F',border_width=0, slider_border_width=0, progress_meter_border_depth=0)
 
     sg.SetOptions(background_color='#A5CADD', input_elements_background_color='#E0F5FF', text_element_background_color='#A5CADD',  element_background_color='#A5CADD',   button_color=('white','#303952'), text_color='#822E45',border_width=0, progress_meter_color=('#3D8255','white'), slider_border_width=0, progress_meter_border_depth=0)
-
-    Everything_NoContextManager()
 
     Everything()
 
