@@ -17,7 +17,8 @@ def HowDoI():
     :return: never returns
     '''
     # -------  Make a new FlexForm  ------- #
-    SG.SetOptions(border_width=1)
+    # Set system-wide options that will affect all future forms.  Give our form a spiffy look and feel
+    SG.SetOptions(background_color='#9FB8AD', text_element_background_color='#9FB8AD',  element_background_color='#9FB8AD', scrollbar_color=None, input_elements_background_color='#F7F3EC', button_color=('white','#475841'))
     form = SG.FlexForm('How Do I ??', auto_size_text=True, default_element_size=(30, 2), icon=DEFAULT_ICON)
     form.AddRow(SG.Text('Ask and your answer will appear here....', size=(40, 1)))
     form.AddRow(SG.Output(size=(90, 20)))

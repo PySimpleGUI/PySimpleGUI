@@ -15,6 +15,7 @@ DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
 DEFAULT_MARGINS = (10,5)                # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in pixels
 DEFAULT_AUTOSIZE_TEXT = False
+DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
 DEFAULT_TEXT_JUSTIFICATION = 'left'
 DEFAULT_BORDER_WIDTH = 1
@@ -62,7 +63,7 @@ RELIEF_GROOVE= 'groove'
 RELIEF_SOLID = 'solid'
 
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')     # a nice green progress bar
-DEFAULT_PROGRESS_BAR_SIZE = (35,20)         # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_SIZE = (25,20)         # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH=1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
 PROGRESS_BAR_STYLES = ('default','winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
@@ -382,7 +383,7 @@ class Text(Element):
 # ---------------------------------------------------------------------- #
 
 class TKProgressBar():
-    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE, relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH, orientation='horizontal', BarColor=DEFAULT_PROGRESS_BAR_COLOR):
+    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE, relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH, orientation='horizontal', BarColor=(None,None)):
         self.Length = length
         self.Width = width
         self.Max = max
@@ -423,8 +424,10 @@ class TKProgressBar():
             pass
 
 # ---------------------------------------------------------------------- #
-#                           Output                                       #
-#   New Type of Widget that's a Text Widget in disguise                  #
+#                           TKOutput                                     #
+#   New Type of TK Widget that's a Text Widget in disguise               #
+#       Note that it's inherited from the TKFrame class so that the      #
+#       Scroll bar will span the length of the frame
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
     def __init__(self, parent, width, height, bd, background_color=None):
@@ -462,6 +465,10 @@ class TKOutput(tk.Frame):
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
+# ---------------------------------------------------------------------- #
+#                           Output                                       #
+#  Routes stdout, stderr to a scrolled window                            #
+# ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, scale=(None, None), size=(None, None), background_color=None):
         self.TKOut = None
@@ -479,7 +486,8 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None,None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
+    def __init__(self, button_type=CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None,None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+        self.AutoSizeButton = auto_size_button
         self.BType = button_type
         self.FileTypes = file_types
         self.TKButton = None
@@ -491,7 +499,7 @@ class Button(Element):
         self.ImageSubsample = image_subsample
         self.UserData = None
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
-        super().__init__(ELEM_TYPE_BUTTON, scale, size, auto_size_text, font=font)
+        super().__init__(ELEM_TYPE_BUTTON, scale, size, font=font)
         return
 
     # -------  Button Callback  ------- #
@@ -667,8 +675,9 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=DEFAULT_AUTOSIZE_TEXT, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
-        self.AutoSizeText = auto_size_text
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
+        self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
+        self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
         self.Rows = []                     # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
@@ -901,50 +910,50 @@ def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, 
     return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
-    return Button(BROWSE_FOLDER, target=target, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
+def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+    return Button(BROWSE_FOLDER, target=target, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
-    return Button(BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
+def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+    return Button(BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
-def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
+def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
-def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
+def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
+def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
-def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
+def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
-def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
+def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
+def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def No(button_text='No', scale=(None, None), size=(None, None), auto_size_text=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color)
+def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
-    return Button(CLOSES_WIN, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample, button_text=button_text,border_width=border_width, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
+def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(CLOSES_WIN, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample, button_text=button_text,border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_text=None, button_color=None, font=None):
-    return Button(READ_FORM, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample,border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_text=auto_size_text, button_color=button_color, font=font)
+def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(READ_FORM, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample,border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 #------------------------------------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  ------- #
@@ -1164,7 +1173,10 @@ def ConvertFlexToTK(MyFlexForm):
                 element.Location = (row_num, col_num)
                 btext = element.ButtonText
                 btype = element.BType
-                if auto_size_text is False: width=element_size[0]
+                if element.AutoSizeButton is not None:
+                    auto_size = element.AutoSizeButton
+                else: auto_size = MyFlexForm.AutoSizeButtons
+                if auto_size is False: width=element_size[0]
                 else: width = 0
                 height=element_size[1]
                 lines = btext.split('\n')
@@ -1334,7 +1346,7 @@ def ConvertFlexToTK(MyFlexForm):
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
                 element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor)
-                element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], fill=tk.X)
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 photo = tk.PhotoImage(file=element.Filename)
@@ -1687,7 +1699,7 @@ def ConvertArgsToSingleString(*args):
 
 # ============================== ProgressMeter  =====#
 # ===================================================#
-def ProgressMeter(title, max_value, *args, orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
+def ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
     '''
     Create and show a form on tbe caller's behalf.
     :param title:
@@ -1801,7 +1813,7 @@ class EasyProgressMeterDataClass():
 
 
 # ============================== EasyProgressMeter  =====#
-def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=DEFAULT_PROGRESS_BAR_COLOR, button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
+def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
     '''
     A ONE-LINE progress meter. Add to your code where ever you need a meter. No need for a second
     function call before your loop. You've got enough code to write!
@@ -2063,7 +2075,7 @@ def SetGlobalIcon(icon):
 # Sets the icon to be used by default                #
 # ===================================================#
 def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), margins=(None,None),
-               element_padding=(None,None),auto_size_text=None, font=None, border_width=None,
+               element_padding=(None,None),auto_size_text=None, auto_size_buttons=None, font=None, border_width=None,
                slider_border_width=None, slider_relief=None, slider_orientation=None,
                autoclose_time=None, message_box_line_width=None,
                progress_meter_border_depth=None, progress_meter_style=None,
@@ -2076,6 +2088,7 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
     global DEFAULT_ELEMENT_PADDING  # Padding between elements (row, col) in pixels
     global DEFAULT_AUTOSIZE_TEXT
+    global DEFAULT_AUTOSIZE_BUTTONS
     global DEFAULT_FONT
     global DEFAULT_BORDER_WIDTH
     global DEFAULT_AUTOCLOSE_TIME
@@ -2119,8 +2132,11 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     if element_padding != (None,None):
         DEFAULT_ELEMENT_PADDING = element_padding
 
-    if auto_size_text:
+    if auto_size_text != None:
         DEFAULT_AUTOSIZE_TEXT = auto_size_text
+
+    if auto_size_buttons != None:
+        DEFAULT_AUTOSIZE_BUTTONS = auto_size_buttons
 
     if font !=None:
         DEFAULT_FONT = font
@@ -2202,3 +2218,19 @@ def ObjToString(obj, extra='    '):
                   (ObjToString(obj.__dict__[item], extra + '    ') if hasattr(obj.__dict__[item], '__dict__') else str(
                       obj.__dict__[item])))
          for item in sorted(obj.__dict__)))
+
+
+def main():
+    with FlexForm('Demo form..', auto_size_text=True) as form:
+        form_rows = [[Text('You are running the PySimpleGUI.py file itself')],
+                     [Text('You should be importing it rather than running it\n')],
+                     [Text('Here is your sample input form....')],
+                     [Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), InputText('Source'),FolderBrowse()],
+                     [Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), InputText('Dest'), FolderBrowse()],
+                     [Submit(), Cancel()]]
+
+        button, (source, dest) = form.LayoutAndRead(form_rows)
+
+if __name__ == '__main__':
+    main()
+    exit(69)

@@ -4,10 +4,10 @@ import PySimpleGUI as sg
 
 # A simple blocking form.   Your best starter-form
 def SourceDestFolders():
-    with sg.FlexForm('Demo Source / Destination Folders', auto_size_text=True) as form:
+    with sg.FlexForm('Demo Source / Destination Folders') as form:
         form_rows = [[sg.Text('Enter the Source and Destination folders')],
-                     [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source')],
-                     [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'), sg.FolderBrowse()],
+                     [sg.Text('Source Folder', size=(15, 1), justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
+                     [sg.Text('Destination Folder', size=(15, 1), justification='right'), sg.InputText('Dest'), sg.FolderBrowse()],
                      [sg.Submit(), sg.Cancel()]]
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
@@ -16,6 +16,35 @@ def SourceDestFolders():
     else:
         sg.MsgBoxError('Cancelled', 'User Cancelled')
 
+
+def MachineLearningGUI():
+    sg.SetOptions(text_justification='right')
+    form = sg.FlexForm('Machine Learning Front End', font=("Helvetica", 12))  # begin with a blank form
+
+    layout = [[sg.Text('Machine Learning Command Line Parameters', font=('Helvetica', 16))],
+              [sg.Text('Passes', size=(15, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1)),
+               sg.Text('Steps', size=(18, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1))],
+              [sg.Text('ooa', size=(15, 1)), sg.In(default_text='6', size=(10, 1)), sg.Text('nn', size=(15, 1)), sg.In(default_text='10', size=(10, 1))],
+              [sg.Text('q', size=(15, 1)), sg.In(default_text='ff', size=(10, 1)), sg.Text('ngram', size=(15, 1)), sg.In(default_text='5', size=(10, 1))],
+              [sg.Text('l', size=(15, 1)), sg.In(default_text='0.4', size=(10, 1)), sg.Text('Layers', size=(15, 1)), sg.Drop(values=('BatchNorm', 'other'),auto_size_text=True)],
+              [sg.Text('_' * 100, size=(65, 1))],
+              [sg.Text('Flags', font=('Helvetica', 13))],
+              [sg.Checkbox('Normalize', size=(12, 1), default=True), sg.Checkbox('Verbose', size=(20, 1))],
+              [sg.Checkbox('Cluster', size=(12, 1)), sg.Checkbox('Flush Output', size=(20, 1), default=True)],
+              [sg.Checkbox('Write Results', size=(12, 1)), sg.Checkbox('Keep Intermediate Data', size=(20, 1))],
+              [sg.Text('_' * 100, size=(65, 1))],
+              [sg.Text('Loss Functions', font=('Helvetica', 13))],
+              [sg.Radio('Cross-Entropy', 'loss', size=(12, 1)), sg.Radio('Logistic', 'loss', default=True, size=(12, 1))],
+              [sg.Radio('Hinge', 'loss', size=(12, 1)), sg.Radio('Huber', 'loss', size=(12, 1))],
+              [sg.Radio('Kullerback', 'loss', size=(12, 1)), sg.Radio('MAE(L1)', 'loss', size=(12, 1))],
+              [sg.Radio('MSE(L2)', 'loss', size=(12, 1)), sg.Radio('MB(L0)', 'loss', size=(12, 1))],
+              [sg.Submit(), sg.Cancel()]]
+    button, values = form.LayoutAndShow(layout)
+    del(form)
+    sg.SetOptions(text_justification='left')
+
+    return button, values
+
 # YOUR BEST STARTING POINT
 # This is a form showing you all of the basic Elements (widgets)
 # Some have a few of the optional parameters set, but there are more to choose from
@@ -23,65 +52,70 @@ def SourceDestFolders():
 # Use this especially if you are runningm multi-threaded
 # Where you free up resources is really important to tkinter
 def Everything():
+
     with sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
         layout = [
-            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
+            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
             [sg.Text('Here is some text.... and a place to enter text')],
             [sg.InputText()],
             [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
             [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
-            [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
-                          scale=(2, 10))],
-            [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
-             sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
-            [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10),
+            [sg.Multiline(default_text='This is the default Text should you decide not to type anything',size=(35,3)),
+             sg.Multiline(default_text='A second multi-line',size=(35,3))],
+            [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 3)),
+             sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
+            [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3', 'Listbox 4'), size=(30, 3)),
+             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
+             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
+             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
              sg.Spin(values=('Spin Box 1', '2','3'), initial_value='Spin Box 1')],
-            [sg.Text('_' * 100, size=(70, 1))],
-            [sg.Text('Choose Source and Destination Folders', size=(35, 1))],
-            [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
-            [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
-             sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', 'green'))]
+            [sg.Text('_' * 80)],
+            [sg.Text('Choose A Folder', size=(35, 1))],
+            [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Default Folder'), sg.FolderBrowse()],
+            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('black', '#EDE5B7'))]
              ]
 
         button, values = form.LayoutAndRead(layout)
 
-    sg.MsgBox('Title', 'Typical message box', 'The results of the form are a lot of data!  Get ready... ', 'The button clicked was "{}"'.format(button), 'The values are', values)
+    sg.MsgBox('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values)
 
 # Should you decide not to use a context manager, then try this form as your starting point
 # Be aware that tkinter, which this is based on, is picky about who frees up resources, especially if
 # you are running multithreaded
 def Everything_NoContextManager():
     form = sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1))
-    layout = [[sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
-              [sg.Text('Here is some text.... and a place to enter text')],
-              [sg.InputText()],
-              [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
-              [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
-              [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything', scale=(2, 10))],
-              [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)), sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
-              [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
-               sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
-               sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
-               sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
-              [sg.Text('_' * 100, size=(70, 1))],
-              [sg.Text('Choose Source and Destination Folders', size=(35, 1), text_color='red')],
-              [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
-              [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'), sg.FolderBrowse()],
-              [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', 'green'))]]
+    layout = [
+        [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
+        [sg.Text('Here is some text.... and a place to enter text')],
+        [sg.InputText('This is my text')],
+        [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
+        [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
+        [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
+         sg.Multiline(default_text='A second multi-line', size=(35, 3))],
+        [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 3)),
+         sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
+        [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
+         sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+        [sg.Text('_' * 80)],
+        [sg.Text('Choose A Folder', size=(35, 1))],
+        [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
+         sg.InputText('Default Folder'), sg.FolderBrowse()],
+        [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', '#7E6C92'))]
+         ]
 
     button, values = form.LayoutAndRead(layout)
     del(form)
 
-    sg.MsgBox('Title', 'Typical message box', 'Here are the restults!  There is one entry per input field ', 'The button clicked was "{}"'.format(button), 'The values are', values)
+    sg.MsgBox('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values)
+
 
 def ProgressMeter():
-    for i in range(1,10000):
-        if not sg.EasyProgressMeter('My Meter', i + 1, 10000): break
-        # SG.Print(i)
+    for i in range(1,100):
+        if not sg.EasyProgressMeter('My Meter', i + 1, 100, orientation='v'): break
+        time.sleep(.01)
 
 # Blocking form that doesn't close
 def ChatBot():
@@ -149,18 +183,40 @@ def DebugTest():
     for i in range (1,300):
         sg.Print(i, randint(1, 1000), end='', sep='-')
 
-
+#=---------------------------------- main ------------------------------
 def main():
-    # SG.SetOptions(border_width=1, font=("Helvetica", 10), button_color=('white', SG.BLUES[0]), slider_border_width=1)
-    NonBlockingPeriodicUpdateForm_ContextManager()
-    NonBlockingPeriodicUpdateForm()
-    Everything_NoContextManager()
-    Everything()
-    ChatBot()
-    ProgressMeter()
+
+    # sg.MsgBox('Changing look and feel.', 'Done by calling SetOptions')
     SourceDestFolders()
+
+    sg.SetOptions(background_color='#9FB8AD', text_element_background_color='#9FB8AD',  element_background_color='#9FB8AD', scrollbar_color=None, input_elements_background_color='#F7F3EC', button_color=('white','#475841'), border_width=0, slider_border_width=0, progress_meter_border_depth=0)
+
+    MachineLearningGUI()
+    Everything_NoContextManager()
+
+    # sg.SetOptions(background_color='#B89FB6', text_element_background_color='#B89FB6',  element_background_color='#B89FB6',   button_color=('white','#7E6C92'), text_color='#3F403F',border_width=0, slider_border_width=0, progress_meter_border_depth=0)
+
+    sg.SetOptions(background_color='#A5CADD', input_elements_background_color='#E0F5FF', text_element_background_color='#A5CADD',  element_background_color='#A5CADD',   button_color=('white','#303952'), text_color='#822E45',border_width=0, progress_meter_color=('#3D8255','white'), slider_border_width=0, progress_meter_border_depth=0)
+
+    Everything_NoContextManager()
+
+    Everything()
+
+    ProgressMeter()
+
+    # Set system-wide options that will affect all future forms
+
+
+    NonBlockingPeriodicUpdateForm_ContextManager()
+
+
+    NonBlockingPeriodicUpdateForm()
+
+
     ChatBot()
+
     DebugTest()
+
     sg.MsgBox('Done with all recipes')
 
 if __name__ == '__main__':
