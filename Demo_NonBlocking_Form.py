@@ -3,6 +3,7 @@ import time
 
 def main():
     StatusOutputExample()
+    StatusOutputExample_context_manager()
 
 # form that doen't block
 def StatusOutputExample_context_manager():
@@ -15,7 +16,7 @@ def StatusOutputExample_context_manager():
         form.LayoutAndRead(form_rows, non_blocking=True)
 
         for i in range(1, 1000):
-            output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i/100), 60), i%100))
+            output_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
             button, values = form.ReadNonBlocking()
             if values is None or button == 'Quit':
                 break
@@ -44,7 +45,7 @@ def StatusOutputExample():
     #
 
     for i in range(1, 1000):
-        output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i / 100), 60), i % 100))
+        output_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
         button, values = form.ReadNonBlocking()
         if values is None or button == 'Quit':
             break
