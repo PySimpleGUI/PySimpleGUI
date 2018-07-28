@@ -336,7 +336,7 @@ A word of caution.  There are known problems when multiple PySimpleGUI windows a
 You can change the size of the debug window using the `SetOptions` call with the `debug_win_size` parameter.
 
 ---
-# Custom Form API Calls
+# Custom Form API Calls  (Your First Form)
 
 This is the FUN part of the programming of this GUI.  In order to really get the most out of the API, you should be using an IDE that supports auto complete or will show you the definition of the function.  This will make customizing go  smoother.
 
@@ -378,6 +378,27 @@ The second design pattern is not context manager based.  If you are struggling w
 
 You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
+### Laying out your form
+Your form is a 2 dimensional list in Python.  The first dimension are rows, the second is a list of Elements for each row.  The first thing you want to do is layout your form on paper.
+
+    layout = [ [row 1],
+               [row 2],
+               [row 3] ]
+
+Simple enough... a list of lists.
+A row is a list of Elements.  For example this could be a row with a couple of elements on it.
+
+    [ Input, Button]
+
+Turning back to our example.  This GUI roughly looks like this:
+
+    layout = [ [Text],
+               [InputText, FileBrowse]
+               [Submit, Cancel] ]
+
+  Now let's put it all together into an entire program.
+
+
 ### Line by line explanation
 
 Going through each line of code in the above form will help explain how to use this design patter.  Copy, modify and run it!
@@ -396,11 +417,8 @@ Now we're on the second row of the form.  On this row there are 2 elements.  The
 The last line of the `form_rows` variable assignment contains a Submit and a Cancel Button.  These are buttons that will cause a form to return its value to the caller.
 
     (button, (source_filename, )) = form.LayoutAndRead(form_rows)
-This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field
+This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field.  The result of the form is stored directly into the variable we wish to work with.
 
-
-
----
 
 ## Return values
 
@@ -1397,4 +1415,5 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
 

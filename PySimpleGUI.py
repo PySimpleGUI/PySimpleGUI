@@ -193,8 +193,16 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-
     def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None):
+        '''
+        Input a line of text Element
+        :param default_text: Default value to display
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param password_char: If non-blank, will display this character for every character typed
+        :param background_color: Color for Element. Text or RGB Hex
+        '''
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -220,6 +228,14 @@ class InputText(Element):
 class InputCombo(Element):
 
     def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
+        '''
+        Input Combo Box Element (also called Dropdown box)
+        :param values:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex
+        '''
         self.Values = values
         self.TKComboBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -240,6 +256,15 @@ class InputCombo(Element):
 class Listbox(Element):
 
     def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
+        '''
+        Listbox Element
+        :param values:
+        :param select_mode:
+        :param font:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex        '''
         self.Values = values
         self.TKListBox = None
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
@@ -270,6 +295,17 @@ class Listbox(Element):
 # ---------------------------------------------------------------------- #
 class Radio(Element):
     def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, font=None):
+        '''
+        Radio Button Element
+        :param text:
+        :param group_id:
+        :param default:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex
+        :param font:
+        '''
         self.InitialState = default
         self.Text = text
         self.TKRadio = None
@@ -290,6 +326,16 @@ class Radio(Element):
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
+        '''
+        Check Box Element
+        :param text:
+        :param default:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex
+        :param font:
+        '''
         self.Text = text
         self.InitialState = default
         self.Value = None
@@ -313,6 +359,16 @@ class Spin(Element):
     # Values = None
     # TKSpinBox = None
     def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
+        '''
+        Spin Box Element
+        :param values:
+        :param initial_value:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex
+        :param font:
+        '''
         self.Values = values
         self.DefaultValue = initial_value
         self.TKSpinBox = None
@@ -332,6 +388,15 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
+        '''
+        Input Multi-line Element
+        :param default_text:
+        :param enter_submits:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex
+        '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -356,6 +421,17 @@ class Multiline(Element):
 # ---------------------------------------------------------------------- #
 class Text(Element):
     def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, background_color=None,justification=None):
+        '''
+        Text Element - Displays text in your form.  Can be updated in non-blocking forms
+        :param text: The text to display
+        :param scale: Scaling factor (w,h) (2,2)= 2 * Size
+        :param size: Size of Element in Characters
+        :param auto_size_text: True if the field should shrink to fit the text
+        :param font: Font name and size ("name", size)
+        :param text_color: Text Color name or RGB hex value '#RRGGBB'
+        :param background_color: Background color for text (name or RGB Hex)
+        :param justification: 'left', 'right', 'center'
+        '''
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification if justification else DEFAULT_TEXT_JUSTIFICATION
@@ -471,6 +547,12 @@ class TKOutput(tk.Frame):
 # ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, scale=(None, None), size=(None, None), background_color=None):
+        '''
+        Output Element - reroutes stdout, stderr to this window
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param background_color: Color for Element. Text or RGB Hex
+        '''
         self.TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg)
@@ -487,6 +569,22 @@ class Output(Element):
 # ---------------------------------------------------------------------- #
 class Button(Element):
     def __init__(self, button_type=CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None,None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+        '''
+        Button Element - Specifies all types of buttons
+        :param button_type:
+        :param target:
+        :param button_text:
+        :param file_types:
+        :param image_filename:
+        :param image_size:
+        :param image_subsample:
+        :param border_width:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_button:
+        :param button_color:
+        :param font:
+        '''
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
         self.FileTypes = file_types
@@ -575,6 +673,19 @@ class Button(Element):
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, target=(None, None), scale=(None, None), size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None):
+        '''
+        Progress Bar Element
+        :param max_value:
+        :param orientation:
+        :param target:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param bar_color:
+        :param style:
+        :param border_width:
+        :param relief:
+        '''
         self.MaxValue = max_value
         self.TKProgressBar = None
         self.Cancelled = False
@@ -619,7 +730,13 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename, scale=(None, None), size=(None, None), auto_size_text=None):
+    def __init__(self, filename, scale=(None, None), size=(None, None)):
+        '''
+        Image Element
+        :param filename:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        '''
         self.Filename = filename
         super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, auto_size_text=auto_size_text)
         return
@@ -632,6 +749,18 @@ class Image(Element):
 # ---------------------------------------------------------------------- #
 class Slider(Element):
     def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None):
+        '''
+        Slider Element
+        :param range:
+        :param default_value:
+        :param orientation:
+        :param border_width:
+        :param relief:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param background_color: Color for Element. Text or RGB Hex
+        :param font:
+        '''
         self.TKScale = None
         self.Range = (1,10) if range == (None, None) else range
         self.DefaultValue = 5 if default_value is None else default_value
@@ -1346,7 +1475,7 @@ def ConvertFlexToTK(MyFlexForm):
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
                 element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor)
-                element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], fill=tk.X)
+                element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 photo = tk.PhotoImage(file=element.Filename)
