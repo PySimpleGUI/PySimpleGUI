@@ -10,11 +10,11 @@ def StatusOutputExample():
     # Make a form, but don't use context manager
     form = sg.FlexForm('Running Timer', auto_size_text=True)
     # Create a text element that will be updated with status information on the GUI itself
-    output_element = sg.Text('', size=(8, 2), font=('Helvetica', 20))
+    output_element = sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center')
     # Create the rows
     form_rows = [[sg.Text('Non-blocking GUI with updates')],
                  [output_element],
-                 [sg.SimpleButton('Quit')]]
+                 [sg.ReadFormButton('LED On'), sg.ReadFormButton('LED Off'), sg.ReadFormButton('Quit')]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
     form.LayoutAndRead(form_rows, non_blocking=True)
 
@@ -29,8 +29,13 @@ def StatusOutputExample():
         # This is the code that reads and updates your window
         output_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
         button, values = form.ReadNonBlocking()
-        if values is None or button == 'Quit':
+        if button == 'Quit' or values is None:
             break
+        if button == 'LED On':
+            print('Turning on the LED')
+        elif button == 'LED Off':
+            print('Turning off the LED')
+
         i += 1
         # Your code begins here
         time.sleep(.01)
