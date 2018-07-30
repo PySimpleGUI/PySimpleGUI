@@ -21,6 +21,7 @@ DEFAULT_TEXT_JUSTIFICATION = 'left'
 DEFAULT_BORDER_WIDTH = 1
 DEFAULT_AUTOCLOSE_TIME = 3              # time in seconds to show an autoclose form
 DEFAULT_DEBUG_WINDOW_SIZE = (80,20)
+DEFAULT_WINDOW_LOCATION = (None,None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 #################### COLOR STUFF ####################
 BLUES = ("#082567","#0A37A3","#00345B")
@@ -738,7 +739,7 @@ class Image(Element):
         :param size: Size of field in characters
         '''
         self.Filename = filename
-        super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, auto_size_text=auto_size_text)
+        super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size)
         return
 
     def __del__(self):
@@ -1520,6 +1521,8 @@ def ConvertFlexToTK(MyFlexForm):
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
         x,y = MyFlexForm.Location
+    elif DEFAULT_WINDOW_LOCATION != (None, None):
+        x,y = DEFAULT_WINDOW_LOCATION
     else:
         master.update_idletasks()  # don't forget
         win_width = master.winfo_width()
@@ -1546,7 +1549,7 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
     if title is not None:
         root.title(title)
     if not len(args):
-        ('******************* SHOW TABBED FORMS ERROR .... no arguments')
+        print('******************* SHOW TABBED FORMS ERROR .... no arguments')
         return
     if DEFAULT_BACKGROUND_COLOR:
         framestyle = ttk.Style()
@@ -2211,7 +2214,7 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
                progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None,
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None,
-               scrollbar_color=None, text_color=None, debug_win_size=(None,None)):
+               scrollbar_color=None, text_color=None, debug_win_size=(None,None), window_location=(None,None)):
 
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
@@ -2239,6 +2242,7 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
     global DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
     global DEFAULT_SCROLLBAR_COLOR
     global DEFAULT_TEXT_COLOR
+    global DEFAULT_WINDOW_LOCATION
     global _my_windows
 
     if icon:
@@ -2317,6 +2321,9 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
 
     if element_background_color != None:
         DEFAULT_ELEMENT_BACKGROUND_COLOR = element_background_color
+
+    if window_location != (None,None):
+        DEFAULT_WINDOW_LOCATION = window_location
 
     if debug_win_size != (None,None):
         DEFAULT_DEBUG_WINDOW_SIZE = debug_win_size
