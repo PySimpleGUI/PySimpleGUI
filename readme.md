@@ -7,6 +7,8 @@
 
 Super-simple GUI to grasp... Powerfully customizable.
 
+Note - *Python3* is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
+
 Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry Pi with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Look no further, you've found your GUI package.
 
     import PySimpleGUI as sg
@@ -70,9 +72,11 @@ The `PySimpleGUI` package is focused on the ***developer***.  How can the desire
         Redirect Python Output/Errors to scrolling window
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
         Single-Line-Of-Coide Proress Bar & Debug Print
+        Complete control of colors, look and feel
+        Button images
 
 
-An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Copy and paste into a temp file and it'll run, presenting you with the screen you see.
+An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
 
 ![everything example](https://user-images.githubusercontent.com/13696193/43097412-0a4652aa-8e8a-11e8-8e09-939484e3c568.jpg)
 
@@ -115,11 +119,13 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 
 `PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
 
- Be Pythonic... Python's lists in particular worked out really well:
+  > Be Pythonic
+
+ Be Pythonic... Attempted to use language constructs in a natural way and to exploit some of Python's interesting features.  Python's lists and optional parameters make PySimpleGUI work.
  - Forms are represented as Python lists.
     - A form is a list of rows
    - A row is a list of elements
-- Return values are a list
+- Return values are a list of button presses and input values.
 
 
   -----

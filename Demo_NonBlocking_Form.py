@@ -2,8 +2,6 @@ import PySimpleGUI as sg
 import time
 
 
-
-
 # form that doen't block
 # good for applications with an loop that polls hardware
 def StatusOutputExample():
