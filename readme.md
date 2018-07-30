@@ -384,6 +384,45 @@ The second design pattern is not context manager based.  If you are struggling w
 
 You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
+### How GUI Programming in Python Should Look
+
+GUI programming in Python is a mess.  tkinter kinda sucks.  Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list?
+
+The key to custom forms in PySimpleGUI is to view forms as ROWS of Widgets (Elements).  Each row is specified as a list of these widgets.  Put the rows together and you've got a form.
+
+Let's look at this one.
+
+
+![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
+
+Let's agree the form has 4 rows.
+
+The first row only has **text** that reads `Rename files or folders`
+
+The second row has 3 elements in it.  First the **text** `Source for Folders`, then an **input** field, then a **browse** button.
+
+Now let's look at how those 2 rows and the other two row from Python code:
+
+    layout = [[sg.Text('Rename files or folders')],
+              [sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+              [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+              [sg.Submit(), sg.Cancel()]]
+
+See how the source code mirrors the layout?  You simply make lists for each row, then submit that table to PySimpleGUI to show and get values from.
+
+And what about those return values?  Most people simply want to show a form, get the input values and do something with them.  So why break up the code into button callbacks, etc, when I simply want my form's input values to be given to me.
+
+The same "row" concept applies to return values.  The form is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
+
+In our example form, there are 2 fields, so the return values from this form will be a list with 2 values in it.
+
+    button, (folder_path, file_path) = form.LayoutAndRead(layout)
+
+In the statement that shows and reads the form, the two input fields are directly assigned to the caller's variables `folder_path` and `file_path`, ready to use.  No parsing no callbacks.
+
+Isn't this what almost every Python programmer looking for a GUI wants??  Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of tkinter code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  I chose 4.
+
+
 ### Laying out your form
 Your form is a 2 dimensional list in Python.  The first dimension are rows, the second is a list of Elements for each row.  The first thing you want to do is layout your form on paper.
 
@@ -422,7 +461,7 @@ Now we're on the second row of the form.  On this row there are 2 elements.  The
 
 The last line of the `form_rows` variable assignment contains a Submit and a Cancel Button.  These are buttons that will cause a form to return its value to the caller.
 
-    (button, (source_filename, )) = form.LayoutAndRead(form_rows)
+    button, (source_filename, ) = form.LayoutAndRead(form_rows)
 This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field.  The result of the form is stored directly into the variable we wish to work with.
 
 
@@ -556,9 +595,6 @@ Sizes can be set at the element level, or in this case, the size variables apply
 In addition to `size` there is a `scale` option.  `scale` will take the Element's size and scale it up or down depending on the scale value.  `scale=(1,1)` doesn't change the Element's size.  `scale=(2,1)` will set the Element's size to be twice as wide as the size setting.
 
 There are a couple of widgets where one of the size values is in pixels rather than characters.  This is true for Progress Meters and Sliders.  The second parameter is the 'height' in pixels.
-
-
-
 
 #### FlexForm - form-level variables overview
 A summary of the variables that can be changed when a FlexForm is created
@@ -1266,20 +1302,19 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize
 
-**Random colors**
+**Colors - Random and predefined**
 To set a button or text to a random color, use the string `'random'` as the color value.  You can also call `PySimpleGUI.GetRandomColor`.
-To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and
-that color's compliment.
-sprint
+To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and  that color's compliment.
 
 **Debug Output**
 Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
 
-For a fun time, add this line to the top of your script
+For a fun time, add these lines to the top of your script
 
     import PySimpleGUI as sg
     print = sg.Print
 
+This will turn all of your print statements into prints that display in a window on your screen rather than to the terminal.
 
 **Look and Feel**
 Dial in the look and feel that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
@@ -1305,9 +1340,6 @@ And this was the output
                 attrx = x
 
 You'll quickly wonder how you ever coded without it.
-
-
-
 
 ---
 # Known Issues
@@ -1352,9 +1384,9 @@ Listboxes are still without scrollwheels. The mouse can drag to see more items. 
 ### Upcoming
 Make suggestions people!  Future release features
 
-Auto Sized Buttons - Rather than using the default setting for TEXT fields, broke out button sizing into it's own setting. Makes much more sense. Reduces the amount of code.
-
 Columns.  How multiple columns would be specified in the SDK interface are still being designed.
+
+Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.
 
 
 
@@ -1378,14 +1410,10 @@ A moment about the design-spirit of `PySimpleGUI`.  From the beginning, this pac
 While not the best programming practice, the implementation resulted in a single file solution.  Only one file is needed, PySimpleGUI.py.  You can post this file, email it, and easily import it using one statement.
 
 **Functions as objects**
-In Python, functions behave just like classes. When you're placing a Text Element into your form, you may be sometimes calling a function and other times declaring an object.  If you use the word Text, then you're getting an object.  If you're using `Txt`, then you're calling a function that returns a `Text` object.
+In Python, functions behave just like object. When you're placing a Text Element into your form, you may be sometimes calling a function and other times declaring an object.  If you use the word Text, then you're getting an object.  If you're using `Txt`, then you're calling a function that returns a `Text` object.
 
 **Lists**
-It seemed quite natural to use Python's powerful list constructs when possible.
-
-
-
-
+It seemed quite natural to use Python's powerful list constructs when possible.  The form is specified as a series of lists.  Each "row" of the GUI is represented as a list of Elements. When the form read returns the results to the user, all of the results are presented as a single list.  This makes reading a form's values super-simple to do in a single line of Python code.
 
 
 ## Authors
