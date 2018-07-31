@@ -112,10 +112,11 @@ def RGB(red,green,blue): return '#%02x%02x%02x' % (red,green,blue)
 #todo Consider removing the Submit, Cancel types... they are just 'RETURN' type in reality
 #uncomment this line and indent to go back to using Enums
 # class ButtonType(Enum):
-BROWSE_FOLDER = 1
-BROWSE_FILE = 2
-CLOSES_WIN = 5
-READ_FORM = 7
+BUTTON_TYPE_BROWSE_FOLDER = 1
+BUTTON_TYPE_BROWSE_FILE = 2
+BUTTON_TYPE_CLOSES_WIN = 5
+BUTTON_TYPE_READ_FORM = 7
+BUTTON_TYPE_REALTIME = 9
 
 # -------------------------  Element types  ------------------------- #
 # class ElementType(Enum):
@@ -216,7 +217,7 @@ class InputText(Element):
         for row in MyForm.Rows:
             for element in row.Elements:
                 if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BType == CLOSES_WIN or element.BType == READ_FORM:
+                    if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
                         element.ButtonCallBack()
                         return
 
@@ -410,7 +411,7 @@ class Multiline(Element):
         for row in MyForm.Rows:
             for element in row.Elements:
                 if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BType == CLOSES_WIN or element.BType == READ_FORM:
+                    if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
                         element.ButtonCallBack()
                         return
 
@@ -569,7 +570,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None,None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -601,6 +602,14 @@ class Button(Element):
         super().__init__(ELEM_TYPE_BUTTON, scale, size, font=font)
         return
 
+    def ButtonReleaseCallBack(self, parm):
+        r, c = self.Position
+        self.ParentForm.Results[r][c] = False  # mark this button's location in results
+
+    def ButtonPressCallBack(self, parm):
+        r, c = self.Position
+        self.ParentForm.Results[r][c] = True  # mark this button's location in results
+
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
         global _my_windows
@@ -622,15 +631,15 @@ class Button(Element):
         else:
             strvar = None
         filetypes = [] if self.FileTypes is None else self.FileTypes
-        if self.BType == BROWSE_FOLDER:
+        if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
             try:
                 strvar.set(folder_name)
             except: pass
-        elif self.BType == BROWSE_FILE:
+        elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             file_name = tk.filedialog.askopenfilename(filetypes=filetypes)  # show the 'get file' dialog box
             strvar.set(file_name)
-        elif self.BType == CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
+        elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
             r,c = self.Position
@@ -644,7 +653,7 @@ class Button(Element):
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
-        elif self.BType == READ_FORM:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
+        elif self.BType == BUTTON_TYPE_READ_FORM:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
             r,c = self.Position
@@ -658,7 +667,7 @@ class Button(Element):
         for row in MyForm.Rows:
             for element in row.Elements:
                 if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BType == CLOSES_WIN or element.BType == READ_FORM:
+                    if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
                         element.ButtonCallBack()
                         return
 
@@ -1041,49 +1050,52 @@ def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BROWSE_FOLDER, target=target, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+    return Button(BUTTON_TYPE_BROWSE_FOLDER, target=target, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
 def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(CLOSES_WIN, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample, button_text=button_text,border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+    return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
 def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(READ_FORM, image_filename=image_filename, image_size=image_size,image_subsample=image_subsample,border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+
+def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 #------------------------------------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  ------- #
@@ -1177,7 +1189,8 @@ def BuildResults(form):
             elif element.Type == ELEM_TYPE_BUTTON:
                 if results[row_num][col_num] is True:
                     button_pressed_text = element.ButtonText
-                    results[row_num][col_num] = False
+                    if element.BType != BUTTON_TYPE_REALTIME:   # Do not clear realtime buttons
+                        results[row_num][col_num] = False
             elif element.Type == ELEM_TYPE_INPUT_COMBO:
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
@@ -1321,10 +1334,15 @@ def ConvertFlexToTK(MyFlexForm):
                 if bc == 'Random' or bc == 'random':
                     bc = GetRandomColorPair()
                 border_depth = element.BorderWidth
-                tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, foreground=bc[0], background=bc[1], bd=border_depth)
+                if btype != BUTTON_TYPE_REALTIME:
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, foreground=bc[0], background=bc[1], bd=border_depth)
+                else:
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, foreground=bc[0], background=bc[1], bd=border_depth)
+                    tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
+                    tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
-                if element.ImageFilename:
+                if element.ImageFilename:           # if button has an image on it
                     photo = tk.PhotoImage(file=element.ImageFilename)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
@@ -1336,7 +1354,7 @@ def ConvertFlexToTK(MyFlexForm):
                     tkbutton.image = photo
                 tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
-                if not focus_set and btype == CLOSES_WIN:
+                if not focus_set and btype == BUTTON_TYPE_CLOSES_WIN:
                     focus_set = True
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                     element.TKButton.focus_set()
