@@ -57,6 +57,7 @@ The `PySimpleGUI` package is focused on the ***developer***.  How can the desire
             Folder Browse
             Non-closing return
             Close form
+            Realtime
         Checkboxes
         Radio Buttons
         Listbox
@@ -622,6 +623,7 @@ A summary of the variables that can be changed when a FlexForm is created
          Folder Browse
          Non-closing return
          Close form
+         Realtime
      Checkboxes
      Radio Buttons
      Listbox
@@ -915,6 +917,7 @@ The Types of buttons include:
 * File Browse
 * Close Form
 * Read Form
+* Realtime
 
 
  Close Form - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close Form" buttons.  They cause the input values to be read and then the form is closed, returning the values to the caller.
@@ -924,6 +927,8 @@ Folder Browse - When clicked a folder browse dialog box is opened.  The results 
 File Browse - Same as the Folder Browse except rather than choosing a folder, a single file is chosen.
 
 Read Form - This is an async form button that will read a snapshot of all of the input fields, but does not close the form after it's clicked.
+
+Realtime - This is another async form button.  Normal button clicks occur after a button's click is released.  Realtime buttons report a click the entire time the button is held down.
 
 While it's possible to build forms using the Button Element directly, you should never need to do that.  There are pre-made buttons and shortcuts that will make life much easier.  The most basic Button element call to use is `SimpleButton`
 
@@ -979,7 +984,7 @@ All buttons can have their text changed by changing the `button_text` variable i
 **Button Images**
 Now this is an exciting feature not found in many simplified packages.... images on buttons!  You can make a pretty spiffy user interface with the help of a few button images.
 
-Your button images need to be in PNG or GIF format.  When you make a button with an image, set the button background to the same color as the background.  There's a button color TRANSPARENT_BUTTON that you can set your button color to.
+Your button images need to be in PNG or GIF format.  When you make a button with an image, set the button background to the same color as the background.  There's a button color TRANSPARENT_BUTTON that you can set your button color to in order for it to blend into the background.  Note that this value is currently the same as the color as the default system background on Windows.
 
 This example comes from the `Demo Media Player.py` example program.  Because it's a non-blocking button, it's defined as `ReadFormButton`.  You also put images on blocking buttons by using `SimpleButton`.
 
@@ -1004,6 +1009,40 @@ You'll find the source code in the file Demo Media Player.  Here is what the but
 
 This is one you'll have to experiment with at this point.  Not up for an exhaustive explanation.
 
+  **Realtime Buttons**
+
+  Normally buttons are considered "clicked" when the mouse button is let UP after a downward click on the button.  What about times when you need to read the raw up/down button values.  A classic example for this is a robotic remote control.  Building a remote control using a GUI is easy enough.  One button for each of the directions is a start.  Perhaps something like this:
+
+![snap0135](https://user-images.githubusercontent.com/13696193/43440841-bcf8d184-9466-11e8-9f7b-30a1d5ce32d3.jpg)
+
+This form has 2 button types.  There's the normal "Simple Button" (Quit) and 4 "Realtime Buttons".
+
+Here is the code to make, show and get results from this form:
+
+    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True)
+
+    form_rows = [[sg.Text('Robotics Remote Control')],
+                 [sg.T(' '*10), sg.RealtimeButton('Forward')],
+                 [ sg.RealtimeButton('Left'), sg.T(' '*15), sg.RealtimeButton('Right')],
+                 [sg.T(' '*10), sg.RealtimeButton('Reverse')],
+                 [sg.T('')],
+                 [sg.Quit(button_color=('black', 'orange'))]
+                 ]
+
+    form.LayoutAndRead(form_rows, non_blocking=True)
+
+Somewhere later in your code will be your main event loop. This is where you do your polling of devices, do input/output, etc.  It's here that you will read your form's buttons.
+
+    while (True):
+        # This is the code that reads and updates your window
+        button, values = form.ReadNonBlocking()
+        if button is not None:
+            sg.Print(button)
+        if button == 'Quit'  or values is None:
+            break
+      time.sleep(.01)
+
+This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `form.ReadNonBlocking` will  return a button name matching the name on the button that was depressed.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons ules anutton was  clicked.
 
 **File Types**
 The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
@@ -1163,6 +1202,7 @@ Let's have some fun customizing!  Make PySimpleGUI look the way you want it to l
                input_elements_background_color=None
                scrollbar_color=None, text_color=None
                debug_win_size=(None,None)
+               window_location=(None,None)
 
 Explanation of parameters
 
@@ -1193,6 +1233,7 @@ Explanation of parameters
              text_color - Text element default text color
              text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
              debug_win_size - size of the Print output window
+             window_location - location on the screen (x,y) of window's top left cornder
 
 
 These settings apply to all forms `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the Form-level being the highest and the Element-level the lowest.  Thus the levels are:
@@ -1369,6 +1410,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.4.0 | July 24, 2018 - Button images. Fixes so can run on Raspberry Pi
 | 2.5.0 | July 26, 2018 - Colors. Listbox scrollbar. tkinter Progress Bar instead of homegrown.
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
+| 2.6.5 | Aug XX, 2018 - window_location default setting
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
