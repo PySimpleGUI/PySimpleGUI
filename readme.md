@@ -3,7 +3,7 @@
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
 # PySimpleGUI
-  (Ver 2.6)
+  (Ver 2.7)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
@@ -118,7 +118,7 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 ### Design Goals
 > Copy, Paste, Run.
 
-`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the SDK to visually match what's on the screen.
+`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the code to visually match what's on the screen.
 
   > Be Pythonic
 
@@ -128,6 +128,7 @@ You will see a number of different styles of buttons, data entry fields, etc, in
    - A row is a list of elements
 - Return values are a list of button presses and input values.
 
+It's stunning that after so many years Python still hasn't put forth a GUI framework that truly fits the language's basic  data structures, especially lists.  It's hard to argue with the success to be had in quickly building GUI applications using this package's syntax.
 
   -----
 ## Getting Started with PySimpleGUI
@@ -1468,6 +1469,8 @@ GNU Lesser General Public License (LGPL 3) +
 ## Acknowledgments
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+* [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`
+
 
 ## How Do I
 Finally, I must thank the fine folks at How Do I.
