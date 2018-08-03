@@ -36,8 +36,7 @@ def FindDuplicatesFilesInFolder(path):
             continue
         shatab.append(f_sha)
 
-    msg = f'{total} Files processed\n'\
-          f'{dup_count} Duplicates found\n'
+    msg = '{} Files processed\n {} Duplicates found'.format(total_files, dup_count)
     sg.MsgBox('Duplicate Finder Ended', msg)
 
 # ====____====____==== Pseudo-MAIN program ====____====____==== #
