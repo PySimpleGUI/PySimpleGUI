@@ -1,4 +1,5 @@
 
+
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
@@ -31,7 +32,7 @@ In addition to a primary GUI, you can add a Progress Meter to your code with ONE
 
     EasyProgressMeter('My meter title', current_value, max value)
 
-![progress meter 2](https://user-images.githubusercontent.com/13696193/42695896-a37eff5c-8684-11e8-8fbb-3d756655a44b.jpg)
+  ![snap0177](https://user-images.githubusercontent.com/13696193/43658025-947973d2-9725-11e8-902f-e2d5effb6e3e.jpg)
 
 You can build an async media player GUI with custom buttons in 30 lines of code.
 
@@ -83,29 +84,29 @@ An example of many widgets used on a single form.  A little further down you'll 
 
 Here is the code that produced the above screenshot.
 
-    import PySimpleGUI as SG
+    import PySimpleGUI as sg
 
-    with SG.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
+    with sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
         layout = [
-            [SG.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
-            [SG.Text('Here is some text.... and a place to enter text')],
-            [SG.InputText()],
-            [SG.Checkbox('My first checkbox!'), SG.Checkbox('My second checkbox!', default=True)],
-            [SG.Radio('My first Radio!     ', "RADIO1", default=True), SG.Radio('My second Radio!', "RADIO1")],
-            [SG.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
+            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
+            [sg.Text('Here is some text.... and a place to enter text')],
+            [sg.InputText()],
+            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
+            [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
+            [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
                           scale=(2, 10))],
-            [SG.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
-             SG.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
-            [SG.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
-             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
-             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
-             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
-            [SG.Text('_'  * 100, size=(70, 1))],
-            [SG.Text('Choose Source and Destination Folders', size=(35, 1))],
-            [SG.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), SG.InputText('Source'), SG.FolderBrowse()],
-            [SG.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), SG.InputText('Dest'),
-             SG.FolderBrowse()],
-            [SG.Submit(), SG.Cancel(), SG.SimpleButton('Customized', button_color=('white', 'green'))]
+            [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
+             sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
+            [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
+             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
+             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
+             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
+            [sg.Text('_'  * 100, size=(70, 1))],
+            [sg.Text('Choose Source and Destination Folders', size=(35, 1))],
+            [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
+            [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
+             sg.FolderBrowse()],
+            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', 'green'))]
              ]
 
     button, values = form.LayoutAndRead(layout)
@@ -145,17 +146,19 @@ Simply download the file - PySimpleGUI.py and import it into your code
 Python 3
 tkinter
 
-Should run on all Python platforms that have tkinter running on them.  Has been thoroughly tested on Windows.  While not tested elsewhere, should work on Linux, Mac, Pi, etc.
+Runs on all Python platforms that have tkinter running on them.  Thoroughly tested on Windows.  Runs on Windows, Mac, Linux, Raspberry Pi.  Even runs on `pypy3`.
 
 ### Using
 
 To use in your code, simply import....
- `import PySimpleGUI as SG`
+ `import PySimpleGUI as sg`
 
 Then use either "high level" API calls or build your own forms.
 
-    SG.MsgBox('This is my first message box')
-![snap0103](https://user-images.githubusercontent.com/13696193/42844641-a04bb798-89e1-11e8-8a37-50ddd9905772.jpg)
+    sg.MsgBox('This is my first message box')
+
+![snap0178](https://user-images.githubusercontent.com/13696193/43658024-945c83f8-9725-11e8-8ddd-0bbe67a9fc5d.jpg)
+
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom form appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
@@ -177,11 +180,12 @@ PySimpleGUI can be broken down into 2 types of API's:
 
  The "High Level" API calls that *output* values take a variable number of arguments so that they match a "print" statement as much as possible.  The idea is to make it simple for the programmer to output as many items as desired and in any format.  The user need not convert the variables to be output into the strings.  The PySimpleGUI functions do that for the user.
 
-    SG.MsgBox('Variable number of parameters example', var1, var2, "etc")
+    sg.MsgBox('Variable number of parameters example', var1, var2, "etc")
 
 Each new item begins on a new line in the Message Box
 
-  ![snap0104](https://user-images.githubusercontent.com/13696193/42844739-ebea22ac-89e1-11e8-8dd1-e61441325701.jpg)
+  ![snap0179](https://user-images.githubusercontent.com/13696193/43658129-f6ca49c6-9725-11e8-9317-1f77443eb04a.jpg)
+
 
 
 #### Optional Parameters to a Function Call
@@ -201,11 +205,10 @@ Here is the function definition for the MsgBox function. The details aren't impo
 
 If the caller wanted to change the button color to be black on yellow, the call would look something like this:
 
-    SG.MsgBox('This box has a custom button color',
-              button_color=('black', 'yellow'))
+    sg.MsgBox('This box has a custom button color', button_color=('black', 'yellow'))
 
 
-![snap0105](https://user-images.githubusercontent.com/13696193/42844830-2d7e8b9a-89e2-11e8-8ef4-5af9e36f30f3.jpg)
+![snap0180](https://user-images.githubusercontent.com/13696193/43658171-13a72bfe-9726-11e8-8c7a-0a46e46fb202.jpg)
 
 
 ---
@@ -216,52 +219,63 @@ The classic "input a value, print result" example.
 Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.
 This code prompts user to input a line of text and then displays that text in a messages box:
 
-    import PySimpleGUI_local as SG
 
-    rc = SG.GetTextBox('Title', 'Please input something')
-    SG.MsgBox('Results', 'The value returned from GetTextBox', rc)
+    import PySimpleGUI as sg
 
-![GetTextBox](https://user-images.githubusercontent.com/13696193/42592930-1ca1370a-8519-11e8-907e-ad73e9be7749.jpg)
+    rc = sg.GetTextBox('Title', 'Please input something')
+    sg.MsgBox('Results', 'The value returned from GetTextBox', rc)
 
-![MsgBox](https://user-images.githubusercontent.com/13696193/42592929-1c7361ae-8519-11e8-8adc-411c1afee69f.jpg)
+
+  ![snap0181](https://user-images.githubusercontent.com/13696193/43658233-48cc7794-9726-11e8-8582-8844280c344e.jpg)
+
+![snap0182](https://user-images.githubusercontent.com/13696193/43658232-48aaad4e-9726-11e8-95f5-aa9b9213bb77.jpg)
+
 
 #### Message Boxes
 In addition to MsgBox, you'll find a several API calls that are shortcuts to common messages boxes.  You can achieve similar results by calling MsgBox with the correct parameters.
 
 The differences tend to be the number and types of buttons.   Here are the calls and the windows that are created.
 
-    import PySimpleGUI as SG
+    import PySimpleGUI as sg
 
-  `SG.MsgBoxOK('This is an OK MsgBox')`
+  `sg.MsgBoxOK('This is an OK MsgBox')`
 
-  ![msgboxok](https://user-images.githubusercontent.com/13696193/42599852-8dd6914e-852e-11e8-888f-f133d787210b.jpg)
+  ![ok](https://user-images.githubusercontent.com/13696193/43667331-723ac666-9745-11e8-8666-230c35a6afd6.jpg)
 
-    SG.MsgBoxOKCancel('This is an OK Cancel MsgBox')
 
-![msgboxokcancel](https://user-images.githubusercontent.com/13696193/42599858-8e8eff22-852e-11e8-8d5c-3fe99237eb7f.jpg)
+    sg.MsgBoxOKCancel('This is an OK Cancel MsgBox')
 
-    SG.MsgBoxCancel('This is a Cancel MsgBox')
-![msgboxcancel](https://user-images.githubusercontent.com/13696193/42599857-8e53dc4e-852e-11e8-8e83-6a8cccf8e706.jpg)
+![ok cancel 2](https://user-images.githubusercontent.com/13696193/43667330-71d5bea6-9745-11e8-8944-b3900853aa62.jpg)
 
-    SG.MsgBoxYesNo('This is a Yes No MsgBox')
-![msgboxyesno](https://user-images.githubusercontent.com/13696193/42599856-8e304540-852e-11e8-975d-fb2b62e94300.jpg)
+    sg.MsgBoxCancel('This is a Cancel MsgBox')
 
-    SG.MsgBoxError('This is an error MsgBox')
-![msgbox error](https://user-images.githubusercontent.com/13696193/42599853-8df8e078-852e-11e8-90dc-7815d69bff7e.jpg)
+![cancel](https://user-images.githubusercontent.com/13696193/43667329-71a007de-9745-11e8-974b-d028f68798e7.jpg)
 
-    SG.MsgBoxAutoClose('This is an autoclose MsgBox')
+    sg.MsgBoxYesNo('This is a Yes No MsgBox')
 
-![msgbox autoclose](https://user-images.githubusercontent.com/13696193/42599855-8e147572-852e-11e8-8c23-7ec771909062.jpg)
+![yesno](https://user-images.githubusercontent.com/13696193/43667327-717ff7dc-9745-11e8-9dce-52c305a85101.jpg)
 
-    SG.ScrolledTextBox(my_text, height=10)
 
-![scrolledtextbox](https://user-images.githubusercontent.com/13696193/42600800-a44f4562-8531-11e8-8c21-51dd70316879.jpg)
+    sg.MsgBoxError('This is an error MsgBox')
 
-Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`.   Your code could contain a line like:
+![error msgbox](https://user-images.githubusercontent.com/13696193/43667326-71621712-9745-11e8-87c4-56e2ab500f8e.jpg)
+
+    sg.MsgBoxAutoClose('This is an autoclose MsgBox')
+
+![autoclose](https://user-images.githubusercontent.com/13696193/43667325-714997dc-9745-11e8-836a-7185dc80329f.jpg)
+
+    sg.ScrolledTextBox(my_text, height=10)
+
+![scrolledtextbox 2](https://user-images.githubusercontent.com/13696193/43667324-712aa0d4-9745-11e8-83a9-a0d0570d0865.jpg)
+
+
+Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing your printed text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`.   Your code could contain a line like:
 
     sprint(f'My variables values include x={x}', f'y={y}')
 
 This becomes a debug print of sorts that will route to a scrolled window.
+
+See also the `EasyPrint` and `Print` functions.
 
 #### High Level User Input
 
@@ -270,22 +284,21 @@ There are 3 very basic user input high-level function calls.  It's expected that
  - GetFileBox
  - GetFolderBox
 
- `submit_clicked, value = SG.GetTextBox('Title', 'Please enter anything')`
+ `submit_clicked, value = sg.GetTextBox('Title', 'Please enter anything')`
 
-![gettextbox](https://user-images.githubusercontent.com/13696193/42600399-1ef66a5e-8530-11e8-9bc4-78ea839213cd.jpg)
+![gettextbox 2](https://user-images.githubusercontent.com/13696193/43667510-355b23a2-9746-11e8-9f1e-91c0dd0f4ed8.jpg)
 
-    submit_clicked, value = SG.GetFileBox('Title', 'Choose a file')
+    submit_clicked, value = sg.GetFileBox('Title', 'Choose a file')
 
-![getfilebox](https://user-images.githubusercontent.com/13696193/42600398-1ed8a122-8530-11e8-9f74-88b101efcea4.jpg)
+![getfilebox 2](https://user-images.githubusercontent.com/13696193/43667535-5821fc94-9746-11e8-95c3-82395099e994.jpg)
 
-    submit_clicked, value = SG.GetPathBox('Title', 'Choose a folder')
+    submit_clicked, value = sg.GetPathBox('Title', 'Choose a folder')
 
-![getfolderbox](https://user-images.githubusercontent.com/13696193/42600397-1ea7cef8-8530-11e8-8d43-e1000c0933cd.jpg)
+![getpathbox](https://user-images.githubusercontent.com/13696193/43667556-79874c22-9746-11e8-80f2-8262d32802c2.jpg)
+
 
 #### Progress Meter!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
-
-![progress meter 3](https://user-images.githubusercontent.com/13696193/42696332-dca3ca6e-8685-11e8-846b-6bee8362ee5f.jpg)
 
 
     EasyProgressMeter(title,
@@ -302,38 +315,36 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
 Here's the one-line Progress Meter in action!
 
     for i in range(1,10000):
-        SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message')
+        sg.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message')
 
 That line of code resulted in this window popping up and updating.
 
-![progress meter 5](https://user-images.githubusercontent.com/13696193/42696912-a5c958b8-8687-11e8-9a7d-a390a465407a.jpg)
+![preogress meter](https://user-images.githubusercontent.com/13696193/43667625-d47da702-9746-11e8-91e6-e5177883abae.jpg)
 
 A meter AND fun statistics to watch while your machine grinds away, all for the price of 1 line of code.
 With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`.
 
-    if not SG.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message'):
-       break
-
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
+
 #### Debug Output
 Another call in the 'Easy' families of APIs is `EasyPrint`.  It will output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick a 'print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement
 
-    print = SG.EasyPrint
+    print = sg.EasyPrint
 
 at the top of your code.
 There are a number of names for the same EasyPrint function.  `Print` is one of the better ones to use as it's easy to remember.   It is simply `print` with a capital P.
 
-    import PySimpleGUI as SG
+    import PySimpleGUI as sg
 
     for i in range(100):
-        SG.Print(i)
+        sg.Print(i)
 
 ![snap0125](https://user-images.githubusercontent.com/13696193/43114979-a696189e-8ecf-11e8-83c7-473fcf0ccc66.jpg)
 Or if you didn't want to change your code:
 
-    import PySimpleGUI as SG
+    import PySimpleGUI as sg
 
-    print=SG.Print
+    print=sg.Print
     for i in range(100):
         print(i)
 
@@ -450,16 +461,16 @@ Turning back to our example.  This GUI roughly looks like this:
 
 Going through each line of code in the above form will help explain how to use this design patter.  Copy, modify and run it!
 
-    with SG.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
+    with sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
 This creates a new form, storing it in the variable `form`.
 
-    form_rows = [[SG.Text('SHA-1 and SHA-256 Hashes for the file')],
+    form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 The next few rows of code lay out the rows of elements in the window to be displayed.  The variable `form_rows` holds our entire GUI window.   The first row of this form has a Text element.  These simply display text on the form.
 
-    [SG.InputText(), SG.FileBrowse()],
+    [sg.InputText(), sg.FileBrowse()],
 Now we're on the second row of the form.  On this row there are 2 elements.  The first is an `Input` field.  It's a place the user can enter `strings`.  The second element is a `File Browse Button`.  A file or folder browse button will always fill in the text field to it's left unless otherwise specified.  In this example, the File Browse Button will interact with the `InputText` field to its left.
 
-   [SG.Submit(), SG.Cancel()]]
+   [sg.Submit(), sg.Cancel()]]
 
 The last line of the `form_rows` variable assignment contains a Submit and a Cancel Button.  These are buttons that will cause a form to return its value to the caller.
 
@@ -498,27 +509,27 @@ If you have a SINGLE value being returned, it is written this way:
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
 
-     with SG.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
+     with sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
         layout = [
-            [SG.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
-            [SG.Text('Here is some text.... and a place to enter text')],
-            [SG.InputText()],
-            [SG.Checkbox('My first checkbox!'), SG.Checkbox('My second checkbox!', default=True)],
-            [SG.Radio('My first Radio!     ', "RADIO1", default=True), SG.Radio('My second Radio!', "RADIO1")],
-            [SG.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
+            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
+            [sg.Text('Here is some text.... and a place to enter text')],
+            [sg.InputText()],
+            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
+            [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
+            [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
                           scale=(2, 10))],
-            [SG.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
-             SG.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
-            [SG.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
-             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
-             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
-             SG.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
-            [SG.Text('_'  * 100, size=(70, 1))],
-            [SG.Text('Choose Source and Destination Folders', size=(35, 1))],
-            [SG.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), SG.InputText('Source'), SG.FolderBrowse()],
-            [SG.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), SG.InputText('Dest'),
-             SG.FolderBrowse()],
-            [SG.Submit(), SG.Cancel(), SG.SimpleButton('Customized', button_color=('white', 'green'))]
+            [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
+             sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
+            [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
+             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
+             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
+             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
+            [sg.Text('_'  * 100, size=(70, 1))],
+            [sg.Text('Choose Source and Destination Folders', size=(35, 1))],
+            [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
+            [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
+             sg.FolderBrowse()],
+            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', 'green'))]
              ]
 
          button, values = form.LayoutAndRead(layout)
@@ -647,7 +658,7 @@ Building a form is simply making lists of Elements.  Each list is a row in the o
 The code is a crude representation of the GUI, laid out in text.
 ####  Text Element
 
-    layout = [[SG.Text('This is what a Text Element looks like')]]
+    layout = [[sg.Text('This is what a Text Element looks like')]]
 
 
  ![textelem](https://user-images.githubusercontent.com/13696193/42670173-4c1fcb40-8627-11e8-851a-5a9ee4672320.jpg)
@@ -698,7 +709,7 @@ The shorthand functions for `Text` are `Txt` and `T`
 
 ####  Multiline Text Element
 
-    layout = [[SG.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
+    layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
 ![multiline text](https://user-images.githubusercontent.com/13696193/42670464-0824c754-8629-11e8-9741-6ed08f924618.jpg)
 This Element doubles as both an input and output Element.  The `DefaultText` optional parameter is used to indicate what to output to the window.
 
@@ -734,7 +745,7 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 
 #### Text Input Element
 
-    layout = [[SG.InputText('Default text')]]
+    layout = [[sg.InputText('Default text')]]
 ![inputtext](https://user-images.githubusercontent.com/13696193/42693515-610a716c-867d-11e8-9a00-7e7fcf771230.jpg)
 
       def InputText(default_text = '',
@@ -756,7 +767,7 @@ Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 #### Combo Element
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
-    layout = [[SG.InputCombo(['choice 1', 'choice 2'])]]
+    layout = [[sg.InputCombo(['choice 1', 'choice 2'])]]
 
 ![combo](https://user-images.githubusercontent.com/13696193/42694431-631c4108-8680-11e8-8e99-c1a642734464.jpg)
 
@@ -774,7 +785,7 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
 #### Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
-    layout = [[SG.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
+    layout = [[sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
 
 ![snap0130](https://user-images.githubusercontent.com/13696193/43115859-2fbf0646-8ed3-11e8-9979-bbee8eaebfab.jpg)
 
@@ -809,7 +820,7 @@ The `select_mode` option can be a string or a constant value defined as a variab
 #### Slider Element
 Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
 
-    layout = [[SG.Slider(range=(1,500), default_value=222, size=(20,15), orientation='horizontal', font=('Helvetica', 12))]]
+    layout = [[sg.Slider(range=(1,500), default_value=222, size=(20,15), orientation='horizontal', font=('Helvetica', 12))]]
 
 ![snap0129](https://user-images.githubusercontent.com/13696193/43115741-e1cb52c8-8ed2-11e8-80bb-0e99ae846ec1.jpg)
 
@@ -841,7 +852,7 @@ Sliders have a couple of slider-specific settings as well as appearance settings
 #### Radio Button Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
-    layout =  [[SG.Radio('My first Radio!', "RADIO1", default=True), SG.Radio('My second radio!', "RADIO1")]]
+    layout =  [[sg.Radio('My first Radio!', "RADIO1", default=True), sg.Radio('My second radio!', "RADIO1")]]
 
 ![radio element](https://user-images.githubusercontent.com/13696193/42705705-327b4b6c-86a2-11e8-81a7-740e57646ba8.jpg)
 
@@ -867,7 +878,7 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
 #### Checkbox Element
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
 
-    layout =  [[SG.Checkbox('My first Checkbox!', default=True), SG.Checkbox('My second Checkbox!')]]
+    layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My second Checkbox!')]]
 
 ![checkbox element](https://user-images.githubusercontent.com/13696193/42717015-655d73d2-86cc-11e8-9c69-3c810f48e578.jpg)
 
@@ -891,7 +902,7 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
 #### Spin Element
 An up/down spinner control.  The valid values are passed in as a list.
 
-    layout =  [[SG.Spin([i for i in range(1,11)], initial_value=1), SG.Text('Volume level')]]
+    layout =  [[sg.Spin([i for i in range(1,11)], initial_value=1), sg.Text('Volume level')]]
 
 ![spin element](https://user-images.githubusercontent.com/13696193/42717231-8ddb51d4-86cd-11e8-827a-75f2237477fa.jpg)
 
@@ -951,7 +962,7 @@ Pre-made buttons include:
     FileBrowse
     FolderBrowse
 .
-    layout =  [[SG.OK(), SG.Cancel()]]
+    layout =  [[sg.OK(), sg.Cancel()]]
 
 ![ok cancel](https://user-images.githubusercontent.com/13696193/42717733-1803f584-86d1-11e8-9223-36b782971b9f.jpg)
 
@@ -969,14 +980,14 @@ The `InputText` element is located at (1,0)... row 1, column 0.  The `Browse` bu
     Target = (-1,0)
 The code for the entire form could be:
 
-    layout =  [[SG.T('Source Folder')],
-               [SG.In()],
-               [SG.FolderBrowse(Target=(-1,0)), SG.OK()]]
+    layout =  [[sg.T('Source Folder')],
+               [sg.In()],
+               [sg.FolderBrowse(Target=(-1,0)), sg.OK()]]
 
 **Custom Buttons**
 Not all buttons are created equal.  A button that closes a form is different that a button that returns from the form without closing it.  If you want to define your own button, you will generally do this with the Button Element `SimpleButton`, which closes the form when clicked.
 
-layout =  [[SG.SimpleButton('My Button')]]
+layout =  [[sg.SimpleButton('My Button')]]
 
 ![singlebutton](https://user-images.githubusercontent.com/13696193/42718281-9453deca-86d5-11e8-83c7-4b6d33720858.jpg)
 
@@ -1052,20 +1063,19 @@ The `FileBrowse` button has an additional setting named `file_types`.  This vari
 
 This code produces a form where the Browse button only shows files of type .TXT
 
-    layout =  [[SG.In() ,SG.FileBrowse(file_types=(("Text Files", "*.txt"),))]]
+    layout =  [[sg.In() ,sg.FileBrowse(file_types=(("Text Files", "*.txt"),))]]
 
   ***The ENTER key***
        The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.
 
-
----
+ ---
 #### ProgressBar
 The `ProgressBar` element is used to build custom Progress Bar forms.  It is HIGHLY recommended that you use the functions that provide a complete progress meter solution for you.  Progress Meters are not easy to work with because the forms have to be non-blocking and they are tricky to debug.
 
 The **easiest** way to get progress meters into your code is to use the `EasyProgessMeter` API.  This consists of a pair of functions, `EasyProgessMeter` and `EasyProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
 You've already seen EasyProgressMeter calls presented earlier in this readme.
 
-    SG.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
+    sg.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
 
 The return value for `EasyProgressMeter` is:
 `True` if meter updated correctly
@@ -1091,10 +1101,10 @@ Then to update the bar within your loop
                                      *args):
 Putting it all together you get this design pattern
 
-    my_meter = SG.ProgressMeter('Meter Title', 100000, orentation='Vert')
+    my_meter = sg.ProgressMeter('Meter Title', 100000, orentation='Vert')
 
     for i in range(0, 100000):
-        SG.ProgressMeterUpdate(my_meter, i+1, 'Some variable', 'Another variable')
+        sg.ProgressMeterUpdate(my_meter, i+1, 'Some variable', 'Another variable')
 
 
 The final way of using a Progress Meter with PySimpleGUI is to build a custom form with a `ProgressBar` Element in the form.  You will need to run your form as a non-blocking form.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
@@ -1108,13 +1118,13 @@ The Output Element is a re-direction of Stdout.  Anything "printed" will be disp
 
 Here's a complete solution for a chat-window using an Async form with an Output Element
 
-    import PySimpleGUI as SG
+    import PySimpleGUI as sg
         # Blocking form that doesn't close
     def ChatBot():
-        with SG.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
-            layout = [[(SG.Text('This is where standard out is being routed', size=[40, 1]))],
-                        [SG.Output(size=(80, 20))],
-                        [SG.Multiline(size=(70, 5), enter_submits=True), SG.ReadFormButton('SEND', button_color=(SG.YELLOWS[0], SG.BLUES[0])), SG.SimpleButton('EXIT', button_color=(SG.YELLOWS[0], SG.GREENS[0]))]]
+        with sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
+            layout = [[(sg.Text('This is where standard out is being routed', size=[40, 1]))],
+                        [sg.Output(size=(80, 20))],
+                        [sg.Multiline(size=(70, 5), enter_submits=True), sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])), sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
             # notice this is NOT the usual LayoutAndRead call because you don't yet want to read the form
            # if you call LayoutAndRead from here, then you will miss the first button click
            form.Layout(layout)
@@ -1178,14 +1188,14 @@ This call sets all of the different color options.
 Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
 
     SetOptions(icon=None
-			   button_color=(None,None)
-			   element_size=(None,None),
-			   margins=(None,None),
-			   element_padding=(None,None)
-			   auto_size_text=None
-			   auto_size_buttons=None
-			   font=None
-			   border_width=None
+            button_color=(None,None)
+            element_size=(None,None),
+            margins=(None,None),
+            element_padding=(None,None)
+            auto_size_text=None
+            auto_size_buttons=None
+            font=None
+            border_width=None
                slider_border_width=None
                slider_relief=None
                slider_orientation=None
@@ -1268,9 +1278,9 @@ The basic flow and functions you will be calling are:
 Setup
 
 
-	form = FlexForm()
-	form_rows = .....
-	form.LayoutAndRead(form_rows, non_blocking=True)
+   form = FlexForm()
+   form_rows = .....
+   form.LayoutAndRead(form_rows, non_blocking=True)
 
 
 Periodic refresh
@@ -1344,10 +1354,6 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize
 
-**Colors - Random and predefined**
-To set a button or text to a random color, use the string `'random'` as the color value.  You can also call `PySimpleGUI.GetRandomColor`.
-To get a random color pair call `PySimpleGUI.GetRandomColorPair`.  This returns a tuple containing a random color and  that color's compliment.
-
 **Debug Output**
 Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
 
@@ -1411,7 +1417,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.4.0 | July 24, 2018 - Button images. Fixes so can run on Raspberry Pi
 | 2.5.0 | July 26, 2018 - Colors. Listbox scrollbar. tkinter Progress Bar instead of homegrown.
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
-| 2.6.5 | Aug XX, 2018 - window_location default setting
+| 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
+
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -1423,6 +1430,9 @@ New debug printing capability.  `sg.Print`
 2.5 Discovered issue with scroll bar on `Output` elements.  The bar will match size of ROW not the size of the element.  Normally you never notice this due to where on a form the `Output` element goes.
 
 Listboxes are still without scrollwheels. The mouse can drag to see more items.  The mouse scrollwheel will also scroll the list and will `page up` and `page down` keys.
+
+2.7 Is the "feature complete" release. Pretty much all features are done and in the code
+
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -1494,5 +1504,3 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
-
-
