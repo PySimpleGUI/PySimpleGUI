@@ -9,7 +9,7 @@ Welcome to PySimpleGUI's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-README.md
+../readme.md
 
 
 Indices and tables
