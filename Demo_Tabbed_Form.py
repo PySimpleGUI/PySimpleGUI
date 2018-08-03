@@ -1,7 +1,5 @@
 import PySimpleGUI as sg
 
-MAX_NUMBER_OF_THREADS = 12
-
 def eBaySuperSearcherGUI():
     # Drop Down list of options
     configs = ('0 - Gruen - Started 2 days ago in Watches',
@@ -55,7 +53,7 @@ def eBaySuperSearcherGUI():
                [sg.Text('_'*100, size=(80,1))],
               [sg.Text('Price Range'), sg.InputText(size=(10,1)),sg.Text('To'), sg.InputText(size=(10,1))],
               [sg.Text('_'*100, size=(80,1))],
-              [sg.Submit(button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue')), sg.Text(f'{MAX_NUMBER_OF_THREADS} Threads will be started')]]
+              [sg.Submit(button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue'))]]
 
 
             # First category is default (need to special case this)
