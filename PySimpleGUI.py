@@ -9,7 +9,7 @@ import datetime
 import sys
 import textwrap
 
-# ----====----====----==== Constants the use CAN safely change ====----====----====----#
+# ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = ''
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
 DEFAULT_MARGINS = (10,5)                # Margins for each LEFT/RIGHT margin is first term
@@ -34,8 +34,8 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#
 
 COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
 DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
+# DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
-DEFAULT_CANCEL_BUTTON_COLOR = (GREENS[3], TANS[0])
 DEFAULT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_BACKGROUND_COLOR = None
 DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR = None
@@ -646,9 +646,9 @@ class Button(Element):
             self.ParentForm.Results[r][c] = True        # mark this button's location in results
             # if the form is tabbed, must collect all form's results and destroy all forms
             if self.ParentForm.IsTabbedForm:
-                self.ParentForm.UberParent.Close()
+                self.ParentForm.UberParent._Close()
             else:
-                self.ParentForm.Close()
+                self.ParentForm._Close()
             self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
@@ -718,8 +718,6 @@ class ProgressBar(Element):
             target_element = self.ParentForm.GetElementAtLocation(target)
             strvar = target_element.TKStringVar
             rc = strvar.set(self.TextToDisplay)
-        # update the progress bar counter
-        # self.TKProgressBar['value'] = self.CurrentValue
 
         self.TKProgressBar.Update(current_count)
         try:
@@ -848,7 +846,7 @@ class FlexForm:
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)               # number of existing rows is our row number
         CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = Row(auto_size_text)                      # start with a blank row and build up
+        CurrentRow = Row(auto_size_text=auto_size_text)                      # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
@@ -900,17 +898,17 @@ class FlexForm:
         element = row.Elements[col_num]
         return element
 
-    def GetDefaultElementSize(self):
+    def _GetDefaultElementSize(self):
         return self.DefaultElementSize
 
-    def AutoCloseAlarmCallback(self):
+    def _AutoCloseAlarmCallback(self):
         try:
             if self.UberParent:
                 window = self.UberParent
             else:
                 window = self
             if window:
-                window.Close()
+                window._Close()
                 self.TKroot.quit()
                 self.RootNeedsDestroying = True
         except:
@@ -953,7 +951,7 @@ class FlexForm:
             _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
         return BuildResults(self)
 
-    def Close(self):
+    def _Close(self):
         try:
             self.TKroot.update()
         except: pass
@@ -1008,10 +1006,10 @@ class UberForm():
     def AddForm(self, form):
         self.FormList.append(form)
 
-    def Close(self):
+    def _Close(self):
         self.FormReturnValues = []
         for form in self.FormList:
-            form.Close()
+            form._Close()
             self.FormReturnValues.append(form.ReturnValues)
         if not self.TKrootDestroyed:
             self.TKrootDestroyed = True
@@ -1033,8 +1031,8 @@ def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_tex
     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text)
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
-def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None):
-    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
+def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
+    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text, background_color=background_color)
 
 def DropDown(values, scale=(None, None), size=(None, None), auto_size_text=None):
     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
@@ -1331,15 +1329,15 @@ def ConvertFlexToTK(MyFlexForm):
                     bc = MyFlexForm.ButtonColor
                 else:
                     bc = DEFAULT_BUTTON_COLOR
-                if bc == 'Random' or bc == 'random':
-                    bc = GetRandomColorPair()
                 border_depth = element.BorderWidth
                 if btype != BUTTON_TYPE_REALTIME:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, foreground=bc[0], background=bc[1], bd=border_depth)
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth)
                 else:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, foreground=bc[0], background=bc[1], bd=border_depth)
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
+                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT:
+                    tkbutton.config(foreground=bc[0], background=bc[1])
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:           # if button has an image on it
@@ -1389,7 +1387,16 @@ def ConvertFlexToTK(MyFlexForm):
                                                                     'fieldbackground':  element.BackgroundColor,
                                                                     'background':  element.BackgroundColor}
                                                                }})
-                    except: pass
+                    except:
+                        try:
+                            combostyle.theme_settings('combostyle',
+                                                settings={'TCombobox':
+                                                              {'configure':
+                                                                   {'selectbackground': element.BackgroundColor,
+                                                                    'fieldbackground':  element.BackgroundColor,
+                                                                    'background':  element.BackgroundColor}
+                                                               }})
+                        except: pass
                     # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
                     combostyle.theme_use('combostyle')
                 element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar,font=font )
@@ -1602,7 +1609,7 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
         uber.FormReturnValues.append(form.ReturnValues)
 
     # dangerous??  or clever? use the final form as a callback for autoclose
-    id = root.after(auto_close_duration * 1000, form.AutoCloseAlarmCallback) if auto_close else 0
+    id = root.after(auto_close_duration * 1000, form._AutoCloseAlarmCallback) if auto_close else 0
     icon = fav_icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
     try: uber.TKroot.iconbitmap(icon)
     except: pass
@@ -1631,7 +1638,7 @@ def StartupTK(my_flex_form):
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
-        my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form.AutoCloseAlarmCallback)
+        my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
     if my_flex_form.NonBlocking:
         my_flex_form.TKroot.protocol("WM_WINDOW_DESTROYED", my_flex_form.OnClosingCallback())
         pass
@@ -1766,7 +1773,7 @@ def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False
 # ==============================  MsgBoxCancel  =====#
 #                                                    #
 # ===================================================#
-def MsgBoxCancel(*args, button_color=DEFAULT_CANCEL_BUTTON_COLOR, auto_close=False, auto_close_duration=None, font=None):
+def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
     '''
     Display a MsgBox with a single "Cancel" button.
     :param args:
@@ -1782,7 +1789,7 @@ def MsgBoxCancel(*args, button_color=DEFAULT_CANCEL_BUTTON_COLOR, auto_close=Fal
 # ==============================  MsgBoxOK      =====#
 # Like MsgBox but only 1 button                      #
 # ===================================================#
-def MsgBoxOK(*args, button_color=('white', 'black'), auto_close=False, auto_close_duration=None, font=None):
+def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
     '''
     Display a MsgBox with a single buttoned labelled "OK"
     :param args:
@@ -1908,7 +1915,7 @@ def ProgressMeterUpdate(bar, value, *args):
     rc = bar.UpdateBar(value)
     if value >= bar.MaxValue or not rc:
         bar.BarExpired = True
-        bar.ParentForm.Close()
+        bar.ParentForm._Close()
     if bar.ParentForm.RootNeedsDestroying:
         try:
             _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
@@ -2102,6 +2109,15 @@ def eprint(*args, size=(None,None), end=None, sep=None):
     EasyPrint(*args, size=size, end=end, sep=sep)
 
 def EasyPrint(*args, size=(None,None), end=None, sep=None):
+    global _easy_print_data
+
+    if _easy_print_data  is None:
+        _easy_print_data = DebugWin(size=size)
+    _easy_print_data.Print(*args, end=end, sep=sep)
+
+
+
+def EasyPrintold(*args, size=(None,None), end=None, sep=None):
     if 'easy_print_data' not in EasyPrint.__dict__:     # use a function property to save DebugWin object (static variable)
         EasyPrint.easy_print_data = DebugWin(size=size)
     if EasyPrint.easy_print_data is None:
@@ -2111,7 +2127,7 @@ def EasyPrint(*args, size=(None,None), end=None, sep=None):
 def EasyPrintClose():
     if 'easy_print_data' in EasyPrint.__dict__:
         if EasyPrint.easy_print_data is not None:
-            EasyPrint.easy_print_data.Close()
+            EasyPrint.easy_print_data._Close()
         EasyPrint.easy_print_data = None
         # del EasyPrint.easy_print_data
 
@@ -2224,7 +2240,7 @@ def SetGlobalIcon(icon):
 # ============================== SetOptions =========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), margins=(None,None),
+def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(None,None),
                element_padding=(None,None),auto_size_text=None, auto_size_buttons=None, font=None, border_width=None,
                slider_border_width=None, slider_relief=None, slider_orientation=None,
                autoclose_time=None, message_box_line_width=None,
@@ -2271,8 +2287,8 @@ def SetOptions(icon=None, button_color=(None,None), element_size=(None,None), ma
             raise FileNotFoundError
         _my_windows.user_defined_icon = icon
 
-    if button_color != (None,None):
-        DEFAULT_BUTTON_COLOR = (button_color[0], button_color[1])
+    if button_color != None:
+        DEFAULT_BUTTON_COLOR = button_color
 
     if element_size != (None,None):
         DEFAULT_ELEMENT_SIZE = element_size
