@@ -38,8 +38,9 @@ DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, No
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_BACKGROUND_COLOR = None
+DEFAULT_ELEMENT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR = None
-DEFAULT_TEXT_COLOR = 'black'
+DEFAULT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_INPUT_ELEMENTS_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[0])    # (Text, Background) or (Color "on", Color) as a way to remember
@@ -72,7 +73,7 @@ DEFAULT_PROGRESS_BAR_STYLE = 'default'
 DEFAULT_METER_ORIENTATION = 'Horizontal'
 DEFAULT_SLIDER_ORIENTATION = 'vertical'
 DEFAULT_SLIDER_BORDER_WIDTH=1
-DEFAULT_SLIDER_RELIEF = tk.SUNKEN
+DEFAULT_SLIDER_RELIEF = tk.FLAT
 
 DEFAULT_LISTBOX_SELECT_MODE = tk.SINGLE
 SELECT_MODE_MULTIPLE = tk.MULTIPLE
@@ -153,7 +154,7 @@ MSG_BOX_OK = 0
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    def __init__(self, type, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
+    def __init__(self, type, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -171,7 +172,7 @@ class Element():
         self.TextInputDefault = None
         self.Position = (0,0)       # Default position Row 0, Col 0
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
-        return
+        self.TextColor = text_color if text_color is not None else DEFAULT_ELEMENT_TEXT_COLOR
 
     def __del__(self):
         try:
@@ -195,7 +196,7 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None):
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -208,14 +209,13 @@ class InputText(Element):
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg)
-        return
+        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color)
 
     def ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
         # search through this form and find the first button that will exit the form
         for row in MyForm.Rows:
-            for element in row.Elements:
+            for element in row:
                 if element.Type == ELEM_TYPE_BUTTON:
                     if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
                         element.ButtonCallBack()
@@ -229,7 +229,7 @@ class InputText(Element):
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
 
-    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
+    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -241,8 +241,7 @@ class InputCombo(Element):
         self.Values = values
         self.TKComboBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg)
-        return
+        super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color)
 
     def __del__(self):
         try:
@@ -257,7 +256,7 @@ class InputCombo(Element):
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
 
-    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
+    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
         '''
         Listbox Element
         :param values:
@@ -280,8 +279,7 @@ class Listbox(Element):
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg)
-        return
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=text_color)
 
     def __del__(self):
         try:
@@ -296,7 +294,7 @@ class Listbox(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, font=None):
+    def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None):
         '''
         Radio Button Element
         :param text:
@@ -313,8 +311,7 @@ class Radio(Element):
         self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
-        super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color)
-        return
+        super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color)
 
     def __del__(self):
         try:
@@ -327,7 +324,7 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
+    def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
         '''
         Check Box Element
         :param text:
@@ -343,8 +340,7 @@ class Checkbox(Element):
         self.Value = None
         self.TKCheckbox = None
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color)
-        return
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color)
 
     def __del__(self):
         try:
@@ -360,7 +356,7 @@ class Checkbox(Element):
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None):
+    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
         '''
         Spin Box Element
         :param values:
@@ -375,7 +371,7 @@ class Spin(Element):
         self.DefaultValue = initial_value
         self.TKSpinBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg)
+        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=text_color)
         return
 
     def __del__(self):
@@ -389,7 +385,7 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
+    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None):
         '''
         Input Multi-line Element
         :param default_text:
@@ -402,14 +398,14 @@ class Multiline(Element):
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg)
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color)
         return
 
     def ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
         # search through this form and find the first button that will exit the form
         for row in MyForm.Rows:
-            for element in row.Elements:
+            for element in row:
                 if element.Type == ELEM_TYPE_BUTTON:
                     if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
                         element.ButtonCallBack()
@@ -443,7 +439,7 @@ class Text(Element):
             bg = background_color
         # self.Font = Font if Font else DEFAULT_FONT
         # i=1/0
-        super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT)
+        super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor)
         return
 
     def Update(self, NewValue):
@@ -508,11 +504,13 @@ class TKProgressBar():
 #       Scroll bar will span the length of the frame
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
-    def __init__(self, parent, width, height, bd, background_color=None):
+    def __init__(self, parent, width, height, bd, background_color=None, text_color=None):
         tk.Frame.__init__(self, parent)
         self.output = tk.Text(parent, width=width, height=height, bd=bd)
         if background_color and background_color != COLOR_SYSTEM_DEFAULT:
             self.output.configure(background=background_color)
+        if text_color and text_color != COLOR_SYSTEM_DEFAULT:
+            self.output.configure(fg=text_color)
         self.vsb = tk.Scrollbar(parent, orient="vertical", command=self.output.yview)
         self.output.configure(yscrollcommand=self.vsb.set)
         self.output.pack(side="left", fill="both", expand=True)
@@ -548,7 +546,7 @@ class TKOutput(tk.Frame):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class Output(Element):
-    def __init__(self, scale=(None, None), size=(None, None), background_color=None):
+    def __init__(self, scale=(None, None), size=(None, None), background_color=None, text_color=None):
         '''
         Output Element - reroutes stdout, stderr to this window
         :param scale: Adds multiplier to size (w,h)
@@ -557,7 +555,7 @@ class Output(Element):
         '''
         self.TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg)
+        super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg, text_color=text_color)
 
     def __del__(self):
         try:
@@ -665,7 +663,7 @@ class Button(Element):
         MyForm = self.ParentForm
         # search through this form and find the first button that will exit the form
         for row in MyForm.Rows:
-            for element in row.Elements:
+            for element in row:
                 if element.Type == ELEM_TYPE_BUTTON:
                     if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
                         element.ButtonCallBack()
@@ -756,7 +754,7 @@ class Image(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None):
+    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None):
         '''
         Slider Element
         :param range:
@@ -775,35 +773,13 @@ class Slider(Element):
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
-        super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color)
+        super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color)
         return
 
     def __del__(self):
         super().__del__()
 
 
-
-# ------------------------------------------------------------------------- #
-#                       Row CLASS                                           #
-# ------------------------------------------------------------------------- #
-class Row():
-    def __init__(self, auto_size_text = None):
-        self.AutoSizeText = auto_size_text        # Setting to override the form's policy on autosizing.
-        self.Elements = []              # List of Elements in this Rrow
-        return
-
-    # ------------------------- AddElement ------------------------- #
-    def AddElement(self, element):
-        self.Elements.append(element)
-        return
-
-    # -------------------------  Print  ------------------------- #
-    def __str__(self):
-        outstr = ''
-        for i, element in enumerate(self.Elements):
-            outstr += 'Element #%i = %s'%(i,element)
-            # outstr += f'Element #{i} = {element}'
-        return outstr
 
 # ------------------------------------------------------------------------- #
 #                       FlexForm CLASS                                      #
@@ -842,16 +818,15 @@ class FlexForm:
         self.ResultsBuilt = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
-    def AddRow(self, *args, auto_size_text=None):
+    def AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)               # number of existing rows is our row number
         CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = Row(auto_size_text=auto_size_text)                      # start with a blank row and build up
+        CurrentRow = []                     # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
-            CurrentRow.Elements.append(element)
-        CurrentRow.AutoSizeText = auto_size_text
+            CurrentRow.append(element)
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
@@ -878,7 +853,7 @@ class FlexForm:
         self.Shown = True
         # Compute num rows & num cols (it'll come in handy debugging)
         self.NumRows = len(self.Rows)
-        self.NumCols = max(len(row.Elements) for row in self.Rows)
+        self.NumCols = max(len(row) for row in self.Rows)
         self.NonBlocking=non_blocking
 
         # -=-=-=-=-=-=-=-=- RUN the GUI -=-=-=-=-=-=-=-=- ##
@@ -895,7 +870,7 @@ class FlexForm:
     def GetElementAtLocation(self, location):
         (row_num,col_num) = location
         row = self.Rows[row_num]
-        element = row.Elements[col_num]
+        element = row[col_num]
         return element
 
     def _GetDefaultElementSize(self):
@@ -981,7 +956,7 @@ class FlexForm:
 
     def __del__(self):
         for row in self.Rows:
-            for element in row.Elements:
+            for element in row:
                 element.__del__()
         try:
             del(self.TKroot)
@@ -1106,7 +1081,7 @@ def InitializeResults(form):
     return_vals = []
     for row_num,row in enumerate(form.Rows):
         r = []
-        for element in row.Elements:
+        for element in row:
             if element.Type == ELEM_TYPE_TEXT:
                 r.append(None)
             if element.Type == ELEM_TYPE_IMAGE:
@@ -1169,7 +1144,7 @@ def BuildResults(form):
     button_pressed_text = None
     input_values = []
     for row_num,row in enumerate(form.Rows):
-        for col_num, element in enumerate(row.Elements):
+        for col_num, element in enumerate(row):
             if element.Type == ELEM_TYPE_INPUT_TEXT:
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
@@ -1253,7 +1228,7 @@ def ConvertFlexToTK(MyFlexForm):
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(master)
-        for col_num, element in enumerate(flex_row.Elements):
+        for col_num, element in enumerate(flex_row):
             element.ParentForm = MyFlexForm  # save the button's parent form object
             if MyFlexForm.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = MyFlexForm.Font
@@ -1262,8 +1237,6 @@ def ConvertFlexToTK(MyFlexForm):
             # -------  Determine Auto-Size setting on a cascading basis ------- #
             if element.AutoSizeText is not None:            # if element overide
                 auto_size_text = element.AutoSizeText
-            elif flex_row.AutoSizeText is not None:         # if Row override
-                auto_size_text = flex_row.AutoSizeText
             elif MyFlexForm.AutoSizeText is not None:       # if form override
                 auto_size_text = MyFlexForm.AutoSizeText
             else:
@@ -1278,6 +1251,8 @@ def ConvertFlexToTK(MyFlexForm):
                 element_size = (int(element_size[0] * element.Scale[0]), int(element_size[1] * element.Scale[1]))
             elif MyFlexForm.Scale != (None, None):
                 element_size = (int(element_size[0] * MyFlexForm.Scale[0]), int(element_size[1] * MyFlexForm.Scale[1]))
+            # Set foreground color
+            text_color = element.TextColor
             # -------------------------  TEXT element  ------------------------- #
             element_type = element.Type
             if element_type == ELEM_TYPE_TEXT:
@@ -1301,13 +1276,16 @@ def ConvertFlexToTK(MyFlexForm):
                     width = 0
                 justify = tk.LEFT if element.Justification == 'left' else tk.CENTER if element.Justification == 'center' else tk.RIGHT
                 anchor = tk.NW if element.Justification == 'left' else tk.N if element.Justification == 'center' else tk.NE
-                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth, fg=element.TextColor)
+                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth)
                 # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
                 tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
                 if element.BackgroundColor is not None:
                     tktext_label.configure(background=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    tktext_label.configure(fg=element.TextColor)
+
                 tktext_label.pack(side=tk.LEFT)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -1367,6 +1345,8 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(background=element.BackgroundColor)
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    element.TKEntry.configure(fg=text_color)
                 element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 if not focus_set:
                     focus_set = True
@@ -1385,6 +1365,7 @@ def ConvertFlexToTK(MyFlexForm):
                                                               {'configure':
                                                                    {'selectbackground': element.BackgroundColor,
                                                                     'fieldbackground':  element.BackgroundColor,
+                                                                    'foreground': text_color,
                                                                     'background':  element.BackgroundColor}
                                                                }})
                     except:
@@ -1394,6 +1375,7 @@ def ConvertFlexToTK(MyFlexForm):
                                                               {'configure':
                                                                    {'selectbackground': element.BackgroundColor,
                                                                     'fieldbackground':  element.BackgroundColor,
+                                                                    'foreground': text_color,
                                                                     'background':  element.BackgroundColor}
                                                                }})
                         except: pass
@@ -1419,6 +1401,8 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKListbox.selection_set(0,0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(background=element.BackgroundColor)
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    element.TKListbox.configure(fg=text_color)
                 # vsb = tk.Scrollbar(tk_row_frame, orient="vertical", command=element.TKListbox.yview)
                 # element.TKListbox.configure(yscrollcommand=vsb.set)
                 element.TKListbox.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
@@ -1438,15 +1422,21 @@ def ConvertFlexToTK(MyFlexForm):
                 if not focus_set:
                     focus_set = True
                     element.TKText.focus_set()
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    element.TKText.configure(fg=text_color)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 element.TKIntVar = tk.IntVar()
-                element.TKIntVar.set(default_value)
+                element.TKIntVar.set(default_value if default_value is not None else 0)
                 element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font)
+                if default_value is None:
+                    element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    element.TKCheckbutton.configure(fg=text_color)
                 element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
@@ -1485,6 +1475,8 @@ def ConvertFlexToTK(MyFlexForm):
                                                        variable=element.TKIntVar, value=value, bd=border_depth, font=font)
                 if element.BackgroundColor is not None:
                     element.TKRadio.configure(background=element.BackgroundColor)
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    element.TKRadio.configure(fg=text_color)
                 element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
@@ -1497,10 +1489,12 @@ def ConvertFlexToTK(MyFlexForm):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(background=element.BackgroundColor)
                 element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    element.TKSpinBox.configure(fg=text_color)
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor)
+                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color)
                 element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -1530,6 +1524,8 @@ def ConvertFlexToTK(MyFlexForm):
                 if element.BackgroundColor is not None:
                     tkscale.configure(background=element.BackgroundColor)
                     tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT)
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
@@ -2248,7 +2244,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
                progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None,
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None,
-               scrollbar_color=None, text_color=None, debug_win_size=(None,None), window_location=(None,None)):
+               scrollbar_color=None, text_color=None, element_text_color = None, debug_win_size=(None,None), window_location=(None,None)):
 
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
@@ -2277,6 +2273,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
     global DEFAULT_SCROLLBAR_COLOR
     global DEFAULT_TEXT_COLOR
     global DEFAULT_WINDOW_LOCATION
+    global DEFAULT_ELEMENT_TEXT_COLOR
     global _my_windows
 
     if icon:
@@ -2367,6 +2364,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
 
     if scrollbar_color != None:
         DEFAULT_SCROLLBAR_COLOR = scrollbar_color
+
+    if element_text_color != None:
+        DEFAULT_ELEMENT_TEXT_COLOR = element_text_color
 
     return True
 
