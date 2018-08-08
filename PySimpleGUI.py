@@ -4,7 +4,6 @@ from tkinter import filedialog
 from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
-from random import randint
 import datetime
 import sys
 import textwrap
@@ -154,7 +153,7 @@ MSG_BOX_OK = 0
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    def __init__(self, type, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
+    def __init__(self, type, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None):
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -173,6 +172,7 @@ class Element():
         self.Position = (0,0)       # Default position Row 0, Col 0
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
         self.TextColor = text_color if text_color is not None else DEFAULT_ELEMENT_TEXT_COLOR
+        self.Key = key             # dictionary key for return values
 
     def __del__(self):
         try:
@@ -196,7 +196,7 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None):
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, key=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -209,7 +209,7 @@ class InputText(Element):
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
 
     def ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
@@ -229,7 +229,7 @@ class InputText(Element):
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
 
-    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None):
+    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -241,7 +241,7 @@ class InputCombo(Element):
         self.Values = values
         self.TKComboBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
 
     def __del__(self):
         try:
@@ -256,7 +256,7 @@ class InputCombo(Element):
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
 
-    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
+    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None):
         '''
         Listbox Element
         :param values:
@@ -279,7 +279,7 @@ class Listbox(Element):
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=text_color, key=key)
 
     def __del__(self):
         try:
@@ -294,7 +294,7 @@ class Listbox(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None):
+    def __init__(self, text, group_id, default=False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None, key=None):
         '''
         Radio Button Element
         :param text:
@@ -311,7 +311,7 @@ class Radio(Element):
         self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
-        super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color, key=key)
 
     def __del__(self):
         try:
@@ -324,7 +324,7 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
+    def __init__(self, text, default=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None):
         '''
         Check Box Element
         :param text:
@@ -340,7 +340,7 @@ class Checkbox(Element):
         self.Value = None
         self.TKCheckbox = None
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color, key=key)
 
     def __del__(self):
         try:
@@ -356,7 +356,7 @@ class Checkbox(Element):
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None):
+    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None):
         '''
         Spin Box Element
         :param values:
@@ -371,7 +371,7 @@ class Spin(Element):
         self.DefaultValue = initial_value
         self.TKSpinBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=text_color, key=key)
         return
 
     def __del__(self):
@@ -385,7 +385,7 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None):
+    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None):
         '''
         Input Multi-line Element
         :param default_text:
@@ -398,7 +398,7 @@ class Multiline(Element):
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
         return
 
     def ReturnKeyHandler(self, event):
@@ -754,7 +754,7 @@ class Image(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None):
+    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None, key=None):
         '''
         Slider Element
         :param range:
@@ -773,7 +773,7 @@ class Slider(Element):
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
-        super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color)
+        super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key)
         return
 
     def __del__(self):
@@ -788,7 +788,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, use_dictionary=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -815,7 +815,9 @@ class FlexForm:
         self.RootNeedsDestroying = False
         self.Shown = False
         self.ReturnValues = None
+        self.ReturnValuesDictionary = None
         self.ResultsBuilt = False
+        self.UseDictionary = use_dictionary
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -1143,22 +1145,32 @@ def BuildResults(form):
     results=form.Results
     button_pressed_text = None
     input_values = []
+    input_values_dictionary = {}
     for row_num,row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             if element.Type == ELEM_TYPE_INPUT_TEXT:
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                 value=element.TKIntVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value != 0)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_INPUT_RADIO:
                 RadVar=element.TKIntVar.get()
                 this_rowcol = EncodeRadioRowCol(row_num,col_num)
                 value = RadVar == this_rowcol
                 results[row_num][col_num] = value
                 input_values.append(value)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_BUTTON:
                 if results[row_num][col_num] is True:
                     button_pressed_text = element.ButtonText
@@ -1168,11 +1180,17 @@ def BuildResults(form):
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                 items=element.TKListbox.curselection()
                 value = [element.Values[int(item)] for item in items]
                 results[row_num][col_num] = value
                 input_values.append(value)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_INPUT_SPIN:
                 try:
                     value=element.TKStringVar.get()
@@ -1180,6 +1198,9 @@ def BuildResults(form):
                     value = 0
                 results[row_num][col_num] = value
                 input_values.append(value)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                 try:
                     value=element.TKIntVar.get()
@@ -1187,6 +1208,9 @@ def BuildResults(form):
                     value = 0
                 results[row_num][col_num] = value
                 input_values.append(value)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 try:
                     value=element.TKText.get(1.0, tk.END)
@@ -1196,11 +1220,21 @@ def BuildResults(form):
                     value = None
                 results[row_num][col_num] = value
                 input_values.append(value)
+                try:
+                    input_values_dictionary[element.Key] = value
+                except: pass
 
-    return_value = button_pressed_text,input_values
-    form.ReturnValues = return_value
+    try:
+        input_values_dictionary.pop(None, None)     # clean up dictionary include None was included
+    except: pass
+
+    if not form.UseDictionary:
+        form.ReturnValues = button_pressed_text, input_values
+    else:
+        form.ReturnValues = button_pressed_text, input_values_dictionary
+    form.ReturnValuesDictionary = button_pressed_text, input_values_dictionary
     form.ResultsBuilt = True
-    return return_value
+    return form.ReturnValues
 
 
 # ------------------------------------------------------------------------------------------------------------------ #
@@ -1447,9 +1481,7 @@ def ConvertFlexToTK(MyFlexForm):
                 progress_length = width*char_width
                 progress_width = element_size[1]
                 direction = element.Orientation
-                if element.BarColor == 'Random' or element.BarColor == 'random':
-                    bar_color = GetRandomColorPair()
-                elif element.BarColor != (None, None):    # if element has a bar color, use it
+                if element.BarColor != (None, None):    # if element has a bar color, use it
                     bar_color = element.BarColor
                 else:
                     bar_color = DEFAULT_PROGRESS_BAR_COLOR
@@ -2033,18 +2065,6 @@ def EasyProgressMeterCancel(title, *args):
         return rc
     return True
 
-
-def GetRandomColor():
-    nums = randint(0,255), randint(0,255), randint(0,255)
-    color_code ='#' + ''.join('{:02X}'.format(a) for a in nums)
-    return color_code
-
-
-def GetRandomColorPair():
-    fg = GetRandomColor()
-    bg = GetComplimentaryHex(fg)
-    color_code = (fg, bg)
-    return color_code
 
 # input is #RRGGBB
 # output is #RRGGBB
