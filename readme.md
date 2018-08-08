@@ -2,15 +2,19 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) since Jul 11, 2018
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  since Jul 11, 2018
+
+![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
+
+
 # PySimpleGUI
   (Ver 2.7)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
-Note - *Python3* is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
+Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
 
-Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry Pi with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Look no further, you've found your GUI package.
+Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Look no further, **you've found your GUI package**.
 
     import PySimpleGUI as sg
 
@@ -23,7 +27,7 @@ Looking to take your Python code from the world of command lines and into the co
 
 ![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
 
-Perhaps you're looking for a way to interact with your Raspberry Pi in a more friendly way.  The is the same form as above, except shown on a Pi.
+Perhaps you're looking for a way to interact with your **Raspberry Pi** in a more friendly way.  The is the same form as above, except shown on a Pi.
 
 ![raspberry pi](https://user-images.githubusercontent.com/13696193/43298356-9cfe9008-9123-11e8-9612-14649a2f6c7f.jpg)
 
@@ -40,7 +44,7 @@ You can build an async media player GUI with custom buttons in 30 lines of code.
 
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited.   The primary difference between these and PySimpleGUI is that in addition to getting the simple Message Boxes you also get the ability to make your own forms that are highly customizeable.  Don't like the standard Message Box? Then make your own!
+There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited.   The primary difference between these and `PySimpleGUI` is that in addition to getting the simple Message Boxes you also get the ability to **make your own forms** that are highly customizeable.  Don't like the standard Message Box? Then make your own!
 
 Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.
 
@@ -73,7 +77,7 @@ The `PySimpleGUI` package is focused on the ***developer***.  How can the desire
         Persistent Windows
         Redirect Python Output/Errors to scrolling window
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
-        Single-Line-Of-Coide Proress Bar & Debug Print
+        Single-Line-Of-Code Proress Bar & Debug Print
         Complete control of colors, look and feel
         Button images
 
@@ -480,6 +484,10 @@ This is the code that **displays** the form, collects the information and return
 
 ## Return values
 
+   As of version 2.8 there are 2 forms of return values, list and dictionary.
+### Return values as a list
+   By default return values are a list of values, one entry for each input field.
+
    Return information from FlexForm, SG's primary form builder interface, is in this format:
 
     button, (value1, value2, ...)
@@ -498,14 +506,40 @@ If you have a SINGLE value being returned, it is written this way:
     button, (value1,) = form.LayoutAndRead(form_rows)
 
 
- Another way of parsing the return values is to store the list of values into a variable representing the list of values.
+ Another way of parsing the return values is to store the list of values into a variable representing the list of values and then index each individual value.  This is not the preferred way of doing it.
 
      button, value_list = form.LayoutAndRead(form_rows)
      value1 = value_list[0]
      value2 = value_list[1]
      ...
 
+### Return values as a dictionary
+
+If you wish to receive the return values as a dictionary rather than a simple list, then you'll have to do 2 things:
+1. Indicate in the form creation that the return should be a dictionary by setting `use_dictionary = True`
+2. Mark each input element you wish to be in the dictionary with the keyword `key`.
+
+This sample program demonstrates these 2 steps as well as how to address the return values (e.g. `values['name']`)
+
+
+    import PySimpleGUI as sg
+    form = sg.FlexForm('Simple data entry form', use_dictionary=True)
+    layout = [
+              [sg.Text('Please enter your Name, Address, Phone')],
+              [sg.Text('Name', size=(15, 1)), sg.InputText('1', key='name')],
+              [sg.Text('Address', size=(15, 1)), sg.InputText('2', key='address')],
+              [sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='phone')],
+              [sg.Submit(), sg.Cancel()]
+             ]
+
+    button, values = form.LayoutAndRead(layout)
+
+    sg.MsgBox(button, values, values['name'], values['address'], values['phone'])
+
+
 ---
+
+
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
 
@@ -588,7 +622,7 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        auto_size_text - Bool. True if elements should size themselves according to contents
        auto_size_buttons - Bool. True if button elements should size themselves according to their text label
        scale - Set size of element to be a multiple of the Element size
-       location - Location to place window in pixels
+       location - (x,y) Location to place window in pixels
        button_color - Default color for buttons (foreground, background). Can be text or hex
        progress_bar_color - Foreground and background colors for progress bars
        is_tabbed_form - Bool. If True then form is a tabbed form
@@ -597,6 +631,9 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        auto_close_duration - Duration in seconds before form closes
        icon - .ICO file that will appear on the Task Bar and end of Title Bar
 
+
+#### Window Location
+PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the form is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.
 
 #### Sizes
 Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
@@ -892,7 +929,7 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
 .
 
      text - Text to display next to checkbox
-     default- Bool.  Initial state
+     default- Bool + None.  Initial state. True = Checked, False = unchecked, None = Not available (grayed out)
      scale - Amount to scale size of element
      size - (width, height) size of element in characters
      auto_size_text- Bool.  True if should size width to fit text
@@ -1418,6 +1455,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.5.0 | July 26, 2018 - Colors. Listbox scrollbar. tkinter Progress Bar instead of homegrown.
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
+| 2.8.0 | Aug xx, 2018 - PLANNED - New None default option for Checkbox element, text color option for all elements, return values as a dictionary
 
 
 ### Release Notes
