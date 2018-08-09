@@ -774,7 +774,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, use_dictionary=False):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -803,7 +803,7 @@ class FlexForm:
         self.ReturnValues = None
         self.ReturnValuesDictionary = None
         self.ResultsBuilt = False
-        self.UseDictionary = use_dictionary
+        self.UseDictionary = False
         self.UseDefaultFocus = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
@@ -853,9 +853,14 @@ class FlexForm:
                 try:
                     if element.Focus:
                         found_focus = True
-                        break
                 except:
                     pass
+                try:
+                    if element.Key is not None:
+                        self.UseDictionary = True
+                except:
+                    pass
+
         if not found_focus:
             self.UseDefaultFocus = True
         # -=-=-=-=-=-=-=-=- RUN the GUI -=-=-=-=-=-=-=-=- ##
@@ -1145,6 +1150,7 @@ def BuildResults(form):
     button_pressed_text = None
     input_values = []
     input_values_dictionary = {}
+    key_counter = 0
     for row_num,row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             if element.Type == ELEM_TYPE_INPUT_TEXT:
@@ -1153,25 +1159,31 @@ def BuildResults(form):
                 input_values.append(value)
                 if not form.NonBlocking:
                     element.TKStringVar.set('')
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
             elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                 value=element.TKIntVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value != 0)
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
             elif element.Type == ELEM_TYPE_INPUT_RADIO:
                 RadVar=element.TKIntVar.get()
                 this_rowcol = EncodeRadioRowCol(row_num,col_num)
                 value = RadVar == this_rowcol
                 results[row_num][col_num] = value
                 input_values.append(value)
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
             elif element.Type == ELEM_TYPE_BUTTON:
                 if results[row_num][col_num] is True:
                     button_pressed_text = element.ButtonText
@@ -1181,17 +1193,21 @@ def BuildResults(form):
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
             elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                 items=element.TKListbox.curselection()
                 value = [element.Values[int(item)] for item in items]
                 results[row_num][col_num] = value
                 input_values.append(value)
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
             elif element.Type == ELEM_TYPE_INPUT_SPIN:
                 try:
                     value=element.TKStringVar.get()
@@ -1199,9 +1215,11 @@ def BuildResults(form):
                     value = 0
                 results[row_num][col_num] = value
                 input_values.append(value)
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
             elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                 try:
                     value=element.TKIntVar.get()
@@ -1221,9 +1239,11 @@ def BuildResults(form):
                     value = None
                 results[row_num][col_num] = value
                 input_values.append(value)
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
 
     try:
         input_values_dictionary.pop(None, None)     # clean up dictionary include None was included
