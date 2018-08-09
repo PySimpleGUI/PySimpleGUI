@@ -404,6 +404,8 @@ class Multiline(Element):
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
         return
 
+    def Update(self, NewValue):
+        self.TKText.insert(1.0, NewValue)
 
     def __del__(self):
         super().__del__()
@@ -1006,11 +1008,11 @@ class UberForm():
 # ====================================================================== #
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
-def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus)
+def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False, key=None):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus, key=key)
 
-def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus)
+def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False, key=None):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus, key=key)
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
