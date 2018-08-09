@@ -9,33 +9,33 @@ def main():
 
     #===== Show some nice BLUE colors with yellow text ===== ===== ===== ===== ===== =====  =====#
     text_color = gg.YELLOWS[0]
-    buttons = (gg.SimpleButton(f'BLUES[{j}]\n{c}', button_color=(text_color, c), size=(10,2)) for j, c in enumerate(gg.BLUES))
+    buttons = (gg.SimpleButton('BLUES[{}]\n{}'.format(j, c), button_color=(text_color, c), size=(10,2)) for j, c in enumerate(gg.BLUES))
     form.AddRow(gg.T('Button Colors Using PySimpleGUI.BLUES'))
     form.AddRow(*buttons)
     form.AddRow(gg.Text('_' * 100, size=(65, 1)))
 
     #===== Show some nice PURPLE colors with yellow text ===== ===== ===== ===== ===== =====  =====#
-    buttons = (gg.SimpleButton(f'PURPLES[{j}]\n{c}', button_color=(text_color, c), size=(10,2)) for j, c in enumerate(gg.PURPLES))
+    buttons = (gg.SimpleButton('PURPLES[{}]\n{}'.format(j, c), button_color=(text_color, c), size=(10,2)) for j, c in enumerate(gg.PURPLES))
     form.AddRow(gg.T('Button Colors Using PySimpleGUI.PURPLES'))
     form.AddRow(*buttons)
     form.AddRow(gg.Text('_' * 100, size=(65, 1)))
 
     #===== Show some nice GREEN colors with yellow text ===== ===== ===== ===== ===== =====  =====#
-    buttons = (gg.SimpleButton(f'GREENS[{j}]\n{c}', button_color=(text_color, c),  size=(10,2)) for j, c in enumerate(gg.GREENS))
+    buttons = (gg.SimpleButton('GREENS[{}]\n{}'.format(j, c), button_color=(text_color, c),  size=(10,2)) for j, c in enumerate(gg.GREENS))
     form.AddRow(gg.T('Button Colors Using PySimpleGUI.GREENS'))
     form.AddRow(*buttons)
     form.AddRow(gg.Text('_' * 100, size=(65, 1)))
 
     #===== Show some nice TAN colors with yellow text ===== ===== ===== ===== ===== =====  =====#
     text_color = gg.GREENS[0]        # let's use GREEN text on the tan
-    buttons = (gg.SimpleButton(f'TANS[{j}]\n{c}', button_color=(text_color, c),  size=(10,2)) for j, c in enumerate(gg.TANS))
+    buttons = (gg.SimpleButton('TANS[{}]\n{}'.format(j, c), button_color=(text_color, c),  size=(10,2)) for j, c in enumerate(gg.TANS))
     form.AddRow(gg.T('Button Colors Using PySimpleGUI.TANS'))
     form.AddRow(*buttons)
     form.AddRow(gg.Text('_' * 100, size=(65, 1)))
 
     #===== Show some nice YELLOWS colors with black text ===== ===== ===== ===== ===== =====  =====#
     text_color = 'black'       # let's use black text on the tan
-    buttons = (gg.SimpleButton(f'YELLOWS[{j}]\n{c}', button_color=(text_color, c),  size=(10,2)) for j, c in enumerate(gg.YELLOWS))
+    buttons = (gg.SimpleButton('YELLOWS[{}]\n{}'.format(j, c), button_color=(text_color, c),  size=(10,2)) for j, c in enumerate(gg.YELLOWS))
     form.AddRow(gg.T('Button Colors Using PySimpleGUI.YELLOWS'))
     form.AddRow(*buttons)
     form.AddRow(gg.Text('_' * 100, size=(65, 1)))

@@ -5,10 +5,10 @@ import PySimpleGUI as sg
 # A simple blocking form.   Your best starter-form
 def SourceDestFolders():
     with sg.FlexForm('Demo Source / Destination Folders') as form:
-        form_rows = [[sg.Text('Enter the Source and Destination folders')],
+        form_rows = ([sg.Text('Enter the Source and Destination folders')],
                      [sg.Text('Source Folder', size=(15, 1), justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
                      [sg.Text('Destination Folder', size=(15, 1), justification='right'), sg.InputText('Dest'), sg.FolderBrowse()],
-                     [sg.Submit(), sg.Cancel()]]
+                     [sg.Submit(), sg.Cancel()])
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
     if button == 'Submit':
@@ -39,7 +39,7 @@ def MachineLearningGUI():
               [sg.Radio('Kullerback', 'loss', size=(12, 1)), sg.Radio('MAE(L1)', 'loss', size=(12, 1))],
               [sg.Radio('MSE(L2)', 'loss', size=(12, 1)), sg.Radio('MB(L0)', 'loss', size=(12, 1))],
               [sg.Submit(), sg.Cancel()]]
-    button, values = form.LayoutAndShow(layout)
+    button, values = form.LayoutAndRead(layout)
     del(form)
     sg.SetOptions(text_justification='left')
 
@@ -70,10 +70,8 @@ def Everything():
              sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
              sg.Spin(values=('Spin Box 1', '2','3'), initial_value='Spin Box 1')],
             [sg.Text('_' * 80)],
-            [sg.Text('Choose A Folder', size=(35, 1))],
             [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Default Folder'), sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('black', '#EDE5B7'))]
-             ]
+            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('black', '#EDE5B7'))] ]
 
         button, values = form.LayoutAndRead(layout)
 
@@ -113,8 +111,8 @@ def Everything_NoContextManager():
 
 
 def ProgressMeter():
-    for i in range(1,100):
-        if not sg.EasyProgressMeter('My Meter', i + 1, 100, orientation='v'): break
+    for i in range(1,1000):
+        if not sg.EasyProgressMeter('My Meter', i + 1, 1000, orientation='h'): break
         time.sleep(.01)
 
 # Blocking form that doesn't close
@@ -122,7 +120,7 @@ def ChatBot():
     with sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
         layout = [[(sg.Text('This is where standard out is being routed', size=[40, 1]))],
                   [sg.Output(size=(80, 20))],
-                  [sg.Multiline(size=(70, 5), enter_submits=True), sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])), sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
+                  [sg.Multiline(size=(70, 5), enter_submits=True), sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True), sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
         # notice this is NOT the usual LayoutAndRead call because you don't yet want to read the form
         # if you call LayoutAndRead from here, then you will miss the first button click
         form.Layout(layout)
@@ -181,39 +179,46 @@ def NonBlockingPeriodicUpdateForm():
 def DebugTest():
     # SG.Print('How about we print a bunch of random numbers?', , size=(90,40))
     for i in range (1,300):
-        sg.Print(i, randint(1, 1000), end='', sep='-')
+        sg.Print('Here are 300 random numbers', i, randint(1, 1000), sep='-')
+
+# Change the colors and set borders to 0 for a flat look
+def ChangeLookAndFeel(colors):
+    sg.SetOptions(background_color=colors['BACKGROUND'],
+                  text_element_background_color=colors['BACKGROUND'],
+                  element_background_color=colors['BACKGROUND'],
+                  text_color=colors['TEXT'],
+                  input_elements_background_color=colors['INPUT'],
+                  button_color=colors['BUTTON'],
+                  progress_meter_color=colors['PROGRESS'],
+                  border_width=0,
+                  slider_border_width=0,
+                  progress_meter_border_depth=0,
+                  scrollbar_color=(colors['INPUT']),
+                  element_text_color=colors['TEXT'])
 
 #=---------------------------------- main ------------------------------
 def main():
 
-    # sg.MsgBox('Changing look and feel.', 'Done by calling SetOptions')
-    SourceDestFolders()
-
-    sg.SetOptions(background_color='#9FB8AD', text_element_background_color='#9FB8AD',  element_background_color='#9FB8AD', scrollbar_color=None, input_elements_background_color='#F7F3EC', button_color=('white','#475841'), border_width=0, slider_border_width=0, progress_meter_border_depth=0)
-
-    MachineLearningGUI()
-
-    Everything_NoContextManager()
-
-    # sg.SetOptions(background_color='#B89FB6', text_element_background_color='#B89FB6',  element_background_color='#B89FB6',   button_color=('white','#7E6C92'), text_color='#3F403F',border_width=0, slider_border_width=0, progress_meter_border_depth=0)
-
-    sg.SetOptions(background_color='#A5CADD', input_elements_background_color='#E0F5FF', text_element_background_color='#A5CADD',  element_background_color='#A5CADD',   button_color=('white','#303952'), text_color='#822E45',border_width=0, progress_meter_color=('#3D8255','white'), slider_border_width=0, progress_meter_border_depth=0)
-
-    Everything()
-
-    ProgressMeter()
-
-    # Set system-wide options that will affect all future forms
-
-
-    NonBlockingPeriodicUpdateForm_ContextManager()
-
-
-    NonBlockingPeriodicUpdateForm()
-
+    # Green & tan color scheme
+    colors1 = {'BACKGROUND' : '#9FB8AD', 'TEXT': sg.COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC', 'BUTTON': ('white', '#475841'),'PROGRESS':sg.DEFAULT_PROGRESS_BAR_COLOR }
+    # light green with tan
+    colors2 = {'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7', 'BUTTON': ('white', '#658268'), 'PROGRESS':('#247BA0','#F8FAF0')}
+    # blue with light blue color scheme
+    colors3 = {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF', 'BUTTON': ('white', '#303952'),'PROGRESS':sg.DEFAULT_PROGRESS_BAR_COLOR}
 
     ChatBot()
+    Everything()
 
+    SourceDestFolders()
+    ChangeLookAndFeel(colors2)
+    ProgressMeter()
+    ChangeLookAndFeel(colors3)
+    Everything()
+    ChangeLookAndFeel(colors2)
+    MachineLearningGUI()
+    Everything_NoContextManager()
+    NonBlockingPeriodicUpdateForm_ContextManager()
+    NonBlockingPeriodicUpdateForm()
     DebugTest()
 
     sg.MsgBox('Done with all recipes')

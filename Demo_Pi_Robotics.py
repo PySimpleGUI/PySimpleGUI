@@ -88,7 +88,7 @@ def RemoteControlExample_NoGraphics():
 def main():
     RemoteControlExample_NoGraphics()
     # Uncomment to get the fancy graphics version.  Be sure and download the button images!
-    # RemoteControlExample()
+    RemoteControlExample()
     sg.MsgBox('End of non-blocking demonstration')
 
 if __name__ == '__main__':

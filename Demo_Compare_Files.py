@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 
 def GetFilesToCompare():
-    with sg.FlexForm('File Compare', auto_size_text=True) as form:
+    with sg.FlexForm('File Compare') as form:
         form_rows = [[sg.Text('Enter 2 files to comare')],
                      [sg.Text('File 1', size=(15, 1)), sg.InputText(), sg.FileBrowse()],
                      [sg.Text('File 2', size=(15, 1)), sg.InputText(), sg.FileBrowse()],
