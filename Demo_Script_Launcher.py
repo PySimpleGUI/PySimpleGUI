@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import os
+import subprocess
 
 def Launcher():
 
@@ -8,7 +8,8 @@ def Launcher():
     layout =  [
                 [sg.Text('Script output....', size=(40, 1))],
                 [sg.Output(size=(88, 20))],
-                [sg.ReadFormButton('script1'), sg.ReadFormButton('script2'), sg.SimpleButton('EXIT')]
+                [sg.ReadFormButton('script1'), sg.ReadFormButton('script2'), sg.SimpleButton('EXIT')],
+                [sg.Text('Manual command', size=(15,1)), sg.InputText(focus=True), sg.ReadFormButton('Run', bind_return_key=True)]
               ]
 
     form.Layout(layout)
@@ -19,16 +20,22 @@ def Launcher():
         if button == 'EXIT' or button is None:
             break           # exit button clicked
         if button == 'script1':
-            ExecuteCommandOS('python SimScript.py')
+            ExecuteCommandSubprocess('pip','list')
         elif button == 'script2':
-            ExecuteCommandOS('python SimScript.py')
-        elif button == 'Enter':
-            ExecuteCommandOS(value[0])      # send string without carriage return on end
+            ExecuteCommandSubprocess('python', '--version')
+        elif button == 'Run':
+            ExecuteCommandSubprocess(value[0])      # send string without carriage return on end
 
 
-def ExecuteCommandOS(command):
-    output = os.popen(command).read()
-    print(output)
+def ExecuteCommandSubprocess(command, *args):
+    try:
+        sp = subprocess.Popen([command,*args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = sp.communicate()
+        if out:
+            print(out.decode("utf-8"))
+        if err:
+            print(err.decode("utf-8"))
+    except: pass
 
 
 if __name__ == '__main__':
