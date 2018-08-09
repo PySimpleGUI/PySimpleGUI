@@ -174,6 +174,15 @@ class Element():
         self.TextColor = text_color if text_color is not None else DEFAULT_ELEMENT_TEXT_COLOR
         self.Key = key             # dictionary key for return values
 
+    def ReturnKeyHandler(self, event):
+        MyForm = self.ParentForm
+        # search through this form and find the first button that will exit the form
+        for row in MyForm.Rows:
+            for element in row:
+                if element.Type == ELEM_TYPE_BUTTON:
+                    if element.BindReturnKey:
+                        element.ButtonCallBack()
+
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -196,7 +205,7 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, key=None):
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, key=None, focus=False):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -209,17 +218,10 @@ class InputText(Element):
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        self.Focus = focus
         super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
 
-    def ReturnKeyHandler(self, event):
-        MyForm = self.ParentForm
-        # search through this form and find the first button that will exit the form
-        for row in MyForm.Rows:
-            for element in row:
-                if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
-                        element.ButtonCallBack()
-                        return
+
 
     def __del__(self):
         super().__del__()
@@ -385,7 +387,7 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None):
+    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, focus=False):
         '''
         Input Multi-line Element
         :param default_text:
@@ -398,18 +400,10 @@ class Multiline(Element):
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        self.Focus = focus
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
         return
 
-    def ReturnKeyHandler(self, event):
-        MyForm = self.ParentForm
-        # search through this form and find the first button that will exit the form
-        for row in MyForm.Rows:
-            for element in row:
-                if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
-                        element.ButtonCallBack()
-                        return
 
     def __del__(self):
         super().__del__()
@@ -568,7 +562,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -597,6 +591,8 @@ class Button(Element):
         self.ImageSubsample = image_subsample
         self.UserData = None
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
+        self.BindReturnKey = bind_return_key
+        self.Focus = focus
         super().__init__(ELEM_TYPE_BUTTON, scale, size, font=font)
         return
 
@@ -658,16 +654,6 @@ class Button(Element):
             self.ParentForm.Results[r][c] = True        # mark this button's location in results
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         return
-
-    def ReturnKeyHandler(self, event):
-        MyForm = self.ParentForm
-        # search through this form and find the first button that will exit the form
-        for row in MyForm.Rows:
-            for element in row:
-                if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BType == BUTTON_TYPE_CLOSES_WIN or element.BType == BUTTON_TYPE_READ_FORM:
-                        element.ButtonCallBack()
-                        return
 
     def __del__(self):
         try:
@@ -818,6 +804,7 @@ class FlexForm:
         self.ReturnValuesDictionary = None
         self.ResultsBuilt = False
         self.UseDictionary = use_dictionary
+        self.UseDefaultFocus = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -858,6 +845,19 @@ class FlexForm:
         self.NumCols = max(len(row) for row in self.Rows)
         self.NonBlocking=non_blocking
 
+        # Search through entire form to see if any elements set the focus
+        # if not, then will set the focus to the first input element
+        found_focus = False
+        for row in self.Rows:
+            for element in row:
+                try:
+                    if element.Focus:
+                        found_focus = True
+                        break
+                except:
+                    pass
+        if not found_focus:
+            self.UseDefaultFocus = True
         # -=-=-=-=-=-=-=-=- RUN the GUI -=-=-=-=-=-=-=-=- ##
         StartupTK(self)
         return self.ReturnValues
@@ -1001,11 +1001,11 @@ class UberForm():
 # ====================================================================== #
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
-def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text)
+def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus)
 
-def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text)
+def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus)
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
@@ -1032,45 +1032,44 @@ def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_
     return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
-def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
-def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
-def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
-def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
-
+def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
-def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
 #------------------------------------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  ------- #
@@ -1152,6 +1151,8 @@ def BuildResults(form):
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
+                if not form.NonBlocking:
+                    element.TKStringVar.set('')
                 try:
                     input_values_dictionary[element.Key] = value
                 except: pass
@@ -1364,7 +1365,7 @@ def ConvertFlexToTK(MyFlexForm):
                     tkbutton.image = photo
                 tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
-                if not focus_set and btype == BUTTON_TYPE_CLOSES_WIN:
+                if element.Focus is True or (MyFlexForm.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                     element.TKButton.focus_set()
@@ -1382,7 +1383,7 @@ def ConvertFlexToTK(MyFlexForm):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
                 element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                if not focus_set:
+                if element.Focus is True or (MyFlexForm.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKEntry.focus_set()
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
@@ -1453,7 +1454,7 @@ def ConvertFlexToTK(MyFlexForm):
                 element.TKText.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element.ReturnKeyHandler)
-                if not focus_set:
+                if element.Focus is True or (MyFlexForm.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKText.focus_set()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -1748,19 +1749,19 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
         pad =1
         # show either an OK or Yes/No depending on paramater
         if button_type is MSG_BOX_YES_NO:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(button_color=button_color), No(
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(button_color=button_color, focus=True, bind_return_key=True), No(
                 button_color=button_color))
             (button_text, values) = form.Show()
             return button_text == 'Yes'
         elif button_type is MSG_BOX_CANCELLED:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('Cancelled', button_color=button_color))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
         elif button_type is MSG_BOX_ERROR:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('ERROR', size=(5, 1), button_color=button_color))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
         elif button_type is MSG_BOX_OK_CANCEL:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color),
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
                         SimpleButton('Cancel', size=(5, 1), button_color=button_color))
         else:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
 
         button, values = form.Show()
     return button
@@ -2169,7 +2170,7 @@ def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, au
         height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
         if height:
             height_computed = height
-        form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)), auto_size_text=True)
+        form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
         pad = max_line_total-15 if max_line_total > 15 else 1
         # show either an OK or Yes/No depending on paramater
         if yes_no:
@@ -2415,9 +2416,9 @@ def main():
         form_rows = [[Text('You are running the PySimpleGUI.py file itself')],
                      [Text('You should be importing it rather than running it\n')],
                      [Text('Here is your sample input form....')],
-                     [Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), InputText('Source'),FolderBrowse()],
+                     [Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), InputText('Source', focus=True),FolderBrowse()],
                      [Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), InputText('Dest'), FolderBrowse()],
-                     [Submit(), Cancel()]]
+                     [Submit(bind_return_key=True), Cancel()]]
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
 
