@@ -8,13 +8,14 @@
 
 
 # PySimpleGUI
-  (Ver 2.7)
+  (Ver 2.8)
+[Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
 Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
 
-Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Look no further, **you've found your GUI package**.
+Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Into Machine Learning and are sick of the command line?  Look no further, **you've found your GUI package**.
 
     import PySimpleGUI as sg
 
@@ -24,6 +25,8 @@ Looking to take your Python code from the world of command lines and into the co
 ![snap0136](https://user-images.githubusercontent.com/13696193/43162494-33095ece-8f59-11e8-86de-b6d8bcc5a52f.jpg)
 
   Build beautiful customized forms that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve the real problems.  Do you really want to plod through the mountains of code required to program tkinter?
+
+PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkinter, but you interact with them in a **much** more friendly way.
 
 ![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
 
@@ -80,6 +83,9 @@ The `PySimpleGUI` package is focused on the ***developer***.  How can the desire
         Single-Line-Of-Code Proress Bar & Debug Print
         Complete control of colors, look and feel
         Button images
+        Return values as dictionary
+        Set focus
+        Bind return key to buttons
 
 
 An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
@@ -515,18 +521,19 @@ If you have a SINGLE value being returned, it is written this way:
 
 ### Return values as a dictionary
 
-If you wish to receive the return values as a dictionary rather than a simple list, then you'll have to do 2 things:
-1. Indicate in the form creation that the return should be a dictionary by setting `use_dictionary = True`
-2. Mark each input element you wish to be in the dictionary with the keyword `key`.
+If you wish to receive the return values as a dictionary rather than a simple list, then you'll have to one thing...
+ * Mark each input element you wish to be in the dictionary with the keyword `key`.
+
+If **any** element in the form has a `key`, then **all** of the return values are returned via a dictionary.  If some elements do not have a key, then they are numbered starting at zero.
 
 This sample program demonstrates these 2 steps as well as how to address the return values (e.g. `values['name']`)
 
 
     import PySimpleGUI as sg
-    form = sg.FlexForm('Simple data entry form', use_dictionary=True)
+    form = sg.FlexForm('Simple data entry form')
     layout = [
               [sg.Text('Please enter your Name, Address, Phone')],
-              [sg.Text('Name', size=(15, 1)), sg.InputText('1', key='name')],
+              [sg.Text('Name', size=(15, 1)), sg.InputText('1')],
               [sg.Text('Address', size=(15, 1)), sg.InputText('2', key='address')],
               [sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='phone')],
               [sg.Submit(), sg.Cancel()]
@@ -534,7 +541,7 @@ This sample program demonstrates these 2 steps as well as how to address the ret
 
     button, values = form.LayoutAndRead(layout)
 
-    sg.MsgBox(button, values, values['name'], values['address'], values['phone'])
+    sg.MsgBox(button, values, values[0], values['address'], values['phone'])
 
 
 ---
@@ -1195,10 +1202,12 @@ Recall that values is a list as well.  Multiple tabs in the form would return li
 Starting in version 2.5 you can change the background colors for the window and the Elements.
 
 Your forms can go from this:
+
 ![snap0155](https://user-images.githubusercontent.com/13696193/43273879-a9fdc10a-90cb-11e8-8c20-4f6a244ebe2f.jpg)
 
 
 to this... with one function call...
+
 
 ![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
 
@@ -1455,7 +1464,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.5.0 | July 26, 2018 - Colors. Listbox scrollbar. tkinter Progress Bar instead of homegrown.
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
-| 2.8.0 | Aug xx, 2018 - PLANNED - New None default option for Checkbox element, text color option for all elements, return values as a dictionary
+| 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
 
 
 ### Release Notes
@@ -1470,6 +1479,7 @@ New debug printing capability.  `sg.Print`
 Listboxes are still without scrollwheels. The mouse can drag to see more items.  The mouse scrollwheel will also scroll the list and will `page up` and `page down` keys.
 
 2.7 Is the "feature complete" release. Pretty much all features are done and in the code
+2.8 More text color controls.  The caller has more control over things like the focus and what buttons should be clicked when enter key is pressed. Return values as a dictionary! (NICE addition)
 
 
 ### Upcoming
@@ -1535,7 +1545,7 @@ Here are the steps to run that application
 
 The pip command is all there is to the setup.
 
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.    
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
 ![snap0109](https://user-images.githubusercontent.com/13696193/42916444-4199b16c-8ad3-11e8-8423-d12e61a58d3d.jpg)
 
