@@ -205,7 +205,7 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, key=None, focus=False):
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -219,6 +219,7 @@ class InputText(Element):
         self.PasswordCharacter = password_char
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
+        self.do_not_clear = do_not_clear
         super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
 
 
@@ -387,7 +388,7 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, focus=False):
+    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
         '''
         Input Multi-line Element
         :param default_text:
@@ -401,6 +402,7 @@ class Multiline(Element):
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
+        self.do_not_clear = do_not_clear
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
         return
 
@@ -913,6 +915,8 @@ class FlexForm:
     def ReadNonBlocking(self, Message=''):
         if self.TKrootDestroyed:
             return None, None
+        if not self.Shown:
+            self.Show(non_blocking=True)
         if Message:
             print(Message)
         try:
@@ -1008,11 +1012,11 @@ class UberForm():
 # ====================================================================== #
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
-def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False, key=None):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus, key=key)
+def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, do_not_clear=False, focus=False, key=None):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, do_not_clear = do_not_clear, focus=focus, key=key)
 
-def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, focus=False, key=None):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, focus=focus, key=key)
+def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, do_not_clear = False, focus=False, key=None):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, do_not_clear=do_not_clear, focus=focus, key=key)
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
@@ -1159,7 +1163,7 @@ def BuildResults(form):
                 value=element.TKStringVar.get()
                 results[row_num][col_num] = value
                 input_values.append(value)
-                if not form.NonBlocking:
+                if not form.NonBlocking and not element.do_not_clear:
                     element.TKStringVar.set('')
                 if element.Key is None:
                     input_values_dictionary[key_counter] = value
@@ -1235,7 +1239,7 @@ def BuildResults(form):
             elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 try:
                     value=element.TKText.get(1.0, tk.END)
-                    if not form.NonBlocking:
+                    if not form.NonBlocking and not element.do_not_clear:
                         element.TKText.delete('1.0', tk.END)
                 except:
                     value = None
@@ -1593,7 +1597,8 @@ def ConvertFlexToTK(MyFlexForm):
     #....................................... DONE creating and laying out window ..........................#
     if MyFlexForm.IsTabbedForm:
         master = MyFlexForm.ParentWindow
-    screen_width = master.winfo_screenwidth()               # get window info to move to middle of screen
+    master.attributes('-alpha', 0)                      # hide window while getting info and moving
+    screen_width = master.winfo_screenwidth()           # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
         x,y = MyFlexForm.Location
@@ -1612,6 +1617,7 @@ def ConvertFlexToTK(MyFlexForm):
 
     move_string = '+%i+%i'%(int(x),int(y))
     master.geometry(move_string)
+    master.attributes('-alpha', 255)                      # Make window visible again
     master.update_idletasks()  # don't forget
     return
 
