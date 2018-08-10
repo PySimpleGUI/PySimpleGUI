@@ -1156,7 +1156,17 @@ class ListDict(OrderedDict):
             return super().__getitem__(item)
 
     def __str__(self):
-        return str(self.ToList())
+        listlike = True
+        for i, key in enumerate(self.keys()):
+            if i != key:
+                listlike = False
+
+        if listlike:
+            return str(list(self.values()))
+        else:
+            output = [("'" + k + "'" if isinstance(k, str) else str(k)) + ': ' + (
+                "'" + v + "'" if isinstance(v, str) else str(v)) for k, v in self.items()]
+            return '{' + ', '.join(output) + '}'
 
     def ToList(self):
         output = []
