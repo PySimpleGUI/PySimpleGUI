@@ -9,7 +9,9 @@
 
 # PySimpleGUI
   (Ver 2.8)
+
 [Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
+[COOKBOOK documentation now online!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
@@ -138,6 +140,7 @@ You will see a number of different styles of buttons, data entry fields, etc, in
     - A form is a list of rows
    - A row is a list of elements
 - Return values are a list of button presses and input values.
+- Return values can also be represented as a dictionary
 
 It's stunning that after so many years Python still hasn't put forth a GUI framework that truly fits the language's basic  data structures, especially lists.  It's hard to argue with the success to be had in quickly building GUI applications using this package's syntax.
 
@@ -409,7 +412,7 @@ You will use these design patterns or code templates for all of your "normal" (b
 
 ### How GUI Programming in Python Should Look
 
-GUI programming in Python is a mess.  tkinter kinda sucks.  Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list?
+GUI programming in Python is a mess.  tkinter kinda sucks.  Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list or dictionary?
 
 The key to custom forms in PySimpleGUI is to view forms as ROWS of Widgets (Elements).  Each row is specified as a list of these widgets.  Put the rows together and you've got a form.
 
@@ -1465,6 +1468,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
 | 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
+| 2.9.0 | Aug XX,2018 - Screen flash fix, do_not_clear input field option,
 
 
 ### Release Notes
@@ -1545,7 +1549,7 @@ Here are the steps to run that application
 
 The pip command is all there is to the setup.
 
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.    
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
 ![snap0109](https://user-images.githubusercontent.com/13696193/42916444-4199b16c-8ad3-11e8-8423-d12e61a58d3d.jpg)
 
