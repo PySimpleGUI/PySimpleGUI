@@ -432,13 +432,13 @@ This form doesn't close after button clicks.  To achieve this the buttons are sp
       while True:
             (button, value) = form.Read()
             if button == 'EXIT'  or button is None:
-                break # exit button clicked
-      if button == 'script1':
+                break                                 # exit button clicked
+            if button == 'script1':
                 ExecuteCommandSubprocess('pip','list')
             elif button == 'script2':
                 ExecuteCommandSubprocess('python', '--version')
             elif button == 'Run':
-                ExecuteCommandSubprocess(value[0])      # send string without carriage return on end
+                ExecuteCommandSubprocess(value[0])
 
 
     def ExecuteCommandSubprocess(command, *args):
@@ -454,3 +454,46 @@ This form doesn't close after button clicks.  To achieve this the buttons are sp
 
     if __name__ == '__main__':
         Launcher()
+----
+## Machine Learning GUI
+A standard non-blocking GUI with lots of inputs.
+
+![machine learning green](https://user-images.githubusercontent.com/13696193/43979000-408b77ba-9cb7-11e8-9ffd-24c156767532.jpg)
+
+    import PySimpleGUI as sg
+
+    # Green & tan color scheme
+    sg.SetOptions(background_color='#9FB8AD',
+                  text_element_background_color='#9FB8AD',
+                  element_background_color='#9FB8AD',
+                  input_elements_background_color='#F7F3EC',
+                  button_color=('white', '#475841'),
+                  border_width=0,
+                  slider_border_width=0,
+                  progress_meter_border_depth=0,
+                  scrollbar_color='#F7F3EC')
+
+    sg.SetOptions(text_justification='right')
+
+    form = sg.FlexForm('Machine Learning Front End', font=("Helvetica", 12))  # begin with a blank form
+
+    layout = [[sg.Text('Machine Learning Command Line Parameters', font=('Helvetica', 16))],
+              [sg.Text('Passes', size=(15, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1)),
+               sg.Text('Steps', size=(18, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1))],
+              [sg.Text('ooa', size=(15, 1)), sg.In(default_text='6', size=(10, 1)), sg.Text('nn', size=(15, 1)), sg.In(default_text='10', size=(10, 1))],
+              [sg.Text('q', size=(15, 1)), sg.In(default_text='ff', size=(10, 1)), sg.Text('ngram', size=(15, 1)), sg.In(default_text='5', size=(10, 1))],
+              [sg.Text('l', size=(15, 1)), sg.In(default_text='0.4', size=(10, 1)), sg.Text('Layers', size=(15, 1)), sg.Drop(values=('BatchNorm', 'other'),auto_size_text=True)],
+              [sg.Text('_'  * 100, size=(65, 1))],
+              [sg.Text('Flags', font=('Helvetica', 15), justification='left')],
+              [sg.Checkbox('Normalize', size=(12, 1), default=True), sg.Checkbox('Verbose', size=(20, 1))],
+              [sg.Checkbox('Cluster', size=(12, 1)), sg.Checkbox('Flush Output', size=(20, 1), default=True)],
+              [sg.Checkbox('Write Results', size=(12, 1)), sg.Checkbox('Keep Intermediate Data', size=(20, 1))],
+              [sg.Text('_'  * 100, size=(65, 1))],
+              [sg.Text('Loss Functions', font=('Helvetica', 15), justification='left')],
+              [sg.Radio('Cross-Entropy', 'loss', size=(12, 1)), sg.Radio('Logistic', 'loss', default=True, size=(12, 1))],
+              [sg.Radio('Hinge', 'loss', size=(12, 1)), sg.Radio('Huber', 'loss', size=(12, 1))],
+              [sg.Radio('Kullerback', 'loss', size=(12, 1)), sg.Radio('MAE(L1)', 'loss', size=(12, 1))],
+              [sg.Radio('MSE(L2)', 'loss', size=(12, 1)), sg.Radio('MB(L0)', 'loss', size=(12, 1))],
+              [sg.Submit(), sg.Cancel()]]
+
+    button, values = form.LayoutAndRead(layout)
