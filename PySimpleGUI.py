@@ -4,6 +4,7 @@ from tkinter import filedialog
 from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
+from collections import OrderedDict
 import datetime
 import sys
 import textwrap
@@ -1142,6 +1143,27 @@ def EncodeRadioRowCol(row, col):
     RadValue = row * 1000 + col
     return RadValue
 
+#===== ListDict - New data type for returning values =====
+class ListDict(OrderedDict):
+    def __iter__(self):
+        for v in self.values():
+            yield v
+
+    def __getitem__(self, item):
+        if isinstance(item, slice):
+            return list(self.values())[item]
+        else:
+            return super().__getitem__(item)
+
+    def __str__(self):
+        return str(self.ToList())
+
+    def ToList(self):
+        output = []
+        for item in self.values():
+            output.append(item)
+        return output
+
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
 # format of return values is
 # (Button Pressed, input_values)
@@ -1155,7 +1177,8 @@ def BuildResults(form):
     results=form.Results
     button_pressed_text = None
     input_values = []
-    input_values_dictionary = {}
+    # input_values_dictionary = {}
+    input_values_dictionary = ListDict()
     key_counter = 0
     for row_num,row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
@@ -1255,10 +1278,9 @@ def BuildResults(form):
         input_values_dictionary.pop(None, None)     # clean up dictionary include None was included
     except: pass
 
-    if not form.UseDictionary:
-        form.ReturnValues = button_pressed_text, input_values
-    else:
-        form.ReturnValues = button_pressed_text, input_values_dictionary
+    # return values are always a list dictionary now (ordered dict with added features)
+    form.ReturnValues = button_pressed_text, input_values_dictionary
+
     form.ReturnValuesDictionary = button_pressed_text, input_values_dictionary
     form.ResultsBuilt = True
     return form.ReturnValues
