@@ -11,6 +11,7 @@
   (Ver 2.8)
 
 [Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
+
 [COOKBOOK documentation now online!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
 Super-simple GUI to grasp... Powerfully customizable.
