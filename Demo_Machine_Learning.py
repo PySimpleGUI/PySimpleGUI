@@ -30,20 +30,27 @@ def MachineLearningGUI():
 
 
 def CustomMeter():
-
+    # create the progress bar element
     progress_bar = sg.ProgressBar(10000, orientation='h', size=(20,20))
-
+    # layout the form
     layout = [[sg.Text('A custom progress meter')],
               [progress_bar],
               [sg.Cancel()]]
 
+    # create the form
     form = sg.FlexForm('Custom Progress Meter')
+    # display the form as a non-blocking form
     form.LayoutAndRead(layout, non_blocking=True)
-
+    # loop that would normally do something useful
     for i in range(10000):
+        # check to see if the cancel button was clicked and exit loop if clicked
         button, values = form.ReadNonBlocking()
-        progress_bar.UpdateBar(i)
-
+        if button == 'Cancel' or values == None:
+            break
+        # update bar with loop value +1 so that bar eventually reaches the maximum
+        progress_bar.UpdateBar(i+1)
+    # done with loop... need to destroy the window as it's still open
+    form.CloseNonBlockingForm()
 
 if __name__ == '__main__':
     CustomMeter()
