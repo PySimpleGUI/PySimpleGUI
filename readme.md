@@ -116,13 +116,14 @@ Here is the code that produced the above screenshot.
              sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
             [sg.Text('_'  * 100, size=(70, 1))],
             [sg.Text('Choose Source and Destination Folders', size=(35, 1))],
-            [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
+            [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'),
+             sg.FolderBrowse()],
             [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
              sg.FolderBrowse()],
             [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', 'green'))]
-             ]
+        ]
 
-    button, values = form.LayoutAndRead(layout)
+        button, values = form.LayoutAndRead(layout)
 
  **A note on screen shots**
 You will see a number of different styles of buttons, data entry fields, etc, in this readme. They were all made with the same SDK, the only difference is in the settings that are specified on a per-element, row, form, or global basis.  One setting in particular, border_width, can make a big difference on the look of the form.  Some of the screenshots had a border_width of 6, others a value of 1.
@@ -1469,7 +1470,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
 | 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
-| 2.9.0 | Aug XX,2018 - Screen flash fix, do_not_clear input field option,
+| 2.9.0 | Aug XX,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict,
 
 
 ### Release Notes
@@ -1533,6 +1534,7 @@ GNU Lesser General Public License (LGPL 3) +
 
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
 * [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`
+* [Ruud van der Ham](https://forum.pythonistacafe.com/u/Ruud) for all the help he's provided as a Python-mentor. Quite a few tricky bits of logic was supplied by Ruud. The dual-purpose return values scheme is Ruud's for example
 
 
 ## How Do I
