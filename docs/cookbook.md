@@ -273,6 +273,7 @@ The architecture of some programs works better with button callbacks instead of 
 ## Realtime Buttons (Good For Raspberry Pi)
 This recipe implements a remote control interface for a robot.  There are 4 directions, forward, reverse, left, right.  When a button is clicked, PySimpleGUI immediately returns button events for as long as the buttons is held down.  When released, the button events stop.  This is an async/non-blocking form.
 
+![robot control](https://user-images.githubusercontent.com/13696193/44006710-d227f23e-9e56-11e8-89a3-2be5b2726199.jpg)
 
     import PySimpleGUI as sg
 
@@ -310,12 +311,14 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
 ## Easy Progress Meter
 This recipe shows just how easy it is to add a progress meter to your code.
 
+![progress meter 6](https://user-images.githubusercontent.com/13696193/43955982-73b33b38-9c70-11e8-8b07-cc1473a58a73.jpg)
+
     import PySimpleGUI as sg
 
     for i in range(1000):
         sg.EasyProgressMeter('Easy Meter Example', i+1, 1000)
 
-![progress meter 6](https://user-images.githubusercontent.com/13696193/43955982-73b33b38-9c70-11e8-8b07-cc1473a58a73.jpg)
+
 -----
 ## Tabbed Form
 Tabbed forms are **easy** to make and use in PySimpleGUI.  You simple may your layouts for each tab and then instead of `LayoutAndRead` you call `ShowTabbedForm`.  Results are returned as a list of form results.  Each tab acts like a single form.
@@ -497,3 +500,40 @@ A standard non-blocking GUI with lots of inputs.
               [sg.Submit(), sg.Cancel()]]
 
     button, values = form.LayoutAndRead(layout)
+
+-------
+## Custom Progress Meter / Progress Bar
+Perhaps you don't want all the statistics that the EasyProgressMeter provides and want to create your own progress bar. Use this recipe to do just that.
+
+![custom progress meter](https://user-images.githubusercontent.com/13696193/43982958-3393b23e-9cc6-11e8-8b49-e7f4890cbc4b.jpg)
+
+
+    import PySimpleGUI as sg
+
+    def CustomMeter():
+        # create the progress bar element
+      progress_bar = sg.ProgressBar(10000, orientation='h', size=(20,20))
+        # layout the form
+      layout = [[sg.Text('A custom progress meter')],
+                  [progress_bar],
+                  [sg.Cancel()]]
+
+      # create the form
+      form = sg.FlexForm('Custom Progress Meter')
+        # display the form as a non-blocking form
+      form.LayoutAndRead(layout, non_blocking=True)
+        # loop that would normally do something useful
+      for i in range(10000):
+            # check to see if the cancel button was clicked and exit loop if clicked
+	        button, values = form.ReadNonBlocking()
+            if button == 'Cancel'  or values == None:
+                break
+      # update bar with loop value +1 so that bar eventually reaches the maximum
+      progress_bar.UpdateBar(i+1)
+        # done with loop... need to destroy the window as it's still open
+      form.CloseNonBlockingForm()
+
+   ----
+
+
+
