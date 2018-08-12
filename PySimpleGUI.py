@@ -1,10 +1,10 @@
+
 #!/usr/bin/env Python3
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
-from collections import OrderedDict
 import datetime
 import sys
 import textwrap
@@ -14,7 +14,7 @@ DEFAULT_WINDOW_ICON = ''
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
 DEFAULT_MARGINS = (10,5)                # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in pixels
-DEFAULT_AUTOSIZE_TEXT = True
+DEFAULT_AUTOSIZE_TEXT = False
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
 DEFAULT_TEXT_JUSTIFICATION = 'left'
@@ -1143,37 +1143,6 @@ def EncodeRadioRowCol(row, col):
     RadValue = row * 1000 + col
     return RadValue
 
-#===== ListDict - New data type for returning values =====
-class ListDict(OrderedDict):
-    def __iter__(self):
-        for v in self.values():
-            yield v
-
-    def __getitem__(self, item):
-        if isinstance(item, slice):
-            return list(self.values())[item]
-        else:
-            return super().__getitem__(item)
-
-    def __str__(self):
-        listlike = True
-        for i, key in enumerate(self.keys()):
-            if i != key:
-                listlike = False
-
-        if listlike:
-            return str(list(self.values()))
-        else:
-            output = [("'" + k + "'" if isinstance(k, str) else str(k)) + ': ' + (
-                "'" + v + "'" if isinstance(v, str) else str(v)) for k, v in self.items()]
-            return '{' + ', '.join(output) + '}'
-
-    def ToList(self):
-        output = []
-        for item in self.values():
-            output.append(item)
-        return output
-
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
 # format of return values is
 # (Button Pressed, input_values)
@@ -1187,8 +1156,7 @@ def BuildResults(form):
     results=form.Results
     button_pressed_text = None
     input_values = []
-    # input_values_dictionary = {}
-    input_values_dictionary = ListDict()
+    input_values_dictionary = {}
     key_counter = 0
     for row_num,row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
@@ -1266,11 +1234,9 @@ def BuildResults(form):
                     value = 0
                 results[row_num][col_num] = value
                 input_values.append(value)
-                if element.Key is None:
-                    input_values_dictionary[key_counter] = value
-                    key_counter +=1
-                else:
+                try:
                     input_values_dictionary[element.Key] = value
+                except: pass
             elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 try:
                     value=element.TKText.get(1.0, tk.END)
@@ -1290,9 +1256,10 @@ def BuildResults(form):
         input_values_dictionary.pop(None, None)     # clean up dictionary include None was included
     except: pass
 
-    # return values are always a list dictionary now (ordered dict with added features)
-    form.ReturnValues = button_pressed_text, input_values_dictionary
-
+    if not form.UseDictionary:
+        form.ReturnValues = button_pressed_text, input_values
+    else:
+        form.ReturnValues = button_pressed_text, input_values_dictionary
     form.ReturnValuesDictionary = button_pressed_text, input_values_dictionary
     form.ResultsBuilt = True
     return form.ReturnValues
@@ -2453,40 +2420,6 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
 
     return True
 
-#################### ChangeLookAndFeel #######################
-# Predefined settings that will change the colors and styles #
-# of the elements.                                           #
-##############################################################
-def ChangeLookAndFeel(index):
-    # look and feel table
-    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC', 'BUTTON': ('white', '#475841'),
-                       'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
-
-                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7', 'BUTTON': ('white', '#658268'), 'PROGRESS':('#247BA0','#F8FAF0')},
-
-                        'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF', 'BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR}}
-
-
-    try:
-        colors = look_and_feel[index]
-
-        SetOptions(background_color=colors['BACKGROUND'],
-                      text_element_background_color=colors['BACKGROUND'],
-                      element_background_color=colors['BACKGROUND'],
-                      text_color=colors['TEXT'],
-                      input_elements_background_color=colors['INPUT'],
-                      button_color=colors['BUTTON'],
-                      progress_meter_color=colors['PROGRESS'],
-                      border_width=0,
-                      slider_border_width=0,
-                      progress_meter_border_depth=0,
-                      scrollbar_color=(colors['INPUT']),
-                      element_text_color=colors['TEXT'])
-    except:    # most likely an index out of range
-        pass
-
-
-
 # ============================== sprint ======#
 # Is identical to the Scrolled Text Box       #
 # Provides a crude 'print' mechanism but in a #
@@ -2508,12 +2441,12 @@ def ObjToString(obj, extra='    '):
 
 
 def main():
-    with FlexForm('Demo form..') as form:
+    with FlexForm('Demo form..', auto_size_text=True) as form:
         form_rows = [[Text('You are running the PySimpleGUI.py file itself')],
                      [Text('You should be importing it rather than running it\n')],
                      [Text('Here is your sample input form....')],
-                     [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
-                     [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
+                     [Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), InputText('Source', focus=True),FolderBrowse()],
+                     [Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), InputText('Dest'), FolderBrowse()],
                      [Submit(bind_return_key=True), Cancel()]]
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
