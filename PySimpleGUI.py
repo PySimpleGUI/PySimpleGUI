@@ -1234,9 +1234,11 @@ def BuildResults(form):
                     value = 0
                 results[row_num][col_num] = value
                 input_values.append(value)
-                try:
+                if element.Key is None:
+                    input_values_dictionary[key_counter] = value
+                    key_counter +=1
+                else:
                     input_values_dictionary[element.Key] = value
-                except: pass
             elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 try:
                     value=element.TKText.get(1.0, tk.END)
