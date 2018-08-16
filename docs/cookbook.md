@@ -535,7 +535,7 @@ Perhaps you don't want all the statistics that the EasyProgressMeter provides an
 
    ----
 
-   ## The One-Line GUI
+## The One-Line GUI
 
 For those of you into super-compact code, a complete customized GUI can be specified, shown, and received the results using a single line of Python code.  The way this is done is to combine the call to `FlexForm` and the call to `LayoutAndRead`.  `FlexForm` returns a `FlexForm` object which has the `LayoutAndRead` method.
 
