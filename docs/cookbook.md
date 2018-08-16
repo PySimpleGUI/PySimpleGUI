@@ -273,6 +273,7 @@ The architecture of some programs works better with button callbacks instead of 
 ## Realtime Buttons (Good For Raspberry Pi)
 This recipe implements a remote control interface for a robot.  There are 4 directions, forward, reverse, left, right.  When a button is clicked, PySimpleGUI immediately returns button events for as long as the buttons is held down.  When released, the button events stop.  This is an async/non-blocking form.
 
+![robot control](https://user-images.githubusercontent.com/13696193/44006710-d227f23e-9e56-11e8-89a3-2be5b2726199.jpg)
 
     import PySimpleGUI as sg
 
@@ -310,12 +311,14 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
 ## Easy Progress Meter
 This recipe shows just how easy it is to add a progress meter to your code.
 
+![progress meter 6](https://user-images.githubusercontent.com/13696193/43955982-73b33b38-9c70-11e8-8b07-cc1473a58a73.jpg)
+
     import PySimpleGUI as sg
 
     for i in range(1000):
         sg.EasyProgressMeter('Easy Meter Example', i+1, 1000)
 
-![progress meter 6](https://user-images.githubusercontent.com/13696193/43955982-73b33b38-9c70-11e8-8b07-cc1473a58a73.jpg)
+
 -----
 ## Tabbed Form
 Tabbed forms are **easy** to make and use in PySimpleGUI.  You simple may your layouts for each tab and then instead of `LayoutAndRead` you call `ShowTabbedForm`.  Results are returned as a list of form results.  Each tab acts like a single form.
@@ -497,3 +500,96 @@ A standard non-blocking GUI with lots of inputs.
               [sg.Submit(), sg.Cancel()]]
 
     button, values = form.LayoutAndRead(layout)
+
+-------
+## Custom Progress Meter / Progress Bar
+Perhaps you don't want all the statistics that the EasyProgressMeter provides and want to create your own progress bar. Use this recipe to do just that.
+
+![custom progress meter](https://user-images.githubusercontent.com/13696193/43982958-3393b23e-9cc6-11e8-8b49-e7f4890cbc4b.jpg)
+
+
+    import PySimpleGUI as sg
+
+    def CustomMeter():
+        # create the progress bar element
+      progress_bar = sg.ProgressBar(10000, orientation='h', size=(20,20))
+        # layout the form
+      layout = [[sg.Text('A custom progress meter')],
+                  [progress_bar],
+                  [sg.Cancel()]]
+
+      # create the form
+      form = sg.FlexForm('Custom Progress Meter')
+        # display the form as a non-blocking form
+      form.LayoutAndRead(layout, non_blocking=True)
+        # loop that would normally do something useful
+      for i in range(10000):
+            # check to see if the cancel button was clicked and exit loop if clicked
+	        button, values = form.ReadNonBlocking()
+            if button == 'Cancel'  or values == None:
+                break
+      # update bar with loop value +1 so that bar eventually reaches the maximum
+      progress_bar.UpdateBar(i+1)
+        # done with loop... need to destroy the window as it's still open
+      form.CloseNonBlockingForm()
+
+   ----
+
+   ## The One-Line GUI
+
+For those of you into super-compact code, a complete customized GUI can be specified, shown, and received the results using a single line of Python code.  The way this is done is to combine the call to `FlexForm` and the call to `LayoutAndRead`.  `FlexForm` returns a `FlexForm` object which has the `LayoutAndRead` method.
+
+
+![simple](https://user-images.githubusercontent.com/13696193/44227935-ecb53b80-a161-11e8-968b-b3f963404dec.jpg)
+
+
+Instead of
+
+    import PySimpleGUI as sg
+
+    layout = [[sg.Text('Filename')],
+              [sg.Input(), sg.FileBrowse()],
+              [sg.OK(), sg.Cancel()] ]
+
+    button, (number,) = sg.FlexForm('Get filename example').LayoutAndRead(layout)
+
+you can write this line of code for the exact same result (OK, two lines with the import):
+
+    import PySimpleGUI as sg
+
+    button, (filename,) = sg.FlexForm('Get filename example'). LayoutAndRead([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
+--------------------
+## Multiple Columns
+Starting in version 2.9 (not yet released but you can get from current GitHub) you can use the Column Element.  A Column is required when you have a tall element to the left of smaller elements.
+
+This example uses a Column.  There is a Listbox on the left that is 3 rows high.  To the right of it are 3 single rows of text and input. These 3 rows are in a Column Element.
+
+To make it easier to see the Column in the window, the Column background has been shaded blue.  The code is wordier than normal due to the blue shading.  Each element in the column needs to have the color set to match blue background.
+
+![snap0202](https://user-images.githubusercontent.com/13696193/44234671-27749f00-a175-11e8-9e66-a3fccf6c077e.jpg)
+
+
+    import PySimpleGUI as sg
+
+    # Demo of how columns work
+    # Form has on row 1 a vertical slider followed by a COLUMN with 7 rows
+    # Prior to the Column element, this layout was not possible
+    # Columns layouts look identical to form layouts, they are a list of lists of elements.
+
+    # sg.ChangeLookAndFeel('BlueMono')
+
+    # Column layout
+    col = [[sg.Text('col Row 1', text_color='white', background_color='blue')],
+           [sg.Text('col Row 2', text_color='white', background_color='blue'), sg.Input('col input 1')],
+           [sg.Text('col Row 3', text_color='white', background_color='blue'), sg.Input('col input 2')]]
+
+    layout = [[sg.Listbox(values=('Listbox Item 1', 'Listbox Item 2', 'Listbox Item 3'), select_mode=sg.LISTBOX_SELECT_MODE_MULTIPLE, size=(20,3)), sg.Column(col, background_color='blue')],
+              [sg.Input('Last input')],
+              [sg.OK()]]
+
+    # Display the form and get values
+    # If you're willing to not use the "context manager" design pattern, then it's possible
+    # to collapse the form display and read down to a single line of code.
+    button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
+
+    sg.MsgBox(button, values, line_width=200)
