@@ -466,7 +466,7 @@ Read on for detailed instructions on the calls that show the form and return you
 ## Pattern 1 - With Context Manager
 
 
-    with sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
+    with sg.FlexForm('SHA-1 & 256 Hash') as form:
         form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [sg.InputText(), sg.FileBrowse()],
                      [sg.Submit(), sg.Cancel()]]
@@ -475,21 +475,33 @@ Read on for detailed instructions on the calls that show the form and return you
 ## Pattern 2 - No Context Manager
 
 
-    form = sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
+    form = sg.FlexForm('SHA-1 & 256 Hash')
     form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                  [sg.InputText(), sg.FileBrowse()],
                  [sg.Submit(), sg.Cancel()]]
     button, (source_filename,) = form.LayoutAndRead(form_rows)
 
+ ----
+
+## Pattern 3 - Short Form
 
 
-These 2 design patters both produce this custom form:
+    form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
+                 [sg.InputText(), sg.FileBrowse()],
+                 [sg.Submit(), sg.Cancel()]]
+    button, (source_filename,) = sg.FlexForm('SHA-1 & 256 Hash').LayoutAndRead(form_rows)
+
+
+
+These 3 design patterns both produce this custom form:
 
 ![snap0134](https://user-images.githubusercontent.com/13696193/43162410-e7775466-8f58-11e8-8d6a-da4772c00dd8.jpg)
 
-It's important to use the "with" context manager so that resources are freed as quickly as possible, using the currently executing thread.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
+When you're code leaves forms open or you show many forms, then it's important to use the "with" context manager so that resources are freed as quickly as possible.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
 
 The second design pattern is not context manager based.  If you are struggling with an unknown error, try modifying the code to run without a context manager.   To do so, you simple remove the with, stick the form on the front of that statement, and un-indent the with-block code.
+
+The third is the 'compact form'.  It compacts down into 2 lines of code.  One line is  your form definition. The next is the call that shows the form and returns the values.  You can use this pattern for simple, short programs where resource allocation isn't an issue.
 
 You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
@@ -1202,7 +1214,7 @@ Somewhere later in your code will be your main event loop. This is where you do 
             break
       time.sleep(.01)
 
-This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `form.ReadNonBlocking` will  return a button name matching the name on the button that was depressed.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons ules anutton was  clicked.
+This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `form.ReadNonBlocking` will  return a button name matching the name on the button that was depressed.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons until a button is again clicked.
 
 **File Types**
 The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
@@ -1283,7 +1295,54 @@ Here's a complete solution for a chat-window using an Async form with an Output 
                     print(value)
                 else:
                     break
+-------------------
+## Columns
+Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a form within a form.  And, yes, you can have a Column within a Column if you want.
 
+Columns are specified in exactly the same way as a form is, as a list of lists.
+
+Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
+
+
+![column example](https://user-images.githubusercontent.com/13696193/44215113-b1097a00-a13f-11e8-96d0-f3511036494e.jpg)
+
+This code produced the above window.
+
+
+    import PySimpleGUI as sg
+
+    # Demo of how columns work
+    # Form has on row 1 a vertical slider followed by a COLUMN with 7 rows
+    # Prior to the Column element, this layout was not possible
+    # Columns layouts look identical to form layouts, they are a list of lists of elements.
+
+    form = sg.FlexForm('Columns')                                   # blank form
+
+    # Column layout
+    col = [[sg.Text('col Row 1')],
+           [sg.Text('col Row 2'), sg.Input('col input 1')],
+           [sg.Text('col Row 3'), sg.Input('col input 2')],
+           [sg.Text('col Row 4'), sg.Input('col input 3')],
+           [sg.Text('col Row 5'), sg.Input('col input 4')],
+           [sg.Text('col Row 6'), sg.Input('col input 5')],
+           [sg.Text('col Row 7'), sg.Input('col input 6')]]
+
+    layout = [[sg.Slider(range=(1,100), default_value=10, orientation='v', size=(8,20)), sg.Column(col)],
+              [sg.In('Last input')],
+              [sg.OK()]]
+
+    # Display the form and get values
+    # If you're willing to not use the "context manager" design pattern, then it's possible
+    # to collapse the form display and read down to a single line of code.
+    button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
+
+    sg.MsgBox(button, values, line_width=200)
+
+The Column Element has 1 required parameter and 1 optional (the layout and the background color).  Setting the background color has the same effect as setting the form's background color, except it only affects the column rectangle.
+
+    Column(layout, background_color=None)
+
+The default background color for Columns is the same as the default window background color.  If you change the look and feel of the form, the column background will match the form background automatically.
 
 ## Tabbed Forms
 Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
@@ -1679,7 +1738,7 @@ Here are the steps to run that application
     To run it:
           Python HowDoI.py
 
-The pip command is all there is to the setup.
+The pip command is all there is to the setup.    
 
 The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
@@ -1688,3 +1747,4 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
