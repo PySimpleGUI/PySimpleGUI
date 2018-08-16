@@ -144,7 +144,6 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 - Return values are a list of button presses and input values.
 - Return values can also be represented as a dictionary
 
-It's stunning that after so many years Python still hasn't put forth a GUI framework that truly fits the language's basic  data structures, especially lists.  It's hard to argue with the success to be had in quickly building GUI applications using this package's syntax.
 
   -----
 ## Getting Started with PySimpleGUI
@@ -380,12 +379,94 @@ Two other types of forms exist.
 1. Persistent form - rather than closing on button clicks, the show form function returns and the form continues to be visible.  This is good for applications like a chat window.
 2. Asynchronous form - the trickiest of the lot. Great care must be exercised.  Examples are an MP3 player or status dashboard.  Async forms are updated (refreshed) on a periodic basis.
 
-It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.   Let's start with a basic Browse for a file and do something with it.
+It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.
+
+## The Form Designer
+The good news to newcomers to GUI programming is that PySimpleGUI has a form designer.  Better yet, the form designer requires no training and everyone knows how to use it.
+
+![gui0_1](https://user-images.githubusercontent.com/13696193/44159598-e2257400-a085-11e8-9b02-343e72cc75c3.JPG)
+
+It's a manual process, but if you follow the instructions, it will take only a minute to do and the result will be a nice looking GUI.  The steps you'll take are:
+1. Sketch your GUI on paper
+2. Divide your GUI up into rows
+3. Label each Element with the Element name
+4. Write your Python code using the labels as pseudo-code
+
+Let's take a couple of examples.
+
+**Enter a number**.... Popular beginner programs are often based on a game or logic puzzle that requires the user to enter something, like a number.  The "high-low" answer game comes to mind where you try to guess the number based on high or low tips.
+
+**Step 1- Sketch the GUI**
+![gui1_1](https://user-images.githubusercontent.com/13696193/44160127-6a584900-a087-11e8-8fec-09099a8e16f6.JPG)
+
+**Step 2 - Divide into rows**
+
+![gui2_1](https://user-images.githubusercontent.com/13696193/44160128-6a584900-a087-11e8-9973-af866fb94c56.JPG)
+
+Step 3 - Label elements
+
+![gui6_1](https://user-images.githubusercontent.com/13696193/44160116-64626800-a087-11e8-8b57-671c0461b508.JPG)
+
+Step 4 - Write the code
+The code we're writing is the layout of the GUI itself.  This tutorial only focuses on getting the window code written, not the stuff to display it, get results.
+
+We have only 1 element on the first row, some text.  Rows are written as a "list of elements", so we'll need [  ] to make a list.  Here's the code for row 1
+
+    [ sg.Text('Enter a number') ]
+
+Row 2 has 1 elements, an input field.
+
+    [ sg.Input() ]
+Row 3 has an OK button
+
+    [ sg.OK() ]
+
+Now that we've got the 3 rows defined, they are put into a list that represents the entire window.
+
+    layout = [ [sg.Text('Enter a Number')],
+               [sg.Input()],
+               [sg.OK()] ]
+
+Finally we can put it all together into a program that will display our window.
+
+    import PySimpleGUI as sg
+
+    layout = [[sg.Text('Enter a Number')],
+              [sg.Input()],
+              [sg.OK()] ]
+
+    button, (number,) = sg.FlexForm('Enter a number example').LayoutAndRead(layout)
+
+    sg.MsgBox(button, number)
+
+### Example 2 - Get a filename
+Let's say you've got a utility you've written that operates on some input file and you're ready to use a GUI to enter than filename rather than the command line.  Follow the same steps as the previous example - draw your form on paper, break it up into rows, label the elements.
+
+![gui4_1](https://user-images.githubusercontent.com/13696193/44160132-6a584900-a087-11e8-862f-7d791a67ee5d.JPG)
+![gui5_1](https://user-images.githubusercontent.com/13696193/44160133-6af0df80-a087-11e8-9dec-bb4d4c59393d.JPG)
+
+Writing the code for this one is just as straightforward.  There is one tricky thing, that browse for a file button.  Thankfully PySimpleGUI takes care of associating it with the input field next to it.  As a result, the code looks almost exactly like the form on the paper.
+
+    import PySimpleGUI as sg
+
+    layout = [[sg.Text('Filename')],
+              [sg.Input(), sg.FileBrowse()],
+              [sg.OK(), sg.Cancel()] ]
+
+    button, (number,) = sg.FlexForm('Get filename example').LayoutAndRead(layout)
+
+    sg.MsgBox(button, number)
+
+
+Read on for detailed instructions on the calls that show the form and return your results.
+
+
+
 # Copy these design patterns!
 ## Pattern 1 - With Context Manager
 
 
-    with sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
+    with sg.FlexForm('SHA-1 & 256 Hash') as form:
         form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [sg.InputText(), sg.FileBrowse()],
                      [sg.Submit(), sg.Cancel()]]
@@ -394,21 +475,33 @@ It's both not enjoyable nor helpful to immediately jump into tweaking each and e
 ## Pattern 2 - No Context Manager
 
 
-    form = sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True)
+    form = sg.FlexForm('SHA-1 & 256 Hash')
     form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                  [sg.InputText(), sg.FileBrowse()],
                  [sg.Submit(), sg.Cancel()]]
     button, (source_filename,) = form.LayoutAndRead(form_rows)
 
+ ----
+
+## Pattern 3 - Short Form
 
 
-These 2 design patters both produce this custom form:
+    form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
+                 [sg.InputText(), sg.FileBrowse()],
+                 [sg.Submit(), sg.Cancel()]]
+    button, (source_filename,) = sg.FlexForm('SHA-1 & 256 Hash').LayoutAndRead(form_rows)
+
+
+
+These 3 design patterns both produce this custom form:
 
 ![snap0134](https://user-images.githubusercontent.com/13696193/43162410-e7775466-8f58-11e8-8d6a-da4772c00dd8.jpg)
 
-It's important to use the "with" context manager so that resources are freed as quickly as possible, using the currently executing thread.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
+When you're code leaves forms open or you show many forms, then it's important to use the "with" context manager so that resources are freed as quickly as possible.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
 
 The second design pattern is not context manager based.  If you are struggling with an unknown error, try modifying the code to run without a context manager.   To do so, you simple remove the with, stick the form on the front of that statement, and un-indent the with-block code.
+
+The third is the 'compact form'.  It compacts down into 2 lines of code.  One line is  your form definition. The next is the call that shows the form and returns the values.  You can use this pattern for simple, short programs where resource allocation isn't an issue.
 
 You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
@@ -449,6 +542,24 @@ In our example form, there are 2 fields, so the return values from this form wil
 In the statement that shows and reads the form, the two input fields are directly assigned to the caller's variables `folder_path` and `file_path`, ready to use.  No parsing no callbacks.
 
 Isn't this what almost every Python programmer looking for a GUI wants??  Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of tkinter code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  I chose 4.
+
+
+
+
+### The Auto-Packer
+
+Once you've laid out your elements into, it's the job of the Auto-Packer to place your elements into a window frame.
+
+The layout of custom GUIs is made trivial by the use of the Auto-Packer.  GUI frameworks often use a grid system and sometimes have a "pack" function that's used to place widgets into a window.  It's almost always a confusing exercise to use them.
+
+PySimpleGUI uses a "row by row" approach to building GUIs.  When you were to sketch your GUI out on a sheet of paper and then draw horizontal lines across the page under each widget then you would have a several "rows" of widgets.
+
+For each row in your GUI, you will have a list of elements.  In Python this list is a simple Python list.  An entire GUI window is a list of rows, one after another.
+
+This is how your GUI is created, one row at a time, with one row stacked on top of another.  This visual form of coding makes GUI creation go so much quicker.
+
+    layout = [ [ Row 1 Elements],
+               [ Row 2 Elements] ]
 
 
 ### Laying out your form
@@ -1103,7 +1214,7 @@ Somewhere later in your code will be your main event loop. This is where you do 
             break
       time.sleep(.01)
 
-This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `form.ReadNonBlocking` will  return a button name matching the name on the button that was depressed.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons ules anutton was  clicked.
+This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `form.ReadNonBlocking` will  return a button name matching the name on the button that was depressed.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons until a button is again clicked.
 
 **File Types**
 The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
@@ -1184,7 +1295,54 @@ Here's a complete solution for a chat-window using an Async form with an Output 
                     print(value)
                 else:
                     break
+-------------------
+## Columns
+Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a form within a form.  And, yes, you can have a Column within a Column if you want.
 
+Columns are specified in exactly the same way as a form is, as a list of lists.
+
+Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
+
+
+![column example](https://user-images.githubusercontent.com/13696193/44215113-b1097a00-a13f-11e8-96d0-f3511036494e.jpg)
+
+This code produced the above window.
+
+
+    import PySimpleGUI as sg
+
+    # Demo of how columns work
+    # Form has on row 1 a vertical slider followed by a COLUMN with 7 rows
+    # Prior to the Column element, this layout was not possible
+    # Columns layouts look identical to form layouts, they are a list of lists of elements.
+
+    form = sg.FlexForm('Columns')                                   # blank form
+
+    # Column layout
+    col = [[sg.Text('col Row 1')],
+           [sg.Text('col Row 2'), sg.Input('col input 1')],
+           [sg.Text('col Row 3'), sg.Input('col input 2')],
+           [sg.Text('col Row 4'), sg.Input('col input 3')],
+           [sg.Text('col Row 5'), sg.Input('col input 4')],
+           [sg.Text('col Row 6'), sg.Input('col input 5')],
+           [sg.Text('col Row 7'), sg.Input('col input 6')]]
+
+    layout = [[sg.Slider(range=(1,100), default_value=10, orientation='v', size=(8,20)), sg.Column(col)],
+              [sg.In('Last input')],
+              [sg.OK()]]
+
+    # Display the form and get values
+    # If you're willing to not use the "context manager" design pattern, then it's possible
+    # to collapse the form display and read down to a single line of code.
+    button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
+
+    sg.MsgBox(button, values, line_width=200)
+
+The Column Element has 1 required parameter and 1 optional (the layout and the background color).  Setting the background color has the same effect as setting the form's background color, except it only affects the column rectangle.
+
+    Column(layout, background_color=None)
+
+The default background color for Columns is the same as the default window background color.  If you change the look and feel of the form, the column background will match the form background automatically.
 
 ## Tabbed Forms
 Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
@@ -1247,24 +1405,27 @@ Let's have some fun customizing!  Make PySimpleGUI look the way you want it to l
             auto_size_buttons=None
             font=None
             border_width=None
-               slider_border_width=None
-               slider_relief=None
-               slider_orientation=None
-               autoclose_time=None
-               message_box_line_width=None
-               progress_meter_border_depth=None
-               progress_meter_style=None
-               progress_meter_relief=None
-               progress_meter_color=None
-               progress_meter_size=None
-               text_justification=None
-               background_color=None
-               element_background_color=None
-               text_element_background_color=None
-               input_elements_background_color=None
-               scrollbar_color=None, text_color=None
-               debug_win_size=(None,None)
-               window_location=(None,None)
+            slider_border_width=None
+            slider_relief=None
+            slider_orientation=None
+            autoclose_time=None
+            message_box_line_width=None
+            progress_meter_border_depth=None
+            progress_meter_style=None
+            progress_meter_relief=None
+            progress_meter_color=None
+            progress_meter_size=None
+            text_justification=None
+            text_color=None
+            background_color=None
+            element_background_color=None
+            text_element_background_color=None
+            input_elements_background_color=None
+            element_text_color=None
+            input_text_color=None
+            scrollbar_color=None, text_color=None
+            debug_win_size=(None,None)
+            window_location=(None,None)
 
 Explanation of parameters
 
@@ -1291,6 +1452,8 @@ Explanation of parameters
              element_background_color - Background color of the elements
              text_element_background_color - Text element background color
              input_elements_background_color - Input fields background color
+             element_text_color - Text color of elements that have text, like Radio Buttons
+             input_text_color - Color of the text that you type in
              scrollbar_color - Color for scrollbars (may not always work)
              text_color - Text element default text color
              text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
@@ -1315,7 +1478,7 @@ When do you use a non-blocking form? A couple of examples are
 * Progress Meters - when you want to make your own progress meters
 * Output using print to a scrolled text element. Good for debugging.
 
-Word of warning... version 2.2, the currently released, and upcoming version 2.3 differ in the return code for the `ReadNonBlocking` call.  Previously the function returned 2 values, except when the form is closed using the "X" which returned a single value of `None`.  The *new* way is that `ReadNonBlocking` always returns 2 values.  If the user closed the form with the "X" then the return values will be None, None.  You will want to key off the second value to catch this case.
+Word of warning... starting with version 2.2 there is a change in the return values from the`ReadNonBlocking` call.  Previously the function returned 2 values, except when the form is closed using the "X" which returned a single value of `None`.  The *new* way is that `ReadNonBlocking` always returns 2 values.  If the user closed the form with the "X" then the return values will be None, None.  You will want to key off the second value to catch this case.
 The proper code to check if the user has exited the form will be a polling-loop that looks something like this:
 
     while True:
@@ -1394,13 +1557,19 @@ That's it... this example follows the async design pattern well.
 ## Sample Applications
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
 
-`Demo Recipes.py` - Sample forms for all major form types and situations. This is the place to get your code template from.  Includes asynchronous forms, etc.
+`Demo_Recipes.py` - Sample forms for all major form types and situations. This is the place to get your code template from.  Includes asynchronous forms, etc.    Start here!
 
-`Demo DisplayHash1and256.py` - Demonstrates using High Level API calls to get a filename
+`Demo_Compare_Files` - Takes 2 filenames as input.  Does a byte for byte compare and returns the results.
 
-`Demo DupliucateFileFinder.py` - Demonstrates High Level API to get a folder & Easy Progress Meter to show progress of the file scanning
+  `Demo_Dictionary` - Simple form demonstrating how return values in dictionary form work.
 
-`Demo HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program could forever change how you code. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.  If anyone wants to help me package this application up, I could use a hand.
+ `Demo_DisplayHash1and256` - Presents 3 methods of gathering the same user input using both high-level APIs and lower-level.
+
+Demo_Func_Callback_Simulation - Shows how callback functions can be simulated. This is particularly good for the Raspberry Pi and other embedded type applications.
+
+`Demo_DuplicateFileFinder.py` - Demonstrates High Level API to get a folder & Easy Progress Meter to show progress of the file scanning
+
+`Demo_HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program **could forever change how you code**. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.  If anyone wants to help me package this application up and release as a standalone application, then speak up on the GitHub!
 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize
@@ -1417,6 +1586,22 @@ This will turn all of your print statements into prints that display in a window
 
 **Look and Feel**
 Dial in the look and feel that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
+Or beginning in version 2.9 you can choose from a look and feel using pre-defined color schemes.   Call ChangeLookAndFeel with a description string.
+
+    sg.ChangeLookAndFeel('GreenTan')
+
+Valid values for the  description string are:
+
+		GreenTan
+		LightGreen
+		BluePurple
+		Purple
+		BlueMono
+		GreenMono
+		BrownBlue
+		BrightColors
+		TealMono
+
 
 **ObjToString**
 Ever wanted to easily display an objects contents easily?  Use ObjToString to get a nicely formatted recursive walk of your objects.
@@ -1470,7 +1655,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
 | 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
-| 2.9.0 | Aug XX,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict,
+| 2.9.0 | Aug XX,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict, removed text target from progress bar, rework of return values and initial return values, removed legacy Form.Refresh() method (replaced by Form.ReadNonBlockingForm()), COLUMN elements!!,
 
 
 ### Release Notes
@@ -1522,6 +1707,9 @@ In Python, functions behave just like object. When you're placing a Text Element
 **Lists**
 It seemed quite natural to use Python's powerful list constructs when possible.  The form is specified as a series of lists.  Each "row" of the GUI is represented as a list of Elements. When the form read returns the results to the user, all of the results are presented as a single list.  This makes reading a form's values super-simple to do in a single line of Python code.
 
+**Dictionaries**
+Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.
+
 
 ## Authors
 MikeTheWatchGuy
@@ -1550,7 +1738,7 @@ Here are the steps to run that application
     To run it:
           Python HowDoI.py
 
-The pip command is all there is to the setup.
+The pip command is all there is to the setup.    
 
 The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
@@ -1559,3 +1747,4 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
