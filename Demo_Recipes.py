@@ -6,13 +6,13 @@ import PySimpleGUI as sg
 def SourceDestFolders():
     with sg.FlexForm('Demo Source / Destination Folders') as form:
         form_rows = ([sg.Text('Enter the Source and Destination folders')],
-                     [sg.Text('Source Folder', size=(15, 1), justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
-                     [sg.Text('Destination Folder', size=(15, 1), justification='right'), sg.InputText('Dest'), sg.FolderBrowse()],
+                     [sg.Text('Source Folder', size=(15, 1), justification='right'), sg.InputText('Source', key='source'), sg.FolderBrowse()],
+                     [sg.Text('Destination Folder', size=(15, 1), justification='right'), sg.InputText('Dest', key='dest'), sg.FolderBrowse()],
                      [sg.Submit(), sg.Cancel()])
 
-        button, (source, dest) = form.LayoutAndRead(form_rows)
+        button, values = form.LayoutAndRead(form_rows)
     if button == 'Submit':
-        sg.MsgBox('Submitted', 'The user entered source:', source, 'Destination folder:', dest, 'Using button', button)
+        sg.MsgBox('Submitted', values, 'The user entered source:', values['source'], 'Destination folder:', values['dest'], 'Using button', button)
     else:
         sg.MsgBoxError('Cancelled', 'User Cancelled')
 
@@ -160,20 +160,26 @@ def NonBlockingPeriodicUpdateForm():
     # Show a form that's a running counter
     form = sg.FlexForm('Running Timer', auto_size_text=True)
     text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center')
-    form_rows = [[sg.Text('Non blocking GUI with updates')],
+    form_rows = [[sg.Text('Stopwatch')],
                  [text_element],
-                 [sg.T(' ' * 15), sg.Quit()]]
+                 [sg.T(' ' * 5), sg.ReadFormButton('Start/Stop', focus=True), sg.Quit()]]
+
     form.LayoutAndRead(form_rows, non_blocking=True)
 
-    for i in range(1,50000):
-        text_element.Update('{:02d}:{:02d}.{:02d}'.format((i//100)//60, (i//100)%60, i%100))
+    timer_running = True
+    i = 0
+    while True:
+        i += 1 * (timer_running is True)
         button, values = form.ReadNonBlocking()
         if values is None or button == 'Quit':      # if user closed the window using X or clicked Quit button
             break
+        elif button == 'Start/Stop':
+            timer_running = not timer_running
+        text_element.Update('{:02d}:{:02d}.{:02d}'.format((i//100)//60, (i//100)%60, i%100))
+
         time.sleep(.01)
-    else:
         # if the loop finished then need to close the form for the user
-        form.CloseNonBlockingForm()
+    form.CloseNonBlockingForm()
     del(form)
 
 def DebugTest():
@@ -199,29 +205,29 @@ def ChangeLookAndFeel(colors):
 #=---------------------------------- main ------------------------------
 def main():
 
-    # Green & tan color scheme
-    colors1 = {'BACKGROUND' : '#9FB8AD', 'TEXT': sg.COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC', 'BUTTON': ('white', '#475841'),'PROGRESS':sg.DEFAULT_PROGRESS_BAR_COLOR }
-    # light green with tan
-    colors2 = {'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7', 'BUTTON': ('white', '#658268'), 'PROGRESS':('#247BA0','#F8FAF0')}
-    # blue with light blue color scheme
-    colors3 = {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF', 'BUTTON': ('white', '#303952'),'PROGRESS':sg.DEFAULT_PROGRESS_BAR_COLOR}
-
+    Everything()
     ChatBot()
-    Everything()
 
+    sg.ChangeLookAndFeel('BrownBlue')
     SourceDestFolders()
-    ChangeLookAndFeel(colors2)
-    ProgressMeter()
-    ChangeLookAndFeel(colors3)
+    sg.ChangeLookAndFeel('BlueMono')
     Everything()
-    ChangeLookAndFeel(colors2)
+    sg.ChangeLookAndFeel('BluePurple')
+    Everything()
+    sg.ChangeLookAndFeel('LightGreen')
+    Everything()
+    sg.ChangeLookAndFeel('GreenMono')
     MachineLearningGUI()
+    sg.ChangeLookAndFeel('TealMono')
+    NonBlockingPeriodicUpdateForm()
+    ChatBot()
+    ProgressMeter()
+    sg.ChangeLookAndFeel('Purple')
     Everything_NoContextManager()
     NonBlockingPeriodicUpdateForm_ContextManager()
-    NonBlockingPeriodicUpdateForm()
-    DebugTest()
 
     sg.MsgBox('Done with all recipes')
+    DebugTest()
 
 if __name__ == '__main__':
     main()

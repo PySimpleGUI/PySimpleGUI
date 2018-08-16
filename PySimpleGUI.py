@@ -42,6 +42,7 @@ DEFAULT_ELEMENT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR = None
 DEFAULT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_INPUT_ELEMENTS_COLOR = COLOR_SYSTEM_DEFAULT
+DEFAULT_INPUT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[0])    # (Text, Background) or (Color "on", Color) as a way to remember
 # DEFAULT_BUTTON_COLOR = (GREENS[3], TANS[0])    # Foreground, Background (None, None) == System Default
@@ -219,10 +220,11 @@ class InputText(Element):
         '''
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color if background_color is not None else DEFAULT_INPUT_ELEMENTS_COLOR
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
-        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
+        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key)
 
 
 
@@ -246,7 +248,9 @@ class InputCombo(Element):
         self.Values = values
         self.TKComboBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
+        super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key)
 
     def __del__(self):
         try:
@@ -284,7 +288,8 @@ class Listbox(Element):
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=text_color, key=key)
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key)
 
     def __del__(self):
         try:
@@ -376,7 +381,9 @@ class Spin(Element):
         self.DefaultValue = initial_value
         self.TKSpinBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=text_color, key=key)
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
+        super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key)
         return
 
     def __del__(self):
@@ -405,7 +412,9 @@ class Multiline(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=text_color, key=key)
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key)
         return
 
     def Update(self, NewValue):
@@ -555,7 +564,9 @@ class Output(Element):
         '''
         self.TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg, text_color=text_color)
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
+        super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg, text_color=fg)
 
     def __del__(self):
         try:
@@ -1366,9 +1377,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:           # if button has an image on it
-                    print('Button Image Filename being placed', element.ImageFilename)
                     photo = tk.PhotoImage(file=element.ImageFilename)
-                    print('PhotoImage object', ObjToString(photo))
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
                         if element.ImageSubsample:
@@ -2037,6 +2046,7 @@ def StartupTK(my_flex_form):
     global _my_windows
 
     ow = _my_windows.NumOpenWindows
+    # print('Starting TK open Windows = {}'.format(ow))
     root = tk.Tk() if not ow else tk.Toplevel()
     if my_flex_form.BackgroundColor is not None:
         root.configure(background=my_flex_form.BackgroundColor)
@@ -2054,7 +2064,9 @@ def StartupTK(my_flex_form):
     if my_flex_form.NonBlocking:
         my_flex_form.TKroot.protocol("WM_WINDOW_DESTROYED", my_flex_form.OnClosingCallback())
     else:       # it's a blocking form
+        # print('..... CALLING MainLoop')
         my_flex_form.TKroot.mainloop()
+        # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
             _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)       # decrement if not 0
         if my_flex_form.RootNeedsDestroying:
@@ -2651,7 +2663,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
                progress_meter_border_depth=None, progress_meter_style=None,
                progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None,
                text_justification=None, background_color=None, element_background_color=None,
-               text_element_background_color=None, input_elements_background_color=None,
+               text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color = None, debug_win_size=(None,None), window_location=(None,None)):
 
     global DEFAULT_ELEMENT_SIZE
@@ -2682,6 +2694,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
     global DEFAULT_TEXT_COLOR
     global DEFAULT_WINDOW_LOCATION
     global DEFAULT_ELEMENT_TEXT_COLOR
+    global DEFAULT_INPUT_TEXT_COLOR
     global _my_windows
 
     if icon:
@@ -2776,6 +2789,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
     if element_text_color != None:
         DEFAULT_ELEMENT_TEXT_COLOR = element_text_color
 
+    if input_text_color is not None:
+        DEFAULT_INPUT_TEXT_COLOR = input_text_color
     return True
 
 
@@ -2785,12 +2800,29 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
 ##############################################################
 def ChangeLookAndFeel(index):
     # look and feel table
-    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC', 'BUTTON': ('white', '#475841'),
-                       'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
+    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
 
-                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7', 'BUTTON': ('white', '#658268'), 'PROGRESS':('#247BA0','#F8FAF0')},
+                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':('#247BA0','#F8FAF0')},
 
-                        'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF', 'BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR}}
+                      'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF','TEXT_INPUT' : 'black', 'SCROLL': '#E0F5FF','BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'Purple': {'BACKGROUND': '#B0AAC2', 'TEXT': 'black', 'INPUT': '#F2EFE8','SCROLL': '#F2EFE8','TEXT_INPUT' : 'black',
+                                     'BUTTON': ('black', '#C2D4D8'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'BlueMono': {'BACKGROUND': '#AAB6D3', 'TEXT': 'black', 'INPUT': '#F1F4FC','SCROLL': '#F1F4FC','TEXT_INPUT' : 'black',
+                                     'BUTTON': ('white', '#7186C7'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'GreenMono': {'BACKGROUND': '#A8C1B4', 'TEXT': 'black', 'INPUT': '#DDE0DE', 'SCROLL': '#E3E3E3','TEXT_INPUT' : 'black',
+                                   'BUTTON': ('white', '#6D9F85'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'BrownBlue': {'BACKGROUND': '#64778d', 'TEXT': 'white', 'INPUT': '#f0f3f7', 'SCROLL': '#A6B2BE','TEXT_INPUT' : 'black',
+                                    'BUTTON': ('white', '#283b5b'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'BrightColors': {'BACKGROUND': '#b4ffb4', 'TEXT': 'black', 'INPUT': '#ffff64','SCROLL': '#ffb482','TEXT_INPUT' : 'black',
+                                   'BUTTON': ('black', '#ffa0dc'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#3b7f97'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR}
+                      }
     try:
         colors = look_and_feel[index]
 
@@ -2804,8 +2836,9 @@ def ChangeLookAndFeel(index):
                       border_width=0,
                       slider_border_width=0,
                       progress_meter_border_depth=0,
-                      scrollbar_color=(colors['INPUT']),
-                      element_text_color=colors['TEXT'])
+                      scrollbar_color=(colors['SCROLL']),
+                      element_text_color=colors['TEXT'],
+                      input_text_color=colors['TEXT_INPUT'])
     except:    # most likely an index out of range
         pass
 
