@@ -269,7 +269,7 @@ class Listbox(Element):
         '''
         Listbox Element
         :param values:
-        :param select_mode:
+        :param select_mode: SELECT_MODE_BROWSE, SELECT_MODE_EXTENDED, SELECT_MODE_MULTIPLE, SELECT_MODE_SINGLE
         :param font:
         :param scale: Adds multiplier to size (w,h)
         :param size: Size of field in characters
@@ -791,6 +791,7 @@ class Column(Element):
         self.Rows = []
         self.ParentForm = None
         self.TKFrame = None
+        bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
 
@@ -1058,11 +1059,11 @@ class UberForm():
 # ====================================================================== #
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
-def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, do_not_clear=False, focus=False, key=None):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, do_not_clear = do_not_clear, focus=focus, key=key)
+def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
 
-def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, do_not_clear = False, focus=False, key=None):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, do_not_clear=do_not_clear, focus=focus, key=key)
+def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
+    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
@@ -1311,7 +1312,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 col_frame = tk.Frame(tk_row_frame)
                 PackFormIntoFrame(element, col_frame, toplevel_form)
                 col_frame.pack(side=tk.LEFT)
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
@@ -1630,359 +1631,6 @@ def ConvertFlexToTK(MyFlexForm):
     master.update_idletasks()  # don't forget
     return
 
-def ConvertFlexToTKOld(MyFlexForm):
-    def CharWidthInPixels():
-        return tkinter.font.Font().measure('A')  # single character width
-    master = MyFlexForm.TKroot
-    # only set title on non-tabbed forms
-    if not MyFlexForm.IsTabbedForm:
-        master.title(MyFlexForm.Title)
-    font = MyFlexForm.Font
-    InitializeResults(MyFlexForm)
-    border_depth = MyFlexForm.BorderDepth if MyFlexForm.BorderDepth is not None else DEFAULT_BORDER_WIDTH
-    # --------------------------------------------------------------------------- #
-    # ****************  Use FlexForm to build the tkinter window ********** ----- #
-    # Building is done row by row.                                                #
-    # --------------------------------------------------------------------------- #
-    focus_set = False
-    ######################### LOOP THROUGH ROWS #########################
-    # *********** -------  Loop through ROWS  ------- ***********#
-    for row_num, flex_row in enumerate(MyFlexForm.Rows):
-        ######################### LOOP THROUGH ELEMENTS ON ROW #########################
-        # *********** -------  Loop through ELEMENTS  ------- ***********#
-        # *********** Make TK Row                             ***********#
-        tk_row_frame = tk.Frame(master)
-        for col_num, element in enumerate(flex_row):
-            element.ParentForm = MyFlexForm  # save the button's parent form object
-            if MyFlexForm.Font and (element.Font == DEFAULT_FONT or not element.Font):
-                font = MyFlexForm.Font
-            elif element.Font is not None:
-                font = element.Font
-            # -------  Determine Auto-Size setting on a cascading basis ------- #
-            if element.AutoSizeText is not None:            # if element overide
-                auto_size_text = element.AutoSizeText
-            elif MyFlexForm.AutoSizeText is not None:       # if form override
-                auto_size_text = MyFlexForm.AutoSizeText
-            else:
-                auto_size_text = DEFAULT_AUTOSIZE_TEXT
-            # Determine Element size
-            element_size = element.Size
-            if (element_size == (None, None)):      # user did not specify a size
-                element_size = MyFlexForm.DefaultElementSize
-            else: auto_size_text = False                # if user has specified a size then it shouldn't autosize
-            # Apply scaling... Element scaling is higher priority than form level
-            if element.Scale != (None, None):
-                element_size = (int(element_size[0] * element.Scale[0]), int(element_size[1] * element.Scale[1]))
-            elif MyFlexForm.Scale != (None, None):
-                element_size = (int(element_size[0] * MyFlexForm.Scale[0]), int(element_size[1] * MyFlexForm.Scale[1]))
-            # Set foreground color
-            text_color = element.TextColor
-            # -------------------------  TEXT element  ------------------------- #
-            element_type = element.Type
-            if element_type == ELEM_TYPE_TEXT:
-                display_text = element.DisplayText         # text to display
-                if auto_size_text is False:
-                    width, height=element_size
-                else:
-                    lines = display_text.split('\n')
-                    max_line_len = max([len(l) for l in lines])
-                    num_lines = len(lines)
-                    if max_line_len > element_size[0]:       # if text exceeds element size, the will have to wrap
-                        width = element_size[0]
-                    else:
-                        width=max_line_len
-                    height=num_lines
-                # ---===--- LABEL widget create and place --- #
-                stringvar = tk.StringVar()
-                element.TKStringVar = stringvar
-                stringvar.set(display_text)
-                if auto_size_text:
-                    width = 0
-                justify = tk.LEFT if element.Justification == 'left' else tk.CENTER if element.Justification == 'center' else tk.RIGHT
-                anchor = tk.NW if element.Justification == 'left' else tk.N if element.Justification == 'center' else tk.NE
-                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth)
-                # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
-                # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
-                if element.BackgroundColor is not None:
-                    tktext_label.configure(background=element.BackgroundColor)
-                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                    tktext_label.configure(fg=element.TextColor)
-
-                tktext_label.pack(side=tk.LEFT)
-            # -------------------------  BUTTON element  ------------------------- #
-            elif element_type == ELEM_TYPE_BUTTON:
-                element.Location = (row_num, col_num)
-                btext = element.ButtonText
-                btype = element.BType
-                if element.AutoSizeButton is not None:
-                    auto_size = element.AutoSizeButton
-                else: auto_size = MyFlexForm.AutoSizeButtons
-                if auto_size is False: width=element_size[0]
-                else: width = 0
-                height=element_size[1]
-                lines = btext.split('\n')
-                max_line_len = max([len(l) for l in lines])
-                num_lines = len(lines)
-                if element.ButtonColor != (None, None)and element.ButtonColor != DEFAULT_BUTTON_COLOR:
-                    bc = element.ButtonColor
-                elif MyFlexForm.ButtonColor != (None, None) and MyFlexForm.ButtonColor != DEFAULT_BUTTON_COLOR:
-                    bc = MyFlexForm.ButtonColor
-                else:
-                    bc = DEFAULT_BUTTON_COLOR
-                border_depth = element.BorderWidth
-                if btype != BUTTON_TYPE_REALTIME:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth)
-                else:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth)
-                    tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
-                    tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT:
-                    tkbutton.config(foreground=bc[0], background=bc[1])
-                element.TKButton = tkbutton          # not used yet but save the TK button in case
-                wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
-                if element.ImageFilename:           # if button has an image on it
-                    photo = tk.PhotoImage(file=element.ImageFilename)
-                    if element.ImageSize != (None, None):
-                        width, height = element.ImageSize
-                        if element.ImageSubsample:
-                            photo = photo.subsample(element.ImageSubsample)
-                    else:
-                        width, height = photo.width(), photo.height()
-                    tkbutton.config(image=photo, width=width, height=height)
-                    tkbutton.image = photo
-                tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
-                tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
-                if element.Focus is True or (MyFlexForm.UseDefaultFocus and not focus_set):
-                    focus_set = True
-                    element.TKButton.bind('<Return>', element.ReturnKeyHandler)
-                    element.TKButton.focus_set()
-                    MyFlexForm.TKroot.focus_force()
-            # -------------------------  INPUT (Single Line) element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_TEXT:
-                default_text = element.DefaultText
-                element.TKStringVar = tk.StringVar()
-                element.TKStringVar.set(default_text)
-                show = element.PasswordCharacter if element.PasswordCharacter else ""
-                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show)
-                element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKEntry.configure(background=element.BackgroundColor)
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKEntry.configure(fg=text_color)
-                element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                if element.Focus is True or (MyFlexForm.UseDefaultFocus and not focus_set):
-                    focus_set = True
-                    element.TKEntry.focus_set()
-            # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_COMBO:
-                max_line_len = max([len(str(l)) for l in element.Values])
-                if auto_size_text is False: width=element_size[0]
-                else: width = max_line_len
-                element.TKStringVar = tk.StringVar()
-                if element.BackgroundColor  and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    combostyle = ttk.Style()
-                    try:
-                        combostyle.theme_create('combostyle',
-                                                settings={'TCombobox':
-                                                              {'configure':
-                                                                   {'selectbackground': element.BackgroundColor,
-                                                                    'fieldbackground':  element.BackgroundColor,
-                                                                    'foreground': text_color,
-                                                                    'background':  element.BackgroundColor}
-                                                               }})
-                    except:
-                        try:
-                            combostyle.theme_settings('combostyle',
-                                                settings={'TCombobox':
-                                                              {'configure':
-                                                                   {'selectbackground': element.BackgroundColor,
-                                                                    'fieldbackground':  element.BackgroundColor,
-                                                                    'foreground': text_color,
-                                                                    'background':  element.BackgroundColor}
-                                                               }})
-                        except: pass
-                    # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-                    combostyle.theme_use('combostyle')
-                element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar,font=font )
-                # element.TKCombo['state']='readonly'
-                element.TKCombo['values'] = element.Values
-                # if element.BackgroundColor is not None:
-                #     element.TKCombo.configure(background=element.BackgroundColor)
-                element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                element.TKCombo.current(0)
-            # -------------------------  LISTBOX element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_LISTBOX:
-                max_line_len = max([len(str(l)) for l in element.Values])
-                if auto_size_text is False: width=element_size[0]
-                else: width = max_line_len
-
-                element.TKStringVar = tk.StringVar()
-                element.TKListbox= tk.Listbox(tk_row_frame, height=element_size[1], width=width, selectmode=element.SelectMode, font=font)
-                for item in element.Values:
-                    element.TKListbox.insert(tk.END, item)
-                element.TKListbox.selection_set(0,0)
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKListbox.configure(background=element.BackgroundColor)
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKListbox.configure(fg=text_color)
-                # vsb = tk.Scrollbar(tk_row_frame, orient="vertical", command=element.TKListbox.yview)
-                # element.TKListbox.configure(yscrollcommand=vsb.set)
-                element.TKListbox.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                # vsb.pack(side=tk.LEFT, fill='y')
-            # -------------------------  INPUT MULTI LINE element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_MULTILINE:
-                default_text = element.DefaultText
-                width, height = element_size
-                element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
-                element.TKText.insert(1.0, default_text)                    # set the default text
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKText.configure(background=element.BackgroundColor)
-                    element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                element.TKText.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                if element.EnterSubmits:
-                    element.TKText.bind('<Return>', element.ReturnKeyHandler)
-                if element.Focus is True or (MyFlexForm.UseDefaultFocus and not focus_set):
-                    focus_set = True
-                    element.TKText.focus_set()
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKText.configure(fg=text_color)
-            # -------------------------  INPUT CHECKBOX element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
-                width = 0 if auto_size_text else element_size[0]
-                default_value = element.InitialState
-                element.TKIntVar = tk.IntVar()
-                element.TKIntVar.set(default_value if default_value is not None else 0)
-                element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font)
-                if default_value is None:
-                    element.TKCheckbutton.configure(state='disable')
-                if element.BackgroundColor is not None:
-                    element.TKCheckbutton.configure(background=element.BackgroundColor)
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKCheckbutton.configure(fg=text_color)
-                element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-            # -------------------------  PROGRESS BAR element  ------------------------- #
-            elif element_type == ELEM_TYPE_PROGRESS_BAR:
-                # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
-                width = element_size[0]
-                fnt = tkinter.font.Font()
-                char_width = fnt.measure('A')       # single character width
-                progress_length = width*char_width
-                progress_width = element_size[1]
-                direction = element.Orientation
-                if element.BarColor != (None, None):    # if element has a bar color, use it
-                    bar_color = element.BarColor
-                else:
-                    bar_color = DEFAULT_PROGRESS_BAR_COLOR
-                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief, style=element.BarStyle )
-                # element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief)
-                element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-                # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_RADIO:
-                width = 0 if auto_size_text else element_size[0]
-                default_value = element.InitialState
-                ID = element.GroupID
-                # see if ID has already been placed
-                value = EncodeRadioRowCol(row_num, col_num)     # value to set intvar to if this radio is selected
-                if ID in MyFlexForm.RadioDict:
-                    RadVar = MyFlexForm.RadioDict[ID]
-                else:
-                    RadVar = tk.IntVar()
-                    MyFlexForm.RadioDict[ID] = RadVar
-                element.TKIntVar = RadVar                       # store the RadVar in Radio object
-                if default_value:                               # if this radio is the one selected, set RadVar to match
-                    element.TKIntVar.set(value)
-                element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-                                                       variable=element.TKIntVar, value=value, bd=border_depth, font=font)
-                if element.BackgroundColor is not None:
-                    element.TKRadio.configure(background=element.BackgroundColor)
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKRadio.configure(fg=text_color)
-                element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
-                # -------------------------  INPUT SPIN Box element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_SPIN:
-                width, height = element_size
-                width = 0 if auto_size_text else element_size[0]
-                element.TKStringVar = tk.StringVar()
-                element.TKSpinBox = tk.Spinbox(tk_row_frame, values=element.Values, textvariable=element.TKStringVar, width=width, bd=border_depth)
-                element.TKStringVar.set(element.DefaultValue)
-                element.TKSpinBox.configure(font=font)  # set wrap to width of widget
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKSpinBox.configure(background=element.BackgroundColor)
-                element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKSpinBox.configure(fg=text_color)
-                # -------------------------  OUTPUT element  ------------------------- #
-            elif element_type == ELEM_TYPE_OUTPUT:
-                width, height = element_size
-                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color)
-                element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                # -------------------------  IMAGE Box element  ------------------------- #
-            elif element_type == ELEM_TYPE_IMAGE:
-                photo = tk.PhotoImage(file=element.Filename)
-                if element_size == (None, None) or element_size == None or element_size == MyFlexForm.DefaultElementSize:
-                    width, height = photo.width(), photo.height()
-                else:
-                    width, height = element_size
-                tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
-                tktext_label.image = photo
-                # tktext_label.configure(anchor=tk.NW, image=photo)
-                tktext_label.pack(side=tk.LEFT)
-                # -------------------------  SLIDER Box element  ------------------------- #
-            elif element_type == ELEM_TYPE_INPUT_SLIDER:
-                slider_length = element_size[0] * CharWidthInPixels()
-                slider_width = element_size[1]
-                element.TKIntVar = tk.IntVar()
-                element.TKIntVar.set(element.DefaultValue)
-                if element.Orientation[0] == 'v':
-                    range_from = element.Range[1]
-                    range_to = element.Range[0]
-                else:
-                    range_from = element.Range[0]
-                    range_to = element.Range[1]
-                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
-                # tktext_label.configure(anchor=tk.NW, image=photo)
-                if element.BackgroundColor is not None:
-                    tkscale.configure(background=element.BackgroundColor)
-                    tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    tkscale.configure(fg=text_color)
-                tkscale.pack(side=tk.LEFT)
-        #............................DONE WITH ROW pack the row of widgets ..........................#
-        # done with row, pack the row of widgets
-        tk_row_frame.grid(row=row_num+2, sticky=tk.W, padx=DEFAULT_MARGINS[0])
-        if MyFlexForm.BackgroundColor is not None:
-            tk_row_frame.configure(background=MyFlexForm.BackgroundColor)
-        if not MyFlexForm.IsTabbedForm:
-            MyFlexForm.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
-        else: MyFlexForm.ParentWindow.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
-    #....................................... DONE creating and laying out window ..........................#
-    if MyFlexForm.IsTabbedForm:
-        master = MyFlexForm.ParentWindow
-    master.attributes('-alpha', 0)                      # hide window while getting info and moving
-    screen_width = master.winfo_screenwidth()           # get window info to move to middle of screen
-    screen_height = master.winfo_screenheight()
-    if MyFlexForm.Location != (None, None):
-        x,y = MyFlexForm.Location
-    elif DEFAULT_WINDOW_LOCATION != (None, None):
-        x,y = DEFAULT_WINDOW_LOCATION
-    else:
-        master.update_idletasks()  # don't forget
-        win_width = master.winfo_width()
-        win_height = master.winfo_height()
-        x = screen_width/2 -win_width/2
-        y = screen_height/2 - win_height/2
-        if y+win_height > screen_height:
-            y = screen_height-win_height
-        if x+win_width > screen_width:
-            x = screen_width-win_width
-
-    move_string = '+%i+%i'%(int(x),int(y))
-    master.geometry(move_string)
-    master.attributes('-alpha', 255)                      # Make window visible again
-    master.update_idletasks()  # don't forget
-    return
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, fav_icon=DEFAULT_WINDOW_ICON):
@@ -2815,13 +2463,23 @@ def ChangeLookAndFeel(index):
                       'GreenMono': {'BACKGROUND': '#A8C1B4', 'TEXT': 'black', 'INPUT': '#DDE0DE', 'SCROLL': '#E3E3E3','TEXT_INPUT' : 'black',
                                    'BUTTON': ('white', '#6D9F85'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
 
-                      'BrownBlue': {'BACKGROUND': '#64778d', 'TEXT': 'white', 'INPUT': '#f0f3f7', 'SCROLL': '#A6B2BE','TEXT_INPUT' : 'black',
-                                    'BUTTON': ('white', '#283b5b'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                      'BrownBlue': {'BACKGROUND': '#64778d', 'TEXT': 'white', 'INPUT': '#f0f3f7', 'SCROLL': '#A6B2BE','TEXT_INPUT' : 'black', 'BUTTON': ('white', '#283b5b'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
 
-                      'BrightColors': {'BACKGROUND': '#b4ffb4', 'TEXT': 'black', 'INPUT': '#ffff64','SCROLL': '#ffb482','TEXT_INPUT' : 'black',
-                                   'BUTTON': ('black', '#ffa0dc'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                      'BrightColors': {'BACKGROUND': '#b4ffb4', 'TEXT': 'black', 'INPUT': '#ffff64','SCROLL': '#ffb482','TEXT_INPUT' : 'black', 'BUTTON': ('black', '#ffa0dc'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
 
-                      'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#3b7f97'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR}
+                      'NeutralBlue': {'BACKGROUND': '#92aa9d', 'TEXT': 'black', 'INPUT': '#fcfff6',
+                                       'SCROLL': '#fcfff6', 'TEXT_INPUT': 'black', 'BUTTON': ('black', '#d0dbbd'),
+                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'Kayak': {'BACKGROUND': '#a7ad7f', 'TEXT': 'black', 'INPUT': '#e6d3a8',
+                                      'SCROLL': '#e6d3a8', 'TEXT_INPUT': 'black', 'BUTTON': ('white', '#5d907d'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'SandyBeach': {'BACKGROUND': '#efeccb', 'TEXT': '#012f2f', 'INPUT': '#e6d3a8',
+                                'SCROLL': '#e6d3a8', 'TEXT_INPUT': '#012f2f', 'BUTTON': ('white', '#046380'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+
+                      'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#183440'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR}
                       }
     try:
         colors = look_and_feel[index]

@@ -8,7 +8,7 @@
 
 
 # PySimpleGUI
-  (Ver 2.8)
+  (Ver 2.9)
 
 [Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
 
@@ -1655,7 +1655,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
 | 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
-| 2.9.0 | Aug XX,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict, removed text target from progress bar, rework of return values and initial return values, removed legacy Form.Refresh() method (replaced by Form.ReadNonBlockingForm()), COLUMN elements!!,
+| 2.9.0 | Aug 16,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict, removed text target from progress bar, rework of return values and initial return values, removed legacy Form.Refresh() method (replaced by Form.ReadNonBlockingForm()), COLUMN elements!!, colored text defaults
 
 
 ### Release Notes
@@ -1670,13 +1670,14 @@ New debug printing capability.  `sg.Print`
 Listboxes are still without scrollwheels. The mouse can drag to see more items.  The mouse scrollwheel will also scroll the list and will `page up` and `page down` keys.
 
 2.7 Is the "feature complete" release. Pretty much all features are done and in the code
+
 2.8 More text color controls.  The caller has more control over things like the focus and what buttons should be clicked when enter key is pressed. Return values as a dictionary! (NICE addition)
+
+2.9 COLUMNS!  This is the biggest feature and had the biggest impact on the code base.  It was a difficult feature to add, but it was worth it.  Can now make even more layouts. Almost any layout is possible with this addition.
 
 
 ### Upcoming
 Make suggestions people!  Future release features
-
-Columns.  How multiple columns would be specified in the SDK interface are still being designed.
 
 Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.
 
@@ -1738,7 +1739,7 @@ Here are the steps to run that application
     To run it:
           Python HowDoI.py
 
-The pip command is all there is to the setup.    
+The pip command is all there is to the setup.
 
 The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
