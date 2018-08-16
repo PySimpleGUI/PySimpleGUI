@@ -536,4 +536,3 @@ Perhaps you don't want all the statistics that the EasyProgressMeter provides an
    ----
 
 
-
