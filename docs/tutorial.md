@@ -228,7 +228,9 @@ That may seem like a lot of code, but try coding this same GUI layout directly i
 ![everything for tutorial](https://user-images.githubusercontent.com/13696193/44302997-38531b00-a303-11e8-8c45-698ea62590a8.jpg)
 
 The last line of code opens a message box. This is how it looks:
+
 ![tutorial results](https://user-images.githubusercontent.com/13696193/44303004-79e3c600-a303-11e8-8311-2f3726d364ad.jpg)
+
 
 Each parameter to the message box call is displayed on a new line.  There are actually 2 lines of text in the message box.  The second line is very long and wrapped a number of times
 
