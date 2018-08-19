@@ -747,7 +747,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename, scale=(None, None), size=(None, None)):
+    def __init__(self, filename=None, data=None,scale=(None, None), size=(None, None)):
         '''
         Image Element
         :param filename:
@@ -755,8 +755,22 @@ class Image(Element):
         :param size: Size of field in characters
         '''
         self.Filename = filename
+        self.Data = data
+        self.tktext_label = None
+
+        if data is None and filename is None:
+            print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size)
         return
+
+    def Update(self, filename=None, data=None):
+        if filename is not None:
+            image = tk.PhotoImage(file=filename)
+        elif data is not None:
+            image = tk.PhotoImage(data=data)
+        else: return
+        self.tktext_label.configure(image=image)
+        self.tktext_label.image = image
 
     def __del__(self):
         super().__del__()
@@ -835,7 +849,7 @@ class Column(Element):
             for element in row:
                 element.__del__()
         try:
-            del(self.TKroot)
+            del(self.TKFrame)
         except:
             pass
         super().__del__()
@@ -1592,15 +1606,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
-                photo = tk.PhotoImage(file=element.Filename)
-                if element_size == (None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
-                    width, height = photo.width(), photo.height()
+                if element.Filename is not None:
+                    photo = tk.PhotoImage(file=element.Filename)
+                elif element.Data is not None:
+                    photo = tk.PhotoImage(data=element.Data)
                 else:
-                    width, height = element_size
-                tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
-                tktext_label.image = photo
-                # tktext_label.configure(anchor=tk.NW, image=photo)
-                tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
+                    photo = None
+                    print('*ERROR laying out form.... Image Element has no image specified*')
+
+                if photo is not None:
+                    if element_size == (None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
+                        width, height = photo.width(), photo.height()
+                    else:
+                        width, height = element_size
+                    element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
+                    element.tktext_label.image = photo
+                    # tktext_label.configure(anchor=tk.NW, image=photo)
+                    element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
