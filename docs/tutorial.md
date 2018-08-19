@@ -12,7 +12,7 @@ PySimpleGUI attempts to address these GUI challenges by providing a super-simple
 
 ## The Secret
 
-What makes PySimpleGUI superior for newcomers is that the package contains the majority of the code that the user is normally expected to write.  Button callbacks are handled by PySimpleGUI, not the user's code.  Beginners struggle to grasp the concept of a function, expecting them to understand a call-back function in the first few weeks is likely a stretch.
+What makes PySimpleGUI superior for newcomers is that the package contains the majority of the code that the user is normally expected to write.  Button callbacks are handled by PySimpleGUI, not the user's code.  Beginners struggle to grasp the concept of a function, expecting them to understand a call-back function in the first few weeks is a stretch.
 
 With most GUIs arranging the GUI Widgets often requires several lines of code.... at least one or two lines per widget.  PySimpleGUI uses an "auto-packer" that creates the layout for the user automatically.  There is no concept of a pack nor a grid system needed to layout a GUI Window.
 
@@ -48,9 +48,9 @@ Let's look at the first recipe from the book
 
     layout = [
               [sg.Text('Please enter your Name, Address, Phone')],
-              [sg.Text('Name', size=(15, 1)), sg.InputText()],
-              [sg.Text('Address', size=(15, 1)), sg.InputText()],
-              [sg.Text('Phone', size=(15, 1)), sg.InputText()],
+              [sg.Text('Name', size=(15, 1)), sg.InputText('name')],
+              [sg.Text('Address', size=(15, 1)), sg.InputText('address')],
+              [sg.Text('Phone', size=(15, 1)), sg.InputText('phone')],
               [sg.Submit(), sg.Cancel()]
              ]
 
