@@ -102,11 +102,11 @@ class MyWindows():
 
     def Decrement(self):
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
-        print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
+        # print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
 
     def Increment(self):
         self.NumOpenWindows += 1
-        print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
+        # print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
 
 _my_windows = MyWindows()            # terrible hack using globals... means need a class for collecing windows
 
@@ -862,7 +862,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -896,6 +896,7 @@ class FlexForm:
         self.LastButtonClicked = None
         self.UseDictionary = False
         self.UseDefaultFocus = False
+        self.ReturnKeyboardEvents = return_keyboard_events
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -1013,6 +1014,8 @@ class FlexForm:
             _my_windows.Decrement()
         return BuildResults(self, False, self)
 
+    def KeyboardCallback(self, event ):
+            print("pressed", event)
 
     def _Close(self):
         try:
@@ -1765,6 +1768,8 @@ def StartupTK(my_flex_form):
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
+    if my_flex_form.ReturnKeyboardEvents:
+        root.bind("<Key>", my_flex_form.KeyboardCallback)
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
