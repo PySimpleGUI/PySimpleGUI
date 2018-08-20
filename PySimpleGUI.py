@@ -1030,7 +1030,6 @@ class FlexForm:
             self.LastKeyboardEvent = event.char
         else:
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
-        # self.LastKeyboardEvent = event
         if not self.NonBlocking:
             results = BuildResults(self, False, self)
         self.TKroot.quit()
