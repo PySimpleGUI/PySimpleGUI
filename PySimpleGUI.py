@@ -1791,8 +1791,10 @@ def StartupTK(my_flex_form):
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
-    if my_flex_form.ReturnKeyboardEvents:
+    if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
         root.bind("<KeyRelease>", my_flex_form.KeyboardCallback)
+    elif my_flex_form.ReturnKeyboardEvents:
+        root.bind("<Key>", my_flex_form.KeyboardCallback)
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
