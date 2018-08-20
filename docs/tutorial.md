@@ -59,12 +59,30 @@ Let's look at the first recipe from the book
     print(button, values[0], values[1], values[2])
 
 
-It's a reasonable sized form.
+It's a reasonably sized form.
 
 
 ![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)
 
 If you only need to collect a few values and they're all basically strings, then you would copy this recipe and modify it to suit your needs.
+
+## The 5-line GUI
+
+Not all GUIs take 5 minutes.  Some take 5 lines of code.  This is a GUI with a custom layout contained in 5 lines of code.
+
+    import PySimpleGUI as sg
+
+    form = sg.FlexForm('My first GUI')
+
+    layout = [ [sg.Text('Enter your name'), sg.InputText()],
+               [sg.OK()] ]
+
+    button, (name,) = form.LayoutAndRead(layout)
+
+
+![myfirstgui](https://user-images.githubusercontent.com/13696193/44315412-d2918c80-a3f1-11e8-9eda-0d5d9bfefb0f.jpg)
+
+
 
 ## Making Your Custom GUI
 
