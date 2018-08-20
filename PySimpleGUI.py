@@ -1023,7 +1023,7 @@ class FlexForm:
         return BuildResults(self, False, self)
 
     def KeyboardCallback(self, event ):
-        print(".",)
+        # print(".",)
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         if event.char != '':
