@@ -49,8 +49,7 @@ layout = [  [image_elem],
 
 form.Layout(layout)
 
-i = 0
-oldzoom = 0
+i = oldzoom = 0
 while True:
     button,value = form.Read()
     zoom = 0
@@ -65,25 +64,13 @@ while True:
     elif button == "Last":
         i = -1
     elif button == "Zoom-1":
-        if oldzoom == 1:
-            zoom = oldzoom = 0
-        else:
-            zoom = oldzoom = 1
+        zoom = oldzoom = 0 if oldzoom == 1 else 1
     elif button == "Zoom-2":
-        if oldzoom == 2:
-            zoom = oldzoom = 0
-        else:
-            zoom = oldzoom = 2
+        zoom = oldzoom = 0 if oldzoom == 2 else 2
     elif button == "Zoom-3":
-        if oldzoom == 3:
-            zoom = oldzoom = 0
-        else:
-            zoom = oldzoom = 3
+        zoom = oldzoom = 0 if oldzoom == 3 else 3
     elif button == "Zoom-4":
-        if oldzoom == 4:
-            zoom = oldzoom = 0
-        else:
-            zoom = oldzoom = 4
+        zoom = oldzoom = 0 if oldzoom == 4 else 4
     try:
         data = get_page(i, zoom)
     except:
