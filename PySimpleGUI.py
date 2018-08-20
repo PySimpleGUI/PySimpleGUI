@@ -100,6 +100,14 @@ class MyWindows():
         self.NumOpenWindows = 0
         self.user_defined_icon = None
 
+    def Decrement(self):
+        self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
+        print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
+
+    def Increment(self):
+        self.NumOpenWindows += 1
+        print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
+
 _my_windows = MyWindows()            # terrible hack using globals... means need a class for collecing windows
 
 # ====================================================================== #
@@ -116,6 +124,7 @@ def RGB(red,green,blue): return '#%02x%02x%02x' % (red,green,blue)
 # class ButtonType(Enum):
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
+BUTTON_TYPE_SAVEAS_FILE = 3
 BUTTON_TYPE_CLOSES_WIN = 5
 BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
@@ -261,7 +270,7 @@ class InputCombo(Element):
 
 
 # ---------------------------------------------------------------------- #
-#                           Combo                                        #
+#                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
 
@@ -514,16 +523,18 @@ class TKProgressBar():
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None):
-        tk.Frame.__init__(self, parent)
-        self.output = tk.Text(parent, width=width, height=height, bd=bd)
+        frame = tk.Frame(parent, width=width, height=height)
+        tk.Frame.__init__(self, frame)
+        self.output = tk.Text(frame, width=width, height=height, bd=bd)
         if background_color and background_color != COLOR_SYSTEM_DEFAULT:
             self.output.configure(background=background_color)
         if text_color and text_color != COLOR_SYSTEM_DEFAULT:
             self.output.configure(fg=text_color)
-        self.vsb = tk.Scrollbar(parent, orient="vertical", command=self.output.yview)
+        self.vsb = tk.Scrollbar(frame, orient="vertical", command=self.output.yview)
         self.output.configure(yscrollcommand=self.vsb.set)
-        self.output.pack(side="left", fill="both", expand=True)
+        self.output.pack(side="left", fill="both")
         self.vsb.pack(side="left", fill="y")
+        frame.pack(side="left")
         self.previous_stdout = sys.stdout
         self.previous_stderr = sys.stderr
 
@@ -650,6 +661,9 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             file_name = tk.filedialog.askopenfilename(filetypes=filetypes)  # show the 'get file' dialog box
             strvar.set(file_name)
+        elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
+            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes)  # show the 'get file' dialog box
+            strvar.set(file_name)
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -664,7 +678,7 @@ class Button(Element):
             self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
-                # _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+                _my_windows.Decrement()
         elif self.BType == BUTTON_TYPE_READ_FORM:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -718,7 +732,7 @@ class ProgressBar(Element):
         try:
             self.ParentForm.TKroot.update()
         except:
-            # _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+            # _my_windows.Decrement()
             return False
         return True
 
@@ -733,7 +747,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename, scale=(None, None), size=(None, None)):
+    def __init__(self, filename=None, data=None,scale=(None, None), size=(None, None)):
         '''
         Image Element
         :param filename:
@@ -741,8 +755,22 @@ class Image(Element):
         :param size: Size of field in characters
         '''
         self.Filename = filename
+        self.Data = data
+        self.tktext_label = None
+
+        if data is None and filename is None:
+            print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size)
         return
+
+    def Update(self, filename=None, data=None):
+        if filename is not None:
+            image = tk.PhotoImage(file=filename)
+        elif data is not None:
+            image = tk.PhotoImage(data=data)
+        else: return
+        self.tktext_label.configure(image=image)
+        self.tktext_label.image = image
 
     def __del__(self):
         super().__del__()
@@ -821,7 +849,7 @@ class Column(Element):
             for element in row:
                 element.__del__()
         try:
-            del(self.TKroot)
+            del(self.TKFrame)
         except:
             pass
         super().__del__()
@@ -968,7 +996,7 @@ class FlexForm:
             self.TKroot.mainloop()
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
-                _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+                _my_windows.Decrement()
         return BuildResults(self, False, self)
 
     def ReadNonBlocking(self, Message=''):
@@ -982,7 +1010,7 @@ class FlexForm:
             rc = self.TKroot.update()
         except:
             self.TKrootDestroyed = True
-            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+            _my_windows.Decrement()
         return BuildResults(self, False, self)
 
 
@@ -999,10 +1027,12 @@ class FlexForm:
         return None
 
     def CloseNonBlockingForm(self):
+        if self.TKrootDestroyed:
+            return
         try:
             self.TKroot.destroy()
+            _my_windows.Decrement()
         except: pass
-        _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
 
     def OnClosingCallback(self):
         return
@@ -1049,7 +1079,7 @@ class UberForm():
         if not self.TKrootDestroyed:
             self.TKrootDestroyed = True
             self.TKroot.destroy()
-            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
+            _my_windows.Decrement()
 
     def __del__(self):
         return
@@ -1082,24 +1112,36 @@ def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, 
     return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
+def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
     return Button(BUTTON_TYPE_BROWSE_FOLDER, target=target, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None):
-    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color)
+def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+
+# -------------------------  FILE BROWSE Element lazy function  ------------------------- #
+def FileSaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+
+# -------------------------  SAVE AS Element lazy function  ------------------------- #
+def SaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
+    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+
+# -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
+def Save(button_text='Save', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
-def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
+def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
-def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
+def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, font=None,focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
+def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, font=None,focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
@@ -1109,13 +1151,17 @@ def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_siz
 def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
     return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
+# -------------------------  Exit BUTTON Element lazy function  ------------------------- #
+def Exit(button_text='Exit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
+
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, focus=False):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
+def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None,font=None, bind_return_key=True, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=False, focus=False):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, bind_return_key=bind_return_key, focus=focus)
+def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None,font=None, bind_return_key=False, focus=False):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
@@ -1378,6 +1424,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:           # if button has an image on it
+                    tkbutton.config(highlightthickness=0)
                     photo = tk.PhotoImage(file=element.ImageFilename)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
@@ -1387,7 +1434,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, width=width, height=height)
                     tkbutton.image = photo
-                tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
+                if width != 0:
+                    tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
+                else:
+                    tkbutton.configure(font=font)                         # only set the font, not wraplength
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
@@ -1452,9 +1502,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False: width=element_size[0]
                 else: width = max_line_len
-
+                listbox_frame = tk.Frame(tk_row_frame)
                 element.TKStringVar = tk.StringVar()
-                element.TKListbox= tk.Listbox(tk_row_frame, height=element_size[1], width=width, selectmode=element.SelectMode, font=font)
+                element.TKListbox= tk.Listbox(listbox_frame, height=element_size[1], width=width, selectmode=element.SelectMode, font=font)
                 for item in element.Values:
                     element.TKListbox.insert(tk.END, item)
                 element.TKListbox.selection_set(0,0)
@@ -1462,10 +1512,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(fg=text_color)
-                # vsb = tk.Scrollbar(tk_row_frame, orient="vertical", command=element.TKListbox.yview)
-                # element.TKListbox.configure(yscrollcommand=vsb.set)
-                element.TKListbox.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                # vsb.pack(side=tk.LEFT, fill='y')
+                vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
+                element.TKListbox.configure(yscrollcommand=vsb.set)
+                element.TKListbox.pack(side=tk.LEFT)
+                vsb.pack(side=tk.LEFT, fill='y')
+                listbox_frame.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
@@ -1555,15 +1606,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
-                photo = tk.PhotoImage(file=element.Filename)
-                if element_size == (None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
-                    width, height = photo.width(), photo.height()
+                if element.Filename is not None:
+                    photo = tk.PhotoImage(file=element.Filename)
+                elif element.Data is not None:
+                    photo = tk.PhotoImage(data=element.Data)
                 else:
-                    width, height = element_size
-                tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
-                tktext_label.image = photo
-                # tktext_label.configure(anchor=tk.NW, image=photo)
-                tktext_label.pack(side=tk.LEFT)
+                    photo = None
+                    print('*ERROR laying out form.... Image Element has no image specified*')
+
+                if photo is not None:
+                    if element_size == (None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
+                        width, height = photo.width(), photo.height()
+                    else:
+                        width, height = element_size
+                    element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
+                    element.tktext_label.image = photo
+                    # tktext_label.configure(anchor=tk.NW, image=photo)
+                    element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -1579,12 +1638,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     range_to = element.Range[1]
                 tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
                 # tktext_label.configure(anchor=tk.NW, image=photo)
+                tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None:
                     tkscale.configure(background=element.BackgroundColor)
                     tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
-                tkscale.pack(side=tk.LEFT)
+                tkscale.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
@@ -1698,7 +1758,7 @@ def StartupTK(my_flex_form):
     root = tk.Tk() if not ow else tk.Toplevel()
     if my_flex_form.BackgroundColor is not None:
         root.configure(background=my_flex_form.BackgroundColor)
-    _my_windows.NumOpenWindows += 1
+    _my_windows.Increment()
 
     my_flex_form.TKroot = root
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
@@ -1716,7 +1776,7 @@ def StartupTK(my_flex_form):
         my_flex_form.TKroot.mainloop()
         # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
-            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)       # decrement if not 0
+            _my_windows.Decrement()
         if my_flex_form.RootNeedsDestroying:
             my_flex_form.TKroot.destroy()
             my_flex_form.RootNeedsDestroying = False
@@ -1992,8 +2052,8 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
         bar.ParentForm._Close()
     if bar.ParentForm.RootNeedsDestroying:
         try:
-            _my_windows.NumOpenWindows -= 1 * (_my_windows.NumOpenWindows != 0)  # decrement if not 0
             bar.ParentForm.TKroot.destroy()
+            _my_windows.Decrement()
         except: pass
         bar.ParentForm.RootNeedsDestroying = False
         bar.ParentForm.__del__()
