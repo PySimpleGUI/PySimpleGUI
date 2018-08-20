@@ -102,11 +102,11 @@ class MyWindows():
 
     def Decrement(self):
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
-        print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
+        # print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
 
     def Increment(self):
         self.NumOpenWindows += 1
-        print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
+        # print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
 
 _my_windows = MyWindows()            # terrible hack using globals... means need a class for collecing windows
 
@@ -862,7 +862,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -896,6 +896,8 @@ class FlexForm:
         self.LastButtonClicked = None
         self.UseDictionary = False
         self.UseDefaultFocus = False
+        self.ReturnKeyboardEvents = return_keyboard_events
+        self.LastKeyboardEvent = None
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -993,11 +995,18 @@ class FlexForm:
         if not self.Shown:
             self.Show()
         else:
+            InitializeResults(self)
             self.TKroot.mainloop()
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.Decrement()
-        return BuildResults(self, False, self)
+        # if self.ReturnValues[0] is not None:      # keyboard events build their own return values
+        #     return self.ReturnValues
+        if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
+            return BuildResults(self, False, self)
+        else:
+            return self.ReturnValues
+
 
     def ReadNonBlocking(self, Message=''):
         if self.TKrootDestroyed:
@@ -1012,6 +1021,19 @@ class FlexForm:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
         return BuildResults(self, False, self)
+
+    def KeyboardCallback(self, event ):
+        print(".",)
+        self.LastButtonClicked = None
+        self.FormRemainedOpen = True
+        if event.char != '':
+            self.LastKeyboardEvent = event.char
+        else:
+            self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
+        # self.LastKeyboardEvent = event
+        if not self.NonBlocking:
+            results = BuildResults(self, False, self)
+        self.TKroot.quit()
 
 
     def _Close(self):
@@ -1125,7 +1147,7 @@ def FileSaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None):
-    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
+    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font)
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False):
@@ -1244,7 +1266,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
             if not initialize_only:
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
                     value=element.TKStringVar.get()
-                    if not top_level_form.NonBlocking and not element.do_not_clear:
+                    if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.TKIntVar.get()
@@ -1279,7 +1301,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     try:
                         value=element.TKText.get(1.0, tk.END)
-                        if not top_level_form.NonBlocking and not element.do_not_clear:
+                        if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                             element.TKText.delete('1.0', tk.END)
                     except:
                         value = None
@@ -1291,6 +1313,10 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and element.Type!= ELEM_TYPE_COLUMN:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
+
+    if form.ReturnKeyboardEvents and form.LastKeyboardEvent is not None:
+        button_pressed_text = form.LastKeyboardEvent
+        form.LastKeyboardEvent = None
 
     try:
         form.ReturnValuesDictionary.pop(None, None)     # clean up dictionary include None was included
@@ -1765,6 +1791,8 @@ def StartupTK(my_flex_form):
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
+    if my_flex_form.ReturnKeyboardEvents:
+        root.bind("<KeyRelease>", my_flex_form.KeyboardCallback)
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
@@ -2571,11 +2599,15 @@ def ChangeLookAndFeel(index):
 sprint=ScrolledTextBox
 
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
-def ObjToString_old(obj):
+def ObjToStringSingleObj(obj):
+    if obj is None:
+        return 'None'
     return str(obj.__class__) + '\n' + '\n'.join(
         (repr(item) + ' = ' + repr(obj.__dict__[item]) for item in sorted(obj.__dict__)))
 
 def ObjToString(obj, extra='    '):
+    if obj is None:
+        return 'None'
     return str(obj.__class__) + '\n' + '\n'.join(
         (extra + (str(item) + ' = ' +
                   (ObjToString(obj.__dict__[item], extra + '    ') if hasattr(obj.__dict__[item], '__dict__') else str(
