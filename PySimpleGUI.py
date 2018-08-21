@@ -236,6 +236,8 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key)
 
 
+    def Update(self, new_value):
+        self.TKStringVar.set(new_value)
 
     def __del__(self):
         super().__del__()
