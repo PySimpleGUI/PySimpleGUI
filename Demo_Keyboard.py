@@ -20,7 +20,7 @@ with sg.FlexForm('Realtime Keyboard Test', return_keyboard_events=True, use_defa
             break
         if button is not None:
             text_elem.Update(button)
-        elif value is None:
+        else:
             break
 
 

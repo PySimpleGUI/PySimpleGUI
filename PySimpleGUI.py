@@ -862,7 +862,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -895,7 +895,7 @@ class FlexForm:
         self.DictionaryKeyCounter = 0
         self.LastButtonClicked = None
         self.UseDictionary = False
-        self.UseDefaultFocus = False
+        self.UseDefaultFocus = use_default_focus
         self.ReturnKeyboardEvents = return_keyboard_events
         self.LastKeyboardEvent = None
 
@@ -954,8 +954,10 @@ class FlexForm:
                 except:
                     pass
 
-        if not found_focus:
+        if not found_focus and self.UseDefaultFocus:
             self.UseDefaultFocus = True
+        else:
+            self.UseDefaultFocus = False
         # -=-=-=-=-=-=-=-=- RUN the GUI -=-=-=-=-=-=-=-=- ##
         StartupTK(self)
         return self.ReturnValues
