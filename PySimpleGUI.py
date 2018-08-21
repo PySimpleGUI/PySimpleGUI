@@ -769,7 +769,10 @@ class Image(Element):
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
-            image = tk.PhotoImage(data=data)
+            if type(data) is bytes:
+                image = tk.PhotoImage(data=data)
+            else:
+                image = data
         else: return
         self.tktext_label.configure(image=image)
         self.tktext_label.image = image
