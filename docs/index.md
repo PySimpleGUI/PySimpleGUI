@@ -6,15 +6,27 @@
 
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
 
+[![Python Version](https://img.shields.io/badge/Python-3-brightgreen.svg)](https://www.python.org/downloads/)
+
 
 # PySimpleGUI
   (Ver 2.9)
 
+Lots of documentation available in addition to this Readme File.
 [Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
 
 [COOKBOOK documentation now online!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
+[Brief Tutorial on PySimpleGUI](https://pysimplegui.readthedocs.io/en/latest/tutorial/)
+
+[See Wiki for latest news about development branch + new features](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
+
+
 Super-simple GUI to grasp... Powerfully customizable.
+
+Create a custom GUI in 5 lines of code.
+
+Can create a custom GUI in 1 line of code if desired.
 
 Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
 
@@ -27,6 +39,14 @@ Looking to take your Python code from the world of command lines and into the co
 
 ![snap0136](https://user-images.githubusercontent.com/13696193/43162494-33095ece-8f59-11e8-86de-b6d8bcc5a52f.jpg)
 
+Or how about a ***custom GUI*** in 1 line of code?
+
+    import PySimpleGUI as sg
+
+    button, (filename,) = sg.FlexForm('Get filename example'). LayoutAndRead([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
+
+![simple](https://user-images.githubusercontent.com/13696193/44279378-2f891900-a21f-11e8-89d1-52d935a4f5f5.jpg)
+
   Build beautiful customized forms that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve the real problems.  Do you really want to plod through the mountains of code required to program tkinter?
 
 PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkinter, but you interact with them in a **much** more friendly way.
@@ -35,7 +55,8 @@ PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkin
 
 Perhaps you're looking for a way to interact with your **Raspberry Pi** in a more friendly way.  The is the same form as above, except shown on a Pi.
 
-![raspberry pi](https://user-images.githubusercontent.com/13696193/43298356-9cfe9008-9123-11e8-9612-14649a2f6c7f.jpg)
+![raspberry pi everything demo](https://user-images.githubusercontent.com/13696193/44279694-5b58ce80-a220-11e8-9ab6-d6021f5a944f.jpg)
+
 
 
 In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this into any of your `for` loops and get a nice meter like this:
@@ -48,6 +69,7 @@ You can build an async media player GUI with custom buttons in 30 lines of code.
 
 ![media file player](https://user-images.githubusercontent.com/13696193/43161977-9ee7cace-8f57-11e8-8ff8-3ea24b69dab9.jpg)
 
+  ## Background
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
 There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited.   The primary difference between these and `PySimpleGUI` is that in addition to getting the simple Message Boxes you also get the ability to **make your own forms** that are highly customizeable.  Don't like the standard Message Box? Then make your own!
@@ -59,6 +81,8 @@ GUI Packages with more functionality, like QT and WxPython, require configuring 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
 The `PySimpleGUI` package is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
+
+## Features
 
     Features of PySimpleGUI include:
         Text
@@ -89,6 +113,7 @@ The `PySimpleGUI` package is focused on the ***developer***.  How can the desire
         Return values as dictionary
         Set focus
         Bind return key to buttons
+        Group widgets into a column and place into form anywhere
 
 
 An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
@@ -143,6 +168,7 @@ You will see a number of different styles of buttons, data entry fields, etc, in
    - A row is a list of elements
 - Return values are a list of button presses and input values.
 - Return values can also be represented as a dictionary
+- The SDK calls collapse down into a single line of Python code that presents a custom GUI and returns values
 
 
   -----
@@ -733,11 +759,19 @@ This is the definition of the FlexForm object:
         location=(None, None),
         button_color=None,Font=None,
         progress_bar_color=(None,None),
+        background_color=None
         is_tabbed_form=False,
         border_depth=None,
         auto_close=False,
         auto_close_duration=DEFAULT_AUTOCLOSE_TIME,
-        icon=DEFAULT_WINDOW_ICON):
+        icon=DEFAULT_WINDOW_ICON,
+        return_keyboard_events=False,
+        use_default_focus=True,
+        text_justification=None):
+
+
+
+
 
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
 
@@ -748,11 +782,15 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        location - (x,y) Location to place window in pixels
        button_color - Default color for buttons (foreground, background). Can be text or hex
        progress_bar_color - Foreground and background colors for progress bars
+       background_color - Color of the window background
        is_tabbed_form - Bool. If True then form is a tabbed form
        border_depth - Amount of 'bezel' to put on input boxes, buttons, etc.
        auto_close - Bool.  If True form will autoclose
        auto_close_duration - Duration in seconds before form closes
        icon - .ICO file that will appear on the Task Bar and end of Title Bar
+       return_keyboard_events - if True key presses are returned as buttons
+       use_default_focus - if True and no focus set, then automatically set a focus
+       text_justification - Justification to use for Text Elements in this form
 
 
 #### Window Location
@@ -1111,7 +1149,7 @@ While it's possible to build forms using the Button Element directly, you should
                  button_color=None,
                  font=None)
 
-Pre-made buttons include:
+These Pre-made buttons are some of the most important elements of all because they are used so much.  If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub.  (hmmm Save already comes to mind). They include:
 
     OK
     Ok
@@ -1600,8 +1638,14 @@ Valid values for the  description string are:
 		GreenMono
 		BrownBlue
 		BrightColors
+		NeutralBlue
+		Kayak
+		SandyBeach
 		TealMono
 
+To see the latest list of color choices, take a look at the bottom of the `PySimpleGUI.py` file where you'll find the `ChangLookAndFeel` function.
+
+You can also combine the `ChangeLookAndFeel` function with the `SetOptions` function to quickly modify one of the canned color schemes.  Maybe you like the colors but was more depth to your bezels.  You can dial in exactly what you want.
 
 **ObjToString**
 Ever wanted to easily display an objects contents easily?  Use ObjToString to get a nicely formatted recursive walk of your objects.
