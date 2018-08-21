@@ -1027,13 +1027,22 @@ class FlexForm:
         return BuildResults(self, False, self)
 
     def KeyboardCallback(self, event ):
-        # print(".",)
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         if event.char != '':
             self.LastKeyboardEvent = event.char
         else:
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
+        if not self.NonBlocking:
+            results = BuildResults(self, False, self)
+        self.TKroot.quit()
+
+    def MouseWheelCallback(self, event ):
+        self.LastButtonClicked = None
+        self.FormRemainedOpen = True
+        # print(ObjToStringSingleObj(event))
+        direction = 'Down' if event.delta < 0 else 'Up'
+        self.LastKeyboardEvent = 'MouseWheel:' + direction
         if not self.NonBlocking:
             results = BuildResults(self, False, self)
         self.TKroot.quit()
@@ -1796,8 +1805,10 @@ def StartupTK(my_flex_form):
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
     if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
         root.bind("<KeyRelease>", my_flex_form.KeyboardCallback)
+        root.bind("<MouseWheel>", my_flex_form.MouseWheelCallback)
     elif my_flex_form.ReturnKeyboardEvents:
         root.bind("<Key>", my_flex_form.KeyboardCallback)
+        root.bind("<MouseWheel>", my_flex_form.MouseWheelCallback)
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
