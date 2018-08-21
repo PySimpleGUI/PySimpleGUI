@@ -452,7 +452,7 @@ class Text(Element):
         '''
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
-        self.Justification = justification if justification else DEFAULT_TEXT_JUSTIFICATION
+        self.Justification = justification
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
@@ -867,7 +867,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True):
+    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -903,6 +903,7 @@ class FlexForm:
         self.UseDefaultFocus = use_default_focus
         self.ReturnKeyboardEvents = return_keyboard_events
         self.LastKeyboardEvent = None
+        self.TextJustification = text_justification
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -1040,17 +1041,15 @@ class FlexForm:
         else:
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
         if not self.NonBlocking:
-            results = BuildResults(self, False, self)
+            BuildResults(self, False, self)
         self.TKroot.quit()
 
     def MouseWheelCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
-        # print(ObjToStringSingleObj(event))
-        direction = 'Down' if event.delta < 0 else 'Up'
-        self.LastKeyboardEvent = 'MouseWheel:' + direction
+        self.LastKeyboardEvent = 'MouseWheel:' + 'Down' if event.delta < 0 else 'Up'
         if not self.NonBlocking:
-            results = BuildResults(self, False, self)
+            BuildResults(self, False, self)
         self.TKroot.quit()
 
 
@@ -1059,7 +1058,7 @@ class FlexForm:
             self.TKroot.update()
         except: pass
         if not self.NonBlocking:
-            results = BuildResults(self, False, self)
+            BuildResults(self, False, self)
         if self.TKrootDestroyed:
             return None
         self.TKrootDestroyed = True
@@ -1424,8 +1423,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 stringvar.set(display_text)
                 if auto_size_text:
                     width = 0
-                justify = tk.LEFT if element.Justification == 'left' else tk.CENTER if element.Justification == 'center' else tk.RIGHT
-                anchor = tk.NW if element.Justification == 'left' else tk.N if element.Justification == 'center' else tk.NE
+                if element.Justification is not None:
+                    justification = element.Justification
+                elif toplevel_form.TextJustification is not None:
+                    justification = toplevel_form.TextJustification
+                else:
+                    justification = DEFAULT_TEXT_JUSTIFICATION
+                justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
+                anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth)
                 # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
