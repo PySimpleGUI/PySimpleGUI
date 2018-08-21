@@ -962,6 +962,9 @@ class FlexForm:
             self.UseDefaultFocus = False
         # -=-=-=-=-=-=-=-=- RUN the GUI -=-=-=-=-=-=-=-=- ##
         StartupTK(self)
+        # If a button or keyboard event happened but no results have been built, build the results
+        if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
+            return BuildResults(self, False, self)
         return self.ReturnValues
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
