@@ -1047,7 +1047,7 @@ class FlexForm:
     def MouseWheelCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
-        self.LastKeyboardEvent = 'MouseWheel:' + 'Down' if event.delta < 0 else 'Up'
+        self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
         if not self.NonBlocking:
             BuildResults(self, False, self)
         self.TKroot.quit()
