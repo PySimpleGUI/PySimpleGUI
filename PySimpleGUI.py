@@ -1048,6 +1048,14 @@ class FlexForm:
             _my_windows.Decrement()
         return BuildResults(self, False, self)
 
+    def GetScreenDimensions(self):
+        if self.TKrootDestroyed:
+            return None, None
+        screen_width = self.TKroot.winfo_screenwidth()  # get window info to move to middle of screen
+        screen_height = self.TKroot.winfo_screenheight()
+        return screen_width, screen_height
+
+
     def KeyboardCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
