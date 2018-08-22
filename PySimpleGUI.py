@@ -788,7 +788,8 @@ class Image(Element):
             else:
                 image = data
         else: return
-        self.tktext_label.configure(image=image)
+        width, height = image.width(), image.height()
+        self.tktext_label.configure(image=image, width=width, height=height)
         self.tktext_label.image = image
 
     def __del__(self):
@@ -1454,7 +1455,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
+                tktext_label.configure(anchor=anchor, font=font)  # set wrap to width of widget
                 if element.BackgroundColor is not None:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
