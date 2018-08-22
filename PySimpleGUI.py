@@ -239,6 +239,9 @@ class InputText(Element):
     def Update(self, new_value):
         self.TKStringVar.set(new_value)
 
+    def Get(self):
+        return self.TKStringVar.get()
+
     def __del__(self):
         super().__del__()
 
@@ -359,15 +362,22 @@ class Checkbox(Element):
         self.Text = text
         self.InitialState = default
         self.Value = None
-        self.TKCheckbox = None
+        self.TKCheckbutton = None
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color, key=key)
 
+    def Get(self):
+        return self.TKIntVar.get()
+
+    def Update(self, value):
+        if value is None:
+            self.TKCheckbutton.configure(state='disabled')
+        else:
+            self.TKCheckbutton.configure(state='normal')
+            self.TKIntVar.set(value)
+
+
     def __del__(self):
-        try:
-            self.TKCheckbox.__del__()
-        except:
-            pass
         super().__del__()
 
 # ---------------------------------------------------------------------- #
@@ -430,6 +440,10 @@ class Multiline(Element):
 
     def Update(self, NewValue):
         self.TKText.insert(1.0, NewValue)
+
+    def Get(self):
+        return  self.TKText.get(1.0, tk.END)
+
 
     def __del__(self):
         super().__del__()
@@ -521,7 +535,7 @@ class TKProgressBar():
 #                           TKOutput                                     #
 #   New Type of TK Widget that's a Text Widget in disguise               #
 #       Note that it's inherited from the TKFrame class so that the      #
-#       Scroll bar will span the length of the frame
+#       Scroll bar will span the length of the frame                     #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None):
@@ -1133,6 +1147,11 @@ def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=N
 
 def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
+
+# -------------------------  CHECKBOX Element lazy functions  ------------------------- #
+CB = Checkbox
+CBox = Checkbox
+Check = Checkbox
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
