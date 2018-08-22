@@ -239,6 +239,9 @@ class InputText(Element):
     def Update(self, new_value):
         self.TKStringVar.set(new_value)
 
+    def Get(self):
+        return self.TKStringVar.get()
+
     def __del__(self):
         super().__del__()
 
@@ -359,15 +362,22 @@ class Checkbox(Element):
         self.Text = text
         self.InitialState = default
         self.Value = None
-        self.TKCheckbox = None
+        self.TKCheckbutton = None
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color, key=key)
 
+    def Get(self):
+        return self.TKIntVar.get()
+
+    def Update(self, value):
+        if value is None:
+            self.TKCheckbutton.configure(state='disabled')
+        else:
+            self.TKCheckbutton.configure(state='normal')
+            self.TKIntVar.set(value)
+
+
     def __del__(self):
-        try:
-            self.TKCheckbox.__del__()
-        except:
-            pass
         super().__del__()
 
 # ---------------------------------------------------------------------- #
@@ -430,6 +440,10 @@ class Multiline(Element):
 
     def Update(self, NewValue):
         self.TKText.insert(1.0, NewValue)
+
+    def Get(self):
+        return  self.TKText.get(1.0, tk.END)
+
 
     def __del__(self):
         super().__del__()
@@ -521,7 +535,7 @@ class TKProgressBar():
 #                           TKOutput                                     #
 #   New Type of TK Widget that's a Text Widget in disguise               #
 #       Note that it's inherited from the TKFrame class so that the      #
-#       Scroll bar will span the length of the frame
+#       Scroll bar will span the length of the frame                     #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None):
@@ -774,7 +788,8 @@ class Image(Element):
             else:
                 image = data
         else: return
-        self.tktext_label.configure(image=image)
+        width, height = image.width(), image.height()
+        self.tktext_label.configure(image=image, width=width, height=height)
         self.tktext_label.image = image
 
     def __del__(self):
@@ -1033,6 +1048,14 @@ class FlexForm:
             _my_windows.Decrement()
         return BuildResults(self, False, self)
 
+    def GetScreenDimensions(self):
+        if self.TKrootDestroyed:
+            return None, None
+        screen_width = self.TKroot.winfo_screenwidth()  # get window info to move to middle of screen
+        screen_height = self.TKroot.winfo_screenheight()
+        return screen_width, screen_height
+
+
     def KeyboardCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
@@ -1133,6 +1156,11 @@ def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=N
 
 def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
+
+# -------------------------  CHECKBOX Element lazy functions  ------------------------- #
+CB = Checkbox
+CBox = Checkbox
+Check = Checkbox
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
@@ -1331,9 +1359,12 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
-    if form.ReturnKeyboardEvents and form.LastKeyboardEvent is not None:
-        button_pressed_text = form.LastKeyboardEvent
-        form.LastKeyboardEvent = None
+    # if this is a column, then will fail so need to wrap with tr
+    try:
+        if form.ReturnKeyboardEvents and form.LastKeyboardEvent is not None:
+            button_pressed_text = form.LastKeyboardEvent
+            form.LastKeyboardEvent = None
+    except: pass
 
     try:
         form.ReturnValuesDictionary.pop(None, None)     # clean up dictionary include None was included
@@ -1435,12 +1466,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen*2 )  # set wrap to width of widget
+                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen+40)  # set wrap to width of widget
                 if element.BackgroundColor is not None:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT)
+                # print(f'Text element placed w = {width}, h = {height}, wrap = {wraplen}')
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element.Location = (row_num, col_num)
@@ -1901,7 +1933,7 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
-            form.AddRow(Text(message_wrapped, auto_size_text=True))
+            form.AddRow(Text(message_wrapped, auto_size_text=True, size=(width_used, height)))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
@@ -2645,7 +2677,7 @@ def ObjToString(obj, extra='    '):
 def main():
     with FlexForm('Demo form..') as form:
         form_rows = [[Text('You are running the PySimpleGUI.py file itself')],
-                     [Text('You should be importing it rather than running it\n')],
+                     [Text('You should be importing it rather than running it', size=(50,2))],
                      [Text('Here is your sample input form....')],
                      [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
                      [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
