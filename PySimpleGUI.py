@@ -867,7 +867,6 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-
     def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
@@ -1035,7 +1034,6 @@ class FlexForm:
         return BuildResults(self, False, self)
 
     def KeyboardCallback(self, event ):
-
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         if event.char != '':
@@ -1049,11 +1047,10 @@ class FlexForm:
     def MouseWheelCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
-        self.LastKeyboardEvent = 'MouseWheel:' + 'Down' if event.delta < 0 else 'Up'
+        self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
         if not self.NonBlocking:
             BuildResults(self, False, self)
         self.TKroot.quit()
-
 
 
     def _Close(self):
@@ -1817,7 +1814,6 @@ def StartupTK(my_flex_form):
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
-
     if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
         root.bind("<KeyRelease>", my_flex_form.KeyboardCallback)
         root.bind("<MouseWheel>", my_flex_form.MouseWheelCallback)
