@@ -1351,9 +1351,12 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
-    if form.ReturnKeyboardEvents and form.LastKeyboardEvent is not None:
-        button_pressed_text = form.LastKeyboardEvent
-        form.LastKeyboardEvent = None
+    # if this is a column, then will fail so need to wrap with tr
+    try:
+        if form.ReturnKeyboardEvents and form.LastKeyboardEvent is not None:
+            button_pressed_text = form.LastKeyboardEvent
+            form.LastKeyboardEvent = None
+    except: pass
 
     try:
         form.ReturnValuesDictionary.pop(None, None)     # clean up dictionary include None was included
@@ -1455,12 +1458,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen+10)  # set wrap to width of widget
+                tktext_label.configure(anchor=anchor, font=font, wraplen=0)  # set wrap to width of widget
                 if element.BackgroundColor is not None:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT)
+                # print(f'Text element placed w = {width}, h = {height}, wrap = {wraplen}')
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element.Location = (row_num, col_num)
@@ -1921,7 +1925,7 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
-            form.AddRow(Text(message_wrapped, auto_size_text=True))
+            form.AddRow(Text(message_wrapped, auto_size_text=True, size=(width_used, height)))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
@@ -2665,7 +2669,7 @@ def ObjToString(obj, extra='    '):
 def main():
     with FlexForm('Demo form..') as form:
         form_rows = [[Text('You are running the PySimpleGUI.py file itself')],
-                     [Text('You should be importing it rather than running it\n')],
+                     [Text('You should be importing it rather than running it', size=(50,2))],
                      [Text('Here is your sample input form....')],
                      [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
                      [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
