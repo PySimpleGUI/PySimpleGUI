@@ -37,6 +37,8 @@ import fitz
 import PySimpleGUI as sg
 from binascii import hexlify
 
+sg.ChangeLookAndFeel('GreenTan')
+
 if len(sys.argv) == 1:
     rc, fname = sg.GetFileBox('PDF Browser', 'PDF file to open', file_types=(("PDF Files", "*.pdf"),))
     if rc is False:
@@ -126,7 +128,7 @@ while True:
     if button is None:
         continue
 
-    if button in ("Escape:27"):  # this spares me a 'Quit' button!
+    if button in ("Escape:27",):  # this spares me a 'Quit' button!
         break
     # print("hex(button)", hexlify(button.encode()))
     if button[0] == chr(13):  # surprise: this is 'Enter'!
