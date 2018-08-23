@@ -715,9 +715,11 @@ class Button(Element):
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         return
 
-    def Update(self, new_text):
+    def Update(self, new_text, button_color=(None, None)):
         try:
             self.TKButton.configure(text=new_text)
+            if button_color != (None, None):
+                self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
             return
 
@@ -1043,8 +1045,6 @@ class FlexForm:
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.Decrement()
-        # if self.ReturnValues[0] is not None:      # keyboard events build their own return values
-        #     return self.ReturnValues
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
             return BuildResults(self, False, self)
         else:
