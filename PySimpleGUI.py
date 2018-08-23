@@ -716,7 +716,10 @@ class Button(Element):
         return
 
     def Update(self, new_text):
-        self.TKButton.configure(text=new_text)
+        try:
+            self.TKButton.configure(text=new_text)
+        except:
+            return
 
     def __del__(self):
         try:
@@ -1060,6 +1063,7 @@ class FlexForm:
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
+            # return None, None
         return BuildResults(self, False, self)
 
     def GetScreenDimensions(self):
