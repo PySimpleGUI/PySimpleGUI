@@ -290,7 +290,7 @@ class Listbox(Element):
         :param auto_size_text: True if should shrink field to fit the default text
         :param background_color: Color for Element. Text or RGB Hex        '''
         self.Values = values
-        self.TKListBox = None
+        self.TKListbox = None
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -304,6 +304,12 @@ class Listbox(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key)
+
+    def Update(self, values):
+        self.TKListbox.delete(0, 'end')
+        for item in values:
+            self.TKListbox.insert(tk.END, item)
+        self.TKListbox.selection_set(0, 0)
 
     def __del__(self):
         try:
