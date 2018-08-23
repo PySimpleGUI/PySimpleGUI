@@ -482,10 +482,15 @@ class Text(Element):
         super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor)
         return
 
-    def Update(self, NewValue):
-        self.DisplayText=NewValue
-        stringvar = self.TKStringVar
-        stringvar.set(NewValue)
+    def Update(self, new_value = None, background_color=None, text_color=None):
+        if new_value is not None:
+            self.DisplayText=new_value
+            stringvar = self.TKStringVar
+            stringvar.set(new_value)
+        if background_color is not None:
+            self.TKText.configure(background=background_color)
+        if text_color is not None:
+            self.TKText.configure(fg=text_color)
 
     def __del__(self):
         super().__del__()
@@ -1478,6 +1483,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT)
+                element.TKText = tktext_label
                 # print(f'Text element placed w = {width}, h = {height}, wrap = {wraplen}')
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
