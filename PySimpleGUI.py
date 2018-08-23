@@ -715,6 +715,9 @@ class Button(Element):
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         return
 
+    def Update(self, new_text):
+        self.TKButton.configure(text=new_text)
+
     def __del__(self):
         try:
             self.TKButton.__del__()
