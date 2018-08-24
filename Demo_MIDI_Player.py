@@ -56,23 +56,19 @@ class PlayerGUI():
         image_next = './ButtonGraphics/Next.png'
         image_exit = './ButtonGraphics/Exit.png'
 
-        self.TextElem = g.T('Song loading....', size=(85, 5 + NumFiles), font=("Helvetica", 14), auto_size_text=False)
-        form = g.FlexForm('MIDI File Player', default_element_size=(30, 1),font=("Helvetica", 25))
+        self.TextElem = g.T('Song loading....', size=(85,5 + NumFiles), font=("Helvetica", 14), auto_size_text=False)
+        form = g.FlexForm('MIDI File Player', default_element_size=(30,1),font=("Helvetica", 25))
         layout = [
-                    [g.T('MIDI File Player', size=(30, 1), font=("Helvetica", 25))],
+                    [g.T('MIDI File Player', size=(30,1), font=("Helvetica", 25))],
                     [self.TextElem],
                     [g.ReadFormButton('PAUSE', button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_pause,  image_size=(50,50),image_subsample=2, border_width=0,
-                                     font=("Helvetica", 15), size=(10, 2)), g.T(' ' * 3),
+                                     image_filename=image_pause,  image_size=(50,50),image_subsample=2, border_width=0), g.T(' '),
                     g.ReadFormButton('NEXT', button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_next, image_size=(50,50),image_subsample=2, border_width=0,
-                                     size=(10, 2), font=("Helvetica", 15)), g.T(' ' * 3),
+                                     image_filename=image_next, image_size=(50,50),image_subsample=2, border_width=0), g.T(' '),
                     g.ReadFormButton('Restart Song',  button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_restart,  image_size=(50,50), image_subsample=2,border_width=0,
-                                     size=(10, 2), font=("Helvetica", 15)), g.T(' ' * 3),
-                    g.T(' '*2), g.SimpleButton('EXIT',  button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_exit, image_size=(50,50), image_subsample=2,border_width=0,
-                                    size=(10, 2), font=("Helvetica", 15))]
+                                     image_filename=image_restart,  image_size=(50,50), image_subsample=2, border_width=0), g.T(' '),
+                    g.SimpleButton('EXIT',  button_color=g.TRANSPARENT_BUTTON,
+                                     image_filename=image_exit, image_size=(50,50), image_subsample=2, border_width=0,)]
                   ]
 
         form.LayoutAndRead(layout, non_blocking=True)
@@ -117,15 +113,13 @@ def main():
         '''
         return int(round(time.time() * 1000))
 
-    g.SetOptions(border_width=1, element_padding=(4, 6), font=("Helvetica", 10), button_color=('white', g.BLUES[0]),
-                 progress_meter_border_depth=1, slider_border_width=1)
     pback = PlayerGUI()
 
     button, values = pback.PlayerChooseSongGUI()
     if button != 'PLAY!':
         g.MsgBoxCancel('Cancelled...\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
         exit(69)
-    if values['device'] is not None:
+    if values['device']:
         midi_port = values['device'][0]
     else:
         g.MsgBoxCancel('No devices found\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
