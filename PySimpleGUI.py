@@ -290,7 +290,7 @@ class Listbox(Element):
         :param auto_size_text: True if should shrink field to fit the default text
         :param background_color: Color for Element. Text or RGB Hex        '''
         self.Values = values
-        self.TKListBox = None
+        self.TKListbox = None
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -304,6 +304,12 @@ class Listbox(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key)
+
+    def Update(self, values):
+        self.TKListbox.delete(0, 'end')
+        for item in values:
+            self.TKListbox.insert(tk.END, item)
+        self.TKListbox.selection_set(0, 0)
 
     def __del__(self):
         try:
@@ -476,10 +482,15 @@ class Text(Element):
         super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor)
         return
 
-    def Update(self, NewValue):
-        self.DisplayText=NewValue
-        stringvar = self.TKStringVar
-        stringvar.set(NewValue)
+    def Update(self, new_value = None, background_color=None, text_color=None):
+        if new_value is not None:
+            self.DisplayText=new_value
+            stringvar = self.TKStringVar
+            stringvar.set(new_value)
+        if background_color is not None:
+            self.TKText.configure(background=background_color)
+        if text_color is not None:
+            self.TKText.configure(fg=text_color)
 
     def __del__(self):
         super().__del__()
@@ -704,6 +715,14 @@ class Button(Element):
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         return
 
+    def Update(self, new_text, button_color=(None, None)):
+        try:
+            self.TKButton.configure(text=new_text)
+            if button_color != (None, None):
+                self.TKButton.config(foreground=button_color[0], background=button_color[1])
+        except:
+            return
+
     def __del__(self):
         try:
             self.TKButton.__del__()
@@ -820,6 +839,9 @@ class Slider(Element):
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key)
         return
+
+    def Update(self, value):
+        self.TKIntVar.set(value)
 
     def __del__(self):
         super().__del__()
@@ -1026,8 +1048,6 @@ class FlexForm:
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.Decrement()
-        # if self.ReturnValues[0] is not None:      # keyboard events build their own return values
-        #     return self.ReturnValues
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
             return BuildResults(self, False, self)
         else:
@@ -1046,6 +1066,7 @@ class FlexForm:
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
+            # return None, None
         return BuildResults(self, False, self)
 
     def GetScreenDimensions(self):
@@ -1452,7 +1473,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 stringvar.set(display_text)
-                if auto_size_text:
+                if element.AutoSizeText:
                     width = 0
                 if element.Justification is not None:
                     justification = element.Justification
@@ -1463,16 +1484,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth)
-                # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen+40)  # set wrap to width of widget
+                wraplen = tktext_label.winfo_reqwidth()+40  # width of widget in Pixels
+                if not auto_size_text:
+                    wraplen = 0
+                # print("wraplen, width, height", wraplen, width, height)
+                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen)  # set wrap to width of widget
                 if element.BackgroundColor is not None:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT)
-                # print(f'Text element placed w = {width}, h = {height}, wrap = {wraplen}')
+                element.TKText = tktext_label
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element.Location = (row_num, col_num)
@@ -1933,6 +1956,7 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
+            # print('Msgbox width, height', width_used, height)
             form.AddRow(Text(message_wrapped, auto_size_text=True, size=(width_used, height)))
             total_lines += height
 

@@ -57,7 +57,7 @@ Browse for a filename that is populated into the input field.
 
     import PySimpleGUI as sg
 
-    with sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
+    with sg.FlexForm('SHA-1 & 256 Hash') as form:
         form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [sg.InputText(), sg.FileBrowse()],
                      [sg.Submit(), sg.Cancel()]]
@@ -101,7 +101,7 @@ Example of nearly all of the widgets in a single form.  Uses a customized color 
                   progress_meter_border_depth=0,
                   scrollbar_color='#F7F3EC')
 
-    with sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
+    with sg.FlexForm('Everything bagel', default_element_size=(40, 1)) as form:
         layout = [
             [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
             [sg.Text('Here is some text.... and a place to enter text')],
@@ -141,7 +141,7 @@ Example of nearly all of the widgets in a single form.  Uses a customized color 
                   progress_meter_border_depth=0,
                   scrollbar_color='#F7F3EC')
 
-    form = sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1))
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
     layout = [
             [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
             [sg.Text('Here is some text.... and a place to enter text')],
@@ -175,7 +175,7 @@ An async form that has a button read loop.  A Text Element is updated periodical
     import PySimpleGUI as sg
     import time
 
-    form = sg.FlexForm('Running Timer', auto_size_text=True)
+    form = sg.FlexForm('Running Timer')
     # create a text element that will be updated periodically
     text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center')
 
@@ -210,7 +210,7 @@ Like the previous recipe, this form is an async form.  The difference is that th
     import PySimpleGUI as sg
     import time
 
-    with sg.FlexForm('Running Timer', auto_size_text=True) as form:
+    with sg.FlexForm('Running Timer') as form:
         text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), text_color='red', justification='center')
         layout = [[sg.Text('Non blocking GUI with updates', justification='center')],
                   [text_element],
@@ -249,7 +249,7 @@ The architecture of some programs works better with button callbacks instead of 
     # Create a standard form
     form = sg.FlexForm('Button callback example')
     # Layout the design of the GUI
-    layout = [[sg.Text('Please click a button', auto_size_text=True)],
+    layout = [[sg.Text('Please click a button')],
               [sg.ReadFormButton('1'), sg.ReadFormButton('2'), sg.Quit()]]
     # Show the form to the user
     form.Layout(layout)
@@ -593,3 +593,44 @@ To make it easier to see the Column in the window, the Column background has bee
     button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
 
     sg.MsgBox(button, values, line_width=200)
+
+
+## Persistent Form With Text Element Updates
+
+This simple program keep a form open, taking input values until the user terminates the program using the "X" button.
+
+![math game](https://user-images.githubusercontent.com/13696193/44537842-c9444080-a6cd-11e8-94bc-6cdf1b765dd8.jpg)
+
+
+
+    import PySimpleGUI as sg
+
+    form = sg.FlexForm('Math')
+
+    output = sg.Txt('', size=(8,1))
+
+    layout = [ [sg.Txt('Enter values to calculate')],
+               [sg.In(size=(8,1), key='numerator')],
+               [sg.Txt('_'  * 10)],
+               [sg.In(size=(8,1), key='denominator')],
+               [output],
+               [sg.ReadFormButton('Calculate', bind_return_key=True)]]
+
+    form.Layout(layout)
+
+    while True:
+        button, values = form.Read()
+
+        if button is not None:
+            try:
+                numerator = float(values['numerator'])
+                denominator = float(values['denominator'])
+                calc = numerator / denominator
+            except:
+                calc = 'Invalid'
+
+            output.Update(calc)
+        else:
+            break
+
+
