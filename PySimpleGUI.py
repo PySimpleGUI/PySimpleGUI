@@ -840,6 +840,9 @@ class Slider(Element):
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key)
         return
 
+    def Update(self, value):
+        self.TKIntVar.set(value)
+
     def __del__(self):
         super().__del__()
 
@@ -1481,17 +1484,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth)
-                # tktext_label = tk.Label(tk_row_frame,anchor=tk.NW, text=display_text, width=width, height=height, justify=tk.LEFT, bd=border_depth)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen+40)  # set wrap to width of widget
+                wraplen = tktext_label.winfo_reqwidth()+40  # width of widget in Pixels
+                if not auto_size_text:
+                    wraplen = 0
+                # print("wraplen, width, height", wraplen, width, height)
+                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen)  # set wrap to width of widget
                 if element.BackgroundColor is not None:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT)
                 element.TKText = tktext_label
-                # print(f'Text element placed w = {width}, h = {height}, wrap = {wraplen}')
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element.Location = (row_num, col_num)
@@ -1952,7 +1956,8 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
-            form.AddRow(Text(message_wrapped, auto_size_text=True, size=(width_used, height)))
+            # print('Msgbox width, height', width_used, height)
+            form.AddRow(Text(message_wrapped, auto_size_text=True))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
