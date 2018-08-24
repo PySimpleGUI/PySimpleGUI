@@ -1473,7 +1473,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 stringvar.set(display_text)
-                if auto_size_text:
+                if element.AutoSizeText:
                     width = 0
                 if element.Justification is not None:
                     justification = element.Justification
@@ -1957,7 +1957,7 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
             # print('Msgbox width, height', width_used, height)
-            form.AddRow(Text(message_wrapped, auto_size_text=True))
+            form.AddRow(Text(message_wrapped, auto_size_text=True, size=(width_used, height)))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
