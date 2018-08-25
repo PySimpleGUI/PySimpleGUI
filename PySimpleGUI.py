@@ -764,7 +764,7 @@ class ProgressBar(Element):
         try:
             self.ParentForm.TKroot.update()
         except:
-            # _my_windows.Decrement()
+            _my_windows.Decrement()
             return False
         return True
 
