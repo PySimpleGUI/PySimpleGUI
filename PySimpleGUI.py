@@ -512,24 +512,21 @@ class TKProgressBar():
         if orientation[0].lower() == 'h':
             s = ttk.Style()
             s.theme_use(style)
-            s.configure("my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style='my.Horizontal.TProgressbar', length=length, orient=tk.HORIZONTAL, mode='determinate')
-            # self.TKCanvas = tk.Canvas(root, width=length, height=width, highlightt=highlightt, relief=relief, borderwidth=border_width)
-            # self.TKRect = self.TKCanvas.create_rectangle(0, 0, -(length * 1.5), width * 1.5, fill=BarColor[0], tags='bar')
-            # self.canvas.pack(padx='10')
+            s.configure(str(length)+str(width)+"my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style=str(length)+str(width)+'my.Horizontal.TProgressbar', length=length, orient=tk.HORIZONTAL, mode='determinate')
         else:
-            # s = ttk.Style()
-            # s.theme_use('clam')
-            # s.configure('Vertical.mycolor.progbar', forground=BarColor[0], background=BarColor[1])
             s = ttk.Style()
             s.theme_use(style)
-            s.configure("my.Vertical.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
-            self.TKProgressBarForReal = ttk.Progressbar(root,  maximum=self.Max, style='my.Vertical.TProgressbar', length=length, orient=tk.VERTICAL, mode='determinate')
-            # self.TKCanvas = tk.Canvas(root, width=width, height=length, highlightt=highlightt, relief=relief, borderwidth=border_width)
-            # self.TKRect = self.TKCanvas.create_rectangle(width * 1.5, 2 * length + 40, 0, length * .5, fill=BarColor[0], tags='bar')
-            # self.canvas.pack()
+            s.configure(str(length)+str(width)+"my.Vertical.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            self.TKProgressBarForReal = ttk.Progressbar(root,  maximum=self.Max, style=str(length)+str(width)+'my.Vertical.TProgressbar', length=length, orient=tk.VERTICAL, mode='determinate')
 
-    def Update(self, count):
+    def Update(self, count, max=None):
+        if max is not None:
+            self.Max = max
+            try:
+                self.TKProgressBarForReal.config(maximum=max)
+            except:
+                return False
         if count > self.Max: return False
         try:
             self.TKProgressBarForReal['value'] = count
@@ -757,17 +754,17 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(ELEM_TYPE_PROGRESS_BAR, scale, size, auto_size_text)
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, scale=scale, size=size, auto_size_text=auto_size_text)
         return
 
-    def UpdateBar(self, current_count):
+    def UpdateBar(self, current_count, max=None):
         if self.ParentForm.TKrootDestroyed:
             return False
-        self.TKProgressBar.Update(current_count)
+        self.TKProgressBar.Update(current_count, max=max)
         try:
             self.ParentForm.TKroot.update()
         except:
-            # _my_windows.Decrement()
+            _my_windows.Decrement()
             return False
         return True
 
@@ -840,8 +837,11 @@ class Slider(Element):
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key)
         return
 
-    def Update(self, value):
+    def Update(self, value, range=(None, None)):
         self.TKIntVar.set(value)
+        if range != (None, None):
+            self.TKScale.config(from_ = range[0], to_ = range[1])
+
 
     def __del__(self):
         super().__del__()
@@ -1749,6 +1749,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
+                element.TKScale = tkscale
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
