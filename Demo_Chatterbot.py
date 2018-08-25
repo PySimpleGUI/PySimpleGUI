@@ -30,8 +30,11 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
     global texts
     global training_form
     # update the form and the bars
-    training_form.ReadNonBlocking()
-    bars[current_bar].UpdateBar(iteration_counter, max=total_items)
+    button, values = training_form.ReadNonBlocking()
+    if button is None and values is None:
+        exit(69)
+    if bars[current_bar].UpdateBar(iteration_counter, max=total_items) is False:
+        exit(69)
     texts[current_bar].Update(description)
     if iteration_counter == total_items:
         current_bar += 1
