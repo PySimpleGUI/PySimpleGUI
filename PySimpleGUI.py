@@ -139,6 +139,7 @@ ELEM_TYPE_INPUT_CHECKBOX = 8
 ELEM_TYPE_INPUT_SPIN = 9
 ELEM_TYPE_BUTTON = 3
 ELEM_TYPE_IMAGE = 30
+ELEM_TYPE_CANVAS = 40
 ELEM_TYPE_INPUT_SLIDER = 10
 ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
@@ -542,12 +543,13 @@ class TKProgressBar():
 #       Scroll bar will span the length of the frame                     #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
-    def __init__(self, parent, width, height, bd, background_color=None, text_color=None):
-        frame = tk.Frame(parent, width=width, height=height)
+    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None):
+        frame = tk.Frame(parent)
         tk.Frame.__init__(self, frame)
-        self.output = tk.Text(frame, width=width, height=height, bd=bd)
+        self.output = tk.Text(frame, width=width, height=height, bd=bd, font=font)
         if background_color and background_color != COLOR_SYSTEM_DEFAULT:
             self.output.configure(background=background_color)
+            frame.configure(background=background_color)
         if text_color and text_color != COLOR_SYSTEM_DEFAULT:
             self.output.configure(fg=text_color)
         self.vsb = tk.Scrollbar(frame, orient="vertical", command=self.output.yview)
@@ -586,7 +588,7 @@ class TKOutput(tk.Frame):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class Output(Element):
-    def __init__(self, scale=(None, None), size=(None, None), background_color=None, text_color=None, pad=None):
+    def __init__(self, scale=(None, None), size=(None, None), background_color=None, text_color=None, pad=None, font=None):
         '''
         Output Element - reroutes stdout, stderr to this window
         :param scale: Adds multiplier to size (w,h)
@@ -597,7 +599,7 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg, text_color=fg, pad=pad)
+        super().__init__(ELEM_TYPE_OUTPUT, scale=scale, size=size, background_color=bg, text_color=fg, pad=pad, font=font)
 
     def __del__(self):
         try:
@@ -806,6 +808,28 @@ class Image(Element):
 
     def __del__(self):
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Canvas                                       #
+# ---------------------------------------------------------------------- #
+class Canvas(Element):
+    def __init__(self, background_color=None, scale=(None, None), size=(None, None), pad=None):
+        '''
+        Image Element
+        :param filename:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        '''
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.TKCanvas = None
+
+        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, scale=scale, size=size, pad=pad)
+        return
+
+    def __del__(self):
+        super().__del__()
+
 
 # ---------------------------------------------------------------------- #
 #                           Slider                                       #
@@ -1168,11 +1192,14 @@ class UberForm():
 # ====================================================================== #
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
-def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
+In = InputText
+Input = InputText
+####  TODO REMOVE THESE COMMENTS  - was the old way, but want to keep around for a bit just in case
+# def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
+#     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
 
-def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
-    return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
+# def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
+#     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
 CB = Checkbox
@@ -1180,20 +1207,29 @@ CBox = Checkbox
 Check = Checkbox
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
-def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
-    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text, background_color=background_color)
 
-def DropDown(values, scale=(None, None), size=(None, None), auto_size_text=None):
-    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
+Combo = InputCombo
+DropDown = InputCombo
+Drop = InputCombo
 
-def Drop(values, scale=(None, None), size=(None, None), auto_size_text=None):
-    return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
+# def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
+#     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text, background_color=background_color)
+#
+# def DropDown(values, scale=(None, None), size=(None, None), auto_size_text=None):
+#     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
+#
+# def Drop(values, scale=(None, None), size=(None, None), auto_size_text=None):
+#     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
 # -------------------------  TEXT Element lazy functions  ------------------------- #
-def Txt(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
-    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
 
-def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
-    return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
+Txt = Text
+T = Text
+
+# def Txt(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
+#     return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
+#
+# def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
+#     return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None):
@@ -1469,7 +1505,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 stringvar.set(display_text)
-                if element.AutoSizeText:
+                if auto_size_text:
                     width = 0
                 if element.Justification is not None:
                     justification = element.Justification
@@ -1500,7 +1536,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.AutoSizeButton is not None:
                     auto_size = element.AutoSizeButton
                 else: auto_size = toplevel_form.AutoSizeButtons
-                if auto_size is False: width=element_size[0]
+                if auto_size is False or element.Size[0] is not None: width=element_size[0]
                 else: width = 0
                 height=element_size[1]
                 lines = btext.split('\n')
@@ -1702,8 +1738,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color)
-                element.TKOut.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font)
+                element.TKOut.pack(side=tk.LEFT)
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
@@ -1723,6 +1759,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
                     element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
+                # -------------------------  Canvas element  ------------------------- #
+            elif element_type == ELEM_TYPE_CANVAS:
+                width, height = element_size
+                element.TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKCanvas.configure(background=element.BackgroundColor)
+                element.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -1954,7 +1997,7 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
             # print('Msgbox width, height', width_used, height)
-            form.AddRow(Text(message_wrapped, auto_size_text=True, size=(width_used, height)))
+            form.AddRow(Text(message_wrapped, auto_size_text=True))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
