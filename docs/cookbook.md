@@ -634,3 +634,103 @@ This simple program keep a form open, taking input values until the user termina
             break
 
 
+
+## tkinter Canvas Widget
+
+The Canvas Element is one of the few tkinter objects that are directly accessible.  The tkinter Canvas widget itself can be retrieved from a Canvas Element like this:
+
+    can = sg.Canvas(size=(100,100))
+    tkcanvas = can.TKCanvas
+    tkcanvas.create_oval(50, 50, 100, 100)
+
+
+![canvas](https://user-images.githubusercontent.com/13696193/44632429-5266ac00-a948-11e8-9ee0-664103c40178.jpg)
+
+
+
+
+    import PySimpleGUI as gui
+
+    canvas = gui.Canvas(size=(100,100), background_color='red')
+
+    layout = [
+               [canvas],
+               [gui.T('Change circle color to:'), gui.ReadFormButton('Red'), gui.ReadFormButton('Blue')]
+               ]
+
+    form = gui.FlexForm('Canvas test')
+    form.Layout(layout)
+    form.ReadNonBlocking()
+
+    cir = canvas.TKCanvas.create_oval(50, 50, 100, 100)
+
+    while True:
+        button, values = form.Read()
+        if button is None:
+            break
+        if button is 'Blue':
+            canvas.TKCanvas.itemconfig(cir, fill = "Blue")
+        elif button is 'Red':
+            canvas.TKCanvas.itemconfig(cir, fill = "Red")
+
+
+## Input Element Update
+
+This Recipe implements a Raspberry Pi touchscreen based keypad entry.  As the digits are entered using the buttons, the Input Element above it is updated with the input digits.
+There are a number of features used in this Recipe including:
+* Default Element Size
+* auto_size_buttons
+* ReadFormButton
+* Dictionary Return values
+* Update of Elements in form (Input, Text)
+* do_not_clear of Input Elements
+
+.
+
+
+
+    import PySimpleGUI as g
+
+    # g.SetOptions(button_color=g.COLOR_SYSTEM_DEFAULT)   # because some people like gray buttons
+
+    # Demonstrates a number of PySimpleGUI features including:
+    #   Default element size
+    #   auto_size_buttons
+    #   ReadFormButton
+    #   Dictionary return values
+    #   Update of elements in form (Text, Input)
+    #   do_not_clear of Input elements
+
+
+    # create the 2 Elements we want to control outside the form
+    out_elem = g.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red')
+    in_elem = g.Input(size=(10, 1), do_not_clear=True, key='input')
+
+    layout = [[g.Text('Enter Your Passcode')],
+              [in_elem],
+              [g.ReadFormButton('1'), g.ReadFormButton('2'), g.ReadFormButton('3')],
+              [g.ReadFormButton('4'), g.ReadFormButton('5'), g.ReadFormButton('6')],
+              [g.ReadFormButton('7'), g.ReadFormButton('8'), g.ReadFormButton('9')],
+              [g.ReadFormButton('Submit'), g.ReadFormButton('0'), g.ReadFormButton('Clear')],
+              [out_elem],
+              ]
+
+    form = g.FlexForm('Keypad', default_element_size=(5, 2), auto_size_buttons=False)
+    form.Layout(layout)
+
+    # Loop forever reading the form's values, updating the Input field
+    keys_entered = ''
+    while True:
+        button, values = form.Read()  # read the form
+        if button is None:  # if the X button clicked, just exit
+            break
+        if button is 'Clear':  # clear keys if clear button
+            keys_entered = ''
+        elif button in '1234567890':
+            keys_entered = values['input']  # get what's been entered so far
+            keys_entered += button  # add the new digit
+        elif button is 'Submit':
+            keys_entered = values['input']
+            out_elem.Update(keys_entered)  # output the final string
+
+        in_elem.Update(keys_entered)  # change the form to reflect current key string
