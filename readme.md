@@ -10,7 +10,8 @@
 
 
 # PySimpleGUI
-  (Ver 2.9)
+  (Ver 2.10)
+  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
 
 Lots of documentation available in addition to this Readme File.
 [Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
@@ -114,6 +115,9 @@ The `PySimpleGUI` package is focused on the ***developer***.  How can the desire
         Set focus
         Bind return key to buttons
         Group widgets into a column and place into form anywhere
+        Keyboard low-level key capture
+        Mouse scroll-wheel support
+        Update elements in a visible form
 
 
 An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
@@ -824,7 +828,7 @@ A summary of the variables that can be changed when a FlexForm is created
 
 
 ## Elements
-"Elements" are the building blocks used to create forms.  Some GUI APIs use the term Widget to describe these graphic elements.
+"Elements" are the building blocks used to create forms.  Some GUI APIs use the term "Widget" to describe these graphic elements.
 
      Text
      Single Line Input
@@ -890,16 +894,19 @@ The default font setting is
 
     ("Helvetica", 10)
 
-**Color** in PySimpleGUI are always in this format:
+**Color** in PySimpleGUI are in one of two format.  They can be a single color or a color pair.  Buttons are an example of a color pair.
 
     (foreground, background)
 
-The values foreground and background can be the color names or the hex value formatted as a string:
+ Individual colors are specified using either the color names as defined in tkinter or an RGB string of this format:
 
     "#RRGGBB"
 
 **auto_size_text**
-A `True` value for `auto_size_text`, when placed on any Element, indicates that the width of the Element should be shrunk do the width of the text.  This is particularly useful with `Buttons` as fixed-width buttons are somewhat crude looking.  The default value is `False`.  You will often see this setting on FlexForm definitions.
+A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.
+
+ - [ ] List item
+
 
 **Shorthand functions**
 The shorthand functions for `Text` are `Txt` and `T`
@@ -950,7 +957,13 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
                     scale=(None, None),
                     size=(None, None),
                     auto_size_text=None,
-                    password_char='')
+                    password_char='',
+                    background_color=None,
+                    text_color=None,
+                    do_not_clear=False,
+                    key=None,
+                    focus=False
+                    )
 .
 
      default_text - Text initially shown in the input box
@@ -958,6 +971,17 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
      size - (width, height) of element in characters
      auto_size_text- Bool.  True is element should be sized to fit text
      password_char - Character that will be used to replace each entered character. Setting to a value indicates this field is a password entry field
+     background_color - color to use for the input field background
+     text_color - color to use for the typed text
+     do_not_clear - Bool. Normally forms clear when read, turn off clearing with this flag.
+     key = Dictionary key to use for return values
+     focus = Bool. True if this field should capture the focus (moves cursor to this field)
+
+ There are two methods that can be called:
+
+     InputText.Update(new_Value) - sets the input value
+     Input.Text(Get() - returns the current value of the field.
+
 
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 
@@ -972,13 +996,20 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
     InputCombo(values,
                scale=(None, None),
                size=(None, None),
-               auto_size_text=None)
+               auto_size_text=None,
+               background_color = None,
+               text_color = None,
+               key = None)
 .
 
      values - Choices to be displayed. List of strings
      scale - Amount to scale size by
      size - (width, height) of element in characters
      auto_size_text - Bool. True if size should fit the text length
+     background_color - color to use for the input field background
+     text_color - color to use for the typed text
+     key = Dictionary key to use for return values
+
 
 #### Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
@@ -993,7 +1024,10 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
              scale=(None, None),
              size=(None, None),
              auto_size_text=None,
-             font=None)
+             font=None,
+             background_color = None,
+             text_color = None,
+             key = None)
 .
 
     values - Choices to be displayed. List of strings
@@ -1012,6 +1046,9 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
     scale - Amount to scale size by
     size - (width, height) of element in characters
     auto_size_text - Bool. True if size should fit the text length
+    background_color - color to use for the input field background
+    text_color - color to use for the typed text
+    key = Dictionary key to use for return values
 
 The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
 
@@ -1029,7 +1066,10 @@ Sliders have a couple of slider-specific settings as well as appearance settings
               relief=None,
               scale=(None, None),
               size=(None, None),
-              font=None):
+              font=None,
+              background_color = None,
+              text_color = None,
+              key = None) ):
 .
 
       range - (min, max) slider's range
@@ -1046,6 +1086,9 @@ Sliders have a couple of slider-specific settings as well as appearance settings
       scale - Amount to scale size by
        size - (width, height) of element in characters
        auto_size_text - Bool. True if size should fit the text
+       background_color - color to use for the input field background
+       text_color - color to use for the typed text
+       key = Dictionary key to use for return values
 
 #### Radio Button Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
@@ -1060,7 +1103,10 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
            scale=(None, None),
            size=(None, None),
            auto_size_text=None,
-           font=None)
+           font=None,
+           background_color = None,
+           text_color = None,
+           key = None)
 
 .
 
@@ -1071,6 +1117,9 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
      size- (width, height) size of element in characters
      auto_size_text - Bool.  True if should size width to fit text
      font - Font type and size for text display
+     background_color - color to use for the background
+     text_color - color to use for the text
+     key = Dictionary key to use for return values
 
 
 #### Checkbox Element
@@ -1086,7 +1135,10 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
              scale=(None, None),
              size=(None, None),
              auto_size_text=None,
-             font=None):
+             font=None,
+             background_color = None,
+             text_color = None,
+             key = None):
 .
 
      text - Text to display next to checkbox
@@ -1095,6 +1147,9 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
      size - (width, height) size of element in characters
      auto_size_text- Bool.  True if should size width to fit text
      font- Font type and size for text display
+     background_color - color to use for the background
+     text_color - color to use for the typed text
+     key = Dictionary key to use for return values
 
 
 #### Spin Element
@@ -1109,7 +1164,10 @@ An up/down spinner control.  The valid values are passed in as a list.
          scale=(None, None),
          size=(None, None),
          auto_size_text=None,
-         font=None)
+         font=None,
+         background_color = None,
+         text_color = None,
+         key = None):
 .
 
      values - List of valid values
@@ -1118,6 +1176,9 @@ An up/down spinner control.  The valid values are passed in as a list.
      size - (width, height) size of element in characters
      auto_size_text - Bool.  True if should size width to fit text
      font - Font type and size for text display
+     background_color - color to use for the background
+     text_color - color to use for the typed text
+     key = Dictionary key to use for return values
 
 #### Button Element
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it but Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
@@ -1143,11 +1204,17 @@ Realtime - This is another async form button.  Normal button clicks occur after 
 While it's possible to build forms using the Button Element directly, you should never need to do that.  There are pre-made buttons and shortcuts that will make life much easier.  The most basic Button element call to use is `SimpleButton`
 
     SimpleButton(text,
+			     image_filename=None,
+			     image_size=(None, None),
+			     image_subsample=None,
+			     border_width=None,
+			     bind_return_key=False,
                  scale=(None, None),
                  size=(None, None),
                  auto_size_button=None,
                  button_color=None,
-                 font=None)
+                 font=None,
+                 focus=False)
 
 These Pre-made buttons are some of the most important elements of all because they are used so much.  If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub.  (hmmm Save already comes to mind). They include:
 
@@ -1157,14 +1224,19 @@ These Pre-made buttons are some of the most important elements of all because th
     Cancel
     Yes
     No
+    Exit
+    Quit
+    Save
+    SaveAs
     FileBrowse
+    FileSaveAs
     FolderBrowse
 .
     layout =  [[sg.OK(), sg.Cancel()]]
 
 ![ok cancel](https://user-images.githubusercontent.com/13696193/42717733-1803f584-86d1-11e8-9223-36b782971b9f.jpg)
 
-The FileBrowse and FolderBrowse buttons both fill-in values into a text input field somewhere on the form.  The location of the TextInput element is specified by the `Target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
+The FileBrowse, FolderBrowse, FileSaveAs buttons all fill-in values into a text input field somewhere on the form.  The location of the TextInput element is specified by the `Target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
 
 The default value for `Target` is `(ThisRow, -1)`.   ThisRow is a special value that tells the GUI to use the same row as the button.  The Y-value of -1 means the field one value to the left of the button.  For a File or Folder Browse button, the field that it fills are generally to the left of the button is most cases.
 
@@ -1189,7 +1261,7 @@ layout =  [[sg.SimpleButton('My Button')]]
 
 ![singlebutton](https://user-images.githubusercontent.com/13696193/42718281-9453deca-86d5-11e8-83c7-4b6d33720858.jpg)
 
-All buttons can have their text changed by changing the `button_text` variable in the button call.  It is this text that is returned when a form is read.  This text will be what tells you which button is called so make it unique.  Most of the convenience buttons (Submit, Cancel, Yes, etc) are all SimpleButtons.  The two that are not are `FileBrowse` and `FolderBrowse`.  They clearly do not close the form. Instead they bring up a file or folder browser dialog box.
+All buttons can have their text changed by changing the `button_text` variable in the button call.  It is this text that is returned when a form is read.  This text will be what tells you which button is called so make it unique.  Most of the convenience buttons (Submit, Cancel, Yes, etc) are all SimpleButtons. Some that are not are `FileBrowse` ,  `FolderBrowse`, `FileSaveAs`.  They clearly do not close the form. Instead they bring up a file or folder browser dialog box.
 
 **Button Images**
 Now this is an exciting feature not found in many simplified packages.... images on buttons!  You can make a pretty spiffy user interface with the help of a few button images.
@@ -1255,7 +1327,7 @@ Somewhere later in your code will be your main event loop. This is where you do 
 This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `form.ReadNonBlocking` will  return a button name matching the name on the button that was depressed.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons until a button is again clicked.
 
 **File Types**
-The `FileBrowse` button has an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
+The `FileBrowse` & `SaveAs` buttons have an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
 
     FileTypes=(("ALL Files", "*.*"),)
 
@@ -1264,7 +1336,10 @@ This code produces a form where the Browse button only shows files of type .TXT
     layout =  [[sg.In() ,sg.FileBrowse(file_types=(("Text Files", "*.txt"),))]]
 
   ***The ENTER key***
-       The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a form.  If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.
+       The ENTER key is an important part of data entry for forms.  There's a long  tradition of the enter key being used to quickly submit forms.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a form.
+
+The Enter Key can be "bound" to a particular button so that when the key is pressed, it causes the form to return as if the button was clicked.  This is done using the `bind_return_key` parameter in the button calls.
+If there are more than 1 button on a form, the FIRST button that is of type Close Form or Read Form is used.  First is determined by scanning the form, top to bottom and left to right.
 
  ---
 #### ProgressBar
@@ -1507,6 +1582,14 @@ These settings apply to all forms `SetOptions`.  The Row options and Element opt
 
 Each lower level overrides the settings of the higher level.  Once settings have been changed, they remain changed for the duration of the program (unless changed again).
 
+## Persistent Forms (Window stays open after button click)
+
+There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking forms (see the next section).  The other way is to use buttons that 'read' the form instead of 'close' the form when clicked.  The typical buttons you find in forms, including the shortcut buttons, close the form.  These include OK, Cancel, Submit, etc.  The SimpleButton Element also closes the form.
+
+The `ReadFormButton` Element creates a button that when clicked will return control to the user, but will leave the form open and visible.  This button is also used in Non-Blocking forms.  The difference is in which call is made to read the form.  The `Read` call will block, the `ReadNonBlocking` will not block.
+
+
+
 ## Asynchronous (Non-Blocking) Forms
 So you want to be a wizard do ya?  Well go boldly!  While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.  With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.ReadNonBlocking` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
 
@@ -1530,9 +1613,11 @@ The basic flow and functions you will be calling are:
 Setup
 
 
-   form = FlexForm()
-   form_rows = .....
-   form.LayoutAndRead(form_rows, non_blocking=True)
+
+       form = FlexForm()
+       form_rows = .....
+       form.LayoutAndRead(form_rows, non_blocking=True)
+
 
 
 Periodic refresh
@@ -1700,7 +1785,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
 | 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
 | 2.9.0 | Aug 16,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict, removed text target from progress bar, rework of return values and initial return values, removed legacy Form.Refresh() method (replaced by Form.ReadNonBlockingForm()), COLUMN elements!!, colored text defaults
-
+| 2.10.0 | Aug 25, 2018 - Keyboard & Mouse features (Return individual keys as if buttons, return mouse scroll-wheel as button, bind return-key to button, control over keyboard focus), SaveAs Button, Update & Get methods for InputText, Update for Listbox, Update & Get for Checkbox, Get for Multiline, Color options for Text Element Update, Progess bar Update can change max value, Update for Button to change text & colors, Update for Image Element, Update for Slider, Form level text justification, Turn off default focus, scroll bar for Listboxes, Images can be from filename or from in-RAM, Update for Image).  Fixes - text wrapping in buttons, msg box, removed slider borders entirely and others
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
