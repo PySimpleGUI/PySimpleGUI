@@ -7,7 +7,7 @@ def Launcher():
 
     layout =  [
                 [sg.Text('Script output....', size=(40, 1))],
-                [sg.Output(size=(88, 20))],
+                [sg.Output(size=(88, 20), font='Courier 10')],
                 [sg.ReadFormButton('script1'), sg.ReadFormButton('script2'), sg.SimpleButton('EXIT')],
                 [sg.Text('Manual command', size=(15,1)), sg.InputText(focus=True), sg.ReadFormButton('Run', bind_return_key=True)]
               ]

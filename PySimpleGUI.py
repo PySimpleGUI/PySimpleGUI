@@ -140,6 +140,7 @@ ELEM_TYPE_INPUT_SPIN = 9
 ELEM_TYPE_BUTTON = 3
 ELEM_TYPE_IMAGE = 30
 ELEM_TYPE_CANVAS = 40
+ELEM_TYPE_FRAME = 41
 ELEM_TYPE_INPUT_SLIDER = 10
 ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
@@ -506,6 +507,7 @@ class TKProgressBar():
         self.Orientation = orientation
         self.Count = None
         self.PriorCount = 0
+
         if orientation[0].lower() == 'h':
             s = ttk.Style()
             s.theme_use(style)
@@ -814,15 +816,9 @@ class Image(Element):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
-    def __init__(self, background_color=None, scale=(None, None), size=(None, None), pad=None):
-        '''
-        Image Element
-        :param filename:
-        :param scale: Adds multiplier to size (w,h)
-        :param size: Size of field in characters
-        '''
+    def __init__(self, canvas=None, background_color=None, scale=(None, None), size=(None, None), pad=None):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.TKCanvas = None
+        self.TKCanvas = canvas
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, scale=scale, size=size, pad=pad)
         return
@@ -830,6 +826,20 @@ class Canvas(Element):
     def __del__(self):
         super().__del__()
 
+
+# ---------------------------------------------------------------------- #
+#                           Frame                                        #
+# ---------------------------------------------------------------------- #
+class Frame(Element):
+    def __init__(self, frame=None, background_color=None, scale=(None, None), size=(None, None), pad=None):
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.TKFrame = frame
+
+        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, scale=scale, size=size, pad=pad)
+        return
+
+    def __del__(self):
+        super().__del__()
 
 # ---------------------------------------------------------------------- #
 #                           Slider                                       #
@@ -1058,6 +1068,7 @@ class FlexForm:
             pass
 
     def Read(self):
+        self.NonBlocking = False
         if self.TKrootDestroyed:
             return None, None
         if not self.Shown:
@@ -1484,7 +1495,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if element_type == ELEM_TYPE_COLUMN:
                 col_frame = tk.Frame(tk_row_frame)
                 PackFormIntoFrame(element, col_frame, toplevel_form)
-                col_frame.pack(side=tk.LEFT)
+                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
@@ -1515,18 +1526,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth)
+                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()+40  # width of widget in Pixels
                 if not auto_size_text:
                     wraplen = 0
                 # print("wraplen, width, height", wraplen, width, height)
-                tktext_label.configure(anchor=anchor, font=font, wraplen=wraplen)  # set wrap to width of widget
+                tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
                 if element.BackgroundColor is not None:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT)
+                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 element.TKText = tktext_label
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -1550,9 +1561,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = DEFAULT_BUTTON_COLOR
                 border_depth = element.BorderWidth
                 if btype != BUTTON_TYPE_REALTIME:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth)
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth, font=font)
                 else:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth)
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT:
@@ -1571,9 +1582,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(image=photo, width=width, height=height)
                     tkbutton.image = photo
                 if width != 0:
-                    tkbutton.configure(wraplength=wraplen+10, font=font)  # set wrap to width of widget
-                else:
-                    tkbutton.configure(font=font)                         # only set the font, not wraplength
+                    tkbutton.configure(wraplength=wraplen+10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
@@ -1698,7 +1707,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     bar_color = DEFAULT_PROGRESS_BAR_COLOR
                 element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief, style=element.BarStyle )
-                # element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief)
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
@@ -1762,10 +1770,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
-                element.TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                if element.TKCanvas is None:
+                    element.TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCanvas.configure(background=element.BackgroundColor)
                 element.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+            # -------------------------  Frame element  ------------------------- #
+            elif element_type == ELEM_TYPE_FRAME:
+                width, height = element_size
+                if element.TKFrame is None:
+                    element.TKFrame = tk.Frame(tk_row_frame, width=width, height=height, bd=border_depth)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKFrame.configure(background=element.BackgroundColor)
+                element.TKFrame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -2659,7 +2676,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
 ##############################################################
 def ChangeLookAndFeel(index):
     # look and feel table
-    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
+    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS':('#9FB8AD','#F7F3EC' )},
 
                       'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':('#247BA0','#F8FAF0')},
 
