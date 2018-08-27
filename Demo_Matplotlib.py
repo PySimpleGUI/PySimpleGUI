@@ -1,9 +1,7 @@
 import PySimpleGUI as g
 import matplotlib
 matplotlib.use('TkAgg')
-from numpy import arange, sin, pi
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
-from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasAgg
 import matplotlib.backends.tkagg as tkagg
 import tkinter as Tk
 
@@ -42,22 +40,30 @@ def draw_figure(canvas, figure, loc=(0, 0)):
     # which must be kept live or else the picture disappears
     return photo
 
-f = Figure(figsize=(5, 4), dpi=100)
-a = f.add_subplot(111)
-t = arange(0.0, 3.0, 0.01)
-s = sin(2*pi*t)
+#------------------------------- PASTE YOUR MATPLOTLIB CODE HERE -------------------------------
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
 
-a.plot(t, s)
-a.set_title('Tk embedding')
-a.set_xlabel('X axis label')
-a.set_ylabel('Y label')
+# Fixing random state for reproducibility
+np.random.seed(19680801)
 
-# -------------------------------- GUI Starts Here --------------------------------
-canvas_elem = g.Canvas(size=(500, 400))         # get the canvas we'll be drawing on
+
+matplotlib.rcParams['axes.unicode_minus'] = False
+fig, ax = plt.subplots()
+ax.plot(10*np.random.randn(100), 10*np.random.randn(100), 'o')
+ax.set_title('Using hyphen instead of Unicode minus')
+
+# -------------------------------- GUI Starts Here -------------------------------#
+# fig = your figure you want to display.  Assumption is that 'fig' holds the      #
+#       information to display.                                                   #
+# --------------------------------------------------------------------------------#
+figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
+canvas_elem = g.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
 # define the form layout
 layout = [[g.Text('Plot test')],
           [canvas_elem],
-          [g.OK(pad=((250,0), 3))]]
+          [g.OK(pad=((figure_w/2,0), 3), size=(4,2))]]
 
 # create the form and show it without the plot
 form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
@@ -65,7 +71,7 @@ form.Layout(layout)
 form.ReadNonBlocking()
 
 # add the plot to the window
-fig_photo = draw_figure(canvas_elem.TKCanvas, f)
+fig_photo = draw_figure(canvas_elem.TKCanvas, fig)
 
 # show it all again and get buttons
 button, values = form.Read()

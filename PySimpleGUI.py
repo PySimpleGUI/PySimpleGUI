@@ -850,7 +850,7 @@ class Frame(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Slider Element
         :param range:
@@ -869,6 +869,8 @@ class Slider(Element):
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
+        self.Resolution = 1 if resolution is None else resolution
+
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad)
         return
 
@@ -1083,6 +1085,9 @@ class FlexForm:
             self.TKroot.mainloop()
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
+                _my_windows.Decrement()
+            # if form was closed with X
+            if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
                 _my_windows.Decrement()
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
             return BuildResults(self, False, self)
@@ -1805,7 +1810,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     range_from = element.Range[0]
                     range_to = element.Range[1]
-                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
+                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
                 # tktext_label.configure(anchor=tk.NW, image=photo)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None:
