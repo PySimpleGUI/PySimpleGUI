@@ -123,6 +123,7 @@ def RGB(red,green,blue): return '#%02x%02x%02x' % (red,green,blue)
 # class ButtonType(Enum):
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
+BUTTON_TYPE_BROWSE_FILES = 21
 BUTTON_TYPE_SAVEAS_FILE = 3
 BUTTON_TYPE_CLOSES_WIN = 5
 BUTTON_TYPE_READ_FORM = 7
@@ -684,6 +685,10 @@ class Button(Element):
             except: pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             file_name = tk.filedialog.askopenfilename(filetypes=filetypes)  # show the 'get file' dialog box
+            strvar.set(file_name)
+        elif self.BType == BUTTON_TYPE_BROWSE_FILES:
+            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes)
+            file_name = ';'.join(file_name)
             strvar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes)  # show the 'get file' dialog box
@@ -1249,6 +1254,10 @@ def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None),
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None):
     return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad)
+
+# -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
+def FilesBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None):
+    return Button(BUTTON_TYPE_BROWSE_FILES, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None):
