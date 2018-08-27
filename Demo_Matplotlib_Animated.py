@@ -1,12 +1,10 @@
-from tkinter import *
 from random import randint
 import PySimpleGUI as g
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 from matplotlib.figure import Figure
 import matplotlib.backends.tkagg as tkagg
-import tkinter as Tk
+import tkinter as tk
 
-VIEW_SIZE = 50     # number of data points visible on 1 screen
 
 def main():
     fig = Figure()
@@ -17,9 +15,11 @@ def main():
     ax.grid()
 
     canvas_elem = g.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
+    slider_elem = g.Slider(range=(0,10000), size=(60,10), orientation='h')
     # define the form layout
     layout = [[g.Text('Animated Matplotlib', size=(40,1), justification='center', font='Helvetica 20')],
               [canvas_elem],
+              [slider_elem],
               [g.ReadFormButton('Exit', size=(10,2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
@@ -36,14 +36,15 @@ def main():
         if button is 'Exit' or values is None:
             exit(69)
 
+        slider_elem.Update(i)
         ax.cla()
         ax.grid()
-
-        ax.plot(range(VIEW_SIZE), dpts[i:i+VIEW_SIZE],  color='purple')
+        DATA_POINTS_PER_SCREEN = 40
+        ax.plot(range(DATA_POINTS_PER_SCREEN), dpts[i:i+DATA_POINTS_PER_SCREEN],  color='purple')
         graph.draw()
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
         figure_w, figure_h = int(figure_w), int(figure_h)
-        photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
+        photo = tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
 
         canvas.create_image(640/2, 480/2, image=photo)
 
@@ -58,4 +59,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
