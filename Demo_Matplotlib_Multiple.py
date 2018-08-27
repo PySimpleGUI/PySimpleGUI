@@ -247,20 +247,15 @@ form.Show(non_blocking=True)
 form.NonBlocking = False
 
 # add the plot to the window
-func = fig_dict['Pyplot Simple']
 while True:
-    fig = func()
-    fig_photo = draw_figure(canvas_elem.TKCanvas, fig)
-
-    # show it all again and get buttons
     button, values = form.Read()
+    # show it all again and get buttons
     if button is None or button is 'Exit':
         break
-
     choice = values['func'][0]
-
     try:
         func = fig_dict[choice]
     except:
         func = fig_dict['Pyplot Simple']
-
+    fig = func()
+    fig_photo = draw_figure(canvas_elem.TKCanvas, fig)
