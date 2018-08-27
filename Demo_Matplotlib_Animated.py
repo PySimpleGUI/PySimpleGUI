@@ -6,6 +6,7 @@ from matplotlib.figure import Figure
 import matplotlib.backends.tkagg as tkagg
 import tkinter as Tk
 
+VIEW_SIZE = 50     # number of data points visible on 1 screen
 
 def main():
     fig = Figure()
@@ -38,7 +39,7 @@ def main():
         ax.cla()
         ax.grid()
 
-        ax.plot(range(20), dpts[i:i+20],  color='purple')
+        ax.plot(range(VIEW_SIZE), dpts[i:i+VIEW_SIZE],  color='purple')
         graph.draw()
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
         figure_w, figure_h = int(figure_w), int(figure_h)
