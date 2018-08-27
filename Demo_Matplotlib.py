@@ -5,7 +5,6 @@ from numpy import arange, sin, pi
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 from matplotlib.figure import Figure
 import matplotlib.backends.tkagg as tkagg
-import sys
 import tkinter as Tk
 
 """
@@ -70,4 +69,3 @@ fig_photo = draw_figure(canvas_elem.TKCanvas, f)
 
 # show it all again and get buttons
 button, values = form.Read()
-
