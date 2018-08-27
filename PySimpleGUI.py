@@ -1084,6 +1084,9 @@ class FlexForm:
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.Decrement()
+            # if form was closed with X
+            if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
+                _my_windows.Decrement()
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
             return BuildResults(self, False, self)
         else:
