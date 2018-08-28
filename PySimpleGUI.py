@@ -11,6 +11,7 @@ import textwrap
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = ''
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
+DEFAULT_BUTTON_ELEMENT_SIZE = (10,1)           # In CHARACTERS
 DEFAULT_MARGINS = (10,5)                # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in pixels
 DEFAULT_AUTOSIZE_TEXT = True
@@ -32,8 +33,8 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#
                (YELLOWS[0], GREENS[3]), (YELLOWS[0], BLUES[2]))
 
 COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
-DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
-# DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
+# DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
+DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_BACKGROUND_COLOR = None
@@ -575,7 +576,7 @@ class TKProgressBar():
 #       Scroll bar will span the length of the frame                     #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
-    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None):
+    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
         frame = tk.Frame(parent)
         tk.Frame.__init__(self, frame)
         self.output = tk.Text(frame, width=width, height=height, bd=bd, font=font)
@@ -588,7 +589,7 @@ class TKOutput(tk.Frame):
         self.output.configure(yscrollcommand=self.vsb.set)
         self.output.pack(side="left", fill="both")
         self.vsb.pack(side="left", fill="y")
-        frame.pack(side="left")
+        frame.pack(side="left", padx=pad[0], pady=pad[1])
         self.previous_stdout = sys.stdout
         self.previous_stderr = sys.stderr
 
@@ -971,12 +972,13 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
         self.Rows = []                     # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
+        self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Scale = scale
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
@@ -1522,19 +1524,21 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 auto_size_text = toplevel_form.AutoSizeText
             else:
                 auto_size_text = DEFAULT_AUTOSIZE_TEXT
+            element_type = element.Type
+            # Set foreground color
+            text_color = element.TextColor
             # Determine Element size
             element_size = element.Size
-            if (element_size == (None, None)):      # user did not specify a size
+            if (element_size == (None, None) and element_type != ELEM_TYPE_BUTTON):      # user did not specify a size
                 element_size = toplevel_form.DefaultElementSize
+            elif (element_size == (None, None) and element_type == ELEM_TYPE_BUTTON):
+                element_size = toplevel_form.DefaultButtonElementSize
             else: auto_size_text = False                # if user has specified a size then it shouldn't autosize
             # Apply scaling... Element scaling is higher priority than form level
             if element.Scale != (None, None):
                 element_size = (int(element_size[0] * element.Scale[0]), int(element_size[1] * element.Scale[1]))
             elif toplevel_form.Scale != (None, None):
                 element_size = (int(element_size[0] * toplevel_form.Scale[0]), int(element_size[1] * toplevel_form.Scale[1]))
-            # Set foreground color
-            text_color = element.TextColor
-            element_type = element.Type
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 col_frame = tk.Frame(tk_row_frame)
@@ -1591,9 +1595,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.AutoSizeButton is not None:
                     auto_size = element.AutoSizeButton
                 else: auto_size = toplevel_form.AutoSizeButtons
-                if auto_size is False or element.Size[0] is not None: width=element_size[0]
-                else: width = 0
-                height=element_size[1]
+                if auto_size is False or element.Size[0] is not None:
+                    width, height = element_size
+                else:
+                    width = 0
+                    height= toplevel_form.DefaultButtonElementSize[1]
                 lines = btext.split('\n')
                 max_line_len = max([len(l) for l in lines])
                 num_lines = len(lines)
@@ -1792,7 +1798,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font)
+                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font, pad=element.Pad)
                 element.TKOut.pack(side=tk.LEFT)
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -2580,7 +2586,7 @@ def SetGlobalIcon(icon):
 # ============================== SetOptions =========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(None,None),
+def SetOptions(icon=None, button_color=None, element_size=(None,None), button_element_size=(None, None), margins=(None,None),
                element_padding=(None,None),auto_size_text=None, auto_size_buttons=None, font=None, border_width=None,
                slider_border_width=None, slider_relief=None, slider_orientation=None,
                autoclose_time=None, message_box_line_width=None,
@@ -2591,6 +2597,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
                scrollbar_color=None, text_color=None, element_text_color = None, debug_win_size=(None,None), window_location=(None,None)):
 
     global DEFAULT_ELEMENT_SIZE
+    global DEFAULT_BUTTON_ELEMENT_SIZE
     global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
     global DEFAULT_ELEMENT_PADDING  # Padding between elements (row, col) in pixels
     global DEFAULT_AUTOSIZE_TEXT
@@ -2634,6 +2641,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
 
     if element_size != (None,None):
         DEFAULT_ELEMENT_SIZE = element_size
+
+    if button_element_size != (None,None):
+        DEFAULT_BUTTON_ELEMENT_SIZE = button_element_size
 
     if margins != (None,None):
         DEFAULT_MARGINS = margins
