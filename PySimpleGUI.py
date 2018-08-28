@@ -1116,7 +1116,6 @@ class FlexForm:
         else:
             return self.ReturnValues
 
-
     def ReadNonBlocking(self, Message=''):
         if self.TKrootDestroyed:
             return None, None
@@ -1131,6 +1130,15 @@ class FlexForm:
             _my_windows.Decrement()
             # return None, None
         return BuildResults(self, False, self)
+
+    def Refresh(self):
+        if self.TKrootDestroyed:
+            return
+        try:
+            rc = self.TKroot.update()
+        except:
+            pass
+
 
     def GetScreenDimensions(self):
         if self.TKrootDestroyed:
@@ -1302,6 +1310,10 @@ def Save(button_text='Save', scale=(None, None), size=(None, None), auto_size_bu
 def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False, pad=None):
     return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
 
+# -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
+def Open(button_text='Open', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False, pad=None):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
+
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, font=None,focus=False, pad=None):
     return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
@@ -1336,7 +1348,7 @@ def SimpleButton(button_text, image_filename=None, image_size=(None, None), imag
     return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, bind_listbox_select=False, focus=False, pad=None):
+def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
     return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
 
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
