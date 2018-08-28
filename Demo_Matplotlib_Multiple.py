@@ -4,6 +4,7 @@ matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
 import matplotlib.backends.tkagg as tkagg
 import tkinter as Tk
+import inspect
 
 """
 Demonstrates one way of embedding Matplotlib figures into a PySimpleGUI window.
@@ -849,6 +850,9 @@ def draw_figure(canvas, figure, loc=(0, 0)):
 #       information to display.                                                   #
 # --------------------------------------------------------------------------------#
 
+print(inspect.getsource(PyplotSimple))
+
+
 fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'PyPlot Three':Subplot3d,
             'Unicode Minus': UnicodeMinus, 'Pyplot Scales' : PyplotScales, 'Axes Grid' : AxesGrid,
             'Exploring Normalizations' : ExploringNormalizations, 'Different Scales' : DifferentScales,
@@ -857,15 +861,18 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
             'Pyplot Scatter With Legend' :PyplotScatterWithLegend, 'Artist Customized Box Plots' : PyplotArtistBoxPlots,
             'Artist Customized Box Plots 2' : ArtistBoxplot2, 'Pyplot Histogram' : PyplotHistogram}
 
+
 figure_w, figure_h = 650, 650
 canvas_elem = g.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
+multiline_elem = g.Multiline(size=(70,35),pad=(5,(3,90)))
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
 col_listbox = [[g.Listbox(values=listbox_values,size=(28,len(listbox_values)), key='func')],
                [g.T('    '), g.ReadFormButton('Plot', size=(5,2)), g.Exit(size=(5,2))]]
 
 layout = [[g.Text('Matplotlib Plot Test', font=('current 18'))],
-          [g.Column(col_listbox), canvas_elem]]
+          [g.Column(col_listbox, pad=(5,(3,330))), canvas_elem, multiline_elem],
+          ]
 
 # create the form and show it without the plot
 form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
@@ -876,16 +883,14 @@ while True:
     # show it all again and get buttons
     if button is None or button is 'Exit':
         break
-    if button is 'Clear':
-        canvas_elem.TKCanvas.delete(Tk.ALL)
-        continue
 
-    choice = values['func'][0]
     try:
+        choice = values['func'][0]
         func = fig_dict[choice]
     except:
         func = fig_dict['Pyplot Simple']
 
+    multiline_elem.Update(inspect.getsource(func))
     plt.clf()
     fig = func()
     fig_photo = draw_figure(canvas_elem.TKCanvas, fig)
