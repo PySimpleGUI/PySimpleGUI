@@ -850,7 +850,7 @@ def draw_figure(canvas, figure, loc=(0, 0)):
 #       information to display.                                                   #
 # --------------------------------------------------------------------------------#
 
-print(inspect.getsource(PyplotSimple))
+# print(inspect.getsource(PyplotSimple))
 
 
 fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'PyPlot Three':Subplot3d,
@@ -868,7 +868,7 @@ multiline_elem = g.Multiline(size=(70,35),pad=(5,(3,90)))
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
 col_listbox = [[g.Listbox(values=listbox_values, select_submits=True, size=(28,len(listbox_values)), key='func')],
-               [g.T('    '), g.ReadFormButton('Plot', bind_listbox_select=True, size=(5,2)), g.Exit(size=(5,2))]]
+               [g.T(' '*12), g.Exit(size=(5,2))]]
 
 layout = [[g.Text('Matplotlib Plot Test', font=('current 18'))],
           [g.Column(col_listbox, pad=(5,(3,330))), canvas_elem, multiline_elem],
@@ -880,6 +880,7 @@ form.Layout(layout)
 
 while True:
     button, values = form.Read()
+    print(button)
     # show it all again and get buttons
     if button is None or button is 'Exit':
         break

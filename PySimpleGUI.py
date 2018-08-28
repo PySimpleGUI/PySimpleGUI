@@ -207,23 +207,15 @@ class Element():
         if button_element is not None:
             button_element.ButtonCallBack()
 
-    def FindListboxBoundButton(self, form):
-        for row in form.Rows:
-            for element in row:
-                if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BindListboxSelect:
-                        return element
-                if element.Type == ELEM_TYPE_COLUMN:
-                    rc = self.FindListboxBoundButton(element)
-                    if rc is not None:
-                        return rc
-        return None
 
     def ListboxSelectHandler(self, event):
         MyForm = self.ParentForm
-        button_element = self.FindListboxBoundButton(MyForm)
-        if button_element is not None:
-            button_element.ButtonCallBack()
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
 
     def __del__(self):
         try:
@@ -645,7 +637,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, bind_listbox_select=False, focus=False, pad=None):
+    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -675,7 +667,6 @@ class Button(Element):
         self.UserData = None
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.BindReturnKey = bind_return_key
-        self.BindListboxSelect = bind_listbox_select
         self.Focus = focus
         super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad)
         return
@@ -742,7 +733,6 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_READ_FORM:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
-            r,c = self.Position
             self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
@@ -1347,7 +1337,7 @@ def SimpleButton(button_text, image_filename=None, image_size=(None, None), imag
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
 def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, bind_listbox_select=False, focus=False, pad=None):
-    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, bind_listbox_select=bind_listbox_select, focus=focus, pad=pad)
+    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
 
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
     return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
@@ -1399,7 +1389,7 @@ def BuildResults(form, initialize_only, top_level_form):
     return form.ReturnValues
 
 def BuildResultsForSubform(form, initialize_only, top_level_form):
-    button_pressed_text = None
+    button_pressed_text = top_level_form.LastButtonClicked
     for row_num,row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             value = None
