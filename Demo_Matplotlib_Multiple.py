@@ -35,6 +35,329 @@ def PyplotSimple():
     fig = plt.gcf()  # get the figure to show
     return fig
 
+def PyplotHistogram():
+    """
+    =============================================================
+    Demo of the histogram (hist) function with multiple data sets
+    =============================================================
+
+    Plot histogram with multiple sample sets and demonstrate:
+
+        * Use of legend with multiple sample sets
+        * Stacked bars
+        * Step curve with no fill
+        * Data sets of different sample sizes
+
+    Selecting different bin counts and sizes can significantly affect the
+    shape of a histogram. The Astropy docs have a great section on how to
+    select these parameters:
+    http://docs.astropy.org/en/stable/visualization/histogram.html
+    """
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    np.random.seed(0)
+
+    n_bins = 10
+    x = np.random.randn(1000, 3)
+
+    fig, axes = plt.subplots(nrows=2, ncols=2)
+    ax0, ax1, ax2, ax3 = axes.flatten()
+
+    colors = ['red', 'tan', 'lime']
+    ax0.hist(x, n_bins, normed=1, histtype='bar', color=colors, label=colors)
+    ax0.legend(prop={'size': 10})
+    ax0.set_title('bars with legend')
+
+    ax1.hist(x, n_bins, normed=1, histtype='bar', stacked=True)
+    ax1.set_title('stacked bar')
+
+    ax2.hist(x, n_bins, histtype='step', stacked=True, fill=False)
+    ax2.set_title('stack step (unfilled)')
+
+    # Make a multiple-histogram of data-sets with different length.
+    x_multi = [np.random.randn(n) for n in [10000, 5000, 2000]]
+    ax3.hist(x_multi, n_bins, histtype='bar')
+    ax3.set_title('different sample sizes')
+
+    fig.tight_layout()
+    return fig
+
+def PyplotArtistBoxPlots():
+    """
+    =========================================
+    Demo of artist customization in box plots
+    =========================================
+
+    This example demonstrates how to use the various kwargs
+    to fully customize box plots. The first figure demonstrates
+    how to remove and add individual components (note that the
+    mean is the only value not shown by default). The second
+    figure demonstrates how the styles of the artists can
+    be customized. It also demonstrates how to set the limit
+    of the whiskers to specific percentiles (lower right axes)
+
+    A good general reference on boxplots and their history can be found
+    here: http://vita.had.co.nz/papers/boxplots.pdf
+
+    """
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    # fake data
+    np.random.seed(937)
+    data = np.random.lognormal(size=(37, 4), mean=1.5, sigma=1.75)
+    labels = list('ABCD')
+    fs = 10  # fontsize
+
+    # demonstrate how to toggle the display of different elements:
+    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(6, 6), sharey=True)
+    axes[0, 0].boxplot(data, labels=labels)
+    axes[0, 0].set_title('Default', fontsize=fs)
+
+    axes[0, 1].boxplot(data, labels=labels, showmeans=True)
+    axes[0, 1].set_title('showmeans=True', fontsize=fs)
+
+    axes[0, 2].boxplot(data, labels=labels, showmeans=True, meanline=True)
+    axes[0, 2].set_title('showmeans=True,\nmeanline=True', fontsize=fs)
+
+    axes[1, 0].boxplot(data, labels=labels, showbox=False, showcaps=False)
+    tufte_title = 'Tufte Style \n(showbox=False,\nshowcaps=False)'
+    axes[1, 0].set_title(tufte_title, fontsize=fs)
+
+    axes[1, 1].boxplot(data, labels=labels, notch=True, bootstrap=10000)
+    axes[1, 1].set_title('notch=True,\nbootstrap=10000', fontsize=fs)
+
+    axes[1, 2].boxplot(data, labels=labels, showfliers=False)
+    axes[1, 2].set_title('showfliers=False', fontsize=fs)
+
+    for ax in axes.flatten():
+        ax.set_yscale('log')
+        ax.set_yticklabels([])
+
+    fig.subplots_adjust(hspace=0.4)
+    return fig
+
+def ArtistBoxplot2():
+
+    # fake data
+    np.random.seed(937)
+    data = np.random.lognormal(size=(37, 4), mean=1.5, sigma=1.75)
+    labels = list('ABCD')
+    fs = 10  # fontsize
+
+    # demonstrate how to customize the display different elements:
+    boxprops = dict(linestyle='--', linewidth=3, color='darkgoldenrod')
+    flierprops = dict(marker='o', markerfacecolor='green', markersize=12,
+                      linestyle='none')
+    medianprops = dict(linestyle='-.', linewidth=2.5, color='firebrick')
+    meanpointprops = dict(marker='D', markeredgecolor='black',
+                          markerfacecolor='firebrick')
+    meanlineprops = dict(linestyle='--', linewidth=2.5, color='purple')
+
+    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(6, 6), sharey=True)
+    axes[0, 0].boxplot(data, boxprops=boxprops)
+    axes[0, 0].set_title('Custom boxprops', fontsize=fs)
+
+    axes[0, 1].boxplot(data, flierprops=flierprops, medianprops=medianprops)
+    axes[0, 1].set_title('Custom medianprops\nand flierprops', fontsize=fs)
+
+    axes[0, 2].boxplot(data, whis='range')
+    axes[0, 2].set_title('whis="range"', fontsize=fs)
+
+    axes[1, 0].boxplot(data, meanprops=meanpointprops, meanline=False,
+                       showmeans=True)
+    axes[1, 0].set_title('Custom mean\nas point', fontsize=fs)
+
+    axes[1, 1].boxplot(data, meanprops=meanlineprops, meanline=True,
+                       showmeans=True)
+    axes[1, 1].set_title('Custom mean\nas line', fontsize=fs)
+
+    axes[1, 2].boxplot(data, whis=[15, 85])
+    axes[1, 2].set_title('whis=[15, 85]\n#percentiles', fontsize=fs)
+
+    for ax in axes.flatten():
+        ax.set_yscale('log')
+        ax.set_yticklabels([])
+
+    fig.suptitle("I never said they'd be pretty")
+    fig.subplots_adjust(hspace=0.4)
+    return fig
+
+def PyplotScatterWithLegend():
+    import matplotlib.pyplot as plt
+    from numpy.random import rand
+
+    fig, ax = plt.subplots()
+    for color in ['red', 'green', 'blue']:
+        n = 750
+        x, y = rand(2, n)
+        scale = 200.0 * rand(n)
+        ax.scatter(x, y, c=color, s=scale, label=color,
+                   alpha=0.3, edgecolors='none')
+
+    ax.legend()
+    ax.grid(True)
+    return fig
+
+def PyplotLineStyles():
+    """
+    ==========
+    Linestyles
+    ==========
+
+    This examples showcases different linestyles copying those of Tikz/PGF.
+    """
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from collections import OrderedDict
+    from matplotlib.transforms import blended_transform_factory
+
+    linestyles = OrderedDict(
+        [('solid', (0, ())),
+         ('loosely dotted', (0, (1, 10))),
+         ('dotted', (0, (1, 5))),
+         ('densely dotted', (0, (1, 1))),
+
+         ('loosely dashed', (0, (5, 10))),
+         ('dashed', (0, (5, 5))),
+         ('densely dashed', (0, (5, 1))),
+
+         ('loosely dashdotted', (0, (3, 10, 1, 10))),
+         ('dashdotted', (0, (3, 5, 1, 5))),
+         ('densely dashdotted', (0, (3, 1, 1, 1))),
+
+         ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
+         ('dashdotdotted', (0, (3, 5, 1, 5, 1, 5))),
+         ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))])
+
+    plt.figure(figsize=(10, 6))
+    ax = plt.subplot(1, 1, 1)
+
+    X, Y = np.linspace(0, 100, 10), np.zeros(10)
+    for i, (name, linestyle) in enumerate(linestyles.items()):
+        ax.plot(X, Y + i, linestyle=linestyle, linewidth=1.5, color='black')
+
+    ax.set_ylim(-0.5, len(linestyles) - 0.5)
+    plt.yticks(np.arange(len(linestyles)), linestyles.keys())
+    plt.xticks([])
+
+    # For each line style, add a text annotation with a small offset from
+    # the reference point (0 in Axes coords, y tick value in Data coords).
+    reference_transform = blended_transform_factory(ax.transAxes, ax.transData)
+    for i, (name, linestyle) in enumerate(linestyles.items()):
+        ax.annotate(str(linestyle), xy=(0.0, i), xycoords=reference_transform,
+                    xytext=(-6, -12), textcoords='offset points', color="blue",
+                    fontsize=8, ha="right", family="monospace")
+
+    plt.tight_layout()
+    return plt.gcf()
+
+def PyplotLinePolyCollection():
+    import matplotlib.pyplot as plt
+    from matplotlib import collections, colors, transforms
+    import numpy as np
+
+    nverts = 50
+    npts = 100
+
+    # Make some spirals
+    r = np.arange(nverts)
+    theta = np.linspace(0, 2 * np.pi, nverts)
+    xx = r * np.sin(theta)
+    yy = r * np.cos(theta)
+    spiral = np.column_stack([xx, yy])
+
+    # Fixing random state for reproducibility
+    rs = np.random.RandomState(19680801)
+
+    # Make some offsets
+    xyo = rs.randn(npts, 2)
+
+    # Make a list of colors cycling through the default series.
+    colors = [colors.to_rgba(c)
+              for c in plt.rcParams['axes.prop_cycle'].by_key()['color']]
+
+    fig, axes = plt.subplots(2, 2)
+    fig.subplots_adjust(top=0.92, left=0.07, right=0.97,
+                        hspace=0.3, wspace=0.3)
+    ((ax1, ax2), (ax3, ax4)) = axes  # unpack the axes
+
+    col = collections.LineCollection([spiral], offsets=xyo,
+                                     transOffset=ax1.transData)
+    trans = fig.dpi_scale_trans + transforms.Affine2D().scale(1.0 / 72.0)
+    col.set_transform(trans)  # the points to pixels transform
+    # Note: the first argument to the collection initializer
+    # must be a list of sequences of x,y tuples; we have only
+    # one sequence, but we still have to put it in a list.
+    ax1.add_collection(col, autolim=True)
+    # autolim=True enables autoscaling.  For collections with
+    # offsets like this, it is neither efficient nor accurate,
+    # but it is good enough to generate a plot that you can use
+    # as a starting point.  If you know beforehand the range of
+    # x and y that you want to show, it is better to set them
+    # explicitly, leave out the autolim kwarg (or set it to False),
+    # and omit the 'ax1.autoscale_view()' call below.
+
+    # Make a transform for the line segments such that their size is
+    # given in points:
+    col.set_color(colors)
+
+    ax1.autoscale_view()  # See comment above, after ax1.add_collection.
+    ax1.set_title('LineCollection using offsets')
+
+    # The same data as above, but fill the curves.
+    col = collections.PolyCollection([spiral], offsets=xyo,
+                                     transOffset=ax2.transData)
+    trans = transforms.Affine2D().scale(fig.dpi / 72.0)
+    col.set_transform(trans)  # the points to pixels transform
+    ax2.add_collection(col, autolim=True)
+    col.set_color(colors)
+
+    ax2.autoscale_view()
+    ax2.set_title('PolyCollection using offsets')
+
+    # 7-sided regular polygons
+
+    col = collections.RegularPolyCollection(
+        7, sizes=np.abs(xx) * 10.0, offsets=xyo, transOffset=ax3.transData)
+    trans = transforms.Affine2D().scale(fig.dpi / 72.0)
+    col.set_transform(trans)  # the points to pixels transform
+    ax3.add_collection(col, autolim=True)
+    col.set_color(colors)
+    ax3.autoscale_view()
+    ax3.set_title('RegularPolyCollection using offsets')
+
+    # Simulate a series of ocean current profiles, successively
+    # offset by 0.1 m/s so that they form what is sometimes called
+    # a "waterfall" plot or a "stagger" plot.
+
+    nverts = 60
+    ncurves = 20
+    offs = (0.1, 0.0)
+
+    yy = np.linspace(0, 2 * np.pi, nverts)
+    ym = np.max(yy)
+    xx = (0.2 + (ym - yy) / ym) ** 2 * np.cos(yy - 0.4) * 0.5
+    segs = []
+    for i in range(ncurves):
+        xxx = xx + 0.02 * rs.randn(nverts)
+        curve = np.column_stack([xxx, yy * 100])
+        segs.append(curve)
+
+    col = collections.LineCollection(segs, offsets=offs)
+    ax4.add_collection(col, autolim=True)
+    col.set_color(colors)
+    ax4.autoscale_view()
+    ax4.set_title('Successive data offsets')
+    ax4.set_xlabel('Zonal velocity component (m/s)')
+    ax4.set_ylabel('Depth (m)')
+    # Reverse the y-axis so depth increases downward
+    ax4.set_ylim(ax4.get_ylim()[::-1])
+    return fig
+
 def PyplotGGPlotSytleSheet():
     import numpy as np
     import matplotlib.pyplot as plt
@@ -529,13 +852,16 @@ def draw_figure(canvas, figure, loc=(0, 0)):
 fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'PyPlot Three':Subplot3d,
             'Unicode Minus': UnicodeMinus, 'Pyplot Scales' : PyplotScales, 'Axes Grid' : AxesGrid,
             'Exploring Normalizations' : ExploringNormalizations, 'Different Scales' : DifferentScales,
-            'Pyplot Box Plot' : PyplotBoxPlot, 'Pyplot ggplot Style Sheet' : PyplotGGPlotSytleSheet}
+            'Pyplot Box Plot' : PyplotBoxPlot, 'Pyplot ggplot Style Sheet' : PyplotGGPlotSytleSheet,
+            'Pyplot Line Poly Collection' : PyplotLinePolyCollection, 'Pyplot Line Styles' : PyplotLineStyles,
+            'Pyplot Scatter With Legend' :PyplotScatterWithLegend, 'Artist Customized Box Plots' : PyplotArtistBoxPlots,
+            'Artist Customized Box Plots 2' : ArtistBoxplot2, 'Pyplot Histogram' : PyplotHistogram}
 
-figure_w, figure_h = 640,480
+figure_w, figure_h = 650, 650
 canvas_elem = g.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
-col_listbox = [[g.Listbox(values=listbox_values,size=(25,len(listbox_values)), key='func')],
+col_listbox = [[g.Listbox(values=listbox_values,size=(28,len(listbox_values)), key='func')],
                [g.T('    '), g.ReadFormButton('Plot', size=(5,2)), g.Exit(size=(5,2))]]
 
 layout = [[g.Text('Matplotlib Plot Test', font=('current 18'))],
