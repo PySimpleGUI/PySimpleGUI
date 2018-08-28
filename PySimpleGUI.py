@@ -188,14 +188,41 @@ class Element():
         self.TextColor = text_color if text_color is not None else DEFAULT_ELEMENT_TEXT_COLOR
         self.Key = key             # dictionary key for return values
 
-    def ReturnKeyHandler(self, event):
-        MyForm = self.ParentForm
-        # search through this form and find the first button that will exit the form
-        for row in MyForm.Rows:
+    def FindReturnKeyBoundButton(self, form):
+        for row in form.Rows:
             for element in row:
                 if element.Type == ELEM_TYPE_BUTTON:
                     if element.BindReturnKey:
-                        element.ButtonCallBack()
+                        return element
+                if element.Type == ELEM_TYPE_COLUMN:
+                    rc = self.FindReturnKeyBoundButton(element)
+                    if rc is not None:
+                        return rc
+        return None
+
+    def ReturnKeyHandler(self, event):
+        MyForm = self.ParentForm
+        button_element = self.FindReturnKeyBoundButton(MyForm)
+        if button_element is not None:
+            button_element.ButtonCallBack()
+
+    def FindListboxBoundButton(self, form):
+        for row in form.Rows:
+            for element in row:
+                if element.Type == ELEM_TYPE_BUTTON:
+                    if element.BindListboxSelect:
+                        return element
+                if element.Type == ELEM_TYPE_COLUMN:
+                    rc = self.FindListboxBoundButton(element)
+                    if rc is not None:
+                        return rc
+        return None
+
+    def ListboxSelectHandler(self, event):
+        MyForm = self.ParentForm
+        button_element = self.FindListboxBoundButton(MyForm)
+        if button_element is not None:
+            button_element.ButtonCallBack()
 
     def __del__(self):
         try:
@@ -280,7 +307,7 @@ class InputCombo(Element):
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, select_mode=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, select_mode=None, select_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Listbox Element
         :param values:
@@ -292,6 +319,7 @@ class Listbox(Element):
         :param background_color: Color for Element. Text or RGB Hex        '''
         self.Values = values
         self.TKListbox = None
+        self.SelectSubmits = select_submits
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -304,6 +332,7 @@ class Listbox(Element):
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key, pad=pad)
 
     def Update(self, values):
@@ -615,7 +644,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
+    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, bind_listbox_select=False, focus=False, pad=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -645,6 +674,7 @@ class Button(Element):
         self.UserData = None
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.BindReturnKey = bind_return_key
+        self.BindListboxSelect = bind_listbox_select
         self.Focus = focus
         super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad)
         return
@@ -1314,8 +1344,8 @@ def SimpleButton(button_text, image_filename=None, image_size=(None, None), imag
     return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
-    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
+def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, bind_listbox_select=False, focus=False, pad=None):
+    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, bind_listbox_select=bind_listbox_select, focus=focus, pad=pad)
 
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
     return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
@@ -1671,6 +1701,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(fg=text_color)
+                if element.SelectSubmits:
+                    element.TKListbox.bind('<<ListboxSelect>>', element.ListboxSelectHandler)
                 vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
                 element.TKListbox.configure(yscrollcommand=vsb.set)
                 element.TKListbox.pack(side=tk.LEFT)
@@ -1786,6 +1818,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 width, height = element_size
                 if element.TKCanvas is None:
                     element.TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                else:
+                    element.TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCanvas.configure(background=element.BackgroundColor)
                 element.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
@@ -2690,9 +2724,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), margins=(
 ##############################################################
 def ChangeLookAndFeel(index):
     # look and feel table
-    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS':('#9FB8AD','#F7F3EC' )},
+    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
 
-                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':('#247BA0','#F8FAF0')},
+                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
 
                       'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF','TEXT_INPUT' : 'black', 'SCROLL': '#E0F5FF','BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
 
