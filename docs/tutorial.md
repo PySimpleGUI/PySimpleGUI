@@ -1,14 +1,19 @@
 # Add GUIs to your programs and scripts easily with PySimpleGUI
 
 ## Introduction
-Python has dropped the GUI ball.  While the rest of the world has been enjoying the use of a mouse, most Python programs continue to be accessed via the command line.  Why is this, does anybody care, and what can be done about it?
+Few people run Python programs by double clicking the .py file as if it were a .exe file.  When a typical user (non-programmer types) double clicks an exe file, they expect it to pop open with a window they can interact with.  While GUIs, using tkinter, are possible using standard Python installations, it's unlikely many programs do this.
+
+What if it were easy so to open a Python program into a GUI that completely beginners could do it?  Would anyone care?  Would anyone use it?  It's difficult to answer because to date it's not been "easy" to build a custom GUI.
+
+There seems to be a gap in the ability to add a GUI onto a Python program/script.  Complete beginners are left using only the command line and many advanced programmers don't want to take the time required to code up a tkinter GUI.
+
 
 ## GUI Frameworks
 There is no shortage of GUI frameworks for Python.  tkinter, WxPython, Qt, Kivy are a few of the major packages.  In addition, there are a good number of dumbed down GUI packages that wrap one of the major packages.  These include EasyGUI, PyGUI, Pyforms, ...
 
-The problem is that beginners (those with experience of less than 6 weeks) are not capable of learning even the simplest of the major packages.  That leaves the wrapper-packages.  Users will quickly find it difficult or impossible to build a custom GUI layout.  Or, if it's possible, pages of code are still required.
+The problem is that beginners (those with experience of less than 6 weeks) are not capable of learning even the simplest of the major packages.  That leaves the wrapper-packages.  Users will likely find it difficult or impossible to build a custom GUI layout.  Or, if it's possible, pages of code are required.
 
-PySimpleGUI attempts to address these GUI challenges by providing a super-simple, easy to understand interface to GUIs that can be customized easily.  Even the most complex of GUIs are often less than 20 lines of code when PySimpleGUI is used.
+PySimpleGUI attempts to address these GUI challenges by providing a super-simple, easy to understand interface to GUIs that can be easily customized.  Even the most complex of GUIs are often less than 20 lines of code when PySimpleGUI is used.
 
 ## The Secret
 
@@ -16,7 +21,7 @@ What makes PySimpleGUI superior for newcomers is that the package contains the m
 
 With most GUIs arranging the GUI Widgets often requires several lines of code.... at least one or two lines per widget.  PySimpleGUI uses an "auto-packer" that creates the layout for the user automatically.  There is no concept of a pack nor a grid system needed to layout a GUI Window.
 
-Finally, PySimpleGUI leverages the Python language constructs in clever ways that shortens the amount of code and returns the GUI data in a straightforward manner.  When a Widget is created in a form layout, it is configured in-place, not several lines of code away.
+Finally, PySimpleGUI leverages the Python language constructs in clever ways that shortens the amount of code and returns the GUI data in a straightforward manner.  When a Widget is created in a form layout, it is configured in-place, not several lines of code away.  Results are returned as a simple list or a dictionary.
 
 ## What is a GUI?
 
@@ -254,6 +259,20 @@ Each parameter to the message box call is displayed on a new line.  There are ac
 
 Take a moment and pair up the results values with the GUI to get an understanding of how results are created and returned.
 
+## Adding a GUI to Your Program or Script
+If you have a script that uses the command line, you don't have to abandon it in order to add a GUI.  An easy solution is that if there are zero parameters given on the command line, then the GUI is run. Otherwise, execute the command line as you do today.
+
+This kind of logic is all that's needed:
+
+    if len(sys.argv) == 1:
+    	# collect arguments from GUI
+    else:
+        # collect arguements from sys.argv
+
+The easiest way to get a GUI up and running quickly is to copy and modify one of the Recipes from the [PySimpleGUI Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
+
+Have some fun!  Spice up the scripts you're tired of running by hand.  Spend 5 or 10 minutes playing with the demo scripts.  You may find one already exists that does exactly what you need.   If not, you  will find it's 'simple' to create your own.  If you really get lost, you've only invested 10 minutes.
+
 ## Resources
 
 ### Installation
@@ -270,4 +289,4 @@ Works on all systems that run tkinter, including the Raspberry Pi
 
 ### Home Page
 
-www.PySimpleGUI.com
+[www.PySimpleGUI.com](www.PySimpleGUI.com)
