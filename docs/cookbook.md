@@ -69,6 +69,9 @@ Browse for a filename that is populated into the input field.
 ## Add GUI to Front-End of Script
 Quickly add a GUI allowing the user to browse for a filename if a filename is not supplied on the command line using this 1-line GUI. It's the best of both worlds.
 
+![script front-end](https://user-images.githubusercontent.com/13696193/44756573-39e9c380-aaf9-11e8-97b4-6679f9f5bd46.jpg)
+
+
     import PySimpleGUI as sg
     import sys
 
@@ -84,7 +87,7 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
         raise SystemExit("Cancelling: no filename supplied")
 
 
-![script front-end](https://user-images.githubusercontent.com/13696193/44756573-39e9c380-aaf9-11e8-97b4-6679f9f5bd46.jpg)
+
 
 --------------
 
