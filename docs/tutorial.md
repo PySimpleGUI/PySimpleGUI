@@ -3,7 +3,7 @@
 ## Introduction
 Few people run Python programs by double clicking the .py file as if it were a .exe file.  When a typical user (non-programmer types) double clicks an exe file, they expect it to pop open with a window they can interact with.  While GUIs, using tkinter, are possible using standard Python installations, it's unlikely many programs do this.
 
-What if it were easy so to open a Python program into a GUI that completely beginners could do it?  Would anyone care?  Would anyone use it?  It's difficult to answer because to date it's not been "easy" to build a custom GUI.
+What if it were easy so to open a Python program into a GUI that complete beginners could do it?  Would anyone care?  Would anyone use it?  It's difficult to answer because to date it's not been "easy" to build a custom GUI.
 
 There seems to be a gap in the ability to add a GUI onto a Python program/script.  Complete beginners are left using only the command line and many advanced programmers don't want to take the time required to code up a tkinter GUI.
 
