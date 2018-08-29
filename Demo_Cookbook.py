@@ -799,7 +799,6 @@ while True:
 
     form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', default_button_element_size=(8,2),auto_size_buttons=False)
     button, values = form.LayoutAndRead(layout)
-    print(button, values)
     # show it all again and get buttons
     while True:
         if button is None or button is 'Exit':
