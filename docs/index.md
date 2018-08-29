@@ -73,15 +73,13 @@ You can build an async media player GUI with custom buttons in 30 lines of code.
   ## Background
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited.   The primary difference between these and `PySimpleGUI` is that in addition to getting the simple Message Boxes you also get the ability to **make your own forms** that are highly customizeable.  Don't like the standard Message Box? Then make your own!
+There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited, and adds the ability to define your own layouts.   This ability to make your own forms is the  primary difference between these and `PySimpleGUI`.   Don't like the standard Message Box? Then replace it with your own GUI!
 
-Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.
-
-GUI Packages with more functionality, like QT and WxPython, require configuring and can take a ***week*** to get *reasonably familiar* with the interfaces.  Clearly there needs to be a middle ground between forms with 1 or two input fields and a full-blown GUI.  You'll be making your own custom forms with PySimpleGUI within minutes, even Async forms.
+Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.  The configure is done in-place.
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
-The `PySimpleGUI` package is focused on the ***developer***.  How can the desired result be achieved in as little and as simple code as possible?  This was the mantra used to create PySimpleGUI.   How can it be done is a Python-like way?
+The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GUI with as little and as simple code as possible.  This was the primary mantra used to create PySimpleGUI.  "Do it in a Python-like way" was the second desired outcome.
 
 ## Features
 
@@ -117,6 +115,7 @@ The `PySimpleGUI` package is focused on the ***developer***.  How can the desire
         Group widgets into a column and place into form anywhere
         Keyboard low-level key capture
         Mouse scroll-wheel support
+        Get Listbox values as they are selected
         Update elements in a visible form
 
 
@@ -1675,24 +1674,106 @@ Note the `else` statement on the for loop.  This is needed because we're about t
 
 That's it... this example follows the async design pattern well.
 
+## Keyboard & Mouse Capture
+Beginning in version 2.10 you can capture keyboard key presses and mouse scroll-wheel events.   Keyboard keys can be used, for example, to detect the page-up and page-down keys for a PDF viewer.  To use this feature, there's a boolean setting in the FlexForm call return_keyboard_events that is set to True in order to get keys returned along with buttons.
+
+Keys and scroll-wheel events are returned in exactly the same way as buttons.
+
+For scroll-wheel events, if the mouse is scrolled up, then the `button` text will be `MouseWheel:Up`.   For downward scrolling, the text returned is `MouseWheel:Down`
+
+Keyboard keys return 2 types of key events. For "normal" keys (a,b,c, etc), a single character is returned that represents that key.  Modifier and special keys are returned as a string with 2 parts:
+
+    Key Sym:Key Code
+
+Key Sym is a string such as 'Control_L'.  The Key Code is a numeric representation of that key.  The left control key, when pressed will return the value 'Control_L:17'
+
+    import PySimpleGUI as sg
+
+    # Recipe for getting keys, one at a time as they are released
+    # If want to use the space bar, then be sure and disable the "default focus"
+
+    with sg.FlexForm("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as form:
+        text_elem = sg.Text("", size=(18,1))
+        layout = [[sg.Text("Press a key or scroll mouse")],
+                  [text_elem],
+                  [sg.SimpleButton("OK")]]
+
+        form.Layout(layout)
+        # ---===--- Loop taking in user input --- #
+      while True:
+            button, value = form.ReadNonBlocking()
+
+            if button == "OK"  or (button is None and value is None):
+                print(button, "exiting")
+                break
+            if button is not None:
+                text_elem.Update(button)
+
+You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.
+
+### Realtime Keyboard Capture
+Use realtime keyboard capture by calling
+
+    import PySimpleGUI as sg
+
+    with sg.FlexForm("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as form:
+        layout = [[sg.Text("Hold down a key")],
+                  [sg.SimpleButton("OK")]]
+
+        form.Layout(layout)
+
+        while True:
+            button, value = form.ReadNonBlocking()
+
+            if button == "OK":
+                print(button, value, "exiting")
+                break
+		    if button is not None:
+                print(button)
+            elif value is None:
+                break
+
 
 
 ## Sample Applications
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
 
-`Demo_Recipes.py` - Sample forms for all major form types and situations. This is the place to get your code template from.  Includes asynchronous forms, etc.    Start here!
+  **Demo_All_Widgets.py** - Nearly all of the Elements shown in a single form
+  **Demo_Canvas.py** - Form with a Canvas Element that is updated outside of the form
+  **Demo_Chat.py** - A chat window with scrollable history
+  **Demo_Chatterbot.py** - Front-end to Chatterbot Machine Learning project
+  **Demo_Color.py** - How to interact with color using RGB hex values and named colors
+  **Demo_Columns.py** - Using the Column Element to create more complex forms
+  **Demo_Compare_Files.py** - Using a simple GUI front-end to create a compare 2-files utility
+  **Demo_Dictionary.py** - Specifying and using return values in dictionary format
+  **Demo_DisplayHash1and256.py** - Using high level API and custom form to implement a simple display hash code utility
+  **Demo_DuplicateFileFinder.py** - High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter.
+  **Demo_Func_Callback_Simulator.py** - For the Raspberry Pi crowd. Event loop that simulates traditional GUI callback functions should you already have an architecture that uses them.
+  **Demo_GoodColors.py** - Using some of the pre-defined PySimpleGUI individual colors
+  **Demo_HowDoI.py** - This is a utility to be experienced! It will change how you code.
+  **Demo_Keyboard.py** - Using blocking keyboard events
+  **Demo_Keyboard_Realtime.py** - Using non-blocking / realtime keyboard events
+  **Demo_Machine_Learning.py** - A sample Machine Learning front end
+  **Demo_Matplotlib.py** - Integrating with Matplotlib to create a single graph
+  **Demo_Matplotlib_Animated.py** - Animated Matplotlib line graph
+  **Demo_Matplotlib_Animated_Scatter.py -** Animated Matplotlib scatter graph
+  **Demo_Media_Player.py** - Non-blocking form with a media player layout. Demonstrates  button graphics, Update method
+  **Demo_MIDI_Player.py** - GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices
+  **Demo_NonBlocking_Form.py** - a basic async form
+  **Demo_PDF_Viewer.py** - Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate
+  **Demo_Pi_Robotics.py** - Simulated robot control using realtime buttons
+  **Demo_PNG_Vierwer.p**y - Uses Image Element to display PNG files
+  **Demo_Recipes.py** - A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook (another script is in the works)
+  **Demo_Script_Launcher.py** - Demonstrates one way of adding a front-end onto several command line scripts
+  **Demo_Script_Parameters.py** - Add a 1-line GUI to the front of your previously command-line only scripts
+  **Demo_Tabbed_Form.py** - Using the Tab feature
 
-`Demo_Compare_Files` - Takes 2 filenames as input.  Does a byte for byte compare and returns the results.
-
-  `Demo_Dictionary` - Simple form demonstrating how return values in dictionary form work.
-
- `Demo_DisplayHash1and256` - Presents 3 methods of gathering the same user input using both high-level APIs and lower-level.
-
-Demo_Func_Callback_Simulation - Shows how callback functions can be simulated. This is particularly good for the Raspberry Pi and other embedded type applications.
-
-`Demo_DuplicateFileFinder.py` - Demonstrates High Level API to get a folder & Easy Progress Meter to show progress of the file scanning
-
-`Demo_HowDoI.py` - An amazing little application.  Acts as a front-end to HowDoI.  This one program **could forever change how you code**. It does searches on Stack Overflow and returns the CODE found in the best answer for your query.  If anyone wants to help me package this application up and release as a standalone application, then speak up on the GitHub!
+  ## Packages Used In Demos
+  While the core PySimpleGUI code  does not utilize any 3rd party packages, some of the demos do.  They add a GUI to a few popular packages.  These packages include:
+  * [Chatterbot](https://github.com/gunthercox/ChatterBot)
+  * [Mido](https://github.com/olemb/mido)
+  * [Matplotlib](https://matplotlib.org/)
+  * [PyMuPDF](https://github.com/rk700/PyMuPDF)
 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize

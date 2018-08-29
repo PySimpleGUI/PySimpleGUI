@@ -862,6 +862,7 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
             'Artist Customized Box Plots 2' : ArtistBoxplot2, 'Pyplot Histogram' : PyplotHistogram}
 
 
+g.ChangeLookAndFeel('LightGreen')
 figure_w, figure_h = 650, 650
 canvas_elem = g.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
 multiline_elem = g.Multiline(size=(70,35),pad=(5,(3,90)))
@@ -889,7 +890,8 @@ while True:
         choice = values['func'][0]
         func = fig_dict[choice]
     except:
-        func = fig_dict['Pyplot Simple']
+        pass
+        # func = fig_dict['Pyplot Simple']
 
     multiline_elem.Update(inspect.getsource(func))
     plt.clf()
