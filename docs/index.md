@@ -1737,37 +1737,37 @@ Use realtime keyboard capture by calling
 
 ## Sample Applications
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
-  |Version | Description |
+  | Source File| Description |
 |--|--|
-|**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single form |
-|**Demo_Canvas.py** | Form with a Canvas Element that is updated outside of the form |
-|**Demo_Chat.py** | A chat window with scrollable history |
-|**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project |
-|**Demo_Color.py** | How to interact with color using RGB hex values and named colors |
-|**Demo_Columns.py** | Using the Column Element to create more complex forms |
-|**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility |
-|**Demo_Dictionary.py** | Specifying and using return values in dictionary format |
-|**Demo_DisplayHash1and256.py** | Using high level API and custom form to implement a simple display hash code utility |
-|**Demo_DuplicateFileFinder.py** | High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter |
-|**Demo_Func_Callback_Simulator.py** | For the Raspberry Pi crowd. Event loop that simulates traditional GUI callback functions should you already have an architecture that uses them |
-|**Demo_GoodColors.py** | Using some of the pre-defined PySimpleGUI individual colors |
-|**Demo_HowDoI.py** | This is a utility to be experienced! It will change how you code |
-|**Demo_Keyboard.py** | Using blocking keyboard events |
-|**Demo_Keyboard_Realtime.py** | Using non-blocking / realtime keyboard events |
-|**Demo_Machine_Learning.py** | A sample Machine Learning front end |
-|**Demo_Matplotlib.py** | Integrating with Matplotlib to create a single graph |
-|**Demo_Matplotlib_Animated.py** | Animated Matplotlib line graph |
-|**Demo_Matplotlib_Animated_Scatter.py** | Animated Matplotlib scatter graph |
-|**Demo_Media_Player.py** | Non-blocking form with a media player layout.  Demonstrates  button graphics, Update method |
-|**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices |
-|**Demo_NonBlocking_Form.py** | a basic async form |
-|**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate |
-|**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons |
-|**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files |
-|**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook (another script is in the works) |
-|**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts |
-|**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts |
-|**Demo_Tabbed_Form.py** | Using the Tab feature |
+|**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single form
+|**Demo_Canvas.py** | Form with a Canvas Element that is updated outside of the form
+|**Demo_Chat.py** | A chat window with scrollable history
+|**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project
+|**Demo_Color.py** | How to interact with color using RGB hex values and named colors
+|**Demo_Columns.py** | Using the Column Element to create more complex forms
+|**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility
+|**Demo_Dictionary.py** | Specifying and using return values in dictionary format
+|**Demo_DisplayHash1and256.py** | Using high level API and custom form to implement a simple display hash code utility
+|**Demo_DuplicateFileFinder.py** | High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter
+|**Demo_Func_Callback_Simulator.py** | For the Raspberry Pi crowd. Event loop that simulates traditional GUI callback functions should you already have an architecture that uses them
+|**Demo_GoodColors.py** | Using some of the pre-defined PySimpleGUI individual colors
+|**Demo_HowDoI.py** | This is a utility to be experienced! It will change how you code
+|**Demo_Keyboard.py** | Using blocking keyboard events
+|**Demo_Keyboard_Realtime.py** | Using non-blocking / realtime keyboard events
+|**Demo_Machine_Learning.py** | A sample Machine Learning front end
+|**Demo_Matplotlib.py** | Integrating with Matplotlib to create a single graph
+|**Demo_Matplotlib_Animated.py** | Animated Matplotlib line graph
+|**Demo_Matplotlib_Animated_Scatter.py** | Animated Matplotlib scatter graph
+|**Demo_Media_Player.py** | Non-blocking form with a media player layout.  Demonstrates  button graphics, Update method
+|**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices
+|**Demo_NonBlocking_Form.py** | a basic async form
+|**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate
+|**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons
+|**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files
+|**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook (another script is in the works)
+|**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts
+|**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts
+|**Demo_Tabbed_Form.py** | Using the Tab feature
 
 ## Packages Used In Demos
 
