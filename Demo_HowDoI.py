@@ -3,7 +3,7 @@ import subprocess
 
 
 # Test this command in a dos window if you are having trouble.
-HOW_DO_I_COMMAND =  'python -m howdoi.howdoi -n 2'
+HOW_DO_I_COMMAND =  'python -m howdoi.howdoi'
 
 # if you want an icon on your taskbar for this gui, then change this line of code to point to the ICO file
 DEFAULT_ICON = 'E:\\TheRealMyDocs\\Icons\\QuestionMark.ico'
@@ -43,20 +43,21 @@ def HowDoI():
             command_history.append(query)
             history_offset = len(command_history)
             multiline_elem.Update('')                       # manually clear input because keyboard events blocks clear
-        elif button is None or button is 'EXIT':
-            break           # exit button clicked
-        elif 'Up' in button:
+        elif button is None or button is 'EXIT':            # if exit button or closed using X
+            break
+        elif 'Up' in button:                                # scroll back in history
             history_offset -= 1 * (history_offset > 0)      # decrement is not zero
             command = command_history[history_offset]
             multiline_elem.Update(command)
-        elif 'Down' in button:
+        elif 'Down' in button:                              # scroll forward in history
             history_offset += 1 * (history_offset < len(command_history)-1) # increment up to end of list
             if history_offset >= len(command_history):
                 history_offset = len(command_history)-1
             command = command_history[history_offset]
             multiline_elem.Update(command)
-        elif 'Escape' in button:
-            multiline_elem.Update('')                       # manually clear input because keyboard events blocks clear
+        elif 'Escape' in button:                            # clear currently line
+            multiline_elem.Update('')
+
     exit(69)
 
 def QueryHowDoI(Query, num_answers, full_text):
