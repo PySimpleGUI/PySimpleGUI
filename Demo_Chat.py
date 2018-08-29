@@ -41,7 +41,7 @@ def ChatBotWithHistory():
             history_offset = len(command_history)-1
             multiline_elem.Update('')                       # manually clear input because keyboard events blocks clear
             history_elem.Update('\n'.join(command_history[-3:]))
-        elif button is None or button is 'EXIT' or 'c:67' in button:  # quit if exit button, X, or control C
+        elif button is None or button is 'EXIT':            # quit if exit button or X
             break
         elif 'Up' in button and len(command_history):
             command = command_history[history_offset]
