@@ -1,6 +1,10 @@
 
 # The PySimpleGUI Cookbook
 
+You will find all of these Recipes in a single Python file ([Demo_Cookbook.py](https://github.com/MikeTheWatchGuy/PySimpleGUI/blob/master/Demo_Cookbook.py)) located on the project's GitHub page.   This program will allow you to view the source code and the window that it produces.
+
+You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.
+
 ## Simple Data Entry - Return Values As List
 Same GUI screen except the return values are in a list instead of a dictionary and doesn't have initial values.
 
