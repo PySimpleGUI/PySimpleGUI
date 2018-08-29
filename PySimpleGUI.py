@@ -35,8 +35,11 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#
 COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
 if sys.platform is 'darwin':
     DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
+    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT       # Colors should never be this long
 else:
     DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
+    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])           # Colors should never be this long
+
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_BACKGROUND_COLOR = None
@@ -1586,7 +1589,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     wraplen = 0
                 # print("wraplen, width, height", wraplen, width, height)
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
@@ -1666,7 +1669,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if auto_size_text is False: width=element_size[0]
                 else: width = max_line_len
                 element.TKStringVar = tk.StringVar()
-                if element.BackgroundColor  and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     combostyle = ttk.Style()
                     try:
                         combostyle.theme_create('combostyle',
@@ -1858,7 +1861,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
                 # tktext_label.configure(anchor=tk.NW, image=photo)
                 tkscale.config(highlightthickness=0)
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
                     tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -2739,38 +2742,39 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
 ##############################################################
 def ChangeLookAndFeel(index):
     # look and feel table
-    look_and_feel =  {'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+    look_and_feel =  {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':1},
+                      'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
-                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
+                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER':1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
-                      'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF','TEXT_INPUT' : 'black', 'SCROLL': '#E0F5FF','BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR},
+                      'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF','TEXT_INPUT' : 'black', 'SCROLL': '#E0F5FF','BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'Purple': {'BACKGROUND': '#B0AAC2', 'TEXT': 'black', 'INPUT': '#F2EFE8','SCROLL': '#F2EFE8','TEXT_INPUT' : 'black',
-                                     'BUTTON': ('black', '#C2D4D8'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                                     'BUTTON': ('black', '#C2D4D8'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'BlueMono': {'BACKGROUND': '#AAB6D3', 'TEXT': 'black', 'INPUT': '#F1F4FC','SCROLL': '#F1F4FC','TEXT_INPUT' : 'black',
-                                     'BUTTON': ('white', '#7186C7'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                                     'BUTTON': ('white', '#7186C7'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'GreenMono': {'BACKGROUND': '#A8C1B4', 'TEXT': 'black', 'INPUT': '#DDE0DE', 'SCROLL': '#E3E3E3','TEXT_INPUT' : 'black',
-                                   'BUTTON': ('white', '#6D9F85'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                                   'BUTTON': ('white', '#6D9F85'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
-                      'BrownBlue': {'BACKGROUND': '#64778d', 'TEXT': 'white', 'INPUT': '#f0f3f7', 'SCROLL': '#A6B2BE','TEXT_INPUT' : 'black', 'BUTTON': ('white', '#283b5b'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                      'BrownBlue': {'BACKGROUND': '#64778d', 'TEXT': 'white', 'INPUT': '#f0f3f7', 'SCROLL': '#A6B2BE','TEXT_INPUT' : 'black', 'BUTTON': ('white', '#283b5b'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
-                      'BrightColors': {'BACKGROUND': '#b4ffb4', 'TEXT': 'black', 'INPUT': '#ffff64','SCROLL': '#ffb482','TEXT_INPUT' : 'black', 'BUTTON': ('black', '#ffa0dc'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                      'BrightColors': {'BACKGROUND': '#b4ffb4', 'TEXT': 'black', 'INPUT': '#ffff64','SCROLL': '#ffb482','TEXT_INPUT' : 'black', 'BUTTON': ('black', '#ffa0dc'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'NeutralBlue': {'BACKGROUND': '#92aa9d', 'TEXT': 'black', 'INPUT': '#fcfff6',
                                        'SCROLL': '#fcfff6', 'TEXT_INPUT': 'black', 'BUTTON': ('black', '#d0dbbd'),
-                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'Kayak': {'BACKGROUND': '#a7ad7f', 'TEXT': 'black', 'INPUT': '#e6d3a8',
                                       'SCROLL': '#e6d3a8', 'TEXT_INPUT': 'black', 'BUTTON': ('white', '#5d907d'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'SandyBeach': {'BACKGROUND': '#efeccb', 'TEXT': '#012f2f', 'INPUT': '#e6d3a8',
                                 'SCROLL': '#e6d3a8', 'TEXT_INPUT': '#012f2f', 'BUTTON': ('white', '#046380'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR},
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
-                      'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#183440'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR}
+                      'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#183440'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0}
                       }
     try:
         colors = look_and_feel[index]
@@ -2782,9 +2786,9 @@ def ChangeLookAndFeel(index):
                       input_elements_background_color=colors['INPUT'],
                       button_color=colors['BUTTON'],
                       progress_meter_color=colors['PROGRESS'],
-                      border_width=0,
-                      slider_border_width=0,
-                      progress_meter_border_depth=0,
+                      border_width=colors['BORDER'],
+                      slider_border_width=colors['SLIDER_DEPTH'],
+                      progress_meter_border_depth=colors['PROGRESS_DEPTH'],
                       scrollbar_color=(colors['SCROLL']),
                       element_text_color=colors['TEXT'],
                       input_text_color=colors['TEXT_INPUT'])
