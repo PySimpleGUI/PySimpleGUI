@@ -6,6 +6,7 @@ import tkinter.scrolledtext as tkst
 import tkinter.font
 import datetime
 import sys
+from sys import platform
 import textwrap
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -33,8 +34,10 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#
                (YELLOWS[0], GREENS[3]), (YELLOWS[0], BLUES[2]))
 
 COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
-# DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
-DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
+if sys.platform is 'darwin':
+    DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
+else:
+    DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
 DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_BACKGROUND_COLOR = None
@@ -1866,7 +1869,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # done with row, pack the row of widgets
         tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
 
-        if form.BackgroundColor is not None:
+        if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         if not toplevel_form.IsTabbedForm:
             toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
@@ -1973,7 +1976,7 @@ def StartupTK(my_flex_form):
     ow = _my_windows.NumOpenWindows
     # print('Starting TK open Windows = {}'.format(ow))
     root = tk.Tk() if not ow else tk.Toplevel()
-    if my_flex_form.BackgroundColor is not None:
+    if my_flex_form.BackgroundColor is not None and my_flex_form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root.configure(background=my_flex_form.BackgroundColor)
     _my_windows.Increment()
 
