@@ -1736,7 +1736,9 @@ Use realtime keyboard capture by calling
 
 
 ## Sample Applications
+
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
+
   | Source File| Description |
 |--|--|
 |**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single form
