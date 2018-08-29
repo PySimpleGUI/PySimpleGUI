@@ -6,7 +6,6 @@ import tkinter.scrolledtext as tkst
 import tkinter.font
 import datetime
 import sys
-from sys import platform
 import textwrap
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -471,6 +470,7 @@ class Multiline(Element):
         return
 
     def Update(self, NewValue):
+        self.TKText.delete('1.0', tk.END)
         self.TKText.insert(1.0, NewValue)
 
     def Get(self):
