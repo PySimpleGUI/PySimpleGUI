@@ -787,8 +787,8 @@ multiline_elem = sg.Multiline(size=(70,35), do_not_clear=True)
 
 while True:
     sg.ChangeLookAndFeel('LightGreen')
-    col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),len(listbox_values)), key='func')],
-                   [sg.SimpleButton('Run'), sg.ReadFormButton('Show Code'), sg.Exit()]]
+    col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),len(listbox_values)), select_submits=True, key='func')],
+                   [sg.SimpleButton('Run'), sg.Exit()]]
 
     layout = [[sg.Text('PySimpleGUI Coookbook', font=('current 18'))],
               [sg.Column(col_listbox, pad=(5,(3,2))), multiline_elem],
@@ -809,7 +809,7 @@ while True:
         except:
             continue
 
-        if button is 'Show Code':
+        if button is '':
             multiline_elem.Update(inspect.getsource(func))
             button, values = form.Read()
         elif button is 'Run':
