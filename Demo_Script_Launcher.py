@@ -5,32 +5,6 @@ import subprocess
 
 LOCATION_OF_YOUR_SCRIPTS = 'C:/Python/PycharmProjects/GooeyGUI/'
 
-def Launcher1():
-
-    form = sg.FlexForm('Script launcher')
-
-    layout =  [
-                [sg.Text('Script output....', size=(40, 1))],
-                [sg.Output(size=(88, 20), font='Courier 10')],
-                [sg.ReadFormButton('script1'), sg.ReadFormButton('script2'), sg.SimpleButton('EXIT')],
-                [sg.Text('Manual command', size=(15,1)), sg.InputText(focus=True), sg.ReadFormButton('Run', bind_return_key=True)]
-              ]
-
-    form.Layout(layout)
-
-    # ---===--- Loop taking in user input and using it to query HowDoI --- #
-    while True:
-        (button, value) = form.Read()
-        if button == 'EXIT' or button is None:
-            break           # exit button clicked
-        if button == 'script1':
-            execute_command_blocking('pip', 'list')
-        elif button == 'script2':
-            execute_command_blocking('python', '--version')
-        elif button == 'Run':
-            execute_command_blocking(value[0])      # send string without carriage return on end
-
-
 # Execute the command.  Will not see the output from the command until it completes.
 def execute_command_blocking(command, *args):
     try:
@@ -60,6 +34,7 @@ def Launcher2():
     layout =  [
                 [sg.Text('Script output....', size=(40, 1))],
                 [sg.Listbox(values=namesonly, size=(30, 19), select_mode=sg.SELECT_MODE_EXTENDED, key='demolist'), sg.Output(size=(88, 20), font='Courier 10')],
+                [sg.Checkbox('Wait for program to complete', default=False, key='wait')],
                 [sg.ReadFormButton('Run'), sg.ReadFormButton('Shortcut 1'), sg.ReadFormButton('Fav Program'), sg.SimpleButton('EXIT')],
                 ]
 
@@ -78,7 +53,10 @@ def Launcher2():
             for index, file in enumerate(value['demolist']):
                 print('Launching %s'%file)
                 form.Refresh()          # make the print appear immediately
-                execute_command_nonblocking(LOCATION_OF_YOUR_SCRIPTS + file)
+                if value['wait']:
+                    execute_command_blocking(LOCATION_OF_YOUR_SCRIPTS + file)
+                else:
+                    execute_command_nonblocking(LOCATION_OF_YOUR_SCRIPTS + file)
 
 
 if __name__ == '__main__':
