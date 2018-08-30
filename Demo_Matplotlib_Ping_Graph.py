@@ -642,11 +642,10 @@ def main():
 
     canvas_elem = g.Canvas(size=SIZE, background_color='white')  # get the canvas we'll be drawing on
     # define the form layout
-    layout = [[canvas_elem],
-              [g.ReadFormButton('Exit', size=(4,1), pad=((130, 0), 3))]]
+    layout = [[ canvas_elem, g.ReadFormButton('Exit', pad=(0,(210,0)))] ]
 
     # create the form and show it without the plot
-    form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', background_color='white')
+    form = g.FlexForm('Ping Graph', background_color='white')
     form.Layout(layout)
     form.ReadNonBlocking()
 
@@ -667,12 +666,6 @@ def main():
         run_a_ping_and_graph()
         photo = draw(fig, canvas)
 
-
-if __name__ == '__main__':
-    main()
-
-# !/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 if __name__ == '__main__':
     main()
