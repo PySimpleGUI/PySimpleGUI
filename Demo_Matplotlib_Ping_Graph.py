@@ -9,153 +9,10 @@ import tkinter as tk
 A graph of time to ping Google.com
 Demonstrates Matploylib used in an animated way.
 
-Note this file contains a copy of ping.py.  Here is some information about it.
-If you scroll past the PySimpleGUI code, you will find 100% of the original file
-has been copied to this file.
-
-    A pure python ping implementation using raw sockets.
-
-    (This is Python 3 port of https://github.com/jedie/python-ping)
-    (Tested and working with python 2.7, should work with 2.6+)
-
-    Note that ICMP messages can only be sent from processes running as root
-    (in Windows, you must run this script as 'Administrator').
-
-    Derived from ping.c distributed in Linux's netkit. That code is
-    copyright (c) 1989 by The Regents of the University of California.
-    That code is in turn derived from code written by Mike Muuss of the
-    US Army Ballistic Research Laboratory in December, 1983 and
-    placed in the public domain. They have my thanks.
-
-    Bugs are naturally mine. I'd be glad to hear about them. There are
-    certainly word - size dependencies here.
-
-    Copyright (c) Matthew Dixon Cowles, <http://www.visi.com/~mdc/>.
-    Distributable under the terms of the GNU General Public License
-    version 2. Provided with no warranties of any sort.
-
-    Original Version from Matthew Dixon Cowles:
-      -> ftp://ftp.visi.com/users/mdc/ping.py
-
-    Rewrite by Jens Diemer:
-      -> http://www.python-forum.de/post-69122.html#69122
-
-    Rewrite by George Notaras:
-      -> http://www.g-loaded.eu/2009/10/30/python-ping/
-
-    Enhancements by Martin Falatic:
-      -> http://www.falatic.com/index.php/39/pinging-with-python
-
-    Enhancements and fixes by Georgi Kolev:
-      -> http://github.com/jedie/python-ping/
-
-    Bug fix by Andrejs Rozitis:
-      -> http://github.com/rozitis/python-ping/
+Note this file contains a copy of ping.py. It is contained in the first part of this file
 
 """
 
-
-#================================================================================
-#   Globals
-#       These are needed because callback functions are used.
-#       Need to retain state across calls
-#================================================================================
-class MyGlobals:
-    axis_pings = None
-    ping_x_array = []
-    ping_y_array = []
-
-g_my_globals = MyGlobals()
-
-#================================================================================
-#       Performs *** PING! ***
-#================================================================================
-def run_a_ping_and_graph():
-    global g_my_globals                 # graphs are global so that can be retained across multiple calls to this callback
-
-    #===================== Do the ping =====================#
-    response = quiet_ping('google.com',timeout=1000)
-    if response[0] == 0:
-        ping_time = 1000
-    else:
-        ping_time = response[0]
-    #===================== Store current ping in historical array =====================#
-    g_my_globals.ping_x_array.append(len(g_my_globals.ping_x_array))
-    g_my_globals.ping_y_array.append(ping_time)
-    # ===================== Only graph last 100 items =====================#
-    if len(g_my_globals.ping_x_array) > 100:
-        x_array = g_my_globals.ping_x_array[-100:]
-        y_array = g_my_globals.ping_y_array[-100:]
-    else:
-        x_array = g_my_globals.ping_x_array
-        y_array = g_my_globals.ping_y_array
-
-    # ===================== Call graphinc functions =====================#
-    g_my_globals.axis_ping.clear()                                                              # clear before graphing
-    g_my_globals.axis_ping.plot(x_array,y_array)                                                # graph the ping values
-
-#================================================================================
-#   Function:   Set graph titles and Axis labels
-#       Sets the text for the subplots
-#       Have to do this in 2 places... initially when creating and when updating
-#       So, putting into a function so don't have to duplicate code
-#================================================================================
-def set_chart_labels():
-    global g_my_globals
-
-    g_my_globals.axis_ping.set_xlabel('Time')
-    g_my_globals.axis_ping.set_ylabel('Ping (ms)')
-    g_my_globals.axis_ping.set_title('Current Ping Duration', fontsize = 12)
-
-def draw(fig, canvas):
-    # Magic code that draws the figure onto the Canvas Element's canvas
-    figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
-    figure_w, figure_h = int(figure_w), int(figure_h)
-    photo = tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
-    canvas.create_image(640 / 2, 480 / 2, image=photo)
-    figure_canvas_agg = FigureCanvasAgg(fig)
-    figure_canvas_agg.draw()
-    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-    return photo
-
-#================================================================================
-#   Function:   MAIN
-#================================================================================
-def main():
-    global g_my_globals
-
-    canvas_elem = g.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
-    # define the form layout
-    layout = [[g.Text('Animated Ping', size=(40,1), justification='center', font='Helvetica 20')],
-              [canvas_elem],
-              [g.ReadFormButton('Exit', size=(10,2), pad=((280, 0), 3), font='Helvetica 14')]]
-
-    # create the form and show it without the plot
-    form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
-    form.Layout(layout)
-    form.ReadNonBlocking()
-
-    canvas = canvas_elem.TKCanvas
-
-    fig = plt.figure()
-    g_my_globals.axis_ping = fig.add_subplot(1,1,1)
-    set_chart_labels()
-    plt.tight_layout()
-
-    while True:
-        button, values = form.ReadNonBlocking()
-        if button is 'Exit' or values is None:
-            break
-
-        run_a_ping_and_graph()
-        photo = draw(fig, canvas)
-
-
-if __name__ == '__main__':
-    main()
-
-# !/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """
     A pure python ping implementation using raw sockets.
@@ -661,20 +518,19 @@ def verbose_ping(hostname, timeout=WAIT_TIMEOUT, count=NUM_PACKETS,
 
     dump_stats(myStats)
 
-
-# =============================================================================#
+#=============================================================================#
 def quiet_ping(hostname, timeout=WAIT_TIMEOUT, count=NUM_PACKETS,
                packet_size=PACKET_SIZE, path_finder=False):
     """
     Same as verbose_ping, but the results are returned as tuple
     """
-    myStats = MyStats()  # Reset the stats
-    mySeqNumber = 0  # Starting value
+    myStats = MyStats() # Reset the stats
+    mySeqNumber = 0 # Starting value
 
     try:
         destIP = socket.gethostbyname(hostname)
     except socket.gaierror as e:
-        return False
+        return 0,0,0,0
 
     myStats.thisIP = destIP
 
@@ -684,12 +540,12 @@ def quiet_ping(hostname, timeout=WAIT_TIMEOUT, count=NUM_PACKETS,
     if path_finder:
         fakeStats = MyStats()
         do_one(fakeStats, destIP, hostname, timeout,
-               mySeqNumber, packet_size, quiet=True)
+                        mySeqNumber, packet_size, quiet=True)
         time.sleep(0.5)
 
     for i in range(count):
         delay = do_one(myStats, destIP, hostname, timeout,
-                       mySeqNumber, packet_size, quiet=True)
+                        mySeqNumber, packet_size, quiet=True)
 
         if delay == None:
             delay = 0
@@ -698,41 +554,125 @@ def quiet_ping(hostname, timeout=WAIT_TIMEOUT, count=NUM_PACKETS,
 
         # Pause for the remainder of the MAX_SLEEP period (if applicable)
         if (MAX_SLEEP > delay):
-            time.sleep((MAX_SLEEP - delay) / 1000)
+            time.sleep((MAX_SLEEP - delay)/1000)
 
     if myStats.pktsSent > 0:
-        myStats.fracLoss = (myStats.pktsSent - myStats.pktsRcvd) / myStats.pktsSent
+        myStats.fracLoss = (myStats.pktsSent - myStats.pktsRcvd)/myStats.pktsSent
     if myStats.pktsRcvd > 0:
         myStats.avrgTime = myStats.totTime / myStats.pktsRcvd
 
     # return tuple(max_rtt, min_rtt, avrg_rtt, percent_lost)
     return myStats.maxTime, myStats.minTime, myStats.avrgTime, myStats.fracLoss
 
-
 # =============================================================================#
+
+
+
+#================================================================================
+#   Globals
+#       These are needed because callback functions are used.
+#       Need to retain state across calls
+#================================================================================
+SIZE=(320,240)
+
+class MyGlobals:
+    axis_pings = None
+    ping_x_array = []
+    ping_y_array = []
+
+g_my_globals = MyGlobals()
+
+#================================================================================
+#       Performs *** PING! ***
+#================================================================================
+def run_a_ping_and_graph():
+    global g_my_globals                 # graphs are global so that can be retained across multiple calls to this callback
+
+    #===================== Do the ping =====================#
+    response = quiet_ping('google.com',timeout=1000)
+    if response[0] == 0:
+        ping_time = 1000
+    else:
+        ping_time = response[0]
+    #===================== Store current ping in historical array =====================#
+    g_my_globals.ping_x_array.append(len(g_my_globals.ping_x_array))
+    g_my_globals.ping_y_array.append(ping_time)
+    # ===================== Only graph last 100 items =====================#
+    if len(g_my_globals.ping_x_array) > 100:
+        x_array = g_my_globals.ping_x_array[-100:]
+        y_array = g_my_globals.ping_y_array[-100:]
+    else:
+        x_array = g_my_globals.ping_x_array
+        y_array = g_my_globals.ping_y_array
+
+    # ===================== Call graphinc functions =====================#
+    g_my_globals.axis_ping.clear()              # clear before graphing
+    set_chart_labels()
+    g_my_globals.axis_ping.plot(x_array,y_array)  # graph the ping values
+
+#================================================================================
+#   Function:   Set graph titles and Axis labels
+#       Sets the text for the subplots
+#       Have to do this in 2 places... initially when creating and when updating
+#       So, putting into a function so don't have to duplicate code
+#================================================================================
+def set_chart_labels():
+    global g_my_globals
+
+    g_my_globals.axis_ping.set_xlabel('Time', fontsize=8)
+    g_my_globals.axis_ping.set_ylabel('Ping (ms)', fontsize=8)
+    g_my_globals.axis_ping.set_title('Current Ping Duration', fontsize = 8)
+
+def draw(fig, canvas):
+    # Magic code that draws the figure onto the Canvas Element's canvas
+    figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
+    figure_w, figure_h = int(figure_w), int(figure_h)
+    photo = tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
+    canvas.create_image(SIZE[0] / 2, SIZE[1] / 2, image=photo)
+    figure_canvas_agg = FigureCanvasAgg(fig)
+    figure_canvas_agg.draw()
+    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
+    return photo
+
+#================================================================================
+#   Function:   MAIN
+#================================================================================
 def main():
-    parser = argparse.ArgumentParser(description=__description__)
-    parser.add_argument('-q', '--quiet', action='store_true',
-                        help='quiet output')
-    parser.add_argument('-c', '--count', type=int, default=NUM_PACKETS,
-                        help=('number of packets to be sent '
-                              '(default: %(default)s)'))
-    parser.add_argument('-W', '--timeout', type=float, default=WAIT_TIMEOUT,
-                        help=('time to wait for a response in seoncds '
-                              '(default: %(default)s)'))
-    parser.add_argument('-s', '--packet-size', type=int, default=PACKET_SIZE,
-                        help=('number of data bytes to be sent '
-                              '(default: %(default)s)'))
-    parser.add_argument('destination')
-    # args = parser.parse_args()
+    global g_my_globals
 
-    ping = verbose_ping
-    # if args.quiet:
-    # ping = quiet_ping
-    ping('Google.com', timeout=1000)
-    # ping(args.destination, timeout=args.timeout*1000, count=args.count,
-    #      packet_size=args.packet_size)
+    canvas_elem = g.Canvas(size=SIZE, background_color='white')  # get the canvas we'll be drawing on
+    # define the form layout
+    layout = [[canvas_elem],
+              [g.ReadFormButton('Exit', size=(4,1), pad=((130, 0), 3))]]
 
+    # create the form and show it without the plot
+    form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', background_color='white')
+    form.Layout(layout)
+    form.ReadNonBlocking()
+
+    canvas = canvas_elem.TKCanvas
+
+    fig = plt.figure(figsize=(3.1, 2.25), tight_layout={'pad':0})
+    g_my_globals.axis_ping = fig.add_subplot(1,1,1)
+    plt.rcParams['xtick.labelsize'] = 8
+    plt.rcParams['ytick.labelsize'] = 8
+    set_chart_labels()
+    plt.tight_layout()
+
+    while True:
+        button, values = form.ReadNonBlocking()
+        if button is 'Exit' or values is None:
+            exit(0)
+
+        run_a_ping_and_graph()
+        photo = draw(fig, canvas)
+
+
+if __name__ == '__main__':
+    main()
+
+# !/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 if __name__ == '__main__':
     main()
