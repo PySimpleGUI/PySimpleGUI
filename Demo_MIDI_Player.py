@@ -41,7 +41,7 @@ class PlayerGUI():
                       [g.Text('Choose MIDI Output Device', size=(22, 1)),
                        g.Listbox(values=self.PortList, size=(30, len(self.PortList) + 1), key='device')],
                       [g.Text('_' * 250, auto_size_text=False, size=(100, 1))],
-                      [g.SimpleButton('PLAY!', size=(10, 2), button_color=('red', 'white'), font=("Helvetica", 15), bind_return_key=True), g.Text(' ' * 2, size=(4, 1)), g.Cancel(size=(8, 2), font=("Helvetica", 15))]]
+                      [g.SimpleButton('PLAY', size=(12, 2), button_color=('red', 'white'), font=("Helvetica", 15), bind_return_key=True), g.Text(' ' * 2, size=(4, 1)), g.Cancel(size=(8, 2), font=("Helvetica", 15))]]
 
 
         self.Form = form
@@ -56,11 +56,13 @@ class PlayerGUI():
         image_next = './ButtonGraphics/Next.png'
         image_exit = './ButtonGraphics/Exit.png'
 
-        self.TextElem = g.T('Song loading....', size=(85,5 + NumFiles), font=("Helvetica", 14), auto_size_text=False)
+        self.TextElem = g.T('Song loading....', size=(70,5 + NumFiles), font=("Helvetica", 14), auto_size_text=False)
+        self.SliderElem = g.Slider(range=(1,100), size=(50, 8), orientation='h', text_color='#f0f0f0')
         form = g.FlexForm('MIDI File Player', default_element_size=(30,1),font=("Helvetica", 25))
         layout = [
                     [g.T('MIDI File Player', size=(30,1), font=("Helvetica", 25))],
                     [self.TextElem],
+                    [self.SliderElem],
                     [g.ReadFormButton('PAUSE', button_color=g.TRANSPARENT_BUTTON,
                                      image_filename=image_pause,  image_size=(50,50),image_subsample=2, border_width=0), g.T(' '),
                     g.ReadFormButton('NEXT', button_color=g.TRANSPARENT_BUTTON,
@@ -113,10 +115,11 @@ def main():
         '''
         return int(round(time.time() * 1000))
 
+
     pback = PlayerGUI()
 
     button, values = pback.PlayerChooseSongGUI()
-    if button != 'PLAY!':
+    if button != 'PLAY':
         g.MsgBoxCancel('Cancelled...\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
         exit(69)
     if values['device']:
@@ -164,7 +167,7 @@ def main():
 
         # Build list of data contained in MIDI File using only track 0
         midi_length_in_seconds = mid.length
-        display_file_list = '>> ' + '\n'.join([f for i, f in enumerate(filelist[now_playing_number:]) if i < 10])
+        display_file_list = '>> ' + '\n'.join([f for i, f in enumerate(filetitles[now_playing_number:]) if i < 10])
         paused = cancelled = next_file = False
         ######################### Loop through MIDI Messages ###########################
         while(True):
@@ -179,6 +182,7 @@ def main():
                     display_string = 'Now Playing {} of {}\n{}\n              {:02d}:{:02d} of {}\nPlaylist:'.\
                         format(now_playing_number+1, len(filelist), midi_title, *divmod(t, 60), display_midi_len)
                      # display list of next 10 files to be played.
+                    pback.SliderElem.Update(t, range=(1,midi_length_in_seconds))
                     rc = pback.PlayerPlaybackGUIUpdate(display_string + '\n' + display_file_list)
                 else:       # fake rest of code as if GUI did nothing
                     rc = PLAYER_COMMAND_NONE
