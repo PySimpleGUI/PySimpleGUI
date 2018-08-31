@@ -421,7 +421,7 @@ class Checkbox(Element):
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, initial_value=None, change_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Spin Box Element
         :param values:
@@ -434,12 +434,20 @@ class Spin(Element):
         '''
         self.Values = values
         self.DefaultValue = initial_value
+        self.ChangeSubmits = change_submits
         self.TKSpinBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad)
         return
+
+    def SpinChangedHandler(self, event):
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         try:
@@ -509,7 +517,7 @@ class Text(Element):
         super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad)
         return
 
-    def Update(self, new_value = None, background_color=None, text_color=None):
+    def Update(self, new_value = None, background_color=None, text_color=None, font=None):
         if new_value is not None:
             self.DisplayText=new_value
             stringvar = self.TKStringVar
@@ -518,6 +526,9 @@ class Text(Element):
             self.TKText.configure(background=background_color)
         if text_color is not None:
             self.TKText.configure(fg=text_color)
+        if font is not None:
+            self.TKText.configure(font=font)
+
 
     def __del__(self):
         super().__del__()
@@ -1803,6 +1814,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(fg=text_color)
+                if element.ChangeSubmits:
+                    element.TKSpinBox.bind('<ButtonRelease-1>', element.SpinChangedHandler)
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
@@ -1870,7 +1883,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKScale = tkscale
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
-        tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
+        # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
+        tk_row_frame.pack(side=tk.TOP, anchor='sw', padx=DEFAULT_MARGINS[0])
 
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
