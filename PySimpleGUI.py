@@ -442,6 +442,9 @@ class Spin(Element):
         super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
+    def Update(self, new_value):
+        self.TKStringVar.set(new_value)
+
     def SpinChangedHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
@@ -888,18 +891,23 @@ class Frame(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, change_submits=False, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
-        Slider Element
+        Slider
         :param range:
         :param default_value:
+        :param resolution:
         :param orientation:
         :param border_width:
         :param relief:
-        :param scale: Adds multiplier to size (w,h)
-        :param size: Size of field in characters
-        :param background_color: Color for Element. Text or RGB Hex
+        :param change_submits:
+        :param scale:
+        :param size:
         :param font:
+        :param background_color:
+        :param text_color:
+        :param key:
+        :param pad:
         '''
         self.TKScale = None
         self.Range = (1,10) if range == (None, None) else range
@@ -908,6 +916,7 @@ class Slider(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad)
         return
@@ -917,6 +926,12 @@ class Slider(Element):
         if range != (None, None):
             self.TKScale.config(from_ = range[0], to_ = range[1])
 
+    def SliderChangedHandler(self, event):
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -1871,7 +1886,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     range_from = element.Range[0]
                     range_to = element.Range[1]
-                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
+                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, command=element.SliderChangedHandler)
+                # if element.ChangeSubmits:
+                #     element.tkscale.bind('<Change>', element.SliderChangedHandler)
                 # tktext_label.configure(anchor=tk.NW, image=photo)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
