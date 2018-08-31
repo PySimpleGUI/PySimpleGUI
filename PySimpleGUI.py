@@ -911,7 +911,7 @@ class Slider(Element):
         '''
         self.TKScale = None
         self.Range = (1,10) if range == (None, None) else range
-        self.DefaultValue = 5 if default_value is None else default_value
+        self.DefaultValue = self.Range[0] if default_value is None else default_value
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
@@ -2131,6 +2131,11 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
         button, values = form.Show()
     return button
 
+# ==============================  PopUp  ============#
+# Lazy function. Same as calling MsgBox with parms   #
+# ===================================================#
+Popup = MsgBox
+
 # ==============================  MsgBoxAutoClose====#
 # Lazy function. Same as calling MsgBox with parms   #
 # ===================================================#
@@ -2146,6 +2151,8 @@ def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_durati
     '''
     MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
+
+PopupTimed = MsgBoxAutoClose
 
 
 # ==============================  MsgBoxError   =====#
@@ -2164,6 +2171,9 @@ def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False
     MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
+PopupError = MsgBoxError
+
+
 # ==============================  MsgBoxCancel  =====#
 #                                                    #
 # ===================================================#
@@ -2179,6 +2189,9 @@ def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration
     '''
     MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
+
+PopupCancel =MsgBoxCancel
+
 
 # ==============================  MsgBoxOK      =====#
 # Like MsgBox but only 1 button                      #
@@ -2196,6 +2209,10 @@ def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=Non
     MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
+PopupOk = MsgBoxOK
+PopupOK = MsgBoxOK
+
+
 # ==============================  MsgBoxOKCancel ====#
 # Like MsgBox but presents OK and Cancel buttons     #
 # ===================================================#
@@ -2211,6 +2228,10 @@ def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_durati
     '''
     result = MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return result
+
+PopupOKCancel = MsgBoxOKCancel
+PopupOkCancel = MsgBoxOKCancel
+
 
 # ====================================  YesNoBox=====#
 # Like MsgBox but presents Yes and No buttons        #
@@ -2228,6 +2249,9 @@ def MsgBoxYesNo(*args, button_color=None, auto_close=False, auto_close_duration=
     '''
     result = MsgBox(*args, button_type=MSG_BOX_YES_NO, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return result
+
+
+PopupYesNo = MsgBoxYesNo
 
 # ==============================  PROGRESS METER ========================================== #
 
@@ -2574,6 +2598,24 @@ def GetPathBox(title, message, default_path='', button_color=None, size=(None, N
             path = input_values[0]
             return True, path
 
+
+GetFolder = GetPathBox
+AskForFolder = GetPathBox
+
+
+def PopupGetFolder(message, default_path='', button_color=None, size=(None, None)):
+    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=default_path, size=size), FolderBrowse()],
+                  [Ok(), Cancel()]]
+
+        (button, input_values) = form.LayoutAndShow(layout)
+        if button != 'Ok':
+            return None
+        else:
+            path = input_values[0]
+            return path
+
 # ============================== GetFileBox =========#
 # Like the Get folder box but for files              #
 # ===================================================#
@@ -2590,6 +2632,22 @@ def GetFileBox(title, message, default_path='', file_types=(("ALL Files", "*.*")
             path = input_values[0]
             return True, path
 
+GetFile = GetFileBox
+AskForFile = GetFileBox
+
+
+def PopupGetFile(message, default_path='', file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
+    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=default_path, size=size), FileBrowse(file_types=file_types)],
+                  [Ok(), Cancel()]]
+
+        (button, input_values) = form.LayoutAndShow(layout)
+        if button != 'Ok':
+            return None
+        else:
+            path = input_values[0]
+            return path
 
 # ============================== GetTextBox =========#
 # Get a single line of text                          #
@@ -2605,6 +2663,24 @@ def GetTextBox(title, message, Default='', button_color=None, size=(None, None))
             return False,None
         else:
             return True, input_values[0]
+
+GetText = GetTextBox
+GetString = GetTextBox
+AskForText = GetTextBox
+AskForString = GetTextBox
+
+
+def PopupGetText(message, Default='', button_color=None, size=(None, None)):
+    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=Default, size=size)],
+                  [Ok(), Cancel()]]
+
+        (button, input_values) = form.LayoutAndShow(layout)
+        if button != 'Ok':
+            return None
+        else:
+            return input_values[0]
 
 
 # ============================== SetGlobalIcon ======#
@@ -2860,7 +2936,7 @@ def main():
                      [Text('Here is your sample input form....')],
                      [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
                      [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-                     [Submit(bind_return_key=True), Cancel()]]
+                     [Ok(bind_return_key=True), Cancel()]]
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
 
