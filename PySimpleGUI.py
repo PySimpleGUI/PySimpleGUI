@@ -938,6 +938,37 @@ class Slider(Element):
 
 
 # ---------------------------------------------------------------------- #
+#                          TkScrollableFrame (Used by Column (SOON)      #
+# ---------------------------------------------------------------------- #
+# TODO  NOT YET WORKING!  DO NOT USE.  Will be used to make scrollable columns
+class TkScrollableFrame(tk.Frame):
+    def __init__(self, master, **kwargs):
+        tk.Frame.__init__(self, master, **kwargs)
+
+        # create a canvas object and a vertical scrollbar for scrolling it
+        self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
+        self.vscrollbar.pack(side='right', fill="y",  expand="false")
+        self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set)
+        self.canvas.pack(side="left")
+        self.vscrollbar.config(command=self.canvas.yview)
+
+        # reset the view
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
+
+        # create a frame inside the canvas which will be scrolled with it
+        # self.interior = tk.Frame(self.canvas, **kwargs)
+        # self.canvas.create_window(0, 0, window=self.interior, anchor="nw")
+
+        # self.bind('<Configure>', self.set_scrollregion)
+
+
+    def set_scrollregion(self, event=None):
+        """ Set the scroll region on the canvas"""
+        self.canvas.configure(scrollregion=self.canvas.bbox('all'))
+
+
+# ---------------------------------------------------------------------- #
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
@@ -1576,6 +1607,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 col_frame = tk.Frame(tk_row_frame)
+                # col_frame = TkScrollableFrame(tk_row_frame)           # do not use yet!  not working
                 PackFormIntoFrame(element, col_frame, toplevel_form)
                 col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
@@ -1886,10 +1918,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     range_from = element.Range[0]
                     range_to = element.Range[1]
-                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, command=element.SliderChangedHandler)
-                # if element.ChangeSubmits:
-                #     element.tkscale.bind('<Change>', element.SliderChangedHandler)
-                # tktext_label.configure(anchor=tk.NW, image=photo)
+                if element.ChangeSubmits:
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, command=element.SliderChangedHandler)
+                else:
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
