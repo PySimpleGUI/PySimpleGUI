@@ -19,7 +19,7 @@ sz = fontSize
 form.Layout(layout)
 while True:
     button, values= form.Read()
-    if button is None:
+    if button in (None, 'OK', 'Cancel'):
         break
     sz_spin = int(values['spin'])
     sz_slider = int(values['slider'])

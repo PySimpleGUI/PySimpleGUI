@@ -140,6 +140,7 @@ BUTTON_TYPE_REALTIME = 9
 ELEM_TYPE_TEXT = 1
 ELEM_TYPE_INPUT_TEXT = 20
 ELEM_TYPE_INPUT_COMBO = 21
+ELEM_TYPE_INPUT_OPTION_MENU = 22
 ELEM_TYPE_INPUT_RADIO = 5
 ELEM_TYPE_INPUT_MULTILINE = 7
 ELEM_TYPE_INPUT_CHECKBOX = 8
@@ -300,6 +301,34 @@ class InputCombo(Element):
             pass
         super().__del__()
 
+
+# ---------------------------------------------------------------------- #
+#                           Option Menu                                  #
+# ---------------------------------------------------------------------- #
+class InputOptionMenu(Element):
+
+    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None):
+        '''
+        Input Combo Box Element (also called Dropdown box)
+        :param values:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex
+        '''
+        self.Values = values
+        self.TKOptionMenu = None
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
+        super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
+
+    def __del__(self):
+        try:
+            self.TKOptionMenu.__del__()
+        except:
+            pass
+        super().__del__()
 
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
@@ -938,6 +967,37 @@ class Slider(Element):
 
 
 # ---------------------------------------------------------------------- #
+#                          TkScrollableFrame (Used by Column (SOON)      #
+# ---------------------------------------------------------------------- #
+# TODO  NOT YET WORKING!  DO NOT USE.  Will be used to make scrollable columns
+class TkScrollableFrame(tk.Frame):
+    def __init__(self, master, **kwargs):
+        tk.Frame.__init__(self, master, **kwargs)
+
+        # create a canvas object and a vertical scrollbar for scrolling it
+        self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
+        self.vscrollbar.pack(side='right', fill="y",  expand="false")
+        self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set)
+        self.canvas.pack(side="left")
+        self.vscrollbar.config(command=self.canvas.yview)
+
+        # reset the view
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
+
+        # create a frame inside the canvas which will be scrolled with it
+        # self.interior = tk.Frame(self.canvas, **kwargs)
+        # self.canvas.create_window(0, 0, window=self.interior, anchor="nw")
+
+        # self.bind('<Configure>', self.set_scrollregion)
+
+
+    def set_scrollregion(self, event=None):
+        """ Set the scroll region on the canvas"""
+        self.canvas.configure(scrollregion=self.canvas.bbox('all'))
+
+
+# ---------------------------------------------------------------------- #
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
@@ -1295,6 +1355,13 @@ Combo = InputCombo
 DropDown = InputCombo
 Drop = InputCombo
 
+
+# -------------------------  OPTION MENU Element lazy functions  ------------------------- #
+
+OptionMenu = InputOptionMenu
+
+
+
 # def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
 #     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text, background_color=background_color)
 #
@@ -1471,6 +1538,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             top_level_form.LastButtonClicked = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     value=element.TKStringVar.get()
+                elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
+                    value=element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                     try:
                         items=element.TKListbox.curselection()
@@ -1576,6 +1645,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 col_frame = tk.Frame(tk_row_frame)
+                # col_frame = TkScrollableFrame(tk_row_frame)           # do not use yet!  not working
                 PackFormIntoFrame(element, col_frame, toplevel_form)
                 col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
@@ -1726,6 +1796,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 element.TKCombo.current(0)
+            # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
+            elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
+                max_line_len = max([len(str(l)) for l in element.Values])
+                element.TKStringVar = tk.StringVar()
+                element.TKStringVar.set(element.Values[0])
+                element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar ,*element.Values )
+                element.TKOptionMenu.config(highlightthickness=0)
+                element.TKOptionMenu.config(borderwidth=border_depth)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKOptionMenu.configure(background=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    element.TKOptionMenu.configure(fg=element.TextColor)
+                element.TKOptionMenu.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 max_line_len = max([len(str(l)) for l in element.Values])
@@ -1886,10 +1969,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     range_from = element.Range[0]
                     range_to = element.Range[1]
-                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, command=element.SliderChangedHandler)
-                # if element.ChangeSubmits:
-                #     element.tkscale.bind('<Change>', element.SliderChangedHandler)
-                # tktext_label.configure(anchor=tk.NW, image=photo)
+                if element.ChangeSubmits:
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, command=element.SliderChangedHandler)
+                else:
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
