@@ -421,7 +421,7 @@ class Checkbox(Element):
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, initial_value=None, change_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Spin Box Element
         :param values:
@@ -434,12 +434,23 @@ class Spin(Element):
         '''
         self.Values = values
         self.DefaultValue = initial_value
+        self.ChangeSubmits = change_submits
         self.TKSpinBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad)
         return
+
+    def Update(self, new_value):
+        self.TKStringVar.set(new_value)
+
+    def SpinChangedHandler(self, event):
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         try:
@@ -509,7 +520,7 @@ class Text(Element):
         super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad)
         return
 
-    def Update(self, new_value = None, background_color=None, text_color=None):
+    def Update(self, new_value = None, background_color=None, text_color=None, font=None):
         if new_value is not None:
             self.DisplayText=new_value
             stringvar = self.TKStringVar
@@ -518,6 +529,9 @@ class Text(Element):
             self.TKText.configure(background=background_color)
         if text_color is not None:
             self.TKText.configure(fg=text_color)
+        if font is not None:
+            self.TKText.configure(font=font)
+
 
     def __del__(self):
         super().__del__()
@@ -877,26 +891,32 @@ class Frame(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, change_submits=False, scale=(None, None), size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
-        Slider Element
+        Slider
         :param range:
         :param default_value:
+        :param resolution:
         :param orientation:
         :param border_width:
         :param relief:
-        :param scale: Adds multiplier to size (w,h)
-        :param size: Size of field in characters
-        :param background_color: Color for Element. Text or RGB Hex
+        :param change_submits:
+        :param scale:
+        :param size:
         :param font:
+        :param background_color:
+        :param text_color:
+        :param key:
+        :param pad:
         '''
         self.TKScale = None
         self.Range = (1,10) if range == (None, None) else range
-        self.DefaultValue = 5 if default_value is None else default_value
+        self.DefaultValue = self.Range[0] if default_value is None else default_value
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad)
         return
@@ -906,6 +926,12 @@ class Slider(Element):
         if range != (None, None):
             self.TKScale.config(from_ = range[0], to_ = range[1])
 
+    def SliderChangedHandler(self, event):
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -1803,6 +1829,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(fg=text_color)
+                if element.ChangeSubmits:
+                    element.TKSpinBox.bind('<ButtonRelease-1>', element.SpinChangedHandler)
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
@@ -1858,7 +1886,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     range_from = element.Range[0]
                     range_to = element.Range[1]
-                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
+                tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, command=element.SliderChangedHandler)
+                # if element.ChangeSubmits:
+                #     element.tkscale.bind('<Change>', element.SliderChangedHandler)
                 # tktext_label.configure(anchor=tk.NW, image=photo)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -1870,7 +1900,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKScale = tkscale
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
-        tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
+        # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
+        tk_row_frame.pack(side=tk.TOP, anchor='sw', padx=DEFAULT_MARGINS[0])
 
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
@@ -2100,6 +2131,11 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
         button, values = form.Show()
     return button
 
+# ==============================  PopUp  ============#
+# Lazy function. Same as calling MsgBox with parms   #
+# ===================================================#
+Popup = MsgBox
+
 # ==============================  MsgBoxAutoClose====#
 # Lazy function. Same as calling MsgBox with parms   #
 # ===================================================#
@@ -2115,6 +2151,8 @@ def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_durati
     '''
     MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
+
+PopupTimed = MsgBoxAutoClose
 
 
 # ==============================  MsgBoxError   =====#
@@ -2133,6 +2171,9 @@ def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False
     MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
+PopupError = MsgBoxError
+
+
 # ==============================  MsgBoxCancel  =====#
 #                                                    #
 # ===================================================#
@@ -2148,6 +2189,9 @@ def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration
     '''
     MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
+
+PopupCancel =MsgBoxCancel
+
 
 # ==============================  MsgBoxOK      =====#
 # Like MsgBox but only 1 button                      #
@@ -2165,6 +2209,10 @@ def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=Non
     MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
+PopupOk = MsgBoxOK
+PopupOK = MsgBoxOK
+
+
 # ==============================  MsgBoxOKCancel ====#
 # Like MsgBox but presents OK and Cancel buttons     #
 # ===================================================#
@@ -2180,6 +2228,10 @@ def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_durati
     '''
     result = MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return result
+
+PopupOKCancel = MsgBoxOKCancel
+PopupOkCancel = MsgBoxOKCancel
+
 
 # ====================================  YesNoBox=====#
 # Like MsgBox but presents Yes and No buttons        #
@@ -2197,6 +2249,9 @@ def MsgBoxYesNo(*args, button_color=None, auto_close=False, auto_close_duration=
     '''
     result = MsgBox(*args, button_type=MSG_BOX_YES_NO, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return result
+
+
+PopupYesNo = MsgBoxYesNo
 
 # ==============================  PROGRESS METER ========================================== #
 
@@ -2543,6 +2598,24 @@ def GetPathBox(title, message, default_path='', button_color=None, size=(None, N
             path = input_values[0]
             return True, path
 
+
+GetFolder = GetPathBox
+AskForFolder = GetPathBox
+
+
+def PopupGetFolder(message, default_path='', button_color=None, size=(None, None)):
+    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=default_path, size=size), FolderBrowse()],
+                  [Ok(), Cancel()]]
+
+        (button, input_values) = form.LayoutAndShow(layout)
+        if button != 'Ok':
+            return None
+        else:
+            path = input_values[0]
+            return path
+
 # ============================== GetFileBox =========#
 # Like the Get folder box but for files              #
 # ===================================================#
@@ -2559,6 +2632,22 @@ def GetFileBox(title, message, default_path='', file_types=(("ALL Files", "*.*")
             path = input_values[0]
             return True, path
 
+GetFile = GetFileBox
+AskForFile = GetFileBox
+
+
+def PopupGetFile(message, default_path='', file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
+    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=default_path, size=size), FileBrowse(file_types=file_types)],
+                  [Ok(), Cancel()]]
+
+        (button, input_values) = form.LayoutAndShow(layout)
+        if button != 'Ok':
+            return None
+        else:
+            path = input_values[0]
+            return path
 
 # ============================== GetTextBox =========#
 # Get a single line of text                          #
@@ -2574,6 +2663,24 @@ def GetTextBox(title, message, Default='', button_color=None, size=(None, None))
             return False,None
         else:
             return True, input_values[0]
+
+GetText = GetTextBox
+GetString = GetTextBox
+AskForText = GetTextBox
+AskForString = GetTextBox
+
+
+def PopupGetText(message, Default='', button_color=None, size=(None, None)):
+    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
+        layout = [[Text(message, auto_size_text=True)],
+                  [InputText(default_text=Default, size=size)],
+                  [Ok(), Cancel()]]
+
+        (button, input_values) = form.LayoutAndShow(layout)
+        if button != 'Ok':
+            return None
+        else:
+            return input_values[0]
 
 
 # ============================== SetGlobalIcon ======#
@@ -2829,7 +2936,7 @@ def main():
                      [Text('Here is your sample input form....')],
                      [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
                      [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-                     [Submit(bind_return_key=True), Cancel()]]
+                     [Ok(bind_return_key=True), Cancel()]]
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
 
