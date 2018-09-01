@@ -398,7 +398,9 @@ class Radio(Element):
         self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
-        super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad)
+        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+
+        super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad)
 
     def __del__(self):
         try:
@@ -426,8 +428,9 @@ class Checkbox(Element):
         self.InitialState = default
         self.Value = None
         self.TKCheckbutton = None
+        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad)
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad)
 
     def Get(self):
         return self.TKIntVar.get()
@@ -583,12 +586,19 @@ class TKProgressBar():
         if orientation[0].lower() == 'h':
             s = ttk.Style()
             s.theme_use(style)
-            s.configure(str(length)+str(width)+"my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            if BarColor != COLOR_SYSTEM_DEFAULT:
+                s.configure(str(length)+str(width)+"my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            else:
+                s.configure(str(length)+str(width)+"my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width, thickness=width)
+
             self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style=str(length)+str(width)+'my.Horizontal.TProgressbar', length=length, orient=tk.HORIZONTAL, mode='determinate')
         else:
             s = ttk.Style()
             s.theme_use(style)
-            s.configure(str(length)+str(width)+"my.Vertical.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            if BarColor != COLOR_SYSTEM_DEFAULT:
+                s.configure(str(length)+str(width)+"my.Vertical.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+            else:
+                s.configure(str(length)+str(width)+"my.Vertical.TProgressbar",  troughrelief=relief, borderwidth=border_width, thickness=width)
             self.TKProgressBarForReal = ttk.Progressbar(root,  maximum=self.Max, style=str(length)+str(width)+'my.Vertical.TProgressbar', length=length, orient=tk.VERTICAL, mode='determinate')
 
     def Update(self, count, max=None):
@@ -1802,7 +1812,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 element.TKStringVar.set(element.Values[0])
                 element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar ,*element.Values )
-                element.TKOptionMenu.config(highlightthickness=0)
+                element.TKOptionMenu.config(highlightthickness=0, font=font)
                 element.TKOptionMenu.config(borderwidth=border_depth)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKOptionMenu.configure(background=element.BackgroundColor)
@@ -1859,6 +1869,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
+                    element.TKCheckbutton.configure(selectcolor=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
                 element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
@@ -1894,7 +1905,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKIntVar.set(value)
                 element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                        variable=element.TKIntVar, value=value, bd=border_depth, font=font)
-                if element.BackgroundColor is not None:
+                if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKRadio.configure(fg=text_color)
@@ -2932,8 +2943,14 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
 ##############################################################
 def ChangeLookAndFeel(index):
     # look and feel table
-    look_and_feel =  {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':1},
+    look_and_feel =  {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':0},
+
                       'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+
+                      'Dark': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'gray40',
+                                   'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                   'PROGRESS_DEPTH': 0},
 
                       'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER':1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
