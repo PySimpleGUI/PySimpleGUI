@@ -8,7 +8,7 @@ form = sg.FlexForm("Font size selector")
 
 fontSize = 12
 sampleText = sg.Text("Aa", size=(2, 1), font="Helvetica " + str(fontSize))
-slider = sg.Slider(range=(6,50), orientation='h', size=(10,20), change_submits=False, key='slider')
+slider = sg.Slider(range=(6,50), orientation='h', size=(10,20), change_submits=True, key='slider')
 spin = sg.Spin([sz for sz in range(4,72)], font=('Helvetica 20'), initial_value=fontSize, change_submits=True, key='spin')
 layout = [
           [sampleText, spin, slider],
