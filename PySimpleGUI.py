@@ -140,6 +140,7 @@ BUTTON_TYPE_REALTIME = 9
 ELEM_TYPE_TEXT = 1
 ELEM_TYPE_INPUT_TEXT = 20
 ELEM_TYPE_INPUT_COMBO = 21
+ELEM_TYPE_INPUT_OPTION_MENU = 22
 ELEM_TYPE_INPUT_RADIO = 5
 ELEM_TYPE_INPUT_MULTILINE = 7
 ELEM_TYPE_INPUT_CHECKBOX = 8
@@ -300,6 +301,34 @@ class InputCombo(Element):
             pass
         super().__del__()
 
+
+# ---------------------------------------------------------------------- #
+#                           Option Menu                                  #
+# ---------------------------------------------------------------------- #
+class InputOptionMenu(Element):
+
+    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None):
+        '''
+        Input Combo Box Element (also called Dropdown box)
+        :param values:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        :param auto_size_text: True if should shrink field to fit the default text
+        :param background_color: Color for Element. Text or RGB Hex
+        '''
+        self.Values = values
+        self.TKOptionMenu = None
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
+        super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
+
+    def __del__(self):
+        try:
+            self.TKOptionMenu.__del__()
+        except:
+            pass
+        super().__del__()
 
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
@@ -1326,6 +1355,13 @@ Combo = InputCombo
 DropDown = InputCombo
 Drop = InputCombo
 
+
+# -------------------------  OPTION MENU Element lazy functions  ------------------------- #
+
+OptionMenu = InputOptionMenu
+
+
+
 # def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
 #     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text, background_color=background_color)
 #
@@ -1501,6 +1537,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         if element.BType != BUTTON_TYPE_REALTIME:   # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
+                    value=element.TKStringVar.get()
+                elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     value=element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                     try:
@@ -1758,6 +1796,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 element.TKCombo.current(0)
+            # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
+            elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
+                max_line_len = max([len(str(l)) for l in element.Values])
+                element.TKStringVar = tk.StringVar()
+                element.TKStringVar.set(element.Values[0])
+                element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar ,*element.Values )
+                element.TKOptionMenu.config(highlightthickness=0)
+                element.TKOptionMenu.config(borderwidth=border_depth)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKOptionMenu.configure(background=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    element.TKOptionMenu.configure(fg=element.TextColor)
+                element.TKOptionMenu.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 max_line_len = max([len(str(l)) for l in element.Values])
