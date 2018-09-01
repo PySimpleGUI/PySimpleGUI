@@ -1907,6 +1907,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                        variable=element.TKIntVar, value=value, bd=border_depth, font=font)
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
+                    element.TKRadio.configure(selectcolor=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKRadio.configure(fg=text_color)
                 element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
