@@ -6,10 +6,17 @@ import tkinter.scrolledtext as tkst
 import tkinter.font
 import datetime
 import sys
+import os
+import base64
+import tempfile
 import textwrap
 
+# TODO - Sept 1 2018 - HIGHLY EXPERIMENTAL.... start TK right away with a hidden window
+# dummyroot = tk.Tk()
+# dummyroot.attributes('-alpha', 0)  # hide window while getting info and moving
+
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
-DEFAULT_WINDOW_ICON = ''
+DEFAULT_WINDOW_ICON = 'default_icon.ico'
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
 DEFAULT_BUTTON_ELEMENT_SIZE = (10,1)           # In CHARACTERS
 DEFAULT_MARGINS = (10,5)                # Margins for each LEFT/RIGHT margin is first term
@@ -132,6 +139,7 @@ BUTTON_TYPE_BROWSE_FILE = 2
 BUTTON_TYPE_BROWSE_FILES = 21
 BUTTON_TYPE_SAVEAS_FILE = 3
 BUTTON_TYPE_CLOSES_WIN = 5
+BUTTON_TYPE_CLOSES_WIN_ONLY = 6
 BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
 
@@ -752,7 +760,7 @@ class Button(Element):
         if target[0] != None:
             if target[0] < 0:
                 target = [self.Position[0] + target[0], target[1]]
-            target_element = self.ParentForm.GetElementAtLocation(target)
+            target_element = self.ParentForm._GetElementAtLocation(target)
             try:
                 strvar = target_element.TKStringVar
             except: pass
@@ -795,6 +803,15 @@ class Button(Element):
             self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
+        elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # this is a return type button so GET RESULTS and destroy window
+            # if the form is tabbed, must collect all form's results and destroy all forms
+            if self.ParentForm.IsTabbedForm:
+                self.ParentForm.UberParent._Close()
+            else:
+                self.ParentForm._Close()
+            if self.ParentForm.NonBlocking:
+                self.ParentForm.TKroot.destroy()
+                _my_windows.Decrement()
         return
 
     def Update(self, new_text, button_color=(None, None)):
@@ -1080,7 +1097,9 @@ class FlexForm:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
+        # self.WindowIcon = icon
+        # self.WindowIcon = icon if icon else icon_tempfile
+        self.WindowIcon = icon if not None else _my_windows.user_defined_icon
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
@@ -1123,11 +1142,6 @@ class FlexForm:
 
     def Layout(self,rows):
         self.AddRows(rows)
-
-    def LayoutAndShow(self,rows, non_blocking=False):
-        self.AddRows(rows)
-        self.Show(non_blocking=non_blocking)
-        return self.ReturnValues
 
     def LayoutAndRead(self,rows, non_blocking=False):
         self.AddRows(rows)
@@ -1176,7 +1190,7 @@ class FlexForm:
             self.TKroot.iconbitmap(icon)
         except: pass
 
-    def GetElementAtLocation(self, location):
+    def _GetElementAtLocation(self, location):
         (row_num,col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
@@ -1250,7 +1264,7 @@ class FlexForm:
         return screen_width, screen_height
 
 
-    def KeyboardCallback(self, event ):
+    def _KeyboardCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         if event.char != '':
@@ -1261,7 +1275,7 @@ class FlexForm:
             BuildResults(self, False, self)
         self.TKroot.quit()
 
-    def MouseWheelCallback(self, event ):
+    def _MouseWheelCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
@@ -1462,6 +1476,11 @@ def ReadFormButton(button_text, image_filename=None, image_size=(None, None),ima
 
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
     return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
+
+# -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
+# this is the only button that REQUIRES button text field
+def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
+    return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
 
 #####################################  -----  RESULTS   ------ ##################################################
 
@@ -2105,6 +2124,7 @@ def StartupTK(my_flex_form):
     ow = _my_windows.NumOpenWindows
     # print('Starting TK open Windows = {}'.format(ow))
     root = tk.Tk() if not ow else tk.Toplevel()
+    # root = tk.Toplevel()
     if my_flex_form.BackgroundColor is not None and my_flex_form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root.configure(background=my_flex_form.BackgroundColor)
     _my_windows.Increment()
@@ -2115,11 +2135,11 @@ def StartupTK(my_flex_form):
     ConvertFlexToTK(my_flex_form)
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
     if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
-        root.bind("<KeyRelease>", my_flex_form.KeyboardCallback)
-        root.bind("<MouseWheel>", my_flex_form.MouseWheelCallback)
+        root.bind("<KeyRelease>", my_flex_form._KeyboardCallback)
+        root.bind("<MouseWheel>", my_flex_form._MouseWheelCallback)
     elif my_flex_form.ReturnKeyboardEvents:
-        root.bind("<Key>", my_flex_form.KeyboardCallback)
-        root.bind("<MouseWheel>", my_flex_form.MouseWheelCallback)
+        root.bind("<Key>", my_flex_form._KeyboardCallback)
+        root.bind("<MouseWheel>", my_flex_form._MouseWheelCallback)
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
@@ -2135,7 +2155,6 @@ def StartupTK(my_flex_form):
         if my_flex_form.RootNeedsDestroying:
             my_flex_form.TKroot.destroy()
             my_flex_form.RootNeedsDestroying = False
-
     return
 
 # ==============================_GetNumLinesNeeded ==#
@@ -2163,7 +2182,7 @@ def _GetNumLinesNeeded(text, max_line_width):
 # Exits via an OK button2 press                      #
 # Returns nothing                                    #
 # ===================================================#
-def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None):
+def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None):
     '''
     Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
@@ -2207,29 +2226,45 @@ def MsgBox(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, a
 
         pad = max_line_total-15 if max_line_total > 15 else 1
         pad =1
+        if non_blocking:
+            PopupButton = DummyButton
+        else:
+            PopupButton = SimpleButton
         # show either an OK or Yes/No depending on paramater
         if button_type is MSG_BOX_YES_NO:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(button_color=button_color, focus=True, bind_return_key=True), No(
-                button_color=button_color))
-            (button_text, values) = form.Show()
-            return button_text == 'Yes'
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
         elif button_type is MSG_BOX_CANCELLED:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
         elif button_type is MSG_BOX_ERROR:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
         elif button_type is MSG_BOX_OK_CANCEL:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
-                        SimpleButton('Cancel', size=(5, 1), button_color=button_color))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
+                        PopupButton('Cancel', size=(5, 1), button_color=button_color))
         else:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
 
-        button, values = form.Show()
+        if non_blocking:
+            button, values = form.ReadNonBlocking()
+        else:
+            button, values = form.Show()
+
     return button
 
-# ==============================  PopUp  ============#
-# Lazy function. Same as calling MsgBox with parms   #
-# ===================================================#
-Popup = MsgBox
+
+
+# ==============================  MsgBox============#
+# Lazy function. Same as calling Popup with parms   #
+# ==================================================#
+# MsgBox is the legacy call and show not be used any longer
+MsgBox = Popup
+
+# --------------------------- PopupNonBlocking ---------------------------
+def PopupoNonBlocking(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    Popup(*args, non_blocking=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+    return
+
+PopupNoWait = PopupoNonBlocking
+
 
 # ==============================  MsgBoxAutoClose====#
 # Lazy function. Same as calling MsgBox with parms   #
@@ -2248,7 +2283,7 @@ def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_durati
     return
 
 PopupTimed = MsgBoxAutoClose
-
+PopupAutoClose = MsgBoxAutoClose
 
 # ==============================  MsgBoxError   =====#
 # Like MsgBox but presents RED BUTTONS               #
@@ -2285,7 +2320,7 @@ def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration
     MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
 
-PopupCancel =MsgBoxCancel
+PopupCancel = MsgBoxCancel
 
 
 # ==============================  MsgBoxOK      =====#
@@ -2305,7 +2340,6 @@ def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=Non
     return
 
 PopupOk = MsgBoxOK
-PopupOK = MsgBoxOK
 
 
 # ==============================  MsgBoxOKCancel ====#
@@ -2324,7 +2358,6 @@ def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_durati
     result = MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return result
 
-PopupOKCancel = MsgBoxOKCancel
 PopupOkCancel = MsgBoxOKCancel
 
 
@@ -2686,7 +2719,7 @@ def GetPathBox(title, message, default_path='', button_color=None, size=(None, N
                   [InputText(default_text=default_path, size=size), FolderBrowse()],
                   [Submit(), Cancel()]]
 
-        (button, input_values) = form.LayoutAndShow(layout)
+        (button, input_values) = form.LayoutAndRead(layout)
         if button != 'Submit':
             return False,None
         else:
@@ -2704,7 +2737,7 @@ def PopupGetFolder(message, default_path='', button_color=None, size=(None, None
                   [InputText(default_text=default_path, size=size), FolderBrowse()],
                   [Ok(), Cancel()]]
 
-        (button, input_values) = form.LayoutAndShow(layout)
+        (button, input_values) = form.LayoutAndRead(layout)
         if button != 'Ok':
             return None
         else:
@@ -2720,7 +2753,7 @@ def GetFileBox(title, message, default_path='', file_types=(("ALL Files", "*.*")
                   [InputText(default_text=default_path, size=size), FileBrowse(file_types=file_types)],
                   [Submit(), Cancel()]]
 
-        (button, input_values) = form.LayoutAndShow(layout)
+        (button, input_values) = form.LayoutAndRead(layout)
         if button != 'Submit':
             return False,None
         else:
@@ -2737,7 +2770,7 @@ def PopupGetFile(message, default_path='', file_types=(("ALL Files", "*.*"),), b
                   [InputText(default_text=default_path, size=size), FileBrowse(file_types=file_types)],
                   [Ok(), Cancel()]]
 
-        (button, input_values) = form.LayoutAndShow(layout)
+        (button, input_values) = form.LayoutAndRead(layout)
         if button != 'Ok':
             return None
         else:
@@ -2753,7 +2786,7 @@ def GetTextBox(title, message, Default='', button_color=None, size=(None, None))
                   [InputText(default_text=Default, size=size)],
                   [Submit(), Cancel()]]
 
-        (button, input_values) = form.LayoutAndShow(layout)
+        (button, input_values) = form.LayoutAndRead(layout)
         if button != 'Submit':
             return False,None
         else:
@@ -2771,7 +2804,7 @@ def PopupGetText(message, Default='', button_color=None, size=(None, None)):
                   [InputText(default_text=Default, size=size)],
                   [Ok(), Cancel()]]
 
-        (button, input_values) = form.LayoutAndShow(layout)
+        (button, input_values) = form.LayoutAndRead(layout)
         if button != 'Ok':
             return None
         else:
@@ -3040,6 +3073,7 @@ def main():
                      [Ok(bind_return_key=True), Cancel()]]
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
+
 
 if __name__ == '__main__':
     main()
