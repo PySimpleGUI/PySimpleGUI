@@ -302,6 +302,13 @@ class InputCombo(Element):
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
+    def Update(self, value):
+        for index, v in enumerate(self.Values):
+            if v == value:
+                self.TKCombo.current(index)
+                break
+
+
     def __del__(self):
         try:
             self.TKComboBox.__del__()
@@ -330,6 +337,13 @@ class InputOptionMenu(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
+
+    def Update(self, value):
+        for index, v in enumerate(self.Values):
+            if v == value:
+                self.TKStringVar.set(value)
+                break
+
 
     def __del__(self):
         try:
@@ -376,6 +390,13 @@ class Listbox(Element):
             self.TKListbox.insert(tk.END, item)
         self.TKListbox.selection_set(0, 0)
 
+    def SetValue(self, value):
+        for index, item in enumerate(self.Values):
+            if item in value:
+                self.TKListbox.selection_set(index)
+            else:
+                self.TKListbox.selection_clear(index)
+
     def __del__(self):
         try:
             self.TKListBox.__del__()
@@ -409,6 +430,12 @@ class Radio(Element):
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad)
+
+    def Update(self, value):
+        if not value:
+            return
+        location = EncodeRadioRowCol(self.Position[0], self.Position[1])
+        self.TKIntVar.set(location)
 
     def __del__(self):
         try:
@@ -1256,6 +1283,9 @@ class FlexForm:
             pass
 
 
+    def Fill(self, values_dict):
+        FillFormWithValues(self, values_dict)
+
     def GetScreenDimensions(self):
         if self.TKrootDestroyed:
             return None, None
@@ -1487,6 +1517,7 @@ def DummyButton(button_text, image_filename=None, image_size=(None, None),image_
 def AddToReturnDictionary(form, element, value):
     if element.Key is None:
         form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
+        element.Key = form.DictionaryKeyCounter
         form.DictionaryKeyCounter += 1
     else:
         form.ReturnValuesDictionary[element.Key] = value
@@ -1619,6 +1650,38 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
 
     return form.ReturnValues
 
+def FillFormWithValues(form, values_dict):
+    FillSubformWithValues(form, values_dict)
+
+def FillSubformWithValues(form, values_dict):
+    for row_num,row in enumerate(form.Rows):
+        for col_num, element in enumerate(row):
+            value = None
+            if element.Type == ELEM_TYPE_COLUMN:
+                FillSubformWithValues(element, values_dict)
+            try:
+                value = values_dict[element.Key]
+            except:
+                continue
+
+            if element.Type == ELEM_TYPE_INPUT_TEXT:
+                element.Update(value)
+            elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
+                element.Update(value)
+            elif element.Type == ELEM_TYPE_INPUT_RADIO:
+                element.Update(value)
+            elif element.Type == ELEM_TYPE_INPUT_COMBO:
+                element.Update(value)
+            elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
+                element.Update(value)
+            elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
+                element.SetValue(value)
+            elif element.Type == ELEM_TYPE_INPUT_SLIDER:
+                element.Update(value)
+            elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
+                element.Update(value)
+            elif element.Type == ELEM_TYPE_INPUT_SPIN:
+                element.Update(value)
 
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   TK CODE STARTS HERE ====================================================== #
@@ -2279,8 +2342,7 @@ def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_durati
     :param font:
     :return:
     '''
-    MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
+    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
 
 PopupTimed = MsgBoxAutoClose
 PopupAutoClose = MsgBoxAutoClose
@@ -2298,8 +2360,8 @@ def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False
     :param font:
     :return:
     '''
-    MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
+    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+
 
 PopupError = MsgBoxError
 
@@ -2317,8 +2379,7 @@ def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration
     :param font:
     :return:
     '''
-    MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
+    return MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
 
 PopupCancel = MsgBoxCancel
 
@@ -2336,8 +2397,7 @@ def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=Non
     :param font:
     :return:
     '''
-    MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
+    return MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
 
 PopupOk = MsgBoxOK
 
@@ -2355,8 +2415,7 @@ def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_durati
     :param font:
     :return:
     '''
-    result = MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return result
+    return MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
 
 PopupOkCancel = MsgBoxOKCancel
 
@@ -2670,8 +2729,10 @@ def EasyPrintClose():
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, height=None):
+def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None)):
     if not args: return
+    width, height = size
+    width = width if width else MESSAGE_BOX_LINE_WIDTH
     with FlexForm(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration) as form:
         max_line_total, max_line_width, total_lines, height_computed = 0,0,0,0
         complete_output = ''
@@ -2680,9 +2741,9 @@ def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, au
             # if not isinstance(message, str): message = str(message)
             message = str(message)
             longest_line_len = max([len(l) for l in message.split('\n')])
-            width_used = min(longest_line_len, MESSAGE_BOX_LINE_WIDTH)
+            width_used = min(longest_line_len, width)
             max_line_total = max(max_line_total, width_used)
-            max_line_width = MESSAGE_BOX_LINE_WIDTH
+            max_line_width = width
             lines_needed = _GetNumLinesNeeded(message, width_used)
             height_computed += lines_needed
             complete_output += message + '\n'
@@ -2695,12 +2756,15 @@ def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, au
         # show either an OK or Yes/No depending on paramater
         if yes_no:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
-            (button_text, values) = form.Show()
-            return button_text == 'Yes'
+            button, values = form.Read()
+            return button
         else:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color))
-        form.Show()
+        button, values = form.Read()
+        return button
 
+
+PopupScrolled = ScrolledTextBox
 
 # ---------------------------------------------------------------------- #
 #  GetPathBox                                                            #
@@ -2725,10 +2789,6 @@ def GetPathBox(title, message, default_path='', button_color=None, size=(None, N
         else:
             path = input_values[0]
             return True, path
-
-
-GetFolder = GetPathBox
-AskForFolder = GetPathBox
 
 
 def PopupGetFolder(message, default_path='', button_color=None, size=(None, None)):
@@ -2791,11 +2851,6 @@ def GetTextBox(title, message, Default='', button_color=None, size=(None, None))
             return False,None
         else:
             return True, input_values[0]
-
-GetText = GetTextBox
-GetString = GetTextBox
-AskForText = GetTextBox
-AskForString = GetTextBox
 
 
 def PopupGetText(message, Default='', button_color=None, size=(None, None)):
@@ -2981,10 +3036,25 @@ def ChangeLookAndFeel(index):
 
                       'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
-                      'Dark': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'gray40',
+                      'Dark': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'gray30',
                                    'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                    'PROGRESS_DEPTH': 0},
+
+                      'Black': {'BACKGROUND': 'black', 'TEXT': 'white', 'INPUT': 'gray30',
+                               'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('black', 'white'),
+                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                               'PROGRESS_DEPTH': 0},
+
+                      'Reds': {'BACKGROUND': '#280001', 'TEXT': 'white', 'INPUT': '#d8d584',
+                               'TEXT_INPUT': 'black', 'SCROLL': '#763e00', 'BUTTON': ('black', '#daad28'),
+                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                               'PROGRESS_DEPTH': 0},
+
+                      'Green': {'BACKGROUND': '#82a459', 'TEXT': 'black', 'INPUT': '#d8d584',
+                               'TEXT_INPUT': 'black', 'SCROLL': '#e3ecf3', 'BUTTON': ('white', '#517239'),
+                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                               'PROGRESS_DEPTH': 0},
 
                       'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER':1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
@@ -3070,7 +3140,7 @@ def main():
                      [Text('Here is your sample input form....')],
                      [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
                      [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-                     [Ok(bind_return_key=True), Cancel()]]
+                     [Ok(), Cancel()]]
 
         button, (source, dest) = form.LayoutAndRead(form_rows)
 

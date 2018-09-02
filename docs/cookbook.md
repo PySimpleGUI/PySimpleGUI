@@ -87,7 +87,7 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
         fname = sys.argv[1]
 
     if not fname:
-        sg.MsgBox("Cancel", "No filename supplied")
+        sg.Popup("Cancel", "No filename supplied")
         raise SystemExit("Cancelling: no filename supplied")
 
 
@@ -296,7 +296,7 @@ The architecture of some programs works better with button callbacks instead of 
             break
 
     # All done!
-    sg.MsgBoxOK('Done')
+    sg.PopupOk('Done')
 
 -----
 ## Realtime Buttons (Good For Raspberry Pi)
@@ -371,7 +371,7 @@ Tabbed forms are **easy** to make and use in PySimpleGUI.  You simple may your l
             results = sg.ShowTabbedForm('Tabbed form example', (form, layout_tab_1, 'First Tab'),
                                         (form2, layout_tab_2,'Second Tab'))
 
-    sg.MsgBox(results)
+    sg.Popup(results)
 -----
 ## Button Graphics (Media Player)
 Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4 images in order to function correctly.  The background is set to the same color as the button background so that they blend together.
@@ -621,7 +621,7 @@ To make it easier to see the Column in the window, the Column background has bee
     # to collapse the form display and read down to a single line of code.
     button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
 
-    sg.MsgBox(button, values, line_width=200)
+    sg.Popup(button, values, line_width=200)
 
 
 ## Persistent Form With Text Element Updates
