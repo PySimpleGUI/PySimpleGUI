@@ -6,10 +6,10 @@ When the "Fill" button is clicked, the form will reset to the initial values
 """
 
 def Everything():
-    sg.ChangeLookAndFeel('Green')
+    sg.ChangeLookAndFeel('Dark')
 
 
-    column1 = [[sg.Text('Column 1', background_color='#d3dfda', justification='center', size=(10, 1))],
+    column1 = [[sg.Text('Column 1', background_color='black', justification='center', size=(10, 1))],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
@@ -29,7 +29,7 @@ def Everything():
          sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
          sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
          sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10, key='slider'),
-         sg.Column(column1, background_color='#d3dfda')],
+         sg.Column(column1, background_color='black')],
         [sg.Text('_' * 80)],
         [sg.Text('Choose A Folder', size=(35, 1))],
         [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
