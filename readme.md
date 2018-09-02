@@ -10,18 +10,19 @@
 
 
 # PySimpleGUI
+
   (Ver 2.11)
-  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
+
+[Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
+
+[Wiki for the latest news](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
 
 Lots of documentation available in addition to this Readme File.
 [Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
 
-[COOKBOOK documentation now online!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
+[COOKBOOK!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
-[Brief Tutorial on PySimpleGUI](https://pysimplegui.readthedocs.io/en/latest/tutorial/)
-
-[See Wiki for latest news about development branch + new features](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
-
+[Brief Tutorial](https://pysimplegui.readthedocs.io/en/latest/tutorial/)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
@@ -35,10 +36,11 @@ Looking to take your Python code from the world of command lines and into the co
 
     import PySimpleGUI as sg
 
-    sg.MsgBox('Hello From PySimpleGUI!', 'This is the shortest GUI program ever!')
+    sg.Popup('Hello From PySimpleGUI!', 'This is the shortest GUI program ever!')
 
 
-![snap0136](https://user-images.githubusercontent.com/13696193/43162494-33095ece-8f59-11e8-86de-b6d8bcc5a52f.jpg)
+![hello world](https://user-images.githubusercontent.com/13696193/44960047-1f7f6380-aec6-11e8-9d5e-12ef935bcade.jpg)
+
 
 Or how about a ***custom GUI*** in 1 line of code?
 
@@ -46,15 +48,16 @@ Or how about a ***custom GUI*** in 1 line of code?
 
     button, (filename,) = sg.FlexForm('Get filename example'). LayoutAndRead([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
 
-![simple](https://user-images.githubusercontent.com/13696193/44279378-2f891900-a21f-11e8-89d1-52d935a4f5f5.jpg)
+![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
+
 
   Build beautiful customized forms that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve the real problems.  Do you really want to plod through the mountains of code required to program tkinter?
 
 PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkinter, but you interact with them in a **much** more friendly way.
 
-![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
+![everything dark theme](https://user-images.githubusercontent.com/13696193/44959854-b1d23800-aec3-11e8-90b6-5af915a86d15.jpg)
 
-Perhaps you're looking for a way to interact with your **Raspberry Pi** in a more friendly way.  The is the same form as above, except shown on a Pi.
+Perhaps you're looking for a way to interact with your **Raspberry Pi** in a more friendly way.  The same for shown as on Pi (roughly the same)
 
 ![raspberry pi everything demo](https://user-images.githubusercontent.com/13696193/44279694-5b58ce80-a220-11e8-9ab6-d6021f5a944f.jpg)
 
@@ -64,16 +67,17 @@ In addition to a primary GUI, you can add a Progress Meter to your code with ONE
 
     EasyProgressMeter('My meter title', current_value, max value)
 
-  ![snap0177](https://user-images.githubusercontent.com/13696193/43658025-947973d2-9725-11e8-902f-e2d5effb6e3e.jpg)
+  ![easyprogressmeter](https://user-images.githubusercontent.com/13696193/44960065-83099100-aec6-11e8-8aa8-96e4b100a0e4.jpg)
 
 You can build an async media player GUI with custom buttons in 30 lines of code.
 
-![media file player](https://user-images.githubusercontent.com/13696193/43161977-9ee7cace-8f57-11e8-8ff8-3ea24b69dab9.jpg)
+![media player 2](https://user-images.githubusercontent.com/13696193/44960091-eeebf980-aec6-11e8-884e-80d4447a83cd.jpg)
+
 
   ## Background
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited, and adds the ability to define your own layouts.   This ability to make your own forms is the  primary difference between these and `PySimpleGUI`.   Don't like the standard Message Box? Then replace it with your own GUI!
+There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited, and adds the ability to define your own layouts.   This ability to make your own forms is the  primary difference between these and `PySimpleGUI`.
 
 Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.  The configure is done in-place.
 
@@ -108,6 +112,7 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
         Single-Line-Of-Code Proress Bar & Debug Print
         Complete control of colors, look and feel
+        Selection of pre-defined palettes
         Button images
         Return values as dictionary
         Set focus
@@ -116,7 +121,8 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         Keyboard low-level key capture
         Mouse scroll-wheel support
         Get Listbox values as they are selected
-        Update elements in a visible form
+        Update elements in a live form
+        Bulk form-fill operation
 
 
 An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
@@ -198,9 +204,9 @@ To use in your code, simply import....
 
 Then use either "high level" API calls or build your own forms.
 
-    sg.MsgBox('This is my first message box')
+    sg.Popup('This is my first Popup')
 
-![snap0178](https://user-images.githubusercontent.com/13696193/43658024-945c83f8-9725-11e8-8ddd-0bbe67a9fc5d.jpg)
+![first popup](https://user-images.githubusercontent.com/13696193/44957300-c7813680-ae9e-11e8-9a8c-c70198db7907.jpg)
 
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom form appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
@@ -209,13 +215,13 @@ Yes, it's just that easy to have a window appear on the screen using Python.  Wi
 ## APIs
 
 PySimpleGUI can be broken down into 2 types of API's:
- * High Level single call functions
+ * High Level single call functions    (The `Popup` calls)
  * Custom form functions
 
 
 ### Python Language Features
 
- There are a couple of Python language features that PySimpleGUI utilizes heavily that should be understood first...
+ There are a number of Python language features that PySimpleGUI utilizes heavily for API access that should be understood...
  * Variable number of arguments to a function call
  * Optional parameters to a function call
 
@@ -223,9 +229,9 @@ PySimpleGUI can be broken down into 2 types of API's:
 
  The "High Level" API calls that *output* values take a variable number of arguments so that they match a "print" statement as much as possible.  The idea is to make it simple for the programmer to output as many items as desired and in any format.  The user need not convert the variables to be output into the strings.  The PySimpleGUI functions do that for the user.
 
-    sg.MsgBox('Variable number of parameters example', var1, var2, "etc")
+    sg.Popup('Variable number of parameters example', var1, var2, "etc")
 
-Each new item begins on a new line in the Message Box
+Each new item begins on a new line in the Popup
 
   ![snap0179](https://user-images.githubusercontent.com/13696193/43658129-f6ca49c6-9725-11e8-9317-1f77443eb04a.jpg)
 
@@ -235,9 +241,9 @@ Each new item begins on a new line in the Message Box
 
 This feature of the Python language is utilized ***heavily*** as a method of customizing forms and form Elements.  Rather than requiring the programmer to specify every possible option for a widget, instead only the options the caller wants to override are specified.
 
-Here is the function definition for the MsgBox function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't *have* to be specified on each and every call.
+Here is the function definition for the Popup function. The details aren't important.  What is important is seeing that there is a long list of potential tweaks that a caller can make.  However, they don't *have* to be specified on each and every call.
 
-    def MsgBox(*args,
+    def Popup(*args,
                button_color=None,
                button_type=MSG_BOX_OK,
                auto_close=False,
@@ -248,7 +254,7 @@ Here is the function definition for the MsgBox function. The details aren't impo
 
 If the caller wanted to change the button color to be black on yellow, the call would look something like this:
 
-    sg.MsgBox('This box has a custom button color', button_color=('black', 'yellow'))
+    sg.Popup('This box has a custom button color', button_color=('black', 'yellow'))
 
 
 ![snap0180](https://user-images.githubusercontent.com/13696193/43658171-13a72bfe-9726-11e8-8c7a-0a46e46fb202.jpg)
@@ -256,89 +262,109 @@ If the caller wanted to change the button color to be black on yellow, the call 
 
 ---
 
-### High Level API Calls
+### High Level API Calls  - Popup's
 
-The classic "input a value, print result" example.
-Often command line programs simply take some value as input on the command line, do something with it and then display the results.  Moving from the command line to a GUI is very simple.
-This code prompts user to input a line of text and then displays that text in a messages box:
+"High level calls" are those that start with "Popup".    They are the most basic form of communications with the user.   They are named after the type of window they create, a pop-up window.  These windows are meant to be short lived while, either delivering information or collecting it, and then quickly disappearing.
 
+### Popup Output
 
-    import PySimpleGUI as sg
+Think of the `Popup` call as the GUI equivelent of a  `print` statement.  It's your way of displaying results to a user in the windowed world.  Each call to Popup will create a new Popup window.
 
-    rc = sg.GetTextBox('Title', 'Please input something')
-    sg.MsgBox('Results', 'The value returned from GetTextBox', rc)
+`Popup` calls are normally blocking.  your program will stop executing until the user has closed the Popup window.  A non-blocking form of Popup discussed in the async section.
 
+Just like a print statement, you can pass any number of arguments you wish.  They will all be turned into strings and displayed in the popup window.
 
-  ![snap0181](https://user-images.githubusercontent.com/13696193/43658233-48cc7794-9726-11e8-8582-8844280c344e.jpg)
+There are a number of Popup output calls, each with a slightly different look (e.g. different button labels).
 
-![snap0182](https://user-images.githubusercontent.com/13696193/43658232-48aaad4e-9726-11e8-95f5-aa9b9213bb77.jpg)
+The list of Popup output functions are
 
+    Popup,PopupOk
+    PopupYesNo
+    PopupCancel
+    PopupOkCancel
+    PopupError
+    PopupTimed, PopupAutoClose
 
-#### Message Boxes
-In addition to MsgBox, you'll find a several API calls that are shortcuts to common messages boxes.  You can achieve similar results by calling MsgBox with the correct parameters.
+The trailing portion of the function name after Popup indicates what buttons are shown.  `PopupYesNo` shows a pair of button with Yes and No on them.   `PopupCancel` has a Cancel button, etc.
 
-The differences tend to be the number and types of buttons.   Here are the calls and the windows that are created.
+While these are "output" windows, they do collect input in the form of buttons.  The Popup functions return the button that was clicked.  If the Ok button was clicked, then Popup returns the string 'Ok'.  If the user clicked the X button to close the window, then the button value returned is `None`.
 
-    import PySimpleGUI as sg
+The function `PopupTimed` or `PopupAutoClose` are popup windows that will automatically close after come period of time.
 
-  `sg.MsgBoxOK('This is an OK MsgBox')`
+Here is a quick-reference showing how the Popup calls look.
 
-  ![ok](https://user-images.githubusercontent.com/13696193/43667331-723ac666-9745-11e8-8666-230c35a6afd6.jpg)
-
-
-    sg.MsgBoxOKCancel('This is an OK Cancel MsgBox')
-
-![ok cancel 2](https://user-images.githubusercontent.com/13696193/43667330-71d5bea6-9745-11e8-8944-b3900853aa62.jpg)
-
-    sg.MsgBoxCancel('This is a Cancel MsgBox')
-
-![cancel](https://user-images.githubusercontent.com/13696193/43667329-71a007de-9745-11e8-974b-d028f68798e7.jpg)
-
-    sg.MsgBoxYesNo('This is a Yes No MsgBox')
-
-![yesno](https://user-images.githubusercontent.com/13696193/43667327-717ff7dc-9745-11e8-9dce-52c305a85101.jpg)
+    print(sg.Popup('Popup'))
+    print(sg.PopupOk('PopupOk'))
+    print(sg.PopupYesNo('PopupYesNo'))
+    print(sg.PopupCancel('PopupCancel'))
+    print(sg.PopupOkCancel('PopupOkCancel'))
+    print(sg.PopupError('PopupError'))
+    print(sg.PopupTimed('PopupTimed'))
+    print(sg.PopupAutoClose('PopupAutoClose'))
 
 
-    sg.MsgBoxError('This is an error MsgBox')
+![snap0256](https://user-images.githubusercontent.com/13696193/44957394-1380ab00-aea0-11e8-98b1-1ab7d7bd5b37.jpg)
 
-![error msgbox](https://user-images.githubusercontent.com/13696193/43667326-71621712-9745-11e8-87c4-56e2ab500f8e.jpg)
+![snap0257](https://user-images.githubusercontent.com/13696193/44957400-167b9b80-aea0-11e8-9d42-2314f24e62de.jpg)
 
-    sg.MsgBoxAutoClose('This is an autoclose MsgBox')
+![snap0258](https://user-images.githubusercontent.com/13696193/44957399-154a6e80-aea0-11e8-9580-e716f839d400.jpg)
 
-![autoclose](https://user-images.githubusercontent.com/13696193/43667325-714997dc-9745-11e8-836a-7185dc80329f.jpg)
+![snap0259](https://user-images.githubusercontent.com/13696193/44957398-14b1d800-aea0-11e8-9e88-c2b36a248447.jpg)
 
-    sg.ScrolledTextBox(my_text, height=10)
+![snap0260](https://user-images.githubusercontent.com/13696193/44957397-14b1d800-aea0-11e8-950b-6d0b4f33841a.jpg)
+
+![snap0261](https://user-images.githubusercontent.com/13696193/44957396-14194180-aea0-11e8-8eef-bb2e1193ecfa.jpg)
+
+![snap0264](https://user-images.githubusercontent.com/13696193/44957595-9e15da00-aea1-11e8-8909-6b6121b74509.jpg)
+
+#### Scrolled Output
+There is a scrolled version of Popups should you have a lot of information to display.
+
+    sg.PopupScrolled(my_text)
 
 ![scrolledtextbox 2](https://user-images.githubusercontent.com/13696193/43667324-712aa0d4-9745-11e8-83a9-a0d0570d0865.jpg)
 
 
-Take a moment to look at that last one.  It's such a simple API call and yet the result is awesome.  Rather than seeing your printed text scrolling past on your display, you can capture that text and present it in a scrolled interface.  It's handy enough of an API call that it can also be called using the name `sprint` which is easier to remember than `ScrollectTextBox`.   Your code could contain a line like:
+The `PopupScrolled` will auto-fit the window size to the size of the text.  Specify `None` in the height field of a `size` parameter to get auto-sized height.
 
-    sprint(f'My variables values include x={x}', f'y={y}')
+This call will create a scrolled box 80 characters wide and a height dependent upon the number of lines of text.
 
-This becomes a debug print of sorts that will route to a scrolled window.
+sg.PopupScrolled(my_text, size=(80, None))
 
-See also the `EasyPrint` and `Print` functions.
+Note that the default max number of lines before scrolling happens is set to 50. At 50 lines the scrolling will begin.
 
-#### High Level User Input
+### Popup Input
 
-There are 3 very basic user input high-level function calls.  It's expected that for most applications, a custom input form will be created. If you need only 1 value, then perhaps one of these high level functions will work.
- - GetTextBox
- - GetFileBox
- - GetFolderBox
+There are Popup calls for single-item inputs. These follow the pattern of `Popup` followed by `Get` and then the type of item to get.
 
- `submit_clicked, value = sg.GetTextBox('Title', 'Please enter anything')`
+ - `PopupGetString` - get a single line of text
+ - `PopupGetFile` - get a filename
+ - `PopupGetFolder` - get a folder name
 
-![gettextbox 2](https://user-images.githubusercontent.com/13696193/43667510-355b23a2-9746-11e8-9f1e-91c0dd0f4ed8.jpg)
+Rather than make  a custom form to get one data value, call the Popup input function to get the item from the user.
 
-    submit_clicked, value = sg.GetFileBox('Title', 'Choose a file')
 
-![getfilebox 2](https://user-images.githubusercontent.com/13696193/43667535-5821fc94-9746-11e8-95c3-82395099e994.jpg)
+    import PySimpleGUI as sg
 
-    submit_clicked, value = sg.GetPathBox('Title', 'Choose a folder')
+    text = sg.PopupGetText('Title', 'Please input something')
+    sg.Popup('Results', 'The value returned from PopupGetText', text)
 
-![getpathbox](https://user-images.githubusercontent.com/13696193/43667556-79874c22-9746-11e8-80f2-8262d32802c2.jpg)
+  ![popupgettext](https://user-images.githubusercontent.com/13696193/44957281-8721b880-ae9e-11e8-98cd-d06369f4187e.jpg)
 
+![popup gettext response](https://user-images.githubusercontent.com/13696193/44957282-8721b880-ae9e-11e8-84ae-dc8bb30504a0.jpg)
+
+
+    text = sg.PopupGetFile('Please enter a file name')
+    sg.Popup('Results', 'The value returned from PopupGetFile', text)
+
+![popupgetfile](https://user-images.githubusercontent.com/13696193/44957857-2fd31680-aea5-11e8-8eb7-f6b91c202cc8.jpg)
+
+The window created to get a folder name looks the same as the get a file name.  The difference is in what the browse button does.  `PopupGetFile` shows an Open File dialog box while `PopupGetFolder`  shows an Open Folder dialog box.
+
+    text = sg.PopupGetFolder('Please enter a folder name')
+    sg.Popup('Results', 'The value returned from PopupGetFolder', text)
+
+![popupgetfolder](https://user-images.githubusercontent.com/13696193/44957861-45484080-aea5-11e8-926c-cf607a45251c.jpg)
 
 #### Progress Meter!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
@@ -466,7 +492,7 @@ Finally we can put it all together into a program that will display our window.
 
     button, (number,) = sg.FlexForm('Enter a number example').LayoutAndRead(layout)
 
-    sg.MsgBox(button, number)
+    sg.Popup(button, number)
 
 ### Example 2 - Get a filename
 Let's say you've got a utility you've written that operates on some input file and you're ready to use a GUI to enter than filename rather than the command line.  Follow the same steps as the previous example - draw your form on paper, break it up into rows, label the elements.
@@ -484,7 +510,7 @@ Writing the code for this one is just as straightforward.  There is one tricky t
 
     button, (number,) = sg.FlexForm('Get filename example').LayoutAndRead(layout)
 
-    sg.MsgBox(button, number)
+    sg.Popup(button, number)
 
 
 Read on for detailed instructions on the calls that show the form and return your results.
@@ -572,9 +598,6 @@ In the statement that shows and reads the form, the two input fields are directl
 
 Isn't this what almost every Python programmer looking for a GUI wants??  Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of tkinter code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  I chose 4.
 
-
-
-
 ### The Auto-Packer
 
 Once you've laid out your elements into, it's the job of the Auto-Packer to place your elements into a window frame.
@@ -592,6 +615,7 @@ This is how your GUI is created, one row at a time, with one row stacked on top 
 
 
 ### Laying out your form
+
 Your form is a 2 dimensional list in Python.  The first dimension are rows, the second is a list of Elements for each row.  The first thing you want to do is layout your form on paper.
 
     layout = [ [row 1],
@@ -636,7 +660,9 @@ This is the code that **displays** the form, collects the information and return
 ## Return values
 
    As of version 2.8 there are 2 forms of return values, list and dictionary.
+
 ### Return values as a list
+
    By default return values are a list of values, one entry for each input field.
 
    Return information from FlexForm, SG's primary form builder interface, is in this format:
@@ -686,11 +712,9 @@ This sample program demonstrates these 2 steps as well as how to address the ret
 
     button, values = form.LayoutAndRead(layout)
 
-    sg.MsgBox(button, values, values[0], values['address'], values['phone'])
-
+    sg.Popup(button, values, values[0], values['address'], values['phone'])
 
 ---
-
 
 ## All Widgets / Elements
 This code utilizes as many of the elements in one form as possible.
@@ -724,16 +748,17 @@ This is a somewhat complex form with quite a bit of custom sizing to make things
 
 ![everything example](https://user-images.githubusercontent.com/13696193/43097412-0a4652aa-8e8a-11e8-8e09-939484e3c568.jpg)
 
-Clicking the Submit button caused the form call to return.  The call to MsgBox resulted in this dialog box.
+Clicking the Submit button caused the form call to return.  The call to Popup resulted in this dialog box.
 ![results 2](https://user-images.githubusercontent.com/13696193/43097502-44e3ed32-8e8a-11e8-9a51-2b8af0b1a682.jpg)
 
 
 **`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
 
-You can see in the MsgBox that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
+You can see in the Popup that the values returned are a list.  Each input field in the form generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
 
 ---
 # Building Custom Forms
+
 You will find it much easier to write code using PySimpleGUI if you use an IDE such as PyCharm.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
 
     Control-Q (when cursor is on function name) brings up a box with the function definition
@@ -857,12 +882,12 @@ Building a form is simply making lists of Elements.  Each list is a row in the o
     layout = [ [row 1 element, row 1 element],
                [row 2 element, row 2 element, row 2 element] ]
 The code is a crude representation of the GUI, laid out in text.
+
 ####  Text Element
 
     layout = [[sg.Text('This is what a Text Element looks like')]]
 
-
- ![textelem](https://user-images.githubusercontent.com/13696193/42670173-4c1fcb40-8627-11e8-851a-5a9ee4672320.jpg)
+ ![simple text](https://user-images.githubusercontent.com/13696193/44959877-e9d97b00-aec3-11e8-9d24-b4405ee4a148.jpg)
 
 
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
@@ -907,14 +932,15 @@ A `True` value for `auto_size_text`, when placed on Text Elements, indicates tha
  - [ ] List item
 
 
-**Shorthand functions**
+**Shortcut functions**
 The shorthand functions for `Text` are `Txt` and `T`
-
 
 ####  Multiline Text Element
 
     layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
-![multiline text](https://user-images.githubusercontent.com/13696193/42670464-0824c754-8629-11e8-9741-6ed08f924618.jpg)
+
+![multiline](https://user-images.githubusercontent.com/13696193/44959853-b139a180-aec3-11e8-972f-f52188510c88.jpg)
+
 This Element doubles as both an input and output Element.  The `DefaultText` optional parameter is used to indicate what to output to the window.
 
     Multiline(default_text='',
@@ -935,7 +961,7 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 
     form.AddRow(gg.Output(size=(100,20)))
 
-![output element](https://user-images.githubusercontent.com/13696193/42704820-5446959c-869f-11e8-849e-047ea280387a.jpg)
+![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)
 
     Output(scale=(None, None),
            size=(None, None))
@@ -950,7 +976,9 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 #### Text Input Element
 
     layout = [[sg.InputText('Default text')]]
-![inputtext](https://user-images.githubusercontent.com/13696193/42693515-610a716c-867d-11e8-9a00-7e7fcf771230.jpg)
+
+![inputtext 2](https://user-images.githubusercontent.com/13696193/44959861-b5fe5580-aec3-11e8-8040-53ec241b5079.jpg)
+
 
       def InputText(default_text = '',
                     scale=(None, None),
@@ -990,7 +1018,7 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
 
     layout = [[sg.InputCombo(['choice 1', 'choice 2'])]]
 
-![combo](https://user-images.githubusercontent.com/13696193/42694431-631c4108-8680-11e8-8e99-c1a642734464.jpg)
+![combobox](https://user-images.githubusercontent.com/13696193/44959860-b565bf00-aec3-11e8-82fe-dbe41252458b.jpg)
 
     InputCombo(values,
                scale=(None, None),
@@ -1009,13 +1037,12 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
      text_color - color to use for the typed text
      key = Dictionary key to use for return values
 
-
 #### Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
     layout = [[sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
 
-![snap0130](https://user-images.githubusercontent.com/13696193/43115859-2fbf0646-8ed3-11e8-9979-bbee8eaebfab.jpg)
+![listbox 2](https://user-images.githubusercontent.com/13696193/44959859-b4cd2880-aec3-11e8-881c-1e369d5c6337.jpg)
 
 
        Listbox(values,
@@ -1052,11 +1079,12 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
 The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
 
 #### Slider Element
+
 Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
 
     layout = [[sg.Slider(range=(1,500), default_value=222, size=(20,15), orientation='horizontal', font=('Helvetica', 12))]]
 
-![snap0129](https://user-images.githubusercontent.com/13696193/43115741-e1cb52c8-8ed2-11e8-80bb-0e99ae846ec1.jpg)
+![slider](https://user-images.githubusercontent.com/13696193/44959858-b4349200-aec3-11e8-9e25-c0fcf025d19e.jpg)
 
        Slider(range=(None,None),
               default_value=None,
@@ -1090,11 +1118,12 @@ Sliders have a couple of slider-specific settings as well as appearance settings
        key = Dictionary key to use for return values
 
 #### Radio Button Element
+
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
     layout =  [[sg.Radio('My first Radio!', "RADIO1", default=True), sg.Radio('My second radio!', "RADIO1")]]
 
-![radio element](https://user-images.githubusercontent.com/13696193/42705705-327b4b6c-86a2-11e8-81a7-740e57646ba8.jpg)
+![radio](https://user-images.githubusercontent.com/13696193/44959857-b4349200-aec3-11e8-8e2d-e6a49ffbd0b6.jpg)
 
      Radio(text,
            group_id,
@@ -1126,7 +1155,8 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
 
     layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My second Checkbox!')]]
 
-![checkbox element](https://user-images.githubusercontent.com/13696193/42717015-655d73d2-86cc-11e8-9c69-3c810f48e578.jpg)
+
+![checkbox](https://user-images.githubusercontent.com/13696193/44959906-6f5d2b00-aec4-11e8-9c8a-962c787f0286.jpg)
 
 
     Checkbox(text,
@@ -1152,11 +1182,12 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
 
 
 #### Spin Element
+
 An up/down spinner control.  The valid values are passed in as a list.
 
     layout =  [[sg.Spin([i for i in range(1,11)], initial_value=1), sg.Text('Volume level')]]
 
-![spin element](https://user-images.githubusercontent.com/13696193/42717231-8ddb51d4-86cd-11e8-827a-75f2237477fa.jpg)
+![spinner](https://user-images.githubusercontent.com/13696193/44959855-b1d23800-aec3-11e8-9f51-afb2109879da.jpg)
 
     Spin(values,
          intiial_value=None,
@@ -1180,6 +1211,7 @@ An up/down spinner control.  The valid values are passed in as a list.
      key = Dictionary key to use for return values
 
 #### Button Element
+
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it but Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
 The Types of buttons include:
@@ -1233,7 +1265,8 @@ These Pre-made buttons are some of the most important elements of all because th
 .
     layout =  [[sg.OK(), sg.Cancel()]]
 
-![ok cancel](https://user-images.githubusercontent.com/13696193/42717733-1803f584-86d1-11e8-9223-36b782971b9f.jpg)
+![ok cancel 3](https://user-images.githubusercontent.com/13696193/44959927-aa5f5e80-aec4-11e8-86e1-5dc0b3a2b803.jpg)
+
 
 The FileBrowse, FolderBrowse, FileSaveAs buttons all fill-in values into a text input field somewhere on the form.  The location of the TextInput element is specified by the `Target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
 
@@ -1241,24 +1274,28 @@ The default value for `Target` is `(ThisRow, -1)`.   ThisRow is a special value 
 
 Let's examine this form as an example:
 
-![button target example](https://user-images.githubusercontent.com/13696193/42718075-b4dcb61e-86d3-11e8-904c-d709dd364108.jpg)
+
+![file browse](https://user-images.githubusercontent.com/13696193/44959944-d1b62b80-aec4-11e8-8a68-9d79d37b2c81.jpg)
+
 
 The `InputText` element is located at (1,0)... row 1, column 0.  The `Browse` button is located at position (2,0).  The Target for the button could be any of these values:
 
     Target = (1,0)
     Target = (-1,0)
+
 The code for the entire form could be:
 
-    layout =  [[sg.T('Source Folder')],
-               [sg.In()],
-               [sg.FolderBrowse(Target=(-1,0)), sg.OK()]]
+    layout = [[sg.T('Source Folder')],
+              [sg.In()],
+              [sg.FolderBrowse(target=(-1, 0)), sg.OK()]]
+
 
 **Custom Buttons**
 Not all buttons are created equal.  A button that closes a form is different that a button that returns from the form without closing it.  If you want to define your own button, you will generally do this with the Button Element `SimpleButton`, which closes the form when clicked.
 
 layout =  [[sg.SimpleButton('My Button')]]
 
-![singlebutton](https://user-images.githubusercontent.com/13696193/42718281-9453deca-86d5-11e8-83c7-4b6d33720858.jpg)
+![button](https://user-images.githubusercontent.com/13696193/44959862-b696ec00-aec3-11e8-9e88-4b9af0338a03.jpg)
 
 All buttons can have their text changed by changing the `button_text` variable in the button call.  It is this text that is returned when a form is read.  This text will be what tells you which button is called so make it unique.  Most of the convenience buttons (Submit, Cancel, Yes, etc) are all SimpleButtons. Some that are not are `FileBrowse` ,  `FolderBrowse`, `FileSaveAs`.  They clearly do not close the form. Instead they bring up a file or folder browser dialog box.
 
@@ -1294,7 +1331,8 @@ This is one you'll have to experiment with at this point.  Not up for an exhaust
 
   Normally buttons are considered "clicked" when the mouse button is let UP after a downward click on the button.  What about times when you need to read the raw up/down button values.  A classic example for this is a robotic remote control.  Building a remote control using a GUI is easy enough.  One button for each of the directions is a start.  Perhaps something like this:
 
-![snap0135](https://user-images.githubusercontent.com/13696193/43440841-bcf8d184-9466-11e8-9f7b-30a1d5ce32d3.jpg)
+![robot remote](https://user-images.githubusercontent.com/13696193/44959958-ff9b7000-aec4-11e8-99ea-7450926409be.jpg)
+
 
 This form has 2 button types.  There's the normal "Simple Button" (Quit) and 4 "Realtime Buttons".
 
@@ -1416,7 +1454,8 @@ Columns are specified in exactly the same way as a form is, as a list of lists.
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
 
 
-![column example](https://user-images.githubusercontent.com/13696193/44215113-b1097a00-a13f-11e8-96d0-f3511036494e.jpg)
+![column](https://user-images.githubusercontent.com/13696193/44959988-66b92480-aec5-11e8-9c26-316ed24a68c0.jpg)
+
 
 This code produced the above window.
 
@@ -1448,7 +1487,7 @@ This code produced the above window.
     # to collapse the form display and read down to a single line of code.
     button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
 
-    sg.MsgBox(button, values, line_width=200)
+    sg.Popup(button, values, line_width=200)
 
 The Column Element has 1 required parameter and 1 optional (the layout and the background color).  Setting the background color has the same effect as setting the form's background color, except it only affects the column rectangle.
 
@@ -1748,6 +1787,7 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 |**Demo_Color.py** | How to interact with color using RGB hex values and named colors
 |**Demo_Columns.py** | Using the Column Element to create more complex forms
 |**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility
+|**Demo_Cookbook_Browser.py** | Source code browser for all Recipes in Cookbook
 |**Demo_Dictionary.py** | Specifying and using return values in dictionary format
 |**Demo_DisplayHash1and256.py** | Using high level API and custom form to implement a simple display hash code utility
 |**Demo_DuplicateFileFinder.py** | High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter
@@ -1760,13 +1800,14 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 |**Demo_Matplotlib.py** | Integrating with Matplotlib to create a single graph
 |**Demo_Matplotlib_Animated.py** | Animated Matplotlib line graph
 |**Demo_Matplotlib_Animated_Scatter.py** | Animated Matplotlib scatter graph
+|**Demo_Matplotlib_Browser.py** | Browse Matplotlib gallery
 |**Demo_Media_Player.py** | Non-blocking form with a media player layout.  Demonstrates  button graphics, Update method
 |**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices
 |**Demo_NonBlocking_Form.py** | a basic async form
 |**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate
 |**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons
 |**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files
-|**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook (another script is in the works)
+|**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook
 |**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts
 |**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts
 |**Demo_Tabbed_Form.py** | Using the Tab feature
