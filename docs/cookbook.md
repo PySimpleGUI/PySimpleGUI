@@ -827,3 +827,19 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
 
         if __name__ == '__main__':
             main()
+
+
+
+## Tables
+
+While there is no official support for "Tables" (e.g. there is no Table Element), it is possible to display information in a tabular way.  This only works for smaller tables because there is no way to scroll a window or a column element.  Until scrollable columns are implemented there is little use in creating  a Table Element.
+
+![simpletable](https://user-images.githubusercontent.com/13696193/44960497-c667fd80-aece-11e8-988c-5fa7dfdb90a6.jpg)
+
+    layout = [[sg.T('Table Test')]]
+
+    for i in range(20):
+        row = [sg.T(f'Row {i}  ', size=(10,1))]
+        layout.append([sg.T(f'{i}{j}', size=(4,1), background_color='white', pad=(1,1)) for j in range(10)])
+
+    sg.FlexForm('Table').LayoutAndRead(layout)
