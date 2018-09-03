@@ -720,6 +720,30 @@ def TableSimulation():
     sg.FlexForm('Table').LayoutAndRead(layout)
 
 
+def TightLayout():
+    import PySimpleGUI as sg
+
+    sg.ChangeLookAndFeel('Dark')
+    sg.SetOptions(element_padding=(0, 0))
+    layout = [[sg.T('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User 2'), size=(20, 1)),
+               sg.T('0', size=(8, 1))],
+              [sg.T('Customer:', pad=((3, 0), 0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20, 1)),
+               sg.T('1', size=(8, 1))],
+              [sg.T('Notes:', pad=((3, 0), 0)), sg.In(size=(44, 1), background_color='white', text_color='black')],
+              [sg.ReadFormButton('Start', button_color=('white', 'black')),
+               sg.ReadFormButton('Stop', button_color=('white', 'black')),
+               sg.ReadFormButton('Reset', button_color=('white', 'firebrick3')),
+               sg.ReadFormButton('Submit', button_color=('white', 'springgreen4'))]
+              ]
+
+    form = sg.FlexForm("Time Tracker", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
+                       auto_size_buttons=False,
+                       default_button_element_size=(12, 1))
+    form.Layout(layout)
+    while True:
+        button, values = form.Read()
+        if button is None:
+            return
 
 # -------------------------------- GUI Starts Here -------------------------------#
 # fig = your figure you want to display.  Assumption is that 'fig' holds the      #
@@ -735,7 +759,7 @@ fig_dict = {'Simple Data Entry':SimpleDataEntry, 'Simple Entry Return Data as Di
             'Realtime Buttons':RealtimeButtons, 'Easy Progress Meter':EasyProgressMeter, 'Tabbed Form':TabbedForm, 'Media Player':MediaPlayer, 'Script Launcher':ScriptLauncher,
             'Machine Learning':MachineLearning, 'Custom Progress Meter':CustromProgressMeter, 'One Line GUI':OneLineGUI, 'Multiple Columns':MultipleColumns,
             'Persistent Form':PersistentForm, 'Canvas Widget':CanvasWidget, 'Input Element Update':InputElementUpdate,
-            'Table Simulation':TableSimulation}
+            'Table Simulation':TableSimulation, 'Tight Layout':TightLayout}
 
 
 # multiline_elem = sg.Multiline(size=(70,35),pad=(5,(3,90)))
@@ -744,8 +768,8 @@ listbox_values = [key for key in fig_dict.keys()]
 multiline_elem = sg.Multiline(size=(70,35), do_not_clear=True)
 
 while True:
-    sg.ChangeLookAndFeel('LightGreen')
-    col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),len(listbox_values)), select_submits=True, key='func')],
+    sg.ChangeLookAndFeel('Dark')
+    col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),len(listbox_values)), change_submits=True, key='func')],
                    [sg.SimpleButton('Run'), sg.Exit()]]
 
     layout = [[sg.Text('PySimpleGUI Coookbook', font=('current 18'))],
