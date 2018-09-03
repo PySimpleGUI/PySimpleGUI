@@ -111,5 +111,3 @@ while True:
     filename_display_elem.Update(filename)
     # update page display
     file_num_display_elem.Update('File {} of {}'.format(i+1, num_files))
-
-
