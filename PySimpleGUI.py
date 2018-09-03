@@ -365,7 +365,7 @@ class InputOptionMenu(Element):
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, select_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Listbox Element
         :param values:
@@ -378,7 +378,7 @@ class Listbox(Element):
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
-        self.SelectSubmits = select_submits
+        self.ChangeSubmits = change_submits
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -1802,8 +1802,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     col_frame = TkScrollableFrame(tk_row_frame)           # do not use yet!  not working
                     PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
                     col_frame.TKFrame.update()
-                    if element.Size == (None, None):
-                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth()/2,height=col_frame.TKFrame.winfo_reqheight()/2)
+                    if element.Size == (None, None):            # if no size specified, use column width x column height/2
+                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),height=col_frame.TKFrame.winfo_reqheight()/2)
                     else:
                         col_frame.canvas.config(width=element.Size[0],height=element.Size[1])
 
@@ -1906,6 +1906,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen+10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
+                if element.BindReturnKey:
+                    element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
@@ -2003,7 +2005,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(fg=text_color)
-                if element.SelectSubmits:
+                if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element.ListboxSelectHandler)
                 vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
                 element.TKListbox.configure(yscrollcommand=vsb.set)
@@ -2181,19 +2183,22 @@ def ConvertFlexToTK(MyFlexForm):
     if not MyFlexForm.IsTabbedForm:
         master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
+    try:
+        master.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
+    except:
+        pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
     #....................................... DONE creating and laying out window ..........................#
     if MyFlexForm.IsTabbedForm:
         master = MyFlexForm.ParentWindow
-    master.attributes('-alpha', 0)                      # hide window while getting info and moving
-    screen_width = master.winfo_screenwidth()           # get window info to move to middle of screen
+    screen_width = master.winfo_screenwidth()      # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
         x,y = MyFlexForm.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
         x,y = DEFAULT_WINDOW_LOCATION
     else:
-        master.update_idletasks()  # don't forget
+        master.update_idletasks()                   # don't forget to do updates or values are bad
         win_width = master.winfo_width()
         win_height = master.winfo_height()
         x = screen_width/2 -win_width/2
@@ -2205,7 +2210,7 @@ def ConvertFlexToTK(MyFlexForm):
 
     move_string = '+%i+%i'%(int(x),int(y))
     master.geometry(move_string)
-    master.attributes('-alpha', 255)                      # Make window visible again
+    master.attributes('-alpha', 255)            # Make window visible again
     master.update_idletasks()  # don't forget
     return
 
