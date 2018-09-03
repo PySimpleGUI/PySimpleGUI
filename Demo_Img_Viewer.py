@@ -20,7 +20,7 @@ PIL
 # Get the folder containing the images from the user
 rc, folder = sg.GetPathBox('Image Browser', 'Image folder to open', default_path='')
 if not rc or not folder:
-    sg.MsgBoxCancel('Cancelling')
+    sg.PopupCancel('Cancelling')
     raise SystemExit()
 
 # PIL supported image types
@@ -34,7 +34,7 @@ fnames = [f for f in flist0 if os.path.isfile(os.path.join(folder,f)) and f.lowe
 
 num_files = len(fnames)                # number of iamges found
 if num_files == 0:
-    sg.MsgBox('No files in folder')
+    sg.Popup('No files in folder')
     raise SystemExit()
 
 del flist0                             # no longer needed
@@ -69,20 +69,21 @@ file_num_display_elem = sg.Text('File 1 of {}'.format(num_files), size=(15,1))
 
 # define layout, show and read the form
 col = [[filename_display_elem],
-          [image_elem],
-          [sg.ReadFormButton('Next', size=(8,2)), sg.ReadFormButton('Prev',
-                             size=(8,2)), file_num_display_elem]]
+          [image_elem]]
 
-col_files = [[sg.Listbox(values = fnames, size=(60,30), key='listbox')],
-             [sg.ReadFormButton('Read')]]
+col_files = [[sg.Listbox(values = fnames, select_submits=True, size=(60,30), key='listbox')],
+             [sg.ReadFormButton('Next', size=(8,2)), sg.ReadFormButton('Prev',
+                             size=(8,2)), file_num_display_elem]]
 
 layout = [[sg.Column(col_files), sg.Column(col)]]
 
-button, values = form.LayoutAndRead(layout)          # Shows form on screen
+form.Layout(layout)          # Shows form on screen
 
 # loop reading the user input and displaying image, filename
 i=0
 while True:
+    # read the form
+    button, values = form.Read()
 
     # perform button and keyboard operations
     if button is None:
@@ -91,12 +92,13 @@ while True:
         i += 1
         if i >= num_files:
             i -= num_files
+        filename = os.path.join(folder, fnames[i])
     elif button in ('Prev', 'MouseWheel:Up', 'Up:38', 'Prior:33'):
         i -= 1
         if i < 0:
             i = num_files + i
-
-    if button == 'Read':                    # something from the listbox
+        filename = os.path.join(folder, fnames[i])
+    elif button in ('Read', ''):            # something from the listbox
         f = values["listbox"][0]            # selected filename
         filename = os.path.join(folder, f)  # read this file
         i = fnames.index(f)                 # update running index
@@ -110,5 +112,4 @@ while True:
     # update page display
     file_num_display_elem.Update('File {} of {}'.format(i+1, num_files))
 
-    # read the form
-    button, values = form.Read()
+
