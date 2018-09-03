@@ -866,9 +866,10 @@ class Button(Element):
                 _my_windows.Decrement()
         return
 
-    def Update(self, new_text, button_color=(None, None)):
+    def Update(self, new_text=None, button_color=(None, None)):
         try:
-            self.TKButton.configure(text=new_text)
+            if new_text is not None:
+                self.TKButton.configure(text=new_text)
             if button_color != (None, None):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
@@ -1618,6 +1619,7 @@ def BuildResults(form, initialize_only, top_level_form):
     form.ReturnValuesDictionary = {}
     form.ReturnValuesList = []
     BuildResultsForSubform(form, initialize_only, top_level_form)
+    top_level_form.LastButtonClicked = None
     return form.ReturnValues
 
 def BuildResultsForSubform(form, initialize_only, top_level_form):
@@ -1801,7 +1803,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
                     col_frame.TKFrame.update()
                     if element.Size == (None, None):
-                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),height=col_frame.TKFrame.winfo_reqheight())
+                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth()/2,height=col_frame.TKFrame.winfo_reqheight()/2)
                     else:
                         col_frame.canvas.config(width=element.Size[0],height=element.Size[1])
 
@@ -1971,11 +1973,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
+                if auto_size_text is False: width=element_size[0]
+                else: width = max_line_len
                 element.TKStringVar = tk.StringVar()
                 default = element.DefaultValue if element.DefaultValue else element.Values[0]
                 element.TKStringVar.set(default)
-                element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar ,*element.Values )
-                element.TKOptionMenu.config(highlightthickness=0, font=font)
+                element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar ,*element.Values)
+                element.TKOptionMenu.config(highlightthickness=0, font=font, width=width )
                 element.TKOptionMenu.config(borderwidth=border_depth)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKOptionMenu.configure(background=element.BackgroundColor)

@@ -843,3 +843,66 @@ While there is no official support for "Tables" (e.g. there is no Table Element)
         layout.append([sg.T(f'{i}{j}', size=(4,1), background_color='white', pad=(1,1)) for j in range(10)])
 
     sg.FlexForm('Table').LayoutAndRead(layout)
+
+## Tight Layout
+
+Saw this example layout written in tkinter and liked it so much I duplicated the interface.  It's "tight", clean, and has a nice dark look and feel.
+
+This Recipe also contains code that implements the button interactions so that you'll have a template to build from.
+
+In other GUI frameworks this program would be most likely "event driven" with callback functions being used to communicate button events.  The "event loop" would be handled by the GUI engine.  If code already existed that used a call-back mechanism, the loop in the example code below could simply call these callback functions directly based on the button text it receives in the form.Read call.
+
+![timemanagement](https://user-images.githubusercontent.com/13696193/44996818-0f27c100-af78-11e8-8836-9ef6164efe3b.jpg)
+
+
+    import PySimpleGUI as sg
+
+    sg.ChangeLookAndFeel('Dark')
+    sg.SetOptions(element_padding=(0, 0))
+
+    StartButton = sg.ReadFormButton('Start', button_color=('white', 'black'))
+    StopButton = sg.ReadFormButton('Stop', button_color=('gray34', 'black'))
+    ResetButton = sg.ReadFormButton('Reset', button_color=('gray', 'firebrick3'))
+    SubmitButton = sg.ReadFormButton('Submit', button_color=('gray34', 'springgreen4'))
+
+    layout = [
+        [sg.T('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User 2'), size=(20, 1)), sg.T('0', size=(8, 1))],
+        [sg.T('Customer:', pad=((3, 0), 0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20, 1)),
+         sg.T('1', size=(8, 1))],
+        [sg.T('Notes:', pad=((3, 0), 0)), sg.In(size=(44, 1), background_color='white', text_color='black')],
+        [StartButton, StopButton, ResetButton, SubmitButton]
+        ]
+
+    form = sg.FlexForm("Time Tracker", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
+                       auto_size_buttons=False,
+                       default_button_element_size=(12, 1))
+    form.Layout(layout)
+    recording = have_data = False
+    while True:
+        button, values = form.Read()
+        if button is None:
+            exit(69)
+        if button is 'Start':
+            StartButton.Update(button_color=('gray34', 'black'))
+            StopButton.Update(button_color=('white', 'black'))
+            ResetButton.Update(button_color=('white', 'firebrick3'))
+            recording = True
+        elif button is 'Stop'  and recording:
+            StopButton.Update(button_color=('gray34', 'black'))
+            StartButton.Update(button_color=('white', 'black'))
+            SubmitButton.Update(button_color=('white', 'springgreen4'))
+            recording = False
+            have_data = True
+        elif button is 'Reset':
+            StopButton.Update(button_color=('gray34', 'black'))
+            StartButton.Update(button_color=('white', 'black'))
+            SubmitButton.Update(button_color=('gray34', 'springgreen4'))
+            ResetButton.Update(button_color=('gray34', 'firebrick3'))
+            recording = False
+            have_data = False
+        elif button is 'Submit'  and have_data:
+            StopButton.Update(button_color=('gray34', 'black'))
+            StartButton.Update(button_color=('white', 'black'))
+            SubmitButton.Update(button_color=('gray34', 'springgreen4'))
+            ResetButton.Update(button_color=('gray34', 'firebrick3'))
+            recording = False
