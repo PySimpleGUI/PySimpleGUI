@@ -273,7 +273,10 @@ class InputText(Element):
 
 
     def Update(self, new_value):
-        self.TKStringVar.set(new_value)
+        try:
+            self.TKStringVar.set(new_value)
+        except: pass
+        self.DefaultText = new_value
 
     def Get(self):
         return self.TKStringVar.get()
@@ -285,8 +288,7 @@ class InputText(Element):
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
-
-    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, default_value=None, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -296,6 +298,7 @@ class InputCombo(Element):
         :param background_color: Color for Element. Text or RGB Hex
         '''
         self.Values = values
+        self.DefaultValue = default_value
         self.TKComboBox = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -305,7 +308,10 @@ class InputCombo(Element):
     def Update(self, value):
         for index, v in enumerate(self.Values):
             if v == value:
-                self.TKCombo.current(index)
+                try:
+                    self.TKCombo.current(index)
+                except: pass
+                self.DefaultValue = value
                 break
 
 
@@ -321,8 +327,7 @@ class InputCombo(Element):
 #                           Option Menu                                  #
 # ---------------------------------------------------------------------- #
 class InputOptionMenu(Element):
-
-    def __init__(self, values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, default_value=None, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -332,6 +337,7 @@ class InputOptionMenu(Element):
         :param background_color: Color for Element. Text or RGB Hex
         '''
         self.Values = values
+        self.DefaultValue = default_value
         self.TKOptionMenu = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -341,7 +347,10 @@ class InputOptionMenu(Element):
     def Update(self, value):
         for index, v in enumerate(self.Values):
             if v == value:
-                self.TKStringVar.set(value)
+                try:
+                    self.TKStringVar.set(value)
+                except: pass
+                self.DefaultValue = value
                 break
 
 
@@ -356,7 +365,7 @@ class InputOptionMenu(Element):
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, select_mode=None, select_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, default_values=None, select_mode=None, select_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Listbox Element
         :param values:
@@ -367,6 +376,7 @@ class Listbox(Element):
         :param auto_size_text: True if should shrink field to fit the default text
         :param background_color: Color for Element. Text or RGB Hex        '''
         self.Values = values
+        self.DefaultValues = default_values
         self.TKListbox = None
         self.SelectSubmits = select_submits
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
@@ -390,12 +400,15 @@ class Listbox(Element):
             self.TKListbox.insert(tk.END, item)
         self.TKListbox.selection_set(0, 0)
 
-    def SetValue(self, value):
+    def SetValue(self, values):
         for index, item in enumerate(self.Values):
-            if item in value:
-                self.TKListbox.selection_set(index)
-            else:
-                self.TKListbox.selection_clear(index)
+            try:
+                if item in values:
+                    self.TKListbox.selection_set(index)
+                else:
+                    self.TKListbox.selection_clear(index)
+            except: pass
+        self.DefaultValues = values
 
     def __del__(self):
         try:
@@ -435,7 +448,10 @@ class Radio(Element):
         if not value:
             return
         location = EncodeRadioRowCol(self.Position[0], self.Position[1])
-        self.TKIntVar.set(location)
+        try:
+            self.TKIntVar.set(location)
+        except: pass
+        self.InitialState = value
 
     def __del__(self):
         try:
@@ -471,11 +487,14 @@ class Checkbox(Element):
         return self.TKIntVar.get()
 
     def Update(self, value):
-        if value is None:
-            self.TKCheckbutton.configure(state='disabled')
-        else:
-            self.TKCheckbutton.configure(state='normal')
-            self.TKIntVar.set(value)
+        try:
+            if value is None:
+                self.TKCheckbutton.configure(state='disabled')
+            else:
+                self.TKCheckbutton.configure(state='normal')
+                self.TKIntVar.set(value)
+        except: pass
+        self.InitialState = value
 
 
     def __del__(self):
@@ -510,7 +529,10 @@ class Spin(Element):
         return
 
     def Update(self, new_value):
-        self.TKStringVar.set(new_value)
+        try:
+            self.TKStringVar.set(new_value)
+        except: pass
+        self.DefaultValue = new_value
 
     def SpinChangedHandler(self, event):
         # first, get the results table built
@@ -550,9 +572,12 @@ class Multiline(Element):
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
-    def Update(self, NewValue):
-        self.TKText.delete('1.0', tk.END)
-        self.TKText.insert(1.0, NewValue)
+    def Update(self, new_value):
+        try:
+            self.TKText.delete('1.0', tk.END)
+            self.TKText.insert(1.0, new_value)
+        except: pass
+        self.DefaultText = new_value
 
     def Get(self):
         return  self.TKText.get(1.0, tk.END)
@@ -1005,9 +1030,12 @@ class Slider(Element):
         return
 
     def Update(self, value, range=(None, None)):
-        self.TKIntVar.set(value)
-        if range != (None, None):
-            self.TKScale.config(from_ = range[0], to_ = range[1])
+        try:
+            self.TKIntVar.set(value)
+            if range != (None, None):
+                self.TKScale.config(from_ = range[0], to_ = range[1])
+        except: pass
+        self.DefaultValue = value
 
     def SliderChangedHandler(self, event):
         # first, get the results table built
@@ -1663,7 +1691,6 @@ def FillSubformWithValues(form, values_dict):
                 value = values_dict[element.Key]
             except:
                 continue
-
             if element.Type == ELEM_TYPE_INPUT_TEXT:
                 element.Update(value)
             elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
@@ -1887,12 +1914,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                element.TKCombo.current(0)
+                if element.DefaultValue:
+                    for i, v in enumerate(element.Values):
+                        if v == element.DefaultValue:
+                            element.TKCombo.current(i)
+                            break
+                else:
+                    element.TKCombo.current(0)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 element.TKStringVar = tk.StringVar()
-                element.TKStringVar.set(element.Values[0])
+                default = element.DefaultValue if element.DefaultValue else element.Values[0]
+                element.TKStringVar.set(default)
                 element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar ,*element.Values )
                 element.TKOptionMenu.config(highlightthickness=0, font=font)
                 element.TKOptionMenu.config(borderwidth=border_depth)
@@ -1909,9 +1943,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 listbox_frame = tk.Frame(tk_row_frame)
                 element.TKStringVar = tk.StringVar()
                 element.TKListbox= tk.Listbox(listbox_frame, height=element_size[1], width=width, selectmode=element.SelectMode, font=font)
-                for item in element.Values:
+                for index, item in enumerate(element.Values):
                     element.TKListbox.insert(tk.END, item)
-                element.TKListbox.selection_set(0,0)
+                    if element.DefaultValues is not None and item in element.DefaultValues:
+                        element.TKListbox.selection_set(index)
+                # element.TKListbox.selection_set(0,0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -3045,6 +3081,26 @@ def ChangeLookAndFeel(index):
                                'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('black', 'white'),
                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                'PROGRESS_DEPTH': 0},
+
+                      'Tan': {'BACKGROUND': '#fdf6e3', 'TEXT': '#268bd1', 'INPUT': '#eee8d5',
+                                'TEXT_INPUT': '#6c71c3', 'SCROLL': '#eee8d5', 'BUTTON': ('white', '#063542'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                'PROGRESS_DEPTH': 0},
+
+                      'TanBlue': {'BACKGROUND': '#e5dece', 'TEXT': '#063289', 'INPUT': '#f9f8f4',
+                              'TEXT_INPUT': '#242834', 'SCROLL': '#eee8d5', 'BUTTON': ('white', '#063289'),
+                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                              'PROGRESS_DEPTH': 0},
+
+                      'DarkTanBlue': {'BACKGROUND': '#242834', 'TEXT': '#dfe6f8', 'INPUT': '#4f5764',
+                                  'TEXT_INPUT': 'white', 'SCROLL': '#a9afbb', 'BUTTON': ('white', '#063289'),
+                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                  'PROGRESS_DEPTH': 0},
+
+                      'DarkBlue': {'BACKGROUND': '#1a2835', 'TEXT': '#d1ecff', 'INPUT': '#335267',
+                              'TEXT_INPUT': '#acc2d0', 'SCROLL': '#1b6497', 'BUTTON': ('black', '#fafaf8'),
+                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                              'PROGRESS_DEPTH': 0},
 
                       'Reds': {'BACKGROUND': '#280001', 'TEXT': 'white', 'INPUT': '#d8d584',
                                'TEXT_INPUT': 'black', 'SCROLL': '#763e00', 'BUTTON': ('black', '#daad28'),
