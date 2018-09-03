@@ -1059,20 +1059,52 @@ class TkScrollableFrame(tk.Frame):
         # create a canvas object and a vertical scrollbar for scrolling it
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
         self.vscrollbar.pack(side='right', fill="y",  expand="false")
-        self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set)
-        self.canvas.pack(side="left")
+
+        self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
+        self.hscrollbar.pack(side='bottom', fill="x",  expand="false")
+
+        self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
+        self.canvas.pack(side="left", fill="both", expand=True)
+
         self.vscrollbar.config(command=self.canvas.yview)
+        self.hscrollbar.config(command=self.canvas.xview)
 
         # reset the view
         self.canvas.xview_moveto(0)
         self.canvas.yview_moveto(0)
 
         # create a frame inside the canvas which will be scrolled with it
-        # self.interior = tk.Frame(self.canvas, **kwargs)
-        # self.canvas.create_window(0, 0, window=self.interior, anchor="nw")
+        self.TKFrame = tk.Frame(self.canvas, **kwargs)
+        self.canvas.create_window(0, 0, window=self.TKFrame, anchor="nw")
+        self.canvas.config(borderwidth=0, highlightthickness=0)
+        self.TKFrame.config(borderwidth=0, highlightthickness=0)
+        self.config(borderwidth=0, highlightthickness=0)
 
-        # self.bind('<Configure>', self.set_scrollregion)
+        self.bind('<Configure>', self.set_scrollregion)
 
+        self.bind_mouse_scroll(self.canvas, self.yscroll)
+        self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
+        self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
+
+
+    def yscroll(self, event):
+        if event.num == 5 or event.delta < 0:
+            self.canvas.yview_scroll(1, "unit")
+        elif event.num == 4 or event.delta > 0:
+            self.canvas.yview_scroll(-1, "unit")
+
+    def xscroll(self, event):
+        if event.num == 5 or event.delta < 0:
+            self.canvas.xview_scroll(1, "unit")
+        elif event.num == 4 or event.delta > 0:
+            self.canvas.xview_scroll(-1, "unit")
+
+    def bind_mouse_scroll(self, parent, mode):
+        # ~~ Windows only
+        parent.bind("<MouseWheel>", mode)
+        # ~~ Unix only
+        parent.bind("<Button-4>", mode)
+        parent.bind("<Button-5>", mode)
 
     def set_scrollregion(self, event=None):
         """ Set the scroll region on the canvas"""
@@ -1083,7 +1115,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color = None, pad=None):
+    def __init__(self, layout, background_color = None, size=(None, None), pad=None, scrollable=False):
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -1093,11 +1125,12 @@ class Column(Element):
         self.Rows = []
         self.ParentForm = None
         self.TKFrame = None
+        self.Scrollable = scrollable
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, pad=pad)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad)
         return
 
     def AddRow(self, *args):
@@ -1763,9 +1796,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element_size = (int(element_size[0] * toplevel_form.Scale[0]), int(element_size[1] * toplevel_form.Scale[1]))
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
-                col_frame = tk.Frame(tk_row_frame)
-                # col_frame = TkScrollableFrame(tk_row_frame)           # do not use yet!  not working
-                PackFormIntoFrame(element, col_frame, toplevel_form)
+                if element.Scrollable:
+                    col_frame = TkScrollableFrame(tk_row_frame)           # do not use yet!  not working
+                    PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
+                    col_frame.TKFrame.update()
+                    if element.Size == (None, None):
+                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),height=col_frame.TKFrame.winfo_reqheight())
+                    else:
+                        col_frame.canvas.config(width=element.Size[0],height=element.Size[1])
+
+                    if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
+                        col_frame.canvas.config(background=element.BackgroundColor)
+                        col_frame.TKFrame.config(background=element.BackgroundColor, borderwidth =0, highlightthickness=0)
+                        col_frame.config(background=element.BackgroundColor, borderwidth =0, highlightthickness=0)
+                else:
+                    col_frame = tk.Frame(tk_row_frame)
+                    PackFormIntoFrame(element, col_frame, toplevel_form)
+
                 col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
@@ -3092,10 +3139,15 @@ def ChangeLookAndFeel(index):
                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                               'PROGRESS_DEPTH': 0},
 
-                      'DarkTanBlue': {'BACKGROUND': '#242834', 'TEXT': '#dfe6f8', 'INPUT': '#4f5764',
+                      'DarkTanBlue': {'BACKGROUND': '#242834', 'TEXT': '#dfe6f8', 'INPUT': '#97755c',
                                   'TEXT_INPUT': 'white', 'SCROLL': '#a9afbb', 'BUTTON': ('white', '#063289'),
                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                   'PROGRESS_DEPTH': 0},
+
+                      'DarkAmber': {'BACKGROUND': '#2c2825', 'TEXT': '#fdcb52', 'INPUT': '#705e52',
+                                   'TEXT_INPUT': '#fdcb52', 'SCROLL': '#705e52', 'BUTTON': ('black', '#fdcb52'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                   'PROGRESS_DEPTH': 0},
 
                       'DarkBlue': {'BACKGROUND': '#1a2835', 'TEXT': '#d1ecff', 'INPUT': '#335267',
                               'TEXT_INPUT': '#acc2d0', 'SCROLL': '#1b6497', 'BUTTON': ('black', '#fafaf8'),
