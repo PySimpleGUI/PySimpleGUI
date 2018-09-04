@@ -71,7 +71,7 @@ file_num_display_elem = sg.Text('File 1 of {}'.format(num_files), size=(15,1))
 col = [[filename_display_elem],
           [image_elem]]
 
-col_files = [[sg.Listbox(values = fnames, select_submits=True, size=(60,30), key='listbox')],
+col_files = [[sg.Listbox(values = fnames, change_submits=True, size=(60, 30), key='listbox')],
              [sg.ReadFormButton('Next', size=(8,2)), sg.ReadFormButton('Prev',
                              size=(8,2)), file_num_display_elem]]
 
@@ -111,3 +111,5 @@ while True:
     filename_display_elem.Update(filename)
     # update page display
     file_num_display_elem.Update('File {} of {}'.format(i+1, num_files))
+
+
