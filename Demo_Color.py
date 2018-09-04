@@ -1684,27 +1684,15 @@ def main():
                   [g.Submit(), g.Quit(), g.SimpleButton('Show me lots of colors!', button_color=('white','#0e6251'))],
                   ]
                   # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
-        (button, (hex_input, drop_down_value)) = g.FlexForm('Color Demo', auto_size_text=True, icon=MY_WINDOW_ICON).LayoutAndShow(layout)
-
-        drop_down_value = drop_down_value[0]
-
-        # -------  Form show  ------- #
-        # layout = [[g.Text('Find color')],
-        #           [g.Text('Demonstration of colors')],
-        #           [g.Text('Enter a color name in text or hex #RRGGBB format')],
-        #           [g.InputText()],
-        #           [g.InputCombo(list_of_colors, size=(20,6)), g.T('Or choose from list')],
-        #           [g.Submit(), g.Quit(), g.SimpleButton('Show me lots of colors!', button_color=('white','#0e6251'))],
-        #           ]
-        #           # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
-        # (button, (hex_input, drop_down_value)) = g.FlexForm('Color Demo', auto_size_text=True, icon=MY_WINDOW_ICON).LayoutAndShow(layout)
-
+        (button, (hex_input, drop_down_value)) = g.FlexForm('Color Demo', auto_size_text=True, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
 
         # -------  OUTPUT results portion  ------- #
         if button == '' or button == 'Quit' or button is None:
             exit(0)
         elif button == 'Show me lots of colors!':
                 show_all_colors_on_buttons()
+
+        drop_down_value = drop_down_value[0]
 
         if hex_input is not '' and hex_input[0] == '#':
             color_hex = hex_input.upper()
@@ -1721,7 +1709,7 @@ def main():
                   [g.Button(button_text=color_name, button_color=(color_hex, complementary_hex))],
                   [g.Button(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30,1))],
                   ]
-        g.FlexForm('Color demo', default_element_size=(100,1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).LayoutAndShow(layout)
+        g.FlexForm('Color demo', default_element_size=(100,1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
 
 
 

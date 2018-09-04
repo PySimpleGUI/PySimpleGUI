@@ -14,7 +14,9 @@ def execute_command_blocking(command, *args):
             print(out.decode("utf-8"))
         if err:
             print(err.decode("utf-8"))
-    except: pass
+    except:
+        out = ''
+    return out
 
 # Executes command and immediately returns.  Will not see anything the script outputs
 def execute_command_nonblocking(command, *args):

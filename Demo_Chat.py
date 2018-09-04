@@ -28,7 +28,7 @@ def ChatBotWithHistory():
               ]
     form.Layout(layout)
 
-    # ---===--- Loop taking in user input and using it to query HowDoI --- #
+    # ---===--- Loop taking in user input and using it  --- #
     command_history = []
     history_offset = 0
     while True:

@@ -36,16 +36,16 @@ def MediaPlayerGUI():
                                 sg.Text(' ' * 2),
               sg.Text(' ' * 2), sg.SimpleButton('Exit', button_color=(background,background),
                                 image_filename=image_exit, image_size=(50, 50), image_subsample=2, border_width=0)],
-             [sg.Text('_'*30)],
+             [sg.Text('_'*20)],
              [sg.Text(' '*30)],
             [
              sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
              sg.Text(' ' * 2),
              sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
-             sg.Text(' ' * 8),
+             sg.Text(' ' * 2),
              sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15))],
-             [sg.Text('Bass', font=("Helvetica", 15), size=(6, 1)),
-             sg.Text('Treble', font=("Helvetica", 15), size=(10, 1)),
+             [sg.Text('   Bass', font=("Helvetica", 15), size=(9, 1)),
+             sg.Text('Treble', font=("Helvetica", 15), size=(7, 1)),
              sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))]
 
              ]

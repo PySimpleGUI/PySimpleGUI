@@ -11,7 +11,7 @@ def SourceDestFolders():
                      [sg.Submit(), sg.Cancel()])
 
         button, values = form.LayoutAndRead(form_rows)
-    if button == 'Submit':
+    if button is 'Submit':
         sg.MsgBox('Submitted', values, 'The user entered source:', values['source'], 'Destination folder:', values['dest'], 'Using button', button)
     else:
         sg.MsgBoxError('Cancelled', 'User Cancelled')
@@ -22,7 +22,7 @@ def MachineLearningGUI():
     form = sg.FlexForm('Machine Learning Front End', font=("Helvetica", 12))  # begin with a blank form
 
     layout = [[sg.Text('Machine Learning Command Line Parameters', font=('Helvetica', 16))],
-              [sg.Text('Passes', size=(15, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1)),
+              [sg.Text('Passes', size =(15, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1)),
                sg.Text('Steps', size=(18, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1))],
               [sg.Text('ooa', size=(15, 1)), sg.In(default_text='6', size=(10, 1)), sg.Text('nn', size=(15, 1)), sg.In(default_text='10', size=(10, 1))],
               [sg.Text('q', size=(15, 1)), sg.In(default_text='ff', size=(10, 1)), sg.Text('ngram', size=(15, 1)), sg.In(default_text='5', size=(10, 1))],
@@ -71,7 +71,7 @@ def Everything():
              sg.Spin(values=('Spin Box 1', '2','3'), initial_value='Spin Box 1')],
             [sg.Text('_' * 80)],
             [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Default Folder'), sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('black', '#EDE5B7'))] ]
+            [sg.Submit(), sg.Cancel()] ]
 
         button, values = form.LayoutAndRead(layout)
 
@@ -81,7 +81,7 @@ def Everything():
 # Be aware that tkinter, which this is based on, is picky about who frees up resources, especially if
 # you are running multithreaded
 def Everything_NoContextManager():
-    form = sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1))
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
     layout = [
         [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Here is some text.... and a place to enter text')],
@@ -101,7 +101,7 @@ def Everything_NoContextManager():
         [sg.Text('Choose A Folder', size=(35, 1))],
         [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
          sg.InputText('Default Folder'), sg.FolderBrowse()],
-        [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', '#7E6C92'))]
+        [sg.Submit(), sg.Cancel()]
          ]
 
     button, values = form.LayoutAndRead(layout)
@@ -117,9 +117,9 @@ def ProgressMeter():
 
 # Blocking form that doesn't close
 def ChatBot():
-    with sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
-        layout = [[(sg.Text('This is where standard out is being routed', size=[40, 1]))],
-                  [sg.Output(size=(80, 20))],
+    with sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2), default_button_element_size=(10,2)) as form:
+        layout = [[(sg.Text('This is where standard out is being routed', size=(40, 1)))],
+                  [sg.Output(size=(80, 20), font=('Courier 10'))],
                   [sg.Multiline(size=(70, 5), enter_submits=True), sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True), sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
         # notice this is NOT the usual LayoutAndRead call because you don't yet want to read the form
         # if you call LayoutAndRead from here, then you will miss the first button click
@@ -127,10 +127,9 @@ def ChatBot():
         # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
         while True:
             button, value = form.Read()
-            if button == 'SEND':
-                print(value)
-            else:
+            if button is not 'SEND':
                 break
+            print(value[0])
 
 # Shows a form that's a running counter
 # this is the basic design pattern if you can keep your reading of the
@@ -138,16 +137,16 @@ def ChatBot():
 # then you will want to use the NonBlockingPeriodicUpdateForm example
 def NonBlockingPeriodicUpdateForm_ContextManager():
     with sg.FlexForm('Running Timer', auto_size_text=True) as form:
-        text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), text_color='red', justification='center')
+        text_element = sg.Text('', size=(15, 2), font=('Helvetica', 20), text_color='red', justification='center')
         layout = [[sg.Text('Non blocking GUI with updates', justification='center')],
                   [text_element],
-                  [sg.T(' ' * 15), sg.Quit()]]
+                  [sg.T(' ' * 22), sg.Quit()]]
         form.LayoutAndRead(layout, non_blocking=True)
 
         for i in range(1,500):
             text_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
             button, values = form.ReadNonBlocking()
-            if values is None or button == 'Quit':      # if user closed the window using X
+            if values is None or button is 'Quit':      # if user closed the window using X
                 break
             time.sleep(.01)
         else:
@@ -171,9 +170,9 @@ def NonBlockingPeriodicUpdateForm():
     while True:
         i += 1 * (timer_running is True)
         button, values = form.ReadNonBlocking()
-        if values is None or button == 'Quit':      # if user closed the window using X or clicked Quit button
+        if values is None or button is 'Quit':      # if user closed the window using X or clicked Quit button
             break
-        elif button == 'Start/Stop':
+        elif button is 'Start/Stop':
             timer_running = not timer_running
         text_element.Update('{:02d}:{:02d}.{:02d}'.format((i//100)//60, (i//100)%60, i%100))
 
@@ -202,32 +201,35 @@ def ChangeLookAndFeel(colors):
                   scrollbar_color=(colors['INPUT']),
                   element_text_color=colors['TEXT'])
 
+def OneLineGUI():
+    return sg.FlexForm('Get filename example').LayoutAndRead(
+        [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]])
+
 #=---------------------------------- main ------------------------------
 def main():
-
-    Everything()
+    # button, (filename,) = OneLineGUI()
+    # DebugTe`st()
     ChatBot()
-
-    sg.ChangeLookAndFeel('BrownBlue')
+    Everything()
     SourceDestFolders()
-    sg.ChangeLookAndFeel('BlueMono')
-    Everything()
-    sg.ChangeLookAndFeel('BluePurple')
-    Everything()
-    sg.ChangeLookAndFeel('LightGreen')
-    Everything()
-    sg.ChangeLookAndFeel('GreenMono')
-    MachineLearningGUI()
-    sg.ChangeLookAndFeel('TealMono')
+    NonBlockingPeriodicUpdateForm_ContextManager()
     NonBlockingPeriodicUpdateForm()
     ChatBot()
+    Everything()
+    sg.ChangeLookAndFeel('GreenTan')
+    Everything()
+    # ChatBot()
+
+    SourceDestFolders()
+    MachineLearningGUI()
+    NonBlockingPeriodicUpdateForm()
     ProgressMeter()
+    DebugTest()
     sg.ChangeLookAndFeel('Purple')
     Everything_NoContextManager()
     NonBlockingPeriodicUpdateForm_ContextManager()
 
     sg.MsgBox('Done with all recipes')
-    DebugTest()
 
 if __name__ == '__main__':
     main()

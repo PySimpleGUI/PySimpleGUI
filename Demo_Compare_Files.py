@@ -1,13 +1,15 @@
 import PySimpleGUI as sg
 
+sg.SetOptions(button_color=sg.COLOR_SYSTEM_DEFAULT)
+
 def GetFilesToCompare():
     with sg.FlexForm('File Compare') as form:
         form_rows = [[sg.Text('Enter 2 files to comare')],
                      [sg.Text('File 1', size=(15, 1)), sg.InputText(), sg.FileBrowse()],
                      [sg.Text('File 2', size=(15, 1)), sg.InputText(), sg.FileBrowse()],
                      [sg.Submit(), sg.Cancel()]]
-        rc = form.LayoutAndShow(form_rows)
-    return rc
+        button, values = form.LayoutAndRead(form_rows)
+    return button, values
 
 def main():
     button, (f1, f2) = GetFilesToCompare()

@@ -66,7 +66,7 @@ def RemoteControlExample():
         # This is the code that reads and updates your window
         button, values = form.ReadNonBlocking()
         if button is not None:
-            sg.Print(button)
+            print(button)
         if button == 'Quit' or values is None:
             break
         # time.sleep(.01)
@@ -98,6 +98,7 @@ def StatusOutputExample_context_manager():
             form.CloseNonBlockingForm()
 
 def main():
+    StatusOutputExample()
     RemoteControlExample()
     StatusOutputExample()
     sg.MsgBox('End of non-blocking demonstration')

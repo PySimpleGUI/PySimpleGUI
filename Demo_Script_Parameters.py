@@ -21,5 +21,5 @@ else:
     fname = sys.argv[1]
 
 if not fname:
-    sg.MsgBox("Cancel", "No filename supplied")
+    sg.Popup("Cancel", "No filename supplied")
     raise SystemExit("Cancelling: no filename supplied")

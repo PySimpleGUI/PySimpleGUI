@@ -26,7 +26,7 @@ def MachineLearningGUI():
     del(form)
     sg.SetOptions(text_justification='left')
 
-    return button, values
+    print(button, values)
 
 
 def CustomMeter():
@@ -37,7 +37,7 @@ def CustomMeter():
               [progress_bar],
               [sg.Cancel()]]
 
-    # create the form
+    # create the form`
     form = sg.FlexForm('Custom Progress Meter')
     # display the form as a non-blocking form
     form.LayoutAndRead(layout, non_blocking=True)
