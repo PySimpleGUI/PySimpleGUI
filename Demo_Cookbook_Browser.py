@@ -385,7 +385,7 @@ def MediaPlayer():
                sg.Text(' '  * 2), sg.SimpleButton('Exit', button_color=(background, background),
                                                  image_filename=image_exit, image_size=(50, 50), image_subsample=2,
                                                  border_width=0)],
-              [sg.Text('_'  * 30)],
+              [sg.Text('_'  * 20)],
               [sg.Text(' '  * 30)],
               [
                   sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical',
@@ -721,6 +721,9 @@ def TableSimulation():
 
 
 def TightLayout():
+    """
+    Turn off padding in order to get a really tight looking layout.
+    """
     import PySimpleGUI as sg
 
     sg.ChangeLookAndFeel('Dark')
@@ -765,7 +768,6 @@ fig_dict = {'Simple Data Entry':SimpleDataEntry, 'Simple Entry Return Data as Di
 # multiline_elem = sg.Multiline(size=(70,35),pad=(5,(3,90)))
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
-multiline_elem = sg.Multiline(size=(70,35), do_not_clear=True)
 
 while True:
     sg.ChangeLookAndFeel('Dark')
@@ -773,7 +775,7 @@ while True:
                    [sg.SimpleButton('Run'), sg.Exit()]]
 
     layout = [[sg.Text('PySimpleGUI Coookbook', font=('current 18'))],
-              [sg.Column(col_listbox, pad=(5,(3,2))), multiline_elem],
+              [sg.Column(col_listbox, pad=(5,(3,2))), sg.Multiline(size=(70,35), do_not_clear=True, key='multi')],
               ]
 
 # create the form and show it without the plot
@@ -792,7 +794,7 @@ while True:
             continue
 
         if button is '':
-            multiline_elem.Update(inspect.getsource(func))
+            form.FindElement('multi').Update(inspect.getsource(func))
             button, values = form.Read()
         elif button is 'Run':
             sg.ChangeLookAndFeel('SystemDefault')
