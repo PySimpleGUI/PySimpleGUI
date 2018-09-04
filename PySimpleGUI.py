@@ -232,6 +232,14 @@ class Element():
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
 
+    def ComboboxSelectHandler(self, event):
+        MyForm = self.ParentForm
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -289,7 +297,7 @@ class InputText(Element):
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
-    def __init__(self, values, default_value=None, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, default_value=None, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, key=None, pad=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -301,6 +309,7 @@ class InputCombo(Element):
         self.Values = values
         self.DefaultValue = default_value
         self.TKComboBox = None
+        self.ChangeSubmits = change_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -1996,6 +2005,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             break
                 else:
                     element.TKCombo.current(0)
+                if element.ChangeSubmits:
+                    element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
