@@ -868,7 +868,7 @@ canvas_elem = g.Canvas(size=(figure_w, figure_h))         # get the canvas we'll
 multiline_elem = g.Multiline(size=(70,35),pad=(5,(3,90)))
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
-col_listbox = [[g.Listbox(values=listbox_values, select_submits=True, size=(28,len(listbox_values)), key='func')],
+col_listbox = [[g.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='func')],
                [g.T(' '*12), g.Exit(size=(5,2))]]
 
 layout = [[g.Text('Matplotlib Plot Test', font=('current 18'))],

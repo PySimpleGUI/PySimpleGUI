@@ -170,6 +170,7 @@ MSG_BOX_CANCELLED = 2
 MSG_BOX_ERROR = 3
 MSG_BOX_OK_CANCEL = 4
 MSG_BOX_OK = 0
+MSG_BOX_NO_BUTTONS = 5
 
 # ---------------------------------------------------------------------- #
 # Cascading structure.... Objects get larger                             #
@@ -305,7 +306,14 @@ class InputCombo(Element):
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, value):
+    def Update(self, value=None, values=None):
+        if values is not None:
+            try:
+                self.TKCombo['values'] = values
+                self.TKCombo.current(0)
+            except: pass
+            self.Values = values
+
         for index, v in enumerate(self.Values):
             if v == value:
                 try:
@@ -365,7 +373,7 @@ class InputOptionMenu(Element):
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, select_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Listbox Element
         :param values:
@@ -378,7 +386,7 @@ class Listbox(Element):
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
-        self.SelectSubmits = select_submits
+        self.ChangeSubmits = change_submits
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -590,7 +598,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, background_color=None,justification=None, pad=None):
+    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, background_color=None,justification=None, pad=None, key=None):
         '''
         Text Element - Displays text in your form.  Can be updated in non-blocking forms
         :param text: The text to display
@@ -609,7 +617,7 @@ class Text(Element):
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
             bg = background_color
-        super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad)
+        super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key)
         return
 
     def Update(self, new_value = None, background_color=None, text_color=None, font=None):
@@ -756,7 +764,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
+    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -787,7 +795,7 @@ class Button(Element):
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.BindReturnKey = bind_return_key
         self.Focus = focus
-        super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad)
+        super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad, key=key)
         return
 
     def ButtonReleaseCallBack(self, parm):
@@ -934,7 +942,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None,scale=(None, None), size=(None, None), pad=None):
+    def __init__(self, filename=None, data=None,scale=(None, None), size=(None, None), pad=None, key=None):
         '''
         Image Element
         :param filename:
@@ -947,7 +955,7 @@ class Image(Element):
 
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
-        super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, pad=pad)
+        super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, pad=pad, key=key)
         return
 
     def Update(self, filename=None, data=None):
@@ -971,11 +979,11 @@ class Image(Element):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
-    def __init__(self, canvas=None, background_color=None, scale=(None, None), size=(None, None), pad=None):
+    def __init__(self, canvas=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TKCanvas = canvas
 
-        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, scale=scale, size=size, pad=pad)
+        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
         return
 
     def __del__(self):
@@ -986,11 +994,11 @@ class Canvas(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, frame=None, background_color=None, scale=(None, None), size=(None, None), pad=None):
+    def __init__(self, frame=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TKFrame = frame
 
-        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, scale=scale, size=size, pad=pad)
+        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
         return
 
     def __del__(self):
@@ -1348,6 +1356,10 @@ class FlexForm:
     def Fill(self, values_dict):
         FillFormWithValues(self, values_dict)
 
+    def FindElement(self, key):
+        return _FindElementFromKeyInSubForm(self, key)
+
+
     def GetScreenDimensions(self):
         if self.TKrootDestroyed:
             return None, None
@@ -1559,20 +1571,20 @@ def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
+def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
-    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
+def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
-def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
-    return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
+def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 # this is the only button that REQUIRES button text field
-def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad)
+def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 #####################################  -----  RESULTS   ------ ##################################################
 
@@ -1745,6 +1757,18 @@ def FillSubformWithValues(form, values_dict):
             elif element.Type == ELEM_TYPE_INPUT_SPIN:
                 element.Update(value)
 
+
+def _FindElementFromKeyInSubForm(form, key):
+    for row_num, row in enumerate(form.Rows):
+        for col_num, element in enumerate(row):
+            if element.Type == ELEM_TYPE_COLUMN:
+                matching_elem = _FindElementFromKeyInSubForm(element, key)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Key == key:
+                return element
+
+
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   TK CODE STARTS HERE ====================================================== #
 # ------------------------------------------------------------------------------------------------------------------ #
@@ -1802,8 +1826,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     col_frame = TkScrollableFrame(tk_row_frame)           # do not use yet!  not working
                     PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
                     col_frame.TKFrame.update()
-                    if element.Size == (None, None):
-                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth()/2,height=col_frame.TKFrame.winfo_reqheight()/2)
+                    if element.Size == (None, None):            # if no size specified, use column width x column height/2
+                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),height=col_frame.TKFrame.winfo_reqheight()/2)
                     else:
                         col_frame.canvas.config(width=element.Size[0],height=element.Size[1])
 
@@ -1906,6 +1930,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen+10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
+                if element.BindReturnKey:
+                    element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
@@ -2003,7 +2029,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(fg=text_color)
-                if element.SelectSubmits:
+                if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element.ListboxSelectHandler)
                 vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
                 element.TKListbox.configure(yscrollcommand=vsb.set)
@@ -2181,19 +2207,22 @@ def ConvertFlexToTK(MyFlexForm):
     if not MyFlexForm.IsTabbedForm:
         master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
+    try:
+        master.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
+    except:
+        pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
     #....................................... DONE creating and laying out window ..........................#
     if MyFlexForm.IsTabbedForm:
         master = MyFlexForm.ParentWindow
-    master.attributes('-alpha', 0)                      # hide window while getting info and moving
-    screen_width = master.winfo_screenwidth()           # get window info to move to middle of screen
+    screen_width = master.winfo_screenwidth()      # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
         x,y = MyFlexForm.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
         x,y = DEFAULT_WINDOW_LOCATION
     else:
-        master.update_idletasks()  # don't forget
+        master.update_idletasks()                   # don't forget to do updates or values are bad
         win_width = master.winfo_width()
         win_height = master.winfo_height()
         x = screen_width/2 -win_width/2
@@ -2205,7 +2234,7 @@ def ConvertFlexToTK(MyFlexForm):
 
     move_string = '+%i+%i'%(int(x),int(y))
     master.geometry(move_string)
-    master.attributes('-alpha', 255)                      # Make window visible again
+    master.attributes('-alpha', 255)            # Make window visible again
     master.update_idletasks()  # don't forget
     return
 
@@ -2390,6 +2419,8 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
         elif button_type is MSG_BOX_OK_CANCEL:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
                         PopupButton('Cancel', size=(5, 1), button_color=button_color))
+        elif button_type is MSG_BOX_NO_BUTTONS:
+            pass
         else:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
 
@@ -2407,6 +2438,12 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
 # ==================================================#
 # MsgBox is the legacy call and show not be used any longer
 MsgBox = Popup
+
+# --------------------------- PopupNonBlocking ---------------------------
+def PopupoNoButtons(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    Popup(*args, button_type=MSG_BOX_NO_BUTTONS, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+    return
+
 
 # --------------------------- PopupNonBlocking ---------------------------
 def PopupoNonBlocking(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
@@ -3127,6 +3164,11 @@ def ChangeLookAndFeel(index):
                                    'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                    'PROGRESS_DEPTH': 0},
+
+                      'Dark2': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'white',
+                               'TEXT_INPUT': 'black', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
+                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                               'PROGRESS_DEPTH': 0},
 
                       'Black': {'BACKGROUND': 'black', 'TEXT': 'white', 'INPUT': 'gray30',
                                'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('black', 'white'),
