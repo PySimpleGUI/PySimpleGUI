@@ -11,6 +11,8 @@ import pickle
 import calendar
 
 
+
+
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
@@ -1413,7 +1415,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -1453,6 +1455,7 @@ class FlexForm:
         self.ReturnKeyboardEvents = return_keyboard_events
         self.LastKeyboardEvent = None
         self.TextJustification = text_justification
+        self.NoTitleBar = no_titlebar
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2487,6 +2490,11 @@ def ConvertFlexToTK(MyFlexForm):
         master.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
     except:
         pass
+    try:
+        if MyFlexForm.NoTitleBar:
+            MyFlexForm.TKroot.wm_overrideredirect(True)
+    except:
+        pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
     #....................................... DONE creating and laying out window ..........................#
     if MyFlexForm.IsTabbedForm:
@@ -2579,7 +2587,7 @@ def StartupTK(my_flex_form):
     ow = _my_windows.NumOpenWindows
     # print('Starting TK open Windows = {}'.format(ow))
     root = tk.Tk() if not ow else tk.Toplevel()
-    # root = tk.Toplevel()
+    # root.wm_overrideredirect(True)
     if my_flex_form.BackgroundColor is not None and my_flex_form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root.configure(background=my_flex_form.BackgroundColor)
     _my_windows.Increment()
@@ -2637,7 +2645,7 @@ def _GetNumLinesNeeded(text, max_line_width):
 # Exits via an OK button2 press                      #
 # Returns nothing                                    #
 # ===================================================#
-def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None):
+def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False):
     '''
     Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
@@ -2659,7 +2667,7 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font) as form:
+    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -2727,6 +2735,16 @@ def PopupoNonBlocking(*args, button_color=None, auto_close=False, auto_close_dur
     return
 
 PopupNoWait = PopupoNonBlocking
+
+
+# --------------------------- PopupNoFrame ---------------------------
+def PopupNoTitlebar(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    Popup(*args, non_blocking=False, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=True)
+    return
+
+PopupNoFrame = PopupNoTitlebar
+PopupNoBorder = PopupNoTitlebar
+PopupAnnoying = PopupNoTitlebar
 
 
 # ==============================  MsgBoxAutoClose====#
