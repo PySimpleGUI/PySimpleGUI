@@ -8,6 +8,7 @@ import datetime
 import sys
 import textwrap
 import pickle
+import calendar
 
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -35,7 +36,7 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#
                (YELLOWS[0], GREENS[3]), (YELLOWS[0], BLUES[2]))
 
 COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
-if sys.platform is 'darwin':
+if sys.platform == 'darwin':
     DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
     OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT       # Colors should never be this long
 else:
@@ -137,6 +138,7 @@ BUTTON_TYPE_CLOSES_WIN = 5
 BUTTON_TYPE_CLOSES_WIN_ONLY = 6
 BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
+BUTTON_TYPE_CALENDAR_CHOOSER = 30
 
 # -------------------------  Element types  ------------------------- #
 # class ElementType(Enum):
@@ -799,6 +801,7 @@ class Button(Element):
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.BindReturnKey = bind_return_key
         self.Focus = focus
+        self.TKCal = None
         super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad, key=key)
         return
 
@@ -829,7 +832,7 @@ class Button(Element):
                 strvar = target_element.TKStringVar
             except: pass
         else:
-            strvar = None
+            strvar = self.TKStringVar
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
@@ -876,6 +879,17 @@ class Button(Element):
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.Decrement()
+        elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
+            root = tk.Toplevel()
+            root.title('Calendar Chooser')
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY)
+            self.TKCal.pack(expand=1, fill='both')
+            # self.ParentForm.TKRroot.mainloop()
+            root.update()
+            # root.mainloop()
+            # root.update()
+            # strvar.set(ttkcal.selection)
+
         return
 
     def Update(self, new_text=None, button_color=(None, None)):
@@ -1172,6 +1186,246 @@ class Column(Element):
         except:
             pass
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Calendar                                     #
+# ---------------------------------------------------------------------- #
+
+class TKCalendar(ttk.Frame):
+    # XXX ToDo: cget and configure
+
+    datetime = calendar.datetime.datetime
+    timedelta = calendar.datetime.timedelta
+
+    def __init__(self, master=None, **kw):
+        """
+        WIDGET-SPECIFIC OPTIONS
+
+            locale, firstweekday, year, month, selectbackground,
+            selectforeground
+        """
+        # remove custom options from kw before initializating ttk.Frame
+        fwday = kw.pop('firstweekday', calendar.MONDAY)
+        year = kw.pop('year', self.datetime.now().year)
+        month = kw.pop('month', self.datetime.now().month)
+        locale = kw.pop('locale', None)
+        sel_bg = kw.pop('selectbackground', '#ecffc4')
+        sel_fg = kw.pop('selectforeground', '#05640e')
+
+        self._date = self.datetime(year, month, 1)
+        self._selection = None # no date selected
+
+        ttk.Frame.__init__(self, master, **kw)
+
+        # instantiate proper calendar class
+        if locale is None:
+            self._cal = calendar.TextCalendar(fwday)
+        else:
+            self._cal =  calendar.LocaleTextCalendar(fwday, locale)
+
+        self.__setup_styles()       # creates custom styles
+        self.__place_widgets()      # pack/grid used widgets
+        self.__config_calendar()    # adjust calendar columns and setup tags
+        # configure a canvas, and proper bindings, for selecting dates
+        self.__setup_selection(sel_bg, sel_fg)
+
+        # store items ids, used for insertion later
+        self._items = [self._calendar.insert('', 'end', values='')
+                            for _ in range(6)]
+        # insert dates in the currently empty calendar
+        self._build_calendar()
+
+    def __setitem__(self, item, value):
+        if item in ('year', 'month'):
+            raise AttributeError("attribute '%s' is not writeable" % item)
+        elif item == 'selectbackground':
+            self._canvas['background'] = value
+        elif item == 'selectforeground':
+            self._canvas.itemconfigure(self._canvas.text, item=value)
+        else:
+            ttk.Frame.__setitem__(self, item, value)
+
+    def __getitem__(self, item):
+        if item in ('year', 'month'):
+            return getattr(self._date, item)
+        elif item == 'selectbackground':
+            return self._canvas['background']
+        elif item == 'selectforeground':
+            return self._canvas.itemcget(self._canvas.text, 'fill')
+        else:
+            r = ttk.tclobjs_to_py({item: ttk.Frame.__getitem__(self, item)})
+            return r[item]
+
+    def __setup_styles(self):
+        # custom ttk styles
+        style = ttk.Style(self.master)
+        arrow_layout = lambda dir: (
+            [('Button.focus', {'children': [('Button.%sarrow' % dir, None)]})]
+        )
+        style.layout('L.TButton', arrow_layout('left'))
+        style.layout('R.TButton', arrow_layout('right'))
+
+    def __place_widgets(self):
+        # header frame and its widgets
+        hframe = ttk.Frame(self)
+        lbtn = ttk.Button(hframe, style='L.TButton', command=self._prev_month)
+        rbtn = ttk.Button(hframe, style='R.TButton', command=self._next_month)
+        self._header = ttk.Label(hframe, width=15, anchor='center')
+        # the calendar
+        self._calendar = ttk.Treeview(self, show='', selectmode='none', height=7)
+
+        # pack the widgets
+        hframe.pack(in_=self, side='top', pady=4, anchor='center')
+        lbtn.grid(in_=hframe)
+        self._header.grid(in_=hframe, column=1, row=0, padx=12)
+        rbtn.grid(in_=hframe, column=2, row=0)
+        self._calendar.pack(in_=self, expand=1, fill='both', side='bottom')
+
+    def __config_calendar(self):
+        cols = self._cal.formatweekheader(3).split()
+        self._calendar['columns'] = cols
+        self._calendar.tag_configure('header', background='grey90')
+        self._calendar.insert('', 'end', values=cols, tag='header')
+        # adjust its columns width
+        font = tkinter.font.Font()
+        maxwidth = max(font.measure(col) for col in cols)
+        for col in cols:
+            self._calendar.column(col, width=maxwidth, minwidth=maxwidth,
+                anchor='e')
+
+    def __setup_selection(self, sel_bg, sel_fg):
+        self._font = tkinter.font.Font()
+        self._canvas = canvas = tk.Canvas(self._calendar,
+            background=sel_bg, borderwidth=0, highlightthickness=0)
+        canvas.text = canvas.create_text(0, 0, fill=sel_fg, anchor='w')
+
+        canvas.bind('<ButtonPress-1>', lambda evt: canvas.place_forget())
+        self._calendar.bind('<Configure>', lambda evt: canvas.place_forget())
+        self._calendar.bind('<ButtonPress-1>', self._pressed)
+
+    def __minsize(self, evt):
+        width, height = self._calendar.master.geometry().split('x')
+        height = height[:height.index('+')]
+        self._calendar.master.minsize(width, height)
+
+    def _build_calendar(self):
+        year, month = self._date.year, self._date.month
+
+        # update header text (Month, YEAR)
+        header = self._cal.formatmonthname(year, month, 0)
+        self._header['text'] = header.title()
+
+        # update calendar shown dates
+        cal = self._cal.monthdayscalendar(year, month)
+        for indx, item in enumerate(self._items):
+            week = cal[indx] if indx < len(cal) else []
+            fmt_week = [('%02d' % day) if day else '' for day in week]
+            self._calendar.item(item, values=fmt_week)
+
+    def _show_selection(self, text, bbox):
+        """Configure canvas for a new selection."""
+        x, y, width, height = bbox
+
+        textw = self._font.measure(text)
+
+        canvas = self._canvas
+        canvas.configure(width=width, height=height)
+        canvas.coords(canvas.text, width - textw, height / 2 - 1)
+        canvas.itemconfigure(canvas.text, text=text)
+        canvas.place(in_=self._calendar, x=x, y=y)
+
+    # Callbacks
+
+    def _pressed(self, evt):
+        """Clicked somewhere in the calendar."""
+        x, y, widget = evt.x, evt.y, evt.widget
+        item = widget.identify_row(y)
+        column = widget.identify_column(x)
+
+        if not column or not item in self._items:
+            # clicked in the weekdays row or just outside the columns
+            return
+
+        item_values = widget.item(item)['values']
+        if not len(item_values): # row is empty for this month
+            return
+
+        text = item_values[int(column[1]) - 1]
+        if not text: # date is empty
+            return
+
+        bbox = widget.bbox(item, column)
+        if not bbox: # calendar not visible yet
+            return
+
+        # update and then show selection
+        text = '%02d' % text
+        self._selection = (text, item, column)
+        self._show_selection(text, bbox)
+
+    def _prev_month(self):
+        """Updated calendar to show the previous month."""
+        self._canvas.place_forget()
+
+        self._date = self._date - self.timedelta(days=1)
+        self._date = self.datetime(self._date.year, self._date.month, 1)
+        self._build_calendar() # reconstuct calendar
+
+    def _next_month(self):
+        """Update calendar to show the next month."""
+        self._canvas.place_forget()
+
+        year, month = self._date.year, self._date.month
+        self._date = self._date + self.timedelta(
+            days=calendar.monthrange(year, month)[1] + 1)
+        self._date = self.datetime(self._date.year, self._date.month, 1)
+        self._build_calendar() # reconstruct calendar
+
+    # Properties
+
+    @property
+    def selection(self):
+        """Return a datetime representing the current selected date."""
+        if not self._selection:
+            return None
+
+        year, month = self._date.year, self._date.month
+        return self.datetime(year, month, int(self._selection[0]))
+
+class Calendar(Element):
+    def __init__(self, scale=(None, None), size=(None, None), pad=None, key=None):
+        '''
+        Image Element
+        :param filename:
+        :param scale: Adds multiplier to size (w,h)
+        :param size: Size of field in characters
+        '''
+        self.tkCalendar = None
+
+
+        if data is None and filename is None:
+            print('* Warning... no image specified in Image Element! *')
+        super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, pad=pad, key=key)
+        return
+
+    def Update(self, filename=None, data=None):
+        if filename is not None:
+            image = tk.PhotoImage(file=filename)
+        elif data is not None:
+            if type(data) is bytes:
+                image = tk.PhotoImage(data=data)
+            else:
+                image = data
+        else: return
+        width, height = image.width(), image.height()
+        self.tktext_label.configure(image=image, width=width, height=height)
+        self.tktext_label.image = image
+
+    def __del__(self):
+        super().__del__()
+
+
 
 
 # ------------------------------------------------------------------------- #
@@ -1606,7 +1860,9 @@ def RealtimeButton(button_text, image_filename=None, image_size=(None, None),ima
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-
+# -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
+def CalendarButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_CALENDAR_CHOOSER, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
@@ -1692,6 +1948,11 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         button_pressed_text = top_level_form.LastButtonClicked
                         if element.BType != BUTTON_TYPE_REALTIME:   # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
+                    if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
+                        try:
+                            value = element.TKCal.selection
+                        except:
+                            value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     value=element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -1723,8 +1984,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 value = None
 
             # if an input type element, update the results
-            if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
-                    element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and element.Type!= ELEM_TYPE_COLUMN:
+            if (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER) or element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and element.Type!= ELEM_TYPE_COLUMN:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
@@ -1906,6 +2166,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKText = tktext_label
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
+                stringvar = tk.StringVar()
+                element.TKStringVar = stringvar
                 element.Location = (row_num, col_num)
                 btext = element.ButtonText
                 btype = element.BType
