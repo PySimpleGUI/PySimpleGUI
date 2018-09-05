@@ -7,6 +7,7 @@ import tkinter.font
 import datetime
 import sys
 import textwrap
+import pickle
 
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -1361,8 +1362,27 @@ class FlexForm:
     def Fill(self, values_dict):
         FillFormWithValues(self, values_dict)
 
+
     def FindElement(self, key):
         return _FindElementFromKeyInSubForm(self, key)
+
+
+    def SaveToDisk(self, filename):
+        try:
+            results = BuildResults(self, False, self)
+            with open(filename, 'wb') as sf:
+                pickle.dump(results[1], sf)
+        except:
+            print('*** Error saving form to disk ***')
+
+
+    def LoadFromDisk(self, filename):
+        try:
+            with open(filename, 'rb') as df:
+                self.Fill(pickle.load(df))
+        except:
+            print('*** Error loading form to disk ***')
+
 
 
     def GetScreenDimensions(self):

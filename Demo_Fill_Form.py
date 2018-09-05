@@ -1,23 +1,4 @@
-# from tkinter.filedialog import asksaveasfilename, askopenfilename
-import pickle
 import PySimpleGUI as sg
-
-
-def save(values):
-    sfilename = sg.PopupGetFile('Save Settings', save_as=True, no_window=True)
-    if not sfilename:
-        return
-    with open(sfilename, 'wb') as sf:
-        pickle.dump(values, sf)
-
-
-def load(form):
-    dfilename = sg.PopupGetFile('Load Settings', no_window=True)
-    if not dfilename:
-        return
-    with open(dfilename, 'rb') as df:
-        form.Fill(pickle.load(df))
-
 
 def Everything():
     sg.ChangeLookAndFeel('TanBlue')
@@ -62,9 +43,13 @@ def Everything():
         button, values = form.Read()
 
         if button is 'SaveSettings':
-            save(values)
+            filename = sg.PopupGetFile('Save Settings', save_as=True, no_window=True)
+            form.SaveToDisk(filename)
+            # save(values)
         elif button is 'LoadSettings':
-            load(form)
+            filename = sg.PopupGetFile('Load Settings', no_window=True)
+            form.LoadFromDisk(filename)
+            # load(form)
         elif button in ['Exit', None]:
             break
 
