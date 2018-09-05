@@ -11,7 +11,6 @@ There are some improvements compared to the PNG browser of the repository:
 3. Limits the maximum form size to the physical screen
 4. When selecting an image from the listbox, subsequent paging uses its index
 5. Paging performance improved significantly because of using PIL
-
 Dependecies
 ------------
 Python v3
@@ -20,7 +19,7 @@ PIL
 # Get the folder containing the images from the user
 rc, folder = sg.GetPathBox('Image Browser', 'Image folder to open', default_path='')
 if not rc or not folder:
-    sg.MsgBoxCancel('Cancelling')
+    sg.PopupCancel('Cancelling')
     raise SystemExit()
 
 # PIL supported image types
@@ -34,7 +33,7 @@ fnames = [f for f in flist0 if os.path.isfile(os.path.join(folder,f)) and f.lowe
 
 num_files = len(fnames)                # number of iamges found
 if num_files == 0:
-    sg.MsgBox('No files in folder')
+    sg.Popup('No files in folder')
     raise SystemExit()
 
 del flist0                             # no longer needed
@@ -55,6 +54,28 @@ def get_img_data(f, maxsize = (1200, 850), first = False):
     return ImageTk.PhotoImage(img)
 #------------------------------------------------------------------------------
 
+# define navigtion functions
+def is_Next(btn):
+    if btn.startswith(("Next", "Down")): return True
+    if btn == 'MouseWheel:Down': return True
+    return False
+
+def is_Prior(btn):
+    if btn.startswith(("Prior", "Up")): return True
+    if btn == 'MouseWheel:Up': return True
+    return False
+
+def is_Read(btn):
+    if btn in ("Read", ""): return True
+    return False
+
+import tkinter as tk
+root = tk.Tk()
+max_width  = root.winfo_screenwidth() - 700
+max_height = root.winfo_screenheight() - 150
+max_size = (max_width, max_height)
+root.destroy()
+del root
 
 # create the form that also returns keyboard events
 form = sg.FlexForm('Image Browser', return_keyboard_events=True,
@@ -63,40 +84,42 @@ form = sg.FlexForm('Image Browser', return_keyboard_events=True,
 # make these 2 elements outside the layout as we want to "update" them later
 # initialize to the first file in the list
 filename = os.path.join(folder, fnames[0])  # name of first file in list
-image_elem = sg.Image(data = get_img_data(filename, first = True))
+image_elem = sg.Image(data = get_img_data(filename, maxsize = max_size, first = True))
 filename_display_elem = sg.Text(filename, size=(80, 3))
 file_num_display_elem = sg.Text('File 1 of {}'.format(num_files), size=(15,1))
 
 # define layout, show and read the form
 col = [[filename_display_elem],
-          [image_elem],
-          [sg.ReadFormButton('Next', size=(8,2)), sg.ReadFormButton('Prev',
-                             size=(8,2)), file_num_display_elem]]
+          [image_elem]]
 
-col_files = [[sg.Listbox(values = fnames, size=(60,30), key='listbox')],
-             [sg.ReadFormButton('Read')]]
+col_files = [[sg.Listbox(values = fnames, change_submits=True, size=(60, 30), key='listbox')],
+             [sg.ReadFormButton('Next', size=(8,2)), sg.ReadFormButton('Prior',
+                             size=(8,2)), file_num_display_elem]]
 
 layout = [[sg.Column(col_files), sg.Column(col)]]
 
-button, values = form.LayoutAndRead(layout)          # Shows form on screen
+form.Layout(layout)          # Shows form on screen
 
 # loop reading the user input and displaying image, filename
 i=0
 while True:
+    # read the form
+    btn, values = form.Read()
 
     # perform button and keyboard operations
-    if button is None:
+    if btn is None:
         break
-    elif button in ('Next', 'MouseWheel:Down', 'Down:40', 'Next:34'):
+    elif is_Next(btn):
         i += 1
         if i >= num_files:
             i -= num_files
-    elif button in ('Prev', 'MouseWheel:Up', 'Up:38', 'Prior:33'):
+        filename = os.path.join(folder, fnames[i])
+    elif is_Prior(btn):
         i -= 1
         if i < 0:
             i = num_files + i
-
-    if button == 'Read':                    # something from the listbox
+        filename = os.path.join(folder, fnames[i])
+    elif is_Read(btn):                      # something from the listbox
         f = values["listbox"][0]            # selected filename
         filename = os.path.join(folder, f)  # read this file
         i = fnames.index(f)                 # update running index
@@ -104,11 +127,8 @@ while True:
         filename = os.path.join(folder, fnames[i])
 
     # update window with new image
-    image_elem.Update(data=get_img_data(filename))
+    image_elem.Update(data=get_img_data(filename, maxsize = max_size))
     # update window with filename
     filename_display_elem.Update(filename)
     # update page display
     file_num_display_elem.Update('File {} of {}'.format(i+1, num_files))
-
-    # read the form
-    button, values = form.Read()

@@ -138,7 +138,7 @@ goto = sg.InputText(str(cur_page + 1), size=(5, 1), do_not_clear=True,
 layout = [
     [
         sg.ReadFormButton('Next'),
-        sg.ReadFormButton('Prev'),
+        sg.ReadFormButton('Prior'),
         sg.Text('Page:'),
         goto,
         sg.Text('(%i)' % page_count),
@@ -151,34 +151,66 @@ layout = [
 form.Layout(layout)
 
 # now define the buttons / events we want to handle
-enter_buttons = [chr(13), "Return:13"]
-quit_buttons = ["Escape:27", chr(27)]
-next_buttons = ["Next", "Next:34", "MouseWheel:Down"]
-prev_buttons = ["Prev", "Prior:33", "MouseWheel:Up"]
-Up    = "Up:38"
-Left  = "Left:37"
-Right = "Right:39"
-Down  = "Down:40"
-zoom_buttons = ["Zoom", Up, Down, Left, Right]
+def is_Enter(btn):
+    if btn.startswith("Return:"): return True
+    if btn == chr(13): return True
+    return False
 
-# all the buttons we will handle
-my_keys = enter_buttons + next_buttons + prev_buttons + zoom_buttons
+def is_Quit(btn):
+    if btn == chr(27): return True
+    if btn.startswith("Escape:"): return True
+    return False
+
+def is_Next(btn):
+    if btn.startswith("Next"): return True
+    if btn == "MouseWheel:Down": return True
+    return False
+
+def is_Prior(btn):
+    if btn.startswith("Prior"): return True
+    if btn ==  "MouseWheel:Up":  return True
+    return False
+
+def is_Up(btn):
+    if btn.startswith("Up:"):  return True
+    return False
+
+def is_Down(btn):
+    if btn.startswith("Down:"):  return True
+    return False
+
+def is_Left(btn):
+    if btn.startswith("Left:"):  return True
+    return False
+
+def is_Right(btn):
+    if btn.startswith("Right:"):  return True
+    return False
+
+def is_Zoom(btn):
+    if btn.startswith("Zoom"):  return True
+    return False
+
+def is_MyKeys(btn):
+    if any((is_Enter(btn), is_Next(btn),
+            is_Prior(btn), is_Zoom(btn))):
+        return True
+    return False
 
 # old page store and zoom toggle
 old_page = 0
-old_zoom = False
+zoom_active = False
 
 while True:
-    button, value = form.Read()
-    if button is None and (value is None or value['PageNumber'] is None):
+    btn, value = form.Read()
+    if btn is None and (value is None or value['PageNumber'] is None):
         break
-    if button in quit_buttons:
+    if is_Quit(btn):
         break
-
     zoom_pressed = False
     zoom = False
 
-    if button in enter_buttons:
+    if is_Enter(btn):
         try:
             cur_page = int(value['PageNumber']) - 1  # check if valid
             while cur_page < 0:
@@ -186,21 +218,22 @@ while True:
         except:
             cur_page = 0  # this guy's trying to fool me
 
-    elif button in next_buttons:
+    elif is_Next(btn):
         cur_page += 1
-    elif button in prev_buttons:
+    elif is_Prior(btn):
         cur_page -= 1
-    elif button == Up:
+    elif is_Up(btn) and zoom_active:
         zoom = (clip_pos, 0, -1)
-    elif button == Down:
+    elif is_Down(btn) and zoom_active:
         zoom = (clip_pos, 0, 1)
-    elif button == Left:
+    elif is_Left(btn) and zoom_active:
         zoom = (clip_pos, -1, 0)
-    elif button == Right:
+    elif is_Right(btn) and zoom_active:
         zoom = (clip_pos, 1, 0)
-    elif button == "Zoom":
+    elif is_Zoom(btn):
         zoom_pressed = True
-        zoom = (clip_pos, 0, 0)
+        if not zoom_active:
+            zoom = (clip_pos, 0, 0)
 
     # sanitize page number
     if cur_page >= page_count:  # wrap around
@@ -208,8 +241,8 @@ while True:
     while cur_page < 0:         # pages > 0 look nicer
         cur_page += page_count
 
-    if zoom_pressed and old_zoom:
-        zoom = zoom_pressed = old_zoom = False
+    if zoom_pressed and zoom_active:
+        zoom = zoom_pressed = zoom_active = False
 
     t0 = time.perf_counter()
     data, clip_pos = get_page(cur_page, zoom = zoom, max_size = max_size,
@@ -221,10 +254,10 @@ while True:
     tk_img_time   += t2 - t1
     img_count     += 1
     old_page = cur_page
-    old_zoom = zoom_pressed or zoom
+    zoom_active = zoom_pressed or zoom
 
     # update page number field
-    if button in my_keys:
+    if is_MyKeys(btn):
         goto.Update(str(cur_page + 1))
 
 
