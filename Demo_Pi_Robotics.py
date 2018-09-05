@@ -18,9 +18,9 @@ def RemoteControlExample():
     status_display_elem = sg.T('', justification='center', size=(19,1))
     form_rows = [[sg.Text('Robotics Remote Control')],
                  [status_display_elem],
-                 [sg.T(' '*10), sg.RealtimeButton('Forward', image_filename=image_forward)],
+                 [sg.T(' '*6), sg.RealtimeButton('Forward', image_filename=image_forward)],
                  [ sg.RealtimeButton('Left', image_filename=image_left), sg.T('     '), sg.RealtimeButton('Right', image_filename=image_right)],
-                 [sg.T(' '*10), sg.RealtimeButton('Reverse', image_filename=image_backward)],
+                 [sg.T(' '*6), sg.RealtimeButton('Reverse', image_filename=image_backward)],
                  [sg.T('')],
                  [sg.Quit(button_color=('black', 'orange'))]
                  ]
@@ -51,11 +51,11 @@ def RemoteControlExample_NoGraphics():
     # Make a form, but don't use context manager
     form = sg.FlexForm('Robotics Remote Control', auto_size_text=True)
     status_display_elem = sg.T('', justification='center', size=(19,1))
-    form_rows = [[sg.Text('Robotics Remote Control')],
+    form_rows = [[sg.Text('Robotics Remote Control', justification='center')],
                  [status_display_elem],
-                 [sg.T(' '*10), sg.RealtimeButton('Forward')],
-                 [ sg.RealtimeButton('Left'), sg.T('                '), sg.RealtimeButton('Right')],
-                 [sg.T(' '*10), sg.RealtimeButton('Reverse')],
+                 [sg.T(' '*8), sg.RealtimeButton('Forward')],
+                 [ sg.RealtimeButton('Left'), sg.T('               '), sg.RealtimeButton('Right')],
+                 [sg.T(' '*8), sg.RealtimeButton('Reverse')],
                  [sg.T('')],
                  [sg.Quit(button_color=('black', 'orange'))]
                  ]

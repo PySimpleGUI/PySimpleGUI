@@ -56,7 +56,7 @@ def FileBrowse():
         form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                      [sg.InputText(), sg.FileBrowse()],
                      [sg.Submit(), sg.Cancel()]]
-        (button, (source_filename,)) = form.LayoutAndShow(form_rows)
+        (button, (source_filename,)) = form.LayoutAndRead(form_rows)
 
     print(button, source_filename)
 
@@ -92,7 +92,7 @@ def Compare2Files():
                      [sg.Text('File 2', size=(8, 1)), sg.InputText(), sg.FileBrowse()],
                      [sg.Submit(), sg.Cancel()]]
 
-        button, values = form.LayoutAndShow(form_rows)
+        button, values = form.LayoutAndRead(form_rows)
 
     print(button, values)
 
@@ -364,15 +364,12 @@ def MediaPlayer():
     image_next = './ButtonGraphics/Next.png'
     image_exit = './ButtonGraphics/Exit.png'
 
-    # A text element that will be changed to display messages in the GUI
-    TextElem = sg.Text('', size=(15, 2), font=("Helvetica", 14))
-
     # Open a form, note that context manager can't be used generally speaking for async forms
     form = sg.FlexForm('Media File Player', auto_size_text=True, default_element_size=(20, 1),
                        font=("Helvetica", 25))
     # define layout of the rows
     layout = [[sg.Text('Media File Player', size=(17, 1), font=("Helvetica", 25))],
-              [TextElem],
+              [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='out')],
               [sg.ReadFormButton('Restart Song', button_color=(background, background),
                                  image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0),
                sg.Text(' '  * 2),
@@ -387,8 +384,7 @@ def MediaPlayer():
                                                  border_width=0)],
               [sg.Text('_'  * 20)],
               [sg.Text(' '  * 30)],
-              [
-                  sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical',
+              [sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical',
                             font=("Helvetica", 15)),
                   sg.Text(' '  * 2),
                   sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical',
@@ -398,9 +394,7 @@ def MediaPlayer():
                             font=("Helvetica", 15))],
               [sg.Text('Bass', font=("Helvetica", 15), size=(6, 1)),
                sg.Text('Treble', font=("Helvetica", 15), size=(10, 1)),
-               sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))]
-
-              ]
+               sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))] ]
 
     # Call the same LayoutAndRead but indicate the form is non-blocking
     form.LayoutAndRead(layout, non_blocking=True)
@@ -412,7 +406,7 @@ def MediaPlayer():
             break
       # If a button was pressed, display it on the GUI by updating the text element
         if button:
-            TextElem.Update(button)
+            form.FindElement('out').Update(button)
 
 def ScriptLauncher():
     """

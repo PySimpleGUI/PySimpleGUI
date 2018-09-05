@@ -11,7 +11,6 @@ import PySimpleGUI as sg
 def ScrollableColumns():
     # sg.ChangeLookAndFeel('Dark')
 
-
     column1 = [[sg.Text('Column 1', justification='center', size=(20, 1))],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1', key='spin1', size=(30,1))],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2', key='spin2')],
@@ -33,12 +32,13 @@ def ScrollableColumns():
     for i in range(50):
         column2.append([sg.T(f'{i}{j}', size=(4, 1), background_color='gray25', text_color='white', pad=(1, 1)) for j in range(10)])
 
-    layout = [[sg.Column(column2, scrollable=True, size=(400,300)), sg.Column(column1, scrollable=True, size=(200,150))],
+    layout = [[sg.Column(column2, scrollable=True), sg.Column(column1, scrollable=True, size=(200,150))],
               [sg.OK()]]
 
     form = sg.FlexForm('Form Fill Demonstration', default_element_size=(40, 1))
     b, v = form.LayoutAndRead(layout)
 
+    sg.Popup(v)
 
 def NormalColumns():
     # Column layout

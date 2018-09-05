@@ -35,7 +35,7 @@ def eBaySuperSearcherGUI():
 
     # the form layout
     with sg.FlexForm('EBay Super Searcher', auto_size_text=True) as form:
-        with sg.FlexForm('EBay Super Searcher') as form2:
+        with sg.FlexForm('EBay Super Searcher', auto_size_text=False) as form2:
             layout_tab_1 = [[sg.Text('eBay Super Searcher!', size=(60,1), font=('helvetica', 15))],
               [sg.Text('Choose base configuration to run')],
               [sg.InputCombo(configs)],
@@ -65,7 +65,6 @@ def eBaySuperSearcherGUI():
                 if i == 0: continue         # skip first one
                 layout_tab_2.append([sg.Radio(cat,'CATUS'), sg.Radio(german_categories[i],'CATDE')])
 
-
             layout_tab_2.append([sg.Text('_' * 100, size=(75, 1))])
             layout_tab_2.append([sg.Text('US Search String Override')])
             layout_tab_2.append([sg.InputText(size=(100,1))])
@@ -82,6 +81,7 @@ def eBaySuperSearcherGUI():
 
 
 if __name__ == '__main__':
+    # sg.SetOptions(background_color='white')
     results = eBaySuperSearcherGUI()
     print(results)
     sg.MsgBox('Results', results)

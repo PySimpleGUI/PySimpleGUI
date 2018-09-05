@@ -22,12 +22,12 @@ def HowDoI():
     form = sg.FlexForm('How Do I ??', default_element_size=(30, 2), icon=DEFAULT_ICON, font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True)
 
     multiline_elem = sg.Multiline(size=(85, 5), enter_submits=True, key='query', do_not_clear=False)
-    history_elem = sg.T('', size=(40,3))
+    history_elem = sg.T('', size=(40,3), text_color=sg.BLUES[0])
     layout =  [
                 [sg.Text('Ask and your answer will appear here....', size=(40, 1))],
                 [sg.Output(size=(127, 30), font=('Helvetica 10'))],
-                [ sg.Spin(values=(1, 2, 3, 4), initial_value=1, size=(2, 1), key='Num Answers', font='Helvetica 15'), sg.T('Num Answers',font='Helvetica 15'), sg.Checkbox('Display Full Text', key='full text', font='Helvetica 15')],
-                [sg.T('Command History'), history_elem],
+                [ sg.Spin(values=(1, 2, 3, 4), initial_value=1, size=(2, 1), key='Num Answers', font='Helvetica 15'), sg.T('Num Answers',font='Helvetica 15'), sg.Checkbox('Display Full Text', key='full text', font='Helvetica 15'),
+                sg.T('Command History'), history_elem],
                 [multiline_elem,
                 sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
                 sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]
@@ -40,6 +40,7 @@ def HowDoI():
         (button, value) = form.Read()
         if button is 'SEND':
             query = value['query'].rstrip()
+            print(query)
             QueryHowDoI(query, value['Num Answers'], value['full text'])  # send the string to HowDoI
             command_history.append(query)
             history_offset = len(command_history)-1
@@ -69,7 +70,7 @@ def QueryHowDoI(Query, num_answers, full_text):
     '''
     howdoi_command = HOW_DO_I_COMMAND
     full_text_option = ' -a' if full_text else ''
-    t = subprocess.Popen(howdoi_command + ' '+ Query + ' -n ' + str(num_answers)+full_text_option, stdout=subprocess.PIPE)
+    t = subprocess.Popen(howdoi_command + ' \"'+ Query + '\" -n ' + str(num_answers)+full_text_option, stdout=subprocess.PIPE)
     (output, err) = t.communicate()
     print('{:^88}'.format(Query.rstrip()))
     print('_'*60)
