@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 2.11)
+  (Ver 2.20)
 
 [Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
 
@@ -1913,7 +1913,9 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
 | 2.9.0 | Aug 16,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict, removed text target from progress bar, rework of return values and initial return values, removed legacy Form.Refresh() method (replaced by Form.ReadNonBlockingForm()), COLUMN elements!!, colored text defaults
 | 2.10.0 | Aug 25, 2018 - Keyboard & Mouse features (Return individual keys as if buttons, return mouse scroll-wheel as button, bind return-key to button, control over keyboard focus), SaveAs Button, Update & Get methods for InputText, Update for Listbox, Update & Get for Checkbox, Get for Multiline, Color options for Text Element Update, Progess bar Update can change max value, Update for Button to change text & colors, Update for Image Element, Update for Slider, Form level text justification, Turn off default focus, scroll bar for Listboxes, Images can be from filename or from in-RAM, Update for Image).  Fixes - text wrapping in buttons, msg box, removed slider borders entirely and others
-| 2.11.0 | Aug 29, 2018 - Lots of little changes that are needed for the demo programs to work. Buttons have their own default element size, fix for Mac default button color, padding support for all elements, option to immediately return if list box gets selected, FilesBrowse button, Canvas Element, Frame Element, Slider resolution option, Form.Refresh method, better text wrapping, 'SystemDefault' look and feel setting,
+| 2.11.0 | Aug 29, 2018 - Lots of little changes that are needed for the demo programs to work. Buttons have their own default element size, fix for Mac default button color, padding support for all elements, option to immediately return if list box gets selected, FilesBrowse button, Canvas Element, Frame Element, Slider resolution option, Form.Refresh method, better text wrapping, 'SystemDefault' look and feel settin
+| 2.20.0 | Sept 4, 2018 - Some sizable features this time around of interest to advanced users.  Renaming of the MsgBox functions to Popup. Renaming GetFile, etc, to PopupGetFile. High-level windowing capabilities start with Popup, PopupNoWait/PopupNonblocking, PopupNoButtons, default icon, change_submits option for Listbox/Combobox/Slider/Spin/, New OptionMenu element, updating elements after shown, system defaul color option for progress bars, new button type (Dummy Button) that only closes a window, SCROLLABLE Columns!! (yea, playing in the Big League now), LayoutAndShow function removed, form.Fill - bulk updates to forms, FindElement - find element based on key value (ALL elements have keys now), no longer use grid packing for row elements (a potentially huge change), scrolled text box sizing changed, new look and feel themes (Dark, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green)
+
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -1969,8 +1971,12 @@ It seemed quite natural to use Python's powerful list constructs when possible. 
 Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.
 
 
-## Authors
+## Author
 MikeTheWatchGuy
+
+## Demo Code Contributors
+
+JorjMcKie - PDF and image viewers (plus a number of code suggestions)
 
 ## License
 
@@ -1981,6 +1987,7 @@ GNU Lesser General Public License (LGPL 3) +
 * Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
 * [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`
 * [Ruud van der Ham](https://forum.pythonistacafe.com/u/Ruud) for all the help he's provided as a Python-mentor. Quite a few tricky bits of logic was supplied by Ruud. The dual-purpose return values scheme is Ruud's for example
+* Numerous users who provided feature suggestions!  Many of the cool features were suggested by others.  If you were one of them and are willing to take more credit, I'll list you here if you give me permission. Most are too modest.
 
 
 ## How Do I
@@ -2000,7 +2007,10 @@ The pip command is all there is to the setup.
 
 The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
-![snap0109](https://user-images.githubusercontent.com/13696193/42916444-4199b16c-8ad3-11e8-8423-d12e61a58d3d.jpg)
+
+![howdoiwithhistory](https://user-images.githubusercontent.com/13696193/45064009-5fd61180-b07f-11e8-8ead-eb0d1ff3a6be.jpg)
+
+
 
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 

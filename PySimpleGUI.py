@@ -6,14 +6,8 @@ import tkinter.scrolledtext as tkst
 import tkinter.font
 import datetime
 import sys
-import os
-import base64
-import tempfile
 import textwrap
 
-# TODO - Sept 1 2018 - HIGHLY EXPERIMENTAL.... start TK right away with a hidden window
-# dummyroot = tk.Tk()
-# dummyroot.attributes('-alpha', 0)  # hide window while getting info and moving
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
@@ -1069,7 +1063,6 @@ class Slider(Element):
 # ---------------------------------------------------------------------- #
 #                          TkScrollableFrame (Used by Column (SOON)      #
 # ---------------------------------------------------------------------- #
-# TODO  NOT YET WORKING!  DO NOT USE.  Will be used to make scrollable columns
 class TkScrollableFrame(tk.Frame):
     def __init__(self, master, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
@@ -1253,6 +1246,9 @@ class FlexForm:
         self.AddRows(rows)
         self.Show(non_blocking=non_blocking)
         return self.ReturnValues
+
+    def LayoutAndShow(self, rows):
+        raise DeprecationWarning('LayoutAndShow is no longer supported... change your call to LayoutAndRead')
 
     # ------------------------- ShowForm   THIS IS IT! ------------------------- #
     def Show(self, non_blocking=False):
@@ -1579,19 +1575,15 @@ def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button
     return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-# this is the only button that REQUIRES button text field
 def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-# this is the only button that REQUIRES button text field
 def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-
+# -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-
-# -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-# this is the only button that REQUIRES button text field
+# -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
@@ -2451,7 +2443,7 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
 # MsgBox is the legacy call and show not be used any longer
 MsgBox = Popup
 
-# --------------------------- PopupNonBlocking ---------------------------
+# --------------------------- PopupNoButtons ---------------------------
 def PopupoNoButtons(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
     Popup(*args, button_type=MSG_BOX_NO_BUTTONS, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
     return
