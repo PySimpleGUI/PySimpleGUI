@@ -103,15 +103,10 @@ def AllWidgetsWithContext():
     """
     import PySimpleGUI as sg
     # Green & tan color scheme
-    sg.SetOptions(background_color='#9FB8AD',
-                  text_element_background_color='#9FB8AD',
-                  element_background_color='#9FB8AD',
-                  input_elements_background_color='#F7F3EC',
-                  button_color=('white', '#475841'),
-                  border_width=0,
-                  slider_border_width=0,
-                  progress_meter_border_depth=0,
-                  scrollbar_color='#F7F3EC')
+    sg.ChangeLookAndFeel('GreenTan')
+
+
+    # sg.ChangeLookAndFeel('GreenTan')
 
     with sg.FlexForm('Everything bagel', default_element_size=(40, 1)) as form:
         layout = [
@@ -143,15 +138,7 @@ def AllWidgetsNoContext():
     import PySimpleGUI as sg
 
     # Green & tan color scheme
-    sg.SetOptions(background_color='#9FB8AD',
-                  text_element_background_color='#9FB8AD',
-                  element_background_color='#9FB8AD',
-                  input_elements_background_color='#F7F3EC',
-                  button_color=('white', '#475841'),
-                  border_width=0,
-                  slider_border_width=0,
-                  progress_meter_border_depth=0,
-                  scrollbar_color='#F7F3EC')
+    sg.ChangeLookAndFeel('GreenTan')
 
     form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
     layout = [
@@ -791,7 +778,7 @@ while True:
             form.FindElement('multi').Update(inspect.getsource(func))
             button, values = form.Read()
         elif button is 'Run':
-            sg.ChangeLookAndFeel('SystemDefault')
+            # sg.ChangeLookAndFeel('SystemDefault')
             func()
             break
         else:

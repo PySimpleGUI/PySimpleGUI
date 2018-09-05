@@ -770,7 +770,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -802,6 +802,7 @@ class Button(Element):
         self.BindReturnKey = bind_return_key
         self.Focus = focus
         self.TKCal = None
+        self.DefaultValue = None
         super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad, key=key)
         return
 
@@ -892,7 +893,7 @@ class Button(Element):
 
         return
 
-    def Update(self, new_text=None, button_color=(None, None)):
+    def Update(self, value=None, new_text=None, button_color=(None, None)):
         try:
             if new_text is not None:
                 self.TKButton.configure(text=new_text)
@@ -900,6 +901,7 @@ class Button(Element):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
             return
+        self.DefaultValue = value
 
     def __del__(self):
         try:
@@ -1193,6 +1195,9 @@ class Column(Element):
 # ---------------------------------------------------------------------- #
 
 class TKCalendar(ttk.Frame):
+    """
+    This code was shamelessly lifted from moshekaplan's repository - moshekaplan/tkinter_components
+    """
     # XXX ToDo: cget and configure
 
     datetime = calendar.datetime.datetime
@@ -1393,37 +1398,6 @@ class TKCalendar(ttk.Frame):
         year, month = self._date.year, self._date.month
         return self.datetime(year, month, int(self._selection[0]))
 
-class Calendar(Element):
-    def __init__(self, scale=(None, None), size=(None, None), pad=None, key=None):
-        '''
-        Image Element
-        :param filename:
-        :param scale: Adds multiplier to size (w,h)
-        :param size: Size of field in characters
-        '''
-        self.tkCalendar = None
-
-
-        if data is None and filename is None:
-            print('* Warning... no image specified in Image Element! *')
-        super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, pad=pad, key=key)
-        return
-
-    def Update(self, filename=None, data=None):
-        if filename is not None:
-            image = tk.PhotoImage(file=filename)
-        elif data is not None:
-            if type(data) is bytes:
-                image = tk.PhotoImage(data=data)
-            else:
-                image = data
-        else: return
-        width, height = image.width(), image.height()
-        self.tktext_label.configure(image=image, width=width, height=height)
-        self.tktext_label.image = image
-
-    def __del__(self):
-        super().__del__()
 
 
 
@@ -1984,7 +1958,14 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 value = None
 
             # if an input type element, update the results
-            if (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER) or element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and element.Type!= ELEM_TYPE_COLUMN:
+            if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
+                    element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
+                    element.Type!= ELEM_TYPE_COLUMN:
+                AddToReturnList(form, value)
+                AddToReturnDictionary(top_level_form, element, value)
+            elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER) or \
+                (element.Type == ELEM_TYPE_BUTTON and element.Target == (None,None) and \
+                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
@@ -2037,7 +2018,8 @@ def FillSubformWithValues(form, values_dict):
                 element.Update(value)
             elif element.Type == ELEM_TYPE_INPUT_SPIN:
                 element.Update(value)
-
+            elif element.Type == ELEM_TYPE_BUTTON:
+                element.Update(value)
 
 def _FindElementFromKeyInSubForm(form, key):
     for row_num, row in enumerate(form.Rows):
