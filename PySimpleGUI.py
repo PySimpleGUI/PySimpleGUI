@@ -825,9 +825,9 @@ class Button(Element):
             if target[1] < 0:
                 target[1] = self.Position[1] + target[1]
         strvar = None
-        if target == (0,0) or target[0] == None:
+        if target == (None, None):
             strvar = self.TKStringVar
-        elif target[0] != None:
+        else:
             if target[0] < 0:
                 target = [self.Position[0] + target[0], target[1]]
             target_element = self.ParentForm._GetElementAtLocation(target)
