@@ -825,31 +825,35 @@ class Button(Element):
             if target[1] < 0:
                 target[1] = self.Position[1] + target[1]
         strvar = None
-        if target[0] != None:
+        if target == (None, None):
+            strvar = self.TKStringVar
+        else:
             if target[0] < 0:
                 target = [self.Position[0] + target[0], target[1]]
             target_element = self.ParentForm._GetElementAtLocation(target)
             try:
                 strvar = target_element.TKStringVar
             except: pass
-        else:
-            strvar = self.TKStringVar
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
             try:
                 strvar.set(folder_name)
+                self.TKStringVar.set(folder_name)
             except: pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             file_name = tk.filedialog.askopenfilename(filetypes=filetypes)  # show the 'get file' dialog box
             strvar.set(file_name)
+            self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             file_name = tk.filedialog.askopenfilenames(filetypes=filetypes)
             file_name = ';'.join(file_name)
             strvar.set(file_name)
+            self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes)  # show the 'get file' dialog box
             strvar.set(file_name)
+            self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1927,6 +1931,11 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             value = element.TKCal.selection
                         except:
                             value = None
+                    else:
+                        try:
+                            value = element.TKStringVar.get()
+                        except:
+                            value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     value=element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -1964,8 +1973,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER) or \
-                (element.Type == ELEM_TYPE_BUTTON and element.Target == (None,None) and \
-                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
+                (element.Type == ELEM_TYPE_BUTTON and element.Key is not None and (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
