@@ -994,8 +994,10 @@ class Image(Element):
             else:
                 image = data
         else: return
-        width, height = image.width(), image.height()
-        self.tktext_label.configure(image=image, width=width, height=height)
+        # width, height = image.width(), image.height()
+        # width, height = image.width(), image.height()
+        # self.tktext_label.configure(image=image, width=width, height=height)
+        self.tktext_label.configure(image=image)
         self.tktext_label.image = image
 
     def __del__(self):
@@ -2441,7 +2443,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width, height = photo.width(), photo.height()
                     else:
                         width, height = element_size
-                    element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
+                    if photo is not None:
+                        element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
+                    else:
+                        element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
                     element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
