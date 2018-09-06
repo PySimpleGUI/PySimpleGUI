@@ -1633,6 +1633,23 @@ class FlexForm:
         return screen_width, screen_height
 
 
+
+    def StartMove(self, event):
+        self.TKroot.x = event.x
+        self.TKroot.y = event.y
+
+    def StopMove(self, event):
+        self.TKroot.x = None
+        self.TKroot.y = None
+
+    def OnMotion(self, event):
+        deltax = event.x - self.TKroot.x
+        deltay = event.y - self.TKroot.y
+        x = self.TKroot.winfo_x() + deltax
+        y = self.TKroot.winfo_y() + deltay
+        self.TKroot.geometry("+%s+%s" % (x, y))
+
+
     def _KeyboardCallback(self, event ):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
@@ -2612,6 +2629,16 @@ def StartupTK(my_flex_form):
     _my_windows.Increment()
 
     my_flex_form.TKroot = root
+
+    # Make moveable window
+    if my_flex_form.NoTitleBar:
+        root.bind("<ButtonPress-1>", my_flex_form.StartMove)
+        root.bind("<ButtonRelease-1>", my_flex_form.StopMove)
+        root.bind("<B1-Motion>", my_flex_form.OnMotion)
+
+
+
+
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
@@ -2659,229 +2686,6 @@ def _GetNumLinesNeeded(text, max_line_width):
         lines_used.append(len(L)//max_line_width + (len(L) % max_line_width > 0))       # fancy math to round up
     total_lines_needed = sum(lines_used)
     return total_lines_needed
-
-# ------------------------------------------------------------------------------------------------------------------ #
-# =====================================   Upper PySimpleGUI ============================================================== #
-#   Pre-built dialog boxes for all your needs                                                                        #
-# ------------------------------------------------------------------------------------------------------------------ #
-
-# ====================================  MSG BOX =====#
-# Display a message wrapping at 60 characters        #
-# Exits via an OK button2 press                      #
-# Returns nothing                                    #
-# ===================================================#
-def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False):
-    '''
-    Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
-    :param args:
-    :param button_color:
-    :param button_type:
-    :param auto_close:
-    :param auto_close_duration:
-    :param icon:
-    :param line_width:
-    :param font:
-    :return:
-    '''
-    if not args:
-        args_to_print = ['']
-    else:
-        args_to_print = args
-    if line_width != None:
-        local_line_width = line_width
-    else:
-        local_line_width = MESSAGE_BOX_LINE_WIDTH
-    title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar) as form:
-        max_line_total, total_lines = 0,0
-        for message in args_to_print:
-            # fancy code to check if string and convert if not is not need. Just always convert to string :-)
-            # if not isinstance(message, str): message = str(message)
-            message = str(message)
-            if message.count('\n'):
-                message_wrapped = message
-            else:
-                message_wrapped = textwrap.fill(message, local_line_width)
-            message_wrapped_lines = message_wrapped.count('\n')+1
-            longest_line_len = max([len(l) for l in message.split('\n')])
-            width_used = min(longest_line_len, local_line_width)
-            max_line_total = max(max_line_total, width_used)
-            # height = _GetNumLinesNeeded(message, width_used)
-            height = message_wrapped_lines
-            # print('Msgbox width, height', width_used, height)
-            form.AddRow(Text(message_wrapped, auto_size_text=True))
-            total_lines += height
-
-        pad = max_line_total-15 if max_line_total > 15 else 1
-        pad =1
-        if non_blocking:
-            PopupButton = DummyButton
-        else:
-            PopupButton = SimpleButton
-        # show either an OK or Yes/No depending on paramater
-        if button_type is MSG_BOX_YES_NO:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
-        elif button_type is MSG_BOX_CANCELLED:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is MSG_BOX_ERROR:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is MSG_BOX_OK_CANCEL:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
-                        PopupButton('Cancel', size=(5, 1), button_color=button_color))
-        elif button_type is MSG_BOX_NO_BUTTONS:
-            pass
-        else:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
-
-        if non_blocking:
-            button, values = form.ReadNonBlocking()
-        else:
-            button, values = form.Show()
-
-    return button
-
-
-
-# ==============================  MsgBox============#
-# Lazy function. Same as calling Popup with parms   #
-# ==================================================#
-# MsgBox is the legacy call and show not be used any longer
-MsgBox = Popup
-
-# --------------------------- PopupNoButtons ---------------------------
-def PopupoNoButtons(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    Popup(*args, button_type=MSG_BOX_NO_BUTTONS, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
-
-
-# --------------------------- PopupNonBlocking ---------------------------
-def PopupoNonBlocking(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    Popup(*args, non_blocking=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
-
-PopupNoWait = PopupoNonBlocking
-
-
-# --------------------------- PopupNoFrame ---------------------------
-def PopupNoTitlebar(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    Popup(*args, non_blocking=False, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=True)
-    return
-
-PopupNoFrame = PopupNoTitlebar
-PopupNoBorder = PopupNoTitlebar
-PopupAnnoying = PopupNoTitlebar
-
-
-# ==============================  MsgBoxAutoClose====#
-# Lazy function. Same as calling MsgBox with parms   #
-# ===================================================#
-def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, font=None):
-    '''
-    Display a standard MsgBox that will automatically close after a specified amount of time
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-
-PopupTimed = MsgBoxAutoClose
-PopupAutoClose = MsgBoxAutoClose
-
-# ==============================  MsgBoxError   =====#
-# Like MsgBox but presents RED BUTTONS               #
-# ===================================================#
-def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display a MsgBox with a red button
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-
-
-PopupError = MsgBoxError
-
-
-# ==============================  MsgBoxCancel  =====#
-#                                                    #
-# ===================================================#
-def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display a MsgBox with a single "Cancel" button.
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-
-PopupCancel = MsgBoxCancel
-
-
-# ==============================  MsgBoxOK      =====#
-# Like MsgBox but only 1 button                      #
-# ===================================================#
-def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display a MsgBox with a single buttoned labelled "OK"
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-
-PopupOk = MsgBoxOK
-
-
-# ==============================  MsgBoxOKCancel ====#
-# Like MsgBox but presents OK and Cancel buttons     #
-# ===================================================#
-def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display MsgBox with 2 buttons, "OK" and "Cancel"
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-
-PopupOkCancel = MsgBoxOKCancel
-
-
-# ====================================  YesNoBox=====#
-# Like MsgBox but presents Yes and No buttons        #
-# Returns True if Yes was pressed else False         #
-# ===================================================#
-def MsgBoxYesNo(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display MsgBox with 2 buttons, "Yes" and "No"
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    result = MsgBox(*args, button_type=MSG_BOX_YES_NO, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return result
-
-
-PopupYesNo = MsgBoxYesNo
 
 # ==============================  PROGRESS METER ========================================== #
 
@@ -3267,7 +3071,7 @@ GetFile = GetFileBox
 AskForFile = GetFileBox
 
 
-def PopupGetFile(message, save_as=False, no_window=False, default_path='', file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
+def PopupGetFile(message, default_path='',save_as=False, no_window=False,  file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
     if no_window:
         if save_as:
             return tk.filedialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
@@ -3295,10 +3099,10 @@ def PopupGetFile(message, save_as=False, no_window=False, default_path='', file_
 # ============================== GetTextBox =========#
 # Get a single line of text                          #
 # ===================================================#
-def GetTextBox(title, message, Default='', button_color=None, size=(None, None)):
+def GetTextBox(title, message, default_text='', button_color=None, size=(None, None)):
     with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
         layout = [[Text(message, auto_size_text=True)],
-                  [InputText(default_text=Default, size=size)],
+                  [InputText(default_text=default_text, size=size)],
                   [Submit(), Cancel()]]
 
         (button, input_values) = form.LayoutAndRead(layout)
@@ -3308,10 +3112,10 @@ def GetTextBox(title, message, Default='', button_color=None, size=(None, None))
             return True, input_values[0]
 
 
-def PopupGetText(message, Default='', button_color=None, size=(None, None)):
+def PopupGetText(message, default_text='', password_char='', button_color=None, size=(None, None)):
     with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
         layout = [[Text(message, auto_size_text=True)],
-                  [InputText(default_text=Default, size=size)],
+                  [InputText(default_text=default_text, size=size, password_char=password_char)],
                   [Ok(), Cancel()]]
 
         (button, input_values) = form.LayoutAndRead(layout)
@@ -3616,6 +3420,231 @@ def ObjToString(obj, extra='    '):
                   (ObjToString(obj.__dict__[item], extra + '    ') if hasattr(obj.__dict__[item], '__dict__') else str(
                       obj.__dict__[item])))
          for item in sorted(obj.__dict__)))
+
+
+# ------------------------------------------------------------------------------------------------------------------ #
+# =====================================   Upper PySimpleGUI ============================================================== #
+#   Pre-built dialog boxes for all your needs                                                                        #
+# ------------------------------------------------------------------------------------------------------------------ #
+
+# ====================================  MSG BOX =====#
+# Display a message wrapping at 60 characters        #
+# Exits via an OK button2 press                      #
+# Returns nothing                                    #
+# ===================================================#
+def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False):
+    '''
+    Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
+    :param args:
+    :param button_color:
+    :param button_type:
+    :param auto_close:
+    :param auto_close_duration:
+    :param icon:
+    :param line_width:
+    :param font:
+    :return:
+    '''
+    if not args:
+        args_to_print = ['']
+    else:
+        args_to_print = args
+    if line_width != None:
+        local_line_width = line_width
+    else:
+        local_line_width = MESSAGE_BOX_LINE_WIDTH
+    title = args_to_print[0] if args_to_print[0] is not None else 'None'
+    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar) as form:
+        max_line_total, total_lines = 0,0
+        for message in args_to_print:
+            # fancy code to check if string and convert if not is not need. Just always convert to string :-)
+            # if not isinstance(message, str): message = str(message)
+            message = str(message)
+            if message.count('\n'):
+                message_wrapped = message
+            else:
+                message_wrapped = textwrap.fill(message, local_line_width)
+            message_wrapped_lines = message_wrapped.count('\n')+1
+            longest_line_len = max([len(l) for l in message.split('\n')])
+            width_used = min(longest_line_len, local_line_width)
+            max_line_total = max(max_line_total, width_used)
+            # height = _GetNumLinesNeeded(message, width_used)
+            height = message_wrapped_lines
+            # print('Msgbox width, height', width_used, height)
+            form.AddRow(Text(message_wrapped, auto_size_text=True))
+            total_lines += height
+
+        pad = max_line_total-15 if max_line_total > 15 else 1
+        pad =1
+        if non_blocking:
+            PopupButton = DummyButton
+        else:
+            PopupButton = SimpleButton
+        # show either an OK or Yes/No depending on paramater
+        if button_type is MSG_BOX_YES_NO:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
+        elif button_type is MSG_BOX_CANCELLED:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
+        elif button_type is MSG_BOX_ERROR:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+        elif button_type is MSG_BOX_OK_CANCEL:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
+                        PopupButton('Cancel', size=(5, 1), button_color=button_color))
+        elif button_type is MSG_BOX_NO_BUTTONS:
+            pass
+        else:
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+
+        if non_blocking:
+            button, values = form.ReadNonBlocking()
+        else:
+            button, values = form.Show()
+
+    return button
+
+
+
+# ==============================  MsgBox============#
+# Lazy function. Same as calling Popup with parms   #
+# ==================================================#
+# MsgBox is the legacy call and show not be used any longer
+MsgBox = Popup
+
+# --------------------------- PopupNoButtons ---------------------------
+def PopupoNoButtons(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    Popup(*args, button_type=MSG_BOX_NO_BUTTONS, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+    return
+
+
+# --------------------------- PopupNonBlocking ---------------------------
+def PopupoNonBlocking(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    Popup(*args, non_blocking=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+    return
+
+PopupNoWait = PopupoNonBlocking
+
+
+# --------------------------- PopupNoFrame ---------------------------
+def PopupNoTitlebar(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    Popup(*args, non_blocking=False, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=True)
+    return
+
+PopupNoFrame = PopupNoTitlebar
+PopupNoBorder = PopupNoTitlebar
+PopupAnnoying = PopupNoTitlebar
+
+
+# ==============================  MsgBoxAutoClose====#
+# Lazy function. Same as calling MsgBox with parms   #
+# ===================================================#
+def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, font=None):
+    '''
+    Display a standard MsgBox that will automatically close after a specified amount of time
+    :param args:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
+    :return:
+    '''
+    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+
+PopupTimed = MsgBoxAutoClose
+PopupAutoClose = MsgBoxAutoClose
+
+# ==============================  MsgBoxError   =====#
+# Like MsgBox but presents RED BUTTONS               #
+# ===================================================#
+def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False, auto_close_duration=None, font=None):
+    '''
+    Display a MsgBox with a red button
+    :param args:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
+    :return:
+    '''
+    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+
+
+PopupError = MsgBoxError
+
+
+# ==============================  MsgBoxCancel  =====#
+#                                                    #
+# ===================================================#
+def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    '''
+    Display a MsgBox with a single "Cancel" button.
+    :param args:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
+    :return:
+    '''
+    return MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+
+PopupCancel = MsgBoxCancel
+
+
+# ==============================  MsgBoxOK      =====#
+# Like MsgBox but only 1 button                      #
+# ===================================================#
+def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    '''
+    Display a MsgBox with a single buttoned labelled "OK"
+    :param args:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
+    :return:
+    '''
+    return MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+
+PopupOk = MsgBoxOK
+
+
+# ==============================  MsgBoxOKCancel ====#
+# Like MsgBox but presents OK and Cancel buttons     #
+# ===================================================#
+def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    '''
+    Display MsgBox with 2 buttons, "OK" and "Cancel"
+    :param args:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
+    :return:
+    '''
+    return MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+
+PopupOkCancel = MsgBoxOKCancel
+
+
+# ====================================  YesNoBox=====#
+# Like MsgBox but presents Yes and No buttons        #
+# Returns True if Yes was pressed else False         #
+# ===================================================#
+def MsgBoxYesNo(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    '''
+    Display MsgBox with 2 buttons, "Yes" and "No"
+    :param args:
+    :param button_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param font:
+    :return:
+    '''
+    result = MsgBox(*args, button_type=MSG_BOX_YES_NO, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+    return result
+
+
+PopupYesNo = MsgBoxYesNo
+
 
 
 def main():
