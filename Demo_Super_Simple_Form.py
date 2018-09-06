@@ -13,7 +13,7 @@ layout = [
 
 button, values = form.LayoutAndRead(layout)
 
-print(button, values['name'], values['address'], values['phone'])
+print(button, values, values['name'], values['address'], values['phone'])
 
 form = sg.FlexForm('Simple data entry form')  # begin with a blank form
 
@@ -26,6 +26,6 @@ layout = [
          ]
 
 button, values = form.LayoutAndRead(layout)
-
+print(values)
 name, address, phone = values
 sg.MsgBox(button, values[0], values[1], values[2])

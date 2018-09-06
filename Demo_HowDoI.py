@@ -1,6 +1,17 @@
 import PySimpleGUI as sg
 import subprocess
 
+import ctypes
+import os
+import win32process
+
+# hwnd = ctypes.windll.kernel32.GetConsoleWindow()
+# if hwnd != 0:
+#     ctypes.windll.user32.ShowWindow(hwnd, 0)
+#     ctypes.windll.kernel32.CloseHandle(hwnd)
+#     _, pid = win32process.GetWindowThreadProcessId(hwnd)
+#     os.system('taskkill /PID ' + str(pid) + ' /f')
+
 
 # Test this command in a dos window if you are having trouble.
 HOW_DO_I_COMMAND =  'python -m howdoi.howdoi'
@@ -19,7 +30,6 @@ def HowDoI():
     # -------  Make a new FlexForm  ------- #
     sg.ChangeLookAndFeel('GreenTan')            # give our form a spiffy set of colors
 
-    form = sg.FlexForm('How Do I ??', default_element_size=(30, 2), icon=DEFAULT_ICON, font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True)
 
     multiline_elem = sg.Multiline(size=(85, 5), enter_submits=True, key='query', do_not_clear=False)
     history_elem = sg.T('', size=(40,3), text_color=sg.BLUES[0])
@@ -32,6 +42,8 @@ def HowDoI():
                 sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
                 sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]
               ]
+
+    form = sg.FlexForm('How Do I ??', default_element_size=(30, 2), icon=DEFAULT_ICON, font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True, no_titlebar=True)
     form.Layout(layout)
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     command_history = []
