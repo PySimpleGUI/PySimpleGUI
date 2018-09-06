@@ -11,6 +11,8 @@ import pickle
 import calendar
 
 
+
+
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
@@ -820,6 +822,7 @@ class Button(Element):
         # Buttons modify targets or return from the form
         # If modifying target, get the element object at the target and modify its StrVar
         target = self.Target
+        target_element = None
         if target[0] == ThisRow:
             target = [self.Position[0], target[1]]
             if target[1] < 0:
@@ -887,7 +890,7 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             root = tk.Toplevel()
             root.title('Calendar Chooser')
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY)
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element)
             self.TKCal.pack(expand=1, fill='both')
             # self.ParentForm.TKRroot.mainloop()
             root.update()
@@ -1207,13 +1210,14 @@ class TKCalendar(ttk.Frame):
     datetime = calendar.datetime.datetime
     timedelta = calendar.datetime.timedelta
 
-    def __init__(self, master=None, **kw):
+    def __init__(self, master=None, target_element=None, **kw):
         """
         WIDGET-SPECIFIC OPTIONS
 
             locale, firstweekday, year, month, selectbackground,
             selectforeground
         """
+        self._TargetElement = target_element
         # remove custom options from kw before initializating ttk.Frame
         fwday = kw.pop('firstweekday', calendar.MONDAY)
         year = kw.pop('year', self.datetime.now().year)
@@ -1224,7 +1228,6 @@ class TKCalendar(ttk.Frame):
 
         self._date = self.datetime(year, month, 1)
         self._selection = None # no date selected
-
         ttk.Frame.__init__(self, master, **kw)
 
         # instantiate proper calendar class
@@ -1372,6 +1375,10 @@ class TKCalendar(ttk.Frame):
         text = '%02d' % text
         self._selection = (text, item, column)
         self._show_selection(text, bbox)
+        year, month = self._date.year, self._date.month
+        try:
+            self._TargetElement.Update(self.datetime(year, month, int(self._selection[0])))
+        except: pass
 
     def _prev_month(self):
         """Updated calendar to show the previous month."""
@@ -1413,7 +1420,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -1453,6 +1460,7 @@ class FlexForm:
         self.ReturnKeyboardEvents = return_keyboard_events
         self.LastKeyboardEvent = None
         self.TextJustification = text_justification
+        self.NoTitleBar = no_titlebar
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -1839,8 +1847,8 @@ def RealtimeButton(button_text, image_filename=None, image_size=(None, None),ima
 def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def CalendarButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CALENDAR_CHOOSER, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def CalendarButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
@@ -2484,7 +2492,8 @@ def ConvertFlexToTK(MyFlexForm):
         master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
     try:
-        master.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
+        if MyFlexForm.NoTitleBar:
+            MyFlexForm.TKroot.wm_overrideredirect(True)
     except:
         pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
@@ -2510,13 +2519,12 @@ def ConvertFlexToTK(MyFlexForm):
 
     move_string = '+%i+%i'%(int(x),int(y))
     master.geometry(move_string)
-    master.attributes('-alpha', 255)            # Make window visible again
     master.update_idletasks()  # don't forget
     return
 
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, fav_icon=DEFAULT_WINDOW_ICON):
+def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, fav_icon=DEFAULT_WINDOW_ICON, no_titlebar=False):
     # takes as input (form, rows, tab name) for each tab
     global _my_windows
 
@@ -2525,6 +2533,11 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
     uber.TKroot = root
     if title is not None:
         root.title(title)
+    try:
+        root.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
+    except:
+        pass
+
     if not len(args):
         print('******************* SHOW TABBED FORMS ERROR .... no arguments')
         return
@@ -2540,6 +2553,7 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
         # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
         # framestyle.theme_use('framestyle')
     tab_control = ttk.Notebook(root)
+
     for num,x in enumerate(args):
         form, rows, tab_name = x
         form.AddRows(rows)
@@ -2565,7 +2579,16 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
     icon = fav_icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
     try: uber.TKroot.iconbitmap(icon)
     except: pass
+    try:
+        if no_titlebar:
+            uber.TKroot.wm_overrideredirect(True)
+    except:
+        pass
 
+    try:
+        root.attributes('-alpha', 255)             # hide window while building it. makes for smoother 'paint'
+    except:
+        pass
     root.mainloop()
 
     if id: root.after_cancel(id)
@@ -2579,7 +2602,11 @@ def StartupTK(my_flex_form):
     ow = _my_windows.NumOpenWindows
     # print('Starting TK open Windows = {}'.format(ow))
     root = tk.Tk() if not ow else tk.Toplevel()
-    # root = tk.Toplevel()
+    try:
+        root.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
+    except:
+        pass
+    # root.wm_overrideredirect(True)
     if my_flex_form.BackgroundColor is not None and my_flex_form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root.configure(background=my_flex_form.BackgroundColor)
     _my_windows.Increment()
@@ -2589,6 +2616,12 @@ def StartupTK(my_flex_form):
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
+
+    try:
+        root.attributes('-alpha', 255)             # hide window while building it. makes for smoother 'paint'
+    except:
+        pass
+
     if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
         root.bind("<KeyRelease>", my_flex_form._KeyboardCallback)
         root.bind("<MouseWheel>", my_flex_form._MouseWheelCallback)
@@ -2637,7 +2670,7 @@ def _GetNumLinesNeeded(text, max_line_width):
 # Exits via an OK button2 press                      #
 # Returns nothing                                    #
 # ===================================================#
-def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None):
+def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False):
     '''
     Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
@@ -2659,7 +2692,7 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font) as form:
+    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -2727,6 +2760,16 @@ def PopupoNonBlocking(*args, button_color=None, auto_close=False, auto_close_dur
     return
 
 PopupNoWait = PopupoNonBlocking
+
+
+# --------------------------- PopupNoFrame ---------------------------
+def PopupNoTitlebar(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
+    Popup(*args, non_blocking=False, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=True)
+    return
+
+PopupNoFrame = PopupNoTitlebar
+PopupNoBorder = PopupNoTitlebar
+PopupAnnoying = PopupNoTitlebar
 
 
 # ==============================  MsgBoxAutoClose====#
