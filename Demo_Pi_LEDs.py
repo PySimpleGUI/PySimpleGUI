@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as rg
 
 # GUI for switching an LED on and off to GPIO14
 
@@ -28,18 +28,18 @@ def FlashLED():
         GPIO.output(14, GPIO.LOW)
         time.sleep(0.5)
 
-results_elem = g.T('', size=(30,1))
+results_elem = rg.T('', size=(30, 1))
 
-layout = [[g.T('Raspberry Pi LEDs')],
+layout = [[rg.T('Raspberry Pi LEDs')],
            [results_elem],
-           [g.ReadFormButton('Switch LED')],
-           [g.ReadFormButton('Flash LED')],
-           [g.ReadFormButton('Show slider value')],
-           [g.Slider(range=(0, 100), default_value=0, orientation='h', size=(40,20), key='slider')],
-           [g.Exit()]
+           [rg.ReadFormButton('Switch LED')],
+           [rg.ReadFormButton('Flash LED')],
+           [rg.ReadFormButton('Show slider value')],
+           [rg.Slider(range=(0, 100), default_value=0, orientation='h', size=(40, 20), key='slider')],
+           [rg.Exit()]
           ]
 
-form = g.FlexForm('Raspberry Pi GUI')
+form = rg.FlexForm('Raspberry Pi GUI')
 form.Layout(layout)
 
 while True:
@@ -56,4 +56,4 @@ while True:
     elif button is 'Show slider value':
         results_elem.Update('Slider = %s'%values['slider'])
 
-g.MsgBox('Done... exiting')
+rg.MsgBox('Done... exiting')

@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as sg
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
 import matplotlib.backends.tkagg as tkagg
@@ -640,12 +640,12 @@ def draw(fig, canvas):
 def main():
     global g_my_globals
 
-    canvas_elem = g.Canvas(size=SIZE, background_color='white')  # get the canvas we'll be drawing on
+    canvas_elem = sg.Canvas(size=SIZE, background_color='white')  # get the canvas we'll be drawing on
     # define the form layout
-    layout = [[ canvas_elem, g.ReadFormButton('Exit', pad=(0,(210,0)))] ]
+    layout = [[canvas_elem, sg.ReadFormButton('Exit', pad=(0, (210, 0)))]]
 
     # create the form and show it without the plot
-    form = g.FlexForm('Ping Graph', background_color='white')
+    form = sg.FlexForm('Ping Graph', background_color='white')
     form.Layout(layout)
     form.ReadNonBlocking()
 

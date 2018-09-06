@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as sg
 from chatterbot import ChatBot
 import chatterbot.utils
 
@@ -11,17 +11,17 @@ to collect user input that is sent to the chatbot.  The reply is displayed in th
 
 # Create the 'Trainer GUI'
 # The Trainer GUI consists of a lot of progress bars stacked on top of each other
-g.ChangeLookAndFeel('GreenTan')
+sg.ChangeLookAndFeel('GreenTan')
 MAX_PROG_BARS = 20              # number of training sessions
 bars = []
 texts = []
-training_layout = [[g.T('TRAINING PROGRESS', size=(20,1), font=('Helvetica', 17))],]
+training_layout = [[sg.T('TRAINING PROGRESS', size=(20, 1), font=('Helvetica', 17))], ]
 for i in range(MAX_PROG_BARS):
-    bars.append(g.ProgressBar(100, size=(30, 4)))
-    texts.append(g.T(' '*20, size=(20,1), justification='right'))
+    bars.append(sg.ProgressBar(100, size=(30, 4)))
+    texts.append(sg.T(' ' * 20, size=(20, 1), justification='right'))
     training_layout += [[texts[i], bars[i]],]       # add a single row
 
-training_form = g.FlexForm('Training')
+training_form = sg.FlexForm('Training')
 training_form.Layout(training_layout)
 current_bar = 0
 
@@ -50,10 +50,10 @@ chatbot = ChatBot('Ron Obvious', trainer='chatterbot.trainers.ChatterBotCorpusTr
 chatbot.train("chatterbot.corpus.english")
 
 ################# GUI #################
-with g.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
-    layout = [[g.Output(size=(80, 20))],
-              [g.Multiline(size=(70, 5), enter_submits=True),
-               g.ReadFormButton('SEND', bind_return_key=True), g.ReadFormButton('EXIT')]]
+with sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
+    layout = [[sg.Output(size=(80, 20))],
+              [sg.Multiline(size=(70, 5), enter_submits=True),
+               sg.ReadFormButton('SEND', bind_return_key=True), sg.ReadFormButton('EXIT')]]
 
     form.Layout(layout)
     # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
@@ -62,7 +62,7 @@ with g.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)
         if button is not 'SEND':
             break
         string = value.rstrip()
-        print(string.rjust(120))
+        print('     '+string)
         # send the user input to chatbot to get a response
         response = chatbot.get_response(value.rstrip())
         print(response)

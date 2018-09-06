@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as sg
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
@@ -862,21 +862,21 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
             'Artist Customized Box Plots 2' : ArtistBoxplot2, 'Pyplot Histogram' : PyplotHistogram}
 
 
-g.ChangeLookAndFeel('LightGreen')
+sg.ChangeLookAndFeel('LightGreen')
 figure_w, figure_h = 650, 650
-canvas_elem = g.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
-multiline_elem = g.Multiline(size=(70,35),pad=(5,(3,90)))
+canvas_elem = sg.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
+multiline_elem = sg.Multiline(size=(70, 35), pad=(5, (3, 90)))
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
-col_listbox = [[g.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='func')],
-               [g.T(' '*12), g.Exit(size=(5,2))]]
+col_listbox = [[sg.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='func')],
+               [sg.T(' ' * 12), sg.Exit(size=(5, 2))]]
 
-layout = [[g.Text('Matplotlib Plot Test', font=('current 18'))],
-          [g.Column(col_listbox, pad=(5,(3,330))), canvas_elem, multiline_elem],
+layout = [[sg.Text('Matplotlib Plot Test', font=('current 18'))],
+          [sg.Column(col_listbox, pad=(5, (3, 330))), canvas_elem, multiline_elem],
           ]
 
 # create the form and show it without the plot
-form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
+form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
 form.Layout(layout)
 
 while True:

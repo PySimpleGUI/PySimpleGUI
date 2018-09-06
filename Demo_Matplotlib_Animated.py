@@ -1,5 +1,5 @@
 from random import randint
-import PySimpleGUI as g
+import PySimpleGUI as sg
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 from matplotlib.figure import Figure
 import matplotlib.backends.tkagg as tkagg
@@ -14,16 +14,16 @@ def main():
     ax.set_ylabel("Y axis")
     ax.grid()
 
-    canvas_elem = g.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
-    slider_elem = g.Slider(range=(0,10000), size=(60,10), orientation='h')
+    canvas_elem = sg.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
+    slider_elem = sg.Slider(range=(0, 10000), size=(60, 10), orientation='h')
     # define the form layout
-    layout = [[g.Text('Animated Matplotlib', size=(40,1), justification='center', font='Helvetica 20')],
+    layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
               [canvas_elem],
               [slider_elem],
-              [g.ReadFormButton('Exit', size=(10,2), pad=((280, 0), 3), font='Helvetica 14')]]
+              [sg.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
     form.Layout(layout)
     form.ReadNonBlocking()
 
