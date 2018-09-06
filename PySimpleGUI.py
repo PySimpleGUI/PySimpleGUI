@@ -3308,10 +3308,10 @@ def GetTextBox(title, message, Default='', button_color=None, size=(None, None))
             return True, input_values[0]
 
 
-def PopupGetText(message, Default='', button_color=None, size=(None, None)):
+def PopupGetText(message, default_text='', password_char='', button_color=None, size=(None, None)):
     with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
         layout = [[Text(message, auto_size_text=True)],
-                  [InputText(default_text=Default, size=size)],
+                  [InputText(default_text=default_text, size=size, password_char=password_char)],
                   [Ok(), Cancel()]]
 
         (button, input_values) = form.LayoutAndRead(layout)
