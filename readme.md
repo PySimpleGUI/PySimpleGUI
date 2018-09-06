@@ -200,8 +200,17 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 ### Installing
 
     pip install PySimpleGUI
- or
-Simply download the file - PySimpleGUI.py and import it into your code
+On some systems you need to run pip3.
+
+
+    pip3 install PySimpleGUI
+
+On a Raspberry Pi, this is should work:
+
+    sudo pip3 install --upgrade pysimplegui
+
+If for some reason you are unable to install using `pip`, don't worry, you can still import PySimpleGUI by downloading the file PySimleGUI.py and placing it in your folder along with the application that is importing it.
+
 
 
 ### Prerequisites
@@ -2023,4 +2032,5 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
 
