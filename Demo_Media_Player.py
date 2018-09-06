@@ -17,14 +17,13 @@ def MediaPlayerGUI():
     image_exit = './ButtonGraphics/Exit.png'
 
     # A text element that will be changed to display messages in the GUI
-    TextElem = sg.Text('', size=(15, 2), font=("Helvetica", 14))
 
     # Open a form, note that context manager can't be used generally speaking for async forms
     form = sg.FlexForm('Media File Player', auto_size_text=True, default_element_size=(20, 1),
-                       font=("Helvetica", 25))
+                       font=("Helvetica", 25), no_titlebar=True)
     # define layout of the rows
     layout= [[sg.Text('Media File Player',size=(17,1), font=("Helvetica", 25))],
-             [TextElem],
+             [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],
              [sg.ReadFormButton('Restart Song', button_color=(background,background),
                                 image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0),
                                 sg.Text(' ' * 2),
@@ -60,7 +59,7 @@ def MediaPlayerGUI():
             break
         # If a button was pressed, display it on the GUI by updating the text element
         if button:
-            TextElem.Update(button)
+            form.FindElement('output').Update(button)
 
 MediaPlayerGUI()
 

@@ -37,14 +37,14 @@ from PIL import Image, ImageTk
 import time
 
 if len(sys.argv) == 1:
-    rc, fname = sg.GetFileBox('Document Browser', 'Document file to open',
+    fname = sg.PopupGetFile('Document Browser', 'Document file to open', no_window=True,
                               file_types = (
                                             ("PDF Files",     "*.pdf"),
                                             ("XPS Files",     "*.*xps"),
                                             ("Epub Files",    "*.epub"),
                                             ("Fiction Books", "*.fb2"),
                                             ("Comic Books",   "*.cbz"),
-                                            ("HTML",   "*.htm*"),
+                                            ("HTML",   "*.htm*")
                                             # add more document types here
                                            )
                              )
@@ -122,7 +122,7 @@ root.destroy()
 del root
 
 form = sg.FlexForm(title, return_keyboard_events = True, 
-                   location = (0,0), use_default_focus = False)
+                   location = (0,0), use_default_focus = False, no_titlebar=True)
 
 cur_page = 0
 data, clip_pos = get_page(cur_page,

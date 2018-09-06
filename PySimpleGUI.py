@@ -3043,7 +3043,17 @@ def GetPathBox(title, message, default_path='', button_color=None, size=(None, N
             return True, path
 
 
-def PopupGetFolder(message, default_path='', button_color=None, size=(None, None)):
+def PopupGetFolder(message, default_path='', no_window=False, button_color=None, size=(None, None)):
+    if no_window:
+        root = tk.Tk()
+        try:
+            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        except:
+            pass
+        folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
+        root.destroy()
+        return folder_name
+
     with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
         layout = [[Text(message, auto_size_text=True)],
                   [InputText(default_text=default_path, size=size), FolderBrowse()],
@@ -3078,10 +3088,17 @@ AskForFile = GetFileBox
 
 def PopupGetFile(message, default_path='',save_as=False, no_window=False,  file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
     if no_window:
+        root = tk.Tk()
+        try:
+            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        except:
+            pass
         if save_as:
-            return tk.filedialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tk.filedialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
         else:
-            return tk.filedialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tk.filedialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
+        root.destroy()
+        return filename
 
     if save_as:
         browse_button =  SaveAs(file_types=file_types)

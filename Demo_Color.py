@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as sg
 
 MY_WINDOW_ICON = 'E:\\TheRealMyDocs\\Icons\\The Planets\\jupiter.ico'
 reverse = {}
@@ -1639,13 +1639,13 @@ def show_all_colors_on_buttons():
     global reverse
     global colorhex
     global colors
-    form = g.FlexForm('Colors on Buttons Demo', default_element_size=(3,1), location=(0,0), icon=MY_WINDOW_ICON, font=("Helvetica", 7))
+    form = sg.FlexForm('Colors on Buttons Demo', default_element_size=(3, 1), location=(0, 0), icon=MY_WINDOW_ICON, font=("Helvetica", 7))
     row = []
     row_len = 20
     for i, c in enumerate(colors):
         hex = get_hex_from_name(c)
-        button1 = g.Button(button_text=c, button_color=(get_complementary_hex(hex), hex), size=(8,1))
-        button2 = g.Button(button_text=c, button_color=(hex,get_complementary_hex(hex)), size=(8,1))
+        button1 = sg.Button(button_text=c, button_color=(get_complementary_hex(hex), hex), size=(8, 1))
+        button2 = sg.Button(button_text=c, button_color=(hex, get_complementary_hex(hex)), size=(8, 1))
         row.append(button1)
         row.append(button2)
         if (i+1) % row_len == 0:
@@ -1656,12 +1656,12 @@ def show_all_colors_on_buttons():
     form.Show()
 
 
-GoodColors = [('#0e6251',g.RGB(255,246,122) ),
-              ('white', g.RGB(0,74,60)),
-              (g.RGB(0,210,124),g.RGB(0,74,60) ),
-              (g.RGB(0,210,87),g.RGB(0,74,60) ),
-              (g.RGB(0,164,73),g.RGB(0,74,60) ),
-              (g.RGB(0,74,60),g.RGB(0,74,60) ),
+GoodColors = [('#0e6251', sg.RGB(255, 246, 122)),
+              ('white', sg.RGB(0, 74, 60)),
+              (sg.RGB(0, 210, 124), sg.RGB(0, 74, 60)),
+              (sg.RGB(0, 210, 87), sg.RGB(0, 74, 60)),
+              (sg.RGB(0, 164, 73), sg.RGB(0, 74, 60)),
+              (sg.RGB(0, 74, 60), sg.RGB(0, 74, 60)),
 
               ]
 
@@ -1676,15 +1676,15 @@ def main():
     # show_all_colors_on_buttons()
     while True:
         # -------  Form show  ------- #
-        layout = [[g.Text('Find color')],
-                  [g.Text('Demonstration of colors')],
-                  [g.Text('Enter a color name in text or hex #RRGGBB format')],
-                  [g.InputText()],
-                  [g.Listbox(list_of_colors, size=(20,30)), g.T('Or choose from list')],
-                  [g.Submit(), g.Quit(), g.SimpleButton('Show me lots of colors!', button_color=('white','#0e6251'))],
+        layout = [[sg.Text('Find color')],
+                  [sg.Text('Demonstration of colors')],
+                  [sg.Text('Enter a color name in text or hex #RRGGBB format')],
+                  [sg.InputText()],
+                  [sg.Listbox(list_of_colors, size=(20, 30)), sg.T('Or choose from list')],
+                  [sg.Submit(), sg.Quit(), sg.SimpleButton('Show me lots of colors!', button_color=('white', '#0e6251'))],
                   ]
                   # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
-        (button, (hex_input, drop_down_value)) = g.FlexForm('Color Demo', auto_size_text=True, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
+        (button, (hex_input, drop_down_value)) = sg.FlexForm('Color Demo', auto_size_text=True, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
 
         # -------  OUTPUT results portion  ------- #
         if button == '' or button == 'Quit' or button is None:
@@ -1705,11 +1705,11 @@ def main():
         complementary_color = get_name_from_hex(complementary_hex)
 
         # g.MsgBox('Colors', 'The RBG value is', rgb, 'color and comp are', color_string, compl)
-        layout = [[g.Text('That color and it\'s compliment are shown on these buttons. This form auto-closes')],
-                  [g.Button(button_text=color_name, button_color=(color_hex, complementary_hex))],
-                  [g.Button(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30,1))],
+        layout = [[sg.Text('That color and it\'s compliment are shown on these buttons. This form auto-closes')],
+                  [sg.Button(button_text=color_name, button_color=(color_hex, complementary_hex))],
+                  [sg.Button(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30, 1))],
                   ]
-        g.FlexForm('Color demo', default_element_size=(100,1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
+        sg.FlexForm('Color demo', default_element_size=(100, 1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
 
 
 

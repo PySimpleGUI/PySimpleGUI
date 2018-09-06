@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as sg
 
 # g.SetOptions(button_color=g.COLOR_SYSTEM_DEFAULT)   # because some people like gray buttons
 
@@ -12,19 +12,17 @@ import PySimpleGUI as g
 
 
 # create the 2 Elements we want to control outside the form
-out_elem = g.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red')
-in_elem = g.Input(size=(10, 1), do_not_clear=True, key='input')
 
-layout = [[g.Text('Enter Your Passcode')],
-          [in_elem],
-          [g.ReadFormButton('1'), g.ReadFormButton('2'), g.ReadFormButton('3')],
-          [g.ReadFormButton('4'), g.ReadFormButton('5'), g.ReadFormButton('6')],
-          [g.ReadFormButton('7'), g.ReadFormButton('8'), g.ReadFormButton('9')],
-          [g.ReadFormButton('Submit'), g.ReadFormButton('0'), g.ReadFormButton('Clear')],
-          [out_elem],
+layout = [[sg.Text('Enter Your Passcode')],
+          [sg.Input(size=(10, 1), do_not_clear=True, key='input')],
+          [sg.ReadFormButton('1'), sg.ReadFormButton('2'), sg.ReadFormButton('3')],
+          [sg.ReadFormButton('4'), sg.ReadFormButton('5'), sg.ReadFormButton('6')],
+          [sg.ReadFormButton('7'), sg.ReadFormButton('8'), sg.ReadFormButton('9')],
+          [sg.ReadFormButton('Submit'), sg.ReadFormButton('0'), sg.ReadFormButton('Clear')],
+          [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],
           ]
 
-form = g.FlexForm('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False)
+form = sg.FlexForm('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False)
 form.Layout(layout)
 
 # Loop forever reading the form's values, updating the Input field
@@ -40,6 +38,6 @@ while True:
         keys_entered += button  # add the new digit
     elif button is 'Submit':
         keys_entered = values['input']
-        out_elem.Update(keys_entered)  # output the final string
+        form.FindElement('out').Update(keys_entered)  # output the final string
 
-    in_elem.Update(keys_entered)  # change the form to reflect current key string
+    form.FindElement('input').Update(keys_entered)  # change the form to reflect current key string

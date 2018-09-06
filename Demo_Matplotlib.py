@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as sg
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
@@ -107,14 +107,14 @@ fig = plt.gcf()      # if using Pyplot then get the figure from the plot
 #       information to display.                                                   #
 # --------------------------------------------------------------------------------#
 figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
-canvas_elem = g.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
+canvas_elem = sg.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
 # define the form layout
-layout = [[g.Text('Plot test')],
+layout = [[sg.Text('Plot test')],
           [canvas_elem],
-          [g.OK(pad=((figure_w/2,0), 3), size=(4,2))]]
+          [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
 
 # create the form and show it without the plot
-form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
+form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
 form.Layout(layout)
 form.ReadNonBlocking()
 

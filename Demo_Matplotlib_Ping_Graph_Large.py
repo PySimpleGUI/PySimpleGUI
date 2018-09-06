@@ -1,4 +1,4 @@
-import PySimpleGUI as g
+import PySimpleGUI as sg
 import matplotlib.pyplot as plt
 import ping
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
@@ -74,14 +74,14 @@ def draw(fig, canvas):
 def main():
     global g_my_globals
 
-    canvas_elem = g.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
+    canvas_elem = sg.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
     # define the form layout
-    layout = [[g.Text('Animated Ping', size=(40,1), justification='center', font='Helvetica 20')],
+    layout = [[sg.Text('Animated Ping', size=(40, 1), justification='center', font='Helvetica 20')],
               [canvas_elem],
-              [g.ReadFormButton('Exit', size=(10,2), pad=((280, 0), 3), font='Helvetica 14')]]
+              [sg.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
     form.Layout(layout)
     form.ReadNonBlocking()
 
