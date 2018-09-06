@@ -12,6 +12,7 @@ a temp file.  Clearly... clearly... this is not the optimal solution and one is 
 Until then enjoy it working somewhat slowly.
 """
 
+
 def main():
     filename = sg.PopupGetFile('Filename to play')
     if filename is None:
@@ -24,10 +25,10 @@ def main():
     sg.ChangeLookAndFeel('Dark')
 
     # define the form layout
-    layout = [[sg.Text('OpenCV Demo', size=(40, 1), justification='center', font='Helvetica 20')],
+    layout = [[sg.Text('OpenCV Demo', size=(15, 1),pad=((510,0),3), justification='center', font='Helvetica 20')],
               [sg.Image(filename='', key='image')],
-              [sg.Slider(range=(0, num_frames), size=(60, 10), orientation='h', key='slider')],
-              [sg.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+              [sg.Slider(range=(0, num_frames), size=(115, 10), orientation='h', key='slider')],
+              [sg.ReadFormButton('Exit', size=(10, 2), pad=((600, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
     form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', no_titlebar=True)
