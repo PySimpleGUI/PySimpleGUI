@@ -20,7 +20,7 @@ layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User
           ]
 
 form = sg.FlexForm("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
-                   default_button_element_size=(12,1), no_titlebar=True)
+                   default_button_element_size=(12,1))
 form.Layout(layout)
 recording = have_data = False
 while True:
