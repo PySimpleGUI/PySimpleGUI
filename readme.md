@@ -13,16 +13,17 @@
 
   (Ver 2.20)
 
-[Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
+
 
 [Wiki for the latest news](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
 
-Lots of documentation available in addition to this Readme File.
 [Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
 
 [COOKBOOK!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
 [Brief Tutorial](https://pysimplegui.readthedocs.io/en/latest/tutorial/)
+
+[Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
 
 Super-simple GUI to grasp... Powerfully customizable.
 
