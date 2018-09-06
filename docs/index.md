@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 2.20)
+  (Ver 2.30)
 
 
 
@@ -52,9 +52,14 @@ Or how about a ***custom GUI*** in 1 line of code?
 ![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
 
 
-  Build beautiful customized forms that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve the real problems.  Do you really want to plod through the mountains of code required to program tkinter?
+  Build beautiful customized forms that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve your real problems.   Look through the Cookbook, find a matching recipe, copy, paste and be up and running with a GUI in minutes.  This is the process PySimpleGUI was designed to work within.
 
-PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkinter, but you interact with them in a **much** more friendly way.
+
+![borderless grayed buttons](https://user-images.githubusercontent.com/13696193/45168664-d848e980-b1c9-11e8-886e-63279ae4017f.jpg)
+
+
+
+PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkinter, but you interact with them in a more friendly way.  It does the layout and boilerplate code for you and presents you with a simple, efficient interface.
 
 ![everything dark theme](https://user-images.githubusercontent.com/13696193/44959854-b1d23800-aec3-11e8-90b6-5af915a86d15.jpg)
 
@@ -93,10 +98,13 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         Single Line Input
         Buttons including these types:
             File Browse
+            Files Browse
             Folder Browse
+            SaveAs
             Non-closing return
             Close form
             Realtime
+            Calendar chooser
         Checkboxes
         Radio Buttons
         Listbox
@@ -106,6 +114,7 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         Scroll-able Output
         Images
         Progress Bar
+        Calendar chooser
         Async/Non-Blocking Windows
         Tabbed forms
         Persistent Windows
@@ -119,11 +128,15 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         Set focus
         Bind return key to buttons
         Group widgets into a column and place into form anywhere
+        Scrollable columns
         Keyboard low-level key capture
         Mouse scroll-wheel support
         Get Listbox values as they are selected
+        Get slider, spinner, combo as they are changed
         Update elements in a live form
         Bulk form-fill operation
+        Save / Load form to/from disk
+        Borderless (no titlebar) windows
 
 
 An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
@@ -784,10 +797,12 @@ This is the definition of the FlexForm object:
 
     def FlexForm(title,
         default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),
+        default_button_element_size = (None, None),
         auto_size_text=None,
         auto_size_buttons=None,
         scale=(None, None),
         location=(None, None),
+        font=None,
         button_color=None,Font=None,
         progress_bar_color=(None,None),
         background_color=None
@@ -798,19 +813,19 @@ This is the definition of the FlexForm object:
         icon=DEFAULT_WINDOW_ICON,
         return_keyboard_events=False,
         use_default_focus=True,
-        text_justification=None):
-
-
-
+        text_justification=None,
+        no_titlebar=False):
 
 
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
 
        default_element_size - Size of elements in form in characters (width, height)
-       auto_size_text - Bool. True if elements should size themselves according to contents
+       default_button_element_size - Size of buttons on this form
+       auto_size_text - Bool. True if elements should size themselves according to contents. Defaults to True
        auto_size_buttons - Bool. True if button elements should size themselves according to their text label
        scale - Set size of element to be a multiple of the Element size
        location - (x,y) Location to place window in pixels
+       font - Font name and size for elements of the form
        button_color - Default color for buttons (foreground, background). Can be text or hex
        progress_bar_color - Foreground and background colors for progress bars
        background_color - Color of the window background
@@ -822,6 +837,7 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        return_keyboard_events - if True key presses are returned as buttons
        use_default_focus - if True and no focus set, then automatically set a focus
        text_justification - Justification to use for Text Elements in this form
+       no_titlebar - Create window without a titlebar
 
 
 #### Window Location
@@ -838,20 +854,6 @@ In addition to `size` there is a `scale` option.  `scale` will take the Element'
 
 There are a couple of widgets where one of the size values is in pixels rather than characters.  This is true for Progress Meters and Sliders.  The second parameter is the 'height' in pixels.
 
-#### FlexForm - form-level variables overview
-A summary of the variables that can be changed when a FlexForm is created
-
-         default_element_size - set default size for all elements in the form
-         auto_size_text- true/false autosizing turned on / off
-         scale - set scale value for all elements
-         button_color- default button color (foreground, background)
-         font - font name and size for all text items
-         progress_bar_color - progress bar colors
-         is_tabbed_form - true/false indicates form is a tabbed or normal form
-         border_depth - style setting for buttons, input fields
-         auto_close - true/false indicates if form will automatically close
-         auto_close_duration - how long in seconds before closing form
-         icon - filename for icon that's displayed on the window on taskbar
 
 
 ## Elements
@@ -1784,6 +1786,7 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
   | Source File| Description |
 |--|--|
 |**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single form
+|**Demo_Borderless_Window.py**| Create clean looking windows with no border
 |**Demo_Canvas.py** | Form with a Canvas Element that is updated outside of the form
 |**Demo_Chat.py** | A chat window with scrollable history
 |**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project
@@ -1918,6 +1921,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.10.0 | Aug 25, 2018 - Keyboard & Mouse features (Return individual keys as if buttons, return mouse scroll-wheel as button, bind return-key to button, control over keyboard focus), SaveAs Button, Update & Get methods for InputText, Update for Listbox, Update & Get for Checkbox, Get for Multiline, Color options for Text Element Update, Progess bar Update can change max value, Update for Button to change text & colors, Update for Image Element, Update for Slider, Form level text justification, Turn off default focus, scroll bar for Listboxes, Images can be from filename or from in-RAM, Update for Image).  Fixes - text wrapping in buttons, msg box, removed slider borders entirely and others
 | 2.11.0 | Aug 29, 2018 - Lots of little changes that are needed for the demo programs to work. Buttons have their own default element size, fix for Mac default button color, padding support for all elements, option to immediately return if list box gets selected, FilesBrowse button, Canvas Element, Frame Element, Slider resolution option, Form.Refresh method, better text wrapping, 'SystemDefault' look and feel settin
 | 2.20.0 | Sept 4, 2018 - Some sizable features this time around of interest to advanced users.  Renaming of the MsgBox functions to Popup. Renaming GetFile, etc, to PopupGetFile. High-level windowing capabilities start with Popup, PopupNoWait/PopupNonblocking, PopupNoButtons, default icon, change_submits option for Listbox/Combobox/Slider/Spin/, New OptionMenu element, updating elements after shown, system defaul color option for progress bars, new button type (Dummy Button) that only closes a window, SCROLLABLE Columns!! (yea, playing in the Big League now), LayoutAndShow function removed, form.Fill - bulk updates to forms, FindElement - find element based on key value (ALL elements have keys now), no longer use grid packing for row elements (a potentially huge change), scrolled text box sizing changed, new look and feel themes (Dark, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green)
+| 2.30.0 | Sept 6, 2018 - Calendar Chooser (button), borderless windows, load/save form to disk
 
 
 ### Release Notes
