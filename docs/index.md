@@ -294,14 +294,16 @@ The function `PopupTimed` or `PopupAutoClose` are popup windows that will automa
 
 Here is a quick-reference showing how the Popup calls look.
 
-    print(sg.Popup('Popup'))
-    print(sg.PopupOk('PopupOk'))
-    print(sg.PopupYesNo('PopupYesNo'))
-    print(sg.PopupCancel('PopupCancel'))
-    print(sg.PopupOkCancel('PopupOkCancel'))
-    print(sg.PopupError('PopupError'))
-    print(sg.PopupTimed('PopupTimed'))
-    print(sg.PopupAutoClose('PopupAutoClose'))
+
+    sg.Popup('Popup')
+    sg.PopupOk('PopupOk')
+    sg.PopupYesNo('PopupYesNo')
+    sg.PopupCancel('PopupCancel')
+    sg.PopupOkCancel('PopupOkCancel')
+    sg.PopupError('PopupError')
+    sg.PopupTimed('PopupTimed')
+    sg.PopupAutoClose('PopupAutoClose')
+
 
 
 ![snap0256](https://user-images.githubusercontent.com/13696193/44957394-1380ab00-aea0-11e8-98b1-1ab7d7bd5b37.jpg)
