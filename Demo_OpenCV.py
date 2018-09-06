@@ -30,7 +30,7 @@ def main():
               [sg.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', no_titlebar=True)
     form.Layout(layout)
     form.ReadNonBlocking()
 
