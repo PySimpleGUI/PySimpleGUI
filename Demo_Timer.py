@@ -5,13 +5,14 @@ import time
 # good for applications with an loop that polls hardware
 def Timer():
     sg.ChangeLookAndFeel('Dark')
+    sg.SetOptions(element_padding=(0,0))
     # Make a form, but don't use context manager
     form = sg.FlexForm('Running Timer', grab_anywhere=False, no_titlebar=True, auto_size_buttons=False)
     # Create a text element that will be updated with status information on the GUI itself
     # Create the rows
-    form_rows = [[sg.Text('Stopwatch')],
+    form_rows = [[sg.Text('')],
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-                 [sg.ReadFormButton('Pause'), sg.ReadFormButton('Reset'), sg.Exit()]]
+                 [sg.ReadFormButton('Pause'), sg.ReadFormButton('Reset'), sg.Exit(button_color=('white','firebrick4'))]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
     form.Layout(form_rows)
     #
