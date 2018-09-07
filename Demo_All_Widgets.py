@@ -4,7 +4,7 @@ import PySimpleGUI as sg
 def Everything():
     sg.ChangeLookAndFeel('Dark')
 
-    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False)
 
     column1 = [[sg.Text('Column 1', background_color='black', justification='center', size=(10, 1))],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
