@@ -14,7 +14,7 @@ def RemoteControlExample():
     image_left = 'ButtonGraphics/RobotLeft.png'
     image_right = 'ButtonGraphics/RobotRight.png'
     sg.SetOptions(border_width=0, button_color=('black', back), background_color=back, element_background_color=back, text_element_background_color=back)
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True)
+    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
     status_display_elem = sg.T('', justification='center', size=(19,1))
     form_rows = [[sg.Text('Robotics Remote Control')],
                  [status_display_elem],
@@ -49,7 +49,7 @@ def RemoteControlExample():
 
 def RemoteControlExample_NoGraphics():
     # Make a form, but don't use context manager
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True)
+    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
     status_display_elem = sg.T('', justification='center', size=(19,1))
     form_rows = [[sg.Text('Robotics Remote Control', justification='center')],
                  [status_display_elem],

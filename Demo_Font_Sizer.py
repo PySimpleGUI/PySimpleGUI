@@ -4,7 +4,6 @@
 
 import PySimpleGUI as sg
 
-form = sg.FlexForm("Font size selector")
 
 fontSize = 12
 
@@ -12,6 +11,7 @@ layout = [[sg.Spin([sz for sz in range(6, 172)], font=('Helvetica 20'), initial_
            sg.Slider(range=(6,172), orientation='h', size=(10,20), change_submits=True, key='slider', font=('Helvetica 20')),  sg.Text("Aa", size=(2, 1), font="Helvetica " + str(fontSize), key='text')]]
 
 sz = fontSize
+form = sg.FlexForm("Font size selector", grab_anywhere=False)
 form.Layout(layout)
 while True:
     button, values= form.Read()

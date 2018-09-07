@@ -4,36 +4,31 @@ import time
 # form that doen't block
 # good for applications with an loop that polls hardware
 def Timer():
-    sg.ChangeLookAndFeel('TealMono')
+    sg.ChangeLookAndFeel('Dark')
     # Make a form, but don't use context manager
-    form = sg.FlexForm('Running Timer', auto_size_text=True)
+    form = sg.FlexForm('Running Timer', grab_anywhere=False, no_titlebar=True, auto_size_buttons=False)
     # Create a text element that will be updated with status information on the GUI itself
     # Create the rows
     form_rows = [[sg.Text('Stopwatch')],
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-                 [sg.ReadFormButton('Pause/Resume'), sg.ReadFormButton('Reset')]]
+                 [sg.ReadFormButton('Pause'), sg.ReadFormButton('Reset'), sg.Exit()]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
-    form.LayoutAndRead(form_rows, non_blocking=True)
-
-    #
-    # Some place later in your code...
-    # You need to perform a ReadNonBlocking on your form every now and then or
-    # else it won't refresh.
+    form.Layout(form_rows)
     #
     # your program's main loop
     i = 0
     paused = False
     while (True):
         # This is the code that reads and updates your window
-        form.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
         button, values = form.ReadNonBlocking()
+        form.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 
-        if values is None:
+        if values is None or button == 'Exit':
             break
 
         if button is 'Reset':
             i=0
-        elif button is 'Pause/Resume':
+        elif button is 'Pause':
             paused = not paused
 
         if not paused:
