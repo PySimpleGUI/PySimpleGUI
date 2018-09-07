@@ -52,7 +52,7 @@ else:
     fname = sys.argv[1]
 
 if not fname:
-    sg.MsgBox("Cancelling:", "No filename supplied")
+    sg.Popup("Cancelling:", "No filename supplied")
     raise SystemExit("Cancelled: no filename supplied")
 
 doc = fitz.open(fname)
@@ -122,7 +122,7 @@ root.destroy()
 del root
 
 form = sg.FlexForm(title, return_keyboard_events = True, 
-                   location = (0,0), use_default_focus = False, no_titlebar=True)
+                   location = (0,0), use_default_focus = False, no_titlebar=False)
 
 cur_page = 0
 data, clip_pos = get_page(cur_page,

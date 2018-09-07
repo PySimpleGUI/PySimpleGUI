@@ -757,17 +757,19 @@ listbox_values = [key for key in fig_dict.keys()]
 
 while True:
     sg.ChangeLookAndFeel('Dark')
+    sg.SetOptions(element_padding=(0,0))
+
     col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),len(listbox_values)), change_submits=True, key='func')],
-                   [sg.SimpleButton('Run'), sg.Exit()]]
+                   [sg.SimpleButton('Run', pad=((30,0),0)), sg.Exit(button_color=('white', 'firebrick4'))]]
 
     layout = [[sg.Text('PySimpleGUI Coookbook', font=('current 18'))],
-              [sg.Column(col_listbox, pad=(5,(3,2))), sg.Multiline(size=(70,35), do_not_clear=True, key='multi')],
+              [sg.Column(col_listbox), sg.Multiline(size=(70,35), do_not_clear=True, key='multi')],
               ]
 
 # create the form and show it without the plot
 # form.Layout(layout)
 
-    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', default_button_element_size=(8,2),auto_size_buttons=False)
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', default_button_element_size=(10,1),auto_size_buttons=False, no_titlebar=True)
     button, values = form.LayoutAndRead(layout)
     # show it all again and get buttons
     while True:

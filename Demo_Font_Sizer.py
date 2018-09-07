@@ -3,13 +3,9 @@
 # that adjusts the size of text displayed
 
 import PySimpleGUI as sg
-
-
 fontSize = 12
-
 layout = [[sg.Spin([sz for sz in range(6, 172)], font=('Helvetica 20'), initial_value=fontSize, change_submits=True, key='spin'),
            sg.Slider(range=(6,172), orientation='h', size=(10,20), change_submits=True, key='slider', font=('Helvetica 20')),  sg.Text("Aa", size=(2, 1), font="Helvetica " + str(fontSize), key='text')]]
-
 sz = fontSize
 form = sg.FlexForm("Font size selector", grab_anywhere=False)
 form.Layout(layout)

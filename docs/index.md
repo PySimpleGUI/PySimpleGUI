@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 2.30)
+  (Ver 3.00)
 
 
 
@@ -823,7 +823,8 @@ This is the definition of the FlexForm object:
         return_keyboard_events=False,
         use_default_focus=True,
         text_justification=None,
-        no_titlebar=False):
+        no_titlebar=False,
+        grab_anywhere=True):
 
 
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
@@ -847,6 +848,7 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        use_default_focus - if True and no focus set, then automatically set a focus
        text_justification - Justification to use for Text Elements in this form
        no_titlebar - Create window without a titlebar
+       grab_anywhere - Grab any location on the window to move the window
 
 
 #### Window Location
@@ -1234,6 +1236,8 @@ The Types of buttons include:
 * Close Form
 * Read Form
 * Realtime
+* Calendar Chooser
+* Color Chooser
 
 
  Close Form - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close Form" buttons.  They cause the input values to be read and then the form is closed, returning the values to the caller.
@@ -1241,6 +1245,10 @@ The Types of buttons include:
 Folder Browse - When clicked a folder browse dialog box is opened.  The results of the Folder Browse dialog box are written into one of the input fields of the form.
 
 File Browse - Same as the Folder Browse except rather than choosing a folder, a single file is chosen.
+
+Calendar Chooser - Opens a graphical calendar to select a date.
+
+Color Chooser - Opens a color chooser dialog
 
 Read Form - This is an async form button that will read a snapshot of all of the input fields, but does not close the form after it's clicked.
 
@@ -1281,10 +1289,13 @@ These Pre-made buttons are some of the most important elements of all because th
 
 ![ok cancel 3](https://user-images.githubusercontent.com/13696193/44959927-aa5f5e80-aec4-11e8-86e1-5dc0b3a2b803.jpg)
 
+  #### Button targets
 
-The FileBrowse, FolderBrowse, FileSaveAs buttons all fill-in values into a text input field somewhere on the form.  The location of the TextInput element is specified by the `Target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
+The `FileBrowse`, `FolderBrowse`, `FileSaveAs` , `FilesSaveAs`, `CalendarButton`, `ColorChooserButton` buttons all fill-in values into another element located on the form.  The target can be a Text Element or an InputText Element.  The location of the element is specified by the `target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
 
-The default value for `Target` is `(ThisRow, -1)`.   ThisRow is a special value that tells the GUI to use the same row as the button.  The Y-value of -1 means the field one value to the left of the button.  For a File or Folder Browse button, the field that it fills are generally to the left of the button is most cases.
+The default value for `targe` is `(ThisRow, -1)`.   `ThisRow` is a special value that tells the GUI to use the same row as the button.  The Y-value of -1 means the field one value to the left of the button.  For a File or Folder Browse button, the field that it fills are generally to the left of the button is most cases.
+
+If a value of `(None, None)` is chosen for the target, then the button itself will hold the information.  Later the button can be queried for the  value.
 
 Let's examine this form as an example:
 
@@ -1302,6 +1313,33 @@ The code for the entire form could be:
     layout = [[sg.T('Source Folder')],
               [sg.In()],
               [sg.FolderBrowse(target=(-1, 0)), sg.OK()]]
+
+**Save & Open Buttons**
+
+There are 3 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use.
+
+
+![open](https://user-images.githubusercontent.com/13696193/45243804-2b529780-b2c3-11e8-90dc-6c9061db2a1e.jpg)
+
+
+![folder](https://user-images.githubusercontent.com/13696193/45243805-2b529780-b2c3-11e8-95ee-fec3c0b11319.jpg)
+
+
+![saveas](https://user-images.githubusercontent.com/13696193/45243807-2beb2e00-b2c3-11e8-8549-ba71cdc05951.jpg)
+
+
+
+**Calendar Buttons**
+
+These buttons pop up a calendar chooser window.  The chosen date is returned as a string.
+
+![calendar](https://user-images.githubusercontent.com/13696193/45243374-99965a80-b2c1-11e8-8311-49777835ca40.jpg)
+
+**Color Chooser Buttons**
+
+These buttons pop up a standard color chooser window.  The result is returned as a tuple.  One of the returned values is an RGB hex representation.
+
+![color](https://user-images.githubusercontent.com/13696193/45243375-99965a80-b2c1-11e8-9779-b71bed85fab6.jpg)
 
 
 **Custom Buttons**
@@ -1405,7 +1443,9 @@ The return value for `EasyProgressMeter` is:
 `True` if meter updated correctly
 `False` if user clicked the Cancel button, closed the form, or vale reached the max value.
 **Customized Progress Bar**
+
 If you want a bit more customization of your meter, then you can go up 1 level and use the calls to `ProgressMeter` and `ProgressMeterUpdate`.  These APIs behave like an object we're all used to.  First you create the `ProgressMeter` object, then you call the `Update` method to update it.
+
 
 You setup the progress meter by calling
 
@@ -1432,6 +1472,30 @@ Putting it all together you get this design pattern
 
 
 The final way of using a Progress Meter with PySimpleGUI is to build a custom form with a `ProgressBar` Element in the form.  You will need to run your form as a non-blocking form.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
+
+![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
+
+    # create the progress bar element
+    progress_bar = sg.ProgressBar(10000, orientation='h', size=(20,20))
+    # layout the form
+    layout = [[sg.Text('A custom progress meter')],
+              [progress_bar],
+              [sg.Cancel()]]
+
+    # create the form`
+    form = sg.FlexForm('Custom Progress Meter')
+    # display the form as a non-blocking form
+    form.LayoutAndRead(layout, non_blocking=True)
+    # loop that would normally do something useful
+    for i in range(10000):
+        # check to see if the cancel button was clicked and exit loop if clicked
+      button, values = form.ReadNonBlocking()
+        if button == 'Cancel'  or values == None:
+            break
+      # update bar with loop value +1 so that bar eventually reaches the maximum
+      progress_bar.UpdateBar(i+1)
+    # done with loop... need to destroy the window as it's still open
+    form.CloseNonBlockingForm()
 
 
 #### Output
@@ -1786,7 +1850,26 @@ Use realtime keyboard capture by calling
             elif value is None:
                 break
 
+## Updating Elements
 
+This is a somewhat advanced topic...
+
+Typically you perform Element updates in response to events from other Elements.  An example is that when you click a button some text on the form changes to red.  You can change the Element's attributes, or at least some of them, and the Element's value.
+
+In some source code examples you will find an older techique for updating elements that did not involve keys.  If you see a technique in the code that does not use keys, then know that there is a version using keys that is easier.
+
+Here's the key's version....
+We have an InputText field that we want to update.  When the Element was created we used this call:
+
+    sg.Input(key='input')
+
+To update or change the value for that Input Element, we use this contruct:
+
+    form.FindElement('input').Update('new text')
+
+Using the '.' makes the code shorter.  The FindElement call returns an Element.  We then call that Element's Update function.
+
+See the Font Sizer demo for example source code.
 
 ## Sample Applications
 
@@ -1796,6 +1879,8 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 |--|--|
 |**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single form
 |**Demo_Borderless_Window.py**| Create clean looking windows with no border
+|**Demo_Button_States.py**| One way of implementing disabling of buttons
+|**Demo_Calendar.py** | Demo of the Calendar Chooser button
 |**Demo_Canvas.py** | Form with a Canvas Element that is updated outside of the form
 |**Demo_Chat.py** | A chat window with scrollable history
 |**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project
@@ -1804,11 +1889,15 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 |**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility
 |**Demo_Cookbook_Browser.py** | Source code browser for all Recipes in Cookbook
 |**Demo_Dictionary.py** | Specifying and using return values in dictionary format
+**Demo_DOC_Viewer_PIL.py** | Display a PDF, HTML, ebook file, etc in your form
 |**Demo_DisplayHash1and256.py** | Using high level API and custom form to implement a simple display hash code utility
 |**Demo_DuplicateFileFinder.py** | High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter
+|**Demo_Fill_Form.py** | How to perform a bulk-fill for a form.  Saving and loading a form from disk
+|**Demo Font Sizer.py** | Demonstrates Elements updating other Elements
 |**Demo_Func_Callback_Simulator.py** | For the Raspberry Pi crowd. Event loop that simulates traditional GUI callback functions should you already have an architecture that uses them
 |**Demo_GoodColors.py** | Using some of the pre-defined PySimpleGUI individual colors
 |**Demo_HowDoI.py** | This is a utility to be experienced! It will change how you code
+|**Demo_Img_Viewer.py** | Display jpg, png,tiff, bmp files
 |**Demo_Keyboard.py** | Using blocking keyboard events
 |**Demo_Keyboard_Realtime.py** | Using non-blocking / realtime keyboard events
 |**Demo_Machine_Learning.py** | A sample Machine Learning front end
@@ -1819,13 +1908,18 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 |**Demo_Media_Player.py** | Non-blocking form with a media player layout.  Demonstrates  button graphics, Update method
 |**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices
 |**Demo_NonBlocking_Form.py** | a basic async form
+|** Demo_OpenCV.py** | Integrated with OpenCV
+|** Demo_Password_Login** | Password protection using SHA1
 |**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate
+|**Demo_Pi_LEDs.py** | Control GPIO using buttons
 |**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons
 |**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files
 |**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook
 |**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts
 |**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts
 |**Demo_Tabbed_Form.py** | Using the Tab feature
+|**Demo_Table_Simulation.py** | Use input fields to display and edit tables
+|**Demo_Timer.py** | Simple non-blocking form
 
 ## Packages Used In Demos
 
@@ -1931,6 +2025,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.11.0 | Aug 29, 2018 - Lots of little changes that are needed for the demo programs to work. Buttons have their own default element size, fix for Mac default button color, padding support for all elements, option to immediately return if list box gets selected, FilesBrowse button, Canvas Element, Frame Element, Slider resolution option, Form.Refresh method, better text wrapping, 'SystemDefault' look and feel settin
 | 2.20.0 | Sept 4, 2018 - Some sizable features this time around of interest to advanced users.  Renaming of the MsgBox functions to Popup. Renaming GetFile, etc, to PopupGetFile. High-level windowing capabilities start with Popup, PopupNoWait/PopupNonblocking, PopupNoButtons, default icon, change_submits option for Listbox/Combobox/Slider/Spin/, New OptionMenu element, updating elements after shown, system defaul color option for progress bars, new button type (Dummy Button) that only closes a window, SCROLLABLE Columns!! (yea, playing in the Big League now), LayoutAndShow function removed, form.Fill - bulk updates to forms, FindElement - find element based on key value (ALL elements have keys now), no longer use grid packing for row elements (a potentially huge change), scrolled text box sizing changed, new look and feel themes (Dark, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green)
 | 2.30.0 | Sept 6, 2018 - Calendar Chooser (button), borderless windows, load/save form to disk
+| 3.0.0 | Sept 7, 2018 - The "fix for poor choice of 2.x numbers" release. Color Chooser (button), "grab anywhere" windows are on by default, disable combo boxes, Input Element text justification (last part needed for 'tables'), Image Element changes to support OpenCV?, PopupGetFile and PopupGetFolder have better no_window option
 
 
 ### Release Notes
@@ -1950,11 +2045,19 @@ Listboxes are still without scrollwheels. The mouse can drag to see more items. 
 
 2.9 COLUMNS!  This is the biggest feature and had the biggest impact on the code base.  It was a difficult feature to add, but it was worth it.  Can now make even more layouts. Almost any layout is possible with this addition.
 
+.................. insert releases 2.9 to 2.30 .................
+
+3.0 We've come a long way baby!  Time for a major revision bump.  One reason is that the numbers started to confuse people  the latest release was 2.30, but some people read it as 2.3 and thought it went backwards.  I kinda messed up the 2.x series of numbers, so why not start with a clean slate.  A lot has happened anyway so it's well earned.
+
+One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn this off for windows with sliders.  This feature is enabled in the FlexForm call.
+
+Related to the Grab Anywhere feature is the no_titlebar option, again found in the call to FlexForm.  Your window will be a spiffy, borderless window.  It's a really interesting effect.  Slight problem is that you do not have an icon on the taskbar with these types of windows, so if you don't supply a button to close the window, there's no way to close it other than task manager.
+
 
 ### Upcoming
 Make suggestions people!  Future release features
 
-Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.
+Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  WxPython is higher priority.
 
 
 
@@ -1985,6 +2088,8 @@ It seemed quite natural to use Python's powerful list constructs when possible. 
 
 **Dictionaries**
 Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.
+
+You can also look up elements using their keys.  This is an excellent way to update elements in reaction to another element.  Call `form.FindElement(key)` to get the Element.
 
 
 ## Author
@@ -2032,5 +2137,6 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
 
 
