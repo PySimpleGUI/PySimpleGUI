@@ -261,7 +261,8 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None):
+    def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='',
+                 justification=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -277,6 +278,7 @@ class InputText(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
+        self.Justification = justification
         super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
 
@@ -2251,7 +2253,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 element.TKStringVar.set(default_text)
                 show = element.PasswordCharacter if element.PasswordCharacter else ""
-                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show)
+                if element.Justification is not None:
+                    justification = element.Justification
+                else:
+                    justification = DEFAULT_TEXT_JUSTIFICATION
+                justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
+                anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show, justify=justify)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(background=element.BackgroundColor)
