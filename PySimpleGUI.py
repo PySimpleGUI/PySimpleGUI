@@ -1,6 +1,7 @@
 #!/usr/bin/env Python3
 import tkinter as tk
 from tkinter import filedialog
+from tkinter.colorchooser import askcolor
 from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
@@ -141,6 +142,7 @@ BUTTON_TYPE_CLOSES_WIN_ONLY = 6
 BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
 BUTTON_TYPE_CALENDAR_CHOOSER = 30
+BUTTON_TYPE_COLOR_CHOOSER = 40
 
 # -------------------------  Element types  ------------------------- #
 # class ElementType(Enum):
@@ -853,6 +855,10 @@ class Button(Element):
             file_name = tk.filedialog.askopenfilename(filetypes=filetypes)  # show the 'get file' dialog box
             strvar.set(file_name)
             self.TKStringVar.set(file_name)
+        elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
+            color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
+            strvar.set(color)
+            self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             file_name = tk.filedialog.askopenfilenames(filetypes=filetypes)
             file_name = ';'.join(file_name)
@@ -1878,9 +1884,13 @@ def RealtimeButton(button_text, image_filename=None, image_size=(None, None),ima
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-# -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
+# -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def CalendarButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+# -------------------------  Calendar Chooser Button lazy function  ------------------------- #
+def ColorChooserButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
@@ -2013,6 +2023,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER) or \
+                    (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_COLOR_CHOOSER) or \
                 (element.Type == ELEM_TYPE_BUTTON and element.Key is not None and (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
