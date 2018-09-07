@@ -1422,7 +1422,7 @@ class FlexForm:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, scale=(None, None), location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=True):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -1463,6 +1463,7 @@ class FlexForm:
         self.LastKeyboardEvent = None
         self.TextJustification = text_justification
         self.NoTitleBar = no_titlebar
+        self.GrabAnywhere = grab_anywhere
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2636,7 +2637,7 @@ def StartupTK(my_flex_form):
     my_flex_form.TKroot = root
 
     # Make moveable window
-    if my_flex_form.NoTitleBar:
+    if my_flex_form.NoTitleBar or my_flex_form.GrabAnywhere:
         root.bind("<ButtonPress-1>", my_flex_form.StartMove)
         root.bind("<ButtonRelease-1>", my_flex_form.StopMove)
         root.bind("<B1-Motion>", my_flex_form.OnMotion)
