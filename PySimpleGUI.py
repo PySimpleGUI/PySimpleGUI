@@ -298,7 +298,7 @@ class InputText(Element):
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
-    def __init__(self, values, default_value=None, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, key=None, pad=None):
+    def __init__(self, values, default_value=None, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -309,20 +309,23 @@ class InputCombo(Element):
         '''
         self.Values = values
         self.DefaultValue = default_value
-        self.TKComboBox = None
         self.ChangeSubmits = change_submits
+        self.TKCombo = None
+        self.InitializeAsDisabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, value=None, values=None):
+    def Update(self, value=None, values=None, disabled=False):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
                 self.TKCombo.current(0)
             except: pass
             self.Values = values
+
+        self.TKCombo['state'] = 'disable' if disabled else 'enable'
 
         for index, v in enumerate(self.Values):
             if v == value:
@@ -335,7 +338,7 @@ class InputCombo(Element):
 
     def __del__(self):
         try:
-            self.TKComboBox.__del__()
+            self.TKCombo.__del__()
         except:
             pass
         super().__del__()
@@ -2302,6 +2305,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar,font=font )
                 # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
+                if element.InitializeAsDisabled:
+                    element.TKCombo['state'] = 'disabled'
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
