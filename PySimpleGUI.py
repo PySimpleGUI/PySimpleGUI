@@ -1646,11 +1646,14 @@ class FlexForm:
         self.TKroot.y = None
 
     def OnMotion(self, event):
-        deltax = event.x - self.TKroot.x
-        deltay = event.y - self.TKroot.y
-        x = self.TKroot.winfo_x() + deltax
-        y = self.TKroot.winfo_y() + deltay
-        self.TKroot.geometry("+%s+%s" % (x, y))
+        try:
+            deltax = event.x - self.TKroot.x
+            deltay = event.y - self.TKroot.y
+            x = self.TKroot.winfo_x() + deltax
+            y = self.TKroot.winfo_y() + deltay
+            self.TKroot.geometry("+%s+%s" % (x, y))
+        except:
+            pass
 
 
     def _KeyboardCallback(self, event ):

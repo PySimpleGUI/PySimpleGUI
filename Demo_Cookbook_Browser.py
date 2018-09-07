@@ -431,7 +431,10 @@ def ScriptLauncher():
 
     def ExecuteCommandSubprocess(command, *args):
         try:
-            sp = subprocess.Popen([command,*args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            expanded_args = []
+            for a in args:
+                expanded_args += a
+            sp = subprocess.Popen([command,expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = sp.communicate()
             if out:
                 print(out.decode("utf-8"))
@@ -691,12 +694,12 @@ def TableSimulation():
     Display data in a table format
     """
     import PySimpleGUI as sg
+    sg.ChangeLookAndFeel('Dark1')
 
     layout = [[sg.T('Table Test')]]
 
     for i in range(20):
-        row = [sg.T(f'Row {i}  ', size=(10, 1))]
-        layout.append([sg.T(f'{i}{j}', size=(4, 1), background_color='white', pad=(1, 1)) for j in range(10)])
+        layout.append([sg.T('{} {}'.format(i,j), size=(4, 1), background_color='black', pad=(1, 1)) for j in range(10)])
 
     sg.FlexForm('Table').LayoutAndRead(layout)
 
