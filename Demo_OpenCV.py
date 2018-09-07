@@ -14,7 +14,8 @@ Until then enjoy it working somewhat slowly.
 
 
 def main():
-    filename = sg.PopupGetFile('Filename to play')
+    filename = 'C:/Python/MIDIVideo/PlainVideos/- 08-30 Ted Talk/TED Talk Short - Video+.mp4'
+    # filename = sg.PopupGetFile('Filename to play')
     if filename is None:
         exit(69)
     vidFile = cv.VideoCapture(filename)
@@ -31,7 +32,7 @@ def main():
               [sg.ReadFormButton('Exit', size=(10, 2), pad=((600, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', no_titlebar=True)
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', no_titlebar=True, location=(0,0))
     form.Layout(layout)
     form.ReadNonBlocking()
 
