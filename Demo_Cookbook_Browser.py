@@ -274,7 +274,7 @@ def RealtimeButtons():
     import PySimpleGUI as sg
 
     # Make a form, but don't use context manager
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
+    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True)
 
     form_rows = [[sg.Text('Robotics Remote Control')],
                  [sg.T(' '  * 10), sg.RealtimeButton('Forward')],
@@ -759,21 +759,23 @@ while True:
     # sg.ChangeLookAndFeel('Dark')
     # sg.SetOptions(element_padding=(0,0))
 
-    col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),len(listbox_values)), change_submits=True, key='func')],
-                   [sg.SimpleButton('Run', pad=((30,0),0)), sg.Exit(button_color=('white', 'firebrick4'))]]
+    col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),min(len(listbox_values), 20)), change_submits=False, key='func')],
+                   [sg.ReadFormButton('Run', pad=(0,0)), sg.ReadFormButton('Show Code', button_color=('white', 'gray25'), pad=(0,0)),  sg.Exit(button_color=('white', 'firebrick4'), pad=(0,0))]]
 
     layout = [[sg.Text('PySimpleGUI Coookbook', font=('current 18'))],
-              [sg.Column(col_listbox), sg.Multiline(size=(70,35), do_not_clear=True, key='multi')],
+              [sg.Column(col_listbox), sg.Multiline(size=(50,min(len(listbox_values), 20)), do_not_clear=True, key='multi')],
               ]
 
 # create the form and show it without the plot
 # form.Layout(layout)
 
-    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', default_button_element_size=(10,1),auto_size_buttons=False, no_titlebar=True)
-    button, values = form.LayoutAndRead(layout)
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', default_button_element_size=(9,1),auto_size_buttons=False, grab_anywhere=False)
+    form.Layout(layout)
     # show it all again and get buttons
     while True:
-        if button is None or button is 'Exit':
+        button, values = form.Read()
+
+        if button is None or button == 'Exit':
             exit(69)
         try:
             choice = values['func'][0]
@@ -781,12 +783,14 @@ while True:
         except:
             continue
 
-        if button is '':
+        if button == 'Show Code' and values['multi']:
             form.FindElement('multi').Update(inspect.getsource(func))
-            button, values = form.Read()
-        elif button is 'Run':
+        elif button is 'Run' and values['func']:
             # sg.ChangeLookAndFeel('SystemDefault')
+            form.CloseNonBlockingForm()
             func()
             break
         else:
-            button, values = form.Read()
+            print('ILLEGAL values')
+            break
+
