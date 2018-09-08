@@ -1674,17 +1674,18 @@ def main():
     list_of_colors = [c for c in colors]
     printable = '\n'.join(map(str, list_of_colors))
     # show_all_colors_on_buttons()
+    sg.SetOptions(element_padding=(0,0))
     while True:
         # -------  Form show  ------- #
         layout = [[sg.Text('Find color')],
                   [sg.Text('Demonstration of colors')],
                   [sg.Text('Enter a color name in text or hex #RRGGBB format')],
-                  [sg.InputText()],
-                  [sg.Listbox(list_of_colors, size=(20, 30)), sg.T('Or choose from list')],
-                  [sg.Submit(), sg.Quit(), sg.SimpleButton('Show me lots of colors!', button_color=('white', '#0e6251'))],
+                  [sg.InputText(key='hex')],
+                  [sg.Listbox(list_of_colors, size=(20, 30), key='listbox'), sg.T('Or choose from list')],
+                  [sg.Submit(), sg.SimpleButton('Many buttons', button_color=('white', '#0e6251')), sg.ColorChooserButton( 'Chooser', target=(3,0)),  sg.Quit(),],
                   ]
                   # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
-        (button, (hex_input, drop_down_value)) = sg.FlexForm('Color Demo', auto_size_text=True, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
+        button, values = sg.FlexForm('Color Demo', auto_size_buttons=False).LayoutAndRead(layout)
 
         # -------  OUTPUT results portion  ------- #
         if button == '' or button == 'Quit' or button is None:
@@ -1692,13 +1693,16 @@ def main():
         elif button == 'Show me lots of colors!':
                 show_all_colors_on_buttons()
 
-        drop_down_value = drop_down_value[0]
+        drop_down_value = values['listbox']
+        hex_input = values['hex']
+        if hex_input == '' and len(drop_down_value) == 0:
+            continue
 
         if hex_input is not '' and hex_input[0] == '#':
             color_hex = hex_input.upper()
             color_name = get_name_from_hex(hex_input)
-        else:
-            color_name = drop_down_value
+        elif drop_down_value is not None:
+            color_name = drop_down_value[0]
             color_hex  = get_hex_from_name(color_name)
 
         complementary_hex = get_complementary_hex(color_hex)
