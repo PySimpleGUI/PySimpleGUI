@@ -1,4 +1,4 @@
-#!/usr/bin/env Python3
+#!/usr/bin/python3
 import tkinter as tk
 from tkinter import filedialog
 from tkinter.colorchooser import askcolor
@@ -10,8 +10,6 @@ import sys
 import textwrap
 import pickle
 import calendar
-
-
 
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -162,6 +160,7 @@ ELEM_TYPE_INPUT_SLIDER = 10
 ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
 ELEM_TYPE_COLUMN = 555
+ELEM_TYPE_MENU = 600
 ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
 
@@ -1218,7 +1217,6 @@ class Column(Element):
 # ---------------------------------------------------------------------- #
 #                           Calendar                                     #
 # ---------------------------------------------------------------------- #
-
 class TKCalendar(ttk.Frame):
     """
     This code was shamelessly lifted from moshekaplan's repository - moshekaplan/tkinter_components
@@ -1428,7 +1426,27 @@ class TKCalendar(ttk.Frame):
         return self.datetime(year, month, int(self._selection[0]))
 
 
+# ---------------------------------------------------------------------- #
+#                           Canvas                                       #
+# ---------------------------------------------------------------------- #
+class Menu(Element):
+    def __init__(self, text, command=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.Command = command
+        self.Text = text
+        self.TKMenu = None
 
+        super().__init__(ELEM_TYPE_MENU, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
+        return
+
+    def MenuItemChosenCallback(self):
+        print('IN MENU ITEM CALLBACK')
+        self.ParentForm.LastButtonClicked = 'Menu'
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
+    def __del__(self):
+        super().__del__()
 
 
 # ------------------------------------------------------------------------- #
@@ -2501,6 +2519,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCanvas.configure(background=element.BackgroundColor)
                 element.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+            # -------------------------  Canvas element  ------------------------- #
+            elif element_type == ELEM_TYPE_MENU:
+                element.TKMenu = tk.Menu(toplevel_form.TKroot)
+                filemenu = tk.Menu(element.TKMenu, tearoff=0)
+                filemenu.add_command(label="Open", command=element.MenuItemChosenCallback)
+                element.TKMenu.add_cascade(label="File", menu=filemenu)
+                toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
                 width, height = element_size
@@ -2676,7 +2701,7 @@ def StartupTK(my_flex_form):
 
     my_flex_form.TKroot = root
     # Make moveable window
-    if my_flex_form.NoTitleBar or my_flex_form.GrabAnywhere:
+    if (my_flex_form.NoTitleBar or my_flex_form.GrabAnywhere) and not my_flex_form.NonBlocking:
         root.bind("<ButtonPress-1>", my_flex_form.StartMove)
         root.bind("<ButtonRelease-1>", my_flex_form.StopMove)
         root.bind("<B1-Motion>", my_flex_form.OnMotion)
