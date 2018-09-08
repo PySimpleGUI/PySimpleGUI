@@ -40,5 +40,6 @@ def Everything():
 
     sg.Popup('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values)
 
-Everything()
 
+if __name__ == '__main__':
+    Everything()
