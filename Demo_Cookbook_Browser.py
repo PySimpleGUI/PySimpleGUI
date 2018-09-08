@@ -431,9 +431,10 @@ def ScriptLauncher():
 
     def ExecuteCommandSubprocess(command, *args):
         try:
-            expanded_args = []
-            for a in args:
-                expanded_args += a
+            # expanded_args = []
+            # for a in args:
+            #     expanded_args += a
+            expanded_args = [*args]
             sp = subprocess.Popen([command,expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = sp.communicate()
             if out:
