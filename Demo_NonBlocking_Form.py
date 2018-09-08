@@ -97,8 +97,8 @@ def StatusOutputExample_context_manager():
             form.CloseNonBlockingForm()
 
 def main():
-    StatusOutputExample()
     RemoteControlExample()
+    StatusOutputExample()
     StatusOutputExample()
     sg.MsgBox('End of non-blocking demonstration')
     # StatusOutputExample_context_manager()

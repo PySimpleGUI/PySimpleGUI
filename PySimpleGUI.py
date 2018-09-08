@@ -815,12 +815,16 @@ class Button(Element):
         super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad, key=key)
         return
 
+    # Realtime button release callback
     def ButtonReleaseCallBack(self, parm):
         r, c = self.Position
+        self.LastButtonClickedWasRealtime = False
         self.ParentForm.LastButtonClicked = None
 
+    # Realtime button callback
     def ButtonPressCallBack(self, parm):
         r, c = self.Position
+        self.ParentForm.LastButtonClickedWasRealtime = True
         self.ParentForm.LastButtonClicked = self.ButtonText
 
     # -------  Button Callback  ------- #
@@ -1468,6 +1472,7 @@ class FlexForm:
         self.ReturnValuesDictionary = {}
         self.DictionaryKeyCounter = 0
         self.LastButtonClicked = None
+        self.LastButtonClickedWasRealtime = False
         self.UseDictionary = False
         self.UseDefaultFocus = use_default_focus
         self.ReturnKeyboardEvents = return_keyboard_events
@@ -1936,7 +1941,8 @@ def BuildResults(form, initialize_only, top_level_form):
     form.ReturnValuesDictionary = {}
     form.ReturnValuesList = []
     BuildResultsForSubform(form, initialize_only, top_level_form)
-    top_level_form.LastButtonClicked = None
+    if not top_level_form.LastButtonClickedWasRealtime:
+        top_level_form.LastButtonClicked = None
     return form.ReturnValues
 
 def BuildResultsForSubform(form, initialize_only, top_level_form):
