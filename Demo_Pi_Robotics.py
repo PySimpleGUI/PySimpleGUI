@@ -8,19 +8,22 @@ import PySimpleGUI as sg
 
 def RemoteControlExample():
     # Make a form, but don't use context manager
+    sg.SetOptions(element_padding=(0,0))
     back ='#eeeeee'
     image_forward = 'ButtonGraphics/RobotForward.png'
     image_backward = 'ButtonGraphics/RobotBack.png'
     image_left = 'ButtonGraphics/RobotLeft.png'
     image_right = 'ButtonGraphics/RobotRight.png'
+
     sg.SetOptions(border_width=0, button_color=('black', back), background_color=back, element_background_color=back, text_element_background_color=back)
+
     form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
-    status_display_elem = sg.T('', justification='center', size=(19,1))
+
     form_rows = [[sg.Text('Robotics Remote Control')],
-                 [status_display_elem],
-                 [sg.T(' '*6), sg.RealtimeButton('Forward', image_filename=image_forward)],
-                 [ sg.RealtimeButton('Left', image_filename=image_left), sg.T('     '), sg.RealtimeButton('Right', image_filename=image_right)],
-                 [sg.T(' '*6), sg.RealtimeButton('Reverse', image_filename=image_backward)],
+                 [sg.T('', justification='center', size=(19,1), key='status')],
+                 [ sg.RealtimeButton('Forward', image_filename=image_forward, pad=((50,0),0))],
+                 [ sg.RealtimeButton('Left', image_filename=image_left), sg.RealtimeButton('Right', image_filename=image_right, pad=((50,0), 0))],
+                 [ sg.RealtimeButton('Reverse', image_filename=image_backward, pad=((50,0),0))],
                  [sg.T('')],
                  [sg.Quit(button_color=('black', 'orange'))]
                  ]
@@ -37,9 +40,9 @@ def RemoteControlExample():
         # This is the code that reads and updates your window
         button, values = form.ReadNonBlocking()
         if button is not None:
-            status_display_elem.Update(button)
+            form.FindElement('status').Update(button)
         else:
-            status_display_elem.Update('')
+            form.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
         if button == 'Quit' or values is None:
             break
@@ -50,11 +53,11 @@ def RemoteControlExample():
 def RemoteControlExample_NoGraphics():
     # Make a form, but don't use context manager
     form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
-    status_display_elem = sg.T('', justification='center', size=(19,1))
+
     form_rows = [[sg.Text('Robotics Remote Control', justification='center')],
-                 [status_display_elem],
+                 [sg.T('', justification='center', size=(19,1), key='status')],
                  [sg.T(' '*8), sg.RealtimeButton('Forward')],
-                 [ sg.RealtimeButton('Left'), sg.T('               '), sg.RealtimeButton('Right')],
+                 [ sg.RealtimeButton('Left'), sg.T('              '), sg.RealtimeButton('Right')],
                  [sg.T(' '*8), sg.RealtimeButton('Reverse')],
                  [sg.T('')],
                  [sg.Quit(button_color=('black', 'orange'))]
@@ -72,9 +75,9 @@ def RemoteControlExample_NoGraphics():
         # This is the code that reads and updates your window
         button, values = form.ReadNonBlocking()
         if button is not None:
-            status_display_elem.Update(button)
+            form.FindElement('status').Update(button)
         else:
-            status_display_elem.Update('')
+            form.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
         if button == 'Quit' or values is None:
             break
@@ -89,7 +92,7 @@ def main():
     RemoteControlExample_NoGraphics()
     # Uncomment to get the fancy graphics version.  Be sure and download the button images!
     RemoteControlExample()
-    sg.MsgBox('End of non-blocking demonstration')
+    # sg.Popup('End of non-blocking demonstration')
 
 if __name__ == '__main__':
 

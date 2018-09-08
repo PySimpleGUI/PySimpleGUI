@@ -274,7 +274,7 @@ def RealtimeButtons():
     import PySimpleGUI as sg
 
     # Make a form, but don't use context manager
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True)
+    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
 
     form_rows = [[sg.Text('Robotics Remote Control')],
                  [sg.T(' '  * 10), sg.RealtimeButton('Forward')],
@@ -431,10 +431,9 @@ def ScriptLauncher():
 
     def ExecuteCommandSubprocess(command, *args):
         try:
-            # expanded_args = []
-            # for a in args:
-            #     expanded_args += a
-            expanded_args = [*args]
+            expanded_args = []
+            for a in args:
+                expanded_args += a
             sp = subprocess.Popen([command,expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = sp.communicate()
             if out:
@@ -757,8 +756,8 @@ fig_dict = {'Simple Data Entry':SimpleDataEntry, 'Simple Entry Return Data as Di
 listbox_values = [key for key in fig_dict.keys()]
 
 while True:
-    sg.ChangeLookAndFeel('Dark')
-    sg.SetOptions(element_padding=(0,0))
+    # sg.ChangeLookAndFeel('Dark')
+    # sg.SetOptions(element_padding=(0,0))
 
     col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),len(listbox_values)), change_submits=True, key='func')],
                    [sg.SimpleButton('Run', pad=((30,0),0)), sg.Exit(button_color=('white', 'firebrick4'))]]
