@@ -861,6 +861,7 @@ class Button(Element):
             self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
             color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
+            color = color[1]         # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
@@ -2028,8 +2029,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     element.Type!= ELEM_TYPE_COLUMN:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
-            elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER) or \
-                    (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_COLOR_CHOOSER) or \
+            elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and element.Target == (None,None)) or \
+                    (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_COLOR_CHOOSER and element.Target == (None,None)) or \
                 (element.Type == ELEM_TYPE_BUTTON and element.Key is not None and (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
@@ -2320,6 +2321,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
                     combostyle.theme_use('combostyle')
                 element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar,font=font )
+                if element.Size[1] != 1 and element.Size[1] is not None:
+                    element.TKCombo.configure(height=element.Size[1])
                 # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
                 if element.InitializeAsDisabled:

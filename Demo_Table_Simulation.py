@@ -14,10 +14,11 @@ def TableSimulation():
 
     for i in range(20):
         inputs = [sg.In('{}{}'.format(i,j), size=(8, 1), pad=(1, 1), justification='right', key=(i,j), do_not_clear=True) for j in range(10)]
-        inputs = [sg.Combo(('Customer ID', 'Customer Name', 'Customer Info')), *inputs]
+        line = [sg.Combo(('Customer ID', 'Customer Name', 'Customer Info'))]
+        line.append(inputs)
         layout.append(inputs)
 
-    form = sg.FlexForm('Table', return_keyboard_events=True)
+    form = sg.FlexForm('Table', return_keyboard_events=True, grab_anywhere=False)
     form.Layout(layout)
 
     while True:
