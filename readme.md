@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 3.00)
+  (Ver 3.00.02)
 
 
 
@@ -199,11 +199,11 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 
 ### Installing
 
-    pip install PySimpleGUI
+    pip install --upgrade PySimpleGUI
+
 On some systems you need to run pip3.
 
-
-    pip3 install PySimpleGUI
+    pip3 install --upgrade PySimpleGUI
 
 On a Raspberry Pi, this is should work:
 
@@ -824,7 +824,8 @@ This is the definition of the FlexForm object:
         use_default_focus=True,
         text_justification=None,
         no_titlebar=False,
-        grab_anywhere=True):
+        grab_anywhere=True
+        keep_on_top=False):
 
 
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `Form` values.
@@ -849,6 +850,7 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        text_justification - Justification to use for Text Elements in this form
        no_titlebar - Create window without a titlebar
        grab_anywhere - Grab any location on the window to move the window
+       keep_on_top - if True then window will always stop on top of other windows on the screen.  Great for floating toolbars.
 
 
 #### Window Location
@@ -865,6 +867,29 @@ In addition to `size` there is a `scale` option.  `scale` will take the Element'
 
 There are a couple of widgets where one of the size values is in pixels rather than characters.  This is true for Progress Meters and Sliders.  The second parameter is the 'height' in pixels.
 
+#### No Titlebar
+
+Should you wish to create cool looking windows that are clean with no windows titlebar, use the no_titlebar option when creating the window.
+
+Be sure an provide your user an "exit" button or they will not be able to close the window!  When no titlebar is enabled, there will be no icon on your taskbar for the window.  Without an exit button you will need to kill via taskmanager... not fun.
+
+Windows with no titlebar rely on the grab anywhere option to be enabled or else you will be unable to move the window.
+
+Windows without a titlebar can be used to easily create a floating launcher.
+
+
+![floating launcher](https://user-images.githubusercontent.com/13696193/45258246-71bafb80-b382-11e8-9f5e-79421e6c00bb.jpg)
+
+
+#### Grab Anywhere
+
+This is a feature unique to PySimpleGUI.  The default is ENABLED.... unless the form is a non-blocking form.
+
+It is turned off for non-blocking because there is a warning message printed out if the user closes a non-blocking form using a button with grab_anywhere enabled.  There is no harm in these messages, but it may be distressing to the user.    Should you wish to enable for a non-blocking form, simply get grab_anywhere = True when you create the form.
+
+#### Always on top
+
+To keep a window on top of all other windows on the screen, set keep_on_top = True when the form is created.  This feature makes for floating toolbars that are very helpful and always visible on your desktop.
 
 
 ## Elements

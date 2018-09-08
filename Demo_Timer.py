@@ -7,7 +7,7 @@ def Timer():
     sg.ChangeLookAndFeel('Dark')
     sg.SetOptions(element_padding=(0,0))
     # Make a form, but don't use context manager
-    form = sg.FlexForm('Running Timer', grab_anywhere=False, no_titlebar=True, auto_size_buttons=False)
+    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False)
     # Create a text element that will be updated with status information on the GUI itself
     # Create the rows
     form_rows = [[sg.Text('')],
