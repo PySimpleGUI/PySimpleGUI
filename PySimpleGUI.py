@@ -231,7 +231,6 @@ class Element():
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-
     def ComboboxSelectHandler(self, event):
         MyForm = self.ParentForm
         # first, get the results table built
