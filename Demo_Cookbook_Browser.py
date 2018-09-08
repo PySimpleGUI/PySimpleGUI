@@ -108,7 +108,7 @@ def AllWidgetsWithContext():
 
     # sg.ChangeLookAndFeel('GreenTan')
 
-    with sg.FlexForm('Everything bagel', default_element_size=(40, 1)) as form:
+    with sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False) as form:
         layout = [
             [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
             [sg.Text('Here is some text.... and a place to enter text')],
@@ -140,7 +140,7 @@ def AllWidgetsNoContext():
     # Green & tan color scheme
     sg.ChangeLookAndFeel('GreenTan')
 
-    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False)
     layout = [
             [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
             [sg.Text('Here is some text.... and a place to enter text')],
@@ -274,7 +274,7 @@ def RealtimeButtons():
     import PySimpleGUI as sg
 
     # Make a form, but don't use context manager
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True)
+    form = sg.FlexForm('Robotics Remote Control')
 
     form_rows = [[sg.Text('Robotics Remote Control')],
                  [sg.T(' '  * 10), sg.RealtimeButton('Forward')],
@@ -319,8 +319,8 @@ def TabbedForm():
     """
     import PySimpleGUI as sg
 
-    with sg.FlexForm('', auto_size_text=True) as form:
-        with sg.FlexForm('', auto_size_text=True) as form2:
+    with sg.FlexForm('') as form:
+        with sg.FlexForm('') as form2:
 
             layout_tab_1 = [[sg.Text('First tab', size=(20, 1), font=('helvetica', 15))],
                             [sg.InputText(), sg.Text('Enter some info')],
@@ -352,7 +352,7 @@ def MediaPlayer():
     image_exit = './ButtonGraphics/Exit.png'
 
     # Open a form, note that context manager can't be used generally speaking for async forms
-    form = sg.FlexForm('Media File Player', auto_size_text=True, default_element_size=(20, 1),
+    form = sg.FlexForm('Media File Player', default_element_size=(20, 1),
                        font=("Helvetica", 25))
     # define layout of the rows
     layout = [[sg.Text('Media File Player', size=(17, 1), font=("Helvetica", 25))],
@@ -623,7 +623,7 @@ def CanvasWidget():
                [gui.T('Change circle color to:'), gui.ReadFormButton('Red'), gui.ReadFormButton('Blue')]
                ]
 
-    form = gui.FlexForm('Canvas test')
+    form = gui.FlexForm('Canvas test', grab_anywhere=True)
     form.Layout(layout)
     form.ReadNonBlocking()
 
