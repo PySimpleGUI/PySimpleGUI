@@ -1732,15 +1732,53 @@ The `ReadFormButton` Element creates a button that when clicked will return cont
 
 
 ## Asynchronous (Non-Blocking) Forms
-So you want to be a wizard do ya?  Well go boldly!  While the majority of GUIs are a simple exercise to "collect input values and return with them", there are instances where we want to continue executing while the form is open.  These are "asynchronous" forms and require special options, new SDK calls, and **great care**.  With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.ReadNonBlocking` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
+So you want to be a wizard do ya?  Well go boldly!
 
-When do you use a non-blocking form? A couple of examples are
+Use async forms sparingly.  It's possible to have a form that appears to be async, but it is not.  **Please** try to find other methods before going to async forms.  The reason for this plea is that async forms poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.
+
+When to use a non-blocking form:
 * A media file player like an MP3 player
 * A status dashboard that's periodically updated
 * Progress Meters - when you want to make your own progress meters
 * Output using print to a scrolled text element. Good for debugging.
 
-Word of warning... starting with version 2.2 there is a change in the return values from the`ReadNonBlocking` call.  Previously the function returned 2 values, except when the form is closed using the "X" which returned a single value of `None`.  The *new* way is that `ReadNonBlocking` always returns 2 values.  If the user closed the form with the "X" then the return values will be None, None.  You will want to key off the second value to catch this case.
+If your application doesn't follow the basic design pattern at one of those, then it shouldn't be  executed as a non-blocking form.
+
+
+### Instead of ReadNonBlocking --- Use `change_submits = True`
+
+Any time you are thinking "I want an X Element to cause a Y Element to do something", then you want to use the `change_submits` option.
+
+***Instead of polling, try options that cause the form to return to you.***  By using non-blocking forms, you are *polling*.  You can indeed create your application by polling.  It will work.  But you're going to be maxing out your processor and may even take longer to react to an event than if you used another technique.
+
+**Examples**
+
+
+
+Or another example is you have an input field that changes as you press buttons on an on-screen keypad.
+
+![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)
+
+
+2. When a slider or a spinner moves it changes the size of the text somewhere on the form.
+
+
+![snap0272](https://user-images.githubusercontent.com/13696193/45260249-ec4e4000-b3af-11e8-853b-9b29d0bf7797.jpg)
+
+
+### Periodically Calling`ReadNonBlocking`
+
+Periodically "refreshing" the visible GUI.  The longer you wait between updates to your GUI the more sluggish your forms will feel.  It is up to you to make these calls or your GUI will freeze.
+
+There are 2 methods of interacting with non-blocking forms.
+1. Read the form just as you would a normal form
+2. "Refresh" the form's values without reading the form. It's a quick operation meant to show the user the latest values
+
+ With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.ReadNonBlocking` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
+
+ #### Exiting a Non-Blocking Form
+Typically when reading a form you check `if Button is None` to determine if a form was closed.  With NonBlocking forms, buttons will be None unless a button or a key was returned.  The way you determine if a window was closed in a non-blocking form  is to check **both** the button and the values are None.  Since button is normally None, you only need to test for `value is None` in your code.
+
 The proper code to check if the user has exited the form will be a polling-loop that looks something like this:
 
     while True:
@@ -1748,22 +1786,21 @@ The proper code to check if the user has exited the form will be a polling-loop 
        if values is None or button == 'Quit':
           break
 
+
 We're going to build an app that does the latter.  It's going to update our form with a running clock.
 
 The basic flow and functions you will be calling are:
 Setup
-
-
 
        form = FlexForm()
        form_rows = .....
        form.LayoutAndRead(form_rows, non_blocking=True)
 
 
-
 Periodic refresh
 
-    form.ReadNonBlocking()
+    form.ReadNonBlocking()   or       form.Refresh()
+
 If you need to close the form
 
     form.CloseNonBlockingForm()
@@ -1782,11 +1819,10 @@ See the sample code on the GitHub named Demo Media Player for another example of
     # form that doesn't block
     # Make a form, but don't use context manager
     form = sg.FlexForm('Running Timer', auto_size_text=True)
-    # Create a text element that will be updated with status information on the GUI itself
-    output_element = sg.Text('', size=(8, 2), font=('Helvetica', 20))
-    # Create the rows
+
+    # Create the layout
     form_rows = [[sg.Text('Non-blocking GUI with updates')],
-                 [output_element],
+                 [sg.Text('', size=(8, 2), font=('Helvetica', 20), key='output')    ],
                  [sg.SimpleButton('Quit')]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
     form.LayoutAndRead(form_rows, non_blocking=True)
@@ -1798,7 +1834,7 @@ See the sample code on the GitHub named Demo Media Player for another example of
     #
 
     for i in range(1, 1000):
-        output_element.Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i / 100), 60), i % 100))
+        form.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format(*divmod(int(i / 100), 60), i % 100))
         button, values = form.ReadNonBlocking()
         if values is None or button == 'Quit':
             break
@@ -1807,17 +1843,14 @@ See the sample code on the GitHub named Demo Media Player for another example of
         form.CloseNonBlockingForm()
 
 
-
 What we have here is the same sequence of function calls as in the description.  Get a form, add rows to it, show the form, and then refresh it every now and then.
 
-The new thing in this example is the call use of the Update method for the Text Element.  The first thing we do inside the loop is "update" the text element that we made earlier.  This changes the value of the text field on the form.  The new value will be displayed when `form.ReadNonBlocking()` is called.
+The new thing in this example is the call use of the Update method for the Text Element.  The first thing we do inside the loop is "update" the text element that we made earlier.  This changes the value of the text field on the form.  The new value will be displayed when `form.ReadNonBlocking()` is called.  if you want to have the form reflect your changes immediately, call `form.Refresh()`.
 
 Note the `else` statement on the for loop.  This is needed because we're about to exit the loop while the form is still open.  The user has not closed the form using the X nor a button so it's up to the caller to close the form using `CloseNonBlockingForm`.
 
-That's it... this example follows the async design pattern well.
-
 ## Keyboard & Mouse Capture
-Beginning in version 2.10 you can capture keyboard key presses and mouse scroll-wheel events.   Keyboard keys can be used, for example, to detect the page-up and page-down keys for a PDF viewer.  To use this feature, there's a boolean setting in the FlexForm call return_keyboard_events that is set to True in order to get keys returned along with buttons.
+Beginning in version 2.10 you can capture keyboard key presses and mouse scroll-wheel events.   Keyboard keys can be used, for example, to detect the page-up and page-down keys for a PDF viewer.  To use this feature, there's a boolean setting in the FlexForm call `return_keyboard_events` that is set to True in order to get keys returned along with buttons.
 
 Keys and scroll-wheel events are returned in exactly the same way as buttons.
 
