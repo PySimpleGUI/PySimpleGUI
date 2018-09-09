@@ -160,7 +160,7 @@ ELEM_TYPE_INPUT_SLIDER = 10
 ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
 ELEM_TYPE_COLUMN = 555
-ELEM_TYPE_MENU = 600
+ELEM_TYPE_MENUBAR = 600
 ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
 
@@ -922,6 +922,8 @@ class Button(Element):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
             return
+        if new_text is not None:
+            self.ButtonText = new_text
         self.DefaultValue = value
 
     def __del__(self):
@@ -1435,12 +1437,12 @@ class Menu(Element):
         self.Text = text
         self.TKMenu = None
 
-        super().__init__(ELEM_TYPE_MENU, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
         return
 
-    def MenuItemChosenCallback(self):
-        print('IN MENU ITEM CALLBACK')
-        self.ParentForm.LastButtonClicked = 'Menu'
+    def MenuItemChosenCallback(self, item_chosen):
+        # print('IN MENU ITEM CALLBACK', item_chosen)
+        self.ParentForm.LastButtonClicked = item_chosen
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
@@ -2518,12 +2520,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCanvas.configure(background=element.BackgroundColor)
                 element.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-            # -------------------------  Canvas element  ------------------------- #
-            elif element_type == ELEM_TYPE_MENU:
+            # -------------------------  MENUBAR element  ------------------------- #
+            elif element_type == ELEM_TYPE_MENUBAR:
                 element.TKMenu = tk.Menu(toplevel_form.TKroot)
                 filemenu = tk.Menu(element.TKMenu, tearoff=0)
-                filemenu.add_command(label="Open", command=element.MenuItemChosenCallback)
+                filemenu.add_command(label="Open", command=lambda: Menu.MenuItemChosenCallback(element,'Open'))
                 element.TKMenu.add_cascade(label="File", menu=filemenu)
+                helpmenu = tk.Menu(element.TKMenu)
+                element.TKMenu.add_cascade(label='Help', menu=helpmenu)
+                helpmenu.add('command', label='About...', command=lambda: Menu.MenuItemChosenCallback(element, 'About...'))
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
