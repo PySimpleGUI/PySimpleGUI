@@ -922,8 +922,6 @@ class Button(Element):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
             return
-        if new_text is not None:
-            self.ButtonText = new_text
         self.DefaultValue = value
 
     def __del__(self):
@@ -1431,10 +1429,10 @@ class TKCalendar(ttk.Frame):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    def __init__(self, text, command=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+    def __init__(self, menu_definition, command=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.Command = command
-        self.Text = text
+        self.MenuDefinition = menu_definition
         self.TKMenu = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
@@ -2117,6 +2115,41 @@ def _FindElementFromKeyInSubForm(form, key):
                 return element
 
 
+def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+    if type(sub_menu_info) is str:
+        if not is_sub_menu and not skip:
+            # print(f'Adding command {sub_menu_info}')
+            top_menu.add_command(label=sub_menu_info, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+    else:
+        i = 0
+        while i < (len(sub_menu_info)):
+            item = sub_menu_info[i]
+            if i != len(sub_menu_info) - 1:
+                if type(sub_menu_info[i+1]) == list:
+                    new_menu = tk.Menu(top_menu)
+                    top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu)
+                    AddMenuItem(new_menu, sub_menu_info[i+1], element, is_sub_menu=True)
+                    i += 1  # skip the next one
+                else:
+                    AddMenuItem(top_menu, item, element)
+            else:
+                AddMenuItem(top_menu, item, element)
+            i += 1
+
+
+
+
+        # print(f'Looping through {sub_menu_info}')
+        # print(f'Type is {type(sub_menu_info)}')
+        # if type(sub_menu_info[1]) is list:
+        #     new_menu = tk.Menu(top_menu)
+        #     top_menu.add_cascade(label=sub_menu_info[0], menu=new_menu)
+        #     AddMenuItem(new_menu, sub_menu_info[1], element, is_sub_menu=True)
+        # else:
+        #     for item in sub_menu_info:
+        #         AddMenuItem(top_menu, item, element)
+
+
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   TK CODE STARTS HERE ====================================================== #
 # ------------------------------------------------------------------------------------------------------------------ #
@@ -2522,13 +2555,21 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
-                element.TKMenu = tk.Menu(toplevel_form.TKroot)
-                filemenu = tk.Menu(element.TKMenu, tearoff=0)
-                filemenu.add_command(label="Open", command=lambda: Menu.MenuItemChosenCallback(element,'Open'))
-                element.TKMenu.add_cascade(label="File", menu=filemenu)
-                helpmenu = tk.Menu(element.TKMenu)
-                element.TKMenu.add_cascade(label='Help', menu=helpmenu)
-                helpmenu.add('command', label='About...', command=lambda: Menu.MenuItemChosenCallback(element, 'About...'))
+                menu_def = (('File', ('Open', 'Save')),
+                            ('Help', 'About...'),)
+                            # ('Help',))
+
+                menu_def = element.MenuDefinition
+
+                element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=0)    # create the menubar
+                menubar = element.TKMenu
+                for menu_entry in menu_def:
+                    # print(f'Adding a Menubar ENTRY')
+                    baritem = tk.Menu(menubar)
+                    menubar.add_cascade(label=menu_entry[0], menu=baritem)
+                    if len(menu_entry) > 1:
+                        AddMenuItem(baritem, menu_entry[1], element)
+
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
