@@ -37,7 +37,6 @@ def Timer():
             current_time = int(round(time.time()*100)) - start_time
         else:
             button, values = form.Read()
-
         # --------- Do Button Operations --------
         if values is None or button == 'Exit':
             break
