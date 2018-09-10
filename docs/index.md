@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 3.00.02)
+  (Ver 3.01.0)
 
 
 
@@ -137,6 +137,8 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         Bulk form-fill operation
         Save / Load form to/from disk
         Borderless (no titlebar) windows
+        Always on top
+        Menus
 
 
 An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
@@ -1915,6 +1917,25 @@ Use realtime keyboard capture by calling
             elif value is None:
                 break
 
+## Menus
+
+Beginning in version 3.01 you can add a menubar to your form/window.  You specify the menus in much the same way as you do form layouts, with lists.  Menu selections are returned as button clicks, so be aware of your overall naming conventions.  If you have an Exit button and also an Exit menu option, then you won't be able to tell the difference when your form.Read returns.  Hopefully will not be a problem.
+
+This definition:
+
+    menu_def = [['File', ['Open', 'Save', 'Exit',]],
+                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
+                ['Help', 'About...'],]
+
+Note the placement of ',' and of [].  It's tricky to get the nested menus correct that implement cascading menus.  See how paste has Special and Normal as a list after it.  This means that Paste has a cascading menu with items Special and Normal.
+
+They menu_def layout produced this window:
+
+![menu](https://user-images.githubusercontent.com/13696193/45306723-56b7cb00-b4eb-11e8-8cbd-faef0c90f8b4.jpg)
+
+
+
+
 ## Updating Elements
 
 This is a somewhat advanced topic...
@@ -2091,6 +2112,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.20.0 | Sept 4, 2018 - Some sizable features this time around of interest to advanced users.  Renaming of the MsgBox functions to Popup. Renaming GetFile, etc, to PopupGetFile. High-level windowing capabilities start with Popup, PopupNoWait/PopupNonblocking, PopupNoButtons, default icon, change_submits option for Listbox/Combobox/Slider/Spin/, New OptionMenu element, updating elements after shown, system defaul color option for progress bars, new button type (Dummy Button) that only closes a window, SCROLLABLE Columns!! (yea, playing in the Big League now), LayoutAndShow function removed, form.Fill - bulk updates to forms, FindElement - find element based on key value (ALL elements have keys now), no longer use grid packing for row elements (a potentially huge change), scrolled text box sizing changed, new look and feel themes (Dark, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green)
 | 2.30.0 | Sept 6, 2018 - Calendar Chooser (button), borderless windows, load/save form to disk
 | 3.0.0 | Sept 7, 2018 - The "fix for poor choice of 2.x numbers" release. Color Chooser (button), "grab anywhere" windows are on by default, disable combo boxes, Input Element text justification (last part needed for 'tables'), Image Element changes to support OpenCV?, PopupGetFile and PopupGetFolder have better no_window option
+| 3.01.0 | Sept 10, 2018 - Menus! (sort of a big deal),
 
 
 ### Release Notes

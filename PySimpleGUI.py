@@ -2137,20 +2137,6 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                 AddMenuItem(top_menu, item, element)
             i += 1
 
-
-
-
-        # print(f'Looping through {sub_menu_info}')
-        # print(f'Type is {type(sub_menu_info)}')
-        # if type(sub_menu_info[1]) is list:
-        #     new_menu = tk.Menu(top_menu)
-        #     top_menu.add_cascade(label=sub_menu_info[0], menu=new_menu)
-        #     AddMenuItem(new_menu, sub_menu_info[1], element, is_sub_menu=True)
-        # else:
-        #     for item in sub_menu_info:
-        #         AddMenuItem(top_menu, item, element)
-
-
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   TK CODE STARTS HERE ====================================================== #
 # ------------------------------------------------------------------------------------------------------------------ #
