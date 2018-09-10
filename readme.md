@@ -585,11 +585,11 @@ The third is the 'compact form'.  It compacts down into 2 lines of code.  One li
 
 You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
-### How GUI Programming in Python Should Look
+### How GUI Programming in Python Should Look?
 
-GUI programming in Python is a mess.  tkinter kinda sucks.  Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list or dictionary?
+Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list or dictionary?  PySimpleGUI set out to be a Pythonic solution to the GUI problem.  Whether it achieved this goal is debatable, but it was an attempt just the same.
 
-The key to custom forms in PySimpleGUI is to view forms as ROWS of Widgets (Elements).  Each row is specified as a list of these widgets.  Put the rows together and you've got a form.
+The key to custom forms in PySimpleGUI is to view forms as ROWS of Widgets (Elements).  Each row is specified as a list of these Elements.  Put the rows together and you've got a form or window.
 
 Let's look at this one.
 
@@ -1745,7 +1745,7 @@ When to use a non-blocking form:
 If your application doesn't follow the basic design pattern at one of those, then it shouldn't be  executed as a non-blocking form.
 
 
-### Instead of ReadNonBlocking --- Use `change_submits = True`
+### Instead of ReadNonBlocking --- Use `change_submits = True` or return_keyboard_events = True
 
 Any time you are thinking "I want an X Element to cause a Y Element to do something", then you want to use the `change_submits` option.
 
@@ -1753,17 +1753,18 @@ Any time you are thinking "I want an X Element to cause a Y Element to do someth
 
 **Examples**
 
-
-
-Or another example is you have an input field that changes as you press buttons on an on-screen keypad.
+One example is you have an input field that changes as you press buttons on an on-screen keypad.
 
 ![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)
 
 
-2. When a slider or a spinner moves it changes the size of the text somewhere on the form.
+Another example, a slider or a spinner move changes the size of the text somewhere on the form.
 
 
 ![snap0272](https://user-images.githubusercontent.com/13696193/45260249-ec4e4000-b3af-11e8-853b-9b29d0bf7797.jpg)
+
+A final example...  changing a text field as a user types into another field.
+
 
 
 ### Periodically Calling`ReadNonBlocking`
