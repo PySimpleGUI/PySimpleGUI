@@ -1,7 +1,7 @@
 
 # The PySimpleGUI Cookbook
 
-You will find all of these Recipes in a single Python file ([Demo_Cookbook.py](https://github.com/MikeTheWatchGuy/PySimpleGUI/blob/master/Demo_Cookbook.py)) located on the project's GitHub page.   This program will allow you to view the source code and the window that it produces.
+You will find all of these Recipes in a single Python file ([Demo_Cookbook.py](https://github.com/MikeTheWatchGuy/PySimpleGUI/blob/master/Demo_Cookbook.py)) located on the project's GitHub page.   This program will allow you to view the source code and the window that it produces.  You can also download over 50 demo programs that are ready to run.
 
 You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.
 
@@ -1087,3 +1087,49 @@ You can easily change colors to match your background by changing a couple of pa
 
     if __name__ == '__main__':
         Launcher()
+
+
+## Menus
+
+Menus are nothing more than buttons that live in a menu-bar.  When you click on a menu item, you get back a "button" with that menu item's text, just as you would had that text been on a button.
+
+Menu's are defined separately from the GUI form.  To add one to your form, simply insert sg.Menu(menu_layout).  The meny definition is a list of menu choices and submenus.  They are a list of lists.  Copy the Recipe and play with it.  You'll eventualy get when you're looking for.
+
+If you double click the dashed line at the top of the list of choices, that menu will tear off and become a floating toolbar.  How cool!
+
+
+![tear off](https://user-images.githubusercontent.com/13696193/45307668-9aabcf80-b4ed-11e8-9b2b-8564d4bf82a8.jpg)
+
+
+    import PySimpleGUI as sg
+
+    sg.ChangeLookAndFeel('LightGreen')
+    sg.SetOptions(element_padding=(0, 0))
+
+    # ------ Menu Definition ------ #
+    menu_def = [['File', ['Open', 'Save',]],
+                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
+                ['Help', 'About...'],]
+
+    # ------ GUI Defintion ------ #
+    layout = [
+            [sg.Menu(menu_def)],
+              [sg.Output(size=(60,20))]
+              ]
+
+    form = sg.FlexForm("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,
+                       default_button_element_size=(12, 1))
+    form.Layout(layout)
+
+    # ------ Loop & Process button menu choices ------ #
+    while True:
+        button, values = form.Read()
+        if button is None or button == 'Exit':
+            return
+      print('Button = ', button)
+        # ------ Process menu choices ------ #
+      if button == 'About...':
+            sg.Popup('About this program','Version 1.0', 'PySimpleGUI rocks...')
+        elif button == 'Open':
+            filename = sg.PopupGetFile('file to open', no_window=True)
+            print(filename)
