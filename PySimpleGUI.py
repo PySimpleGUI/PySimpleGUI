@@ -550,11 +550,16 @@ class Spin(Element):
         super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
-    def Update(self, new_value):
-        try:
-            self.TKStringVar.set(new_value)
-        except: pass
-        self.DefaultValue = new_value
+    def Update(self, new_value=None, new_values=None ):
+        if new_value is not None:
+            try:
+                self.TKStringVar.set(new_value)
+            except: pass
+            self.DefaultValue = new_value
+        if new_values != None:
+            self.Values = new_values
+            self.TKSpinBox.configure(values=new_values)
+
 
     def SpinChangedHandler(self, event):
         # first, get the results table built
@@ -936,7 +941,7 @@ class Button(Element):
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
-    def __init__(self, max_value, orientation=None, scale=(None, None), size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None, pad=None):
+    def __init__(self, max_value, orientation=None, scale=(None, None), size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None, key=None, pad=None):
         '''
         Progress Bar Element
         :param max_value:
@@ -959,7 +964,7 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(ELEM_TYPE_PROGRESS_BAR, scale=scale, size=size, auto_size_text=auto_size_text, pad=pad)
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, scale=scale, size=size, auto_size_text=auto_size_text, key=key, pad=pad)
         return
 
     def UpdateBar(self, current_count, max=None):
@@ -994,7 +999,6 @@ class Image(Element):
         self.Filename = filename
         self.Data = data
         self.tktext_label = None
-
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, scale=scale, size=size, pad=pad, key=key)
@@ -2266,9 +2270,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     width = 0
                     height= toplevel_form.DefaultButtonElementSize[1]
-                lines = btext.split('\n')
-                max_line_len = max([len(l) for l in lines])
-                num_lines = len(lines)
                 if element.ButtonColor != (None, None)and element.ButtonColor != DEFAULT_BUTTON_COLOR:
                     bc = element.ButtonColor
                 elif toplevel_form.ButtonColor != (None, None) and toplevel_form.ButtonColor != DEFAULT_BUTTON_COLOR:
