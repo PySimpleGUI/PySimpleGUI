@@ -115,87 +115,102 @@ Browse to get 2 file names that can be then compared.  Uses a context manager
 
 ---------------
 ## Nearly All Widgets with Green Color Theme with Context Manager
-Example of nearly all of the widgets in a single form.  Uses a customized color scheme.  This recipe uses a context manager, the preferred method.
+Example of nearly all of the widgets in a single form.  Uses a customized color scheme.  This recipe uses a context manager, ***the preferred method***.
 
-![green everything](https://user-images.githubusercontent.com/13696193/43937043-7d0794be-9c29-11e8-8591-31373ddd5c34.jpg)
+![cookbook all elements](https://user-images.githubusercontent.com/13696193/45308495-9bddfc00-b4ef-11e8-9c6a-32edf6b1d925.jpg)
 
-    # Green & tan color scheme
-    sg.SetOptions(background_color='#9FB8AD',
-                  text_element_background_color='#9FB8AD',
-                  element_background_color='#9FB8AD',
-                  input_elements_background_color='#F7F3EC',
-                  button_color=('white', '#475841'),
-                  border_width=0,
-                  slider_border_width=0,
-                  progress_meter_border_depth=0,
-                  scrollbar_color='#F7F3EC')
-
-    with sg.FlexForm('Everything bagel', default_element_size=(40, 1)) as form:
-        layout = [
-            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
-            [sg.Text('Here is some text.... and a place to enter text')],
-            [sg.InputText()],
-            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
-            [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
-            [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
-             sg.Multiline(default_text='A second multi-line', size=(35, 3))],
-            [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 3)),
-             sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
-            [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3', 'Listbox 4'), size=(30, 3)),
-             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
-             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
-             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
-             sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
-            [sg.Text('_'  * 80)],
-            [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
-             sg.InputText('Default Folder'), sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('black', '#EDE5B7'))]]
-
-        button, values = form.LayoutAndRead(layout)
--------------
-### All Widgets No Context Manager
-
-![green everything](https://user-images.githubusercontent.com/13696193/43937043-7d0794be-9c29-11e8-8591-31373ddd5c34.jpg)
 
     import PySimpleGUI as sg
 
-    # Green & tan color scheme
-    sg.SetOptions(background_color='#9FB8AD',
-                  text_element_background_color='#9FB8AD',
-                  element_background_color='#9FB8AD',
-                  input_elements_background_color='#F7F3EC',
-                  button_color=('white', '#475841'),
-                  border_width=0,
-                  slider_border_width=0,
-                  progress_meter_border_depth=0,
-                  scrollbar_color='#F7F3EC')
+    sg.ChangeLookAndFeel('GreenTan')
 
-    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
-    layout = [
+    with sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False) as form:
+
+        column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
+                   [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+                   [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
+                   [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+
+        layout = [
             [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
             [sg.Text('Here is some text.... and a place to enter text')],
             [sg.InputText('This is my text')],
-            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
+            [sg.Checkbox('Checkbox'), sg.Checkbox('My second checkbox!', default=True)],
             [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
             [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
              sg.Multiline(default_text='A second multi-line', size=(35, 3))],
-            [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 3)),
+            [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
              sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
+            [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
             [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
              sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
              sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
              sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
-             sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+             sg.Column(column1, background_color='#F7F3EC')],
             [sg.Text('_'  * 80)],
             [sg.Text('Choose A Folder', size=(35, 1))],
             [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
              sg.InputText('Default Folder'), sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', '#7E6C92'))]
-             ]
+            [sg.Submit(), sg.Cancel()]
+        ]
+
+        button, values = form.LayoutAndRead(layout)
+
+-------------
+### All Widgets No Context Manager
+
+Same form as above with no Context Manager. Use this pattern when you are in a hurry, don't have time to do things right, or it's throw-away code.... the legit use of this design is when you have non-blocking forms that update the form far away in the code from the form creation.  Perhaps you show your form, get some input, then down in your event loop you want to execute another read or have an event loop where form.ReadNonBlocking is called.
+
+Turning your form into forms that use a Contact Manage is quite easy.  Change your FlexForm call from
+
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False)
+
+to
+
+    with sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False) as form:
+
+Be sure and place the with statement at the top of your GUI code and indent you code under it.
+
+    import PySimpleGUI as sg
+
+    sg.ChangeLookAndFeel('GreenTan')
+
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False)
+
+    column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+
+    layout = [
+        [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
+        [sg.Text('Here is some text.... and a place to enter text')],
+        [sg.InputText('This is my text')],
+        [sg.Checkbox('Checkbox'),  sg.Checkbox('My second checkbox!', default=True)],
+        [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
+        [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
+         sg.Multiline(default_text='A second multi-line', size=(35, 3))],
+        [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
+         sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
+        [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
+        [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
+         sg.Column(column1, background_color='#F7F3EC')],
+        [sg.Text('_'  * 80)],
+        [sg.Text('Choose A Folder', size=(35, 1))],
+        [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
+         sg.InputText('Default Folder'), sg.FolderBrowse()],
+        [sg.Submit(), sg.Cancel()]
+    ]
 
     button, values = form.LayoutAndRead(layout)
 
-----
+-----------
+
+
+
 ## Non-Blocking Form With Periodic Update
 An async form that has a button read loop.  A Text Element is updated periodically with a running timer.  There is no context manager for this recipe because the loop that reads the form is likely to be some distance away from where the form was initialized.
 
@@ -206,10 +221,8 @@ An async form that has a button read loop.  A Text Element is updated periodical
 
     form = sg.FlexForm('Running Timer')
     # create a text element that will be updated periodically
-    text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center')
-
-    form_rows = [[sg.Text('Stopwatch', size=(20,2), justification='center')],
-                 [text_element],
+    form_rows = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],
+                 [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='output')],
                  [sg.T(' '  * 5), sg.ReadFormButton('Start/Stop', focus=True), sg.Quit()]]
 
     form.LayoutAndRead(form_rows, non_blocking=True)
@@ -220,42 +233,19 @@ An async form that has a button read loop.  A Text Element is updated periodical
     while True:
         i += 1 * (timer_running is True)
         button, values = form.ReadNonBlocking()
+
         if values is None or button == 'Quit':  # if user closed the window using X or clicked Quit button
-      break
-     elif button == 'Start/Stop':
+            break
+        elif button == 'Start/Stop':
             timer_running = not timer_running
-        text_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 
+        form.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
         time.sleep(.01)
-        # if the loop finished then need to close the form for the user
-    form.CloseNonBlockingForm()
-    del (form)
-----
-## Async Form (Non-Blocking) with Context Manager
-Like the previous recipe, this form is an async form.  The difference is that this form uses a context manager.
 
-![non-blocking 2](https://user-images.githubusercontent.com/13696193/43955456-4d5d9ef8-9c6e-11e8-8598-80dddf8eba6f.jpg)
 
-    import PySimpleGUI as sg
-    import time
 
-    with sg.FlexForm('Running Timer') as form:
-        text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), text_color='red', justification='center')
-        layout = [[sg.Text('Non blocking GUI with updates', justification='center')],
-                  [text_element],
-                  [sg.T(' '  * 15), sg.Quit()]]
-        form.LayoutAndRead(layout, non_blocking=True)
+--------
 
-        for i in range(1, 500):
-            text_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
-            button, values = form.ReadNonBlocking()
-            if values is None or button == 'Quit':  # if user closed the 				window using X
-		      break
-		    time.sleep(.01)
-        else:
-            # if the loop finished then need to close the form for the user
-            form.CloseNonBlockingForm()
-----
 ## Callback Function Simulation
 The architecture of some programs works better with button callbacks instead of handling in-line.  While button callbacks are part of the PySimpleGUI implementation, they are not directly exposed to the caller.  The way to get the same result as callbacks is to simulate them with a recipe like this one.
 
@@ -389,15 +379,12 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
     image_next = './ButtonGraphics/Next.png'
     image_exit = './ButtonGraphics/Exit.png'
 
-    # A text element that will be changed to display messages in the GUI
-    TextElem = sg.Text('', size=(15, 2), font=("Helvetica", 14))
-
     # Open a form, note that context manager can't be used generally speaking for async forms
     form = sg.FlexForm('Media File Player', auto_size_text=True, default_element_size=(20, 1),
                        font=("Helvetica", 25))
     # define layout of the rows
     layout = [[sg.Text('Media File Player', size=(17, 1), font=("Helvetica", 25))],
-              [TextElem],
+              [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],
               [sg.ReadFormButton('Restart Song', button_color=(background, background),
                                  image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0),
                sg.Text(' '  * 2),
@@ -437,7 +424,7 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
             break
       # If a button was pressed, display it on the GUI by updating the text element
       if button:
-            TextElem.Update(button)
+            form.FindElement('output).Update(button)
 ----
 ## Script Launcher - Persistent Form
 This form doesn't close after button clicks.  To achieve this the buttons are specified as `sg.ReadFormButton` instead of `sg.SimpleButton`.   The exception to this is the EXIT button.  Clicking it will close the form.  This program will run commands and display the output in the scrollable window.
@@ -495,15 +482,7 @@ A standard non-blocking GUI with lots of inputs.
     import PySimpleGUI as sg
 
     # Green & tan color scheme
-    sg.SetOptions(background_color='#9FB8AD',
-                  text_element_background_color='#9FB8AD',
-                  element_background_color='#9FB8AD',
-                  input_elements_background_color='#F7F3EC',
-                  button_color=('white', '#475841'),
-                  border_width=0,
-                  slider_border_width=0,
-                  progress_meter_border_depth=0,
-                  scrollbar_color='#F7F3EC')
+    sg.ChangeLookAndFeel('GreenTan')
 
     sg.SetOptions(text_justification='right')
 
@@ -539,28 +518,26 @@ Perhaps you don't want all the statistics that the EasyProgressMeter provides an
 
     import PySimpleGUI as sg
 
-    def CustomMeter():
-        # create the progress bar element
-      progress_bar = sg.ProgressBar(10000, orientation='h', size=(20,20))
-        # layout the form
-      layout = [[sg.Text('A custom progress meter')],
-                  [progress_bar],
-                  [sg.Cancel()]]
+    # layout the form
+    layout = [[sg.Text('A custom progress meter')],
+              [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progbar')],
+              [sg.Cancel()]]
 
-      # create the form
-      form = sg.FlexForm('Custom Progress Meter')
-        # display the form as a non-blocking form
-      form.LayoutAndRead(layout, non_blocking=True)
-        # loop that would normally do something useful
-      for i in range(10000):
-            # check to see if the cancel button was clicked and exit loop if clicked
-	        button, values = form.ReadNonBlocking()
-            if button == 'Cancel'  or values == None:
-                break
+    # create the form
+    form = sg.FlexForm('Custom Progress Meter')
+    # display the form as a non-blocking form
+    form.LayoutAndRead(layout, non_blocking=True)
+    # loop that would normally do something useful
+    for i in range(10000):
+        # check to see if the cancel button was clicked and exit loop if clicked
+      button, values = form.ReadNonBlocking()
+        if button == 'Cancel'  or values == None:
+            break
       # update bar with loop value +1 so that bar eventually reaches the maximum
-      progress_bar.UpdateBar(i+1)
-        # done with loop... need to destroy the window as it's still open
-      form.CloseNonBlockingForm()
+      form.FindElement('progbar').UpdateBar(i + 1)
+    # done with loop... need to destroy the window as it's still open
+    form.CloseNonBlockingForm()
+
 
    ----
 
@@ -595,7 +572,8 @@ This example uses a Column.  There is a Listbox on the left that is 3 rows high.
 
 To make it easier to see the Column in the window, the Column background has been shaded blue.  The code is wordier than normal due to the blue shading.  Each element in the column needs to have the color set to match blue background.
 
-![snap0202](https://user-images.githubusercontent.com/13696193/44234671-27749f00-a175-11e8-9e66-a3fccf6c077e.jpg)
+![cookbook columns](https://user-images.githubusercontent.com/13696193/45309948-f6c52280-b4f2-11e8-8691-a45fa0e06c50.jpg)
+
 
 
     import PySimpleGUI as sg
@@ -636,13 +614,12 @@ This simple program keep a form open, taking input values until the user termina
 
     form = sg.FlexForm('Math')
 
-    output = sg.Txt('', size=(8,1))
 
     layout = [ [sg.Txt('Enter values to calculate')],
                [sg.In(size=(8,1), key='numerator')],
                [sg.Txt('_'  * 10)],
                [sg.In(size=(8,1), key='denominator')],
-               [output],
+               [sg.Txt('', size=(8,1), key='output')  ],
                [sg.ReadFormButton('Calculate', bind_return_key=True)]]
 
     form.Layout(layout)
@@ -658,7 +635,7 @@ This simple program keep a form open, taking input values until the user termina
             except:
                 calc = 'Invalid'
 
-            output.Update(calc)
+            form.FindElement('output').Update(calc)
         else:
             break
 
@@ -676,31 +653,28 @@ The Canvas Element is one of the few tkinter objects that are directly accessibl
 ![canvas](https://user-images.githubusercontent.com/13696193/44632429-5266ac00-a948-11e8-9ee0-664103c40178.jpg)
 
 
-
-
-    import PySimpleGUI as gui
-
-    canvas = gui.Canvas(size=(100,100), background_color='red')
+    import PySimpleGUI as sg
 
     layout = [
-               [canvas],
-               [gui.T('Change circle color to:'), gui.ReadFormButton('Red'), gui.ReadFormButton('Blue')]
-               ]
+        [sg.Canvas(size=(100, 100), background_color='red', key= 'canvas')],
+        [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue')]
+    ]
 
-    form = gui.FlexForm('Canvas test')
+    form = sg.FlexForm('Canvas test')
     form.Layout(layout)
     form.ReadNonBlocking()
 
+    canvas = form.FindElement('canvas')
     cir = canvas.TKCanvas.create_oval(50, 50, 100, 100)
 
     while True:
         button, values = form.Read()
         if button is None:
             break
-        if button is 'Blue':
-            canvas.TKCanvas.itemconfig(cir, fill = "Blue")
+     if button is 'Blue':
+            canvas.TKCanvas.itemconfig(cir, fill="Blue")
         elif button is 'Red':
-            canvas.TKCanvas.itemconfig(cir, fill = "Red")
+            canvas.TKCanvas.itemconfig(cir, fill="Red")
 
 
 ## Input Element Update
@@ -719,9 +693,7 @@ There are a number of features used in this Recipe including:
 
 
 
-    import PySimpleGUI as g
-
-    # g.SetOptions(button_color=g.COLOR_SYSTEM_DEFAULT)   # because some people like gray buttons
+    import PySimpleGUI as sg
 
     # Demonstrates a number of PySimpleGUI features including:
     #   Default element size
@@ -731,38 +703,34 @@ There are a number of features used in this Recipe including:
     #   Update of elements in form (Text, Input)
     #   do_not_clear of Input elements
 
-    # create the 2 Elements we want to control outside the form
-    out_elem = g.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red')
-    in_elem = g.Input(size=(10, 1), do_not_clear=True, key='input')
-
-    layout = [[g.Text('Enter Your Passcode')],
-              [in_elem],
-              [g.ReadFormButton('1'), g.ReadFormButton('2'), g.ReadFormButton('3')],
-              [g.ReadFormButton('4'), g.ReadFormButton('5'), g.ReadFormButton('6')],
-              [g.ReadFormButton('7'), g.ReadFormButton('8'), g.ReadFormButton('9')],
-              [g.ReadFormButton('Submit'), g.ReadFormButton('0'), g.ReadFormButton('Clear')],
-              [out_elem],
+    layout = [[sg.Text('Enter Your Passcode')],
+              [sg.Input(size=(10, 1), do_not_clear=True, justification='right', key='input')],
+              [sg.ReadFormButton('1'), sg.ReadFormButton('2'), sg.ReadFormButton('3')],
+              [sg.ReadFormButton('4'), sg.ReadFormButton('5'), sg.ReadFormButton('6')],
+              [sg.ReadFormButton('7'), sg.ReadFormButton('8'), sg.ReadFormButton('9')],
+              [sg.ReadFormButton('Submit'), sg.ReadFormButton('0'), sg.ReadFormButton('Clear')],
+              [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],
               ]
 
-    form = g.FlexForm('Keypad', default_element_size=(5, 2), auto_size_buttons=False)
+    form = sg.FlexForm('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False)
     form.Layout(layout)
 
     # Loop forever reading the form's values, updating the Input field
     keys_entered = ''
     while True:
         button, values = form.Read()  # read the form
-        if button is None:  # if the X button clicked, just exit
-            break
-        if button is 'Clear':  # clear keys if clear button
-            keys_entered = ''
-        elif button in '1234567890':
+      if button is None:  # if the X button clicked, just exit
+      break
+     if button is 'Clear':  # clear keys if clear button
+      keys_entered = ''
+      elif button in '1234567890':
             keys_entered = values['input']  # get what's been entered so far
-            keys_entered += button  # add the new digit
-        elif button is 'Submit':
+      keys_entered += button  # add the new digit
+      elif button is 'Submit':
             keys_entered = values['input']
-            out_elem.Update(keys_entered)  # output the final string
+            form.FindElement('out').Update(keys_entered)  # output the final string
 
-        in_elem.Update(keys_entered)  # change the form to reflect current key string
+      form.FindElement('input').Update(keys_entered)  # change the form to reflect current key string
 
 ## Animated Matplotlib Graph
 
@@ -788,16 +756,16 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
         ax.set_ylabel("Y axis")
         ax.grid()
 
-        canvas_elem = g.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
-
         layout = [[g.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
-                  [canvas_elem],
+                  [g.Canvas(size=(640, 480), key='canvas')],
                   [g.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
         # create the form and show it without the plot
-        form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
+      form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
         form.Layout(layout)
         form.ReadNonBlocking()
+
+        canvas_elem = form.FindElement('canvas')
 
         graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
         canvas = canvas_elem.TKCanvas
@@ -825,24 +793,80 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
             tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
             # time.sleep(.1)
 
-        if __name__ == '__main__':
-            main()
-
-
+    if __name__ == '__main__':
+        main()
 
 ## Tables
 
 While there is no official support for "Tables" (e.g. there is no Table Element), it is possible to display information in a tabular way.  This only works for smaller tables because there is no way to scroll a window or a column element.  Until scrollable columns are implemented there is little use in creating  a Table Element.
 
-![simpletable](https://user-images.githubusercontent.com/13696193/44960497-c667fd80-aece-11e8-988c-5fa7dfdb90a6.jpg)
+This Recipe contains a number of concepts beyond just tables. It has menus, and 'realtime' keyboard input.  Working with large numbers of elements takes time to layout.  Once laid out it should be OK.
 
-    layout = [[sg.T('Table Test')]]
+
+![table 2](https://user-images.githubusercontent.com/13696193/45310830-5de3d680-b4f5-11e8-925a-7c2a7b8b1922.jpg)
+
+
+
+    import PySimpleGUI as sg
+
+    menu_def = [['File', ['Open', 'Save', 'Exit']],
+                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
+                ['Help', 'About...'],]
+
+    sg.SetOptions(element_padding=(0,0))
+    layout = [ [sg.Menu(menu_def)],
+               [sg.T('Table Using Combos and Input Elements', font='Any 18')],
+              [sg.T('Row, Cal to change'),
+               sg.In(key='inputrow', justification='right', size=(8,1), pad=(1,1), do_not_clear=True),
+               sg.In(key='inputcol', size=(8,1), pad=(1,1), justification='right', do_not_clear=True),
+               sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)]]
 
     for i in range(20):
-        row = [sg.T(f'Row {i}  ', size=(10,1))]
-        layout.append([sg.T(f'{i}{j}', size=(4,1), background_color='white', pad=(1,1)) for j in range(10)])
+        inputs = [sg.In(size=(18, 1), pad=(1, 1), justification='right', key=(i,j), do_not_clear=True) for j in range(10)]
+        line = [sg.Combo(('Customer ID', 'Customer Name', 'Customer Info'))]
+        line.append(inputs)
+        layout.append(inputs)
 
-    sg.FlexForm('Table').LayoutAndRead(layout)
+    form = sg.FlexForm('Table', return_keyboard_events=True, grab_anywhere=False)
+    form.Layout(layout)
+
+    while True:
+        button, values = form.Read()
+        if button is None:
+            break
+     if button == 'Open':
+            filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
+            if filename is not None:
+                with open(filename, "r") as infile:
+                    reader = csv.reader(infile)
+                    # first_row = next(reader, None)  # skip the headers
+      data = list(reader)  # read everything else into a list of rows
+      sg.Print(data)
+                for i, row in enumerate(data):
+                    for j, item in enumerate(row):
+                        print(i,j, item)
+                        # form.FindElement(key=(i,j)).Update(item)
+      location = (i,j)
+                        try:
+                            # location = (int(values['inputrow']), int(values['inputcol']))
+      target_element = form.FindElement(location)
+                            new_value = item
+                            # new_value = values['value']
+      if target_element is not None and new_value != '':
+                                target_element.Update(new_value)
+                        except:
+                            pass
+     if button == 'Exit':
+            break
+     try:
+            location = (int(values['inputrow']), int(values['inputcol']))
+            target_element = form.FindElement(location)
+            new_value = values['value']
+            if target_element is not None and new_value != '':
+                target_element.Update(new_value)
+        except:
+            pass
+
 
 ## Tight Layout with Button States
 
@@ -856,26 +880,26 @@ In other GUI frameworks this program would be most likely "event driven" with ca
 
 
     import PySimpleGUI as sg
+    """
+    Demonstrates using a "tight" layout with a Dark theme.
+    Shows how button states can be controlled by a user application.  The program manages the disabled/enabled
+    states for buttons and changes the text color to show greyed-out (disabled) buttons
+    """
 
     sg.ChangeLookAndFeel('Dark')
-    sg.SetOptions(element_padding=(0, 0))
+    sg.SetOptions(element_padding=(0,0))
 
-    StartButton = sg.ReadFormButton('Start', button_color=('white', 'black'))
-    StopButton = sg.ReadFormButton('Stop', button_color=('gray34', 'black'))
-    ResetButton = sg.ReadFormButton('Reset', button_color=('gray', 'firebrick3'))
-    SubmitButton = sg.ReadFormButton('Submit', button_color=('gray34', 'springgreen4'))
+    layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User 2'), size=(20,1)), sg.T('0', size=(8,1))],
+              [sg.T('Customer:', pad=((3,0),0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20,1)), sg.T('1', size=(8,1))],
+              [sg.T('Notes:', pad=((3,0),0)), sg.In(size=(44,1), background_color='white', text_color='black')],
+              [sg.ReadFormButton('Start', button_color=('white', 'black'), key='start'),
+               sg.ReadFormButton('Stop', button_color=('gray34', 'black'), key='stop'),
+               sg.ReadFormButton('Reset', button_color=('gray', 'firebrick3'), key='reset'),
+               sg.ReadFormButton('Submit', button_color=('gray34', 'springgreen4'), key='submit')]
+              ]
 
-    layout = [
-        [sg.T('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User 2'), size=(20, 1)), sg.T('0', size=(8, 1))],
-        [sg.T('Customer:', pad=((3, 0), 0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20, 1)),
-         sg.T('1', size=(8, 1))],
-        [sg.T('Notes:', pad=((3, 0), 0)), sg.In(size=(44, 1), background_color='white', text_color='black')],
-        [StartButton, StopButton, ResetButton, SubmitButton]
-        ]
-
-    form = sg.FlexForm("Time Tracker", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
-                       auto_size_buttons=False,
-                       default_button_element_size=(12, 1))
+    form = sg.FlexForm("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
+                       default_button_element_size=(12,1))
     form.Layout(layout)
     recording = have_data = False
     while True:
@@ -883,28 +907,28 @@ In other GUI frameworks this program would be most likely "event driven" with ca
         if button is None:
             exit(69)
         if button is 'Start':
-            StartButton.Update(button_color=('gray34', 'black'))
-            StopButton.Update(button_color=('white', 'black'))
-            ResetButton.Update(button_color=('white', 'firebrick3'))
+            form.FindElement('start').Update(button_color=('gray34','black'))
+            form.FindElement('stop').Update(button_color=('white', 'black'))
+            form.FindElement('reset').Update(button_color=('white', 'firebrick3'))
             recording = True
-        elif button is 'Stop'  and recording:
-            StopButton.Update(button_color=('gray34', 'black'))
-            StartButton.Update(button_color=('white', 'black'))
-            SubmitButton.Update(button_color=('white', 'springgreen4'))
+     elif button is 'Stop'  and recording:
+            form.FindElement('stop').Update(button_color=('gray34','black'))
+            form.FindElement('start').Update(button_color=('white', 'black'))
+            form.FindElement('submit').Update(button_color=('white', 'springgreen4'))
             recording = False
-            have_data = True
-        elif button is 'Reset':
-            StopButton.Update(button_color=('gray34', 'black'))
-            StartButton.Update(button_color=('white', 'black'))
-            SubmitButton.Update(button_color=('gray34', 'springgreen4'))
-            ResetButton.Update(button_color=('gray34', 'firebrick3'))
+      have_data = True
+     elif button is 'Reset':
+            form.FindElement('stop').Update(button_color=('gray34','black'))
+            form.FindElement('start').Update(button_color=('white', 'black'))
+            form.FindElement('submit').Update(button_color=('gray34', 'springgreen4'))
+            form.FindElement('reset').Update(button_color=('gray34', 'firebrick3'))
             recording = False
-            have_data = False
-        elif button is 'Submit'  and have_data:
-            StopButton.Update(button_color=('gray34', 'black'))
-            StartButton.Update(button_color=('white', 'black'))
-            SubmitButton.Update(button_color=('gray34', 'springgreen4'))
-            ResetButton.Update(button_color=('gray34', 'firebrick3'))
+      have_data = False
+     elif button is 'Submit'  and have_data:
+            form.FindElement('stop').Update(button_color=('gray34','black'))
+            form.FindElement('start').Update(button_color=('white', 'black'))
+            form.FindElement('submit').Update(button_color=('gray34', 'springgreen4'))
+            form.FindElement('reset').Update(button_color=('gray34', 'firebrick3'))
             recording = False
 
 ## Password Protection For Scripts
@@ -976,3 +1000,5 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
         print('Login SUCCESSFUL')
     else:
         print('Login FAILED!!')
+
+
