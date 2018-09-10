@@ -924,6 +924,7 @@ class Button(Element):
         try:
             if new_text is not None:
                 self.TKButton.configure(text=new_text)
+                self.ButtonText = new_text
             if button_color != (None, None):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
