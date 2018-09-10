@@ -15,13 +15,13 @@ import time
 
 def Timer():
     # ----------------  Create Form  ----------------
-    sg.ChangeLookAndFeel('Dark')
+    sg.ChangeLookAndFeel('Black')
     sg.SetOptions(element_padding=(0,0))
     # Make a form, but don't use context manager
     # Create the form layout
     form_rows = [[sg.Text('')],
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-                 [sg.ReadFormButton('Pause', key='button'), sg.ReadFormButton('Reset'), sg.Exit(button_color=('white','firebrick4'))]]
+                 [sg.ReadFormButton('Pause', key='button', button_color=('white', '#001480')), sg.ReadFormButton('Reset', button_color=('white', '#007339')), sg.Exit(button_color=('white','firebrick4'))]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
     form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
     form.Layout(form_rows)
