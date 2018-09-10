@@ -420,6 +420,7 @@ class Listbox(Element):
         for item in values:
             self.TKListbox.insert(tk.END, item)
         self.TKListbox.selection_set(0, 0)
+        self.Values = values
 
     def SetValue(self, values):
         for index, item in enumerate(self.Values):
