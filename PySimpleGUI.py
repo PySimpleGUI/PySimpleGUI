@@ -2445,7 +2445,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font)
                 if default_value is None:
                     element.TKCheckbutton.configure(state='disable')
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
                     element.TKCheckbutton.configure(selectcolor=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
