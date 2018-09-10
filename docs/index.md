@@ -209,6 +209,12 @@ On a Raspberry Pi, this is should work:
 
     sudo pip3 install --upgrade pysimplegui
 
+Some users have found that upgrading required using an extra flag on the pip `--no-cache-dir` and you can force the version number too by adding `==version` onto the end
+
+    pip install --upgrade --no-cache-dir PySimpleGUI==3.0.3
+
+
+
 If for some reason you are unable to install using `pip`, don't worry, you can still import PySimpleGUI by downloading the file PySimleGUI.py and placing it in your folder along with the application that is importing it.
 
 
