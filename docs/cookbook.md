@@ -1049,8 +1049,8 @@ You can easily change colors to match your background by changing a couple of pa
 
         form.Layout(layout)
 
-        # ---===--- Loop taking in user input and using it to query HowDoI --- #
-      while True:
+        # ---===--- Loop taking in user input (buttons) --- #
+        while True:
             (button, value) = form.Read()
             if button is 'EXIT'  or button is None:
                 break # exit button clicked
