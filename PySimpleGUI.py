@@ -282,10 +282,10 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
 
-    def Update(self, value=None, disable=None):
-        if disable is True:
+    def Update(self, value=None, disabled=None):
+        if disabled is True:
             self.TKEntry['state'] = 'disabled'
-        elif disable is False:
+        elif disabled is False:
             self.TKEntry['state'] = 'normal'
         if value is not None:
             try:
@@ -322,7 +322,7 @@ class InputCombo(Element):
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, value=None, values=None, disable=None):
+    def Update(self, value=None, values=None, disabled=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -336,9 +336,9 @@ class InputCombo(Element):
                     except: pass
                     self.DefaultValue = value
                     break
-        if disable == True:
+        if disabled == True:
             self.TKCombo['state'] = 'disable'
-        elif disable == False:
+        elif disabled == False:
             self.TKCombo['state'] = 'enable'
 
 
@@ -371,7 +371,7 @@ class InputOptionMenu(Element):
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, value=None, values=None, disable=None):
+    def Update(self, value=None, values=None, disabled=None):
         if values is not None:
             self.Values = values
         if self.Values is not None:
@@ -382,9 +382,9 @@ class InputOptionMenu(Element):
                     except: pass
                     self.DefaultValue = value
                     break
-        if disable == True:
+        if disabled == True:
             self.TKOptionMenu['state'] = 'disabled'
-        elif disable == False:
+        elif disabled == False:
             self.TKOptionMenu['state'] = 'normal'
 
 
@@ -428,10 +428,10 @@ class Listbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, values=None, disable=None):
-        if disable == True:
+    def Update(self, values=None, disabled=None):
+        if disabled == True:
             self.TKListbox.configure(state='disabled')
-        elif disable == False:
+        elif disabled == False:
             self.TKListbox.configure(state='normal')
         if values is not None:
             self.TKListbox.delete(0, 'end')
@@ -486,16 +486,16 @@ class Radio(Element):
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad)
 
-    def Update(self, value=None, disable=None):
+    def Update(self, value=None, disabled=None):
         location = EncodeRadioRowCol(self.Position[0], self.Position[1])
         if value is not None:
             try:
                 self.TKIntVar.set(location)
             except: pass
             self.InitialState = value
-        if disable == True:
+        if disabled == True:
             self.TKRadio['state'] = 'disabled'
-        elif disable == False:
+        elif disabled == False:
             self.TKRadio['state'] = 'normal'
 
     def __del__(self):
@@ -531,15 +531,15 @@ class Checkbox(Element):
     def Get(self):
         return self.TKIntVar.get()
 
-    def Update(self, value=None, disable=None):
+    def Update(self, value=None, disabled=None):
         if value is not None:
             try:
                 self.TKIntVar.set(value)
                 self.InitialState = value
             except: pass
-        if disable == True:
+        if disabled == True:
             self.TKCheckbutton.configure(state='disabled')
-        elif disable == False:
+        elif disabled == False:
             self.TKCheckbutton.configure(state='normal')
 
 
@@ -574,7 +574,7 @@ class Spin(Element):
         super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
-    def Update(self, value=None, values=None, disable=None):
+    def Update(self, value=None, values=None, disabled=None):
         if values != None:
             old_value = self.TKStringVar.get()
             self.Values = values
@@ -585,9 +585,9 @@ class Spin(Element):
                 self.TKStringVar.set(value)
             except: pass
         self.DefaultValue = value
-        if disable == True:
+        if disabled == True:
             self.TKSpinBox.configure(state='disabled')
-        elif disable == False:
+        elif disabled == False:
             self.TKSpinBox.configure(state='normal')
 
 
@@ -629,16 +629,16 @@ class Multiline(Element):
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
-    def Update(self, value=None, disable=None):
+    def Update(self, value=None, disabled=None):
         if value is not None:
             try:
                 self.TKText.delete('1.0', tk.END)
                 self.TKText.insert(1.0, value)
             except: pass
             self.DefaultText = value
-        if disable == True:
+        if disabled == True:
             self.TKText.configure(state='disabled')
-        elif disable == False:
+        elif disabled == False:
             self.TKText.configure(state='normal')
 
     def Get(self):
@@ -956,7 +956,7 @@ class Button(Element):
 
         return
 
-    def Update(self, value=None, text=None, button_color=(None, None), disable=None):
+    def Update(self, value=None, text=None, button_color=(None, None), disabled=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -967,9 +967,9 @@ class Button(Element):
             return
         if value is not None:
             self.DefaultValue = value
-        if disable == True:
+        if disabled == True:
             self.TKButton['state'] = 'disabled'
-        elif disable == False:
+        elif disabled == False:
             self.TKButton['state'] = 'normal'
 
 
@@ -1129,7 +1129,7 @@ class Slider(Element):
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad)
         return
 
-    def Update(self, value=None, range=(None, None), disable=None):
+    def Update(self, value=None, range=(None, None), disabled=None):
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -1137,9 +1137,9 @@ class Slider(Element):
                     self.TKScale.config(from_ = range[0], to_ = range[1])
             except: pass
             self.DefaultValue = value
-        if disable == True:
+        if disabled == True:
             self.TKScale['state'] = 'disabled'
-        elif disable == False:
+        elif disabled == False:
             self.TKScale['state'] = 'normal'
 
     def SliderChangedHandler(self, event):
