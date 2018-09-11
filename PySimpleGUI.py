@@ -551,14 +551,16 @@ class Spin(Element):
         return
 
     def Update(self, new_value=None, new_values=None ):
+        if new_values != None:
+            old_value = self.TKStringVar.get()
+            self.Values = new_values
+            self.TKSpinBox.configure(values=new_values)
+            self.TKStringVar.set(old_value)
         if new_value is not None:
             try:
                 self.TKStringVar.set(new_value)
             except: pass
             self.DefaultValue = new_value
-        if new_values != None:
-            self.Values = new_values
-            self.TKSpinBox.configure(values=new_values)
 
 
     def SpinChangedHandler(self, event):
