@@ -67,11 +67,11 @@ DEFAULT_SCROLLBAR_COLOR = None
 TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')
 #--------------------------------------------------------------------------------
 # Progress Bar Relief Choices
-RELIEF_RAISED= 'raised'
-RELIEF_SUNKEN= 'sunken'
-RELIEF_FLAT= 'flat'
-RELIEF_RIDGE= 'ridge'
-RELIEF_GROOVE= 'groove'
+RELIEF_RAISED = 'raised'
+RELIEF_SUNKEN = 'sunken'
+RELIEF_FLAT = 'flat'
+RELIEF_RIDGE = 'ridge'
+RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')     # a nice green progress bar
