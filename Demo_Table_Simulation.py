@@ -1,30 +1,68 @@
+import csv
 import PySimpleGUI as sg
 
 def TableSimulation():
     """
     Display data in a table format
     """
-    # sg.ChangeLookAndFeel('Dark')
     sg.SetOptions(element_padding=(0,0))
-    layout = [[sg.T('Table Using Combos and Input Elements', font='Any 18')],
-              [sg.T('Row, Cal to change'),
+
+    menu_def = [['File', ['Open', 'Save', 'Exit']],
+                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
+                ['Help', 'About...'],]
+
+    columm_layout = [[]]
+
+    MAX_ROWS = 60
+    MAX_COL = 10
+    for i in range(MAX_ROWS):
+        inputs = [sg.T('{}'.format(i), size=(4,1), justification='right')] + [sg.In(size=(10, 1), pad=(1, 1), justification='right', key=(i,j), do_not_clear=True) for j in range(MAX_COL)]
+        columm_layout.append(inputs)
+
+    layout = [ [sg.Menu(menu_def)],
+               [sg.T('Table Using Combos and Input Elements', font='Any 18')],
+              [sg.T('Type in a row, column and value. The form will update the values in realtime as you type'),
                sg.In(key='inputrow', justification='right', size=(8,1), pad=(1,1), do_not_clear=True),
                sg.In(key='inputcol', size=(8,1), pad=(1,1), justification='right', do_not_clear=True),
-               sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)]]
-
-    for i in range(20):
-        inputs = [sg.In('{}{}'.format(i,j), size=(8, 1), pad=(1, 1), justification='right', key=(i,j), do_not_clear=True) for j in range(10)]
-        line = [sg.Combo(('Customer ID', 'Customer Name', 'Customer Info'))]
-        line.append(inputs)
-        layout.append(inputs)
+               sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)],
+               [sg.Column(columm_layout, size=(815,600), scrollable=True)]]
 
     form = sg.FlexForm('Table', return_keyboard_events=True, grab_anywhere=False)
     form.Layout(layout)
 
     while True:
         button, values = form.Read()
-        if button is None:
+        # --- Process buttons --- #
+        if button is None or button == 'Exit':
             break
+        elif button == 'About...':
+            sg.Popup('Demo of table capabilities')
+        elif button == 'Open':
+            filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
+            # --- populate table with file contents --- #
+            if filename is not None:
+                with open(filename, "r") as infile:
+                    reader = csv.reader(infile)
+                    try:
+                        data = list(reader)  # read everything else into a list of rows
+                    except:
+                        sg.PopupError('Error reading file')
+                        continue
+                # clear the table
+                [form.FindElement((i,j)).Update('') for j in range(MAX_COL) for i in range(MAX_ROWS)]
+
+                for i, row in enumerate(data):
+                    for j, item in enumerate(row):
+                        location = (i,j)
+                        try:            # try the best we can at reading and filling the table
+                            target_element = form.FindElement(location)
+                            new_value = item
+                            if target_element is not None and new_value != '':
+                                target_element.Update(new_value)
+                        except:
+                            pass
+
+        # if a valid table location entered, change that location's value
         try:
             location = (int(values['inputrow']), int(values['inputcol']))
             target_element = form.FindElement(location)

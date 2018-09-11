@@ -9,6 +9,8 @@ import hashlib
     3. Type password into the GUI
     4. Copy and paste hash code form GUI into variable named login_password_hash
     5. Run program again and test your login!
+    6. Are you paying attention? The first person that can post an issue on GitHub with the
+       matching password to the hash code in this example gets a $5 PayPal payment
 """
 
 # Use this GUI to get your password's hash code
@@ -47,7 +49,7 @@ def PasswordMatches(password, hash):
     return password_hash == hash
 
 
-login_password_hash = '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8'
+login_password_hash = 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4'
 password = sg.PopupGetText('Password', password_char='*')
 if password == 'gui':                # Remove when pasting into your program
     HashGeneratorGUI()               # Remove when pasting into your program

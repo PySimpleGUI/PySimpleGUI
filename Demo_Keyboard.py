@@ -18,7 +18,7 @@ with sg.FlexForm("Keyboard Test", return_keyboard_events=True, use_default_focus
             print(button, "exiting")
             break
         if len(button) == 1:
-            text_elem.Update(new_value='%s - %s'%(button, ord(button)))
+            text_elem.Update(value='%s - %s' % (button, ord(button)))
         if button is not None:
             text_elem.Update(button)
 

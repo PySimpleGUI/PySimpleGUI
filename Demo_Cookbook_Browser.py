@@ -109,25 +109,34 @@ def AllWidgetsWithContext():
     # sg.ChangeLookAndFeel('GreenTan')
 
     with sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False) as form:
+
+        column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
+                   [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+                   [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
+                   [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+
         layout = [
             [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
             [sg.Text('Here is some text.... and a place to enter text')],
-            [sg.InputText()],
-            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
+            [sg.InputText('This is my text')],
+            [sg.Checkbox('Checkbox'), sg.Checkbox('My second checkbox!', default=True)],
             [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
             [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
              sg.Multiline(default_text='A second multi-line', size=(35, 3))],
-            [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 3)),
+            [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
              sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
-            [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3', 'Listbox 4'), size=(30, 3)),
+            [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
+            [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
              sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
              sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
              sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
-             sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
-            [sg.Text('_'  * 80)],
+             sg.Column(column1, background_color='#F7F3EC')],
+            [sg.Text('_' * 80)],
+            [sg.Text('Choose A Folder', size=(35, 1))],
             [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
              sg.InputText('Default Folder'), sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('black', '#EDE5B7'))]]
+            [sg.Submit(), sg.Cancel()]
+        ]
 
         button, values = form.LayoutAndRead(layout)
 
@@ -137,31 +146,37 @@ def AllWidgetsNoContext():
     """
     import PySimpleGUI as sg
 
-    # Green & tan color scheme
     sg.ChangeLookAndFeel('GreenTan')
 
     form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False)
+
+    column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+
     layout = [
-            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
-            [sg.Text('Here is some text.... and a place to enter text')],
-            [sg.InputText('This is my text')],
-            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
-            [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
-            [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
-             sg.Multiline(default_text='A second multi-line', size=(35, 3))],
-            [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 3)),
-             sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
-            [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
-             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
-             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
-             sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
-             sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
-            [sg.Text('_'  * 80)],
-            [sg.Text('Choose A Folder', size=(35, 1))],
-            [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
-             sg.InputText('Default Folder'), sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', '#7E6C92'))]
-             ]
+        [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
+        [sg.Text('Here is some text.... and a place to enter text')],
+        [sg.InputText('This is my text')],
+        [sg.Checkbox('Checkbox'), sg.Checkbox('My second checkbox!', default=True)],
+        [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
+        [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
+         sg.Multiline(default_text='A second multi-line', size=(35, 3))],
+        [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
+         sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
+        [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
+        [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
+         sg.Column(column1, background_color='#F7F3EC')],
+        [sg.Text('_' * 80)],
+        [sg.Text('Choose A Folder', size=(35, 1))],
+        [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
+         sg.InputText('Default Folder'), sg.FolderBrowse()],
+        [sg.Submit(), sg.Cancel()]
+    ]
 
     button, values = form.LayoutAndRead(layout)
 
@@ -175,10 +190,9 @@ def NonBlockingWithUpdates():
 
     form = sg.FlexForm('Running Timer')
     # create a text element that will be updated periodically
-    text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center')
 
     form_rows = [[sg.Text('Stopwatch', size=(20,2), justification='center')],
-                 [text_element],
+                 [ sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='output')],
                  [sg.T(' '  * 5), sg.ReadFormButton('Start/Stop', focus=True), sg.Quit()]]
 
     form.LayoutAndRead(form_rows, non_blocking=True)
@@ -193,7 +207,7 @@ def NonBlockingWithUpdates():
             break
         elif button == 'Start/Stop':
             timer_running = not timer_running
-        text_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+        form.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 
         time.sleep(.01)
         # if the loop finished then need to close the form for the user
@@ -208,14 +222,13 @@ def NonBlockingWithContext():
     import time
 
     with sg.FlexForm('Running Timer') as form:
-        text_element = sg.Text('', size=(10, 2), font=('Helvetica', 20), text_color='red', justification='center')
         layout = [[sg.Text('Non blocking GUI with updates', justification='center')],
-                  [text_element],
+                  [sg.Text('', size=(10, 2), font=('Helvetica', 20), text_color='red', justification='center', key='output')],
                   [sg.T(' '  * 15), sg.Quit()]]
         form.LayoutAndRead(layout, non_blocking=True)
 
         for i in range(1, 500):
-            text_element.Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+            form.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
             button, values = form.ReadNonBlocking()
             if values is None or button == 'Quit':  # if user closed the                window using X
               break
@@ -451,16 +464,7 @@ def MachineLearning():
     """
     import PySimpleGUI as sg
 
-    # Green & tan color scheme
-    sg.SetOptions(background_color='#9FB8AD',
-                  text_element_background_color='#9FB8AD',
-                  element_background_color='#9FB8AD',
-                  input_elements_background_color='#F7F3EC',
-                  button_color=('white', '#475841'),
-                  border_width=0,
-                  slider_border_width=0,
-                  progress_meter_border_depth=0,
-                  scrollbar_color='#F7F3EC')
+    sg.ChangeLookAndFeel('LightGreen')
 
     sg.SetOptions(text_justification='right')
 
@@ -645,8 +649,6 @@ def InputElementUpdate():
     """
     import PySimpleGUI as g
 
-    # g.SetOptions(button_color=g.COLOR_SYSTEM_DEFAULT)   # because some people like gray buttons
-
     # Demonstrates a number of PySimpleGUI features including:
     #   Default element size
     #   auto_size_buttons
@@ -655,17 +657,13 @@ def InputElementUpdate():
     #   Update of elements in form (Text, Input)
     #   do_not_clear of Input elements
 
-    # create the 2 Elements we want to control outside the form
-    out_elem = g.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red')
-    in_elem = g.Input(size=(10, 1), do_not_clear=True, key='input')
-
     layout = [[g.Text('Enter Your Passcode')],
-              [in_elem],
+              [g.Input(size=(10, 1), do_not_clear=True, key='input')],
               [g.ReadFormButton('1'), g.ReadFormButton('2'), g.ReadFormButton('3')],
               [g.ReadFormButton('4'), g.ReadFormButton('5'), g.ReadFormButton('6')],
               [g.ReadFormButton('7'), g.ReadFormButton('8'), g.ReadFormButton('9')],
               [g.ReadFormButton('Submit'), g.ReadFormButton('0'), g.ReadFormButton('Clear')],
-              [out_elem],
+              [ g.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='output')],
               ]
 
     form = g.FlexForm('Keypad', default_element_size=(5, 2), auto_size_buttons=False)
@@ -684,9 +682,9 @@ def InputElementUpdate():
             keys_entered += button  # add the new digit
         elif button is 'Submit':
             keys_entered = values['input']
-            out_elem.Update(keys_entered)  # output the final string
+            form.FindElement('outpput').Update(keys_entered)  # output the final string
 
-        in_elem.Update(keys_entered)  # change the form to reflect current key string
+        form.FindElement('input').Update(keys_entered)  # change the form to reflect current key string
 
 
 def TableSimulation():
@@ -751,13 +749,12 @@ fig_dict = {'Simple Data Entry':SimpleDataEntry, 'Simple Entry Return Data as Di
             'Table Simulation':TableSimulation, 'Tight Layout':TightLayout}
 
 
-# multiline_elem = sg.Multiline(size=(70,35),pad=(5,(3,90)))
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
 
 while True:
-    # sg.ChangeLookAndFeel('Dark')
-    # sg.SetOptions(element_padding=(0,0))
+    sg.ChangeLookAndFeel('Dark')
+    sg.SetOptions(element_padding=(0,0))
 
     col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),min(len(listbox_values), 20)), change_submits=False, key='func')],
                    [sg.ReadFormButton('Run', pad=(0,0)), sg.ReadFormButton('Show Code', button_color=('white', 'gray25'), pad=(0,0)),  sg.Exit(button_color=('white', 'firebrick4'), pad=(0,0))]]
