@@ -645,7 +645,7 @@ def main():
     layout = [[canvas_elem, sg.ReadFormButton('Exit', pad=(0, (210, 0)))]]
 
     # create the form and show it without the plot
-    form = sg.FlexForm('Ping Graph', background_color='white')
+    form = sg.FlexForm('Ping Graph', background_color='white', grab_anywhere=True)
     form.Layout(layout)
     form.ReadNonBlocking()
 

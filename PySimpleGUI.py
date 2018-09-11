@@ -282,11 +282,16 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
 
-    def Update(self, new_value):
-        try:
-            self.TKStringVar.set(new_value)
-        except: pass
-        self.DefaultText = new_value
+    def Update(self, value=None, disable=None):
+        if disable is True:
+            self.TKEntry['state'] = 'disabled'
+        elif disable is False:
+            self.TKEntry['state'] = 'normal'
+        if value is not None:
+            try:
+                self.TKStringVar.set(value)
+            except: pass
+            self.DefaultText = value
 
     def Get(self):
         return self.TKStringVar.get()
@@ -317,23 +322,24 @@ class InputCombo(Element):
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, value=None, values=None, disabled=False):
+    def Update(self, value=None, values=None, disable=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
                 self.TKCombo.current(0)
             except: pass
             self.Values = values
-
-        self.TKCombo['state'] = 'disable' if disabled else 'enable'
-
-        for index, v in enumerate(self.Values):
-            if v == value:
-                try:
-                    self.TKCombo.current(index)
-                except: pass
-                self.DefaultValue = value
-                break
+            for index, v in enumerate(self.Values):
+                if v == value:
+                    try:
+                        self.TKCombo.current(index)
+                    except: pass
+                    self.DefaultValue = value
+                    break
+        if disable == True:
+            self.TKCombo['state'] = 'disable'
+        elif disable == False:
+            self.TKCombo['state'] = 'enable'
 
 
     def __del__(self):
@@ -365,14 +371,21 @@ class InputOptionMenu(Element):
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, value):
-        for index, v in enumerate(self.Values):
-            if v == value:
-                try:
-                    self.TKStringVar.set(value)
-                except: pass
-                self.DefaultValue = value
-                break
+    def Update(self, value=None, values=None, disable=None):
+        if values is not None:
+            self.Values = values
+        if self.Values is not None:
+            for index, v in enumerate(self.Values):
+                if v == value:
+                    try:
+                        self.TKStringVar.set(value)
+                    except: pass
+                    self.DefaultValue = value
+                    break
+        if disable == True:
+            self.TKOptionMenu['state'] = 'disabled'
+        elif disable == False:
+            self.TKOptionMenu['state'] = 'normal'
 
 
     def __del__(self):
@@ -415,12 +428,19 @@ class Listbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key, pad=pad)
 
-    def Update(self, values):
-        self.TKListbox.delete(0, 'end')
-        for item in values:
-            self.TKListbox.insert(tk.END, item)
-        self.TKListbox.selection_set(0, 0)
-        self.Values = values
+    def Update(self, values=None, disable=None):
+        if disable == True:
+            self.TKListbox.configure(state='disabled')
+        elif disable == False:
+            self.TKListbox.configure(state='normal')
+        if values is not None:
+            self.TKListbox.delete(0, 'end')
+            for item in values:
+                self.TKListbox.insert(tk.END, item)
+            self.TKListbox.selection_set(0, 0)
+            self.Values = values
+
+
 
     def SetValue(self, values):
         for index, item in enumerate(self.Values):
@@ -466,14 +486,17 @@ class Radio(Element):
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, scale=scale , size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad)
 
-    def Update(self, value):
-        if not value:
-            return
+    def Update(self, value=None, disable=None):
         location = EncodeRadioRowCol(self.Position[0], self.Position[1])
-        try:
-            self.TKIntVar.set(location)
-        except: pass
-        self.InitialState = value
+        if value is not None:
+            try:
+                self.TKIntVar.set(location)
+            except: pass
+            self.InitialState = value
+        if disable == True:
+            self.TKRadio['state'] = 'disabled'
+        elif disable == False:
+            self.TKRadio['state'] = 'normal'
 
     def __del__(self):
         try:
@@ -508,15 +531,16 @@ class Checkbox(Element):
     def Get(self):
         return self.TKIntVar.get()
 
-    def Update(self, value):
-        try:
-            if value is None:
-                self.TKCheckbutton.configure(state='disabled')
-            else:
-                self.TKCheckbutton.configure(state='normal')
+    def Update(self, value=None, disable=None):
+        if value is not None:
+            try:
                 self.TKIntVar.set(value)
-        except: pass
-        self.InitialState = value
+                self.InitialState = value
+            except: pass
+        if disable == True:
+            self.TKCheckbutton.configure(state='disabled')
+        elif disable == False:
+            self.TKCheckbutton.configure(state='normal')
 
 
     def __del__(self):
@@ -550,17 +574,21 @@ class Spin(Element):
         super().__init__(ELEM_TYPE_INPUT_SPIN, scale, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
-    def Update(self, new_value=None, new_values=None ):
-        if new_values != None:
+    def Update(self, value=None, values=None, disable=None):
+        if values != None:
             old_value = self.TKStringVar.get()
-            self.Values = new_values
-            self.TKSpinBox.configure(values=new_values)
+            self.Values = values
+            self.TKSpinBox.configure(values=values)
             self.TKStringVar.set(old_value)
-        if new_value is not None:
+        if value is not None:
             try:
-                self.TKStringVar.set(new_value)
+                self.TKStringVar.set(value)
             except: pass
-            self.DefaultValue = new_value
+        self.DefaultValue = value
+        if disable == True:
+            self.TKSpinBox.configure(state='disabled')
+        elif disable == False:
+            self.TKSpinBox.configure(state='normal')
 
 
     def SpinChangedHandler(self, event):
@@ -601,12 +629,17 @@ class Multiline(Element):
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
-    def Update(self, new_value):
-        try:
-            self.TKText.delete('1.0', tk.END)
-            self.TKText.insert(1.0, new_value)
-        except: pass
-        self.DefaultText = new_value
+    def Update(self, value=None, disable=None):
+        if value is not None:
+            try:
+                self.TKText.delete('1.0', tk.END)
+                self.TKText.insert(1.0, value)
+            except: pass
+            self.DefaultText = value
+        if disable == True:
+            self.TKText.configure(state='disabled')
+        elif disable == False:
+            self.TKText.configure(state='normal')
 
     def Get(self):
         return  self.TKText.get(1.0, tk.END)
@@ -641,11 +674,11 @@ class Text(Element):
         super().__init__(ELEM_TYPE_TEXT, scale, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key)
         return
 
-    def Update(self, new_value = None, background_color=None, text_color=None, font=None):
-        if new_value is not None:
-            self.DisplayText=new_value
+    def Update(self, value = None, background_color=None, text_color=None, font=None):
+        if value is not None:
+            self.DisplayText=value
             stringvar = self.TKStringVar
-            stringvar.set(new_value)
+            stringvar.set(value)
         if background_color is not None:
             self.TKText.configure(background=background_color)
         if text_color is not None:
@@ -690,17 +723,18 @@ class TKProgressBar():
                 s.configure(str(length)+str(width)+"my.Vertical.TProgressbar",  troughrelief=relief, borderwidth=border_width, thickness=width)
             self.TKProgressBarForReal = ttk.Progressbar(root,  maximum=self.Max, style=str(length)+str(width)+'my.Vertical.TProgressbar', length=length, orient=tk.VERTICAL, mode='determinate')
 
-    def Update(self, count, max=None):
+    def Update(self, count=None, max=None):
         if max is not None:
             self.Max = max
             try:
                 self.TKProgressBarForReal.config(maximum=max)
             except:
                 return False
-        if count > self.Max: return False
-        try:
-            self.TKProgressBarForReal['value'] = count
-        except: return False
+        if count is not None and count > self.Max: return False
+        if count is not None:
+            try:
+                self.TKProgressBarForReal['value'] = count
+            except: return False
         return True
 
     def __del__(self):
@@ -922,16 +956,23 @@ class Button(Element):
 
         return
 
-    def Update(self, value=None, new_text=None, button_color=(None, None)):
+    def Update(self, value=None, text=None, button_color=(None, None), disable=None):
         try:
-            if new_text is not None:
-                self.TKButton.configure(text=new_text)
-                self.ButtonText = new_text
+            if text is not None:
+                self.TKButton.configure(text=text)
+                self.ButtonText = text
             if button_color != (None, None):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
             return
-        self.DefaultValue = value
+        if value is not None:
+            self.DefaultValue = value
+        if disable == True:
+            self.TKButton['state'] = 'disabled'
+        elif disable == False:
+            self.TKButton['state'] = 'normal'
+
+
 
     def __del__(self):
         try:
@@ -1089,13 +1130,18 @@ class Slider(Element):
         super().__init__(ELEM_TYPE_INPUT_SLIDER, scale=scale, size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad)
         return
 
-    def Update(self, value, range=(None, None)):
-        try:
-            self.TKIntVar.set(value)
-            if range != (None, None):
-                self.TKScale.config(from_ = range[0], to_ = range[1])
-        except: pass
-        self.DefaultValue = value
+    def Update(self, value=None, range=(None, None), disable=None):
+        if value is not None:
+            try:
+                self.TKIntVar.set(value)
+                if range != (None, None):
+                    self.TKScale.config(from_ = range[0], to_ = range[1])
+            except: pass
+            self.DefaultValue = value
+        if disable == True:
+            self.TKScale['state'] = 'disabled'
+        elif disable == False:
+            self.TKScale['state'] = 'normal'
 
     def SliderChangedHandler(self, event):
         # first, get the results table built
@@ -2737,8 +2783,7 @@ def StartupTK(my_flex_form):
 
     my_flex_form.TKroot = root
     # Make moveable window
-    if ((my_flex_form.NoTitleBar or my_flex_form.GrabAnywhere in (None, True)) and not my_flex_form.NonBlocking) or \
-        (my_flex_form.GrabAnywhere == True and my_flex_form.NonBlocking):
+    if (my_flex_form.GrabAnywhere is not False and not (my_flex_form.NonBlocking and my_flex_form.GrabAnywhere is not True)):
         root.bind("<ButtonPress-1>", my_flex_form.StartMove)
         root.bind("<ButtonRelease-1>", my_flex_form.StopMove)
         root.bind("<B1-Motion>", my_flex_form.OnMotion)
@@ -3556,7 +3601,7 @@ def ObjToString(obj, extra='    '):
 # Exits via an OK button2 press                      #
 # Returns nothing                                    #
 # ===================================================#
-def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False):
+def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, keep_on_top=False):
     '''
     Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
@@ -3578,7 +3623,7 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar) as form:
+    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, keep_on_top=keep_on_top) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
