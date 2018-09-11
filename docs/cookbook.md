@@ -677,7 +677,7 @@ The Canvas Element is one of the few tkinter objects that are directly accessibl
             canvas.TKCanvas.itemconfig(cir, fill="Red")
 
 
-## Input Element Update
+## Keypad Touchscreen Entry - Input Element Update
 
 This Recipe implements a Raspberry Pi touchscreen based keypad entry.  As the digits are entered using the buttons, the Input Element above it is updated with the input digits.
 There are a number of features used in this Recipe including:
@@ -961,7 +961,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
                   ]
 
         form = sg.FlexForm('SHA Generator', auto_size_text=False, default_element_size=(10,1),
-                           text_justification='r', return_keyboard_events=True)
+                           text_justification='r', return_keyboard_events=True, grab_anywhere=False)
         form.Layout(layout)
 
         while True:
@@ -1157,10 +1157,6 @@ Much of the code is handling the button states in a fancy way.  It could be much
 
     # Broke out of main loop. Close the window.
     form.CloseNonBlockingForm()
-
-
-
-
 
 
 
