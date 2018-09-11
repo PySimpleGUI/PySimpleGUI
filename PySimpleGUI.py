@@ -1057,10 +1057,9 @@ class Image(Element):
             else:
                 image = data
         else: return
-        # width, height = image.width(), image.height()
-        # width, height = image.width(), image.height()
-        # self.tktext_label.configure(image=image, width=width, height=height)
-        self.tktext_label.configure(image=image)
+        width, height = image.width(), image.height()
+        self.tktext_label.configure(image=image, width=width, height=height)
+        # self.tktext_label.configure(image=image)
         self.tktext_label.image = image
 
     def __del__(self):
