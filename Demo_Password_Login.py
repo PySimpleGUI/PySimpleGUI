@@ -19,7 +19,7 @@ def HashGeneratorGUI():
               ]
 
     form = sg.FlexForm('SHA Generator', auto_size_text=False, default_element_size=(10,1),
-                       text_justification='r', return_keyboard_events=True)
+                       text_justification='r', return_keyboard_events=True, grab_anywhere=False)
     form.Layout(layout)
 
     while True:
@@ -44,10 +44,8 @@ def PasswordMatches(password, hash):
     sha1hash = hashlib.sha1()
     sha1hash.update(password_utf)
     password_hash = sha1hash.hexdigest()
-    if password_hash == hash:
-        return True
-    else:
-        return False
+    return password_hash == hash
+
 
 login_password_hash = '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8'
 password = sg.PopupGetText('Password', password_char='*')

@@ -3224,7 +3224,7 @@ def PopupGetFile(message, default_path='',save_as=False, no_window=False,  file_
 # Get a single line of text                          #
 # ===================================================#
 def GetTextBox(title, message, default_text='', button_color=None, size=(None, None)):
-    with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
+    with FlexForm(title, auto_size_text=True, button_color=button_color, grab_anywhere=False) as form:
         layout = [[Text(message, auto_size_text=True)],
                   [InputText(default_text=default_text, size=size)],
                   [Submit(), Cancel()]]
@@ -3237,7 +3237,7 @@ def GetTextBox(title, message, default_text='', button_color=None, size=(None, N
 
 
 def PopupGetText(message, default_text='', password_char='', button_color=None, size=(None, None)):
-    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
+    with FlexForm(title=message, auto_size_text=True, button_color=button_color, grab_anywhere=False) as form:
         layout = [[Text(message, auto_size_text=True)],
                   [InputText(default_text=default_text, size=size, password_char=password_char)],
                   [Ok(), Cancel()]]
