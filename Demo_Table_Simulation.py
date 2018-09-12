@@ -25,7 +25,7 @@ def TableSimulation():
                sg.In(key='inputrow', justification='right', size=(8,1), pad=(1,1), do_not_clear=True),
                sg.In(key='inputcol', size=(8,1), pad=(1,1), justification='right', do_not_clear=True),
                sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)],
-               [sg.Column(columm_layout, size=(815,600), scrollable=True)]]
+               [sg.Column(columm_layout, size=(800,600), scrollable=True)]]
 
     form = sg.FlexForm('Table', return_keyboard_events=True, grab_anywhere=False)
     form.Layout(layout)
