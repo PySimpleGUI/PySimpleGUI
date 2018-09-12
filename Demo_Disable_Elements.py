@@ -26,6 +26,20 @@ form = sg.FlexForm("Time Tracker", default_element_size=(12, 1), text_justificat
 
 form.Layout(layout)
 
+form.ReadNonBlocking()
+
+form.FindElement('cbox').Update(disabled=True)
+form.FindElement('listbox').Update(disabled=True)
+form.FindElement('radio1').Update(disabled=True)
+form.FindElement('radio2').Update(disabled=True)
+form.FindElement('spin').Update(disabled=True)
+form.FindElement('option').Update(disabled=True)
+form.FindElement('combo').Update(disabled=True)
+form.FindElement('reset').Update(disabled=True)
+form.FindElement('notes').Update(disabled=True)
+form.FindElement('multi').Update(disabled=True)
+form.FindElement('slider').Update(disabled=True)
+
 while True:
     button, values = form.Read()
     if button is None or button == 'Exit':

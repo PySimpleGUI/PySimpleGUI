@@ -35,7 +35,7 @@ def Everything():
          sg.Text(' ' * 40), sg.ReadFormButton('SaveSettings'), sg.ReadFormButton('LoadSettings')]
     ]
 
-    form = sg.FlexForm('Form Fill Demonstration', default_element_size=(40, 1))
+    form = sg.FlexForm('Form Fill Demonstration', default_element_size=(40, 1), grab_anywhere=False)
     # button, values = form.LayoutAndRead(layout, non_blocking=True)
     form.Layout(layout)
 

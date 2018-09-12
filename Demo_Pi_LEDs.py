@@ -12,8 +12,8 @@ GPIO.setup(14, GPIO.OUT)
 
 def SwitchLED():
     varLEDStatus = GPIO.input(14)
-
-    if varLEDStatus == 0:
+    varLedStatus = 0
+    if varLedStatus == 0:
         GPIO.output(14, GPIO.HIGH)
         return "LED is switched ON"
     else:
@@ -28,32 +28,27 @@ def FlashLED():
         GPIO.output(14, GPIO.LOW)
         time.sleep(0.5)
 
-results_elem = rg.T('', size=(30, 1))
-
 layout = [[rg.T('Raspberry Pi LEDs')],
-           [results_elem],
+           [rg.T('', size=(14, 1), key='output')],
            [rg.ReadFormButton('Switch LED')],
            [rg.ReadFormButton('Flash LED')],
-           [rg.ReadFormButton('Show slider value')],
-           [rg.Slider(range=(0, 100), default_value=0, orientation='h', size=(40, 20), key='slider')],
            [rg.Exit()]
           ]
 
-form = rg.FlexForm('Raspberry Pi GUI')
+form = rg.FlexForm('Raspberry Pi GUI', grab_anywhere=False)
 form.Layout(layout)
 
 while True:
     button, values = form.Read()
     if button is None:
         break
+
     if button is 'Switch LED':
-        results_elem.Update(SwitchLED())
+        form.FindElement('output').Update(SwitchLED())
     elif button is 'Flash LED':
-        results_elem.Update('LED is Flashing')
+        form.FindElement('output').Update('LED is Flashing')
         form.ReadNonBlocking()
         FlashLED()
-        results_elem.Update('')
-    elif button is 'Show slider value':
-        results_elem.Update('Slider = %s'%values['slider'])
+        form.FindElement('output').Update('')
 
 rg.MsgBox('Done... exiting')

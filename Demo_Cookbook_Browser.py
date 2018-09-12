@@ -682,7 +682,7 @@ def InputElementUpdate():
             keys_entered += button  # add the new digit
         elif button is 'Submit':
             keys_entered = values['input']
-            form.FindElement('outpput').Update(keys_entered)  # output the final string
+            form.FindElement('output').Update(keys_entered)  # output the final string
 
         form.FindElement('input').Update(keys_entered)  # change the form to reflect current key string
 
