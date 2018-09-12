@@ -3669,7 +3669,7 @@ def ObjToString(obj, extra='    '):
 # Exits via an OK button2 press                      #
 # Returns nothing                                    #
 # ===================================================#
-def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, keep_on_top=False):
+def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, keep_on_top=False):
     '''
     Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
     :param args:
@@ -3691,7 +3691,7 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, keep_on_top=keep_on_top) as form:
+    with FlexForm(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, keep_on_top=keep_on_top) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -3708,7 +3708,7 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
             # print('Msgbox width, height', width_used, height)
-            form.AddRow(Text(message_wrapped, auto_size_text=True))
+            form.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
             total_lines += height
 
         pad = max_line_total-15 if max_line_total > 15 else 1
@@ -3719,18 +3719,18 @@ def Popup(*args, button_color=None, button_type=MSG_BOX_OK, auto_close=False, au
             PopupButton = SimpleButton
         # show either an OK or Yes/No depending on paramater
         if button_type is MSG_BOX_YES_NO:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False,  text_color=text_color, background_color=background_color), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
         elif button_type is MSG_BOX_CANCELLED:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
         elif button_type is MSG_BOX_ERROR:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
         elif button_type is MSG_BOX_OK_CANCEL:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color,  background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
                         PopupButton('Cancel', size=(5, 1), button_color=button_color))
         elif button_type is MSG_BOX_NO_BUTTONS:
             pass
         else:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
 
         if non_blocking:
             button, values = form.ReadNonBlocking()
