@@ -95,6 +95,13 @@ LISTBOX_SELECT_MODE_EXTENDED = 'extended'
 SELECT_MODE_SINGLE = tk.SINGLE
 LISTBOX_SELECT_MODE_SINGLE = 'single'
 
+TREEVIEW_SELECT_MODE_NONE = tk.NONE
+TREEVIEW_SELECT_MODE_BROWSE = tk.BROWSE
+TREEVIEW_SELECT_MODE_EXTENDED = tk.EXTENDED
+DEFAULT_TREEVIEW_SECECT_MODE = TREEVIEW_SELECT_MODE_EXTENDED
+
+
+
 # DEFAULT_METER_ORIENTATION = 'Vertical'
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777         # magic number
@@ -163,6 +170,7 @@ ELEM_TYPE_COLUMN = 555
 ELEM_TYPE_MENUBAR = 600
 ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
+ELEM_TYPE_TREEVIEW = 700
 
 # -------------------------  MsgBox Buttons Types  ------------------------- #
 MSG_BOX_YES_NO = 1
@@ -262,7 +270,7 @@ class Element():
 # ---------------------------------------------------------------------- #
 class InputText(Element):
     def __init__(self, default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='',
-                 justification=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None):
+                 justification=None, background_color=None, text_color=None, font=None, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -279,7 +287,7 @@ class InputText(Element):
         self.Focus = focus
         self.do_not_clear = do_not_clear
         self.Justification = justification
-        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
+        super().__init__(ELEM_TYPE_INPUT_TEXT, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, font=font)
 
 
     def Update(self, value=None, disabled=None):
@@ -761,9 +769,9 @@ class TKOutput(tk.Frame):
             self.output.configure(fg=text_color)
         self.vsb = tk.Scrollbar(frame, orient="vertical", command=self.output.yview)
         self.output.configure(yscrollcommand=self.vsb.set)
-        self.output.pack(side="left", fill="both")
-        self.vsb.pack(side="left", fill="y")
-        frame.pack(side="left", padx=pad[0], pady=pad[1])
+        self.output.pack(side="left", fill="both", expand=True)
+        self.vsb.pack(side="left", fill="y", expand=False)
+        frame.pack(side="left", padx=pad[0], pady=pad[1], expand=True, fill='y')
         self.previous_stdout = sys.stdout
         self.previous_stderr = sys.stderr
 
@@ -1162,10 +1170,10 @@ class TkScrollableFrame(tk.Frame):
 
         # create a canvas object and a vertical scrollbar for scrolling it
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-        self.vscrollbar.pack(side='right', fill="y",  expand="false")
+        self.vscrollbar.pack(side='right', fill="y",  expand="true")
 
         self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-        self.hscrollbar.pack(side='bottom', fill="x",  expand="false")
+        self.hscrollbar.pack(side='bottom', fill="x",  expand="true")
 
         self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -1179,17 +1187,20 @@ class TkScrollableFrame(tk.Frame):
 
         # create a frame inside the canvas which will be scrolled with it
         self.TKFrame = tk.Frame(self.canvas, **kwargs)
-        self.canvas.create_window(0, 0, window=self.TKFrame, anchor="nw")
+        self.frame_id = self.canvas.create_window(0, 0, window=self.TKFrame, anchor="nw")
         self.canvas.config(borderwidth=0, highlightthickness=0)
         self.TKFrame.config(borderwidth=0, highlightthickness=0)
         self.config(borderwidth=0, highlightthickness=0)
 
+        self.canvas.bind("<Configure>", self.resize_frame)
         self.bind('<Configure>', self.set_scrollregion)
 
         self.bind_mouse_scroll(self.canvas, self.yscroll)
         self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
         self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
 
+    def resize_frame(self, e):
+        self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
 
     def yscroll(self, event):
         if event.num == 5 or event.delta < 0:
@@ -1482,9 +1493,8 @@ class TKCalendar(ttk.Frame):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    def __init__(self, menu_definition, command=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+    def __init__(self, menu_definition, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.Command = command
         self.MenuDefinition = menu_definition
         self.TKMenu = None
 
@@ -1499,6 +1509,47 @@ class Menu(Element):
 
     def __del__(self):
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           TreeView                                     #
+# ---------------------------------------------------------------------- #
+class Treeview(Element):
+    def __init__(self, values, column_headings=None, display_columns=None, show=None, tags=None, label=None, image=None, readonly=None, disabled=False, select_mode=None, children_hidden=False, font=None, justification='left',  text_color=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+        self.Values = values
+        self.ColumnHeadings = column_headings
+        self.ColumnsToDisplay = display_columns
+        self.Show = show
+        self.ChildrenHidden = children_hidden
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.TextColor = text_color
+        self.Disabled = disabled
+        self.ReadOnly = readonly
+        self.Image = image
+        self.Label = label
+        self.Tags = tags
+        self.Justification = justification
+        self.InitialState = None
+        self.SelectMode = select_mode
+        self.TKTreeview = None
+
+        super().__init__(ELEM_TYPE_TREEVIEW, text_color=text_color, background_color=background_color, scale=scale, font=font, size=size, pad=pad, key=key)
+        return
+
+
+    def __del__(self):
+        super().__del__()
+
+
+class TreeviewItem(object):
+    def __init__(self, text=None, image=None, values=None, hidden=False, tags=None ):
+        self.Text = text
+        self.Image = image
+        self.Vales = values
+        self.Hidden = hidden
+        self.Tags = tags
+
+
 
 
 # ------------------------------------------------------------------------- #
@@ -2259,7 +2310,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     col_frame = tk.Frame(tk_row_frame)
                     PackFormIntoFrame(element, col_frame, toplevel_form)
 
-                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
@@ -2301,7 +2352,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
                 element.TKText = tktext_label
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -2367,14 +2418,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
-                anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show, justify=justify)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
-                element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='x')
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKEntry.focus_set()
@@ -2476,7 +2527,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                element.TKText.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                element.TKText.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
@@ -2556,7 +2607,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
                 element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font, pad=element.Pad)
-                element.TKOut.pack(side=tk.LEFT)
+                element.TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
@@ -2641,10 +2692,28 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 element.TKScale = tkscale
+            # -------------------------  Treeview element  ------------------------- #
+            elif element_type == ELEM_TYPE_TREEVIEW:
+                width, height = element_size
+                anchor = tk.W if element.Justification == 'left' else tk.E
+                element.TKTreeview = ttk.Treeview(tk_row_frame, columns=element.ColumnHeadings,
+                                                  displaycolumns=element.ColumnsToDisplay, show=element.Show, height=height, selectmode=element.SelectMode)
+                treeview = element.TKTreeview
+                for heading in element.ColumnHeadings:
+                    treeview.heading(heading, text=heading)
+                    treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+                for value in element.Values:
+                    id = treeview.insert('', 'end', text=value, values=value)
+                    print(id)
+                    for i in range(5):
+                        treeview.insert(id, 'end', text=value, values=i)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKTreeview.configure(background=element.BackgroundColor)
+                element.TKTreeview.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='sw', padx=DEFAULT_MARGINS[0])
+        tk_row_frame.pack(side=tk.TOP, anchor='sw', padx=DEFAULT_MARGINS[0], expand=True, fill='both')
 
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
