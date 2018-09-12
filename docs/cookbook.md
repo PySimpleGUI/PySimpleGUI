@@ -1004,9 +1004,21 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
 
 ## Desktop Floating Toolbar
 
+#### Hiding your windows commmand window
+For this and the Time & CPU Widgets you may wish to consider using a tool or technique that will hide your Windows Command Prompt window.  I recommend the techniques found on this site:
+
+[http://www.robvanderwoude.com/battech_hideconsole.php](http://www.robvanderwoude.com/battech_hideconsole.php)
+
+At the moment I'm using the technique that involves wscript and a script named RunNHide.vbs.  They are working beautifully.  I'm using a hotkey program and launch by using this script with the command "python.exe insert_program_here.py".   I guess the next widget should be one that shows all the programs launched this way so you can kill any bad ones.  If you don't properly catch the exit button on your form then your while loop is going to keep on working while your window is no longer there so be careful in your code to always have exit explicitly handled.
+
+
+### Floating toolbar
+
 This is a cool one!  (Sorry about the code pastes... I'm working in it)
 
 Impress your friends at what a tool-wizard you are by popping a custom toolbar that you keep in the corner of your screen.  It stays on top of all your other windows.
+
+
 
 
 ![toolbar gray](https://user-images.githubusercontent.com/13696193/45324308-bfb73700-b51b-11e8-90e7-ab24f3d6e61d.jpg)
@@ -1091,12 +1103,13 @@ You can easily change colors to match your background by changing a couple of pa
 
 
 
-## Desktop Floating Widget
+## Desktop Floating Widget - Timer
 
 This is a little widget you can leave running on your desktop.  Will hopefully see more of these for things like checking email, checking server pings, displaying system information, dashboards, etc
 .
 Much of the code is handling the button states in a fancy way.  It could be much simpler if you don't change the button text based on state.
 
+![timer](https://user-images.githubusercontent.com/13696193/45336349-26a31300-b551-11e8-8b06-d1232ff8ca10.jpg)
 
         import PySimpleGUI as sg
         import time
@@ -1159,6 +1172,49 @@ Much of the code is handling the button states in a fancy way.  It could be much
     form.CloseNonBlockingForm()
 
 
+## Desktop Floating Widget - CPU Utilization
+
+Like the Timer widget above, this script can be kept running.  You will need the package psutil installed in order to run this Recipe.
+The spinner changes the number of seconds between reads.
+
+
+![cpu widget 2](https://user-images.githubusercontent.com/13696193/45456096-77348080-b6b7-11e8-8906-6663c31ad0eb.jpg)
+
+
+
+    import PySimpleGUI as sg
+    import psutil
+
+    # ----------------  Create Form  ----------------
+    sg.ChangeLookAndFeel('Black')
+    form_rows = [[sg.Text('')],
+                 [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]
+    # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
+    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
+    form.Layout(form_rows)
+
+    # ----------------  main loop  ----------------
+    while (True):
+        # --------- Read and update window --------
+      button, values = form.ReadNonBlocking()
+
+        # --------- Do Button Operations --------
+      if values is None or button == 'Exit':
+            break
+      try:
+            interval = int(values['spin'])
+        except:
+            interval = 1
+
+      cpu_percent = psutil.cpu_percent(interval=interval)
+
+        # --------- Display timer in window --------
+
+      form.FindElement('text').Update(f'CPU {cpu_percent:02.0f}%')
+
+    # Broke out of main loop. Close the window.
+    form.CloseNonBlockingForm()
 
 ## Menus
 

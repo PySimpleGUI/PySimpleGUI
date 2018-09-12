@@ -5,11 +5,11 @@ import PySimpleGUI as sg
 """
 
 sg.SetOptions(element_padding=(0,0))
-sg.ChangeLookAndFeel('Dark')
+# sg.ChangeLookAndFeel('Dark')
 # --- Define our "Big-Button-Spinner" compound element. Has 2 buttons and an input field --- #
-NewSpinner =  [sg.ReadFormButton('-', size=(4,1), font='Any 12'),
-               sg.In('0', size=(5,1), font='Any 14', justification='r', key='spin'),
-               sg.ReadFormButton('+', size=(4,1), font='Any 12')]
+NewSpinner =  [sg.ReadFormButton('-', size=(2,1), font='Any 12'),
+               sg.In('0', size=(2,1), font='Any 14', justification='r', key='spin'),
+               sg.ReadFormButton('+', size=(2,1), font='Any 12')]
 # --- Define Window --- #
 layout = [
           [sg.Text('Spinner simulation')],

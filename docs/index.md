@@ -137,8 +137,9 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         Bulk form-fill operation
         Save / Load form to/from disk
         Borderless (no titlebar) windows
-        Always on top
+        Always on top windows
         Menus
+        No async programming required (no callbacks to worry about)
 
 
 An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
@@ -181,6 +182,7 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 
 ---
 ### Design Goals
+
 > Copy, Paste, Run.
 
 `PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the code to visually match what's on the screen.
@@ -188,12 +190,16 @@ You will see a number of different styles of buttons, data entry fields, etc, in
   > Be Pythonic
 
  Be Pythonic... Attempted to use language constructs in a natural way and to exploit some of Python's interesting features.  Python's lists and optional parameters make PySimpleGUI work.
+
  - Forms are represented as Python lists.
     - A form is a list of rows
    - A row is a list of elements
 - Return values are a list of button presses and input values.
 - Return values can also be represented as a dictionary
 - The SDK calls collapse down into a single line of Python code that presents a custom GUI and returns values
+-  Linear programming instead of callbacks
+
+
 
 
   -----
@@ -593,7 +599,7 @@ The third is the 'compact form'.  It compacts down into 2 lines of code.  One li
 
 You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
 
-### How GUI Programming in Python Should Look?
+### How GUI Programming in Python Should Look?  At least for beginners
 
 Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list or dictionary?  PySimpleGUI set out to be a Pythonic solution to the GUI problem.  Whether it achieved this goal is debatable, but it was an attempt just the same.
 
@@ -746,6 +752,53 @@ This sample program demonstrates these 2 steps as well as how to address the ret
     button, values = form.LayoutAndRead(layout)
 
     sg.Popup(button, values, values[0], values['address'], values['phone'])
+
+
+## The Event Loop / Callback Functions
+
+All GUIs have a few things in common, one of them being an "event loop" of some sort.  If your program shows a single form, collects the data and then executes the primary code of the program then you likely don't need an event loop.  This simple scenarios are front-end GUIs where you call sg.GetFile for example and then call your program that does something with the file.
+
+Event Loops are used in programs where the window stays open after button presses.  The program processes button clicks a loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.  Let's take a Pi demo program as an example.  This program shows a GUI window, gets button presses, and uses them to control some LEDs.  It loops, reading user input and doing something with it.
+
+This little program has a typical Event Loop
+
+![pi leds](https://user-images.githubusercontent.com/13696193/45448517-8cea7b80-b6a0-11e8-8dbe-eeefea2e93c1.jpg)
+
+
+
+    import PySimpleGUI as sg
+    layout = [[sg.T('Raspberry Pi LEDs')],
+              [sg.ReadFormButton('Turn LED On')],
+              [sg.ReadFormButton('Turn LED Off')],
+              [sg.Exit()]]
+
+    form = sg.FlexForm('Raspberry Pi GUI', grab_anywhere=False)
+    form.Layout(layout)
+
+    # ---- Event Loop ---- #
+    while True:
+        button, values = form.Read()
+
+        # ---- Process Button Clicks ---- #
+       if button is None or button == 'Exit':
+            break
+	   if button == 'Turn LED Off':
+            turn_LED_off()
+       elif button == 'Turn LED On':
+            turn_LED_on()
+
+    # ---- After Event Loop ---- #
+    sg.Popup('Done... exiting')
+
+
+
+In the Event Loop we are reading the form and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)
+
+The way buttons are presented to the caller in PySimpleGUI is ***not*** how *most* GUI frameworks handle button clicks.  Most GUI frameworks, including tkinter, use ***callback*** functions.  A function you define would be called when a button is clicked.  This requires you to write code where data is shared between these callback functions.  There is a lot more communications that have to happen between parts of your program.
+
+One of the larger hurdles for beginners to GUI programming are these callback functions.  PySimpleGUI was specifically designed in a way that callbacks would not be required.  There is no coordination between one function and another required.  You simple read your button click and take appropriate action.
+
+Whether or not this is a "proper" design for GUI programs can be debated.  It's not a terrible tradeoff to run your own event loop and having a functioning GUI application versus one that maybe never gets written because callback functions were too much to grasp.
 
 ---
 
