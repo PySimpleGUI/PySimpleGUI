@@ -2315,6 +2315,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
+                # auto_size_text = element.AutoSizeText
                 display_text = element.DisplayText         # text to display
                 if auto_size_text is False:
                     width, height=element_size
@@ -2344,7 +2345,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()+40  # width of widget in Pixels
-                if not auto_size_text:
+                if not auto_size_text and height == 1:
                     wraplen = 0
                 # print("wraplen, width, height", wraplen, width, height)
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
@@ -2713,8 +2714,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='sw', padx=DEFAULT_MARGINS[0], expand=True, fill='both')
-
+        tk_row_frame.pack(side=tk.TOP, anchor='sw', padx=DEFAULT_MARGINS[0], expand=True)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         if not toplevel_form.IsTabbedForm:
