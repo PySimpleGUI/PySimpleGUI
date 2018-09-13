@@ -3274,27 +3274,9 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
             path = input_values[0]
             return path
 
-# ============================== GetFileBox =========#
-# Like the Get folder box but for files              #
-# ===================================================#
-def GetFileBox(title, message, default_path='', file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
-    with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
-        layout = [[Text(message, auto_size_text=True)],
-                  [InputText(default_text=default_path, size=size), FileBrowse(file_types=file_types)],
-                  [Submit(), Cancel()]]
-
-        (button, input_values) = form.LayoutAndRead(layout)
-        if button != 'Submit':
-            return False,None
-        else:
-            path = input_values[0]
-            return True, path
-
-GetFile = GetFileBox
-AskForFile = GetFileBox
-
-
-def PopupGetFile(message, default_path='',save_as=False, no_window=False,  file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
+#####################################
+# PopupGetFile                      #
+#####################################
 def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
     if no_window:
         root = tk.Tk()
