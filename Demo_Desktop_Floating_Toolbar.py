@@ -16,8 +16,8 @@ ROOT_PATH = './'
 
 def Launcher():
 
-    def print(line):
-        form.FindElement('output').Update(line)
+    # def print(line):
+    #     form.FindElement('output').Update(line)
 
     sg.ChangeLookAndFeel('Dark')
 
@@ -56,11 +56,15 @@ def ExecuteCommandSubprocess(command, *args, wait=False):
     try:
         if sys.platform == 'linux':
             arg_string = ''
-            for arg in args:
-                arg_string += ' ' + str(arg)
-            sp = subprocess.Popen(['python3' + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            arg_string = ' '.join([str(arg) for arg in args])
+            # for arg in args:
+            #     arg_string += ' ' + str(arg)
+            print('python3 ' + arg_string)
+            sp = subprocess.Popen(['python3 ', arg_string ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         else:
-            sp = subprocess.Popen([command, list(args)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            arg_string = ' '.join([str(arg) for arg in args])
+            sp = subprocess.Popen([command, arg_string], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # sp = subprocess.Popen([command, list(args)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         if wait:
             out, err = sp.communicate()

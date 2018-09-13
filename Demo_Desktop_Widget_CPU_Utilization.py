@@ -19,7 +19,7 @@ sg.ChangeLookAndFeel('Black')
 form_rows = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0], justification='center', key='text')],
              [sg.Text('', size=(30, 8), font=('Courier', 10),text_color='white', justification='left', key='processes')],
              [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]
-# Layout the rows of the form and perform a read. Indicate the form is non-blocking!
+
 form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
 form.Layout(form_rows)
 
@@ -38,16 +38,17 @@ while (True):
 
     cpu_percent = psutil.cpu_percent(interval=interval)
 
+    # --------- Create list of top % CPU porocesses --------
     top = {proc.name() : proc.cpu_percent() for proc in psutil.process_iter()}
 
     top_sorted = sorted(top.items(), key=operator.itemgetter(1), reverse=True)
     top_sorted.pop(0)
     display_string = ''
     for proc, cpu in top_sorted:
-        display_string += f'{cpu:2.0f} {proc}\n'
-    # --------- Display timer in window --------
+        display_string += '{} {}\n'.format(cpu, proc)
 
-    form.FindElement('text').Update(f'CPU {cpu_percent:02.0f}%')
+    # --------- Display timer in window --------
+    form.FindElement('text').Update('CPU {}'.format(cpu_percent))
     # form.FindElement('processes').Update('\n'.join(top_sorted))
     form.FindElement('processes').Update(display_string)
 

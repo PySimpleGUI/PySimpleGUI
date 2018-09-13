@@ -1749,6 +1749,8 @@ class FlexForm:
 
     # Another name for ReadNonBlocking.
     PrepareForUpdate = ReadNonBlocking
+    Finalize = ReadNonBlocking
+    PreRead = ReadNonBlocking
 
 
     def Refresh(self):
