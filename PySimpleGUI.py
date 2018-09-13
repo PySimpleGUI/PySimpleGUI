@@ -95,10 +95,10 @@ LISTBOX_SELECT_MODE_EXTENDED = 'extended'
 SELECT_MODE_SINGLE = tk.SINGLE
 LISTBOX_SELECT_MODE_SINGLE = 'single'
 
-TREEVIEW_SELECT_MODE_NONE = tk.NONE
-TREEVIEW_SELECT_MODE_BROWSE = tk.BROWSE
-TREEVIEW_SELECT_MODE_EXTENDED = tk.EXTENDED
-DEFAULT_TREEVIEW_SECECT_MODE = TREEVIEW_SELECT_MODE_EXTENDED
+TABLE_SELECT_MODE_NONE = tk.NONE
+TABLE_SELECT_MODE_BROWSE = tk.BROWSE
+TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
+DEFAULT_TABLE_SECECT_MODE = TABLE_SELECT_MODE_EXTENDED
 
 
 
@@ -170,7 +170,7 @@ ELEM_TYPE_COLUMN = 555
 ELEM_TYPE_MENUBAR = 600
 ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
-ELEM_TYPE_TREEVIEW = 700
+ELEM_TYPE_TABLE = 700
 
 # -------------------------  MsgBox Buttons Types  ------------------------- #
 MSG_BOX_YES_NO = 1
@@ -1514,26 +1514,20 @@ class Menu(Element):
 # ---------------------------------------------------------------------- #
 #                           TreeView                                     #
 # ---------------------------------------------------------------------- #
-class Treeview(Element):
-    def __init__(self, values, column_headings=None, display_columns=None, show=None, tags=None, label=None, image=None, readonly=None, disabled=False, select_mode=None, children_hidden=False, font=None, justification='left',  text_color=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+class Table(Element):
+    def __init__(self, values, headings=None, visible_column_map=None, select_mode=None, scrollable=None, font=None, justification='left', text_color=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.Values = values
-        self.ColumnHeadings = column_headings
-        self.ColumnsToDisplay = display_columns
-        self.Show = show
-        self.ChildrenHidden = children_hidden
+        self.ColumnHeadings = headings
+        self.ColumnsToDisplay = visible_column_map
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TextColor = text_color
-        self.Disabled = disabled
-        self.ReadOnly = readonly
-        self.Image = image
-        self.Label = label
-        self.Tags = tags
         self.Justification = justification
+        self.Scrollable = scrollable
         self.InitialState = None
         self.SelectMode = select_mode
         self.TKTreeview = None
 
-        super().__init__(ELEM_TYPE_TREEVIEW, text_color=text_color, background_color=background_color, scale=scale, font=font, size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, scale=scale, font=font, size=size, pad=pad, key=key)
         return
 
 
@@ -1548,8 +1542,6 @@ class TreeviewItem(object):
         self.Vales = values
         self.Hidden = hidden
         self.Tags = tags
-
-
 
 
 # ------------------------------------------------------------------------- #
@@ -1731,6 +1723,10 @@ class FlexForm:
             _my_windows.Decrement()
             # return None, None
         return BuildResults(self, False, self)
+
+    # Another name for ReadNonBlocking.
+    PrepareForUpdate = ReadNonBlocking
+
 
     def Refresh(self):
         if self.TKrootDestroyed:
@@ -2693,19 +2689,26 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 element.TKScale = tkscale
-            # -------------------------  Treeview element  ------------------------- #
-            elif element_type == ELEM_TYPE_TREEVIEW:
+            # -------------------------  TABLE element  ------------------------- #
+            elif element_type == ELEM_TYPE_TABLE:
                 width, height = element_size
                 anchor = tk.W if element.Justification == 'left' else tk.E
+                if element.ColumnsToDisplay is None:
+                    displaycolumns = element.ColumnHeadings
+                else:
+                    displaycolumns = []
+                    for i, should_display in enumerate(element.ColumnsToDisplay):
+                        if should_display:
+                            displaycolumns.append(element.ColumnHeadings[i])
                 element.TKTreeview = ttk.Treeview(tk_row_frame, columns=element.ColumnHeadings,
-                                                  displaycolumns=element.ColumnsToDisplay, show=element.Show, height=height, selectmode=element.SelectMode)
+                                                  displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
                 treeview = element.TKTreeview
                 for heading in element.ColumnHeadings:
                     treeview.heading(heading, text=heading)
                     treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
                 for value in element.Values:
                     id = treeview.insert('', 'end', text=value, values=value)
-                    print(id)
+                    # print(id)
                     for i in range(5):
                         treeview.insert(id, 'end', text=value, values=i)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
