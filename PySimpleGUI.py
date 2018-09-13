@@ -172,13 +172,13 @@ ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
 ELEM_TYPE_TABLE = 700
 
-# -------------------------  MsgBox Buttons Types  ------------------------- #
-MSG_BOX_YES_NO = 1
-MSG_BOX_CANCELLED = 2
-MSG_BOX_ERROR = 3
-MSG_BOX_OK_CANCEL = 4
-MSG_BOX_OK = 0
-MSG_BOX_NO_BUTTONS = 5
+# -------------------------  Popup Buttons Types  ------------------------- #
+POPUP_BUTTONS_YES_NO = 1
+POPUP_BUTTONS_CANCELLED = 2
+POPUP_BUTTONS_ERROR = 3
+POPUP_BUTTONS_OK_CANCEL = 4
+POPUP_BUTTONS_OK = 0
+POPUP_BUTTONS_NO_BUTTONS = 5
 
 # ---------------------------------------------------------------------- #
 # Cascading structure.... Objects get larger                             #
@@ -307,6 +307,11 @@ class InputText(Element):
     def __del__(self):
         super().__del__()
 
+
+# -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
+In = InputText
+Input = InputText
+
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
@@ -357,6 +362,10 @@ class InputCombo(Element):
             pass
         super().__del__()
 
+# -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
+Combo = InputCombo
+DropDown = InputCombo
+Drop = InputCombo
 
 # ---------------------------------------------------------------------- #
 #                           Option Menu                                  #
@@ -402,6 +411,10 @@ class InputOptionMenu(Element):
         except:
             pass
         super().__del__()
+
+
+# -------------------------  OPTION MENU Element lazy functions  ------------------------- #
+OptionMenu = InputOptionMenu
 
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
@@ -554,6 +567,13 @@ class Checkbox(Element):
     def __del__(self):
         super().__del__()
 
+
+# -------------------------  CHECKBOX Element lazy functions  ------------------------- #
+CB = Checkbox
+CBox = Checkbox
+Check = Checkbox
+
+
 # ---------------------------------------------------------------------- #
 #                           Spin                                         #
 # ---------------------------------------------------------------------- #
@@ -697,6 +717,11 @@ class Text(Element):
 
     def __del__(self):
         super().__del__()
+
+
+# -------------------------  Text Element lazy functions  ------------------------- #
+Txt = Text
+T = Text
 
 
 # ---------------------------------------------------------------------- #
@@ -1170,10 +1195,10 @@ class TkScrollableFrame(tk.Frame):
 
         # create a canvas object and a vertical scrollbar for scrolling it
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-        self.vscrollbar.pack(side='right', fill="y",  expand="true")
+        self.vscrollbar.pack(side='right', fill="y",  expand="false")
 
         self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-        self.hscrollbar.pack(side='bottom', fill="x",  expand="true")
+        self.hscrollbar.pack(side='bottom', fill="x",  expand="false")
 
         self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -1192,7 +1217,6 @@ class TkScrollableFrame(tk.Frame):
         self.TKFrame.config(borderwidth=0, highlightthickness=0)
         self.config(borderwidth=0, highlightthickness=0)
 
-        self.canvas.bind("<Configure>", self.resize_frame)
         self.bind('<Configure>', self.set_scrollregion)
 
         self.bind_mouse_scroll(self.canvas, self.yscroll)
@@ -1511,14 +1535,19 @@ class Menu(Element):
         super().__del__()
 
 
+
 # ---------------------------------------------------------------------- #
-#                           TreeView                                     #
+#                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    def __init__(self, values, headings=None, visible_column_map=None, select_mode=None, scrollable=None, font=None, justification='left', text_color=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=10, select_mode=None, scrollable=None, font=None, justification='left', text_color=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.Values = values
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
+        self.ColumnWidths = col_widths
+        self.MaxColumnWidth = max_col_width
+        self.DefaultColumnWidth = def_col_width
+        self.AutoSizeColumns = auto_size_columns
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TextColor = text_color
         self.Justification = justification
@@ -1535,13 +1564,7 @@ class Table(Element):
         super().__del__()
 
 
-class TreeviewItem(object):
-    def __init__(self, text=None, image=None, values=None, hidden=False, tags=None ):
-        self.Text = text
-        self.Image = image
-        self.Vales = values
-        self.Hidden = hidden
-        self.Tags = tags
+
 
 
 # ------------------------------------------------------------------------- #
@@ -1884,56 +1907,10 @@ class UberForm():
     def __del__(self):
         return
 
-# ====================================================================== #
-# BUTTON Lazy Functions                                                  #
-# ====================================================================== #
+# =========================================================================== #
+# Button Lazy Functions so the caller doesn't have to define a bunch of stuff #
+# =========================================================================== #
 
-# -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
-In = InputText
-Input = InputText
-####  TODO REMOVE THESE COMMENTS  - was the old way, but want to keep around for a bit just in case
-# def In(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
-#     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
-
-# def Input(default_text ='', scale=(None, None), size=(None, None), auto_size_text=None, password_char='', background_color=None, text_color=None, do_not_clear=False, key=None, focus=False):
-#     return InputText(default_text=default_text, scale=scale, size=size, auto_size_text=auto_size_text, password_char=password_char, background_color=background_color, text_color=text_color, do_not_clear=do_not_clear, focus=focus, key=key)
-
-# -------------------------  CHECKBOX Element lazy functions  ------------------------- #
-CB = Checkbox
-CBox = Checkbox
-Check = Checkbox
-
-# -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
-
-Combo = InputCombo
-DropDown = InputCombo
-Drop = InputCombo
-
-
-# -------------------------  OPTION MENU Element lazy functions  ------------------------- #
-
-OptionMenu = InputOptionMenu
-
-
-
-# def Combo(values, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None):
-#     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text, background_color=background_color)
-#
-# def DropDown(values, scale=(None, None), size=(None, None), auto_size_text=None):
-#     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
-#
-# def Drop(values, scale=(None, None), size=(None, None), auto_size_text=None):
-#     return InputCombo(values=values, scale=scale, size=size, auto_size_text=auto_size_text)
-# -------------------------  TEXT Element lazy functions  ------------------------- #
-
-Txt = Text
-T = Text
-
-# def Txt(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
-#     return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
-#
-# def T(display_text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, justification=None):
-#     return Text(display_text, scale=scale, size=size, auto_size_text=auto_size_text, font=font, text_color=text_color, justification=justification)
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
@@ -2306,7 +2283,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     col_frame = tk.Frame(tk_row_frame)
                     PackFormIntoFrame(element, col_frame, toplevel_form)
 
-                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
@@ -2693,6 +2670,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TABLE:
                 width, height = element_size
                 anchor = tk.W if element.Justification == 'left' else tk.E
+
+                column_widths = {}
+                for row in element.Values:
+                    for i,col in enumerate(row):
+                        col_len = min(len(str(col)), element.MaxColumnWidth)
+                        try:
+                            if col_len > column_widths[i]:
+                                column_widths[i] = col_len
+                        except:
+                            column_widths[i] = col_len
+
                 if element.ColumnsToDisplay is None:
                     displaycolumns = element.ColumnHeadings
                 else:
@@ -2700,20 +2688,34 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     for i, should_display in enumerate(element.ColumnsToDisplay):
                         if should_display:
                             displaycolumns.append(element.ColumnHeadings[i])
-                element.TKTreeview = ttk.Treeview(tk_row_frame, columns=element.ColumnHeadings,
+                displaycolumns = ['Row',] + displaycolumns
+                column_headings = ['Row',] + element.ColumnHeadings
+                # scrollable_frame = TkScrollableFrame(tk_row_frame)
+                element.TKTreeview = ttk.Treeview(tk_row_frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
                 treeview = element.TKTreeview
-                for heading in element.ColumnHeadings:
+                treeview.heading('Row', text='Row')         # make a dummy heading
+                treeview.column('Row', width=50, anchor=anchor)
+                for i, heading in enumerate(element.ColumnHeadings):
                     treeview.heading(heading, text=heading)
+                    if element.AutoSizeColumns:
+                        width = column_widths[i]
+                    else:
+                        try:
+                            width = element.ColumnWidths[i]
+                        except:
+                            width = element.DefaultColumnWidth
                     treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
-                for value in element.Values:
+                for i, value in enumerate(element.Values):
+                    value = [i] + value
                     id = treeview.insert('', 'end', text=value, values=value)
                     # print(id)
-                    for i in range(5):
-                        treeview.insert(id, 'end', text=value, values=i)
+                    # for i in range(5):
+                    #     treeview.insert(id, 'end', text=value, values=i)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKTreeview.configure(background=element.BackgroundColor)
-                element.TKTreeview.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
@@ -3247,21 +3249,8 @@ PopupScrolled = ScrolledTextBox
 #    True/False, path                                                    #
 #     (True if Submit was pressed, false otherwise)                      #
 # ---------------------------------------------------------------------- #
-def GetPathBox(title, message, default_path='', button_color=None, size=(None, None)):
-    with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
-        layout = [[Text(message, auto_size_text=True)],
-                  [InputText(default_text=default_path, size=size), FolderBrowse()],
-                  [Submit(), Cancel()]]
 
-        (button, input_values) = form.LayoutAndRead(layout)
-        if button != 'Submit':
-            return False,None
-        else:
-            path = input_values[0]
-            return True, path
-
-
-def PopupGetFolder(message, default_path='', no_window=False, button_color=None, size=(None, None)):
+def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
     if no_window:
         root = tk.Tk()
         try:
@@ -3272,8 +3261,9 @@ def PopupGetFolder(message, default_path='', no_window=False, button_color=None,
         root.destroy()
         return folder_name
 
-    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
-        layout = [[Text(message, auto_size_text=True)],
+    with FlexForm(title=message, icon=icon, auto_size_text=True, button_color=button_color, background_color=background_color,
+                  font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top) as form:
+        layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
                   [InputText(default_text=default_path, size=size), FolderBrowse()],
                   [Ok(), Cancel()]]
 
@@ -3284,27 +3274,10 @@ def PopupGetFolder(message, default_path='', no_window=False, button_color=None,
             path = input_values[0]
             return path
 
-# ============================== GetFileBox =========#
-# Like the Get folder box but for files              #
-# ===================================================#
-def GetFileBox(title, message, default_path='', file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
-    with FlexForm(title, auto_size_text=True, button_color=button_color) as form:
-        layout = [[Text(message, auto_size_text=True)],
-                  [InputText(default_text=default_path, size=size), FileBrowse(file_types=file_types)],
-                  [Submit(), Cancel()]]
-
-        (button, input_values) = form.LayoutAndRead(layout)
-        if button != 'Submit':
-            return False,None
-        else:
-            path = input_values[0]
-            return True, path
-
-GetFile = GetFileBox
-AskForFile = GetFileBox
-
-
-def PopupGetFile(message, default_path='',save_as=False, no_window=False,  file_types=(("ALL Files", "*.*"),), button_color=None, size=(None, None)):
+#####################################
+# PopupGetFile                      #
+#####################################
+def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
     if no_window:
         root = tk.Tk()
         try:
@@ -3318,13 +3291,11 @@ def PopupGetFile(message, default_path='',save_as=False, no_window=False,  file_
         root.destroy()
         return filename
 
-    if save_as:
-        browse_button =  SaveAs(file_types=file_types)
-    else:
-        browse_button =  FileBrowse(file_types=file_types)
+    browse_button =  SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
 
-    with FlexForm(title=message, auto_size_text=True, button_color=button_color) as form:
-        layout = [[Text(message, auto_size_text=True)],
+    with FlexForm(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font, background_color=background_color,
+                  no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top) as form:
+        layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
                   [InputText(default_text=default_path, size=size), browse_button],
                   [Ok(), Cancel()]]
 
@@ -3335,26 +3306,13 @@ def PopupGetFile(message, default_path='',save_as=False, no_window=False,  file_
             path = input_values[0]
             return path
 
-
-# ============================== GetTextBox =========#
-# Get a single line of text                          #
-# ===================================================#
-def GetTextBox(title, message, default_text='', button_color=None, size=(None, None)):
-    with FlexForm(title, auto_size_text=True, button_color=button_color, grab_anywhere=False) as form:
-        layout = [[Text(message, auto_size_text=True)],
-                  [InputText(default_text=default_text, size=size)],
-                  [Submit(), Cancel()]]
-
-        (button, input_values) = form.LayoutAndRead(layout)
-        if button != 'Submit':
-            return False,None
-        else:
-            return True, input_values[0]
-
-
-def PopupGetText(message, default_text='', password_char='', button_color=None, size=(None, None)):
-    with FlexForm(title=message, auto_size_text=True, button_color=button_color, grab_anywhere=False) as form:
-        layout = [[Text(message, auto_size_text=True)],
+#####################################
+# PopupGetText                      #
+#####################################
+def PopupGetText(message, default_text='', password_char='', size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    with FlexForm(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+                  background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top) as form:
+        layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
                   [InputText(default_text=default_text, size=size, password_char=password_char)],
                   [Ok(), Cancel()]]
 
@@ -3663,28 +3621,31 @@ def ObjToString(obj, extra='    '):
 
 
 # ------------------------------------------------------------------------------------------------------------------ #
-# =====================================   Upper PySimpleGUI ============================================================== #
-#   Pre-built dialog boxes for all your needs                                                                        #
+# =====================================   Upper PySimpleGUI ======================================================== #
+#   Pre-built dialog boxes for all your needs    These are the "high level API calls                                 #
 # ------------------------------------------------------------------------------------------------------------------ #
 
-# ====================================  MSG BOX =====#
-# Display a message wrapping at 60 characters        #
-# Exits via an OK button2 press                      #
-# Returns nothing                                    #
-# ===================================================#
-def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=MSG_BOX_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, keep_on_top=False):
-    '''
-    Show message box.  Displays one line per user supplied argument. Takes any Type of variable to display.
+# ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
+
+def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    """
+    Popup = Display a message in a small window.  Many options available
     :param args:
     :param button_color:
+    :param background_color:
+    :param text_color:
     :param button_type:
     :param auto_close:
     :param auto_close_duration:
+    :param non_blocking:
     :param icon:
     :param line_width:
     :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
     :return:
-    '''
+    """
     if not args:
         args_to_print = ['']
     else:
@@ -3694,7 +3655,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, keep_on_top=keep_on_top) as form:
+    with FlexForm(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -3710,7 +3671,6 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
             max_line_total = max(max_line_total, width_used)
             # height = _GetNumLinesNeeded(message, width_used)
             height = message_wrapped_lines
-            # print('Msgbox width, height', width_used, height)
             form.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
             total_lines += height
 
@@ -3721,16 +3681,16 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         else:
             PopupButton = SimpleButton
         # show either an OK or Yes/No depending on paramater
-        if button_type is MSG_BOX_YES_NO:
+        if button_type is POPUP_BUTTONS_YES_NO:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False,  text_color=text_color, background_color=background_color), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
-        elif button_type is MSG_BOX_CANCELLED:
+        elif button_type is POPUP_BUTTONS_CANCELLED:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is MSG_BOX_ERROR:
+        elif button_type is POPUP_BUTTONS_ERROR:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('ERROR', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is MSG_BOX_OK_CANCEL:
+        elif button_type is POPUP_BUTTONS_OK_CANCEL:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color,  background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
                         PopupButton('Cancel', size=(5, 1), button_color=button_color))
-        elif button_type is MSG_BOX_NO_BUTTONS:
+        elif button_type is POPUP_BUTTONS_NO_BUTTONS:
             pass
         else:
             form.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
@@ -3746,145 +3706,74 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
 
 # ==============================  MsgBox============#
 # Lazy function. Same as calling Popup with parms   #
+# This function WILL Disappear perhaps today        #
 # ==================================================#
-# MsgBox is the legacy call and show not be used any longer
-MsgBox = Popup
+# MsgBox is the legacy call and should not be used any longer
+def MsgBox(*args):
+    raise DeprecationWarning('MsgBox is no longer supported... change your call to Popup')
+
 
 # --------------------------- PopupNoButtons ---------------------------
-def PopupoNoButtons(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    Popup(*args, button_type=MSG_BOX_NO_BUTTONS, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
+def PopupNoButtons(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=POPUP_BUTTONS_NO_BUTTONS,
+        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
+        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
 
 # --------------------------- PopupNonBlocking ---------------------------
-def PopupoNonBlocking(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    Popup(*args, non_blocking=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return
+def PopupNonBlocking(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
+        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
+        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
-PopupNoWait = PopupoNonBlocking
+
+PopupNoWait = PopupNonBlocking
 
 
-# --------------------------- PopupNoFrame ---------------------------
-def PopupNoTitlebar(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    Popup(*args, non_blocking=False, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=True)
-    return
+# --------------------------- PopupNoTitlebar ---------------------------
+def PopupNoTitlebar(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
+        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
+        font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
 PopupNoFrame = PopupNoTitlebar
 PopupNoBorder = PopupNoTitlebar
 PopupAnnoying = PopupNoTitlebar
 
 
-# ==============================  MsgBoxAutoClose====#
-# Lazy function. Same as calling MsgBox with parms   #
-# ===================================================#
-def MsgBoxAutoClose(*args, button_color=None, auto_close=True, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, font=None):
-    '''
-    Display a standard MsgBox that will automatically close after a specified amount of time
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+# --------------------------- PopupAutoClose ---------------------------
+def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
+        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
+        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
-PopupTimed = MsgBoxAutoClose
-PopupAutoClose = MsgBoxAutoClose
+PopupTimed = PopupAutoClose
 
-# ==============================  MsgBoxError   =====#
-# Like MsgBox but presents RED BUTTONS               #
-# ===================================================#
-def MsgBoxError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display a MsgBox with a red button
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+# --------------------------- PopupError ---------------------------
+def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, auto_close=False,  auto_close_duration=None,
+               font=None,no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, non_blocking=False, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
 
-PopupError = MsgBoxError
+# --------------------------- PopupCancel ---------------------------
+def PopupCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_type=POPUP_BUTTONS_CANCELLED, button_color=button_color, auto_close=auto_close,
+          auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
+# --------------------------- PopupOK ---------------------------
+def PopupOK(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_type=POPUP_BUTTONS_OK, button_color=button_color, auto_close=auto_close,
+          auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
-# ==============================  MsgBoxCancel  =====#
-#                                                    #
-# ===================================================#
-def MsgBoxCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display a MsgBox with a single "Cancel" button.
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_type=MSG_BOX_CANCELLED, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
+# --------------------------- PopupOKCancel ---------------------------
+def PopupOKCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_type=POPUP_BUTTONS_OK_CANCEL, button_color=button_color, auto_close=auto_close,
+          auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
-PopupCancel = MsgBoxCancel
-
-
-# ==============================  MsgBoxOK      =====#
-# Like MsgBox but only 1 button                      #
-# ===================================================#
-def MsgBoxOK(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display a MsgBox with a single buttoned labelled "OK"
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_type=MSG_BOX_OK, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-
-PopupOk = MsgBoxOK
-
-
-# ==============================  MsgBoxOKCancel ====#
-# Like MsgBox but presents OK and Cancel buttons     #
-# ===================================================#
-def MsgBoxOKCancel(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display MsgBox with 2 buttons, "OK" and "Cancel"
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    return MsgBox(*args, button_type=MSG_BOX_OK_CANCEL, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-
-PopupOkCancel = MsgBoxOKCancel
-
-
-# ====================================  YesNoBox=====#
-# Like MsgBox but presents Yes and No buttons        #
-# Returns True if Yes was pressed else False         #
-# ===================================================#
-def MsgBoxYesNo(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None):
-    '''
-    Display MsgBox with 2 buttons, "Yes" and "No"
-    :param args:
-    :param button_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param font:
-    :return:
-    '''
-    result = MsgBox(*args, button_type=MSG_BOX_YES_NO, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font)
-    return result
-
-
-PopupYesNo = MsgBoxYesNo
-
+# --------------------------- PopupYesNo ---------------------------
+def PopupYesNo(*args, button_color=None, auto_close=False, auto_close_duration=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False):
+    Popup(*args, button_type=POPUP_BUTTONS_YES_NO, button_color=button_color, auto_close=auto_close,
+          auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
 
 
 def main():
