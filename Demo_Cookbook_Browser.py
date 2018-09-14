@@ -754,7 +754,7 @@ listbox_values = [key for key in fig_dict.keys()]
 
 while True:
     sg.ChangeLookAndFeel('Dark')
-    sg.SetOptions(element_padding=(0,0))
+    # sg.SetOptions(element_padding=(0,0))
 
     col_listbox = [[sg.Listbox(values=listbox_values, size=(max(len(x) for x in listbox_values),min(len(listbox_values), 20)), change_submits=False, key='func')],
                    [sg.ReadFormButton('Run', pad=(0,0)), sg.ReadFormButton('Show Code', button_color=('white', 'gray25'), pad=(0,0)),  sg.Exit(button_color=('white', 'firebrick4'), pad=(0,0))]]

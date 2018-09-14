@@ -1,5 +1,7 @@
 import random
-import PySimpleGUI as gui
+import PySimpleGUI as sg
+import time
+
 """
     Pong code supplied by Daniel Young (Neonzz)
     Modified.  Original code: https://www.pygame.org/project/3649/5739
@@ -23,20 +25,12 @@ class Ball:
 
     def checkwin(self):
         winner = None
-        if self.playerScore == 10:
+        if self.playerScore >= 10:
             winner = 'Player left wins'
-            # gameOver = True
-        if self.player1Score == 10:
+        if self.player1Score >= 10:
             winner = 'Player Right'
-            # gameOver = True
         return winner
 
-    def checkForgameOver(self):
-        gameOver = False
-        if self.playerScore == 10 or self.player1Score == 10:
-            gameOver = True
-            return gameOver
-        return gameOver
 
     def updatep(self, val):
         self.canvas.delete(self.drawP)
@@ -91,9 +85,6 @@ class pongbat():
         self.canvas_width = self.canvas.winfo_width()
         self.y = 0
 
-        self.canvas.bind_all('w', self.up)
-        self.canvas.bind_all('s', self.down)
-
     def up(self, evt):
         self.y = -5
 
@@ -106,7 +97,7 @@ class pongbat():
         if pos[1] <= 0:
             self.y = 0
         if pos[3] >= 400:
-            self.y = -0
+            self.y = 0
 
 
 class pongbat2():
@@ -116,8 +107,6 @@ class pongbat2():
         self.canvas_height = self.canvas.winfo_height()
         self.canvas_width = self.canvas.winfo_width()
         self.y = 0
-        self.canvas.bind_all('<KeyPress-Up>', self.up)
-        self.canvas.bind_all('<KeyPress-Down>', self.down)
 
     def up(self, evt):
         self.y = -5
@@ -131,33 +120,57 @@ class pongbat2():
         if pos[1] <= 0:
             self.y = 0
         if pos[3] >= 400:
-            self.y = -0
+            self.y = 0
 
 
 def pong():
-    layout = [ [gui.Canvas(size=(700, 400), background_color='black', key='canvas')],
-        [gui.T(''), gui.ReadFormButton('Quit')]]
-
-    form = gui.FlexForm('Canvas test')
+    # ------------- Define GUI layout -------------
+    layout = [[sg.Canvas(size=(700, 400), background_color='black', key='canvas')],
+              [sg.T(''), sg.ReadFormButton('Quit')]]
+    # ------------- Create window -------------
+    form = sg.FlexForm('Canvas test', return_keyboard_events=True)
     form.Layout(layout)
-    form.ReadNonBlocking()                  # TODO Replace with call to Finalize once code released
+    form.ReadNonBlocking()                  # TODO Replace with call to form.Finalize once code released
 
+    # ------------- Get the tkinter Canvas we're drawing on -------------
     canvas = form.FindElement('canvas').TKCanvas
 
+    # ------------- Create line down center, the bats and ball -------------
     canvas.create_line(350, 0, 350, 400, fill='white')
     bat1 = pongbat(canvas, 'white')
     bat2 = pongbat2(canvas, 'white')
     ball1 = Ball(canvas, bat1, bat2, 'green')
 
+    # ------------- Event Loop -------------
     while True:
+        # ------------- Draw ball and bats -------------
         ball1.draw()
         bat1.draw()
         bat2.draw()
+
+        # ------------- Read the form, get keypresses -------------
         button, values = form.ReadNonBlocking()
+
+        # ------------- If quit  -------------
         if button is None and values is None or button == 'Quit':
             exit(69)
+        # ------------- Keypresses -------------
+        if button is not None:
+            if button.startswith('Up'):
+                bat2.up(2)
+            elif button.startswith('Down'):
+                bat2.down(2)
+            elif button == 'w':
+                bat1.up(1)
+            elif button == 's':
+                bat1.down(1)
+
         if ball1.checkwin():
-            gui.Popup('Game End', ball1.checkwin() + ' won!!')
+            sg.Popup('Game Over', ball1.checkwin() + ' won!!')
+
+
+        # ------------- Bottom of loop, delay between animations -------------
+        # time.sleep(.01)
         canvas.after(10)
 
 if __name__ == '__main__':

@@ -209,6 +209,7 @@ def OneLineGUI():
 def main():
     # button, (filename,) = OneLineGUI()
     # DebugTe`st()
+    sg.MsgBox('Hello')
     ChatBot()
     Everything()
     SourceDestFolders()

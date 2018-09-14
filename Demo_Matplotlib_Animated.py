@@ -25,7 +25,7 @@ def main():
     # create the form and show it without the plot
     form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
     form.Layout(layout)
-    form.ReadNonBlocking()
+    form.Finalize()
 
     graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
     canvas = canvas_elem.TKCanvas

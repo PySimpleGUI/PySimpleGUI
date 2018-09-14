@@ -7,7 +7,7 @@ layout = [
 
 form = gui.FlexForm('Canvas test')
 form.Layout(layout)
-form.ReadNonBlocking()
+form.Finalize()
 
 cir = form.FindElement('canvas').TKCanvas.create_oval(50, 50, 100, 100)
 

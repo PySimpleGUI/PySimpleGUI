@@ -26,7 +26,7 @@ form = sg.FlexForm("Time Tracker", default_element_size=(12, 1), text_justificat
 
 form.Layout(layout)
 
-form.ReadNonBlocking()
+form.Finalize()
 
 form.FindElement('cbox').Update(disabled=True)
 form.FindElement('listbox').Update(disabled=True)
