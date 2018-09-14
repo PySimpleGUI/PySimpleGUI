@@ -647,7 +647,7 @@ def main():
     # create the form and show it without the plot
     form = sg.FlexForm('Ping Graph', background_color='white', grab_anywhere=True)
     form.Layout(layout)
-    form.ReadNonBlocking()
+    form.Finalize()
 
     canvas = canvas_elem.TKCanvas
 

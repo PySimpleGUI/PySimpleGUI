@@ -35,7 +35,7 @@ def ScrollableColumns():
     layout = [[sg.Column(column2, scrollable=True), sg.Column(column1, scrollable=True, size=(200,150))],
               [sg.OK()]]
 
-    form = sg.FlexForm('Form Fill Demonstration', default_element_size=(40, 1))
+    form = sg.FlexForm('Form Fill Demonstration', grab_anywhere=False, default_element_size=(40, 1))
     b, v = form.LayoutAndRead(layout)
 
     sg.Popup(v)
@@ -53,9 +53,9 @@ def NormalColumns():
     # Display the form and get values
     # If you're willing to not use the "context manager" design pattern, then it's possible
     # to collapse the form display and read down to a single line of code.
-    button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
+    button, values = sg.FlexForm('Compact 1-line form with column', grab_anywhere=False).LayoutAndRead(layout)
 
     sg.Popup(button, values, line_width=200)
 
-NormalColumns()
+# NormalColumns()
 ScrollableColumns()
