@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 3.1.2)
+  (Ver 3.2.0)
 
 
 
@@ -222,8 +222,16 @@ Some users have found that upgrading required using an extra flag on the pip `--
     pip install --upgrade --no-cache-dir PySimpleGUI==3.0.3
 
 
-
 If for some reason you are unable to install using `pip`, don't worry, you can still import PySimpleGUI by downloading the file PySimleGUI.py and placing it in your folder along with the application that is importing it.
+
+`tkinter` is a requirement for PySimpleGUI (the only requirement).  Some OS variants, such as Ubuntu, do not some with `tkinter` already installed.  If you get an error similar to:
+```
+ImportError: No module named tkinter
+```
+then you need to install `tkinter`.  Be sure and get the Python 3 version.
+```
+sudo apt-get install python3-tk
+```
 
 
 
@@ -2167,6 +2175,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.0.0 | Sept 7, 2018 - The "fix for poor choice of 2.x numbers" release. Color Chooser (button), "grab anywhere" windows are on by default, disable combo boxes, Input Element text justification (last part needed for 'tables'), Image Element changes to support OpenCV?, PopupGetFile and PopupGetFolder have better no_window option
 | 3.01.01 | Sept 10, 2018 - Menus! (sort of a big deal)
 | 3.01.02 | Step 11, 2018 - All Element.Update functions have a `disabled` parameter so they can be disabled.  Renamed some parameters in Update function (sorry if I broke your code), fix for bug in Image.Update. Wasn't setting size correctly, changed grab_anywhere logic again,added grab anywhere option to PupupGetText (assumes disabled)
+| 3.02.00 | Sept 14, 2018 - New Table Element (Beta release), MsgBox removed entirely, font setting for InputText Element, **packing change** risky change that allows some Elements to be resized,removed command parameter from Menu Element, new function names for ReadNonBlocking (Finalize, PreRead), change to text element autosizing and wrapping (yet again), lots of parameter additions to Popup functions (colors, etc).
 
 
 ### Release Notes
@@ -2195,6 +2204,8 @@ One change that will set PySimpleGUI apart is the parlor trick of being able to 
 Related to the Grab Anywhere feature is the no_titlebar option, again found in the call to FlexForm.  Your window will be a spiffy, borderless window.  It's a really interesting effect.  Slight problem is that you do not have an icon on the taskbar with these types of windows, so if you don't supply a button to close the window, there's no way to close it other than task manager.
 
 3.0.2 Still making changes to Update methods with many more ahead in the future.  Continue to mess with grab anywhere option.  Needed to disable in more places such as the PopupGetText function.  Any time these is text input on a form, you generally want to turn off the grab anywhere feature.
+
+3.2.0 Biggest change was the addition of the Table Element.  Trying to make changes so that form resizing is a possibility but unknown if will work in the long run.  Removed all MsgBox, Get* functions and replaced with Popup functions.  Popups had multiple new parameters added to change the look and feel of a popup.
 
 
 ### Upcoming
