@@ -20,7 +20,7 @@ form_rows = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLO
              [sg.Text('', size=(30, 8), font=('Courier', 10),text_color='white', justification='left', key='processes')],
              [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]
 
-form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
+form = sg.FlexForm('CPU Utilization', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
 form.Layout(form_rows)
 
 # ----------------  main loop  ----------------
