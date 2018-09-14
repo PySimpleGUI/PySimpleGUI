@@ -130,7 +130,7 @@ def pong():
     # ------------- Create window -------------
     form = sg.FlexForm('Canvas test', return_keyboard_events=True)
     form.Layout(layout)
-    form.ReadNonBlocking()                  # TODO Replace with call to form.Finalize once code released
+    form.Finalize()                  # TODO Replace with call to form.Finalize once code released
 
     # ------------- Get the tkinter Canvas we're drawing on -------------
     canvas = form.FindElement('canvas').TKCanvas
