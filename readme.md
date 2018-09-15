@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 3.2.0)
+  (Ver 3.3.0)
 
 
 
@@ -71,7 +71,7 @@ Perhaps you're looking for a way to interact with your **Raspberry Pi** in a mor
 
 In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this into any of your `for` loops and get a nice meter like this:
 
-    EasyProgressMeter('My meter title', current_value, max value)
+    OneLineProgressMeter('My meter title', current_value, max value, 'key')
 
   ![easyprogressmeter](https://user-images.githubusercontent.com/13696193/44960065-83099100-aec6-11e8-8aa8-96e4b100a0e4.jpg)
 
@@ -199,7 +199,12 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 - The SDK calls collapse down into a single line of Python code that presents a custom GUI and returns values
 -  Linear programming instead of callbacks
 
+ #### Lofty Goals
+>
+>
+>  Change Python
 
+The expectation is not that ***this*** package will become part of the Python Standard Library.  The hope is that Python will become ***the*** go-to language for creating GUI programs that run on Windows, Mac, and Linux.  There is a gap in the Python GUI solution.  Fill that gap and who knows what will happen.  Maybe there's no "there there".  Or maybe an easy to use GUI API will enable Python to dominate yet another computing discipline like it has so many others.   I want to find out.
 
 
   -----
@@ -413,13 +418,14 @@ The window created to get a folder name looks the same as the get a file name.  
 
 ![popupgetfolder](https://user-images.githubusercontent.com/13696193/44957861-45484080-aea5-11e8-926c-cf607a45251c.jpg)
 
-#### Progress Meter!
+#### Progress Meters!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
 
 
-    EasyProgressMeter(title,
+    OneLineProgressMeter(title,
                       current_value,
                       max_value,
+                      key,
                       *args,
                       orientation=None,
                       bar_color=DEFAULT_PROGRESS_BAR_COLOR,
@@ -431,14 +437,14 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
 Here's the one-line Progress Meter in action!
 
     for i in range(1,10000):
-        sg.EasyProgressMeter('My Meter', i+1, 10000, 'Optional message')
+        sg.OneLineProgressMeter('My Meter', i+1, 10000, 'Optional message', 'key')
 
 That line of code resulted in this window popping up and updating.
 
 ![preogress meter](https://user-images.githubusercontent.com/13696193/43667625-d47da702-9746-11e8-91e6-e5177883abae.jpg)
 
 A meter AND fun statistics to watch while your machine grinds away, all for the price of 1 line of code.
-With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `EasyProgressMeter`.  It normally returns `True`.
+With a little trickery you can provide a way to break out of your loop using the Progress Meter form.  The cancel button results in a `False` return value from `OneLineProgressMeter`.  It normally returns `True`.
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
 
@@ -1526,46 +1532,19 @@ If there are more than 1 button on a form, the FIRST button that is of type Clos
 
  ---
 #### ProgressBar
-The `ProgressBar` element is used to build custom Progress Bar forms.  It is HIGHLY recommended that you use the functions that provide a complete progress meter solution for you.  Progress Meters are not easy to work with because the forms have to be non-blocking and they are tricky to debug.
+The `ProgressBar` element is used to build custom Progress Bar forms.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the forms have to be non-blocking and they are tricky to debug.
 
-The **easiest** way to get progress meters into your code is to use the `EasyProgessMeter` API.  This consists of a pair of functions, `EasyProgessMeter` and `EasyProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
-You've already seen EasyProgressMeter calls presented earlier in this readme.
+The **easiest** way to get progress meters into your code is to use the `OneLineProgressMeter` API.  This consists of a pair of functions, `OneLineProgressMeter` and `OneLineProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
+You've already seen OneLineProgressMeter calls presented earlier in this readme.
 
-    sg.EasyProgressMeter('My Meter', i+1, 1000, 'Optional message')
+    sg.OneLineProgressMeter('My Meter', i+1, 1000, 'Optional message', 'key')
 
-The return value for `EasyProgressMeter` is:
+The return value for `OneLineProgressMeter` is:
 `True` if meter updated correctly
 `False` if user clicked the Cancel button, closed the form, or vale reached the max value.
-**Customized Progress Bar**
 
-If you want a bit more customization of your meter, then you can go up 1 level and use the calls to `ProgressMeter` and `ProgressMeterUpdate`.  These APIs behave like an object we're all used to.  First you create the `ProgressMeter` object, then you call the `Update` method to update it.
-
-
-You setup the progress meter by calling
-
-    my_meter = ProgressMeter(title,
-                        max_value,
-                        *args,
-                        orientantion=None,
-                        bar_color=DEFAULT_PROGRESS_BAR_COLOR,
-                        button_color=None,
-                        size=DEFAULT_PROGRESS_BAR_SIZE,
-                        scale=(None, None),
-                        border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
-Then to update the bar within your loop
-
-    return_code = ProgressMeterUpdate(my_meter,
-                                     value,
-                                     *args):
-Putting it all together you get this design pattern
-
-    my_meter = sg.ProgressMeter('Meter Title', 100000, orentation='Vert')
-
-    for i in range(0, 100000):
-        sg.ProgressMeterUpdate(my_meter, i+1, 'Some variable', 'Another variable')
-
-
-The final way of using a Progress Meter with PySimpleGUI is to build a custom form with a `ProgressBar` Element in the form.  You will need to run your form as a non-blocking form.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
+#### Progress Mater in Your Form
+Another way of using a Progress Meter with PySimpleGUI is to build a custom form with a `ProgressBar` Element in the form.  You will need to run your form as a non-blocking form.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
 
 ![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
 
@@ -2055,12 +2034,13 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 |**Demo_Media_Player.py** | Non-blocking form with a media player layout.  Demonstrates  button graphics, Update method
 |**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices
 |**Demo_NonBlocking_Form.py** | a basic async form
-|** Demo_OpenCV.py** | Integrated with OpenCV
-|** Demo_Password_Login** | Password protection using SHA1
+|**Demo_OpenCV.py** | Integrated with OpenCV
+|**Demo_Password_Login** | Password protection using SHA1
 |**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate
 |**Demo_Pi_LEDs.py** | Control GPIO using buttons
 |**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons
 |**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files
+| **Demo_Progress_Meters.py** | Demonstrates using 2 progress meters simultaneously
 |**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook
 |**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts
 |**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts
@@ -2143,9 +2123,9 @@ While not an "issue" this is a ***stern warning***
 
 ## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
 
-**Progress Meters** - the visual graphic portion of the meter may be off.  May return to the native tkinter progress meter solution in the future.  Right now a "custom" progress meter is used.  On the bright side, the statistics shown are extremely accurate and can tell you something about the performance of your code.
+**Progress Meters** - the visual graphic portion of the meter may be off.  May return to the native tkinter progress meter solution in the future.  Right now a "custom" progress meter is used.  On the bright side, the statistics shown are extremely accurate and can tell you something about the performance of your code.    If you are running 2 or more progress meters at the same time using `OneLineProgressMeter`, you need to close the meter by using the "Cancel" button rather than the X
 
-**Async Forms** - these include the 'easy' forms (EasyProgressMeter and EasyPrint/Print). If you start overlapping having Async forms open with normal forms then things get a littler squirrelly.  Still tracking down the issues and am making it more solid every day possible.  You'll know there's an issue when you see blank form.
+**Async Forms** - these include the 'easy' forms (`OneLineProgressMeter` and EasyPrint/Print). If you start overlapping having Async forms open with normal forms then things get a littler squirrelly.  Still tracking down the issues and am making it more solid every day possible.  You'll know there's an issue when you see blank form.
 
 **EasyPrint** - EasyPrint is a new feature that's pretty awesome.  You print and the output goes to a window, with a scroll bar, that you can copy and paste from.  Being a new feature, it's got some potential problems.  There are known interaction problems with other GUI windows.  For example, closing a Print window can also close other windows you have open.  For now, don't close your debug print window until other windows are closed too.
 
@@ -2206,6 +2186,8 @@ Related to the Grab Anywhere feature is the no_titlebar option, again found in t
 3.0.2 Still making changes to Update methods with many more ahead in the future.  Continue to mess with grab anywhere option.  Needed to disable in more places such as the PopupGetText function.  Any time these is text input on a form, you generally want to turn off the grab anywhere feature.
 
 3.2.0 Biggest change was the addition of the Table Element.  Trying to make changes so that form resizing is a possibility but unknown if will work in the long run.  Removed all MsgBox, Get* functions and replaced with Popup functions.  Popups had multiple new parameters added to change the look and feel of a popup.
+
+3.3.0 OneLineProgressMeter function added which gives you not only a one-line solution to progress meters, but it also gives you the ability to have more than 1 running at the same time, something not possible with the EasyProgressMeterCall
 
 
 ### Upcoming
