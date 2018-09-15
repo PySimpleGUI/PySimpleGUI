@@ -1044,6 +1044,7 @@ class ProgressBar(Element):
         super().__init__(ELEM_TYPE_PROGRESS_BAR, scale=scale, size=size, auto_size_text=auto_size_text, key=key, pad=pad)
         return
 
+    # returns False if update failed
     def UpdateBar(self, current_count, max=None):
         if self.ParentForm.TKrootDestroyed:
             return False
@@ -2952,7 +2953,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,No
     local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
     bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color, scale=scale, border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
-    form = FlexForm(title, auto_size_text=True)
+    form = FlexForm(title, auto_size_text=True, grab_anywhere=True)
 
     # Form using a horizontal bar
     if local_orientation[0].lower() == 'h':
@@ -2996,10 +2997,12 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     if value >= bar.MaxValue or not rc:
         bar.BarExpired = True
         bar.ParentForm._Close()
+        if rc:                      # if update was OK but bar expired, decrement num windows
+            _my_windows.Decrement()
     if bar.ParentForm.RootNeedsDestroying:
         try:
             bar.ParentForm.TKroot.destroy()
-            _my_windows.Decrement()
+            # _my_windows.Decrement()
         except: pass
         bar.ParentForm.RootNeedsDestroying = False
         bar.ParentForm.__del__()
@@ -3071,42 +3074,42 @@ def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, 
     # STATIC VARIABLE!
     # This is a very clever form of static variable using a function attribute
     # If the variable doesn't yet exist, then it will create it and initialize with the 3rd parameter
-    EasyProgressMeter.EasyProgressMeterData = getattr(EasyProgressMeter, 'EasyProgressMeterData', EasyProgressMeterDataClass())
+    EasyProgressMeter.Data = getattr(EasyProgressMeter, 'Data', EasyProgressMeterDataClass())
     # if no meter currently running
-    if EasyProgressMeter.EasyProgressMeterData.MeterID is None:           # Starting a new meter
+    if EasyProgressMeter.Data.MeterID is None:           # Starting a new meter
         if int(current_value) >= int(max_value):
             return False
-        del(EasyProgressMeter.EasyProgressMeterData)
-        EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
-        EasyProgressMeter.EasyProgressMeterData.ComputeProgressStats()
-        message = "\n".join([line for line in EasyProgressMeter.EasyProgressMeterData.StatMessages])
-        EasyProgressMeter.EasyProgressMeterData.MeterID, EasyProgressMeter.EasyProgressMeterData.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=local_border_width)
-        EasyProgressMeter.EasyProgressMeterData.ParentForm = EasyProgressMeter.EasyProgressMeterData.MeterID.ParentForm
+        del(EasyProgressMeter.Data)
+        EasyProgressMeter.Data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
+        EasyProgressMeter.Data.ComputeProgressStats()
+        message = "\n".join([line for line in EasyProgressMeter.Data.StatMessages])
+        EasyProgressMeter.Data.MeterID, EasyProgressMeter.Data.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=local_border_width)
+        EasyProgressMeter.Data.ParentForm = EasyProgressMeter.Data.MeterID.ParentForm
         return True
     # if exactly the same values as before, then ignore.
-    if EasyProgressMeter.EasyProgressMeterData.MaxValue == max_value and EasyProgressMeter.EasyProgressMeterData.CurrentValue == current_value:
+    if EasyProgressMeter.Data.MaxValue == max_value and EasyProgressMeter.Data.CurrentValue == current_value:
         return True
-    if EasyProgressMeter.EasyProgressMeterData.MaxValue != int(max_value):
-        EasyProgressMeter.EasyProgressMeterData.MeterID = None
-        EasyProgressMeter.EasyProgressMeterData.ParentForm = None
-        del(EasyProgressMeter.EasyProgressMeterData)
-        EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass()            # setup a new progress meter
+    if EasyProgressMeter.Data.MaxValue != int(max_value):
+        EasyProgressMeter.Data.MeterID = None
+        EasyProgressMeter.Data.ParentForm = None
+        del(EasyProgressMeter.Data)
+        EasyProgressMeter.Data = EasyProgressMeterDataClass()            # setup a new progress meter
         return True         # HAVE to return TRUE or else the new meter will thing IT is failing when it hasn't
-    EasyProgressMeter.EasyProgressMeterData.CurrentValue = int(current_value)
-    EasyProgressMeter.EasyProgressMeterData.MaxValue = int(max_value)
-    EasyProgressMeter.EasyProgressMeterData.ComputeProgressStats()
+    EasyProgressMeter.Data.CurrentValue = int(current_value)
+    EasyProgressMeter.Data.MaxValue = int(max_value)
+    EasyProgressMeter.Data.ComputeProgressStats()
     message = ''
-    for line in EasyProgressMeter.EasyProgressMeterData.StatMessages:
+    for line in EasyProgressMeter.Data.StatMessages:
         message = message + str(line) + '\n'
-    message = "\n".join(EasyProgressMeter.EasyProgressMeterData.StatMessages)
+    message = "\n".join(EasyProgressMeter.Data.StatMessages)
     args= args + (message,)
-    rc = _ProgressMeterUpdate(EasyProgressMeter.EasyProgressMeterData.MeterID, current_value,
-                              EasyProgressMeter.EasyProgressMeterData.MeterText, *args)
+    rc = _ProgressMeterUpdate(EasyProgressMeter.Data.MeterID, current_value,
+                              EasyProgressMeter.Data.MeterText, *args)
     # if counter >= max then the progress meter is all done. Indicate none running
-    if current_value >= EasyProgressMeter.EasyProgressMeterData.MaxValue or not rc:
-        EasyProgressMeter.EasyProgressMeterData.MeterID = None
-        del(EasyProgressMeter.EasyProgressMeterData)
-        EasyProgressMeter.EasyProgressMeterData = EasyProgressMeterDataClass()            # setup a new progress meter
+    if current_value >= EasyProgressMeter.Data.MaxValue or not rc:
+        EasyProgressMeter.Data.MeterID = None
+        del(EasyProgressMeter.Data)
+        EasyProgressMeter.Data = EasyProgressMeterDataClass()            # setup a new progress meter
         return False     # even though at the end, return True so don't cause error with the app
     return rc           # return whatever the update told us
 
@@ -3118,6 +3121,61 @@ def EasyProgressMeterCancel(title, *args):
         rc = EasyProgressMeter(title, EasyProgressMeter.EasyProgressMeterData.MaxValue, EasyProgressMeter.EasyProgressMeterData.MaxValue, ' *** CANCELLING ***', 'Caller requested a cancel', *args)
         return rc
     return True
+
+
+# global variable containing dictionary will all currently running one-line progress meters.
+_one_line_progress_meters = {}
+
+# ============================== OneLineProgressMeter  =====#
+def OneLineProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None, key=None):
+
+    global _one_line_progress_meters
+
+    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is not None else border_width
+    try:
+        meter_data = _one_line_progress_meters[key]
+    except:     # a new meater is starting
+        if int(current_value) >= int(max_value):     # if already expired then it's an old meter, ignore
+            return False
+        meter_data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
+        _one_line_progress_meters[key] = meter_data
+        meter_data.ComputeProgressStats()
+        message = "\n".join([line for line in meter_data.StatMessages])
+        meter_data.MeterID, meter_data.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=local_border_width)
+        meter_data.ParentForm = meter_data.MeterID.ParentForm
+        return True
+
+    # if exactly the same values as before, then ignore, return success.
+    if meter_data.MaxValue == max_value and meter_data.CurrentValue == current_value:
+        return True
+    meter_data.CurrentValue = int(current_value)
+    meter_data.MaxValue = int(max_value)
+    meter_data.ComputeProgressStats()
+    message = ''
+    for line in meter_data.StatMessages:
+        message = message + str(line) + '\n'
+    message = "\n".join(meter_data.StatMessages)
+    args= args + (message,)
+    rc = _ProgressMeterUpdate(meter_data.MeterID, current_value,
+                              meter_data.MeterText, *args)
+    # if counter >= max then the progress meter is all done. Indicate none running
+    if current_value >= meter_data.MaxValue or not rc:
+        del _one_line_progress_meters[key]
+        return False
+
+    return rc           # return whatever the update told us
+
+
+def OneLineProgressMeterCancel(key):
+    global _one_line_progress_meters
+
+    try:
+        meter_data = _one_line_progress_meters[key]
+    except:     # meter is already deleted
+        return
+    OneLineProgressMeter('', meter_data.MaxValue, meter_data.MaxValue, key=key)
+
+
 
 
 # input is #RRGGBB
