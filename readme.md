@@ -25,11 +25,9 @@
 
 [Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
 
-Super-simple GUI to grasp... Powerfully customizable.
+Super-simple GUI to use... Powerfully customizable.
 
-Create a custom GUI in 5 lines of code.
-
-Can create a custom GUI in 1 line of code if desired.
+Home of the 1-line custom GUI and 1-line progress meter
 
 Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
 
@@ -69,7 +67,7 @@ Perhaps you're looking for a way to interact with your **Raspberry Pi** in a mor
 
 
 
-In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this into any of your `for` loops and get a nice meter like this:
+In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this line into any of your `for` loops and get a nice meter:
 
     OneLineProgressMeter('My meter title', current_value, max value, 'key')
 
@@ -83,7 +81,7 @@ You can build an async media player GUI with custom buttons in 30 lines of code.
   ## Background
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they're **very** limiting.  PySimpleGUI takes the best of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited, and adds the ability to define your own layouts.   This ability to make your own forms is the  primary difference between these and `PySimpleGUI`.
+There are a number of 'easy to use' Python GUIs, but they were too limited for my requirements.  PySimpleGUIest of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited, and adds the ability to define your own layouts.   This ability to make your own forms is the  primary difference between these and `PySimpleGUI`.
 
 Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.  The configure is done in-place.
 
@@ -204,7 +202,7 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 >
 >  Change Python
 
-The expectation is not that ***this*** package will become part of the Python Standard Library.  The hope is that Python will become ***the*** go-to language for creating GUI programs that run on Windows, Mac, and Linux.  There is a gap in the Python GUI solution.  Fill that gap and who knows what will happen.  Maybe there's no "there there".  Or maybe an easy to use GUI API will enable Python to dominate yet another computing discipline like it has so many others.   I want to find out.
+The hope is not that ***this*** package will become part of the Python Standard Library.  The hope is that Python will become ***the*** go-to language for creating GUI programs that run on Windows, Mac, and Linux for all levels of developer.  The hope is that beginners that are interested in graphic design will have an easy way to express themselves, right from the start of their Python experience.  There is a gap in the Python GUI solution.  Fill that gap and who knows what will happen.  Maybe there's no "there there".  Or maybe simple GUI API will enable Python to dominate yet another computing discipline like it has so many others.   I want to find out.
 
 
   -----
