@@ -2937,7 +2937,7 @@ def ConvertArgsToSingleString(*args):
 
 # ============================== ProgressMeter  =====#
 # ===================================================#
-def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
+def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None, grab_anywhere=True):
     '''
     Create and show a form on tbe caller's behalf.
     :param title:
@@ -2954,7 +2954,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,No
     local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
     bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color, scale=scale, border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
-    form = FlexForm(title, auto_size_text=True, grab_anywhere=True)
+    form = FlexForm(title, auto_size_text=True, grab_anywhere=grab_anywhere)
 
     # Form using a horizontal bar
     if local_orientation[0].lower() == 'h':
@@ -3128,7 +3128,7 @@ def EasyProgressMeterCancel(title, *args):
 _one_line_progress_meters = {}
 
 # ============================== OneLineProgressMeter  =====#
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
+def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None, grab_anywhere=True):
 
     global _one_line_progress_meters
 
@@ -3142,7 +3142,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
         _one_line_progress_meters[key] = meter_data
         meter_data.ComputeProgressStats()
         message = "\n".join([line for line in meter_data.StatMessages])
-        meter_data.MeterID, meter_data.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=local_border_width)
+        meter_data.MeterID, meter_data.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size, scale=scale, button_color=button_color, border_width=local_border_width, grab_anywhere=grab_anywhere)
         meter_data.ParentForm = meter_data.MeterID.ParentForm
         return True
 
