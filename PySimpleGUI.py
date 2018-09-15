@@ -3127,7 +3127,7 @@ def EasyProgressMeterCancel(title, *args):
 _one_line_progress_meters = {}
 
 # ============================== OneLineProgressMeter  =====#
-def OneLineProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None, key=None):
+def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, scale=(None, None), border_width=None):
 
     global _one_line_progress_meters
 
@@ -3162,7 +3162,6 @@ def OneLineProgressMeter(title, current_value, max_value, *args, orientation=Non
     if current_value >= meter_data.MaxValue or not rc:
         del _one_line_progress_meters[key]
         return False
-
     return rc           # return whatever the update told us
 
 
