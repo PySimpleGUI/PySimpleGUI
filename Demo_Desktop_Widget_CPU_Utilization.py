@@ -17,7 +17,7 @@ import operator
             invalid command name "1616802625480StopMove"
 """
 
-
+# globale used to communicate with thread.. yea yea... it's working fine
 g_interval = 1
 g_cpu_percent = 0
 g_procs = None
@@ -38,11 +38,11 @@ def main():
     sg.ChangeLookAndFeel('Black')
     form_rows = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0], justification='center', key='text')],
                  [sg.Text('', size=(30, 8), font=('Courier New', 12),text_color='white', justification='left', key='processes')],
-                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')],
-                 ]
+                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')],]
 
     form = sg.FlexForm('CPU Utilization', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
     form.Layout(form_rows)
+    # start cpu measurement thread
     thread = Thread(target=CPU_thread,args=(None,))
     thread.start()
     # ----------------  main loop  ----------------
@@ -58,9 +58,11 @@ def main():
         except:
             g_interval = 1
 
-        # cpu_percent = psutil.cpu_percent(interval=interval)
+        # cpu_percent = psutil.cpu_percent(interval=interval)       # if don't wan to use a task
         cpu_percent = g_cpu_percent
-        time.sleep(.1)
+
+        # let the GUI run ever 700ms regardless of CPU polling time. makes window be more responsive
+        time.sleep(.7)
 
         display_string = ''
         if g_procs:

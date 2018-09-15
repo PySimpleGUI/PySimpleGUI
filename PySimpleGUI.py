@@ -1541,7 +1541,7 @@ class Menu(Element):
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=10, select_mode=None, scrollable=None, font=None, justification='left', text_color=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, scrollable=None, font=None, justification='right', text_color=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.Values = values
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
@@ -1555,6 +1555,7 @@ class Table(Element):
         self.Scrollable = scrollable
         self.InitialState = None
         self.SelectMode = select_mode
+        self.DisplayRowNumbers = display_row_numbers
         self.TKTreeview = None
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, scale=scale, font=font, size=size, pad=pad, key=key)
@@ -2683,7 +2684,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                 column_widths[i] = col_len
                         except:
                             column_widths[i] = col_len
-
                 if element.ColumnsToDisplay is None:
                     displaycolumns = element.ColumnHeadings
                 else:
@@ -2691,14 +2691,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     for i, should_display in enumerate(element.ColumnsToDisplay):
                         if should_display:
                             displaycolumns.append(element.ColumnHeadings[i])
-                displaycolumns = ['Row',] + displaycolumns
-                column_headings = ['Row',] + element.ColumnHeadings
-                # scrollable_frame = TkScrollableFrame(tk_row_frame)
+                column_headings= element.ColumnHeadings
+                if element.DisplayRowNumbers:       # if display row number, tack on the numbers to front of columns
+                    displaycolumns = ['Row',] + displaycolumns
+                    column_headings = ['Row',] + element.ColumnHeadings
                 element.TKTreeview = ttk.Treeview(tk_row_frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
                 treeview = element.TKTreeview
-                treeview.heading('Row', text='Row')         # make a dummy heading
-                treeview.column('Row', width=50, anchor=anchor)
+                if element.DisplayRowNumbers:
+                    treeview.heading('Row', text='Row')         # make a dummy heading
+                    treeview.column('Row', width=50, anchor=anchor)
                 for i, heading in enumerate(element.ColumnHeadings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
@@ -2708,13 +2710,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
+
                     treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
                 for i, value in enumerate(element.Values):
-                    value = [i] + value
+                    if element.DisplayRowNumbers:
+                        value = [i] + value
                     id = treeview.insert('', 'end', text=value, values=value)
-                    # print(id)
-                    # for i in range(5):
-                    #     treeview.insert(id, 'end', text=value, values=i)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKTreeview.configure(background=element.BackgroundColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')

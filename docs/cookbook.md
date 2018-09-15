@@ -327,15 +327,17 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
 
 ---------
 
-## Easy Progress Meter
+## OneLineProgressMeter
+
 This recipe shows just how easy it is to add a progress meter to your code.
 
-![progress meter 6](https://user-images.githubusercontent.com/13696193/43955982-73b33b38-9c70-11e8-8b07-cc1473a58a73.jpg)
+![onelineprogressmeter](https://user-images.githubusercontent.com/13696193/45589254-bd285900-b8f0-11e8-9122-b43f06bf074d.jpg)
+
 
     import PySimpleGUI as sg
 
     for i in range(1000):
-        sg.EasyProgressMeter('Easy Meter Example', i+1, 1000)
+        sg.OneLineProgressMeter('One Line Meter Example', i+1, 1000, 'mymeter')
 
 
 -----

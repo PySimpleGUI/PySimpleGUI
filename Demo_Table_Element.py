@@ -15,8 +15,8 @@ if filename is not None:
 
 sg.SetOptions(element_padding=(0, 0))
 
-col_layout = [[sg.Table(values=data, headings=[x for x in range(len(data[0]))], max_col_width=8,
-                        auto_size_columns=False, justification='right', size=(8, len(data)))]]
+col_layout = [[sg.Table(values=data[1:][:], headings=[data[0][x] for x in range(len(data[0]))], max_col_width=25,
+                        auto_size_columns=True, display_row_numbers=True, justification='right', size=(None, len(data)))]]
 
 layout = [[sg.Column(col_layout, size=(1200,600), scrollable=True)],]
 
