@@ -27,8 +27,11 @@ def CPU_thread(args):
     global g_interval, g_cpu_percent, g_procs, g_exit
 
     while not g_exit:
-        g_cpu_percent = psutil.cpu_percent(interval=g_interval)
-        g_procs = psutil.process_iter()
+        try:
+            g_cpu_percent = psutil.cpu_percent(interval=g_interval)
+            g_procs = psutil.process_iter()
+        except:
+            pass
 
 
 def main():
@@ -67,7 +70,10 @@ def main():
         display_string = ''
         if g_procs:
             # --------- Create list of top % CPU porocesses --------
-            top = {proc.name() : proc.cpu_percent() for proc in g_procs}
+            try:
+                top = {proc.name() : proc.cpu_percent() for proc in g_procs}
+            except: pass
+
 
             top_sorted = sorted(top.items(), key=operator.itemgetter(1), reverse=True)
             if top_sorted:

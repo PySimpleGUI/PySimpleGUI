@@ -1106,10 +1106,54 @@ class Image(Element):
 class Canvas(Element):
     def __init__(self, canvas=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.TKCanvas = canvas
+        self._TKCanvas = canvas
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
         return
+
+    @property
+    def TKCanvas(self):
+        return self._TKCanvas
+
+
+    def __del__(self):
+        super().__del__()
+
+
+
+
+# ---------------------------------------------------------------------- #
+#                           Graph                                        #
+# ---------------------------------------------------------------------- #
+class Graph(Canvas):
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+
+        self.CanvasSize = canvas_size
+        self.BottomLeft = graph_bottom_left
+        self.TopRight = graph_top_right
+
+        super().__init__(background_color=background_color, scale=scale, size=canvas_size, pad=pad, key=key)
+        return
+
+    def _convert_xy_to_canvas_xy(self, x_in, y_in):
+        scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
+        scale_y = (0 - self.CanvasSize[1]) / (self.TopRight[1] - self.BottomLeft[1])
+        new_x = 0 + scale_x * (x_in - self.BottomLeft[0])
+        new_y = self.CanvasSize[1] + scale_y * (y_in - self.BottomLeft[1])
+        return new_x, new_y
+
+    def DrawLine(self, point_from, point_to, color='black', width=1):
+        converted_point_from = self._convert_xy_to_canvas_xy(*point_from)
+        converted_point_to = self._convert_xy_to_canvas_xy(*point_to)
+        self.TKCanvas.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+
+    def DrawPoint(self, point, size=2, color='black'):
+        converted_point = self._convert_xy_to_canvas_xy(*point)
+        self.TKCanvas.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
+
+    def Erase(self):
+        self.TKCanvas.delete('all')
+
 
     def __del__(self):
         super().__del__()
@@ -2611,13 +2655,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
-                if element.TKCanvas is None:
-                    element.TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                if element._TKCanvas is None:
+                    element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
                 else:
-                    element.TKCanvas.master = tk_row_frame
+                    element._TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKCanvas.configure(background=element.BackgroundColor)
-                element.TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                    element._TKCanvas.configure(background=element.BackgroundColor)
+                element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 menu_def = (('File', ('Open', 'Save')),
@@ -3078,6 +3122,7 @@ def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, 
     EasyProgressMeter.Data = getattr(EasyProgressMeter, 'Data', EasyProgressMeterDataClass())
     # if no meter currently running
     if EasyProgressMeter.Data.MeterID is None:           # Starting a new meter
+        print("Please change your call of EasyProgressMeter to use OneLineProgressMeter. EasyProgressMeter will be removed soon")
         if int(current_value) >= int(max_value):
             return False
         del(EasyProgressMeter.Data)
