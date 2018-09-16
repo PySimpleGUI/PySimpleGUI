@@ -74,7 +74,7 @@ def main():
                 top_sorted.pop(0)
             display_string = ''
             for proc, cpu in top_sorted:
-                display_string += '{} {}\n'.format(cpu, proc)
+                display_string += '{:2.2f} {}\n'.format(cpu/10, proc)
 
 
         # --------- Display timer in window --------
