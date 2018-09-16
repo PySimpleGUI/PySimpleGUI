@@ -68,6 +68,7 @@ while True:
     if i >= x_right:
         i = 0
         prev_x = prev_y = last_x = last_y = 0
+        canvas.delete('all')
     else: i += 1
 
 # tell thread we're done. wait for thread to exit
