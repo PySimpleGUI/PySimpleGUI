@@ -2692,7 +2692,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     element._TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element._TKCanvas.configure(background=element.BackgroundColor)
+                    element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
@@ -2705,8 +2705,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element._TKCanvas2.pack(side=tk.LEFT)
                 element._TKCanvas2.addtag_all('mytag')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element._TKCanvas2.configure(background=element.BackgroundColor)
-                    element._TKCanvas.configure(background=element.BackgroundColor)
+                    element._TKCanvas2.configure(background=element.BackgroundColor, highlightthickness=0)
+                    element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
