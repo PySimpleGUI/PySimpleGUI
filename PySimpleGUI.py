@@ -163,6 +163,7 @@ ELEM_TYPE_BUTTON = 3
 ELEM_TYPE_IMAGE = 30
 ELEM_TYPE_CANVAS = 40
 ELEM_TYPE_FRAME = 41
+ELEM_TYPE_GRAPH = 42
 ELEM_TYPE_INPUT_SLIDER = 10
 ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
@@ -852,7 +853,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), initial_folder=None, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -885,6 +886,8 @@ class Button(Element):
         self.Focus = focus
         self.TKCal = None
         self.DefaultValue = None
+        self.InitialFolder = initial_folder
+
         super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad, key=key)
         return
 
@@ -923,29 +926,33 @@ class Button(Element):
             except: pass
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
-            try:
-                strvar.set(folder_name)
-                self.TKStringVar.set(folder_name)
-            except: pass
+            folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
+            if folder_name != '':
+                try:
+                    strvar.set(folder_name)
+                    self.TKStringVar.set(folder_name)
+                except: pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            file_name = tk.filedialog.askopenfilename(filetypes=filetypes)  # show the 'get file' dialog box
-            strvar.set(file_name)
-            self.TKStringVar.set(file_name)
+            file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            if file_name != '':
+                strvar.set(file_name)
+                self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
             color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
             color = color[1]         # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes)
-            file_name = ';'.join(file_name)
-            strvar.set(file_name)
-            self.TKStringVar.set(file_name)
+            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+            if file_name != '':
+                file_name = ';'.join(file_name)
+                strvar.set(file_name)
+                self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes)  # show the 'get file' dialog box
-            strvar.set(file_name)
-            self.TKStringVar.set(file_name)
+            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            if file_name != '':
+                strvar.set(file_name)
+                self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1125,14 +1132,16 @@ class Canvas(Element):
 # ---------------------------------------------------------------------- #
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
-class Graph(Canvas):
-    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+class Graph(Element):
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, scale=(None, None), pad=None, key=None):
 
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
+        self._TKCanvas = None
+        self._TKCanvas2 = None
 
-        super().__init__(background_color=background_color, scale=scale, size=canvas_size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, scale=scale, size=canvas_size, pad=pad, key=key)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
@@ -1145,15 +1154,29 @@ class Graph(Canvas):
     def DrawLine(self, point_from, point_to, color='black', width=1):
         converted_point_from = self._convert_xy_to_canvas_xy(*point_from)
         converted_point_to = self._convert_xy_to_canvas_xy(*point_to)
-        self.TKCanvas.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+        self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
 
     def DrawPoint(self, point, size=2, color='black'):
         converted_point = self._convert_xy_to_canvas_xy(*point)
-        self.TKCanvas.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
+        self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
 
     def Erase(self):
-        self.TKCanvas.delete('all')
+        self._TKCanvas2.delete('all')
 
+
+    def Update(self, background_color):
+        self._TKCanvas2.configure(background=background_color)
+
+    def Move(self, x_direction, y_direction):
+        zero_converted = self._convert_xy_to_canvas_xy(0,0)
+        shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
+        shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
+        print(shift_amount)
+        self._TKCanvas2.move('all', *shift_amount)
+
+    @property
+    def TKCanvas(self):
+        return self._TKCanvas2
 
     def __del__(self):
         super().__del__()
@@ -1961,24 +1984,24 @@ class UberForm():
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(target=(ThisRow, -1), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_BROWSE_FOLDER, target=target, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FolderBrowse(target=(ThisRow, -1), button_text='Browse',  initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(BUTTON_TYPE_BROWSE_FOLDER, target=target, button_text=button_text, initial_folder=initial_folder, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types,initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
-def FilesBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_BROWSE_FILES, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FilesBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(BUTTON_TYPE_BROWSE_FILES, target, button_text=button_text, file_types=file_types, initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileSaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FileSaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, initial_folder=initial_folder, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
-def SaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def SaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False, pad=None, key=None):
@@ -2660,6 +2683,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     element._TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element._TKCanvas.configure(background=element.BackgroundColor)
+                element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                # -------------------------  Graph element  ------------------------- #
+            elif element_type == ELEM_TYPE_GRAPH:
+                width, height = element_size
+                if element._TKCanvas is None:
+                    element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                else:
+                    element._TKCanvas.master = tk_row_frame
+                element._TKCanvas2 = tk.Canvas(element._TKCanvas, width=width, height=height, bd=border_depth)
+                element._TKCanvas2.pack(side=tk.LEFT)
+                element._TKCanvas2.addtag_all('mytag')
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element._TKCanvas2.configure(background=element.BackgroundColor)
                     element._TKCanvas.configure(background=element.BackgroundColor)
                 element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
             # -------------------------  MENUBAR element  ------------------------- #
