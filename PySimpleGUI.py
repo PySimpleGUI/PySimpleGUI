@@ -901,7 +901,10 @@ class Button(Element):
     def ButtonPressCallBack(self, parm):
         r, c = self.Position
         self.ParentForm.LastButtonClickedWasRealtime = True
-        self.ParentForm.LastButtonClicked = self.ButtonText
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = self.ButtonText
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
@@ -957,7 +960,10 @@ class Button(Element):
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
             r,c = self.Position
-            self.ParentForm.LastButtonClicked = self.ButtonText
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
             # if the form is tabbed, must collect all form's results and destroy all forms
             if self.ParentForm.IsTabbedForm:
@@ -971,7 +977,10 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_READ_FORM:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
-            self.ParentForm.LastButtonClicked = self.ButtonText
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # this is a return type button so GET RESULTS and destroy window
