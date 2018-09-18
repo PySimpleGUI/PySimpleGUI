@@ -118,6 +118,14 @@ TABLE_SELECT_MODE_BROWSE = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
 DEFAULT_TABLE_SECECT_MODE = TABLE_SELECT_MODE_EXTENDED
 
+TITLE_LOCATION_TOP = tk.N
+TITLE_LOCATION_BOTTOM = tk.S
+TITLE_LOCATION_LEFT = tk.W
+TITLE_LOCATION_RIGHT = tk.E
+TITLE_LOCATION_TOP_LEFT = tk.NW
+TITLE_LOCATION_TOP_RIGHT = tk.NE
+TITLE_LOCATION_BOTTOM_LEFT = tk.SW
+TITLE_LOCATION_BOTTOM_RIGHT = tk.SE
 
 
 # DEFAULT_METER_ORIENTATION = 'Vertical'
@@ -1217,7 +1225,7 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, title, layout, text_color=None, background_color=None, relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, key=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None , relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1230,11 +1238,13 @@ class Frame(Element):
         self.TKFrame = None
         self.Title = title
         self.Relief = relief
+        self.TitleLocation = title_location
+        self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=text_color,  size=size, font=font, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key)
         return
 
     def AddRow(self, *args):
@@ -2815,8 +2825,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     labeled_frame.configure(foreground=element.TextColor)
-                if element.Font != None:
-                    labeled_frame.configure(font=element.Font)
+                if font is not None:
+                    labeled_frame.configure(font=font)
+                if element.TitleLocation is not None:
+                    labeled_frame.configure(labelanchor=element.TitleLocation)
+                if element.BorderWidth is not None:
+                    labeled_frame.configure(borderwidth=element.BorderWidth)
 
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
