@@ -1194,15 +1194,29 @@ class Graph(Element):
     def DrawLine(self, point_from, point_to, color='black', width=1):
         converted_point_from = self._convert_xy_to_canvas_xy(*point_from)
         converted_point_to = self._convert_xy_to_canvas_xy(*point_to)
-        self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+        return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
 
     def DrawPoint(self, point, size=2, color='black'):
         converted_point = self._convert_xy_to_canvas_xy(*point)
-        self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
+        return self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
+
+    def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
+        converted_point = self._convert_xy_to_canvas_xy(*center_location)
+        return self._TKCanvas2.create_oval(converted_point[0]-radius, converted_point[1]-radius, converted_point[0]+radius, converted_point[1]+radius, fill=fill_color, outline=line_color)
+
+    def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
+        converted_top_left = self._convert_xy_to_canvas_xy(*top_left)
+        converted_bottom_right = self._convert_xy_to_canvas_xy(*bottom_right)
+        return self._TKCanvas2.create_oval(*converted_top_left, *converted_bottom_right, fill=fill_color, outline=line_color)
+
+
+    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
+        converted_top_left = self._convert_xy_to_canvas_xy(*top_left)
+        converted_bottom_right = self._convert_xy_to_canvas_xy(*bottom_right)
+        return self._TKCanvas2.create_rectangle(*converted_top_left, *converted_bottom_right, fill=fill_color, outline=line_color)
 
     def Erase(self):
         self._TKCanvas2.delete('all')
-
 
     def Update(self, background_color):
         self._TKCanvas2.configure(background=background_color)
@@ -1212,6 +1226,12 @@ class Graph(Element):
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
         self._TKCanvas2.move('all', *shift_amount)
+
+    def MoveFigure(self, figure, x_direction, y_direction):
+        zero_converted = self._convert_xy_to_canvas_xy(0,0)
+        shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
+        shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
+        self._TKCanvas2.move(figure, *shift_amount)
 
     @property
     def TKCanvas(self):
