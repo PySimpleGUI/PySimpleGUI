@@ -1684,10 +1684,11 @@ class TKCalendar(ttk.Frame):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    def __init__(self, menu_definition, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
+    def __init__(self, menu_definition, background_color=None, scale=(None, None), size=(None, None), tearoff=True, pad=None, key=None):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
         self.TKMenu = None
+        self.Tearoff = tearoff
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
         return
@@ -1935,7 +1936,10 @@ class FlexForm:
 
 
     def FindElement(self, key):
-        return _FindElementFromKeyInSubForm(self, key)
+        element = _FindElementFromKeyInSubForm(self, key)
+        if element is None:
+            print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+        return element
 
 
     def SaveToDisk(self, filename):
@@ -2836,11 +2840,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 menu_def = element.MenuDefinition
 
-                element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=0)    # create the menubar
+                element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)    # create the menubar
                 menubar = element.TKMenu
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY')
-                    baritem = tk.Menu(menubar)
+                    baritem = tk.Menu(menubar, tearoff=element.Tearoff)
                     menubar.add_cascade(label=menu_entry[0], menu=baritem)
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
