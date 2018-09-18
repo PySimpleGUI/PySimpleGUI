@@ -40,9 +40,9 @@ from binascii import hexlify
 sg.ChangeLookAndFeel('GreenTan')
 
 if len(sys.argv) == 1:
-    rc, fname = sg.GetFileBox('PDF Browser', 'PDF file to open', file_types=(("PDF Files", "*.pdf"),))
+    rc, fname = sg.PopupGetFile('PDF Browser', 'PDF file to open', file_types=(("PDF Files", "*.pdf"),))
     if rc is False:
-        sg.MsgBoxCancel('Cancelling')
+        sg.PopupCancel('Cancelling')
         exit(0)
 else:
     fname = sys.argv[1]

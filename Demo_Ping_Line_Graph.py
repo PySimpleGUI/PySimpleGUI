@@ -61,7 +61,10 @@ while True:
 
     if g_response_time is None or prev_response_time == g_response_time:
         continue
-    new_x, new_y = convert_xy_to_canvas_xy(i, g_response_time[0])
+    try:
+        new_x, new_y = convert_xy_to_canvas_xy(i, g_response_time[0])
+    except: continue
+
     prev_response_time = g_response_time
     canvas.create_line(prev_x, prev_y, new_x, new_y, width=1, fill='black')
     prev_x, prev_y = new_x, new_y

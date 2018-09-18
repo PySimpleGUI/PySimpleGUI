@@ -2,7 +2,7 @@ from time import sleep
 import PySimpleGUI as sg
 
 """
-    Demonstration of multiple OneLineProgressMeter's
+    Demonstration of simple and multiple OneLineProgressMeter's
     
     Shows how 2 progress meters can be running at the same time.
     Note -- If the user wants to cancel a meter, it's important to use the "Cancel" button, not the X
@@ -10,7 +10,26 @@ import PySimpleGUI as sg
         calling OneLineProgresMeterCancel(key) will cancel the meter with the matching key
 """
 
-sg.ChangeLookAndFeel('Dark')
+# sg.ChangeLookAndFeel('Dark')
+
+
+"""
+    The simple case is that you want to add a single meter to your code.  The one-line solution
+"""
+
+import PySimpleGUI as sg
+
+# Display a progress meter in work loop. User is not allowed to break out of the loop
+for i in range(10000):
+    if i % 5 == 0: sg.OneLineProgressMeter('My 1-line progress meter', i+1, 10000, 'single')
+
+# Display a progress meter. Allow user to break out of loop using cancel button
+for i in range(10000):
+    if not sg.OneLineProgressMeter('My 1-line progress meter', i+1, 10000, 'single'):
+        break
+
+
+
 
 layout = [
             [sg.T('One-Line Progress Meter Demo', font=('Any 18'))],

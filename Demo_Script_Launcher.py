@@ -41,7 +41,6 @@ def Launcher2():
         namesonly.append(ntpath.basename(file))
 
     layout =  [
-                [sg.Text('Script output....', size=(40, 1))],
                 [sg.Listbox(values=namesonly, size=(30, 19), select_mode=sg.SELECT_MODE_EXTENDED, key='demolist'), sg.Output(size=(88, 20), font='Courier 10')],
                 [sg.Checkbox('Wait for program to complete', default=False, key='wait')],
                 [sg.ReadFormButton('Run'), sg.ReadFormButton('Shortcut 1'), sg.ReadFormButton('Fav Program'), sg.SimpleButton('EXIT')],

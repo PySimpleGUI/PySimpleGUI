@@ -29,7 +29,8 @@ def TestMenus():
     # ------ GUI Defintion ------ #
     layout = [
             [sg.Menu(menu_def)],
-              [sg.Output(size=(60,20))]
+              [sg.Output(size=(60,20))],
+            [sg.In('Test', key='input', do_not_clear=True)]
               ]
 
     form = sg.FlexForm("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,

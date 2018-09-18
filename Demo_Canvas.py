@@ -1,11 +1,12 @@
-import PySimpleGUI as gui
+import PySimpleGUI as sg
+
 
 layout = [
-           [gui.Canvas(size=(100,100), background_color='red', key='canvas')],
-           [gui.T('Change circle color to:'), gui.ReadFormButton('Red'), gui.ReadFormButton('Blue')]
+           [sg.Canvas(size=(150, 150), background_color='red', key='canvas')],
+           [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue')]
            ]
 
-form = gui.FlexForm('Canvas test')
+form = sg.FlexForm('Canvas test')
 form.Layout(layout)
 form.Finalize()
 

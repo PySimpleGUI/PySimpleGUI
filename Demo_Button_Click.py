@@ -15,7 +15,7 @@ layout = [
 form = sg.FlexForm("Button Click", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
                    default_button_element_size=(12,1))
 form.Layout(layout)
-form.Finalize()
+form.Finalize()             # only needed if want to diable elements prior to showing form
 
 form.FindElement('submit').Update(disabled=True)
 
