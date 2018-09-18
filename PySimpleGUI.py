@@ -118,6 +118,14 @@ TABLE_SELECT_MODE_BROWSE = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
 DEFAULT_TABLE_SECECT_MODE = TABLE_SELECT_MODE_EXTENDED
 
+TITLE_LOCATION_TOP = tk.N
+TITLE_LOCATION_BOTTOM = tk.S
+TITLE_LOCATION_LEFT = tk.W
+TITLE_LOCATION_RIGHT = tk.E
+TITLE_LOCATION_TOP_LEFT = tk.NW
+TITLE_LOCATION_TOP_RIGHT = tk.NE
+TITLE_LOCATION_BOTTOM_LEFT = tk.SW
+TITLE_LOCATION_BOTTOM_RIGHT = tk.SE
 
 
 # DEFAULT_METER_ORIENTATION = 'Vertical'
@@ -1186,15 +1194,29 @@ class Graph(Element):
     def DrawLine(self, point_from, point_to, color='black', width=1):
         converted_point_from = self._convert_xy_to_canvas_xy(*point_from)
         converted_point_to = self._convert_xy_to_canvas_xy(*point_to)
-        self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+        return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
 
     def DrawPoint(self, point, size=2, color='black'):
         converted_point = self._convert_xy_to_canvas_xy(*point)
-        self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
+        return self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
+
+    def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
+        converted_point = self._convert_xy_to_canvas_xy(*center_location)
+        return self._TKCanvas2.create_oval(converted_point[0]-radius, converted_point[1]-radius, converted_point[0]+radius, converted_point[1]+radius, fill=fill_color, outline=line_color)
+
+    def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
+        converted_top_left = self._convert_xy_to_canvas_xy(*top_left)
+        converted_bottom_right = self._convert_xy_to_canvas_xy(*bottom_right)
+        return self._TKCanvas2.create_oval(*converted_top_left, *converted_bottom_right, fill=fill_color, outline=line_color)
+
+
+    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
+        converted_top_left = self._convert_xy_to_canvas_xy(*top_left)
+        converted_bottom_right = self._convert_xy_to_canvas_xy(*bottom_right)
+        return self._TKCanvas2.create_rectangle(*converted_top_left, *converted_bottom_right, fill=fill_color, outline=line_color)
 
     def Erase(self):
         self._TKCanvas2.delete('all')
-
 
     def Update(self, background_color):
         self._TKCanvas2.configure(background=background_color)
@@ -1204,6 +1226,12 @@ class Graph(Element):
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
         self._TKCanvas2.move('all', *shift_amount)
+
+    def MoveFigure(self, figure, x_direction, y_direction):
+        zero_converted = self._convert_xy_to_canvas_xy(0,0)
+        shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
+        shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
+        self._TKCanvas2.move(figure, *shift_amount)
 
     @property
     def TKCanvas(self):
@@ -1217,7 +1245,7 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, title, layout, text_color=None, background_color=None, relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, key=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None , relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1230,11 +1258,13 @@ class Frame(Element):
         self.TKFrame = None
         self.Title = title
         self.Relief = relief
+        self.TitleLocation = title_location
+        self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=text_color,  size=size, font=font, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key)
         return
 
     def AddRow(self, *args):
@@ -2815,8 +2845,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     labeled_frame.configure(foreground=element.TextColor)
-                if element.Font != None:
-                    labeled_frame.configure(font=element.Font)
+                if font is not None:
+                    labeled_frame.configure(font=font)
+                if element.TitleLocation is not None:
+                    labeled_frame.configure(labelanchor=element.TitleLocation)
+                if element.BorderWidth is not None:
+                    labeled_frame.configure(borderwidth=element.BorderWidth)
 
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
