@@ -12,6 +12,23 @@ import pickle
 import calendar
 
 
+g_time_start = 0
+g_time_end = 0
+g_time_delta = 0
+
+import time
+def TimerStart():
+    global g_time_start
+
+    g_time_start = time.time()
+
+def TimerStop():
+    global g_time_delta, g_time_end
+
+    g_time_end = time.time()
+    g_time_delta = g_time_end - g_time_start
+    print(g_time_delta)
+
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
@@ -84,6 +101,7 @@ DEFAULT_METER_ORIENTATION = 'Horizontal'
 DEFAULT_SLIDER_ORIENTATION = 'vertical'
 DEFAULT_SLIDER_BORDER_WIDTH=1
 DEFAULT_SLIDER_RELIEF = tk.FLAT
+DEFAULT_FRAME_RELIEF = tk.GROOVE
 
 DEFAULT_LISTBOX_SELECT_MODE = tk.SINGLE
 SELECT_MODE_MULTIPLE = tk.MULTIPLE
@@ -223,6 +241,11 @@ class Element():
                     rc = self.FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
+                if element.Type == ELEM_TYPE_FRAME:
+                    rc = self.FindReturnKeyBoundButton(element)
+                    if rc is not None:
+                        return rc
+
         return None
 
     def ReturnKeyHandler(self, event):
@@ -1180,7 +1203,6 @@ class Graph(Element):
         zero_converted = self._convert_xy_to_canvas_xy(0,0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
-        print(shift_amount)
         self._TKCanvas2.move('all', *shift_amount)
 
     @property
@@ -1195,12 +1217,49 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, frame=None, background_color=None, scale=(None, None), size=(None, None), pad=None, key=None):
-        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.TKFrame = frame
+    def __init__(self, title, layout, text_color=None, background_color=None, relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, key=None):
 
-        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, scale=scale, size=size, pad=pad, key=key)
+        self.UseDictionary = False
+        self.ReturnValues = None
+        self.ReturnValuesList = []
+        self.ReturnValuesDictionary = {}
+        self.DictionaryKeyCounter = 0
+        self.ParentWindow = None
+        self.Rows = []
+        self.ParentForm = None
+        self.TKFrame = None
+        self.Title = title
+        self.Relief = relief
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+
+        self.Layout(layout)
+
+        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=text_color,  size=size, font=font, pad=pad, key=key)
         return
+
+    def AddRow(self, *args):
+        ''' Parms are a variable number of Elements '''
+        NumRows = len(self.Rows)               # number of existing rows is our row number
+        CurrentRowNumber = NumRows             # this row's number
+        CurrentRow = []                     # start with a blank row and build up
+        # -------------------------  Add the elements to a row  ------------------------- #
+        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+            element.Position = (CurrentRowNumber, i)
+            CurrentRow.append(element)
+            if element.Key is not None:
+                self.UseDictionary = True
+        # -------------------------  Append the row to list of Rows  ------------------------- #
+        self.Rows.append(CurrentRow)
+
+    def Layout(self, rows):
+        for row in rows:
+            self.AddRow(*row)
+
+    def __del__(self):
+        for row in self.Rows:
+            for element in row:
+                element.__del__()
+
 
     def __del__(self):
         super().__del__()
@@ -1264,7 +1323,7 @@ class Slider(Element):
 
 
 # ---------------------------------------------------------------------- #
-#                          TkScrollableFrame (Used by Column (SOON)      #
+#                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
 class TkScrollableFrame(tk.Frame):
     def __init__(self, master, **kwargs):
@@ -2132,9 +2191,18 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 BuildResultsForSubform(element, initialize_only, top_level_form)
                 for item in element.ReturnValuesList:
                     AddToReturnList(top_level_form, item)
-                # for key in element.ReturnValuesDictionary:
-                #     top_level_form.ReturnValuesDictionary[key] = element.ReturnValuesDictionary[key]
-                # top_level_form.DictionaryKeyCounter += element.DictionaryKeyCounter
+                if element.UseDictionary:
+                    top_level_form.UseDictionary = True
+                if element.ReturnValues[0] is not None:         # if a button was clicked
+                    button_pressed_text = element.ReturnValues[0]
+
+            if element.Type == ELEM_TYPE_FRAME:
+                element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
+                element.ReturnValuesList = []
+                element.ReturnValuesDictionary = {}
+                BuildResultsForSubform(element, initialize_only, top_level_form)
+                for item in element.ReturnValuesList:
+                    AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
                 if element.ReturnValues[0] is not None:         # if a button was clicked
@@ -2200,7 +2268,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
             # if an input type element, update the results
             if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
                     element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN:
+                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and element.Target == (None,None)) or \
@@ -2240,6 +2308,13 @@ def FillSubformWithValues(form, values_dict):
                 value = values_dict[element.Key]
             except:
                 continue
+            if element.Type == ELEM_TYPE_FRAME:
+                FillSubformWithValues(element, values_dict)
+            try:
+                value = values_dict[element.Key]
+            except:
+                continue
+
             if element.Type == ELEM_TYPE_INPUT_TEXT:
                 element.Update(value)
             elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
@@ -2265,6 +2340,10 @@ def _FindElementFromKeyInSubForm(form, key):
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             if element.Type == ELEM_TYPE_COLUMN:
+                matching_elem = _FindElementFromKeyInSubForm(element, key)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_FRAME:
                 matching_elem = _FindElementFromKeyInSubForm(element, key)
                 if matching_elem is not None:
                     return matching_elem
@@ -2366,6 +2445,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
+
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
@@ -2728,12 +2808,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
-                width, height = element_size
-                if element.TKFrame is None:
-                    element.TKFrame = tk.Frame(tk_row_frame, width=width, height=height, bd=border_depth)
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKFrame.configure(background=element.BackgroundColor)
-                element.TKFrame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                labeled_frame = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
+                PackFormIntoFrame(element, labeled_frame, toplevel_form)
+                labeled_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
+                    labeled_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    labeled_frame.configure(foreground=element.TextColor)
+                if element.Font != None:
+                    labeled_frame.configure(font=element.Font)
+
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -2856,7 +2940,9 @@ def ConvertFlexToTK(MyFlexForm):
 
     move_string = '+%i+%i'%(int(x),int(y))
     master.geometry(move_string)
+
     master.update_idletasks()  # don't forget
+
     return
 
 
@@ -2961,6 +3047,7 @@ def StartupTK(my_flex_form):
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
+
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
 
     try:
