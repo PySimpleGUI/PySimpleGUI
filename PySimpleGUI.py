@@ -1052,7 +1052,8 @@ class Button(Element):
         elif disabled == False:
             self.TKButton['state'] = 'normal'
 
-
+    def GetText(self):
+        return self.ButtonText
 
     def __del__(self):
         try:
@@ -2141,12 +2142,21 @@ def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_butt
 def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None,font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
+# -------------------------  NO BUTTON Element lazy function  ------------------------- #
+def Help(button_text='Help', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None,font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+Btn = ReadFormButton
+ReadButton = ReadFormButton
+FormButton = ReadFormButton
+
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
