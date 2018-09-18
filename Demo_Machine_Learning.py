@@ -24,9 +24,9 @@ def MachineLearningGUI():
         [sg.Text('l', size=(8, 1)), sg.In(default_text='0.4', size=(8, 1)), sg.Text('Layers', size=(8, 1)),
          sg.Drop(values=('BatchNorm', 'other'), auto_size_text=True)],]
 
-    layout = [[sg.Frame('Command Line Parameteres', command_line_parms, text_color='green', font='Any 12')],
-              [sg.Frame('Flags', flags, font='Any 12', text_color='blue')],
-                [sg.Frame('Loss Functions',  loss_functions, font='Any 12', text_color='red')],
+    layout = [[sg.Frame('Command Line Parameteres', command_line_parms, title_color='green', font='Any 12')],
+              [sg.Frame('Flags', flags, font='Any 12', title_color='blue')],
+                [sg.Frame('Loss Functions',  loss_functions, font='Any 12', title_color='red')],
               [sg.Submit(), sg.Cancel()]]
 
 

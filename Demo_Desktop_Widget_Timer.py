@@ -1,18 +1,6 @@
 import PySimpleGUI as sg
 import time
 
-"""
-    Timer Desktop Widget
-    Creates a floating timer that is always on top of other windows
-    You move it by grabbing anywhere on the window
-    Good example of how to do a non-blocking, polling program using PySimpleGUI
-    Can be used to poll hardware when running on a Pi
-
-    NOTE - you will get a warning message printed when you exit using exit button.
-    It will look something like:
-            invalid command name "1616802625480StopMove"
-"""
-
 # ----------------  Create Form  ----------------
 sg.ChangeLookAndFeel('Black')
 sg.SetOptions(element_padding=(0, 0))

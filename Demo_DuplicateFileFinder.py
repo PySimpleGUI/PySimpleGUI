@@ -12,12 +12,12 @@ def FindDuplicatesFilesInFolder(path):
     small_count, dup_count, error_count = 0,0,0
     pngdir = path
     if not os.path.exists(path):
-        sg.MsgBox('Duplicate Finder', '** Folder doesn\'t exist***', path)
+        sg.Popup('Duplicate Finder', '** Folder doesn\'t exist***', path)
         return
     pngfiles = os.listdir(pngdir)
     total_files = len(pngfiles)
     for idx, f in enumerate(pngfiles):
-        if not sg.EasyProgressMeter('Counting Duplicates', idx + 1, total_files, 'Counting Duplicate Files'):
+        if not sg.OneLineProgressMeter('Counting Duplicates', idx + 1, total_files, 'Counting Duplicate Files'):
             break
         total += 1
         fname = os.path.join(pngdir, f)
@@ -37,7 +37,7 @@ def FindDuplicatesFilesInFolder(path):
         shatab.append(f_sha)
 
     msg = '{} Files processed\n {} Duplicates found'.format(total_files, dup_count)
-    sg.MsgBox('Duplicate Finder Ended', msg)
+    sg.Popup('Duplicate Finder Ended', msg)
 
 # ====____====____==== Pseudo-MAIN program ====____====____==== #
 # This is our main-alike piece of code                          #
@@ -48,9 +48,9 @@ def FindDuplicatesFilesInFolder(path):
 if __name__ == '__main__':
 
     source_folder = None
-    rc, source_folder = sg.GetPathBox('Duplicate Finder - Count number of duplicate files', 'Enter path to folder you wish to find duplicates in')
+    rc, source_folder = sg.PopupGetFolder('Duplicate Finder - Count number of duplicate files', 'Enter path to folder you wish to find duplicates in')
     if rc is True and source_folder is not None:
         FindDuplicatesFilesInFolder(source_folder)
     else:
-        sg.MsgBoxCancel('Cancelling', '*** Cancelling ***')
+        sg.PopupCancel('Cancelling', '*** Cancelling ***')
     exit(0)
