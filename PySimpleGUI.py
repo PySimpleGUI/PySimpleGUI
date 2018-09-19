@@ -671,7 +671,7 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None):
+    def __init__(self, default_text='', enter_submits = False, autoscroll=False, scale=(None, None), size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input Multi-line Element
         :param default_text:
@@ -687,17 +687,21 @@ class Multiline(Element):
         self.Focus = focus
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.Autoscroll = autoscroll
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, scale=scale, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad)
         return
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, append=False):
         if value is not None:
             try:
-                self.TKText.delete('1.0', tk.END)
+                if not append:
+                    self.TKText.delete('1.0', tk.END)
                 self.TKText.insert(1.0, value)
             except: pass
             self.DefaultText = value
+        if self.Autoscroll:
+            self.TKText.see(tk.END)
         if disabled == True:
             self.TKText.configure(state='disabled')
         elif disabled == False:
