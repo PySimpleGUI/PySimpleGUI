@@ -712,7 +712,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, font=None, text_color=None, background_color=None,justification=None, pad=None, key=None):
+    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, relief=None, font=None, text_color=None, background_color=None,justification=None, pad=None, key=None):
         '''
         Text Element - Displays text in your form.  Can be updated in non-blocking forms
         :param text: The text to display
@@ -727,6 +727,7 @@ class Text(Element):
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
+        self.Relief = relief
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
@@ -2524,6 +2525,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     wraplen = 0
                 # print("wraplen, width, height", wraplen, width, height)
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
+                if element.Relief is not None:
+                    tktext_label.configure(relief=element.Relief)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
