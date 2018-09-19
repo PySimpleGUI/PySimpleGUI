@@ -2404,7 +2404,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
             item = sub_menu_info[i]
             if i != len(sub_menu_info) - 1:
                 if type(sub_menu_info[i+1]) == list:
-                    new_menu = tk.Menu(top_menu)
+                    new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
                     top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu)
                     AddMenuItem(new_menu, sub_menu_info[i+1], element, is_sub_menu=True)
                     i += 1  # skip the next one
@@ -2898,12 +2898,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 column_widths = {}
                 for row in element.Values:
                     for i,col in enumerate(row):
-                        col_len = min(len(str(col)), element.MaxColumnWidth)
+                        col_width = min(len(str(col)), element.MaxColumnWidth)
                         try:
-                            if col_len > column_widths[i]:
-                                column_widths[i] = col_len
+                            if col_width > column_widths[i]:
+                                column_widths[i] = col_width
                         except:
-                            column_widths[i] = col_len
+                            column_widths[i] = col_width
                 if element.ColumnsToDisplay is None:
                     displaycolumns = element.ColumnHeadings
                 else:
