@@ -2,22 +2,17 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  since Jul 11, 2018
-
-![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
-
-[![Python Version](https://img.shields.io/badge/Python-3-brightgreen.svg)](https://www.python.org/downloads/)
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest) [![Python Version](https://img.shields.io/badge/Python-3-brightgreen.svg)](https://www.python.org/downloads/)
 
 
 # PySimpleGUI
 
-  (Ver 3.4.1)
-
+![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 
 [Wiki for the latest news](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
 
-[Formatted ReadTheDocs Version of this Readme](http://pysimplegui.readthedocs.io/)
+[ReadTheDocs](http://pysimplegui.readthedocs.io/)
 
 [COOKBOOK!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
@@ -103,6 +98,7 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
             Close form
             Realtime
             Calendar chooser
+            Color chooser
         Checkboxes
         Radio Buttons
         Listbox
@@ -1328,7 +1324,7 @@ An up/down spinner control.  The valid values are passed in as a list.
 
 #### Button Element
 
-Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it but Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
+Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it be Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
 The Types of buttons include:
 * Folder Browse
@@ -1340,7 +1336,7 @@ The Types of buttons include:
 * Color Chooser
 
 
- Close Form - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close Form" buttons.  They cause the input values to be read and then the form is closed, returning the values to the caller.
+ Close Form - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close Form" buttons.  They cause the input values to be read and then the form is ***closed***, returning the values to the caller.
 
 Folder Browse - When clicked a folder browse dialog box is opened.  The results of the Folder Browse dialog box are written into one of the input fields of the form.
 
@@ -2270,7 +2266,8 @@ MikeTheWatchGuy
 
 ## Demo Code Contributors
 
-JorjMcKie - PDF and image viewers (plus a number of code suggestions)
+ [JorjMcKie](https://github.com/JorjMcKie) - PDF and image viewers (plus a number of code suggestions)
+[Otherion](https://github.com/Otherion) - Table Demos Panda & CSV.  Loads of suggestions to the core APIs
 
 ## License
 
@@ -2278,12 +2275,13 @@ GNU Lesser General Public License (LGPL 3) +
 
 ## Acknowledgments
 
-* Jorj McKie was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+*  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
 * [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`
 * [Ruud van der Ham](https://forum.pythonistacafe.com/u/Ruud) for all the help he's provided as a Python-mentor. Quite a few tricky bits of logic was supplied by Ruud. The dual-purpose return values scheme is Ruud's for example
 * **Numerous** users who provided feature suggestions!  Many of the cool features were suggested by others.  If you were one of them and are willing to take more credit, I'll list you here if you give me permission. Most are too modest
 * [moshekaplan](https://github.com/moshekaplan)/**[tkinter_components](https://github.com/moshekaplan/tkinter_components)** wrote the code for the Calendar Chooser Element. It was lifted straight from GitHub
 * [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.
+* [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help
 
 
 ## How Do I
@@ -2298,7 +2296,7 @@ Here are the steps to run that application
           python -m howdoi howdoi.py
     To run it:
           Python HowDoI.py
-    
+
 The pip command is all there is to the setup.
 
 The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
