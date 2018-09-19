@@ -11,7 +11,7 @@
 
 # PySimpleGUI
 
-  (Ver 3.4.0)
+  (Ver 3.4.1)
 
 
 
@@ -2157,7 +2157,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.01.02 | Step 11, 2018 - All Element.Update functions have a `disabled` parameter so they can be disabled.  Renamed some parameters in Update function (sorry if I broke your code), fix for bug in Image.Update. Wasn't setting size correctly, changed grab_anywhere logic again,added grab anywhere option to PupupGetText (assumes disabled)
 | 3.02.00 | Sept 14, 2018 - New Table Element (Beta release), MsgBox removed entirely, font setting for InputText Element, **packing change** risky change that allows some Elements to be resized,removed command parameter from Menu Element, new function names for ReadNonBlocking (Finalize, PreRead), change to text element autosizing and wrapping (yet again), lots of parameter additions to Popup functions (colors, etc).
 | 3.03.00 | New feature - One Line Progress Meters, new display_row_numbers for Table Element, fixed bug in EasyProgresssMeters (function will soon go away), OneLine and Easy progress meters set to grab anywhere but can be turned off.
-{ 03,04.00 | New features - Graph Element, Frame Element, more settings exposed to Popup calls.  See notes below for more.
+| 03,04.00 | Sept 18, 2018 - New features - Graph Element, Frame Element, more settings exposed to Popup calls.  See notes below for more.
+| 03.04.01 | Sept 18, 2018 - See release notes below
 
 
 ### Release Notes
@@ -2187,11 +2188,44 @@ Related to the Grab Anywhere feature is the no_titlebar option, again found in t
 
 3.0.2 Still making changes to Update methods with many more ahead in the future.  Continue to mess with grab anywhere option.  Needed to disable in more places such as the PopupGetText function.  Any time these is text input on a form, you generally want to turn off the grab anywhere feature.
 
-3.2.0 Biggest change was the addition of the Table Element.  Trying to make changes so that form resizing is a possibility but unknown if will work in the long run.  Removed all MsgBox, Get* functions and replaced with Popup functions.  Popups had multiple new parameters added to change the look and feel of a popup.
+#### 3.2.0
+ Biggest change was the addition of the Table Element.  Trying to make changes so that form resizing is a possibility but unknown if will work in the long run.  Removed all MsgBox, Get* functions and replaced with Popup functions.  Popups had multiple new parameters added to change the look and feel of a popup.
 
-3.3.0 OneLineProgressMeter function added which gives you not only a one-line solution to progress meters, but it also gives you the ability to have more than 1 running at the same time, something not possible with the EasyProgressMeterCall
+#### 3.3.0
+OneLineProgressMeter function added which gives you not only a one-line solution to progress meters, but it also gives you the ability to have more than 1 running at the same time, something not possible with the EasyProgressMeterCall
 
-3.4.0 New Elements - Frame (a labelled frame for grouping elements. Similar to Column), Graph (like a Canvas element except uses the caller's coordinate system rather than tkinter's). Set an initial_folder for browsing type buttons (browse for file/folder).  Buttons return key value rather than button text if a key is specified,  OneLineProgressMeter!  Replaced EasyProgressMeter (sorry folks that's the way progress works sometimes), changed ALL of the Popup calls to provide many more customization settings - changed PopupGetFolder, PopupGetFile, PopupGetText, Popup, PopupNoButtons, PopupNonBlocking, PopupNoTitlebar, PopupAutoClose, PopupCancel, PopupOK, PopupOKCancel, PopupYesNo
+#### 3.4.0
+
+* Frame - New Element - a labelled frame for grouping elements. Similar
+   to Column
+* Graph (like a Canvas element except uses the caller's
+   coordinate system rather than tkinter's).
+* initial_folder - sets starting folder for browsing type buttons (browse for file/folder).
+* Buttons return  key value rather than button text **If** a `key` is specified,
+*
+   OneLineProgressMeter!  Replaced EasyProgressMeter (sorry folks that's
+   the way progress works sometimes)
+ * Popup - changed ALL of the Popup calls to   provide many more customization settings
+    * Popup
+    * PopupGetFolder
+    * PopupGetFile
+    * PopupGetText
+    * Popup
+    * PopupNoButtons
+    * PopupNonBlocking
+    * PopupNoTitlebar
+    * PopupAutoClose
+    * PopupCancel
+    * PopupOK
+    * PopupOKCancel
+    * PopupYesNo
+
+#### 3.4.1
+* Button.GetText - Button class method.  Returns the current text being shown on a button.
+* Menu - Tearoff option. Determines if menus should allow them to be torn off
+* Help - Shorcut button. Like Submit, cancel, etc
+* ReadButton - shortcut for ReadFormButton
+
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -2264,10 +2298,10 @@ Here are the steps to run that application
           python -m howdoi howdoi.py
     To run it:
           Python HowDoI.py
-
+    
 The pip command is all there is to the setup.
 
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.    
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
 For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
 
 ![howdoiwithhistory](https://user-images.githubusercontent.com/13696193/45064009-5fd61180-b07f-11e8-8ead-eb0d1ff3a6be.jpg)
