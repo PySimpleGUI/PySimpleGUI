@@ -959,9 +959,12 @@ class Button(Element):
         if target == (None, None):
             strvar = self.TKStringVar
         else:
-            if target[0] < 0:
-                target = [self.Position[0] + target[0], target[1]]
-            target_element = self.ParentForm._GetElementAtLocation(target)
+            if len(target) == 2:
+                if target[0] < 0:
+                    target = [self.Position[0] + target[0], target[1]]
+                target_element = self.ParentForm._GetElementAtLocation(target)
+            else:
+                target_element = self.ParentForm.FindElement(target)
             try:
                 strvar = target_element.TKStringVar
             except: pass
