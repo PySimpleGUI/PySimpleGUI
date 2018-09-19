@@ -1828,6 +1828,7 @@ class FlexForm:
 
     def Layout(self,rows):
         self.AddRows(rows)
+        return self
 
     def LayoutAndRead(self,rows, non_blocking=False):
         self.AddRows(rows)
