@@ -452,7 +452,7 @@ OptionMenu = InputOptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False, scale=(None, None), size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None):
         '''
         Listbox Element
         :param values:
@@ -466,6 +466,7 @@ class Listbox(Element):
         self.DefaultValues = default_values
         self.TKListbox = None
         self.ChangeSubmits = change_submits
+        self.BindReturnKey = bind_return_key
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -478,6 +479,7 @@ class Listbox(Element):
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, scale=scale, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key, pad=pad)
 
@@ -2696,7 +2698,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKListbox.pack(side=tk.LEFT)
                 vsb.pack(side=tk.LEFT, fill='y')
                 listbox_frame.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
-                element.TKListbox.bind('<Return>', element.ReturnKeyHandler)
+                if element.BindReturnKey:
+                    element.TKListbox.bind('<Return>', element.ReturnKeyHandler)
+                    element.TKListbox.bind('<Double-Button-1>', element.ReturnKeyHandler)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
@@ -2896,8 +2900,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
                 width, height = element_size
-                anchor = tk.W if element.Justification == 'left' else tk.E
-
+                if element.Justification == 'left':
+                    anchor = tk.W
+                elif element.Justification == 'right':
+                    anchor = tk.E
+                else:
+                    anchor = tk.CENTER
                 column_widths = {}
                 for row in element.Values:
                     for i,col in enumerate(row):
