@@ -256,6 +256,15 @@ class Element():
 
         return None
 
+    def TextClickedHandler(self, event):
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = self.DisplayText
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
+
     def ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
         button_element = self.FindReturnKeyBoundButton(MyForm)
@@ -718,7 +727,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, relief=None, font=None, text_color=None, background_color=None,justification=None, pad=None, key=None):
+    def __init__(self, text, scale=(None, None), size=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None, text_color=None, background_color=None,justification=None, pad=None, key=None):
         '''
         Text Element - Displays text in your form.  Can be updated in non-blocking forms
         :param text: The text to display
@@ -734,6 +743,7 @@ class Text(Element):
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
+        self.ClickSubmits = click_submits
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
@@ -1818,6 +1828,7 @@ class FlexForm:
 
     def Layout(self,rows):
         self.AddRows(rows)
+        return self
 
     def LayoutAndRead(self,rows, non_blocking=False):
         self.AddRows(rows)
@@ -2542,6 +2553,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
                 element.TKText = tktext_label
+                if element.ClickSubmits:
+                    tktext_label.bind('<Button-1>', element.TextClickedHandler)
+
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 stringvar = tk.StringVar()
