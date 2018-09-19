@@ -16,8 +16,8 @@ layout = [
     [sg.InputText('This is my text')],
 
     [sg.Frame(layout=[
-    [sg.Checkbox('Checkbox'),  sg.Checkbox('My second checkbox!', default=True)],
-    [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN)],
+    [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],
+    [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN)],
     [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
      sg.Multiline(default_text='A second multi-line', size=(35, 3))],
     [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
