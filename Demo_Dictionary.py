@@ -14,5 +14,5 @@ layout = [
 
 button, values = form.LayoutAndRead(layout)
 
-sg.MsgBox(button, values, values['name'], values['address'], values['phone'])
+sg.Popup(button, values, values['name'], values['address'], values['phone'])
 

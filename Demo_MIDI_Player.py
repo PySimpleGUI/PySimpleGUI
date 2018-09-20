@@ -120,12 +120,12 @@ def main():
 
     button, values = pback.PlayerChooseSongGUI()
     if button != 'PLAY':
-        g.MsgBoxCancel('Cancelled...\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
+        g.PopupCancel('Cancelled...\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
         exit(69)
     if values['device']:
         midi_port = values['device'][0]
     else:
-        g.MsgBoxCancel('No devices found\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
+        g.PopupCancel('No devices found\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
 
     batch_folder = values['folder']
     midi_filename = values['midifile']
@@ -138,7 +138,7 @@ def main():
         filelist = [midi_filename,]
         filetitles = [os.path.basename(midi_filename),]
     else:
-        g.MsgBoxError('*** Error - No MIDI files specified ***')
+        g.PopupError('*** Error - No MIDI files specified ***')
         exit(666)
 
     # ------ LOOP THROUGH MULTIPLE FILES --------------------------------------------------------- #
@@ -162,7 +162,7 @@ def main():
             mid = mido.MidiFile(filename=midi_filename)
         except:
             print('****** Exception trying to play MidiFile filename = {}***************'.format(midi_filename))
-            g.MsgBoxError('Exception trying to play MIDI file:', midi_filename, 'Skipping file')
+            g.PopupError('Exception trying to play MIDI file:', midi_filename, 'Skipping file')
             continue
 
         # Build list of data contained in MIDI File using only track 0

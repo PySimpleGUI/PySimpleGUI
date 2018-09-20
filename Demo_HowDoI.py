@@ -33,8 +33,9 @@ def HowDoI():
     layout =  [
                 [sg.Text('Ask and your answer will appear here....', size=(40, 1))],
                 [sg.Output(size=(127, 30), font=('Helvetica 10'))],
-                [ sg.Spin(values=(1, 2, 3, 4), initial_value=1, size=(2, 1), key='Num Answers', font='Helvetica 15'), sg.T('Num Answers',font='Helvetica 15'), sg.Checkbox('Display Full Text', key='full text', font='Helvetica 15'),
-                sg.T('Command History'), sg.T('', size=(40,3), text_color=sg.BLUES[0], key='history')],
+                [ sg.Spin(values=(1, 2, 3, 4), initial_value=1, size=(2, 1), key='Num Answers', font='Helvetica 15'),
+                  sg.Text('Num Answers',font='Helvetica 15'), sg.Checkbox('Display Full Text', key='full text', font='Helvetica 15'),
+                sg.T('Command History', font='Helvetica 15'), sg.T('', size=(40,3), text_color=sg.BLUES[0], key='history')],
                 [sg.Multiline(size=(85, 5), enter_submits=True, key='query', do_not_clear=False),
                 sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
                 sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]

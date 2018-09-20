@@ -1,8 +1,7 @@
 import csv
 import PySimpleGUI as sg
 
-# filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
-filename = 'C:/Python/PycharmProjects/GooeyGUI/CSV/Gruen Movement Catalog V5.3 for Lucid less data  2017-08-30.csv'
+filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
 # --- populate table with file contents --- #
 data = []
 if filename is not None:

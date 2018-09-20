@@ -28,7 +28,7 @@ def TestMenus():
 
     # ------ GUI Defintion ------ #
     layout = [
-            [sg.Menu(menu_def)],
+            [sg.Menu(menu_def, tearoff=True)],
               [sg.Output(size=(60,20))],
             [sg.In('Test', key='input', do_not_clear=True)]
               ]

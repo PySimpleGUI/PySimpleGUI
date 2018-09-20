@@ -901,7 +901,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), button_text='', file_types=(("ALL Files", "*.*"),), initial_folder=None, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None),  file_types=(("ALL Files", "*.*"),), initial_folder=None, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -933,7 +933,7 @@ class Button(Element):
         self.BindReturnKey = bind_return_key
         self.Focus = focus
         self.TKCal = None
-        self.DefaultValue = None
+        self.DefaultValue = default_value
         self.InitialFolder = initial_folder
 
         super().__init__(ELEM_TYPE_BUTTON, scale=scale, size=size, font=font, pad=pad, key=key)
@@ -969,7 +969,7 @@ class Button(Element):
         if target == (None, None):
             strvar = self.TKStringVar
         else:
-            if len(target) == 2:
+            if not isinstance(target, str):
                 if target[0] < 0:
                     target = [self.Position[0] + target[0], target[1]]
                 target_element = self.ParentForm._GetElementAtLocation(target)
@@ -2108,92 +2108,94 @@ class UberForm():
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(target=(ThisRow, -1), button_text='Browse',  initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_BROWSE_FOLDER, target=target, button_text=button_text, initial_folder=initial_folder, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FolderBrowse(button_text='Browse', target=(ThisRow, -1),  initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,  initial_folder=initial_folder, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_BROWSE_FILE, target, button_text=button_text, file_types=file_types,initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FileBrowse( button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
-def FilesBrowse(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Browse', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_BROWSE_FILES, target, button_text=button_text, file_types=file_types, initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FilesBrowse(button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),),  initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target,  file_types=file_types, initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileSaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, initial_folder=initial_folder, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FileSaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
-def SaveAs(target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), button_text='Save As...', initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(BUTTON_TYPE_SAVEAS_FILE, target, button_text=button_text, file_types=file_types, initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def SaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),),initial_folder=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button( button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,font=None, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, font=None,focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, font=None,focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
 def Exit(button_text='Exit', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None,font=None, bind_return_key=True, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None,font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Help(button_text='Help', scale=(None, None), size=(None, None), auto_size_button=None, button_color=None,font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button( button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width,scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 ReadButton = ReadFormButton
+RButton = ReadFormButton
+RFButton = ReadFormButton
 
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button( button_text=button_text,button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text, button_type= BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width,scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def CalendarButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def ColorChooserButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, button_text=button_text, border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
@@ -2552,7 +2554,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
+                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], expand=True)
                 element.TKText = tktext_label
                 if element.ClickSubmits:
                     tktext_label.bind('<Button-1>', element.TextClickedHandler)

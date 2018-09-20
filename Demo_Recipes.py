@@ -12,9 +12,9 @@ def SourceDestFolders():
 
         button, values = form.LayoutAndRead(form_rows)
     if button is 'Submit':
-        sg.MsgBox('Submitted', values, 'The user entered source:', values['source'], 'Destination folder:', values['dest'], 'Using button', button)
+        sg.Popup('Submitted', values, 'The user entered source:', values['source'], 'Destination folder:', values['dest'], 'Using button', button)
     else:
-        sg.MsgBoxError('Cancelled', 'User Cancelled')
+        sg.PopupError('Cancelled', 'User Cancelled')
 
 
 def MachineLearningGUI():
@@ -75,7 +75,7 @@ def Everything():
 
         button, values = form.LayoutAndRead(layout)
 
-    sg.MsgBox('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values)
+    sg.Popup('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values)
 
 # Should you decide not to use a context manager, then try this form as your starting point
 # Be aware that tkinter, which this is based on, is picky about who frees up resources, especially if
@@ -107,7 +107,7 @@ def Everything_NoContextManager():
     button, values = form.LayoutAndRead(layout)
     del(form)
 
-    sg.MsgBox('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values)
+    sg.Popup('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values)
 
 
 def ProgressMeter():
@@ -209,7 +209,7 @@ def OneLineGUI():
 def main():
     # button, (filename,) = OneLineGUI()
     # DebugTe`st()
-    sg.MsgBox('Hello')
+    sg.Popup('Hello')
     ChatBot()
     Everything()
     SourceDestFolders()
@@ -230,7 +230,7 @@ def main():
     Everything_NoContextManager()
     NonBlockingPeriodicUpdateForm_ContextManager()
 
-    sg.MsgBox('Done with all recipes')
+    sg.Popup('Done with all recipes')
 
 if __name__ == '__main__':
     main()
