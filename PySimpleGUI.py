@@ -969,7 +969,7 @@ class Button(Element):
         if target == (None, None):
             strvar = self.TKStringVar
         else:
-            if len(target) == 2:
+            if not isinstance(target, str):
                 if target[0] < 0:
                     target = [self.Position[0] + target[0], target[1]]
                 target_element = self.ParentForm._GetElementAtLocation(target)
@@ -2179,6 +2179,8 @@ def ReadFormButton(button_text, image_filename=None, image_size=(None, None),ima
     return Button(BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 ReadButton = ReadFormButton
+RButton = ReadFormButton
+RFButton = ReadFormButton
 
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
@@ -2552,7 +2554,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
+                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], expand=True)
                 element.TKText = tktext_label
                 if element.ClickSubmits:
                     tktext_label.bind('<Button-1>', element.TextClickedHandler)
