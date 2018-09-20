@@ -2180,6 +2180,7 @@ def ReadFormButton(button_text, image_filename=None, image_size=(None, None),ima
 
 ReadButton = ReadFormButton
 
+
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,scale=(None, None), size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, button_text=button_text, scale=scale, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -2956,7 +2957,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for i, heading in enumerate(element.ColumnHeadings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = column_widths[i]
+                        width = max(column_widths[i], len(heading))
                     else:
                         try:
                             width = element.ColumnWidths[i]
