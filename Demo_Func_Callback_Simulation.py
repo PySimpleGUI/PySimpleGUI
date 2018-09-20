@@ -33,4 +33,4 @@ while True:
         break
 
 # All done!
-sg.MsgBoxOK('Done')
+sg.PopupOK('Done')

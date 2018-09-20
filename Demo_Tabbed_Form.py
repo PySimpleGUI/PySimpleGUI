@@ -73,7 +73,7 @@ def eBaySuperSearcherGUI():
             layout_tab_2.append([sg.Text('Typical US Search String')])
             layout_tab_2.append([sg.InputText(size=(100,1), default_text='gruen -sara -quarz -quartz -embassy -bob -robert -elephants -adidas -LED ')])
             layout_tab_2.append([sg.Text('_' * 100, size=(75, 1))])
-            layout_tab_2.append([sg.Submit(button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue'))])
+            layout_tab_2.append([sg.ReadButton('Submit', button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue'))])
 
             results = sg.ShowTabbedForm('eBay Super Searcher', (form,layout_tab_1,'Where To Save'), (form2, layout_tab_2, 'Categories & Search String'))
 
@@ -84,4 +84,4 @@ if __name__ == '__main__':
     # sg.SetOptions(background_color='white')
     results = eBaySuperSearcherGUI()
     print(results)
-    sg.MsgBox('Results', results)
+    sg.Popup('Results', results)

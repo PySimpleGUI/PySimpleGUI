@@ -1707,7 +1707,6 @@ def main():
         complementary_hex = get_complementary_hex(color_hex)
         complementary_color = get_name_from_hex(complementary_hex)
 
-        # g.MsgBox('Colors', 'The RBG value is', rgb, 'color and comp are', color_string, compl)
         layout = [[sg.Text('That color and it\'s compliment are shown on these buttons. This form auto-closes')],
                   [sg.Button(button_text=color_name, button_color=(color_hex, complementary_hex))],
                   [sg.Button(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30, 1))],

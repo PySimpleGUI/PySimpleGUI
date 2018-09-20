@@ -4,17 +4,16 @@ import PySimpleGUI as sg
 # If want to use the space bar, then be sure and disable the "default focus"
 
 with sg.FlexForm("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as form:
-    text_elem = sg.Text("", size=(18,1))
     layout = [[sg.Text("Press a key or scroll mouse")],
-              [text_elem],
-              [sg.SimpleButton("OK")]]
+              [sg.Text("", size=(18,1), key='text')],
+              [sg.SimpleButton("OK", key='OK')]]
 
     form.Layout(layout)
     # ---===--- Loop taking in user input --- #
     while True:
         button, value = form.Read()
-
-        if button == "OK" or (button is None and value is None):
+        text_elem = form.FindElement('text')
+        if button in ("OK", None):
             print(button, "exiting")
             break
         if len(button) == 1:

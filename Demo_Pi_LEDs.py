@@ -51,4 +51,4 @@ while True:
         FlashLED()
         form.FindElement('output').Update('')
 
-rg.MsgBox('Done... exiting')
+rg.Popup('Done... exiting')

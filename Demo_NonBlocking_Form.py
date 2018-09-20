@@ -100,7 +100,7 @@ def main():
     RemoteControlExample()
     StatusOutputExample()
     StatusOutputExample()
-    sg.MsgBox('End of non-blocking demonstration')
+    sg.Popup('End of non-blocking demonstration')
     # StatusOutputExample_context_manager()
 
 

@@ -37,6 +37,8 @@ def CPU_thread(args):
 def main():
     global g_interval,  g_procs, g_exit
 
+    yesno = sg.PopupYesNo('My popup')
+
     # ----------------  Create Form  ----------------
     sg.ChangeLookAndFeel('Black')
     form_rows = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0], justification='center', key='text')],

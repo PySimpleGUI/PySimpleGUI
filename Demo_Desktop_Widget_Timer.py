@@ -1,6 +1,12 @@
 import PySimpleGUI as sg
 import time
 
+"""
+ Timer Desktop Widget Creates a floating timer that is always on top of other windows You move it by grabbing anywhere on the window Good example of how to do a non-blocking, polling program using PySimpleGUI Can be used to poll hardware when running on a Pi     NOTE - you will get a warning message printed when you exit using exit button.
+ It will look something like: invalid command name \"1616802625480StopMove\"
+"""
+
+
 # ----------------  Create Form  ----------------
 sg.ChangeLookAndFeel('Black')
 sg.SetOptions(element_padding=(0, 0))
@@ -8,8 +14,8 @@ sg.SetOptions(element_padding=(0, 0))
 form_rows = [[sg.Text('')],
              [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
              [sg.ReadFormButton('Pause', key='button', button_color=('white', '#001480')),
-              sg.ReadFormButton('Reset', button_color=('white', '#007339')),
-              sg.Exit(button_color=('white', 'firebrick4'))]]
+              sg.ReadFormButton('Reset', button_color=('white', '#007339'), key='Reset'),
+              sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
 form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
 form.Layout(form_rows)
@@ -25,6 +31,8 @@ while (True):
         current_time = int(round(time.time() * 100)) - start_time
     else:
         button, values = form.Read()
+    if button == 'button':
+        button = form.FindElement(button).GetText()
     # --------- Do Button Operations --------
     if values is None or button == 'Exit':
         break
