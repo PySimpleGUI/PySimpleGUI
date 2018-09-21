@@ -1827,9 +1827,7 @@ class FlexForm:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        # self.WindowIcon = icon
-        # self.WindowIcon = icon if icon else icon_tempfile
-        self.WindowIcon = icon if not None else _my_windows.user_defined_icon
+        self.WindowIcon = icon if icon is not None else _my_windows.user_defined_icon
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
