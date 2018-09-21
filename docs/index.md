@@ -137,6 +137,8 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         Borderless (no titlebar) windows
         Always on top windows
         Menus
+        Tooltips
+        Clickable links
         No async programming required (no callbacks to worry about)
 
 
@@ -156,7 +158,7 @@ Here is the code that produced the above screenshot.
             [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
             [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
             [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
-                          scale=(2, 10))],
+                      ))],
             [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
              sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
             [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
@@ -429,7 +431,6 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
                       bar_color=DEFAULT_PROGRESS_BAR_COLOR,
                       button_color=None,
                       size=DEFAULT_PROGRESS_BAR_SIZE,
-                      scale=(None, None),
                       border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
 
 Here's the one-line Progress Meter in action!
@@ -825,7 +826,7 @@ This code utilizes as many of the elements in one form as possible.
             [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
             [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
             [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
-                          scale=(2, 10))],
+                         )],
             [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
              sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
             [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
@@ -882,7 +883,6 @@ This is the definition of the FlexForm object:
         default_button_element_size = (None, None),
         auto_size_text=None,
         auto_size_buttons=None,
-        scale=(None, None),
         location=(None, None),
         font=None,
         button_color=None,Font=None,
@@ -907,7 +907,6 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        default_button_element_size - Size of buttons on this form
        auto_size_text - Bool. True if elements should size themselves according to contents. Defaults to True
        auto_size_buttons - Bool. True if button elements should size themselves according to their text label
-       scale - Set size of element to be a multiple of the Element size
        location - (x,y) Location to place window in pixels
        font - Font name and size for elements of the form
        button_color - Default color for buttons (foreground, background). Can be text or hex
@@ -935,8 +934,6 @@ Note several variables that deal with "size".  Element sizes are measured in cha
 The default Element size for PySimpleGUI is `(45,1)`.
 
 Sizes can be set at the element level, or in this case, the size variables apply to all elements in the form.  Setting `size=(20,1)` in the form creation call will set all elements in the form to that size.
-
-In addition to `size` there is a `scale` option.  `scale` will take the Element's size and scale it up or down depending on the scale value.  `scale=(1,1)` doesn't change the Element's size.  `scale=(2,1)` will set the Element's size to be twice as wide as the size setting.
 
 There are a couple of widgets where one of the size values is in pixels rather than characters.  This is true for Progress Meters and Sliders.  The second parameter is the 'height' in pixels.
 
@@ -983,11 +980,26 @@ To keep a window on top of all other windows on the screen, set keep_on_top = Tr
      Multi-line Text Input
      Scroll-able Output
      Progress Bar
+     Menu
+     Frame
+     Graph
+     Table
      Async/Non-Blocking Windows
      Tabbed forms
      Persistent Windows
      Redirect Python Output/Errors to scrolling Window
      "Higher level" APIs (e.g. MessageBox, YesNobox, ...)
+
+#### Common Parameters
+Some parameters that you  will see on almost all Elements are:
+key
+tooltip
+
+#### Tooltip
+Tooltips are text boxes that popup next to an element if you hold your mouse over the top of it.  If you want to be extra kind to your form's user, then you can create tooltips for them by setting the parameter `tooltip` to some text string.  You will need to supply your own line breaks / text wrapping.  If you don't want to manually add them, then take a look at the standard library package `textwrap`.
+
+Tooltips are one of those "polish" items that really dress-up a GUI and show's a level of sophistication.  Go ahead, impress people, throw some tooltips into your GUI.
+
 
 
 ### Output Elements
@@ -1004,23 +1016,35 @@ The code is a crude representation of the GUI, laid out in text.
  ![simple text](https://user-images.githubusercontent.com/13696193/44959877-e9d97b00-aec3-11e8-9d24-b4405ee4a148.jpg)
 
 
-The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.  Size, Scale are a couple that you will see in every element.
+The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.
 
-    Text(Text,
-        scale=(None, None),
-        size=(None, None),
-        auto_size_text=None,
-        font=None,
-        text_color=None,
-        justification=None)
+    Text(text
+         size=(None, None)
+         auto_size_text=None
+         click_submits=None
+         relief=None
+         font=None
+         text_color=None
+         background_color=None
+         justification=None
+         pad=None
+         key=None
+         tooltip=None)
+
 .
 
     Text - The text that's displayed
     size - Element's size
+    click_submits - if clicked will cause a read call to return they key value as the button
+    relief - relief to use around the text
     auto_size_text - Bool. Change width to match size of text
     font - Font name and size to use
     text_color - text color
+    background_color - background color
     justification - Justification for the text. String - 'left', 'right', 'center'
+    pad - (x,y) amount of padding in pixels to use around element when packing
+    key - used to identify element.  This value will return as button if click_submits True
+    tooltip - string representing tooltip
 
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.
 
@@ -1059,14 +1083,12 @@ This Element doubles as both an input and output Element.  The `DefaultText` opt
 
     Multiline(default_text='',
            enter_submits = False,
-           scale=(None, None),
               size=(None, None),
             auto_size_text=None)
 .
 
     default_text - Text to display in the text box
     enter_submits - Bool. If True, pressing Enter key submits form
-    scale - Element's scale
     size - Element's size
     auto_size_text - Bool. Change width to match size of text
 
@@ -1077,11 +1099,9 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)
 
-    Output(scale=(None, None),
-           size=(None, None))
+    Output(size=(None, None))
 .
 
-     scale  - How much to scale size of element
      size - Size of element (width, height) in characters
 
 ###  Input Elements
@@ -1095,7 +1115,6 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 
 
       def InputText(default_text = '',
-                    scale=(None, None),
                     size=(None, None),
                     auto_size_text=None,
                     password_char='',
@@ -1108,7 +1127,6 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async forms.  
 .
 
      default_text - Text initially shown in the input box
-     scale - Amount size is scaled by
      size - (width, height) of element in characters
      auto_size_text- Bool.  True is element should be sized to fit text
      password_char - Character that will be used to replace each entered character. Setting to a value indicates this field is a password entry field
@@ -1134,8 +1152,7 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
 
 ![combobox](https://user-images.githubusercontent.com/13696193/44959860-b565bf00-aec3-11e8-82fe-dbe41252458b.jpg)
 
-    InputCombo(values,
-               scale=(None, None),
+    InputCombo(values,    ,
                size=(None, None),
                auto_size_text=None,
                background_color = None,
@@ -1144,7 +1161,6 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
 .
 
      values - Choices to be displayed. List of strings
-     scale - Amount to scale size by
      size - (width, height) of element in characters
      auto_size_text - Bool. True if size should fit the text length
      background_color - color to use for the input field background
@@ -1159,15 +1175,20 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
 ![listbox 2](https://user-images.githubusercontent.com/13696193/44959859-b4cd2880-aec3-11e8-881c-1e369d5c6337.jpg)
 
 
-       Listbox(values,
-             select_mode=None,
-             scale=(None, None),
-             size=(None, None),
-             auto_size_text=None,
-             font=None,
-             background_color = None,
-             text_color = None,
-             key = None)
+         Listbox(values
+                 default_values=None
+                 select_mode=None
+                 change_submits=False
+                 bind_return_key=False
+                 size=(None, None)
+                 auto_size_text=None
+                 font=None
+                 background_color=None
+                 text_color=None
+                 key=None
+                 pad=None
+                 tooltip=None):
+
 .
 
     values - Choices to be displayed. List of strings
@@ -1183,12 +1204,16 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
        'extended'
        'multiple'
        'single'
-    scale - Amount to scale size by
+    change_submits - if True, the form read will return with a button value of ''
+    bind_return_key - if the focus is on the listbox and the user presses return key, or if the user double clicks an item, then the read will return
     size - (width, height) of element in characters
     auto_size_text - Bool. True if size should fit the text length
     background_color - color to use for the input field background
+    font - font to use for items in list
     text_color - color to use for the typed text
-    key = Dictionary key to use for return values
+    key - Dictionary key to use for return values and to find element
+    pad - amount of padding to use when packing
+    tooltip - tooltip text
 
 The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
 
@@ -1205,7 +1230,6 @@ Sliders have a couple of slider-specific settings as well as appearance settings
               orientation=None,
               border_width=None,
               relief=None,
-              scale=(None, None),
               size=(None, None),
               font=None,
               background_color = None,
@@ -1224,7 +1248,6 @@ Sliders have a couple of slider-specific settings as well as appearance settings
          RELIEF_RIDGE= 'ridge'
          RELIEF_GROOVE= 'groove'
          RELIEF_SOLID = 'solid'
-      scale - Amount to scale size by
        size - (width, height) of element in characters
        auto_size_text - Bool. True if size should fit the text
        background_color - color to use for the input field background
@@ -1242,7 +1265,6 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
      Radio(text,
            group_id,
            default=False,
-           scale=(None, None),
            size=(None, None),
            auto_size_text=None,
            font=None,
@@ -1255,7 +1277,6 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
      text - Text to display next to button
      group_id - Groups together multiple Radio Buttons. Can be any value
      default - Bool.  Initial state
-     scale - Amount to scale size of element
      size- (width, height) size of element in characters
      auto_size_text - Bool.  True if should size width to fit text
      font - Font type and size for text display
@@ -1275,7 +1296,6 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
 
     Checkbox(text,
              default=False,
-             scale=(None, None),
              size=(None, None),
              auto_size_text=None,
              font=None,
@@ -1286,7 +1306,6 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
 
      text - Text to display next to checkbox
      default- Bool + None.  Initial state. True = Checked, False = unchecked, None = Not available (grayed out)
-     scale - Amount to scale size of element
      size - (width, height) size of element in characters
      auto_size_text- Bool.  True if should size width to fit text
      font- Font type and size for text display
@@ -1305,7 +1324,6 @@ An up/down spinner control.  The valid values are passed in as a list.
 
     Spin(values,
          intiial_value=None,
-         scale=(None, None),
          size=(None, None),
          auto_size_text=None,
          font=None,
@@ -1316,7 +1334,6 @@ An up/down spinner control.  The valid values are passed in as a list.
 
      values - List of valid values
      initial_value - String with initial value
-     scale - Amount to scale size of element
      size - (width, height) size of element in characters
      auto_size_text - Bool.  True if should size width to fit text
      font - Font type and size for text display
@@ -1360,7 +1377,6 @@ While it's possible to build forms using the Button Element directly, you should
 			     image_subsample=None,
 			     border_width=None,
 			     bind_return_key=False,
-                 scale=(None, None),
                  size=(None, None),
                  auto_size_button=None,
                  button_color=None,
@@ -1572,8 +1588,7 @@ Another way of using a Progress Meter with PySimpleGUI is to build a custom form
 #### Output
 The Output Element is a re-direction of Stdout.  Anything "printed" will be displayed in this element.
 
-    Output(scale=(None, None),
-           size=(None, None))
+    Output(size=(None, None))
 
 Here's a complete solution for a chat-window using an Async form with an Output Element
 
@@ -1599,6 +1614,13 @@ Here's a complete solution for a chat-window using an Async form with an Output 
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a form within a form.  And, yes, you can have a Column within a Column if you want.
 
 Columns are specified in exactly the same way as a form is, as a list of lists.
+
+    def Column(layout - the list of rows that define the layout
+			   background_color - color of background
+			   size - size of visible portion of column
+			   pad - element padding to use when packing
+			   scrollable - bool. True if should add scrollbars
+
 
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
 
@@ -1643,6 +1665,157 @@ The Column Element has 1 required parameter and 1 optional (the layout and the b
     Column(layout, background_color=None)
 
 The default background color for Columns is the same as the default window background color.  If you change the look and feel of the form, the column background will match the form background automatically.
+
+
+
+----
+## Frames (Labelled Frames, Frames with a title)
+
+Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.
+
+    def Frame(title - the label / title to put on frame
+    				  layout - list of rows of elements the frame contains
+    				  title_color - color of the title text
+    				  background_color - color of background
+    				  title_location - locations to put the title
+    				  relief - type of relief to use
+    				  size - size of Frame in characters. Do not use if you want frame to autosize
+    				  font - font to use for title
+    				  pad - element padding  to use when packing
+    				  border_width - how thick the line going around frame should be
+    				  key - key used to location the element
+    				  tooltip - tooltip text
+
+
+
+This code creates a form with a Frame and 2 buttons.
+
+    frame_layout = [
+                      [sg.T('Text inside of a frame')],
+                      [sg.CB('Check 1'), sg.CB('Check 2')],
+                   ]
+    layout = [
+              [sg.Frame('My Frame Title', frame_layout, font='Any 12', title_color='blue')],
+              [sg.Submit(), sg.Cancel()]
+             ]
+
+    form = sg.FlexForm('Frame with buttons', font=("Helvetica", 12)).Layout(layout)
+
+
+![frame element](https://user-images.githubusercontent.com/13696193/45889173-c2245700-bd8d-11e8-8f73-1e5f1be3ddb1.jpg)
+
+
+
+Notice how the Frame layout looks identical to a form layout.  A Form works exactly the same way as a Column and a Frame.  They all are "container elements".  Elements that contain other elements.
+
+*These container Elements can be nested as deep as you want.* That's a pretty spiffy feature, right?  Took a lot of work so be appreciative.  Recursive code isn't trivial.
+
+## Canvas Element
+
+In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.
+
+### Matplotlib, Pyplot Integration
+
+One such integration is with Matploplib and Pyplot.  There is a Demo program written that you can use as a design pattern to get an understanding of how to use the Canvas Widget once you get it.
+
+    def Canvas(canvas - a tkinter canvasf if you created one. Normally not set
+    		   background_color - canvas color
+    		   size - size in pixels
+    		   pad - element padding for packing
+    		   key - key used to lookup element
+    		   tooltip - tooltip text
+
+The order of operations to obtain a tkinter Canvas Widget is:
+
+    figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
+    # define the form layout
+    layout = [[sg.Text('Plot test')],
+              [sg.Canvas(size=(figure_w, figure_h), key='canvas')],
+              [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
+
+    # create the form and show it without the plot
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)
+    form.Finalize()
+
+    # add the plot to the window
+    fig_photo = draw_figure(form.FindElement('canvas').TKCanvas, fig)
+
+    # show it all again and get buttons
+    button, values = form.Read()
+
+To get a tkinter Canvas Widget from PySimpleGUI, follow these steps:
+* Add Canvas Element to your form
+* Layout your form
+* Call `form.Finalize()` - this is a critical step you must not forget
+* Find the Canvas Element by looking up using key
+* Your Canvas Widget Object will be the found_element.TKCanvas
+* Draw on your canvas to your heart's content
+* Call `form.Read()` - Nothing will appear on your canvas until you call Read
+
+See `Demo_Matplotlib.py` for a Recipe you can copy.
+
+
+## Graph Element
+
+All you math fans will enjoy this Element... and all you non-math fans will enjoy it too.
+
+I've found nothing to be less fun than dealing with a graphic's coordinate system from a GUI Framework.  It's always upside down from what I want.  (0,0) is in the upper left hand corner.  In short, it's a **pain in the ass**.
+
+Graph Element to the rescue.  A Graph Element creates a pixel addressable canvas using YOUR coordinate system.  *You* get to define the units on the X and Y axis.
+
+There are 3 values you'll need to supply the Graph Element.  They are:
+* Size of the canvas in pixels
+* The lower left (x,y) coordinate of your coordinate system
+* The upper right (x,y) coordinate of your coordinate system
+
+After you supply those values you can scribble all of over your graph by creating Graph Figures.  Graph Figures are created, and a Figure ID is obtained by calling:
+* DrawCircle
+* DrawLine
+* DrawPoint
+* DrawRectangle
+* DrawOval
+
+You can move your figures around on the canvas by supplying the Figure ID the x,y amount to move.
+
+    graph.MoveFigure(my_circle, 10, 10)
+
+This Element is relatively new and may have some parameter additions or deletions.  It shouldn't break your code however.
+
+    def Graph( canvas_size - size of canvas in pixels
+                      graph_bottom_left - the x,y location of your coordinate system's bottom left point
+                      graph_top_right - the x,y location of your coordinate system's top right point
+                      background_color - color to use for background
+                      pad - element padding for pack
+                      key -  key used to lookup element
+                      tooltip - tooltip text
+
+
+
+## Table Element
+
+Let me say up front that the Table Element has Beta status. The reason is that some of the parameters are not quite right and will change. Be warned one or two parameters may change.  The `size` parameter in particular is gong to change. Currently the number of rows to allocate for the table is set by the height parameter of size.  The problem is that the width is not used.  The plan is to instead have a parameter named `number_of_rows` or something like it.
+
+    def Table(values - Your table's array
+              headings - list of strings representing your headings, if you have any
+              visible_column_map - list of bools. If True, column in that position is shown.  Defaults to all columns
+              col_widths - list of column widths
+              def_col_width - default column width. defaults to 10
+              auto_size_columns - bool. If True column widths are determined by table contents
+              max_col_width - maximum width of a column. defaults to 25
+              select_mode - table rows can be selected, but doesn't currently do anything
+              display_row_numbers - bool. If True shows numbers next to rows
+              scrollable - if True table will be scrolled
+              font - font for table entries
+              justification - left, right, center
+              text_color - color of text
+              background_color - cell background color
+              size - (None, number of rows).
+              pad - element padding for packing
+              key - key used to lookup element
+              tooltip - tooltip text
+
+
+
 
 ## Tabbed Forms
 Tabbed forms are shown using the `ShowTabbedForm` call.  The call has the format
@@ -1726,6 +1899,7 @@ Let's have some fun customizing!  Make PySimpleGUI look the way you want it to l
             scrollbar_color=None, text_color=None
             debug_win_size=(None,None)
             window_location=(None,None)
+            tooltip_time = None
 
 Explanation of parameters
 
@@ -1759,6 +1933,7 @@ Explanation of parameters
              text_justification - justification to use on Text Elements. Values are strings - 'left', 'right', 'center'
              debug_win_size - size of the Print output window
              window_location - location on the screen (x,y) of window's top left cornder
+             tooltip_time - time in milliseconds to wait before showing a tooltip. Default is 400ms
 
 
 These settings apply to all forms `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the Form-level being the highest and the Element-level the lowest.  Thus the levels are:
@@ -2325,6 +2500,8 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
+
 
 
 
