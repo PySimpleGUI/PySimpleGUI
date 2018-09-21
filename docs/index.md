@@ -7,7 +7,7 @@
 
 # PySimpleGUI
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.4.1-blue.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.5.0-red.svg?longCache=true&style=for-the-badge)
 
 
 [Wiki for the latest news](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
@@ -2154,7 +2154,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.02.00 | Sept 14, 2018 - New Table Element (Beta release), MsgBox removed entirely, font setting for InputText Element, **packing change** risky change that allows some Elements to be resized,removed command parameter from Menu Element, new function names for ReadNonBlocking (Finalize, PreRead), change to text element autosizing and wrapping (yet again), lots of parameter additions to Popup functions (colors, etc).
 | 3.03.00 | New feature - One Line Progress Meters, new display_row_numbers for Table Element, fixed bug in EasyProgresssMeters (function will soon go away), OneLine and Easy progress meters set to grab anywhere but can be turned off.
 | 03,04.00 | Sept 18, 2018 - New features - Graph Element, Frame Element, more settings exposed to Popup calls.  See notes below for more.
-| 03.04.01 | Sept 18, 2018 - See release notes below
+| 03.04.01 | Sept 18, 2018 - See release notes
+| 03.05.00 | Sept 20, 2018 - See release notes
 
 
 ### Release Notes
@@ -2221,6 +2222,19 @@ OneLineProgressMeter function added which gives you not only a one-line solution
 * Menu - Tearoff option. Determines if menus should allow them to be torn off
 * Help - Shorcut button. Like Submit, cancel, etc
 * ReadButton - shortcut for ReadFormButton
+
+#### 3.5.0
+* Tool Tips for all elements
+* Clickable text
+* Text Element relief setting
+* Keys as targets for buttons
+* New names for buttons:
+	* Button = SimpleButton
+	* RButton = ReadButton = ReadFormButton
+* Double clickable list entries
+* Auto sizing table widths works now
+* Feature DELETED - Scaling. Removed from all elements
+
 
 
 ### Upcoming
