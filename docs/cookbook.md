@@ -396,7 +396,7 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
                sg.ReadButton('Next', button_color=(background, background),
                                  image_filename=image_next, image_size=(50, 50), image_subsample=2, border_width=0),
                sg.Text(' '  * 2),
-               sg.Text(' '  * 2), sg.SimpleButton('Exit', button_color=(background, background),
+               sg.Text(' '  * 2), sg.Button('Exit', button_color=(background, background),
                                                  image_filename=image_exit, image_size=(50, 50), image_subsample=2,
                                                  border_width=0)],
               [sg.Text('_'  * 30)],
@@ -429,7 +429,7 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
             form.FindElement('output).Update(button)
 ----
 ## Script Launcher - Persistent Form
-This form doesn't close after button clicks.  To achieve this the buttons are specified as `sg.ReadButton` instead of `sg.SimpleButton`.   The exception to this is the EXIT button.  Clicking it will close the form.  This program will run commands and display the output in the scrollable window.
+This form doesn't close after button clicks.  To achieve this the buttons are specified as `sg.ReadButton` instead of `sg.Button`.   The exception to this is the EXIT button.  Clicking it will close the form.  This program will run commands and display the output in the scrollable window.
 
 ![launcher 2](https://user-images.githubusercontent.com/13696193/43958519-b30af218-9c79-11e8-88da-fadc69da818c.jpg)
 
@@ -443,7 +443,7 @@ This form doesn't close after button clicks.  To achieve this the buttons are sp
         layout =  [
                     [sg.Text('Script output....', size=(40, 1))],
                     [sg.Output(size=(88, 20))],
-                    [sg.ReadButton('script1'), sg.ReadButton('script2'), sg.SimpleButton('EXIT')],
+                    [sg.ReadButton('script1'), sg.ReadButton('script2'), sg.Button('EXIT')],
                     [sg.Text('Manual command', size=(15,1)), sg.InputText(focus=True), sg.ReadButton('Run', bind_return_key=True)]
                   ]
 
@@ -1056,7 +1056,7 @@ You can easily change colors to match your background by changing a couple of pa
                     sg.ReadButton('Program 1'),
                     sg.ReadButton('Program 2'),
                     sg.ReadButton('Program 3', button_color=('white', '#35008B')),
-                    sg.SimpleButton('EXIT', button_color=('white','firebrick3'))],
+                    sg.Button('EXIT', button_color=('white','firebrick3'))],
                     [sg.T('', text_color='white', size=(50,1), key='output')]]
 
         form = sg.FlexForm('Floating Toolbar', no_titlebar=True, keep_on_top=True)
@@ -1127,8 +1127,8 @@ Much of the code is handling the button states in a fancy way.  It could be much
 
     form_rows = [[sg.Text('')],
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-                 [sg.ReadFormButton('Pause', key='button', button_color=('white', '#001480')),
-                  sg.ReadFormButton('Reset', button_color=('white', '#007339'), key='Reset'),
+                 [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),
+                  sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
                   sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
     form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
@@ -1271,7 +1271,8 @@ Use the Graph Element to draw points, lines, circles, rectangles using ***your**
 
 In this example we're defining our graph to be from -100, -100 to +100,+100.  That means that zero is in the middle of the drawing.  You define this graph description in your call to Graph.
 
-![graph element](https://user-images.githubusercontent.com/13696193/45860701-a8a3f080-bd36-11e8-9649-ada5890cdc14.jpg)
+![snap0354](https://user-images.githubusercontent.com/13696193/45861485-cd9a6280-bd3a-11e8-83ea-32ca42dc9f3a.jpg)
+
 
 
     import math
@@ -1283,8 +1284,11 @@ In this example we're defining our graph to be from -100, -100 to +100,+100.  Th
     form.Finalize()
     graph = form.FindElement('graph')
 
+    graph.DrawLine((-100,0), (100,0))
+    graph.DrawLine((0,-100), (0,100))
+
     for x in range(-100,100):
         y = math.sin(x/20)*50
-      graph.DrawPoint((x,y))
+      graph.DrawPoint((x,y), color='red')
 
     button, values = form.Read()
