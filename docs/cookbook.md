@@ -80,7 +80,7 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
     import sys
 
     if len(sys.argv) == 1:
-        button, (fname,) = sg.FlexForm('My Script').LayoutAndRead([[sg.T('Document to open')],
+        button, (fname,) = sg.FlexForm('My Script').LayoutAndRead([[sg.Text('Document to open')],
                                                                [sg.In(), sg.FileBrowse()],
                                                                [sg.Open(), sg.Cancel()]])
     else:
@@ -223,7 +223,7 @@ An async form that has a button read loop.  A Text Element is updated periodical
     # create a text element that will be updated periodically
     form_rows = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],
                  [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='output')],
-                 [sg.T(' '  * 5), sg.ReadFormButton('Start/Stop', focus=True), sg.Quit()]]
+                 [sg.T(' '  * 5), sg.ReadButton('Start/Stop', focus=True), sg.Quit()]]
 
     form.LayoutAndRead(form_rows, non_blocking=True)
 
@@ -269,7 +269,7 @@ The architecture of some programs works better with button callbacks instead of 
     form = sg.FlexForm('Button callback example')
     # Layout the design of the GUI
     layout = [[sg.Text('Please click a button')],
-              [sg.ReadFormButton('1'), sg.ReadFormButton('2'), sg.Quit()]]
+              [sg.ReadButton('1'), sg.ReadButton('2'), sg.Quit()]]
     # Show the form to the user
     form.Layout(layout)
 
@@ -282,7 +282,7 @@ The architecture of some programs works better with button callbacks instead of 
             button1()
         elif button == '2':
             button2()
-        elif button =='Quit'  or button is None:
+        elif button =='Quit'  or button == None:
             break
 
     # All done!
@@ -387,13 +387,13 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
     # define layout of the rows
     layout = [[sg.Text('Media File Player', size=(17, 1), font=("Helvetica", 25))],
               [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],
-              [sg.ReadFormButton('Restart Song', button_color=(background, background),
+              [sg.ReadButton('Restart Song', button_color=(background, background),
                                  image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0),
                sg.Text(' '  * 2),
-               sg.ReadFormButton('Pause', button_color=(background, background),
+               sg.ReadButton('Pause', button_color=(background, background),
                                  image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0),
                sg.Text(' '  * 2),
-               sg.ReadFormButton('Next', button_color=(background, background),
+               sg.ReadButton('Next', button_color=(background, background),
                                  image_filename=image_next, image_size=(50, 50), image_subsample=2, border_width=0),
                sg.Text(' '  * 2),
                sg.Text(' '  * 2), sg.SimpleButton('Exit', button_color=(background, background),
@@ -429,7 +429,7 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
             form.FindElement('output).Update(button)
 ----
 ## Script Launcher - Persistent Form
-This form doesn't close after button clicks.  To achieve this the buttons are specified as `sg.ReadFormButton` instead of `sg.SimpleButton`.   The exception to this is the EXIT button.  Clicking it will close the form.  This program will run commands and display the output in the scrollable window.
+This form doesn't close after button clicks.  To achieve this the buttons are specified as `sg.ReadButton` instead of `sg.SimpleButton`.   The exception to this is the EXIT button.  Clicking it will close the form.  This program will run commands and display the output in the scrollable window.
 
 ![launcher 2](https://user-images.githubusercontent.com/13696193/43958519-b30af218-9c79-11e8-88da-fadc69da818c.jpg)
 
@@ -443,8 +443,8 @@ This form doesn't close after button clicks.  To achieve this the buttons are sp
         layout =  [
                     [sg.Text('Script output....', size=(40, 1))],
                     [sg.Output(size=(88, 20))],
-                    [sg.ReadFormButton('script1'), sg.ReadFormButton('script2'), sg.SimpleButton('EXIT')],
-                    [sg.Text('Manual command', size=(15,1)), sg.InputText(focus=True), sg.ReadFormButton('Run', bind_return_key=True)]
+                    [sg.ReadButton('script1'), sg.ReadButton('script2'), sg.SimpleButton('EXIT')],
+                    [sg.Text('Manual command', size=(15,1)), sg.InputText(focus=True), sg.ReadButton('Run', bind_return_key=True)]
                   ]
 
         form.Layout(layout)
@@ -622,7 +622,7 @@ This simple program keep a form open, taking input values until the user termina
                [sg.Txt('_'  * 10)],
                [sg.In(size=(8,1), key='denominator')],
                [sg.Txt('', size=(8,1), key='output')  ],
-               [sg.ReadFormButton('Calculate', bind_return_key=True)]]
+               [sg.ReadButton('Calculate', bind_return_key=True)]]
 
     form.Layout(layout)
 
@@ -659,7 +659,7 @@ The Canvas Element is one of the few tkinter objects that are directly accessibl
 
     layout = [
         [sg.Canvas(size=(100, 100), background_color='red', key= 'canvas')],
-        [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue')]
+        [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue')]
     ]
 
     form = sg.FlexForm('Canvas test')
@@ -673,9 +673,9 @@ The Canvas Element is one of the few tkinter objects that are directly accessibl
         button, values = form.Read()
         if button is None:
             break
-     if button is 'Blue':
+     if button == 'Blue':
             canvas.TKCanvas.itemconfig(cir, fill="Blue")
-        elif button is 'Red':
+        elif button == 'Red':
             canvas.TKCanvas.itemconfig(cir, fill="Red")
 
 
@@ -685,7 +685,7 @@ This Recipe implements a Raspberry Pi touchscreen based keypad entry.  As the di
 There are a number of features used in this Recipe including:
 * Default Element Size
 * auto_size_buttons
-* ReadFormButton
+* ReadButton
 * Dictionary Return values
 * Update of Elements in form (Input, Text)
 * do_not_clear of Input Elements
@@ -700,17 +700,17 @@ There are a number of features used in this Recipe including:
     # Demonstrates a number of PySimpleGUI features including:
     #   Default element size
     #   auto_size_buttons
-    #   ReadFormButton
+    #   ReadButton
     #   Dictionary return values
     #   Update of elements in form (Text, Input)
     #   do_not_clear of Input elements
 
     layout = [[sg.Text('Enter Your Passcode')],
               [sg.Input(size=(10, 1), do_not_clear=True, justification='right', key='input')],
-              [sg.ReadFormButton('1'), sg.ReadFormButton('2'), sg.ReadFormButton('3')],
-              [sg.ReadFormButton('4'), sg.ReadFormButton('5'), sg.ReadFormButton('6')],
-              [sg.ReadFormButton('7'), sg.ReadFormButton('8'), sg.ReadFormButton('9')],
-              [sg.ReadFormButton('Submit'), sg.ReadFormButton('0'), sg.ReadFormButton('Clear')],
+              [sg.ReadButton('1'), sg.ReadButton('2'), sg.ReadButton('3')],
+              [sg.ReadButton('4'), sg.ReadButton('5'), sg.ReadButton('6')],
+              [sg.ReadButton('7'), sg.ReadButton('8'), sg.ReadButton('9')],
+              [sg.ReadButton('Submit'), sg.ReadButton('0'), sg.ReadButton('Clear')],
               [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],
               ]
 
@@ -723,12 +723,12 @@ There are a number of features used in this Recipe including:
         button, values = form.Read()  # read the form
       if button is None:  # if the X button clicked, just exit
       break
-     if button is 'Clear':  # clear keys if clear button
+     if button == 'Clear':  # clear keys if clear button
       keys_entered = ''
       elif button in '1234567890':
             keys_entered = values['input']  # get what's been entered so far
       keys_entered += button  # add the new digit
-      elif button is 'Submit':
+      elif button == 'Submit':
             keys_entered = values['input']
             form.FindElement('out').Update(keys_entered)  # output the final string
 
@@ -760,7 +760,7 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
 
         layout = [[g.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
                   [g.Canvas(size=(640, 480), key='canvas')],
-                  [g.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+                  [g.ReadButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
         # create the form and show it without the plot
       form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
@@ -775,7 +775,7 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
         dpts = [randint(0, 10) for x in range(10000)]
         for i in range(len(dpts)):
             button, values = form.ReadNonBlocking()
-            if button is 'Exit'  or values is None:
+            if button == 'Exit'  or values is None:
                 exit(69)
 
             ax.cla()
@@ -894,10 +894,10 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User 2'), size=(20,1)), sg.T('0', size=(8,1))],
               [sg.T('Customer:', pad=((3,0),0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20,1)), sg.T('1', size=(8,1))],
               [sg.T('Notes:', pad=((3,0),0)), sg.In(size=(44,1), background_color='white', text_color='black')],
-              [sg.ReadFormButton('Start', button_color=('white', 'black'), key='start'),
-               sg.ReadFormButton('Stop', button_color=('gray34', 'black'), key='stop'),
-               sg.ReadFormButton('Reset', button_color=('gray', 'firebrick3'), key='reset'),
-               sg.ReadFormButton('Submit', button_color=('gray34', 'springgreen4'), key='submit')]
+              [sg.ReadButton('Start', button_color=('white', 'black'), key='start'),
+               sg.ReadButton('Stop', button_color=('gray34', 'black'), key='stop'),
+               sg.ReadButton('Reset', button_color=('gray', 'firebrick3'), key='reset'),
+               sg.ReadButton('Submit', button_color=('gray34', 'springgreen4'), key='submit')]
               ]
 
     form = sg.FlexForm("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
@@ -908,25 +908,25 @@ In other GUI frameworks this program would be most likely "event driven" with ca
         button, values = form.Read()
         if button is None:
             exit(69)
-        if button is 'Start':
+        if button ==  'Start':
             form.FindElement('start').Update(button_color=('gray34','black'))
             form.FindElement('stop').Update(button_color=('white', 'black'))
             form.FindElement('reset').Update(button_color=('white', 'firebrick3'))
             recording = True
-     elif button is 'Stop'  and recording:
+     elif button ==  'Stop'  and recording:
             form.FindElement('stop').Update(button_color=('gray34','black'))
             form.FindElement('start').Update(button_color=('white', 'black'))
             form.FindElement('submit').Update(button_color=('white', 'springgreen4'))
             recording = False
       have_data = True
-     elif button is 'Reset':
+     elif button ==  'Reset':
             form.FindElement('stop').Update(button_color=('gray34','black'))
             form.FindElement('start').Update(button_color=('white', 'black'))
             form.FindElement('submit').Update(button_color=('gray34', 'springgreen4'))
             form.FindElement('reset').Update(button_color=('gray34', 'firebrick3'))
             recording = False
       have_data = False
-     elif button is 'Submit'  and have_data:
+     elif button == 'Submit'  and have_data:
             form.FindElement('stop').Update(button_color=('gray34','black'))
             form.FindElement('start').Update(button_color=('white', 'black'))
             form.FindElement('submit').Update(button_color=('gray34', 'springgreen4'))
@@ -1052,10 +1052,10 @@ You can easily change colors to match your background by changing a couple of pa
 
         sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)
         layout =  [[sg.Combo(values=namesonly, size=(35,30), key='demofile'),
-                    sg.ReadFormButton('Run', button_color=('white', '#00168B')),
-                    sg.ReadFormButton('Program 1'),
-                    sg.ReadFormButton('Program 2'),
-                    sg.ReadFormButton('Program 3', button_color=('white', '#35008B')),
+                    sg.ReadButton('Run', button_color=('white', '#00168B')),
+                    sg.ReadButton('Program 1'),
+                    sg.ReadButton('Program 2'),
+                    sg.ReadButton('Program 3', button_color=('white', '#35008B')),
                     sg.SimpleButton('EXIT', button_color=('white','firebrick3'))],
                     [sg.T('', text_color='white', size=(50,1), key='output')]]
 
@@ -1066,13 +1066,13 @@ You can easily change colors to match your background by changing a couple of pa
         # ---===--- Loop taking in user input (buttons) --- #
         while True:
             (button, value) = form.Read()
-            if button is 'EXIT'  or button is None:
+            if button ==  'EXIT'  or button is None:
                 break # exit button clicked
-            if button is 'Program 1':
+            if button ==  'Program 1':
                 print('Run your program 1 here!')
-            elif button is 'Program 2':
+            elif button ==  'Program 2':
                 print('Run your program 2 here!')
-            elif button is 'Run':
+            elif button ==  'Run':
                 file = value['demofile']
                 print('Launching %s'%file)
                 ExecuteCommandSubprocess('python', os.path.join(ROOT_PATH, file))
@@ -1113,71 +1113,73 @@ Much of the code is handling the button states in a fancy way.  It could be much
 
 ![timer](https://user-images.githubusercontent.com/13696193/45336349-26a31300-b551-11e8-8b06-d1232ff8ca10.jpg)
 
-        import PySimpleGUI as sg
-        import time
+    import PySimpleGUI as sg
+    import time
 
-        """
-         Timer Desktop Widget Creates a floating timer that is always on top of other windows You move it by grabbing anywhere on the window Good example of how to do a non-blocking, polling program using PySimpleGUI Can be used to poll hardware when running on a Pi     NOTE - you will get a warning message printed when you exit using exit button.
-         It will look something like: invalid command name "1616802625480StopMove""""
+    """
+     Timer Desktop Widget Creates a floating timer that is always on top of other windows You move it by grabbing anywhere on the window Good example of how to do a non-blocking, polling program using PySimpleGUI Can be used to poll hardware when running on a Pi     NOTE - you will get a warning message printed when you exit using exit button. It will look something like: invalid command name \"1616802625480StopMove\"
+    """
 
-        # ----------------  Create Form  ----------------
-        sg.ChangeLookAndFeel('Black')
-        sg.SetOptions(element_padding=(0,0))
-        # Make a form, but don't use context manager
-        # Create the form layout
-        form_rows = [[sg.Text('')],
-                     [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-                     [sg.ReadFormButton('Pause', key='button', button_color=('white', '#001480')), sg.ReadFormButton('Reset', button_color=('white', '#007339')), sg.Exit(button_color=('white','firebrick4'))]]
-        # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
-        form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
-        form.Layout(form_rows)
-        #
-        # ----------------  main loop  ----------------
-        current_time = 0
-        paused = False
-        start_time = int(round(time.time()*100))
-        while (True):
-            # --------- Read and update window --------
-          if not paused:
-                button, values = form.ReadNonBlocking()
-                current_time = int(round(time.time()*100)) - start_time
-          else:
-                button, values = form.Read()
-            # --------- Do Button Operations --------
-          if values is None or button == 'Exit':
-                break
-          if button is 'Reset':
-                start_time = int(round(time.time()*100))
-                current_time = 0
-                paused_time = start_time
-          elif button == 'Pause':
-                paused = True
-                paused_time = int(round(time.time()*100))
-                element = form.FindElement('button')
-                element.Update(new_text='Run')
-          elif button == 'Run':
-                paused = False
-                start_time = start_time + int(round(time.time()*100)) - paused_time
-                element = form.FindElement('button')
-                element.Update(new_text='Pause')
 
-            # --------- Display timer in window --------
-          form.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
-                                                                          (current_time // 100) % 60,
-                                                                           current_time % 100))
-            time.sleep(.01)
+    # ----------------  Create Form  ----------------
+    sg.ChangeLookAndFeel('Black')
+    sg.SetOptions(element_padding=(0, 0))
 
+    form_rows = [[sg.Text('')],
+                 [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+                 [sg.ReadFormButton('Pause', key='button', button_color=('white', '#001480')),
+                  sg.ReadFormButton('Reset', button_color=('white', '#007339'), key='Reset'),
+                  sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
+
+    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
+    form.Layout(form_rows)
+
+    # ----------------  main loop  ----------------
+    current_time = 0
+    paused = False
+    start_time = int(round(time.time() * 100))
+    while (True):
+        # --------- Read and update window --------
+      if not paused:
+            button, values = form.ReadNonBlocking()
+            current_time = int(round(time.time() * 100)) - start_time
+        else:
+            button, values = form.Read()
+        if button == 'button':
+            button = form.FindElement(button).GetText()
+        # --------- Do Button Operations --------
+      if values is None or button == 'Exit':
+            break
+     if button is 'Reset':
+            start_time = int(round(time.time() * 100))
+            current_time = 0
+      paused_time = start_time
+        elif button == 'Pause':
+            paused = True
+      paused_time = int(round(time.time() * 100))
+            element = form.FindElement('button')
+            element.Update(text='Run')
+        elif button == 'Run':
+            paused = False
+      start_time = start_time + int(round(time.time() * 100)) - paused_time
+            element = form.FindElement('button')
+            element.Update(text='Pause')
+
+        # --------- Display timer in window --------
+      form.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+                                                                      (current_time // 100) % 60,
+                                                                      current_time % 100))
+        time.sleep(.01)
 
     # --------- After loop --------
 
     # Broke out of main loop. Close the window.
     form.CloseNonBlockingForm()
 
-
 ## Desktop Floating Widget - CPU Utilization
 
 Like the Timer widget above, this script can be kept running.  You will need the package psutil installed in order to run this Recipe.
-The spinner changes the number of seconds between reads.
+The spinner changes the number of seconds between reads.  Note that you will get an error message printed when exiting because the window does not have have a titlebar.  It's a known problem.
 
 
 ![cpu widget 2](https://user-images.githubusercontent.com/13696193/45456096-77348080-b6b7-11e8-8906-6663c31ad0eb.jpg)
@@ -1222,7 +1224,7 @@ The spinner changes the number of seconds between reads.
 
 Menus are nothing more than buttons that live in a menu-bar.  When you click on a menu item, you get back a "button" with that menu item's text, just as you would had that text been on a button.
 
-Menu's are defined separately from the GUI form.  To add one to your form, simply insert sg.Menu(menu_layout).  The meny definition is a list of menu choices and submenus.  They are a list of lists.  Copy the Recipe and play with it.  You'll eventualy get when you're looking for.
+Menu's are defined separately from the GUI form.  To add one to your form, simply insert sg.Menu(menu_layout).  The menu definition is a list of menu choices and submenus.  They are a list of lists.  Copy the Recipe and play with it.  You'll eventually get when you're looking for.
 
 If you double click the dashed line at the top of the list of choices, that menu will tear off and become a floating toolbar.  How cool!
 
@@ -1253,7 +1255,7 @@ If you double click the dashed line at the top of the list of choices, that menu
     # ------ Loop & Process button menu choices ------ #
     while True:
         button, values = form.Read()
-        if button is None or button == 'Exit':
+        if button == None or button == 'Exit':
             return
       print('Button = ', button)
         # ------ Process menu choices ------ #
@@ -1262,3 +1264,27 @@ If you double click the dashed line at the top of the list of choices, that menu
         elif button == 'Open':
             filename = sg.PopupGetFile('file to open', no_window=True)
             print(filename)
+
+## Graphing with Graph Element
+
+Use the Graph Element to draw points, lines, circles, rectangles using ***your***  coordinate systems rather than the underlying graphics coordinates.
+
+In this example we're defining our graph to be from -100, -100 to +100,+100.  That means that zero is in the middle of the drawing.  You define this graph description in your call to Graph.
+
+![graph element](https://user-images.githubusercontent.com/13696193/45860701-a8a3f080-bd36-11e8-9649-ada5890cdc14.jpg)
+
+
+    import math
+    import PySimpleGUI as sg
+
+    layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-100,-100), graph_top_right=(100,100), background_color='white', key='graph')],]
+
+    form = sg.FlexForm('Graph of Sine Function').Layout(layout)
+    form.Finalize()
+    graph = form.FindElement('graph')
+
+    for x in range(-100,100):
+        y = math.sin(x/20)*50
+      graph.DrawPoint((x,y))
+
+    button, values = form.Read()
