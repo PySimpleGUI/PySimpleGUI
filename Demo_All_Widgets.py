@@ -3,18 +3,24 @@ import PySimpleGUI as sg
 
 sg.ChangeLookAndFeel('GreenTan')
 
-form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False)
 
+# ------ Menu Definition ------ #
+menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],
+            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+            ['Help', 'About...'], ]
+
+
+# ------ Column Definition ------ #
 column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
 
 layout = [
+    [sg.Menu(menu_def, tearoff=True)],
     [sg.Text('All graphic widgets in one form!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
     [sg.Text('Here is some text.... and a place to enter text')],
     [sg.InputText('This is my text')],
-
     [sg.Frame(layout=[
     [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],
     [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN)],
@@ -36,8 +42,14 @@ layout = [
     [sg.Submit(), sg.Cancel()]
 ]
 
-button, values = form.LayoutAndRead(layout)
 
-sg.PopupAutoClose('Title', 'The results of the form.', 'The button clicked was "{}"'.format(button), 'The values are', values, auto_close_duration=1)
+form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
+
+button, values = form.Read()
+
+sg.Popup('Title',
+         'The results of the form.',
+         'The button clicked was "{}"'.format(button),
+         'The values are', values)
 
 
