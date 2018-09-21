@@ -931,7 +931,7 @@ class TKOutput(tk.Frame):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class Output(Element):
-    def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None):
+    def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None, key=None):
         '''
         Output Element - reroutes stdout, stderr to this window
         :param size: Size of field in characters
@@ -941,7 +941,7 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_OUTPUT,  size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_OUTPUT,  size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
 
     def __del__(self):
         try:
@@ -1490,7 +1490,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color = None, size=(None, None), pad=None, scrollable=False):
+    def __init__(self, layout, background_color = None, size=(None, None), pad=None, scrollable=False, key=None):
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -1505,7 +1505,7 @@ class Column(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key)
         return
 
     def AddRow(self, *args):
