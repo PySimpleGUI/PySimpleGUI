@@ -876,7 +876,7 @@ layout = [[sg.Text('Matplotlib Plot Test', font=('current 18'))],
           ]
 
 # create the form and show it without the plot
-form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
+form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', grab_anywhere=False)
 form.Layout(layout)
 
 while True:
