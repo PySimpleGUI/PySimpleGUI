@@ -761,7 +761,7 @@ class Multiline(Element):
             try:
                 if not append:
                     self.TKText.delete('1.0', tk.END)
-                self.TKText.insert(1.0, value)
+                self.TKText.insert(tk.END, value)
             except: pass
             self.DefaultText = value
         if self.Autoscroll:
@@ -993,13 +993,11 @@ class Button(Element):
 
     # Realtime button release callback
     def ButtonReleaseCallBack(self, parm):
-        r, c = self.Position
         self.LastButtonClickedWasRealtime = False
         self.ParentForm.LastButtonClicked = None
 
     # Realtime button callback
     def ButtonPressCallBack(self, parm):
-        r, c = self.Position
         self.ParentForm.LastButtonClickedWasRealtime = True
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
@@ -1009,6 +1007,7 @@ class Button(Element):
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
         global _my_windows
+        # print(f'Parent = {self.ParentForm}   Position = {self.Position}')
         # Buttons modify targets or return from the form
         # If modifying target, get the element object at the target and modify its StrVar
         target = self.Target
@@ -1062,7 +1061,6 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
-            r,c = self.Position
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = self.Key
             else:
