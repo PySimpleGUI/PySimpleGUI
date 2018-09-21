@@ -7,8 +7,11 @@ form = sg.FlexForm('Graph of Sine Function').Layout(layout)
 form.Finalize()
 graph = form.FindElement('graph')
 
+graph.DrawLine((-100,0), (100,0))
+graph.DrawLine((0,-100), (0,100))
+
 for x in range(-100,100):
     y = math.sin(x/20)*50
-    graph.DrawPoint((x,y))
+    graph.DrawPoint((x,y), color='red')
 
 button, values = form.Read()
