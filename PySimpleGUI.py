@@ -293,6 +293,7 @@ class Element():
         self.TKImage = None
 
         self.ParentForm=None
+        self.ParentContainer=None     # will be a Form, Column, or Frame element
         self.TextInputDefault = None
         self.Position = (0,0)       # Default position Row 0, Col 0
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
@@ -1023,7 +1024,7 @@ class Button(Element):
             if not isinstance(target, str):
                 if target[0] < 0:
                     target = [self.Position[0] + target[0], target[1]]
-                target_element = self.ParentForm._GetElementAtLocation(target)
+                target_element = self.ParentContainer._GetElementAtLocation(target)
             else:
                 target_element = self.ParentForm.FindElement(target)
             try:
@@ -1324,7 +1325,7 @@ class Frame(Element):
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
         self.Rows = []
-        self.ParentForm = None
+        # self.ParentForm = None
         self.TKFrame = None
         self.Title = title
         self.Relief = relief
@@ -1345,6 +1346,7 @@ class Frame(Element):
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
+            element.ParentContainer = self
             CurrentRow.append(element)
             if element.Key is not None:
                 self.UseDictionary = True
@@ -1355,14 +1357,19 @@ class Frame(Element):
         for row in rows:
             self.AddRow(*row)
 
+    def _GetElementAtLocation(self, location):
+        (row_num,col_num) = location
+        row = self.Rows[row_num]
+        element = row[col_num]
+        return element
+
+
     def __del__(self):
         for row in self.Rows:
             for element in row:
                 element.__del__()
-
-
-    def __del__(self):
         super().__del__()
+
 
 # ---------------------------------------------------------------------- #
 #                           Slider                                       #
@@ -1498,7 +1505,7 @@ class Column(Element):
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
         self.Rows = []
-        self.ParentForm = None
+        # self.ParentForm = None
         self.TKFrame = None
         self.Scrollable = scrollable
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -1516,6 +1523,7 @@ class Column(Element):
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
+            element.ParentContainer = self
             CurrentRow.append(element)
             if element.Key is not None:
                 self.UseDictionary = True
@@ -1525,6 +1533,13 @@ class Column(Element):
     def Layout(self, rows):
         for row in rows:
             self.AddRow(*row)
+
+    def _GetElementAtLocation(self, location):
+        (row_num,col_num) = location
+        row = self.Rows[row_num]
+        element = row[col_num]
+        return element
+
 
     def __del__(self):
         for row in self.Rows:
@@ -1863,6 +1878,7 @@ class FlexForm:
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
+            element.ParentContainer = self
             CurrentRow.append(element)
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
