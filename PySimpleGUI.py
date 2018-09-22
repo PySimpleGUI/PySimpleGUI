@@ -1084,6 +1084,8 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.IsTabbedForm:
+                self.ParentForm.UberParent.FormStayedOpen = True
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # this is a return type button so GET RESULTS and destroy window
             # if the form is tabbed, must collect all form's results and destroy all forms
@@ -2147,6 +2149,7 @@ class UberForm():
         self.FormReturnValues = []
         self.TKroot = None
         self.TKrootDestroyed = False
+        self.FormStayedOpen = False
 
     def AddForm(self, form):
         self.FormList.append(form)
@@ -3131,6 +3134,8 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
     except:
         pass
 
+    _my_windows.Increment()
+
     if not len(args):
         print('******************* SHOW TABBED FORMS ERROR .... no arguments')
         return
@@ -3184,6 +3189,14 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
         pass
     root.mainloop()
 
+    if uber.FormStayedOpen:
+        FormReturnValues = []
+        for form in uber.FormList:
+            BuildResults(form, False, form)
+            FormReturnValues.append(form.ReturnValues)
+        uber.FormReturnValues = FormReturnValues
+    # if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
+    #     return BuildResults(self, False, self)
     if id: root.after_cancel(id)
     uber.TKrootDestroyed = True
     return uber.FormReturnValues
