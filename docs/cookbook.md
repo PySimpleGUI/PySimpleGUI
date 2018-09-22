@@ -575,9 +575,6 @@ This simple program keep a form open, taking input values until the user termina
 
     import PySimpleGUI as sg
 
-    form = sg.FlexForm('Math')
-
-
     layout = [ [sg.Txt('Enter values to calculate')],
                [sg.In(size=(8,1), key='numerator')],
                [sg.Txt('_'  * 10)],
@@ -585,7 +582,7 @@ This simple program keep a form open, taking input values until the user termina
                [sg.Txt('', size=(8,1), key='output')  ],
                [sg.ReadButton('Calculate', bind_return_key=True)]]
 
-    form.Layout(layout)
+    form = sg.FlexForm('Math').Layout(layout)
 
     while True:
         button, values = form.Read()
@@ -612,6 +609,8 @@ The Canvas Element is one of the few tkinter objects that are directly accessibl
     tkcanvas = can.TKCanvas
     tkcanvas.create_oval(50, 50, 100, 100)
 
+While it's fun to scribble on a Canvas Widget, try Graph Element makes it a downright pleasant experience.  You do not have to worry about the tkinter coordinate system and can instead work in your own coordinate system.
+
 
 ![canvas](https://user-images.githubusercontent.com/13696193/44632429-5266ac00-a948-11e8-9ee0-664103c40178.jpg)
 
@@ -634,10 +633,49 @@ The Canvas Element is one of the few tkinter objects that are directly accessibl
         button, values = form.Read()
         if button is None:
             break
-     if button == 'Blue':
+        if button == 'Blue':
             canvas.TKCanvas.itemconfig(cir, fill="Blue")
         elif button == 'Red':
             canvas.TKCanvas.itemconfig(cir, fill="Red")
+
+## Graph Element - drawing circle, rectangle, etc, objects
+
+Just like you can draw on a tkinter widget, you can also draw on a Graph Element.  Graph Elements are easier on the programmer as you get to work in your own coordinate system.
+
+![graph recipe](https://user-images.githubusercontent.com/13696193/45920640-751bb000-be75-11e8-9530-45b71cbae07d.jpg)
+
+
+    import PySimpleGUI as sg
+
+    layout = [
+               [sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0,0), graph_top_right=(400, 400), background_color='red', key='graph')],
+               [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue'), sg.ReadFormButton('Move')]
+               ]
+
+    form = sg.FlexForm('Graph test')
+    form.Layout(layout)
+    form.Finalize()
+
+    graph = form.FindElement('graph')
+    circle = graph.DrawCircle((75,75), 25, fill_color='black',line_color='white')
+    point = graph.DrawPoint((75,75), 10, color='green')
+    oval = graph.DrawOval((25,300), (100,280), fill_color='purple', line_color='purple'  )
+    rectangle = graph.DrawRectangle((25,300), (100,280), line_color='purple'  )
+    line = graph.DrawLine((0,0), (100,100))
+
+    while True:
+        button, values = form.Read()
+        if button is None:
+            break
+        if button is 'Blue':
+            graph.TKCanvas.itemconfig(circle, fill = "Blue")
+        elif button is 'Red':
+            graph.TKCanvas.itemconfig(circle, fill = "Red")
+        elif button is 'Move':
+            graph.MoveFigure(point, 10,10)
+            graph.MoveFigure(circle, 10,10)
+            graph.MoveFigure(oval, 10,10)
+            graph.MoveFigure(rectangle, 10,10)
 
 
 ## Keypad Touchscreen Entry - Input Element Update
@@ -675,25 +713,24 @@ There are a number of features used in this Recipe including:
               [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],
               ]
 
-    form = sg.FlexForm('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False)
-    form.Layout(layout)
+    form = sg.FlexForm('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False).Layout(layout)
 
     # Loop forever reading the form's values, updating the Input field
     keys_entered = ''
     while True:
         button, values = form.Read()  # read the form
-      if button is None:  # if the X button clicked, just exit
-      break
-     if button == 'Clear':  # clear keys if clear button
-      keys_entered = ''
-      elif button in '1234567890':
-            keys_entered = values['input']  # get what's been entered so far
-      keys_entered += button  # add the new digit
-      elif button == 'Submit':
-            keys_entered = values['input']
-            form.FindElement('out').Update(keys_entered)  # output the final string
+        if button is None:  # if the X button clicked, just exit
+            break
+        if button == 'Clear':  # clear keys if clear button
+           keys_entered = ''
+        elif button in '1234567890':
+           keys_entered = values['input']  # get what's been entered so far
+           keys_entered += button  # add the new digit
+        elif button == 'Submit':
+           keys_entered = values['input']
+           form.FindElement('out').Update(keys_entered)  # output the final string
 
-      form.FindElement('input').Update(keys_entered)  # change the form to reflect current key string
+        form.FindElement('input').Update(keys_entered)  # change the form to reflect current key string
 
 ## Animated Matplotlib Graph
 
@@ -711,124 +748,51 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
     import tkinter as Tk
 
 
-    def main():
-        fig = Figure()
+    fig = Figure()
 
-        ax = fig.add_subplot(111)
-        ax.set_xlabel("X axis")
-        ax.set_ylabel("Y axis")
+    ax = fig.add_subplot(111)
+    ax.set_xlabel("X axis")
+    ax.set_ylabel("Y axis")
+    ax.grid()
+
+    layout = [[g.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
+              [g.Canvas(size=(640, 480), key='canvas')],
+              [g.ReadButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+
+    # create the form and show it without the plot
+
+
+    form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)
+    form.Finalize()     # needed to access the canvas element prior to reading the form
+
+    canvas_elem = form.FindElement('canvas')
+
+    graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
+    canvas = canvas_elem.TKCanvas
+
+    dpts = [randint(0, 10) for x in range(10000)]
+    # Our event loop
+    for i in range(len(dpts)):
+        button, values = form.ReadNonBlocking()
+        if button == 'Exit'  or values is None:
+            exit(69)
+
+        ax.cla()
         ax.grid()
 
-        layout = [[g.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
-                  [g.Canvas(size=(640, 480), key='canvas')],
-                  [g.ReadButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+        ax.plot(range(20), dpts[i:i + 20], color='purple')
+        graph.draw()
+        figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
+        figure_w, figure_h = int(figure_w), int(figure_h)
+        photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
 
-        # create the form and show it without the plot
-      form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
-        form.Layout(layout)
-        form.ReadNonBlocking()
+        canvas.create_image(640 / 2, 480 / 2, image=photo)
 
-        canvas_elem = form.FindElement('canvas')
+        figure_canvas_agg = FigureCanvasAgg(fig)
+        figure_canvas_agg.draw()
 
-        graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
-        canvas = canvas_elem.TKCanvas
+        tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
 
-        dpts = [randint(0, 10) for x in range(10000)]
-        for i in range(len(dpts)):
-            button, values = form.ReadNonBlocking()
-            if button == 'Exit'  or values is None:
-                exit(69)
-
-            ax.cla()
-            ax.grid()
-
-            ax.plot(range(20), dpts[i:i + 20], color='purple')
-            graph.draw()
-            figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
-            figure_w, figure_h = int(figure_w), int(figure_h)
-            photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
-
-            canvas.create_image(640 / 2, 480 / 2, image=photo)
-
-            figure_canvas_agg = FigureCanvasAgg(fig)
-            figure_canvas_agg.draw()
-
-            tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-            # time.sleep(.1)
-
-    if __name__ == '__main__':
-        main()
-
-## Tables
-
-While there is no official support for "Tables" (e.g. there is no Table Element), it is possible to display information in a tabular way.  This only works for smaller tables because there is no way to scroll a window or a column element.  Until scrollable columns are implemented there is little use in creating  a Table Element.
-
-This Recipe contains a number of concepts beyond just tables. It has menus, and 'realtime' keyboard input.  Working with large numbers of elements takes time to layout.  Once laid out it should be OK.
-
-
-![table 2](https://user-images.githubusercontent.com/13696193/45310830-5de3d680-b4f5-11e8-925a-7c2a7b8b1922.jpg)
-
-
-
-    import PySimpleGUI as sg
-
-    menu_def = [['File', ['Open', 'Save', 'Exit']],
-                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
-                ['Help', 'About...'],]
-
-    sg.SetOptions(element_padding=(0,0))
-    layout = [ [sg.Menu(menu_def)],
-               [sg.T('Table Using Combos and Input Elements', font='Any 18')],
-              [sg.T('Row, Cal to change'),
-               sg.In(key='inputrow', justification='right', size=(8,1), pad=(1,1), do_not_clear=True),
-               sg.In(key='inputcol', size=(8,1), pad=(1,1), justification='right', do_not_clear=True),
-               sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)]]
-
-    for i in range(20):
-        inputs = [sg.In(size=(18, 1), pad=(1, 1), justification='right', key=(i,j), do_not_clear=True) for j in range(10)]
-        line = [sg.Combo(('Customer ID', 'Customer Name', 'Customer Info'))]
-        line.append(inputs)
-        layout.append(inputs)
-
-    form = sg.FlexForm('Table', return_keyboard_events=True, grab_anywhere=False)
-    form.Layout(layout)
-
-    while True:
-        button, values = form.Read()
-        if button is None:
-            break
-     if button == 'Open':
-            filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
-            if filename is not None:
-                with open(filename, "r") as infile:
-                    reader = csv.reader(infile)
-                    # first_row = next(reader, None)  # skip the headers
-      data = list(reader)  # read everything else into a list of rows
-      sg.Print(data)
-                for i, row in enumerate(data):
-                    for j, item in enumerate(row):
-                        print(i,j, item)
-                        # form.FindElement(key=(i,j)).Update(item)
-      location = (i,j)
-                        try:
-                            # location = (int(values['inputrow']), int(values['inputcol']))
-      target_element = form.FindElement(location)
-                            new_value = item
-                            # new_value = values['value']
-      if target_element is not None and new_value != '':
-                                target_element.Update(new_value)
-                        except:
-                            pass
-     if button == 'Exit':
-            break
-     try:
-            location = (int(values['inputrow']), int(values['inputcol']))
-            target_element = form.FindElement(location)
-            new_value = values['value']
-            if target_element is not None and new_value != '':
-                target_element.Update(new_value)
-        except:
-            pass
 
 
 ## Tight Layout with Button States
@@ -855,43 +819,49 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User 2'), size=(20,1)), sg.T('0', size=(8,1))],
               [sg.T('Customer:', pad=((3,0),0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20,1)), sg.T('1', size=(8,1))],
               [sg.T('Notes:', pad=((3,0),0)), sg.In(size=(44,1), background_color='white', text_color='black')],
-              [sg.ReadButton('Start', button_color=('white', 'black'), key='start'),
-               sg.ReadButton('Stop', button_color=('gray34', 'black'), key='stop'),
-               sg.ReadButton('Reset', button_color=('gray', 'firebrick3'), key='reset'),
-               sg.ReadButton('Submit', button_color=('gray34', 'springgreen4'), key='submit')]
+              [sg.ReadFormButton('Start', button_color=('white', 'black'), key='Start'),
+               sg.ReadFormButton('Stop', button_color=('white', 'black'), key='Stop'),
+               sg.ReadFormButton('Reset', button_color=('white', 'firebrick3'), key='Reset'),
+               sg.ReadFormButton('Submit', button_color=('white', 'springgreen4'), key='Submit')]
               ]
 
     form = sg.FlexForm("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
                        default_button_element_size=(12,1))
     form.Layout(layout)
+    form.Finalize()
+    form.FindElement('Stop').Update(disabled=True)
+    form.FindElement('Reset').Update(disabled=True)
+    form.FindElement('Submit').Update(disabled=True)
     recording = have_data = False
     while True:
         button, values = form.Read()
+        print(button)
         if button is None:
             exit(69)
-        if button ==  'Start':
-            form.FindElement('start').Update(button_color=('gray34','black'))
-            form.FindElement('stop').Update(button_color=('white', 'black'))
-            form.FindElement('reset').Update(button_color=('white', 'firebrick3'))
+        if button is 'Start':
+            form.FindElement('Start').Update(disabled=True)
+            form.FindElement('Stop').Update(disabled=False)
+            form.FindElement('Reset').Update(disabled=False)
+            form.FindElement('Submit').Update(disabled=True)
             recording = True
-     elif button ==  'Stop'  and recording:
-            form.FindElement('stop').Update(button_color=('gray34','black'))
-            form.FindElement('start').Update(button_color=('white', 'black'))
-            form.FindElement('submit').Update(button_color=('white', 'springgreen4'))
+         elif button is 'Stop'  and recording:
+            form.FindElement('Stop').Update(disabled=True)
+            form.FindElement('Start').Update(disabled=False)
+            form.FindElement('Submit').Update(disabled=False)
             recording = False
-      have_data = True
-     elif button ==  'Reset':
-            form.FindElement('stop').Update(button_color=('gray34','black'))
-            form.FindElement('start').Update(button_color=('white', 'black'))
-            form.FindElement('submit').Update(button_color=('gray34', 'springgreen4'))
-            form.FindElement('reset').Update(button_color=('gray34', 'firebrick3'))
+            have_data = True
+         elif button is 'Reset':
+            form.FindElement('Stop').Update(disabled=True)
+            form.FindElement('Start').Update(disabled=False)
+            form.FindElement('Submit').Update(disabled=True)
+            form.FindElement('Reset').Update(disabled=False)
             recording = False
-      have_data = False
-     elif button == 'Submit'  and have_data:
-            form.FindElement('stop').Update(button_color=('gray34','black'))
-            form.FindElement('start').Update(button_color=('white', 'black'))
-            form.FindElement('submit').Update(button_color=('gray34', 'springgreen4'))
-            form.FindElement('reset').Update(button_color=('gray34', 'firebrick3'))
+            have_data = False
+         elif button is 'Submit'  and have_data:
+            form.FindElement('Stop').Update(disabled=True)
+            form.FindElement('Start').Update(disabled=False)
+            form.FindElement('Submit').Update(disabled=True)
+            form.FindElement('Reset').Update(disabled=False)
             recording = False
 
 ## Password Protection For Scripts
@@ -924,8 +894,8 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
                   ]
 
         form = sg.FlexForm('SHA Generator', auto_size_text=False, default_element_size=(10,1),
-                           text_justification='r', return_keyboard_events=True, grab_anywhere=False)
-        form.Layout(layout)
+                           text_justification='r', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
+
 
         while True:
             button, values = form.Read()
@@ -1020,9 +990,7 @@ You can easily change colors to match your background by changing a couple of pa
                     sg.Button('EXIT', button_color=('white','firebrick3'))],
                     [sg.T('', text_color='white', size=(50,1), key='output')]]
 
-        form = sg.FlexForm('Floating Toolbar', no_titlebar=True, keep_on_top=True)
-
-        form.Layout(layout)
+        form = sg.FlexForm('Floating Toolbar', no_titlebar=True, keep_on_top=True).Layout(layout)
 
         # ---===--- Loop taking in user input (buttons) --- #
         while True:
@@ -1092,8 +1060,8 @@ Much of the code is handling the button states in a fancy way.  It could be much
                   sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
                   sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
-    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
-    form.Layout(form_rows)
+    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
+
 
     # ----------------  main loop  ----------------
     current_time = 0
@@ -1156,8 +1124,8 @@ The spinner changes the number of seconds between reads.  Note that you will get
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
                  [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
-    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
-    form.Layout(form_rows)
+    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(form_rows)
+
 
     # ----------------  main loop  ----------------
     while (True):
@@ -1169,7 +1137,7 @@ The spinner changes the number of seconds between reads.  Note that you will get
             break
       try:
             interval = int(values['spin'])
-        except:
+      except:
             interval = 1
 
       cpu_percent = psutil.cpu_percent(interval=interval)
@@ -1193,35 +1161,35 @@ If you double click the dashed line at the top of the list of choices, that menu
 ![tear off](https://user-images.githubusercontent.com/13696193/45307668-9aabcf80-b4ed-11e8-9b2b-8564d4bf82a8.jpg)
 
 
+
     import PySimpleGUI as sg
 
     sg.ChangeLookAndFeel('LightGreen')
     sg.SetOptions(element_padding=(0, 0))
 
     # ------ Menu Definition ------ #
-    menu_def = [['File', ['Open', 'Save',]],
-                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
-                ['Help', 'About...'],]
+    menu_def = [['File', ['Open', 'Save', 'Exit'  ]],
+                ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['Help', 'About...'], ]
 
     # ------ GUI Defintion ------ #
     layout = [
-            [sg.Menu(menu_def)],
-              [sg.Output(size=(60,20))]
-              ]
+        [sg.Menu(menu_def)],
+        [sg.Output(size=(60, 20))]
+             ]
 
     form = sg.FlexForm("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,
-                       default_button_element_size=(12, 1))
-    form.Layout(layout)
+                       default_button_element_size=(12, 1)).Layout(layout)
 
     # ------ Loop & Process button menu choices ------ #
     while True:
         button, values = form.Read()
         if button == None or button == 'Exit':
-            return
-      print('Button = ', button)
+            break
+        print('Button = ', button)
         # ------ Process menu choices ------ #
-      if button == 'About...':
-            sg.Popup('About this program','Version 1.0', 'PySimpleGUI rocks...')
+        if button == 'About...':
+            sg.Popup('About this program', 'Version 1.0', 'PySimpleGUI rocks...')
         elif button == 'Open':
             filename = sg.PopupGetFile('file to open', no_window=True)
             print(filename)
@@ -1253,4 +1221,5 @@ In this example we're defining our graph to be from -100, -100 to +100,+100.  Th
       graph.DrawPoint((x,y), color='red')
 
     button, values = form.Read()
+
 
