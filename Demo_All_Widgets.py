@@ -23,7 +23,7 @@ layout = [
     [sg.InputText('This is my text')],
     [sg.Frame(layout=[
     [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],
-    [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN)],
+    [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
     [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
      sg.Multiline(default_text='A second multi-line', size=(35, 3))],
     [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
@@ -39,7 +39,7 @@ layout = [
     [sg.Text('Choose A Folder', size=(35, 1))],
     [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
      sg.InputText('Default Folder'), sg.FolderBrowse()],
-    [sg.Submit(), sg.Cancel()]
+    [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]
 ]
 
 
