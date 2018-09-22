@@ -7,4 +7,4 @@ layout = [[sg.T('Calendar Test')],
 
 form = sg.FlexForm('Calendar', grab_anywhere=False)
 b,v = form.LayoutAndRead(layout)
-sg.Popup(v['date'])
+sg.Popup(v['input'])
