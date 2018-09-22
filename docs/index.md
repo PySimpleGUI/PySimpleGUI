@@ -171,7 +171,7 @@ Here is the code that produced the above screenshot.
              sg.FolderBrowse()],
             [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
              sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', 'green'))]
+            [sg.Submit(), sg.Cancel(), sg.Button('Customized', button_color=('white', 'green'))]
         ]
 
         button, values = form.LayoutAndRead(layout)
@@ -328,12 +328,14 @@ There are a number of Popup output calls, each with a slightly different look (e
 
 The list of Popup output functions are
 
-    Popup,PopupOk
+    Popup
+    PopupOk
     PopupYesNo
     PopupCancel
     PopupOkCancel
     PopupError
     PopupTimed, PopupAutoClose
+    PopupNoWait, PopupNonBlocking
 
 The trailing portion of the function name after Popup indicates what buttons are shown.  `PopupYesNo` shows a pair of button with Yes and No on them.   `PopupCancel` has a Cancel button, etc.
 
@@ -384,6 +386,16 @@ This call will create a scrolled box 80 characters wide and a height dependent u
 sg.PopupScrolled(my_text, size=(80, None))
 
 Note that the default max number of lines before scrolling happens is set to 50. At 50 lines the scrolling will begin.
+
+### PopupNoWait
+
+The Popup call PopupNoWait or PopupNonBlocking will create a popup window and then immediately return control back to you.  All other popup functions will block, waiting for the user to close the popup window.
+
+This function is very handy for when you're **debugging** and want to display something as output but don't want to change the programs's overall timing by blocking.  Think of it like a `print` statement
+
+A word of ***caution***... Windows that are created after the NoWait Popup are "slaves" to the NoWait'd popup.  If you close the Popup, it will also lose the window the you created after the Popup.  A good rule of thumb is to leave the popup open while you're interacting with the rest of your program until you understand what happens when you close the NoWaitPopup.
+
+
 
 ### Popup Input
 
@@ -570,55 +582,75 @@ Read on for detailed instructions on the calls that show the form and return you
 
 
 # Copy these design patterns!
-## Pattern 1 - With Context Manager
+
+All of your PySimpleGUI programs will utilize one of these 3 design patterns depending on the type of form you're implementing.
 
 
-    with sg.FlexForm('SHA-1 & 256 Hash') as form:
-        form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
-                     [sg.InputText(), sg.FileBrowse()],
-                     [sg.Submit(), sg.Cancel()]]
-        button, (source_filename,) = form.LayoutAndRead(form_rows)
+## Pattern 1 - Single read forms
 
-## Pattern 2 - No Context Manager
+This is the most basic design pattern.  Use this for forms that are shown to the user 1 time.  The input values are gathered and returned to the program
 
-
-    form = sg.FlexForm('SHA-1 & 256 Hash')
     form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                  [sg.InputText(), sg.FileBrowse()],
                  [sg.Submit(), sg.Cancel()]]
+
+    form = sg.FlexForm('SHA-1 & 256 Hash')
+
     button, (source_filename,) = form.LayoutAndRead(form_rows)
 
  ----
 
-## Pattern 3 - Short Form
+## Pattern 2 - Single-read form "chained"
 
+Python has a ***beautiful*** way of compacting code known as "chaining".  You take the output from one function and feed it as input to the next.  Notice in the first example how a form is first obtained by calling FlexForm and then that form is then read.  It's possible to combine the creation of the form with the read.  This design pattern does exactly that, chain together the form creation and the form reading.
 
     form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                  [sg.InputText(), sg.FileBrowse()],
                  [sg.Submit(), sg.Cancel()]]
+
     button, (source_filename,) = sg.FlexForm('SHA-1 & 256 Hash').LayoutAndRead(form_rows)
 
 
+## Pattern 3 - Persistent form (multiple reads)
 
-These 3 design patterns both produce this custom form:
+Some of the more advanced programs operate with the form remaining visible on the screen.  Input values are collected, but rather than closing the form, it is kept visible acting as a way to both output information to the user and gather input data.
 
-![snap0134](https://user-images.githubusercontent.com/13696193/43162410-e7775466-8f58-11e8-8d6a-da4772c00dd8.jpg)
+This is done by splitting the LayoutAndRead call apart into a Layout call and a Read call.  Note how chaining is again used.  In this case a form is created by calling FlexForm which is then passed on to the Layout method.  The Layout method returns the form value so that it can be stored and used later in the program to Read the form.
 
-When you're code leaves forms open or you show many forms, then it's important to use the "with" context manager so that resources are freed as quickly as possible.  PySimpleGUI uses `tkinter`.  `tkinter` is very picky about who releases objects and when.  The `with` takes care of disposing of everything properly for you.
+    import PySimpleGUI as sg
 
-The second design pattern is not context manager based.  If you are struggling with an unknown error, try modifying the code to run without a context manager.   To do so, you simple remove the with, stick the form on the front of that statement, and un-indent the with-block code.
+    layout = [[sg.Text('Persistent form')],
+              [sg.RButton('Turn LED On')],
+              [sg.RButton('Turn LED Off')],
+              [sg.Exit()]]
 
-The third is the 'compact form'.  It compacts down into 2 lines of code.  One line is  your form definition. The next is the call that shows the form and returns the values.  You can use this pattern for simple, short programs where resource allocation isn't an issue.
+    form = sg.FlexForm('Raspberry Pi GUI').Layout(layout)
 
-You will use these design patterns or code templates for all of your "normal" (blocking) types of input forms.  Copy it and modify it to suit your needs.  This is the quickest way to get your code up and running with PySimpleGUI.  This is the most basic / normal of the design patterns.
+    while True:
+        button, values = form.Read()
+        if button is None:
+            break
+
 
 ### How GUI Programming in Python Should Look?  At least for beginners
 
 Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list or dictionary?  PySimpleGUI set out to be a Pythonic solution to the GUI problem.  Whether it achieved this goal is debatable, but it was an attempt just the same.
 
-The key to custom forms in PySimpleGUI is to view forms as ROWS of Widgets (Elements).  Each row is specified as a list of these Elements.  Put the rows together and you've got a form or window.
+The key to custom forms in PySimpleGUI is to view forms as ROWS of  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a form or window.
 
-Let's look at this one.
+ Let's dissect this little program
+
+    import PySimpleGUI as sg
+
+    layout = [[sg.Text('Rename files or folders')],
+              [sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+              [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+              [sg.Submit(), sg.Cancel()]]
+
+    form = sg.FlexForm('Rename Files or Folders')
+
+    button, (folder_path, file_path) = form.LayoutAndRead(layout)
+
 
 
 ![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
@@ -640,7 +672,7 @@ See how the source code mirrors the layout?  You simply make lists for each row,
 
 And what about those return values?  Most people simply want to show a form, get the input values and do something with them.  So why break up the code into button callbacks, etc, when I simply want my form's input values to be given to me.
 
-The same "row" concept applies to return values.  The form is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
+For return values the form is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
 
 In our example form, there are 2 fields, so the return values from this form will be a list with 2 values in it.
 
@@ -648,65 +680,7 @@ In our example form, there are 2 fields, so the return values from this form wil
 
 In the statement that shows and reads the form, the two input fields are directly assigned to the caller's variables `folder_path` and `file_path`, ready to use.  No parsing no callbacks.
 
-Isn't this what almost every Python programmer looking for a GUI wants??  Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of tkinter code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  I chose 4.
-
-### The Auto-Packer
-
-Once you've laid out your elements into, it's the job of the Auto-Packer to place your elements into a window frame.
-
-The layout of custom GUIs is made trivial by the use of the Auto-Packer.  GUI frameworks often use a grid system and sometimes have a "pack" function that's used to place widgets into a window.  It's almost always a confusing exercise to use them.
-
-PySimpleGUI uses a "row by row" approach to building GUIs.  When you were to sketch your GUI out on a sheet of paper and then draw horizontal lines across the page under each widget then you would have a several "rows" of widgets.
-
-For each row in your GUI, you will have a list of elements.  In Python this list is a simple Python list.  An entire GUI window is a list of rows, one after another.
-
-This is how your GUI is created, one row at a time, with one row stacked on top of another.  This visual form of coding makes GUI creation go so much quicker.
-
-    layout = [ [ Row 1 Elements],
-               [ Row 2 Elements] ]
-
-
-### Laying out your form
-
-Your form is a 2 dimensional list in Python.  The first dimension are rows, the second is a list of Elements for each row.  The first thing you want to do is layout your form on paper.
-
-    layout = [ [row 1],
-               [row 2],
-               [row 3] ]
-
-Simple enough... a list of lists.
-A row is a list of Elements.  For example this could be a row with a couple of elements on it.
-
-    [ Input, Button]
-
-Turning back to our example.  This GUI roughly looks like this:
-
-    layout = [ [Text],
-               [InputText, FileBrowse]
-               [Submit, Cancel] ]
-
-  Now let's put it all together into an entire program.
-
-
-### Line by line explanation
-
-Going through each line of code in the above form will help explain how to use this design patter.  Copy, modify and run it!
-
-    with sg.FlexForm('SHA-1 & 256 Hash', auto_size_text=True) as form:
-This creates a new form, storing it in the variable `form`.
-
-    form_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
-The next few rows of code lay out the rows of elements in the window to be displayed.  The variable `form_rows` holds our entire GUI window.   The first row of this form has a Text element.  These simply display text on the form.
-
-    [sg.InputText(), sg.FileBrowse()],
-Now we're on the second row of the form.  On this row there are 2 elements.  The first is an `Input` field.  It's a place the user can enter `strings`.  The second element is a `File Browse Button`.  A file or folder browse button will always fill in the text field to it's left unless otherwise specified.  In this example, the File Browse Button will interact with the `InputText` field to its left.
-
-   [sg.Submit(), sg.Cancel()]]
-
-The last line of the `form_rows` variable assignment contains a Submit and a Cancel Button.  These are buttons that will cause a form to return its value to the caller.
-
-    button, (source_filename, ) = form.LayoutAndRead(form_rows)
-This is the code that **displays** the form, collects the information and returns the data collected.  In this example we have a button return code and only 1 input field.  The result of the form is stored directly into the variable we wish to work with.
+Isn't this what almost every Python programmer looking for a GUI wants??  Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of GUI code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  I chose 4.
 
 
 ## Return values
@@ -744,19 +718,30 @@ If you have a SINGLE value being returned, it is written this way:
 
 ### Return values as a dictionary
 
-If you wish to receive the return values as a dictionary rather than a simple list, then you'll have to one thing...
+For forms longer than 3 or 4 fields you will want to use a dictionary to help you organize your return values. In almost all (if not all) of the demo programs you'll find the return values being passed as a dictionary.  It is not a difficult concept to grasp, the syntax is easy to understand, and it makes for very readable code.
+
+The most common form read statement you'll encounter looks something like this:
+
+    button, values = form.LayoutAndRead(layout)
+
+or
+
+    button, values = form.Read()
+
+All of your return values will be stored in the variable `values`.   When using the dictionary return values, the `values` variable is a dictionary.
+
+  To use a dictionary, you will need to:
  * Mark each input element you wish to be in the dictionary with the keyword `key`.
 
 If **any** element in the form has a `key`, then **all** of the return values are returned via a dictionary.  If some elements do not have a key, then they are numbered starting at zero.
 
-This sample program demonstrates these 2 steps as well as how to address the return values (e.g. `values['name']`)
-
+Let's take a look at your first dictionary-based form.
 
     import PySimpleGUI as sg
     form = sg.FlexForm('Simple data entry form')
     layout = [
               [sg.Text('Please enter your Name, Address, Phone')],
-              [sg.Text('Name', size=(15, 1)), sg.InputText('1')],
+              [sg.Text('Name', size=(15, 1)), sg.InputText('1', key='name')],
               [sg.Text('Address', size=(15, 1)), sg.InputText('2', key='address')],
               [sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='phone')],
               [sg.Submit(), sg.Cancel()]
@@ -764,14 +749,39 @@ This sample program demonstrates these 2 steps as well as how to address the ret
 
     button, values = form.LayoutAndRead(layout)
 
-    sg.Popup(button, values, values[0], values['address'], values['phone'])
+    sg.Popup(button, values, values['name'], values['address'], values['phone'])
 
+To get the value of an input field, you use whatever value used as the `key` value as the index value.  Thus to get the value of the name field, it is written as
+
+    values['name']
+
+You will find the key field used quite heavily in most PySimpleGUI forms unless the form is very simple.
+
+### Button Return Values
+
+The button value from a Read call will be one of 3 values:
+1. The Button's text
+2. The Button's key
+3. None
+
+If a button has a key set for it when it's created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the form returned anyway, the button value is None.
+
+None is returned when the user clicks the X to close a window.
+
+If your form has an event loop where it is read over and over, remember to give your user an "out".  You should always check for a None value and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:
+
+    while True:
+        button, values= form.Read()
+        if button is None or button == 'Quit':
+            break
 
 ## The Event Loop / Callback Functions
 
-All GUIs have a few things in common, one of them being an "event loop" of some sort.  If your program shows a single form, collects the data and then executes the primary code of the program then you likely don't need an event loop.  This simple scenarios are front-end GUIs where you call sg.GetFile for example and then call your program that does something with the file.
+All GUIs have one thing in common, an "event loop" or some kind. If your program shows a single form, collects the data and then executes the primary code of the program then you likely don't need an event loop.
 
-Event Loops are used in programs where the window stays open after button presses.  The program processes button clicks a loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.  Let's take a Pi demo program as an example.  This program shows a GUI window, gets button presses, and uses them to control some LEDs.  It loops, reading user input and doing something with it.
+Event Loops are used in programs where the window ***stays open*** after button presses.  The program processes button clicks and user input in a loop called the event  loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.
+
+Let's take a Pi demo program as an example.  This program shows a GUI window, gets button presses, and uses them to control some LEDs.  It loops, reading user input and doing something with it.
 
 This little program has a typical Event Loop
 
@@ -781,12 +791,11 @@ This little program has a typical Event Loop
 
     import PySimpleGUI as sg
     layout = [[sg.T('Raspberry Pi LEDs')],
-              [sg.ReadFormButton('Turn LED On')],
-              [sg.ReadFormButton('Turn LED Off')],
+              [sg.RButton('Turn LED On')],
+              [sg.RButton('Turn LED Off')],
               [sg.Exit()]]
 
-    form = sg.FlexForm('Raspberry Pi GUI', grab_anywhere=False)
-    form.Layout(layout)
+    form = sg.FlexForm('Raspberry Pi).Layout(layout)
 
     # ---- Event Loop ---- #
     while True:
@@ -807,48 +816,78 @@ This little program has a typical Event Loop
 
 In the Event Loop we are reading the form and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)
 
-The way buttons are presented to the caller in PySimpleGUI is ***not*** how *most* GUI frameworks handle button clicks.  Most GUI frameworks, including tkinter, use ***callback*** functions.  A function you define would be called when a button is clicked.  This requires you to write code where data is shared between these callback functions.  There is a lot more communications that have to happen between parts of your program.
+The way buttons are presented to the caller in PySimpleGUI is ***not*** how *most* GUI frameworks handle button clicks.  Most GUI frameworks, including tkinter, use ***callback*** functions, a function you define would be called when a button is clicked.  This requires you to write code where data is shared.
 
-One of the larger hurdles for beginners to GUI programming are these callback functions.  PySimpleGUI was specifically designed in a way that callbacks would not be required.  There is no coordination between one function and another required.  You simple read your button click and take appropriate action.
+There is a more communications that have to happen between parts of your program when using callbacks.  Callbacks can break your program's logic apart and scatter it.  One of the larger hurdles for beginners to GUI programming are these callback functions.
 
-Whether or not this is a "proper" design for GUI programs can be debated.  It's not a terrible tradeoff to run your own event loop and having a functioning GUI application versus one that maybe never gets written because callback functions were too much to grasp.
+PySimpleGUI was specifically designed in a way that callbacks would not be required.  There is no coordination between one function and another required.  You simply read your button click and take appropriate action at the same location as when you .
+
+Whether or not this is a "proper" design for GUI programs can be debated.  It's not a terrible trade-off to run your own event loop and having a functioning GUI application versus one that maybe never gets written because callback functions were too much to grasp.
 
 ---
 
 ## All Widgets / Elements
+
 This code utilizes as many of the elements in one form as possible.
 
-     with sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
-        layout = [
-            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
-            [sg.Text('Here is some text.... and a place to enter text')],
-            [sg.InputText()],
-            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
-            [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
-            [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
-                         )],
-            [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
-             sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
-            [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
-            [sg.Text('_'  * 100, size=(70, 1))],
-            [sg.Text('Choose Source and Destination Folders', size=(35, 1))],
-            [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'), sg.FolderBrowse()],
-            [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
-             sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.SimpleButton('Customized', button_color=('white', 'green'))]
-             ]
+    import PySimpleGUI as sg
 
-         button, values = form.LayoutAndRead(layout)
+    sg.ChangeLookAndFeel('GreenTan')
+
+    # ------ Menu Definition ------ #
+    menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],
+                ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['Help', 'About...'], ]
+
+    # ------ Column Definition ------ #
+    column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
+               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+
+    layout = [
+        [sg.Menu(menu_def, tearoff=True)],
+        [sg.Text('All graphic widgets in one form!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+        [sg.Text('Here is some text.... and a place to enter text')],
+        [sg.InputText('This is my text')],
+        [sg.Frame(layout=[
+        [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],
+        [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
+        [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
+         sg.Multiline(default_text='A second multi-line', size=(35, 3))],
+        [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
+         sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
+        [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
+        [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
+         sg.Frame('Labelled Group',[[
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
+         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
+         sg.Column(column1, background_color='#F7F3EC')]])],
+        [sg.Text('_'  * 80)],
+        [sg.Text('Choose A Folder', size=(35, 1))],
+        [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
+         sg.InputText('Default Folder'), sg.FolderBrowse()],
+        [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]
+    ]
+
+
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
+
+    button, values = form.Read()
+
+    sg.Popup('Title',
+             'The results of the form.',
+             'The button clicked was "{}"'.format(button),
+             'The values are', values)
 
 This is a somewhat complex form with quite a bit of custom sizing to make things line up well.  This is code you only have to write once.  When looking at the code, remember that what you're seeing is a list of lists.  Each row contains a list of Graphical Elements that are used to create the form.
 
-![everything example](https://user-images.githubusercontent.com/13696193/43097412-0a4652aa-8e8a-11e8-8e09-939484e3c568.jpg)
+   ![everything bagel](https://user-images.githubusercontent.com/13696193/45914128-87163800-be0e-11e8-9a83-7ee5960e88b9.jpg)
 
 Clicking the Submit button caused the form call to return.  The call to Popup resulted in this dialog box.
-![results 2](https://user-images.githubusercontent.com/13696193/43097502-44e3ed32-8e8a-11e8-9a51-2b8af0b1a682.jpg)
+
+![everything bagel reseults](https://user-images.githubusercontent.com/13696193/45914129-87aece80-be0e-11e8-8aae-9a483a9ad4a6.jpg)
 
 
 **`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the form using something other than a button, then `button` will be `None`.
@@ -1217,6 +1256,9 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
 
 The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
 
+ListBoxes can cause a form to return from a Read call.  If the flag change_submits is set, then when a user makes a selection, the Read immediately returns.
+Another way ListBoxes can cause Reads to return is if the flag bind_return_key is set.  If True, then if the user presses the return key while an entry is selected, then the Read returns.  Also, if this flag is set, if the user double-clicks an entry it will return from the Read.
+
 #### Slider Element
 
 Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
@@ -1341,14 +1383,17 @@ An up/down spinner control.  The valid values are passed in as a list.
      text_color - color to use for the typed text
      key = Dictionary key to use for return values
 
-#### Button Element
+### Button Element
 
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a form, whether it be Submit or Cancel, one way or another a button is involved in all forms.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
 The Types of buttons include:
 * Folder Browse
 * File Browse
-* Close Form
+* Files Browse
+* File SaveAs
+* File Save
+* Close Form  (normal button)
 * Read Form
 * Realtime
 * Calendar Chooser
@@ -1365,25 +1410,68 @@ Calendar Chooser - Opens a graphical calendar to select a date.
 
 Color Chooser - Opens a color chooser dialog
 
-Read Form - This is an async form button that will read a snapshot of all of the input fields, but does not close the form after it's clicked.
+Read Form - This is a form button that will read a snapshot of all of the input fields, but does not close the form after it's clicked.
 
 Realtime - This is another async form button.  Normal button clicks occur after a button's click is released.  Realtime buttons report a click the entire time the button is held down.
 
-While it's possible to build forms using the Button Element directly, you should never need to do that.  There are pre-made buttons and shortcuts that will make life much easier.  The most basic Button element call to use is `SimpleButton`
+Most programs will use a combination of shortcut button calls (Submit, Cancel, etc), plain buttons that close the form, and ReadForm buttons that keep the window open but returns control back to the caller.
 
-    SimpleButton(text,
-			     image_filename=None,
-			     image_size=(None, None),
-			     image_subsample=None,
-			     border_width=None,
-			     bind_return_key=False,
-                 size=(None, None),
-                 auto_size_button=None,
-                 button_color=None,
-                 font=None,
-                 focus=False)
+Sometimes there are multiple names for the same function.  This is simply to make the job of the programmer quicker and easier.
 
-These Pre-made buttons are some of the most important elements of all because they are used so much.  If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub.  (hmmm Save already comes to mind). They include:
+The 3 primary forms of PySimpleGUI buttons and their names are:
+
+ 1. `Button` = `SimpleButton`
+ 2. `ReadFormButton` = `ReadButton` = `RFButton` = `RButton`
+ 3. `RealtimeButton`
+
+You will find the long-form in the older programs.
+
+The most basic Button element call to use is `Button`
+
+    Button(button_text=''
+           button_type=BUTTON_TYPE_CLOSES_WIN
+           target=(None, None)
+           tooltip=None
+           file_types=(("ALL Files", "*.*"),)
+           initial_folder=None
+           image_filename=None
+           image_size=(None, None)
+           image_subsample=None
+           border_width=None
+           size=(None, None)
+           auto_size_button=None
+           button_color=None
+           default_value = None
+           font=None
+           bind_return_key=False
+           focus=False
+           pad=None
+           key=None):
+
+Parameters
+
+    button_text - Text to be displayed on the button
+    button_type - You  should NOT be setting this directly
+    target - key or (row,col) target for the button
+    tooltip - tooltip text for the button
+    file_types - the filetypes that will be used to match files
+    initial_folder - starting path for folders and files
+    image_filename - image filename if there is a button image
+    image_size - size of button image in pixels
+    image_subsample - amount to reduce the size of the image
+    border_width - width of border around button in pixels
+    size - size in characters
+    auto_size_button - True if button size is determined by button text
+    button_color - (text color, backound color)
+    default_value - initial value for buttons that hold information
+    font - font to use for button text
+    bind_return_key - If True the return key will cause this button to fire
+    focus - if focus should be set to this button
+    pad - (x,y) padding in pixels for packing the button
+    key - key used for finding the element
+
+#### Pre-defined Buttons
+These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, set the button text to match the function name and set the parameters to commonly used values. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
 
     OK
     Ok
@@ -1393,9 +1481,11 @@ These Pre-made buttons are some of the most important elements of all because th
     No
     Exit
     Quit
+    Help
     Save
     SaveAs
     FileBrowse
+    FilesBrowse
     FileSaveAs
     FolderBrowse
 .
@@ -1405,11 +1495,21 @@ These Pre-made buttons are some of the most important elements of all because th
 
   #### Button targets
 
-The `FileBrowse`, `FolderBrowse`, `FileSaveAs` , `FilesSaveAs`, `CalendarButton`, `ColorChooserButton` buttons all fill-in values into another element located on the form.  The target can be a Text Element or an InputText Element.  The location of the element is specified by the `target` variable in the function call.  The Target is specified using a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
+The `FileBrowse`, `FolderBrowse`, `FileSaveAs` , `FilesSaveAs`, `CalendarButton`, `ColorChooserButton` buttons all fill-in values into another element located on the form.  The target can be a Text Element or an InputText Element.  The location of the element is specified by the `target` variable in the function call.
 
-The default value for `targe` is `(ThisRow, -1)`.   `ThisRow` is a special value that tells the GUI to use the same row as the button.  The Y-value of -1 means the field one value to the left of the button.  For a File or Folder Browse button, the field that it fills are generally to the left of the button is most cases.
+The Target comes in two forms.
+1. Key
+2. (row, column)
 
-If a value of `(None, None)` is chosen for the target, then the button itself will hold the information.  Later the button can be queried for the  value.
+Targets that are specified using a key will find its target element by using the target's key value.  This is the "preferred" method.
+
+If the Target is specified using (row, column) then it utilizes a grid system.  The rows in your GUI are numbered starting with 0. The target can be specified as a hard coded grid item or it can be relative to the button.
+
+The (row, col) targeting can only target elements that are in the same "container".  Containers are the FlexForm, Column and Frame Elements.  A File Browse button located inside of a Column is unable to target elements outside of that Column.
+
+The default value for `target` is `(ThisRow, -1)`.   `ThisRow` is a special value that tells the GUI to use the same row as the button.  The Y-value of -1 means the field one value to the left of the button.  For a File or Folder Browse button, the field that it fills are generally to the left of the button is most cases.    (ThisRow, -1) means the Element to the left of the button, on the same row.
+
+If a value of `(None, None)` is chosen for the target, then the button itself will hold the information.  Later the button can be queried for the  value by using the button's key.
 
 Let's examine this form as an example:
 
@@ -1428,9 +1528,17 @@ The code for the entire form could be:
               [sg.In()],
               [sg.FolderBrowse(target=(-1, 0)), sg.OK()]]
 
+or if using keys, then the code would be:
+
+    layout = [[sg.T('Source Folder')],
+              [sg.In(key='input')],
+              [sg.FolderBrowse(target='input'), sg.OK()]]
+
+See how much easier the key method is?
+
 **Save & Open Buttons**
 
-There are 3 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use.
+There are 3 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use. To open several files at once, use the `FilesBrowse` button.  It will create a list of files that are separated by ';'
 
 
 ![open](https://user-images.githubusercontent.com/13696193/45243804-2b529780-b2c3-11e8-90dc-6c9061db2a1e.jpg)
@@ -1457,23 +1565,23 @@ These buttons pop up a standard color chooser window.  The result is returned as
 
 
 **Custom Buttons**
-Not all buttons are created equal.  A button that closes a form is different that a button that returns from the form without closing it.  If you want to define your own button, you will generally do this with the Button Element `SimpleButton`, which closes the form when clicked.
+Not all buttons are created equal.  A button that closes a form is different that a button that returns from the form without closing it.  If you want to define your own button, you will generally do this with the Button Element `Button`, which closes the form when clicked.
 
-layout =  [[sg.SimpleButton('My Button')]]
+layout =  [[sg.Button('My Button')]]
 
 ![button](https://user-images.githubusercontent.com/13696193/44959862-b696ec00-aec3-11e8-9e88-4b9af0338a03.jpg)
 
-All buttons can have their text changed by changing the `button_text` variable in the button call.  It is this text that is returned when a form is read.  This text will be what tells you which button is called so make it unique.  Most of the convenience buttons (Submit, Cancel, Yes, etc) are all SimpleButtons. Some that are not are `FileBrowse` ,  `FolderBrowse`, `FileSaveAs`.  They clearly do not close the form. Instead they bring up a file or folder browser dialog box.
+All buttons can have their text changed by changing the `button_text` variable in the button call.  It is this text that is returned when a form is read.  This text will be what tells you which button is called so make it unique.  Most of the convenience buttons (Submit, Cancel, Yes, etc) are all Buttons. Some that are not are `FileBrowse` ,  `FolderBrowse`, `FileSaveAs`.  They clearly do not close the form. Instead they bring up a file or folder browser dialog box.
 
 **Button Images**
 Now this is an exciting feature not found in many simplified packages.... images on buttons!  You can make a pretty spiffy user interface with the help of a few button images.
 
 Your button images need to be in PNG or GIF format.  When you make a button with an image, set the button background to the same color as the background.  There's a button color TRANSPARENT_BUTTON that you can set your button color to in order for it to blend into the background.  Note that this value is currently the same as the color as the default system background on Windows.
 
-This example comes from the `Demo Media Player.py` example program.  Because it's a non-blocking button, it's defined as `ReadFormButton`.  You also put images on blocking buttons by using `SimpleButton`.
+This example comes from the `Demo Media Player.py` example program.  Because it's a non-blocking button, it's defined as `RButton`.  You also put images on blocking buttons by using `Button`.
 
 
-    sg.ReadFormButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
+    sg.RButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
                        image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0)
 
 Three parameters are used for button images.
@@ -1488,7 +1596,7 @@ Here's an example form made with button images.
 
 You'll find the source code in the file Demo Media Player.  Here is what the button calls look like to create media player form
 
-    sg.ReadFormButton('Pause', button_color=sg.TRANSPARENT_BUTTON,
+    sg.RButton('Pause', button_color=sg.TRANSPARENT_BUTTON,
                       image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0)
 
 This is one you'll have to experiment with at this point.  Not up for an exhaustive explanation.
@@ -1562,17 +1670,16 @@ Another way of using a Progress Meter with PySimpleGUI is to build a custom form
 
 ![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
 
-    # create the progress bar element
-    progress_bar = sg.ProgressBar(10000, orientation='h', size=(20,20))
+    import PySimpleGUI as sg
+
     # layout the form
     layout = [[sg.Text('A custom progress meter')],
-              [progress_bar],
+              [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progressbar')],
               [sg.Cancel()]]
 
     # create the form`
-    form = sg.FlexForm('Custom Progress Meter')
-    # display the form as a non-blocking form
-    form.LayoutAndRead(layout, non_blocking=True)
+    form = sg.FlexForm('Custom Progress Meter').Layout(layout)
+    progress_bar = form.FindElement('progressbar')
     # loop that would normally do something useful
     for i in range(10000):
         # check to see if the cancel button was clicked and exit loop if clicked
@@ -1580,9 +1687,9 @@ Another way of using a Progress Meter with PySimpleGUI is to build a custom form
         if button == 'Cancel'  or values == None:
             break
       # update bar with loop value +1 so that bar eventually reaches the maximum
-      progress_bar.UpdateBar(i+1)
+      progress_bar.UpdateBar(i + 1)
     # done with loop... need to destroy the window as it's still open
-    form.CloseNonBlockingForm()
+    form.CloseNonBlockingForm())
 
 
 #### Output
@@ -1593,22 +1700,27 @@ The Output Element is a re-direction of Stdout.  Anything "printed" will be disp
 Here's a complete solution for a chat-window using an Async form with an Output Element
 
     import PySimpleGUI as sg
-        # Blocking form that doesn't close
+
+    # Blocking form that doesn't close
     def ChatBot():
-        with sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
-            layout = [[(sg.Text('This is where standard out is being routed', size=[40, 1]))],
-                        [sg.Output(size=(80, 20))],
-                        [sg.Multiline(size=(70, 5), enter_submits=True), sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])), sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
-            # notice this is NOT the usual LayoutAndRead call because you don't yet want to read the form
-           # if you call LayoutAndRead from here, then you will miss the first button click
-           form.Layout(layout)
-            # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
-           while True:
-                button, value = form.Read()
-                if button == 'SEND':
-                    print(value)
-                else:
-                    break
+        layout = [[(sg.Text('This is where standard out is being routed', size=[40, 1]))],
+                  [sg.Output(size=(80, 20))],
+                  [sg.Multiline(size=(70, 5), enter_submits=True),
+                   sg.RButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])),
+                   sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
+
+      form = sg.FlexForm('Chat Window', default_element_size=(30, 2)).Layout(layout)
+
+        # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
+      while True:
+            button, value = form.Read()
+            if button == 'SEND':
+                print(value)
+            else:
+                break
+
+    ChatBot()
+
 -------------------
 ## Columns
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a form within a form.  And, yes, you can have a Column within a Column if you want.
@@ -1946,9 +2058,9 @@ Each lower level overrides the settings of the higher level.  Once settings have
 
 ## Persistent Forms (Window stays open after button click)
 
-There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking forms (see the next section).  The other way is to use buttons that 'read' the form instead of 'close' the form when clicked.  The typical buttons you find in forms, including the shortcut buttons, close the form.  These include OK, Cancel, Submit, etc.  The SimpleButton Element also closes the form.
+There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking forms (see the next section).  The other way is to use buttons that 'read' the form instead of 'close' the form when clicked.  The typical buttons you find in forms, including the shortcut buttons, close the form.  These include OK, Cancel, Submit, etc.  The Button Element also closes the form.
 
-The `ReadFormButton` Element creates a button that when clicked will return control to the user, but will leave the form open and visible.  This button is also used in Non-Blocking forms.  The difference is in which call is made to read the form.  The `Read` call will block, the `ReadNonBlocking` will not block.
+The `RButton` Element creates a button that when clicked will return control to the user, but will leave the form open and visible.  This button is also used in Non-Blocking forms.  The difference is in which call is made to read the form.  The `Read` call will block, the `ReadNonBlocking` will not block.
 
 
 
@@ -1979,13 +2091,6 @@ One example is you have an input field that changes as you press buttons on an o
 ![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)
 
 
-Another example, a slider or a spinner move changes the size of the text somewhere on the form.
-
-
-![snap0272](https://user-images.githubusercontent.com/13696193/45260249-ec4e4000-b3af-11e8-853b-9b29d0bf7797.jpg)
-
-A final example...  changing a text field as a user types into another field.
-
 
 
 ### Periodically Calling`ReadNonBlocking`
@@ -1999,6 +2104,9 @@ There are 2 methods of interacting with non-blocking forms.
  With asynchronous forms the form is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.ReadNonBlocking` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.
 
  #### Exiting a Non-Blocking Form
+
+It's important to always provide a "way out" for your user.  Make sure you have provided a button or some other mechanism to exit.  Also be sure to check for closed forms in your code.  It  is possible for a form to look closed, but continue running your event loop.
+
 Typically when reading a form you check `if Button is None` to determine if a form was closed.  With NonBlocking forms, buttons will be None unless a button or a key was returned.  The way you determine if a window was closed in a non-blocking form  is to check **both** the button and the values are None.  Since button is normally None, you only need to test for `value is None` in your code.
 
 The proper code to check if the user has exited the form will be a polling-loop that looks something like this:
@@ -2045,7 +2153,7 @@ See the sample code on the GitHub named Demo Media Player for another example of
     # Create the layout
     form_rows = [[sg.Text('Non-blocking GUI with updates')],
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), key='output')    ],
-                 [sg.SimpleButton('Quit')]]
+                 [sg.Button('Quit')]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
     form.LayoutAndRead(form_rows, non_blocking=True)
 
@@ -2071,6 +2179,71 @@ The new thing in this example is the call use of the Update method for the Text 
 
 Note the `else` statement on the for loop.  This is needed because we're about to exit the loop while the form is still open.  The user has not closed the form using the X nor a button so it's up to the caller to close the form using `CloseNonBlockingForm`.
 
+## Updating Elements (changing elements in active form)
+
+Persistent forms remain open and thus continue to interact with the user after the Read has returned.  Often the program wishes to communicate results (output information) or change an Element's values (such as populating a List Element).
+
+The way this is done is via an Update method that is available for nearly all of the Elements.  Here is an example of a program that uses a persistent window that is updated.
+
+![snap0272](https://user-images.githubusercontent.com/13696193/45260249-ec4e4000-b3af-11e8-853b-9b29d0bf7797.jpg)
+
+
+In some programs these updates happen in response to another Element.  This program takes a Spinner and a Slider's input values and uses them to resize a Text Element.  The Spinner and Slider are on the left, the Text element being changed is on the right.
+
+
+
+
+
+    # Testing async form, see if can have a slider
+    # that adjusts the size of text displayed
+
+    import PySimpleGUI as sg
+    fontSize = 12
+    layout = [[sg.Spin([sz for sz in range(6, 172)], font=('Helvetica 20'), initial_value=fontSize, change_submits=True, key='spin'),
+               sg.Slider(range=(6,172), orientation='h', size=(10,20),
+               change_submits=True, key='slider', font=('Helvetica 20')),
+               sg.Text("Aa", size=(2, 1), font="Helvetica "  + str(fontSize), key='text')]]
+
+    sz = fontSize
+    form = sg.FlexForm("Font size selector", grab_anywhere=False).Layout(layout)
+    # Event Loop
+    while True:
+        button, values= form.Read()
+        if button is None:
+            break
+        sz_spin = int(values['spin'])
+        sz_slider = int(values['slider'])
+        sz = sz_spin if sz_spin != fontSize else sz_slider
+        if sz != fontSize:
+            fontSize = sz
+            font = "Helvetica "  + str(fontSize)
+            form.FindElement('text').Update(font=font)
+            form.FindElement('slider').Update(sz)
+            form.FindElement('spin').Update(sz)
+
+    print("Done.")
+
+
+Inside the event loop we read the value of the Spinner and the Slider using those Elements' keys.
+For example, `values['slider']` is the value of the Slider Element.
+
+This program changes all 3 elements if either the Slider or the Spinner changes.  This is done with these statements:
+
+        form.FindElement('text').Update(font=font)
+        form.FindElement('slider').Update(sz)
+        form.FindElement('spin').Update(sz)
+
+Remember this design pattern because you will use it OFTEN if you use persistent forms.
+
+It works as follows.  The call to `form.FindElement` returns the Element object represented by they provided `key`.  This element is then updated by calling it's `Update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:
+
+    text_element = form.FindElement('text')
+    text_element.Update(font=font)
+
+The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the form and also to identify elements.  As already mentioned, they are used as targets in  Button calls.
+
+
+
 ## Keyboard & Mouse Capture
 Beginning in version 2.10 you can capture keyboard key presses and mouse scroll-wheel events.   Keyboard keys can be used, for example, to detect the page-up and page-down keys for a PDF viewer.  To use this feature, there's a boolean setting in the FlexForm call `return_keyboard_events` that is set to True in order to get keys returned along with buttons.
 
@@ -2093,7 +2266,7 @@ Key Sym is a string such as 'Control_L'.  The Key Code is a numeric representati
         text_elem = sg.Text("", size=(18,1))
         layout = [[sg.Text("Press a key or scroll mouse")],
                   [text_elem],
-                  [sg.SimpleButton("OK")]]
+                  [sg.Button("OK")]]
 
         form.Layout(layout)
         # ---===--- Loop taking in user input --- #
@@ -2115,7 +2288,7 @@ Use realtime keyboard capture by calling
 
     with sg.FlexForm("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as form:
         layout = [[sg.Text("Hold down a key")],
-                  [sg.SimpleButton("OK")]]
+                  [sg.Button("OK")]]
 
         form.Layout(layout)
 
@@ -2162,13 +2335,24 @@ We have an InputText field that we want to update.  When the Element was created
 
     sg.Input(key='input')
 
-To update or change the value for that Input Element, we use this contruct:
+To update or change the value for that Input Element, we use this construct:
 
     form.FindElement('input').Update('new text')
 
 Using the '.' makes the code shorter.  The FindElement call returns an Element.  We then call that Element's Update function.
 
 See the Font Sizer demo for example source code.
+
+You can use Update to do things like:
+* Have one Element (appear to) make a change to another Element
+* Disable a button, slider, input field, etc
+* Change a button's text
+* Change an Element's text or background color
+* Add text to a scrolling output window
+* Change the choices in a list
+* etc
+
+
 
 ## Sample Applications
 
@@ -2500,6 +2684,12 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
+
+
+
+
+
 
 
 
