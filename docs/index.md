@@ -7,7 +7,7 @@
 
 # PySimpleGUI
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.5.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.5.1-red.svg?longCache=true&style=for-the-badge)
 
 
 [Wiki for the latest news](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
@@ -2517,7 +2517,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 03,04.00 | Sept 18, 2018 - New features - Graph Element, Frame Element, more settings exposed to Popup calls.  See notes below for more.
 | 03.04.01 | Sept 18, 2018 - See release notes
 | 03.05.00 | Sept 20, 2018 - See release notes
-
+| 03.05.01 | Sept 22, 2018 - See release notes
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -2596,7 +2596,9 @@ OneLineProgressMeter function added which gives you not only a one-line solution
 * Auto sizing table widths works now
 * Feature DELETED - Scaling. Removed from all elements
 
-
+#### 3.5.1
+* Bug fix for broken PySimpleGUI if Python version < 3.6 (sorry!)
+* LOTS of Readme changes
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -2684,14 +2686,5 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
-
-
-
-
-
-
-
-
-
 
 
