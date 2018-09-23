@@ -1233,6 +1233,9 @@ class Canvas(Element):
 
     @property
     def TKCanvas(self):
+        if self._TKCanvas is None:
+            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
+            print('*** form = sg.FlexForm("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
 
@@ -1308,6 +1311,9 @@ class Graph(Element):
 
     @property
     def TKCanvas(self):
+        if self._TKCanvas2 is None:
+            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
+            print('*** form = sg.FlexForm("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas2
 
     def __del__(self):
@@ -2015,10 +2021,6 @@ class FlexForm:
             # return None, None
         return self
 
-    # Another name for ReadNonBlocking.
-    PrepareForUpdate = ReadNonBlocking
-    # Finalize = ReadNonBlocking
-    PreRead = ReadNonBlocking
 
 
     def Refresh(self):
@@ -3976,6 +3978,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
 # of the elements.                                           #
 ##############################################################
 def ChangeLookAndFeel(index):
+    if sys.platform == 'darwin':
+        print('*** Changing look and feel is not supported on Mac platform ***')
+        return
+
     # look and feel table
     look_and_feel =  {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':0},
 
