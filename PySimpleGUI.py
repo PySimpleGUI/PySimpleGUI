@@ -2001,9 +2001,23 @@ class FlexForm:
             # return None, None
         return BuildResults(self, False, self)
 
+
+    def Finalize(self):
+        if self.TKrootDestroyed:
+            return self
+        if not self.Shown:
+            self.Show(non_blocking=True)
+        try:
+            rc = self.TKroot.update()
+        except:
+            self.TKrootDestroyed = True
+            _my_windows.Decrement()
+            # return None, None
+        return self
+
     # Another name for ReadNonBlocking.
     PrepareForUpdate = ReadNonBlocking
-    Finalize = ReadNonBlocking
+    # Finalize = ReadNonBlocking
     PreRead = ReadNonBlocking
 
 
