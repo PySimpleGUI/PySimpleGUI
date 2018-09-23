@@ -2435,17 +2435,12 @@ def FillSubformWithValues(form, values_dict):
             value = None
             if element.Type == ELEM_TYPE_COLUMN:
                 FillSubformWithValues(element, values_dict)
-            try:
-                value = values_dict[element.Key]
-            except:
-                continue
             if element.Type == ELEM_TYPE_FRAME:
                 FillSubformWithValues(element, values_dict)
             try:
                 value = values_dict[element.Key]
             except:
                 continue
-
             if element.Type == ELEM_TYPE_INPUT_TEXT:
                 element.Update(value)
             elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
