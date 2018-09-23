@@ -31,10 +31,7 @@ def main():
     layout = [  [sg.Quit( button_color=('white','black'))],
                [sg.Graph(CANVAS_SIZE, (0,0), (SAMPLES,SAMPLE_MAX),background_color='black', key='graph')],]
 
-    form = sg.FlexForm('Canvas test', grab_anywhere=True, background_color='black', no_titlebar=False, use_default_focus=False)
-    form.Layout(layout)
-
-    form.Finalize()
+    form = sg.FlexForm('Canvas test', grab_anywhere=True, background_color='black', no_titlebar=False, use_default_focus=False).Layout(layout).Finalize()
     graph = form.FindElement('graph')
 
     prev_response_time = None

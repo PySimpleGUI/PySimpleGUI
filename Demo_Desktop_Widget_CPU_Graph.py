@@ -36,8 +36,7 @@ def main():
     layout = [  [sg.Quit( button_color=('white','black')), sg.T('', pad=((100,0),0), font='Any 15', key='output')],
                [sg.Graph(CANVAS_SIZE, (0,0), (SAMPLES,SAMPLE_MAX),background_color='black', key='graph')],]
 
-    form = sg.FlexForm('CPU Graph', grab_anywhere=True, keep_on_top=True, background_color='black', no_titlebar=True, use_default_focus=False)
-    form.Layout(layout)
+    form = sg.FlexForm('CPU Graph', grab_anywhere=True, keep_on_top=True, background_color='black', no_titlebar=True, use_default_focus=False).Layout(layout)
 
     graph = form.FindElement('graph')
     output = form.FindElement('output')

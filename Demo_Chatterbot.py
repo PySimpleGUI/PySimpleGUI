@@ -12,6 +12,7 @@ to collect user input that is sent to the chatbot.  The reply is displayed in th
 # Create the 'Trainer GUI'
 # The Trainer GUI consists of a lot of progress bars stacked on top of each other
 sg.ChangeLookAndFeel('GreenTan')
+sg.DebugWin()
 MAX_PROG_BARS = 20              # number of training sessions
 bars = []
 texts = []
@@ -21,8 +22,7 @@ for i in range(MAX_PROG_BARS):
     texts.append(sg.T(' ' * 20, size=(20, 1), justification='right'))
     training_layout += [[texts[i], bars[i]],]       # add a single row
 
-training_form = sg.FlexForm('Training')
-training_form.Layout(training_layout)
+training_form = sg.FlexForm('Training').Layout(training_layout)
 current_bar = 0
 
 # callback function for training runs
@@ -50,19 +50,20 @@ chatbot = ChatBot('Ron Obvious', trainer='chatterbot.trainers.ChatterBotCorpusTr
 chatbot.train("chatterbot.corpus.english")
 
 ################# GUI #################
-with sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)) as form:
-    layout = [[sg.Output(size=(80, 20))],
-              [sg.Multiline(size=(70, 5), enter_submits=True),
-               sg.ReadFormButton('SEND', bind_return_key=True), sg.ReadFormButton('EXIT')]]
 
-    form.Layout(layout)
-    # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
-    while True:
-        button, (value,) = form.Read()
-        if button is not 'SEND':
-            break
-        string = value.rstrip()
-        print('     '+string)
-        # send the user input to chatbot to get a response
-        response = chatbot.get_response(value.rstrip())
-        print(response)
+layout = [[sg.Output(size=(80, 20))],
+          [sg.Multiline(size=(70, 5), enter_submits=True),
+           sg.ReadFormButton('SEND', bind_return_key=True), sg.ReadFormButton('EXIT')]]
+
+form = sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)).Layout(layout)
+
+# ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
+while True:
+    button, (value,) = form.Read()
+    if button is not 'SEND':
+        break
+    string = value.rstrip()
+    print('     '+string)
+    # send the user input to chatbot to get a response
+    response = chatbot.get_response(value.rstrip())
+    print(response)

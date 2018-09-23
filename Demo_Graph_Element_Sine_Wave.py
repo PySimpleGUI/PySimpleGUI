@@ -1,10 +1,9 @@
 import math
 import PySimpleGUI as sg
 
-layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-100,-100), graph_top_right=(100,100), background_color='white', key='graph')],]
+layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-100,-100), graph_top_right=(100,100), background_color='white', key='graph', tooltip='This is a cool graph!')],]
 
-form = sg.FlexForm('Graph of Sine Function').Layout(layout)
-form.Finalize()
+form = sg.FlexForm('Graph of Sine Function', grab_anywhere=True).Layout(layout).Finalize()
 graph = form.FindElement('graph')
 
 graph.DrawLine((-100,0), (100,0))
