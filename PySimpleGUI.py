@@ -1829,9 +1829,9 @@ class Table(Element):
 
 
 # ------------------------------------------------------------------------- #
-#                       FlexForm CLASS                                      #
+#                       Window CLASS                                      #
 # ------------------------------------------------------------------------- #
-class FlexForm:
+class Window:
     '''
     Display a user defined for and return the filled in data
     '''
@@ -2124,13 +2124,15 @@ class FlexForm:
         self.RootNeedsDestroying = True
         return None
 
-    def CloseNonBlockingForm(self):
+    def CloseNonBlocking(self):
         if self.TKrootDestroyed:
             return
         try:
             self.TKroot.destroy()
             _my_windows.Decrement()
         except: pass
+
+    CloseNonBlockingForm = CloseNonBlocking
 
     def OnClosingCallback(self):
         return
@@ -2150,6 +2152,9 @@ class FlexForm:
         #     del(self.TKroot)
         # except:
         #     pass
+
+FlexForm = Window
+
 
 # ------------------------------------------------------------------------- #
 #                       UberForm CLASS                                      #
