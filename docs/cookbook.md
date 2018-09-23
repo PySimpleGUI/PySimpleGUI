@@ -13,7 +13,7 @@ Same GUI screen except the return values are in a list instead of a dictionary a
     import PySimpleGUI as sg
 
     # Very basic form.  Return values as a list
-    form = sg.FlexForm('Simple data entry form')  # begin with a blank form
+    form = sg.Window('Simple data entry form')  # begin with a blank form
 
     layout = [
               [sg.Text('Please enter your Name, Address, Phone')],
@@ -35,7 +35,7 @@ A simple form with default values.  Results returned in a dictionary.
     import PySimpleGUI as sg
 
     # Very basic form.  Return values as a dictionary
-    form = sg.FlexForm('Simple data entry form')  # begin with a blank form
+    form = sg.Window('Simple data entry form')  # begin with a blank form
 
     layout = [
               [sg.Text('Please enter your Name, Address, Phone')],
@@ -66,7 +66,7 @@ Browse for a filename that is populated into the input field.
                  [sg.InputText(), sg.FileBrowse()],
                  [sg.Submit(), sg.Cancel()]]
 
-    (button, (source_filename,)) = sg.FlexForm('SHA-1 & 256 Hash').LayoutAndRead(form_rows)
+    (button, (source_filename,)) = sg.Window('SHA-1 & 256 Hash').LayoutAndRead(form_rows)
 
     print(button, source_filename)
 
@@ -81,7 +81,7 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
     import sys
 
     if len(sys.argv) == 1:
-        button, (fname,) = sg.FlexForm('My Script').LayoutAndRead([[sg.Text('Document to open')],
+        button, (fname,) = sg.Window('My Script').LayoutAndRead([[sg.Text('Document to open')],
                                                                    [sg.In(), sg.FileBrowse()],
                                                                    [sg.Open(), sg.Cancel()]])
     else:
@@ -110,7 +110,7 @@ Browse to get 2 file names that can be then compared.
                  [sg.Submit(), sg.Cancel()]]
 
 
-    form = sg.FlexForm('File Compare')
+    form = sg.Window('File Compare')
 
     button, values = form.LayoutAndRead(form_rows)
 
@@ -167,7 +167,7 @@ Example of nearly all of the widgets in a single form.  Uses a customized color 
     ]
 
 
-    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
+    form = sg.Window('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
 
     button, values = form.Read()
 
@@ -194,7 +194,7 @@ An async form that has a button read loop.  A Text Element is updated periodical
                  [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='output')],
                  [sg.T(' '  * 5), sg.ReadButton('Start/Stop', focus=True), sg.Quit()]]
 
-    form = sg.FlexForm('Running Timer').Layout(form_rows)
+    form = sg.Window('Running Timer').Layout(form_rows)
 
     timer_running = True
     i = 0
@@ -238,7 +238,7 @@ The architecture of some programs works better with button callbacks instead of 
               [sg.ReadFormButton('1'), sg.ReadFormButton('2'), sg.Quit()]]
 
     # Show the form to the user
-    form = sg.FlexForm('Button callback example').Layout(layout)
+    form = sg.Window('Button callback example').Layout(layout)
 
     # Event loop. Read buttons, make callbacks
     while True:
@@ -272,7 +272,7 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
                  [sg.Quit(button_color=('black', 'orange'))]
                  ]
 
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True).Layout(form_rows)
+    form = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(form_rows)
 
     #
     # Some place later in your code...
@@ -321,8 +321,8 @@ Tabbed forms are **easy** to make and use in PySimpleGUI.  You simple may your l
                     [sg.InputText(), sg.Text('Enter some info')],
                     [sg.Submit(button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue'))]]
 
-    form = sg.FlexForm('')
-    form2 = sg.FlexForm('')
+    form = sg.Window('')
+    form2 = sg.Window('')
 
     results = sg.ShowTabbedForm('Tabbed form example', (form, layout_tab_1, 'First Tab'),
                                     (form2, layout_tab_2, 'Second Tab'))
@@ -377,7 +377,7 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
                sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))]
               ]
 
-    form = sg.FlexForm('Media File Player', auto_size_text=True, default_element_size=(20, 1),
+    form = sg.Window('Media File Player', auto_size_text=True, default_element_size=(20, 1),
                        font=("Helvetica", 25)).Layout(layout)
     # Our event loop
     while (True):
@@ -419,7 +419,7 @@ This form doesn't close after button clicks.  To achieve this the buttons are sp
             ]
 
 
-    form = sg.FlexForm('Script launcher').Layout(layout)
+    form = sg.Window('Script launcher').Layout(layout)
 
     # ---===--- Loop taking in user input and using it to call scripts --- #
 
@@ -469,7 +469,7 @@ A standard non-blocking GUI with lots of inputs.
               [sg.Radio('MSE(L2)', 'loss', size=(12, 1)), sg.Radio('MB(L0)', 'loss', size=(12, 1))],
               [sg.Submit(), sg.Cancel()]]
 
-    form = sg.FlexForm('Machine Learning Front End', font=("Helvetica", 12)).Layout(layout)
+    form = sg.Window('Machine Learning Front End', font=("Helvetica", 12)).Layout(layout)
 
     button, values = form.Read()
 
@@ -488,7 +488,7 @@ Perhaps you don't want all the statistics that the EasyProgressMeter provides an
               [sg.Cancel()]]
 
     # create the form
-    form = sg.FlexForm('Custom Progress Meter').Layout(layout)
+    form = sg.Window('Custom Progress Meter').Layout(layout)
     # loop that would normally do something useful
     for i in range(10000):
         # check to see if the cancel button was clicked and exit loop if clicked
@@ -505,7 +505,7 @@ Perhaps you don't want all the statistics that the EasyProgressMeter provides an
 
 ## The One-Line GUI
 
-For those of you into super-compact code, a complete customized GUI can be specified, shown, and received the results using a single line of Python code.  The way this is done is to combine the call to `FlexForm` and the call to `LayoutAndRead`.  `FlexForm` returns a `FlexForm` object which has the `LayoutAndRead` method.
+For those of you into super-compact code, a complete customized GUI can be specified, shown, and received the results using a single line of Python code.  The way this is done is to combine the call to `Window` and the call to `LayoutAndRead`.  `Window` returns a `Window` object which has the `LayoutAndRead` method.
 
 
 ![simple](https://user-images.githubusercontent.com/13696193/44227935-ecb53b80-a161-11e8-968b-b3f963404dec.jpg)
@@ -519,13 +519,13 @@ Instead of
               [sg.Input(), sg.FileBrowse()],
               [sg.OK(), sg.Cancel()]]
 
-    button, (number,) = sg.FlexForm('Get filename example').LayoutAndRead(layout)
+    button, (number,) = sg.Window('Get filename example').LayoutAndRead(layout)
 
 you can write this line of code for the exact same result (OK, two lines with the import):
 
     import PySimpleGUI as sg
 
-    button, (filename,) = sg.FlexForm('Get filename example').LayoutAndRead(
+    button, (filename,) = sg.Window('Get filename example').LayoutAndRead(
         [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]])
 
 --------------------
@@ -560,7 +560,7 @@ To make it easier to see the Column in the window, the Column background has bee
 
     # Display the form and get values
 
-    button, values = sg.FlexForm('Compact 1-line form with column').LayoutAndRead(layout)
+    button, values = sg.Window('Compact 1-line form with column').LayoutAndRead(layout)
 
     sg.Popup(button, values, line_width=200)
 
@@ -582,7 +582,7 @@ This simple program keep a form open, taking input values until the user termina
                [sg.Txt('', size=(8,1), key='output')  ],
                [sg.ReadButton('Calculate', bind_return_key=True)]]
 
-    form = sg.FlexForm('Math').Layout(layout)
+    form = sg.Window('Math').Layout(layout)
 
     while True:
         button, values = form.Read()
@@ -622,7 +622,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
         [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue')]
     ]
 
-    form = sg.FlexForm('Canvas test')
+    form = sg.Window('Canvas test')
     form.Layout(layout)
     form.Finalize()
 
@@ -652,7 +652,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
                [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue'), sg.ReadFormButton('Move')]
                ]
 
-    form = sg.FlexForm('Graph test')
+    form = sg.Window('Graph test')
     form.Layout(layout)
     form.Finalize()
 
@@ -713,7 +713,7 @@ There are a number of features used in this Recipe including:
               [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],
               ]
 
-    form = sg.FlexForm('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False).Layout(layout)
+    form = sg.Window('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False).Layout(layout)
 
     # Loop forever reading the form's values, updating the Input field
     keys_entered = ''
@@ -762,7 +762,7 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
     # create the form and show it without the plot
 
 
-    form = g.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)
+    form = g.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)
     form.Finalize()     # needed to access the canvas element prior to reading the form
 
     canvas_elem = form.FindElement('canvas')
@@ -825,7 +825,7 @@ In other GUI frameworks this program would be most likely "event driven" with ca
                sg.ReadFormButton('Submit', button_color=('white', 'springgreen4'), key='Submit')]
               ]
 
-    form = sg.FlexForm("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
+    form = sg.Window("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
                        default_button_element_size=(12,1))
     form.Layout(layout)
     form.Finalize()
@@ -893,7 +893,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
                   [sg.T('SHA Hash'), sg.In('', size=(40,1), key='hash')],
                   ]
 
-        form = sg.FlexForm('SHA Generator', auto_size_text=False, default_element_size=(10,1),
+        form = sg.Window('SHA Generator', auto_size_text=False, default_element_size=(10,1),
                            text_justification='r', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
 
 
@@ -990,7 +990,7 @@ You can easily change colors to match your background by changing a couple of pa
                     sg.Button('EXIT', button_color=('white','firebrick3'))],
                     [sg.T('', text_color='white', size=(50,1), key='output')]]
 
-        form = sg.FlexForm('Floating Toolbar', no_titlebar=True, keep_on_top=True).Layout(layout)
+        form = sg.Window('Floating Toolbar', no_titlebar=True, keep_on_top=True).Layout(layout)
 
         # ---===--- Loop taking in user input (buttons) --- #
         while True:
@@ -1060,7 +1060,7 @@ Much of the code is handling the button states in a fancy way.  It could be much
                   sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
                   sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
-    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
+    form = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
 
 
     # ----------------  main loop  ----------------
@@ -1124,7 +1124,7 @@ The spinner changes the number of seconds between reads.  Note that you will get
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
                  [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]
     # Layout the rows of the form and perform a read. Indicate the form is non-blocking!
-    form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(form_rows)
+    form = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(form_rows)
 
 
     # ----------------  main loop  ----------------
@@ -1178,7 +1178,7 @@ If you double click the dashed line at the top of the list of choices, that menu
         [sg.Output(size=(60, 20))]
              ]
 
-    form = sg.FlexForm("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,
+    form = sg.Window("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,
                        default_button_element_size=(12, 1)).Layout(layout)
 
     # ------ Loop & Process button menu choices ------ #
@@ -1209,7 +1209,7 @@ In this example we're defining our graph to be from -100, -100 to +100,+100.  Th
 
     layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-100,-100), graph_top_right=(100,100), background_color='white', key='graph')],]
 
-    form = sg.FlexForm('Graph of Sine Function').Layout(layout)
+    form = sg.Window('Graph of Sine Function').Layout(layout)
     form.Finalize()
     graph = form.FindElement('graph')
 
