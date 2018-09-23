@@ -1,5 +1,7 @@
 # Add GUIs to your programs and scripts easily with PySimpleGUI
 
+NOTE -- PySimpleGUI requires Python3.  If you're running Python2, don't waste your time reading.
+
 ## Introduction
 Few people run Python programs by double clicking the .py file as if it were a .exe file.  When a typical user (non-programmer types) double clicks an exe file, they expect it to pop open with a window they can interact with.  While GUIs, using tkinter, are possible using standard Python installations, it's unlikely many programs do this.
 
@@ -8,24 +10,26 @@ What if it were easy so to open a Python program into a GUI that complete beginn
 There seems to be a gap in the ability to add a GUI onto a Python program/script.  Complete beginners are left using only the command line and many advanced programmers don't want to take the time required to code up a tkinter GUI.
 
 
+
+
 ## GUI Frameworks
 There is no shortage of GUI frameworks for Python.  tkinter, WxPython, Qt, Kivy are a few of the major packages.  In addition, there are a good number of dumbed down GUI packages that wrap one of the major packages.  These include EasyGUI, PyGUI, Pyforms, ...
 
-The problem is that beginners (those with experience of less than 6 weeks) are not capable of learning even the simplest of the major packages.  That leaves the wrapper-packages.  Users will likely find it difficult or impossible to build a custom GUI layout.  Or, if it's possible, pages of code are required.
+The problem is that beginners (those with experience of less than 6 weeks) are not capable of learning even the simplest of the major packages.  That leaves the wrapper-packages.  Users will likely find it difficult or impossible to build a custom GUI layout using the smaller packages.
 
-PySimpleGUI attempts to address these GUI challenges by providing a super-simple, easy to understand interface to GUIs that can be easily customized.  Even the most complex of GUIs are often less than 20 lines of code when PySimpleGUI is used.
+PySimpleGUI attempts to address these GUI challenges by providing a super-simple, easy to understand interface to GUIs that can be easily customized.  Complex GUIs are often less than 20 lines of code when PySimpleGUI is used.
 
 ## The Secret
 
 What makes PySimpleGUI superior for newcomers is that the package contains the majority of the code that the user is normally expected to write.  Button callbacks are handled by PySimpleGUI, not the user's code.  Beginners struggle to grasp the concept of a function, expecting them to understand a call-back function in the first few weeks is a stretch.
 
-With most GUIs arranging the GUI Widgets often requires several lines of code.... at least one or two lines per widget.  PySimpleGUI uses an "auto-packer" that creates the layout for the user automatically.  There is no concept of a pack nor a grid system needed to layout a GUI Window.
+With some GUIs arranging the GUI Widgets often requires several lines of code.... at least one or two lines per widget.  PySimpleGUI uses an "auto-packer" that creates the layout for the user automatically.  There is no concept of a pack nor a grid system needed to layout a GUI Window.
 
 Finally, PySimpleGUI leverages the Python language constructs in clever ways that shortens the amount of code and returns the GUI data in a straightforward manner.  When a Widget is created in a form layout, it is configured in-place, not several lines of code away.  Results are returned as a simple list or a dictionary.
 
 ## What is a GUI?
 
-Most GUIs do one thing.... they collect information from the user and return it.  From a programmer's viewpoint this could be summed up as a function call that looks like this:
+Most GUIs do one thing.... they collect information from the user and return it.  From a programmer's viewpoint a GUI that collects information, like a form, could be summed up as a function call that looks like this:
 
     button, values = GUI_Display(gui_layout)
 
@@ -33,13 +37,14 @@ What's expected from most GUIs is the button that was clicked (OK, cancel, save,
 
 This is exactly how PySimpleGUI works (for these simple kinds of GUIs).  When the call is made to display the GUI, execution does no return until a button is clicked that closes the form.
 
-There are more complex GUIs such as those that don't close after a button is clicked.  These complex forms can also be created with PySimpleGUI.  A remote control interface for a robot and a chat window are a couple of examples.
+There are more complex GUIs such as those that don't close after a button is clicked.  These resemble a windows program and also be created with PySimpleGUI.  A remote control interface for a robot and a chat window are a couple of examples where you want to keep the window open after a button is clicked.
 
 ## The 5-Minute GUI
 
-When is PySimpleGUI useful?  Immediately, anytime you've got a GUI need.  It will take under 5 minutes for you to create and try your GUI.  With those kinds of times, what do you have to lose trying it?
+When is PySimpleGUI useful?  ***Immediately***, anytime you've got a GUI need.  It will take under 5 minutes for you to create and try your GUI.  With those kinds of times, what do you have to lose trying it?
 
 The best way to go about making your GUI in under 5 minutes is to copy one of the GUIs from the [PySimpleGUI Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/).  Follow these steps:
+* Install PySimpleGUI
 *  Find a GUI that looks similar to what you want to create
 * Copy code from Cookbook
 * Paste into your IDE and run
@@ -91,80 +96,99 @@ Not all GUIs take 5 minutes.  Some take 5 lines of code.  This is a GUI with a c
 
 ## Making Your Custom GUI
 
-That 5-minute estimate wasn't the time it takes to copy and paste the code from the Cookbook.  You should be able to modify the code within 5 minutes in order to get to your layout, assuming you've got a straightforward layout.
+If you find a Recipe similar to your project.  You may be able to modify the code within 5 minutes in order to get to *your layout*, assuming you've got a straightforward layout.
 
 Widgets are called Elements in PySimpleGUI.  This list of Elements are spelled exactly as you would type it into your Python code.
 
 ### Core Element list
 ```
-  Text
-  InputText
-  Multiline
-  InputCombo
-  Listbox
-  Radio
+  Buttons including these types:
+      File Browse
+      Folder Browse
+      Color chooser
+      Date picker
+      Read Form
+      Close form
+      Realtime
   Checkbox
-  Spin
-  Output
-  SimpleButton
-  RealtimeButton
-  ReadFormButton
-  ProgressBar
-  Image
+  Radio Button
+  Listbox
   Slider
+  Multi-line Text Input
+  Scroll-able Output
+  Progress Bar
+  Option Menu
+  Image
+  Menu
+  Frame
   Column
+  Graph
+  Table
+  Tabbed forms
+  Redirected Python Output/Errors to scrolling Window
 ```
 
 You can also have short-cut Elements.  There are 2 types of shortcuts.  One is simply other names for the exact same element (e.g. T instead of Text).  The second type configures an Element with particular setting, sparing the programmer from specifying all of the parameters (e.g. Submit is a button with the text "Submit" on it).
+
 ### Shortcut list
 
     T = Text
     Txt = Text
     In = InputText
     Input = IntputText
-    Combo = InputCombo
+    Combo = DropDown = Drop = InputCombo
     DropDown = InputCombo
     Drop = InputCombo
+    OptionMenu = InputOptionMenu
+    CB - CBox = Check = Checkbox
+    RButton = ReadButton = ReadFormButton
+    Button = SimpleButton
 
 A number of common buttons have been implemented as shortcuts.  These include:
 ### Button  Shortcuts
     FolderBrowse
     FileBrowse
+    FilesBrowse
     FileSaveAs
     Save
+    Open
     Submit
     OK
     Ok
     Cancel
     Quit
+    Help
     Exit
     Yes
     No
 
 The more generic button functions, that are also shortcuts
 ### Generic Buttons
-    SimpleButton
-    ReadFormButton
+    Button
+    RButton (ReadButton)
     RealtimeButton
 
-These are all of the GUI Widgets you have to choose from. If it's not in this list, it doesn't go in your form layout.
+These are all of the GUI Widgets you have to choose from. If it's not in this list, it doesn't go in your form layout.  (Maybe... unless there's been an update with more features and this tutorial wasn't updated)
 
 ### GUI Design Pattern
 
 The stuff that tends not to change in GUIs are the calls that setup and show the Window.  It's the layout of the Elements that changes from one program to another.   This is the code from above with the layout removed:
 
     import PySimpleGUI as sg
-
-    form = sg.FlexForm('Simple data entry form')
     # Define your form here (it's a list of lists)
+    layout = [[ your layout ]]
+    form = sg.FlexForm('Simple data entry form')
     button, values = form.LayoutAndRead(layout)
+
 
  The flow for most GUIs is:
  * Create the Form object
  * Define GUI as a list of lists
  * Show the GUI and get results
 
-These are line for line what you see in design pattern.
+Some forms act more like Windows programs. These forms have an "Event Loop".  Please see the readme for more info on these kinds of forms (Persistent Forms)
+
+These are line for line what you see in design pattern above.
 
 ### GUI Layout
 
@@ -184,11 +208,14 @@ The layout produced this window:
 
 Once you have your layout complete and you've copied over the lines of code that setup and show the form, it's time to look at how to display the form and get the values from the user.
 
-This is the line of code that displays the form and provides the results:
+First get a form.
+```    form = sg.FlexForm('Simple data entry form')   ```
+
+Then display the form and get the results.:
 
     button, values = form.LayoutAndRead(layout)
 
-   Forms return 2 values, the text of the button that was clicked and a ***list of values*** the user entered into the form.
+   Forms return 2 values, the text of the button that was clicked and a ***list of values*** the user entered into the form.  More advanced forms return the values as a **dictionary of values**,
 
 If the example form was displayed and the user did nothing other than click the OK button, then the results would have been:
 
@@ -201,11 +228,11 @@ Checkbox Elements return a value of True/False.  Because these checkboxes defaul
 
 Once you have the values from the GUI it would be nice to check what values are in the variables. Rather than print them out using a `print` statement, let's stick with the GUI idea and output to a window.
 
-PySimpleGUI has a number of Message Boxes to choose from.  The data passed to the message box will be displayed in a window.  The function takes any number of arguments.  Simply indicate all the variables you would like to see in the call.
+PySimpleGUI has a number of Popup Windows to choose from.  The data passed to the Popup will be displayed in a window.  The function takes any number of arguments, just like a print call would.  Simply pass in all the variables you would like to see in the call.
 
-The most-commonly used Message Box in PySimpleGUI is MsgBox.  To display the results of the previous example, one would write:
+The most-commonly used display window is the `Popup`.  To display the results of the previous example, one would write:
 
-    MsgBox('The GUI returned:', button, values)
+    Popup('The GUI returned:', button, values)
 
 ## Putting It All Together
 
@@ -215,9 +242,7 @@ Now that you know the basics, let's put together a form that contains as many Py
 
     sg.ChangeLookAndFeel('GreenTan')
 
-    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
-
-    column1 = [[sg.Text('Column 1', background_color='#d3dfda', justification='center', size=(10,1))],
+    column1 = [[sg.Text('Column 1', background_color='#d3dfda', justification='center', size=(10, 1))],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
@@ -241,12 +266,13 @@ Now that you know the basics, let's put together a form that contains as many Py
         [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
          sg.InputText('Default Folder'), sg.FolderBrowse()],
         [sg.Submit(), sg.Cancel()]
-         ]
+    ]
 
+    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
     button, values = form.LayoutAndRead(layout)
-    sg.MsgBox(button, values)
+    sg.Popup(button, values)
 
-That may seem like a lot of code, but try coding this same GUI layout directly in tkinter and you'll quickly realize that the length is tiny.
+That may seem like a lot of code, but try coding this same GUI layout using any other GUI framework and it will be lengthier and what you see here.... by a WIDE margin.  10's of times longer.
 
 ![everything for tutorial](https://user-images.githubusercontent.com/13696193/44302997-38531b00-a303-11e8-8c45-698ea62590a8.jpg)
 
@@ -269,16 +295,22 @@ This kind of logic is all that's needed:
     else:
         # collect arguements from sys.argv
 
-The easiest way to get a GUI up and running quickly is to copy and modify one of the Recipes from the [PySimpleGUI Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
+Copy one of the Recipes from the Cookbook and run it.  See if it resembles something you would like to build:
+[PySimpleGUI Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
 Have some fun!  Spice up the scripts you're tired of running by hand.  Spend 5 or 10 minutes playing with the demo scripts.  You may find one already exists that does exactly what you need.   If not, you  will find it's 'simple' to create your own.  If you really get lost, you've only invested 10 minutes.
 
 ## Resources
 
 ### Installation
+
 Requires Python 3
 
     pip install PySimpleGUI
+
+If on a Raspberry Pi or Linux, may need to do this instead:
+
+    sudo pip3 install --upgrade pysimplegui
 
 Works on all systems that run tkinter, including the Raspberry Pi
 
@@ -287,6 +319,6 @@ Works on all systems that run tkinter, including the Raspberry Pi
 
 [Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
 
-### Home Page
+### Home Page (GitHub)
 
 [www.PySimpleGUI.com](www.PySimpleGUI.com)
