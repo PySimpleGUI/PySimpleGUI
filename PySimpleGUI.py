@@ -2261,12 +2261,11 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
 def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip,  size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def ReadFormButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+def ReadButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button( button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
-ReadButton = ReadFormButton
+ReadFormButton = ReadButton
 RButton = ReadFormButton
-RFButton = ReadFormButton
 
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
@@ -4436,7 +4435,7 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
 
 
 def main():
-    with FlexForm('Demo form..') as form:
+    with Window('Demo form..') as form:
         form_rows = [[Text('You are running the PySimpleGUI.py file itself')],
                      [Text('You should be importing it rather than running it', size=(50,2))],
                      [Text('Here is your sample input form....')],
