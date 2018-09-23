@@ -547,7 +547,7 @@ To make it easier to see the Column in the window, the Column background has bee
     # Prior to the Column element, this layout was not possible
     # Columns layouts look identical to form layouts, they are a list of lists of elements.
 
-    # sg.ChangeLookAndFeel('BlueMono')
+    sg.ChangeLookAndFeel('BlueMono')
 
     # Column layout
     col = [[sg.Text('col Row 1', text_color='white', background_color='blue')],
@@ -624,7 +624,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
 
     form = sg.FlexForm('Canvas test')
     form.Layout(layout)
-    form.ReadNonBlocking()
+    form.Finalize()
 
     canvas = form.FindElement('canvas')
     cir = canvas.TKCanvas.create_oval(50, 50, 100, 100)
@@ -1223,3 +1223,25 @@ In this example we're defining our graph to be from -100, -100 to +100,+100.  Th
     button, values = form.Read()
 
 
+## Creating a Windows .EXE File
+
+It's possible to create a single .EXE file that can be distributed to Windows users.  There is no requirement to install the Python interpreter on the PC you wish to run it on.  Everything it needs is in the one EXE file, assuming you're running a somewhat up to date version of Windows.
+
+Installation of the packages, you'll need to install PySimpleGUI and PyInstaller (you need to install only once)
+
+    pip install PySimpleGUI
+    pip install PyInstaller
+
+To create your EXE file from your program that uses PySimpleGUI, `my_program.py`,  enter this command in your  Windows command prompt:
+
+    pyinstaller -wF my_program.py
+
+You will be left with a single file, `my_program.exe`, located in a folder named `dist` under the folder where you executed the `pyinstaller` command.
+
+That's all... Run your `my_program.exe` file on the Windows machine of your choosing.
+
+> "It's just that easy."
+>
+(famous last words that screw up just about anything being referenced)
+
+Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
