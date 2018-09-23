@@ -236,7 +236,7 @@ The architecture of some programs works better with button callbacks instead of 
   
     # Layout the design of the GUI  
     layout = [[sg.Text('Please click a button', auto_size_text=True)],  
-              [sg.ReadFormButton('1'), sg.ReadFormButton('2'), sg.Quit()]]  
+              [sg.ReadButton('1'), sg.ReadButton('2'), sg.Quit()]]  
   
     # Show the Window to the user
     window = sg.Window('Button callback example').Layout(layout)  
@@ -289,7 +289,7 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
         if button == 'Quit'  or values is None:  
             break  
   
-    window.CloseNonBlockingForm()   # Don't forget to close your window!  
+    window.CloseNonBlocking()   # Don't forget to close your window!  
   
 ---------  
   
@@ -499,7 +499,7 @@ Perhaps you don't want all the statistics that the EasyProgressMeter provides an
       # update bar with loop value +1 so that bar eventually reaches the maximum  
       window.FindElement('progbar').UpdateBar(i + 1)  
     # done with loop... need to destroy the window as it's still open  
-    window.CloseNonBlockingForm()  
+    window.CloseNonBlocking()  
   
   
    ----  
@@ -650,7 +650,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
   
     layout = [  
                [sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0,0), graph_top_right=(400, 400), background_color='red', key='graph')],  
-               [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue'), sg.ReadFormButton('Move')]  
+               [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue'), sg.ReadButton('Move')]  
                ]  
   
     window = sg.Window('Graph test')  
@@ -820,10 +820,10 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User 2'), size=(20,1)), sg.T('0', size=(8,1))],  
               [sg.T('Customer:', pad=((3,0),0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20,1)), sg.T('1', size=(8,1))],  
               [sg.T('Notes:', pad=((3,0),0)), sg.In(size=(44,1), background_color='white', text_color='black')],  
-              [sg.ReadFormButton('Start', button_color=('white', 'black'), key='Start'),  
-               sg.ReadFormButton('Stop', button_color=('white', 'black'), key='Stop'),  
-               sg.ReadFormButton('Reset', button_color=('white', 'firebrick3'), key='Reset'),  
-               sg.ReadFormButton('Submit', button_color=('white', 'springgreen4'), key='Submit')]  
+              [sg.ReadButton('Start', button_color=('white', 'black'), key='Start'),  
+               sg.ReadButton('Stop', button_color=('white', 'black'), key='Stop'),  
+               sg.ReadButton('Reset', button_color=('white', 'firebrick3'), key='Reset'),  
+               sg.ReadButton('Submit', button_color=('white', 'springgreen4'), key='Submit')]  
               ]  
   
     window = sg.Window("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,  
@@ -883,7 +883,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
          1. Choose a password  
          2. Generate a hash code for your chosen password by running program and entering 'gui' as the password  
          3. Type password into the GUI  
-         4. Copy and paste hash code form GUI into variable named login_password_hash  
+         4. Copy and paste hash code Window GUI into variable named login_password_hash
          5. Run program again and test your login!  
     '''  
   
@@ -1104,7 +1104,7 @@ Much of the code is handling the button states in a fancy way.  It could be much
     # --------- After loop --------  
   
     # Broke out of main loop. Close the window.  
-    window.CloseNonBlockingForm()  
+    window.CloseNonBlocking()  
   
 ## Desktop Floating Widget - CPU Utilization  
   
@@ -1119,12 +1119,12 @@ The spinner changes the number of seconds between reads.  Note that you will get
     import PySimpleGUI as sg  
     import psutil  
   
-    # ----------------  Create Form  ----------------  
+    # ----------------  Create Window  ----------------
     sg.ChangeLookAndFeel('Black')  
     layout = [[sg.Text('')],
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],  
-                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]  
-    # Layout the rows of the window and perform a read. Indicate the window is non-blocking!
+                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]
+
     window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
   
   
@@ -1148,7 +1148,7 @@ The spinner changes the number of seconds between reads.  Note that you will get
       window.FindElement('text').Update(f'CPU {cpu_percent:02.0f}%')  
   
     # Broke out of main loop. Close the window.  
-    window.CloseNonBlockingForm()  
+    window.CloseNonBlocking()  
   
 ## Menus  
   
