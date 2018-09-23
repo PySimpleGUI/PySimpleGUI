@@ -26,7 +26,7 @@ Home of the 1-line custom GUI and 1-line progress meter
 
 Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
 
-Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Into Machine Learning and are sick of the command line?  Look no further, **you've found your GUI package**.
+Looking to take your Python code from the world of command lines and into the convenience of a GUI?  Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?  Into Machine Learning and are sick of the command line? How about distributing your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?  Look no further, **you've found your GUI package**.
 
     import PySimpleGUI as sg
 
@@ -73,20 +73,35 @@ You can build an async media player GUI with custom buttons in 30 lines of code.
 ![media player 2](https://user-images.githubusercontent.com/13696193/44960091-eeebf980-aec6-11e8-884e-80d4447a83cd.jpg)
 
 
+How about embedding a game inside of a GUI?  This game of Pong is written in tkinter and then dropped into the PySimpleGUI window creating a game that has an accompanying GUI.
+
 ![pong](https://user-images.githubusercontent.com/13696193/45860012-2d8d0b00-bd33-11e8-9efd-3eaf4c30f324.gif)
+
+
+Combining PySimpleGUI with PyInstaller creates something truly remarkable and special, a Python program that looks like a Windows WinForms application.  This application with working menu was created in 20 lines of Python code.  It is a single .EXE file that launches straight into the screen you see.  And more good news, the only icon you see on the taskbar is the window itself... there is no pesky shell window.
+
+![menu demo](https://user-images.githubusercontent.com/13696193/45923097-8fbc4c00-beaa-11e8-87d2-01a5331811c8.gif)
+
 
   ## Background
 I was frustrated by having to deal with the dos prompt when I had a powerful Windows machine right in front of me.  Why is it SO difficult to do even the simplest of input/output to a window in Python??
 
-There are a number of 'easy to use' Python GUIs, but they were too limited for my requirements.  PySimpleGUIest of packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited, and adds the ability to define your own layouts.   This ability to make your own forms is the  primary difference between these and `PySimpleGUI`.
-
-Every call has optional parameters so that you can change the look and feel.  Don't like the button color? It's easy to change by adding a button_color parameter to your widget.  The configure is done in-place.
+There are a number of 'easy to use' Python GUIs, but they were too limited for my requirements.  PySimpleGUI aims for the same simplicity found in packages like `EasyGUI`and `WxSimpleGUI` , both really handy but limited, and adds the ability to define your own layouts.   This ability to make your own forms using a large palette of widgets is but one difference  between the existing "simple" packages and `PySimpleGUI`.
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
-The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GUI with as little and as simple code as possible.  This was the primary mantra used to create PySimpleGUI.  "Do it in a Python-like way" was the second desired outcome.
+The `PySimpleGUI` package is focused on the ***developer***.
+> Create a custom GUI with as little and as simple code as possible.
+
+This was the primary focus used to create PySimpleGUI.
+
+> "Do it in a Python-like way"
+
+was the second.
 
 ## Features
+
+While simple to use, PySimpleGUI has significant depth to be explored by more advanced programmers.  The feature set goes way beyond the requirements of a beginner programmer, and into the  required features needed for complex GUIs.
 
     Features of PySimpleGUI include:
         Text
@@ -142,42 +157,39 @@ The `PySimpleGUI` package is focused on the ***developer***.  Create a custom GU
         No async programming required (no callbacks to worry about)
 
 
-An example of many widgets used on a single form.  A little further down you'll find the TWENTY lines of code required to create this complex form.  Try it if you don't believe it.  Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
+An example of many widgets used on a single form.  A little further down you'll find the 21 lines of code required to create this complex form.  Try it if you don't believe it.  Install PySimpleGUI then :
+
+>Start Python, copy and paste the code below into the >>> prompt and hit enter. This will pop up...
+>
 
 ![everything example](https://user-images.githubusercontent.com/13696193/43097412-0a4652aa-8e8a-11e8-8e09-939484e3c568.jpg)
 
-Here is the code that produced the above screenshot.
+
 
     import PySimpleGUI as sg
 
-    with sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)) as form:
-        layout = [
-            [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
-            [sg.Text('Here is some text.... and a place to enter text')],
-            [sg.InputText()],
-            [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
-            [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
-            [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',
-                      ))],
-            [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
-             sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
-            [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
-             sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
-            [sg.Text('_'  * 100, size=(70, 1))],
-            [sg.Text('Choose Source and Destination Folders', size=(35, 1))],
-            [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'),
-             sg.FolderBrowse()],
-            [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
-             sg.FolderBrowse()],
-            [sg.Submit(), sg.Cancel(), sg.Button('Customized', button_color=('white', 'green'))]
-        ]
+    layout = [[sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
+       [sg.Text('Here is some text.... and a place to enter text')],
+       [sg.InputText()],
+       [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
+       [sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
+       [sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',)],
+    [sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
+     sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
+    [sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
+     sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
+     sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
+     sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
+    [sg.Text('_'  * 100, size=(70, 1))],
+    [sg.Text('Choose Source and Destination Folders', size=(35, 1))],
+    [sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'),
+     sg.FolderBrowse()],
+    [sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
+     sg.FolderBrowse()],
+    [sg.Submit(), sg.Cancel(), sg.Button('Customized', button_color=('white', 'green'))]]
 
-        button, values = form.LayoutAndRead(layout)
+    button, values  = sg.FlexForm('Everything bagel', auto_size_text=True, default_element_size=(40, 1)).LayoutAndRead(layout)
 
- **A note on screen shots**
-You will see a number of different styles of buttons, data entry fields, etc, in this readme. They were all made with the same SDK, the only difference is in the settings that are specified on a per-element, row, form, or global basis.  One setting in particular, border_width, can make a big difference on the look of the form.  Some of the screenshots had a border_width of 6, others a value of 1.
 
 
 ---
@@ -185,11 +197,11 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 
 > Copy, Paste, Run.
 
-`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the code to visually match what's on the screen.
+`PySimpleGUI's` goal with the API is to be easy on the programmer, and to function in a Python-like way. Since GUIs are visual, it was desirable for the code to visually match what's on the screen.  By providing a significant amount of documentation and an easy to use Cookbook, it's possible to see your first GUI within 5 minutes of beginning the installation.
 
   > Be Pythonic
 
- Be Pythonic... Attempted to use language constructs in a natural way and to exploit some of Python's interesting features.  Python's lists and optional parameters make PySimpleGUI work.
+ Be Pythonic... Attempted to use language constructs in a natural way and to exploit some of Python's interesting features.  Python's lists and optional parameters make PySimpleGUI work smoothly.
 
  - Forms are represented as Python lists.
     - A form is a list of rows
@@ -200,11 +212,18 @@ You will see a number of different styles of buttons, data entry fields, etc, in
 -  Linear programming instead of callbacks
 
  #### Lofty Goals
->
->
+
 >  Change Python
 
-The hope is not that ***this*** package will become part of the Python Standard Library.  The hope is that Python will become ***the*** go-to language for creating GUI programs that run on Windows, Mac, and Linux for all levels of developer.  The hope is that beginners that are interested in graphic design will have an easy way to express themselves, right from the start of their Python experience.  There is a gap in the Python GUI solution.  Fill that gap and who knows what will happen.  Maybe there's no "there there".  Or maybe simple GUI API will enable Python to dominate yet another computing discipline like it has so many others.   I want to find out.
+The hope is not that ***this*** package will become part of the Python Standard Library.
+
+The hope is that Python will become ***the*** go-to language for creating GUI programs that run on Windows, Mac, and Linux *for all levels of developer*.
+
+The hope is that beginners that are interested in graphic design will have an easy way to express themselves, right from the start of their Python experience.
+
+There is a noticeable gap in the Python GUI solution.  Fill that gap and who knows what will happen.
+
+Maybe there's no "there there".  ***Or*** maybe a simple GUI API will enable Python to dominate yet another computing discipline like it has so many others.   This is my attempt to find out.
 
 
   -----
@@ -222,10 +241,9 @@ On a Raspberry Pi, this is should work:
 
     sudo pip3 install --upgrade pysimplegui
 
-Some users have found that upgrading required using an extra flag on the pip `--no-cache-dir` and you can force the version number too by adding `==version` onto the end
+Some users have found that upgrading required using an extra flag on the pip `--no-cache-dir`.
 
-    pip install --upgrade --no-cache-dir PySimpleGUI==3.0.3
-
+    pip install --upgrade --no-cache-dir
 
 If for some reason you are unable to install using `pip`, don't worry, you can still import PySimpleGUI by downloading the file PySimleGUI.py and placing it in your folder along with the application that is importing it.
 
@@ -238,16 +256,19 @@ then you need to install `tkinter`.  Be sure and get the Python 3 version.
 sudo apt-get install python3-tk
 ```
 
-
-
 ### Prerequisites
 
 Python 3
 tkinter
 
-Runs on all Python platforms that have tkinter running on them.  Thoroughly tested on Windows.  Runs on Windows, Mac, Linux, Raspberry Pi.  Even runs on `pypy3`.
+PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It has been tested on Windows.  Runs on Windows, Mac, Linux, Raspberry Pi.  Even runs on `pypy3`.
 
-### Using
+### EXE file creation
+
+If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this ReadMe
+
+
+## Using
 
 To use in your code, simply import....
  `import PySimpleGUI as sg`
@@ -274,6 +295,7 @@ PySimpleGUI can be broken down into 2 types of API's:
  There are a number of Python language features that PySimpleGUI utilizes heavily for API access that should be understood...
  * Variable number of arguments to a function call
  * Optional parameters to a function call
+ * Dictionaries
 
 #### Variable Number of Arguments
 
@@ -310,6 +332,12 @@ If the caller wanted to change the button color to be black on yellow, the call 
 ![snap0180](https://user-images.githubusercontent.com/13696193/43658171-13a72bfe-9726-11e8-8c7a-0a46e46fb202.jpg)
 
 
+#### Dictionaries
+
+Dictionaries are used by more advanced PySimpleGUI users.  You'll know that dictionaries are being used if you see a `key` parameter on any Element.  Dictionaries are used in 2 ways:
+1. To identify values when a form is read
+2. To identify Elements so that they can be "updated"
+
 ---
 
 ### High Level API Calls  - Popup's
@@ -318,7 +346,7 @@ If the caller wanted to change the button color to be black on yellow, the call 
 
 ### Popup Output
 
-Think of the `Popup` call as the GUI equivelent of a  `print` statement.  It's your way of displaying results to a user in the windowed world.  Each call to Popup will create a new Popup window.
+Think of the `Popup` call as the GUI equivalent of a  `print` statement.  It's your way of displaying results to a user in the windowed world.  Each call to Popup will create a new Popup window.
 
 `Popup` calls are normally blocking.  your program will stop executing until the user has closed the Popup window.  A non-blocking form of Popup discussed in the async section.
 
@@ -2413,6 +2441,36 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
   * [Mido](https://github.com/olemb/mido)
   * [Matplotlib](https://matplotlib.org/)
   * [PyMuPDF](https://github.com/rk700/PyMuPDF)
+
+
+## Creating a Windows .EXE File
+
+It's possible to create a single .EXE file that can be distributed to Windows users. There is no requirement to install the Python interpreter on the PC you wish to run it on. Everything it needs is in the one EXE file, assuming you're running a somewhat up to date version of Windows.
+
+Installation of the packages, you'll need to install PySimpleGUI and PyInstaller (you need to install only once)
+
+```
+pip install PySimpleGUI
+pip install PyInstaller
+
+```
+
+To create your EXE file from your program that uses PySimpleGUI,  `my_program.py`, enter this command in your Windows command prompt:
+
+```
+pyinstaller -wF my_program.py
+
+```
+
+You will be left with a single file,  `my_program.exe`, located in a folder named  `dist`  under the folder where you executed the  `pyinstaller`  command.
+
+That's all... Run your  `my_program.exe`  file on the Windows machine of your choosing.
+
+> "It's just that easy."
+
+(famous last words that screw up just about anything being referenced)
+
+Your EXE file should run without creating a "shell window". Only the GUI window should show up on your taskbar.
 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize
