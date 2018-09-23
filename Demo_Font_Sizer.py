@@ -11,7 +11,7 @@ form = sg.FlexForm("Font size selector", grab_anywhere=False)
 form.Layout(layout)
 while True:
     button, values= form.Read()
-    if button is None:
+    if button is None or button == 'Quit':
         break
     sz_spin = int(values['spin'])
     sz_slider = int(values['slider'])

@@ -5,15 +5,14 @@ layout = [
            [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue'), sg.ReadFormButton('Move')]
            ]
 
-form = sg.FlexForm('Canvas test')
-form.Layout(layout)
-form.Finalize()
+form = sg.FlexForm('Graph test').Layout(layout).Finalize()
 
 graph = form.FindElement('graph')
 circle = graph.DrawCircle((75,75), 25, fill_color='black',line_color='white')
 point = graph.DrawPoint((75,75), 10, color='green')
 oval = graph.DrawOval((25,300), (100,280), fill_color='purple', line_color='purple' )
 rectangle = graph.DrawRectangle((25,300), (100,280), line_color='purple' )
+line = graph.DrawLine((0,0), (100,100))
 
 while True:
     button, values = form.Read()

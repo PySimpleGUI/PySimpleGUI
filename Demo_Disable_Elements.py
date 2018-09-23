@@ -20,13 +20,9 @@ layout = [
            sg.ReadFormButton('Values', button_color=('white', 'springgreen4')),
            sg.SimpleButton('Exit', button_color=('white', '#00406B'))]]
 
-form = sg.FlexForm("Time Tracker", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
+form = sg.FlexForm("Disable Elements Demo", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
                    auto_size_buttons=False, keep_on_top=True, grab_anywhere=False,
-                   default_button_element_size=(12, 1))
-
-form.Layout(layout)
-
-form.Finalize()
+                   default_button_element_size=(12, 1)).Layout(layout).Finalize()
 
 form.FindElement('cbox').Update(disabled=True)
 form.FindElement('listbox').Update(disabled=True)

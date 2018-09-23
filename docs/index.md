@@ -7,7 +7,7 @@
 
 # PySimpleGUI
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.5.1-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.5.2-red.svg?longCache=true&style=for-the-badge)
 
 
 [Wiki for the latest news](https://github.com/MikeTheWatchGuy/PySimpleGUI/wiki)
@@ -1846,8 +1846,8 @@ The order of operations to obtain a tkinter Canvas Widget is:
               [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
 
     # create the form and show it without the plot
-    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)
-    form.Finalize()
+    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
+
 
     # add the plot to the window
     fig_photo = draw_figure(form.FindElement('canvas').TKCanvas, fig)
@@ -2518,6 +2518,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 03.04.01 | Sept 18, 2018 - See release notes
 | 03.05.00 | Sept 20, 2018 - See release notes
 | 03.05.01 | Sept 22, 2018 - See release notes
+| 03.05.02 | Sept 23, 2018 - See release notes
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -2599,6 +2600,11 @@ OneLineProgressMeter function added which gives you not only a one-line solution
 #### 3.5.1
 * Bug fix for broken PySimpleGUI if Python version < 3.6 (sorry!)
 * LOTS of Readme changes
+
+#### 3.5.2
+* Made `Finalize()` in a way that it can be chained
+* Fixed bug in return values from Frame Element contents
+
 
 ### Upcoming
 Make suggestions people!  Future release features

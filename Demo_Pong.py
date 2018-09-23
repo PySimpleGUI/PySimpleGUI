@@ -128,9 +128,8 @@ def pong():
     layout = [[sg.Canvas(size=(700, 400), background_color='black', key='canvas')],
               [sg.T(''), sg.ReadFormButton('Quit')]]
     # ------------- Create window -------------
-    form = sg.FlexForm('Canvas test', return_keyboard_events=True)
-    form.Layout(layout)
-    form.Finalize()                  # TODO Replace with call to form.Finalize once code released
+    form = sg.FlexForm('The Classic Game of Pong', return_keyboard_events=True).Layout(layout).Finalize()
+    # form.Finalize()                  # TODO Replace with call to form.Finalize once code released
 
     # ------------- Get the tkinter Canvas we're drawing on -------------
     canvas = form.FindElement('canvas').TKCanvas
@@ -150,7 +149,6 @@ def pong():
 
         # ------------- Read the form, get keypresses -------------
         button, values = form.ReadNonBlocking()
-
         # ------------- If quit  -------------
         if button is None and values is None or button == 'Quit':
             exit(69)
@@ -167,6 +165,7 @@ def pong():
 
         if ball1.checkwin():
             sg.Popup('Game Over', ball1.checkwin() + ' won!!')
+            break
 
 
         # ------------- Bottom of loop, delay between animations -------------

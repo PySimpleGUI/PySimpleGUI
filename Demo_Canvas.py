@@ -6,9 +6,7 @@ layout = [
            [sg.T('Change circle color to:'), sg.ReadFormButton('Red'), sg.ReadFormButton('Blue')]
            ]
 
-form = sg.FlexForm('Canvas test')
-form.Layout(layout)
-form.Finalize()
+form = sg.FlexForm('Canvas test').Layout(layout).Finalize()
 
 cir = form.FindElement('canvas').TKCanvas.create_oval(50, 50, 100, 100)
 

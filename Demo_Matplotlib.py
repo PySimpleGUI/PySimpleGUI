@@ -107,19 +107,16 @@ fig = plt.gcf()      # if using Pyplot then get the figure from the plot
 #       information to display.                                                   #
 # --------------------------------------------------------------------------------#
 figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
-canvas_elem = sg.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
 # define the form layout
 layout = [[sg.Text('Plot test')],
-          [canvas_elem],
+          [sg.Canvas(size=(figure_w, figure_h), key='canvas')],
           [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
 
 # create the form and show it without the plot
-form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
-form.Layout(layout)
-form.ReadNonBlocking()
+form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
 
 # add the plot to the window
-fig_photo = draw_figure(canvas_elem.TKCanvas, fig)
+fig_photo = draw_figure(form.FindElement('canvas').TKCanvas, fig)
 
 # show it all again and get buttons
 button, values = form.Read()
