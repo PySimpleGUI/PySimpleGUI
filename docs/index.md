@@ -485,7 +485,7 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
 Here's the one-line Progress Meter in action!
 
     for i in range(1,10000):
-        sg.OneLineProgressMeter('My Meter', i+1, 10000, 'Optional message', 'key')
+        sg.OneLineProgressMeter('My Meter', i+1, 10000, 'key','Optional message')
 
 That line of code resulted in this window popping up and updating.
 
@@ -1701,7 +1701,7 @@ The `ProgressBar` element is used to build custom Progress Bar windows.  It is H
 The **easiest** way to get progress meters into your code is to use the `OneLineProgressMeter` API.  This consists of a pair of functions, `OneLineProgressMeter` and `OneLineProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
 You've already seen OneLineProgressMeter calls presented earlier in this readme.
 
-    sg.OneLineProgressMeter('My Meter', i+1, 1000, 'Optional message', 'key')
+    sg.OneLineProgressMeter('My Meter', i+1, 1000,  'key', 'Optional message')
 
 The return value for `OneLineProgressMeter` is:
 `True` if meter updated correctly
