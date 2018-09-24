@@ -27,11 +27,11 @@ What makes PySimpleGUI superior for newcomers is that the package contains the m
 
 With some GUIs arranging the GUI Widgets often requires several lines of code.... at least one or two lines per widget.  PySimpleGUI uses an "auto-packer" that creates the layout for the user automatically.  There is no concept of a pack nor a grid system needed to layout a GUI Window.
 
-Finally, PySimpleGUI leverages the Python language constructs in clever ways that shortens the amount of code and returns the GUI data in a straightforward manner.  When a Widget is created in a form layout, it is configured in-place, not several lines of code away.  Results are returned as a simple list or a dictionary.
+Finally, PySimpleGUI leverages the Python language constructs in clever ways that shortens the amount of code and returns the GUI data in a straightforward manner.  When a Widget is created in a window layout, it is configured in-place, not several lines of code away.  Results are returned as a simple list or a dictionary.
 
 ## What is a GUI?
 
-Most GUIs do one thing.... they collect information from the user and return it.  From a programmer's viewpoint a GUI that collects information, like a form, could be summed up as a function call that looks like this:
+Most GUIs do one thing.... they collect information from the user and return it.  From a programmer's viewpoint a GUI that collects information, like a window, could be summed up as a function call that looks like this:
 
     button, values = GUI_Display(gui_layout)
 
@@ -65,7 +65,7 @@ Let's look at the first recipe from the book
               [sg.Submit(), sg.Cancel()]
              ]
 
-    window = sg.Window('Simple data entry form').Layout(layout)
+    window = sg.Window('Simple data entry window').Layout(layout)
     button, values = window.Read()
 
     print(button, values[0], values[1], values[2])
@@ -187,7 +187,7 @@ The stuff that tends not to change in GUIs are the calls that setup and show the
  * Define GUI as a list of lists
  * Show the GUI and get results
 
-Some windows act more like Windows programs. These windows have an "Event Loop".  Please see the readme for more info on these kinds of forms (Persistent windows)
+Some windows act more like Windows programs. These windows have an "Event Loop".  Please see the readme for more info on these kinds of windows (Persistent windows)
 
 These are line for line what you see in design pattern above.
 
