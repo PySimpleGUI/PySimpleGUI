@@ -6,6 +6,7 @@ def TableSimulation():
     Display data in a table format
     """
     sg.SetOptions(element_padding=(0,0))
+    sg.PopupNoWait('Give it a few seconds to load please...', auto_close=True)
 
     menu_def = [['File', ['Open', 'Save', 'Exit']],
                 ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
@@ -21,17 +22,16 @@ def TableSimulation():
 
     layout = [ [sg.Menu(menu_def)],
                [sg.T('Table Using Combos and Input Elements', font='Any 18')],
-              [sg.T('Type in a row, column and value. The form will update the values in realtime as you type'),
+               [sg.T('Type in a row, column and value. The form will update the values in realtime as you type'),
                sg.In(key='inputrow', justification='right', size=(8,1), pad=(1,1), do_not_clear=True),
                sg.In(key='inputcol', size=(8,1), pad=(1,1), justification='right', do_not_clear=True),
                sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)],
-               [sg.Column(columm_layout, size=(800,600), scrollable=True)]]
+               [sg.Column(columm_layout, size=(800,600), scrollable=True)] ]
 
-    form = sg.FlexForm('Table', return_keyboard_events=True, grab_anywhere=False)
-    form.Layout(layout)
+    window = sg.Window('Table', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
 
     while True:
-        button, values = form.Read()
+        button, values = window.Read()
         # --- Process buttons --- #
         if button is None or button == 'Exit':
             break
@@ -49,13 +49,13 @@ def TableSimulation():
                         sg.PopupError('Error reading file')
                         continue
                 # clear the table
-                [form.FindElement((i,j)).Update('') for j in range(MAX_COL) for i in range(MAX_ROWS)]
+                [window.FindElement((i,j)).Update('') for j in range(MAX_COL) for i in range(MAX_ROWS)]
 
                 for i, row in enumerate(data):
                     for j, item in enumerate(row):
                         location = (i,j)
                         try:            # try the best we can at reading and filling the table
-                            target_element = form.FindElement(location)
+                            target_element = window.FindElement(location)
                             new_value = item
                             if target_element is not None and new_value != '':
                                 target_element.Update(new_value)
@@ -65,7 +65,7 @@ def TableSimulation():
         # if a valid table location entered, change that location's value
         try:
             location = (int(values['inputrow']), int(values['inputcol']))
-            target_element = form.FindElement(location)
+            target_element = window.FindElement(location)
             new_value = values['value']
             if target_element is not None and new_value != '':
                 target_element.Update(new_value)

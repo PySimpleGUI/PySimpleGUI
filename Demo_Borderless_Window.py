@@ -11,20 +11,20 @@ layout = [[sg.T('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User
           [sg.T('Customer:', pad=((3, 0), 0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20, 1)),
            sg.T('1', size=(8, 1))],
           [sg.T('Notes:', pad=((3, 0), 0)), sg.In(size=(44, 1), background_color='white', text_color='black')],
-          [sg.ReadFormButton('Start', button_color=('white', 'black')),
-           sg.ReadFormButton('Stop', button_color=('gray50', 'black')),
-           sg.ReadFormButton('Reset', button_color=('white', '#9B0023')),
-           sg.ReadFormButton('Submit', button_color=('gray60', 'springgreen4')),
-           sg.SimpleButton('Exit', button_color=('white', '#00406B'))]]
+          [sg.ReadButton('Start', button_color=('white', 'black')),
+           sg.ReadButton('Stop', button_color=('gray50', 'black')),
+           sg.ReadButton('Reset', button_color=('white', '#9B0023')),
+           sg.ReadButton('Submit', button_color=('gray60', 'springgreen4')),
+           sg.Button('Exit', button_color=('white', '#00406B'))]]
 
-form = sg.FlexForm("Time Tracker", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
+window = sg.Window("Time Tracker", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
                    auto_size_buttons=False, no_titlebar=True,
                    default_button_element_size=(12, 1))
 
-form.Layout(layout)
+window.Layout(layout)
 
 while True:
-    button, values = form.Read()
+    button, values = window.Read()
     if button is None or button == 'Exit':
         break
 

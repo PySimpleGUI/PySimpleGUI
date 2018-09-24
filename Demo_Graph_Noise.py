@@ -1,7 +1,7 @@
 import time
 import random
 import PySimpleGUI as sg
-
+import sys
 
 STEP_SIZE=1
 SAMPLES = 300
@@ -12,16 +12,16 @@ CANVAS_SIZE = (300,300)
 def main():
     global g_exit, g_response_time
 
-    with sg.FlexForm('Enter graph size') as form:
-        layout = [[sg.T('Enter width, height of graph')],
-                  [sg.In(size=(6, 1)), sg.In(size=(6, 1))],
-                  [sg.Ok(), sg.Cancel()]]
+    layout = [[sg.T('Enter width, height of graph')],
+              [sg.In(size=(6, 1)), sg.In(size=(6, 1))],
+              [sg.Ok(), sg.Cancel()]]
 
-        b,v = form.LayoutAndRead(layout)
-        if b is None or b == 'Cancel':
-            exit(69)
-        w, h = int(v[0]), int(v[1])
-        CANVAS_SIZE = (w,h)
+    window = sg.Window('Enter graph size').Layout(layout)
+    b,v = window.Read()
+    if b is None or b == 'Cancel':
+        sys.exit(69)
+    w, h = int(v[0]), int(v[1])
+    CANVAS_SIZE = (w,h)
 
     # start ping measurement thread
 
@@ -31,8 +31,8 @@ def main():
     layout = [  [sg.Quit( button_color=('white','black'))],
                [sg.Graph(CANVAS_SIZE, (0,0), (SAMPLES,SAMPLE_MAX),background_color='black', key='graph')],]
 
-    form = sg.FlexForm('Canvas test', grab_anywhere=True, background_color='black', no_titlebar=False, use_default_focus=False).Layout(layout).Finalize()
-    graph = form.FindElement('graph')
+    window = sg.Window('Canvas test', grab_anywhere=True, background_color='black', no_titlebar=False, use_default_focus=False).Layout(layout).Finalize()
+    graph = window.FindElement('graph')
 
     prev_response_time = None
     i=0
@@ -40,7 +40,7 @@ def main():
     graph_value = 250
     while True:
         # time.sleep(.2)
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         if button == 'Quit' or values is None:
             break
         graph_offset = random.randint(-10, 10)
@@ -55,7 +55,7 @@ def main():
             graph.Move(-STEP_SIZE,0)
             prev_x = prev_x - STEP_SIZE
         graph.DrawLine((prev_x, prev_y), (new_x, new_y), color='white')
-        # form.FindElement('graph').DrawPoint((new_x, new_y), color='red')
+        # window.FindElement('graph').DrawPoint((new_x, new_y), color='red')
         prev_x, prev_y = new_x, new_y
         i += STEP_SIZE if i < SAMPLES else 0
 
@@ -63,4 +63,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    exit(69)

@@ -247,7 +247,7 @@ def PyplotLineStyles():
 
     # For each line style, add a text annotation with a small offset from
     # the reference point (0 in Axes coords, y tick value in Data coords).
-    reference_transform = blended_transform_factory(ax.transAxes, ax.transData)
+    reference_transwindow = blended_transform_factory(ax.transAxes, ax.transData)
     for i, (name, linestyle) in enumerate(linestyles.items()):
         ax.annotate(str(linestyle), xy=(0.0, i), xycoords=reference_transform,
                     xytext=(-6, -12), textcoords='offset points', color="blue",
@@ -864,23 +864,24 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
 
 sg.ChangeLookAndFeel('LightGreen')
 figure_w, figure_h = 650, 650
-canvas_elem = sg.Canvas(size=(figure_w, figure_h))         # get the canvas we'll be drawing on
-multiline_elem = sg.Multiline(size=(70, 35), pad=(5, (3, 90)))
 # define the form layout
 listbox_values = [key for key in fig_dict.keys()]
 col_listbox = [[sg.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='func')],
                [sg.T(' ' * 12), sg.Exit(size=(5, 2))]]
 
 layout = [[sg.Text('Matplotlib Plot Test', font=('current 18'))],
-          [sg.Column(col_listbox, pad=(5, (3, 330))), canvas_elem, multiline_elem],
-          ]
+          [sg.Column(col_listbox, pad=(5, (3, 330))), sg.Canvas(size=(figure_w, figure_h), key='canvas') ,
+           sg.Multiline(size=(70, 35), pad=(5, (3, 90)), key='multiline')],]
 
 # create the form and show it without the plot
-form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI', grab_anywhere=False)
-form.Layout(layout)
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', grab_anywhere=False).Layout(layout)
+window.Finalize()
+
+canvas_elem = window.FindElement('canvas')
+multiline_elem= window.FindElement('multiline')
 
 while True:
-    button, values = form.Read()
+    button, values = window.Read()
     print(button)
     # show it all again and get buttons
     if button is None or button is 'Exit':
@@ -891,7 +892,6 @@ while True:
         func = fig_dict[choice]
     except:
         pass
-        # func = fig_dict['Pyplot Simple']
 
     multiline_elem.Update(inspect.getsource(func))
     plt.clf()

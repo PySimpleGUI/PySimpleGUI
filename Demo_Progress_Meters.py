@@ -1,5 +1,7 @@
 from time import sleep
 import PySimpleGUI as sg
+from sys import exit as exit
+
 
 """
     Demonstration of simple and multiple OneLineProgressMeter's
@@ -17,7 +19,6 @@ import PySimpleGUI as sg
     The simple case is that you want to add a single meter to your code.  The one-line solution
 """
 
-import PySimpleGUI as sg
 
 # Display a progress meter in work loop. User is not allowed to break out of the loop
 for i in range(10000):
@@ -29,22 +30,19 @@ for i in range(10000):
         break
 
 
-
-
 layout = [
             [sg.T('One-Line Progress Meter Demo', font=('Any 18'))],
             [sg.T('Outer Loop Count', size=(15,1), justification='r'), sg.In(default_text='100', size=(5,1), key='CountOuter', do_not_clear=True),
              sg.T('Delay'), sg.In(default_text='10', key='TimeOuter', size=(5,1), do_not_clear=True), sg.T('ms')],
             [sg.T('Inner Loop Count', size=(15,1), justification='r'), sg.In(default_text='100', size=(5,1), key='CountInner', do_not_clear=True) ,
              sg.T('Delay'), sg.In(default_text='10', key='TimeInner', size=(5,1), do_not_clear=True), sg.T('ms')],
-            [sg.SimpleButton('Show', pad=((0,0), 3), bind_return_key=True), sg.T('me the meters!')]
+            [sg.Button('Show', pad=((0,0), 3), bind_return_key=True), sg.T('me the meters!')]
           ]
 
-form = sg.FlexForm('One-Line Progress Meter Demo')
-form.Layout(layout)
+window = sg.Window('One-Line Progress Meter Demo').Layout(layout)
 
 while True:
-    button, values = form.Read()
+    button, values = window.Read()
     if button is None:
         break
     if button == 'Show':

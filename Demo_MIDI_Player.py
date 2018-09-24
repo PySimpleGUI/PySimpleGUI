@@ -2,6 +2,7 @@ import os
 import PySimpleGUI as g
 import mido
 import time
+import sys
 
 PLAYER_COMMAND_NONE = 0
 PLAYER_COMMAND_EXIT = 1
@@ -18,7 +19,7 @@ class PlayerGUI():
     '''
 
     def __init__(self):
-        self.Form = None
+        self.Window = None
         self.TextElem = None
         self.PortList = mido.get_output_names()        # use to get the list of midi ports
         self.PortList = self.PortList[::-1]            # reverse the list so the last one is first
@@ -30,10 +31,8 @@ class PlayerGUI():
     def PlayerChooseSongGUI(self):
 
         # ---------------------- DEFINION OF CHOOSE WHAT TO PLAY GUI ----------------------------
-        with g.FlexForm('MIDI File Player', auto_size_text=False,
-                        default_element_size=(30, 1),
-                        font=("Helvetica", 12)) as form:
-            layout = [[g.Text('MIDI File Player', font=("Helvetica", 15), size=(20, 1), text_color='green')],
+
+        layout = [[g.Text('MIDI File Player', font=("Helvetica", 15), size=(20, 1), text_color='green')],
                       [g.Text('File Selection', font=("Helvetica", 15), size=(20, 1))],
                       [g.Text('Single File Playback', justification='right'), g.InputText(size=(65, 1), key='midifile'), g.FileBrowse(size=(10, 1), file_types=(("MIDI files", "*.mid"),))],
                       [g.Text('Or Batch Play From This Folder', auto_size_text=False, justification='right'), g.InputText(size=(65, 1), key='folder'), g.FolderBrowse(size=(10, 1))],
@@ -43,9 +42,9 @@ class PlayerGUI():
                       [g.Text('_' * 250, auto_size_text=False, size=(100, 1))],
                       [g.SimpleButton('PLAY', size=(12, 2), button_color=('red', 'white'), font=("Helvetica", 15), bind_return_key=True), g.Text(' ' * 2, size=(4, 1)), g.Cancel(size=(8, 2), font=("Helvetica", 15))]]
 
-
-        self.Form = form
-        return form.LayoutAndRead(layout)
+        window = g.Window('MIDI File Player', auto_size_text=False, default_element_size=(30, 1), font=("Helvetica", 12)).Layout(layout)
+        self.Window = window
+        return window.Read()
 
 
     def PlayerPlaybackGUIStart(self, NumFiles=1):
@@ -58,7 +57,6 @@ class PlayerGUI():
 
         self.TextElem = g.T('Song loading....', size=(70,5 + NumFiles), font=("Helvetica", 14), auto_size_text=False)
         self.SliderElem = g.Slider(range=(1,100), size=(50, 8), orientation='h', text_color='#f0f0f0')
-        form = g.FlexForm('MIDI File Player', default_element_size=(30,1),font=("Helvetica", 25))
         layout = [
                     [g.T('MIDI File Player', size=(30,1), font=("Helvetica", 25))],
                     [self.TextElem],
@@ -73,8 +71,8 @@ class PlayerGUI():
                                      image_filename=image_exit, image_size=(50,50), image_subsample=2, border_width=0,)]
                   ]
 
-        form.LayoutAndRead(layout, non_blocking=True)
-        self.Form = form
+        window = g.FlexForm('MIDI File Player', default_element_size=(30,1),font=("Helvetica", 25)).Layout(layout).Finalize()
+        self.Window = window
 
 
 
@@ -83,11 +81,11 @@ class PlayerGUI():
     #   Refresh the GUI for the main playback interface (must call periodically #
     # ------------------------------------------------------------------------- #
     def PlayerPlaybackGUIUpdate(self, DisplayString):
-        form = self.Form
-        if 'form' not in locals() or form is None:          # if the form has been destoyed don't mess with it
+        window = self.Window
+        if 'window' not in locals() or window is None:          # if the form has been destoyed don't mess with it
             return PLAYER_COMMAND_EXIT
         self.TextElem.Update(DisplayString)
-        button, (values) = form.ReadNonBlocking()
+        button, (values) = window.ReadNonBlocking()
         if values is None:
             return PLAYER_COMMAND_EXIT
         if button == 'PAUSE':
@@ -121,7 +119,7 @@ def main():
     button, values = pback.PlayerChooseSongGUI()
     if button != 'PLAY':
         g.PopupCancel('Cancelled...\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
-        exit(69)
+        sys.exit(69)
     if values['device']:
         midi_port = values['device'][0]
     else:
@@ -139,7 +137,7 @@ def main():
         filetitles = [os.path.basename(midi_filename),]
     else:
         g.PopupError('*** Error - No MIDI files specified ***')
-        exit(666)
+        sys.exit(666)
 
     # ------ LOOP THROUGH MULTIPLE FILES --------------------------------------------------------- #
     pback.PlayerPlaybackGUIStart(NumFiles=len(filelist) if len(filelist) <=10 else 10)
@@ -215,7 +213,6 @@ def main():
 
         if cancelled:
             break
-    exit(69)
 
 # ---------------------------------------------------------------------- #
 #  LAUNCH POINT -- program starts and ends here                          #
@@ -223,4 +220,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-    exit(69)

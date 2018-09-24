@@ -38,15 +38,14 @@ layout = [
     [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
      sg.InputText('Default Folder'), sg.FolderBrowse()],
     [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]
-]
+    ]
 
+window = sg.Window('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
 
-form = sg.FlexForm('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
-
-button, values = form.Read()
+button, values = window.Read()
 
 sg.Popup('Title',
-         'The results of the form.',
+         'The results of the window.',
          'The button clicked was "{}"'.format(button),
          'The values are', values)
 

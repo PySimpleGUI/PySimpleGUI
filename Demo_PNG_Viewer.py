@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import os
+from sys import exit as exit
 
 # Simple Image Browser based on PySimpleGUI
 
@@ -20,24 +21,23 @@ if len(png_files) == 0:
 
 # define menu layout
 menu = [['File', ['Open Folder', 'Exit']], ['Help', ['About',]]]
-# create the form that also returns keyboard events
-form = sg.FlexForm('Image Browser', return_keyboard_events=True, location=(0,0), use_default_focus=False )
 
-# define layout, show and read the form
+# define layout, show and read the window
 col = [[sg.Text(png_files[0], size=(80, 3), key='filename')],
           [sg.Image(filename=png_files[0], key='image')],
-          [sg.ReadFormButton('Next', size=(8,2)), sg.ReadFormButton('Prev', size=(8,2)),
+          [sg.ReadButton('Next', size=(8,2)), sg.ReadButton('Prev', size=(8,2)),
            sg.Text('File 1 of {}'.format(len(png_files)), size=(15,1), key='filenum')]]
 
 col_files = [[sg.Listbox(values=filenames_only, size=(60,30), key='listbox')],
-             [sg.ReadFormButton('Read')]]
+             [sg.ReadButton('Read')]]
 layout = [[sg.Menu(menu)], [sg.Column(col_files), sg.Column(col)]]
-button, values = form.LayoutAndRead(layout)          # Shows form on screen
+window = sg.Window('Image Browser', return_keyboard_events=True, location=(0,0), use_default_focus=False ).Layout(layout)
 
 # loop reading the user input and displaying image, filename
 i=0
 while True:
 
+    button, values = window.Read()
     # --------------------- Button & Keyboard ---------------------
     if button is None:
         break
@@ -58,18 +58,16 @@ while True:
         folder = newfolder
         png_files = [folder + '/' + f for f in os.listdir(folder) if '.png' in f]
         filenames_only = [f for f in os.listdir(folder) if '.png' in f]
-        form.FindElement('listbox').Update(values=filenames_only)
-        form.Refresh()
+        window.FindElement('listbox').Update(values=filenames_only)
+        window.Refresh()
         i = 0
     elif button == 'About':
         sg.Popup('Demo PNG Viewer Program', 'Please give PySimpleGUI a try!')
 
     # update window with new image
-    form.FindElement('image').Update(filename=filename)
+    window.FindElement('image').Update(filename=filename)
     # update window with filename
-    form.FindElement('filename').Update(filename)
+    window.FindElement('filename').Update(filename)
     # update page display
-    form.FindElement('filenum').Update('File {} of {}'.format(i+1, len(png_files)))
+    window.FindElement('filenum').Update('File {} of {}'.format(i+1, len(png_files)))
 
-    # read the form
-    button, values = form.Read()

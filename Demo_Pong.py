@@ -1,6 +1,8 @@
 import random
 import PySimpleGUI as sg
 import time
+from sys import exit as exit
+
 
 """
     Pong code supplied by Daniel Young (Neonzz)
@@ -126,13 +128,13 @@ class pongbat2():
 def pong():
     # ------------- Define GUI layout -------------
     layout = [[sg.Canvas(size=(700, 400), background_color='black', key='canvas')],
-              [sg.T(''), sg.ReadFormButton('Quit')]]
+              [sg.T(''), sg.ReadButton('Quit')]]
     # ------------- Create window -------------
-    form = sg.FlexForm('The Classic Game of Pong', return_keyboard_events=True).Layout(layout).Finalize()
-    # form.Finalize()                  # TODO Replace with call to form.Finalize once code released
+    window = sg.Window('The Classic Game of Pong', return_keyboard_events=True).Layout(layout).Finalize()
+    # window.Finalize()                  # TODO Replace with call to window.Finalize once code released
 
     # ------------- Get the tkinter Canvas we're drawing on -------------
-    canvas = form.FindElement('canvas').TKCanvas
+    canvas = window.FindElement('canvas').TKCanvas
 
     # ------------- Create line down center, the bats and ball -------------
     canvas.create_line(350, 0, 350, 400, fill='white')
@@ -148,7 +150,7 @@ def pong():
         bat2.draw()
 
         # ------------- Read the form, get keypresses -------------
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         # ------------- If quit  -------------
         if button is None and values is None or button == 'Quit':
             exit(69)

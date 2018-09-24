@@ -22,7 +22,7 @@ This version contains enhancements:
 
 We also interpret keyboard events (PageDown / PageUp) and mouse wheel actions
 to support paging as if a button was clicked. Similarly, we do not include
-a 'Quit' button. Instead, the ESCAPE key can be used, or cancelling the form.
+a 'Quit' button. Instead, the ESCAPE key can be used, or cancelling the window.
 To improve paging performance, we are not directly creating pixmaps from
 pages, but instead from the fitz.DisplayList of the page. A display list
 will be stored in a list and looked up by page number. This way, zooming
@@ -121,7 +121,7 @@ max_size = (max_width, max_height)
 root.destroy()
 del root
 
-form = sg.FlexForm(title, return_keyboard_events = True, 
+window = sg.Window(title, return_keyboard_events = True,
                    location = (0,0), use_default_focus = False, no_titlebar=False)
 
 cur_page = 0
@@ -137,18 +137,18 @@ goto = sg.InputText(str(cur_page + 1), size=(5, 1), do_not_clear=True,
 
 layout = [
     [
-        sg.ReadFormButton('Next'),
-        sg.ReadFormButton('Prev'),
+        sg.ReadButton('Next'),
+        sg.ReadButton('Prev'),
         sg.Text('Page:'),
         goto,
         sg.Text('(%i)' % page_count),
-        sg.ReadFormButton('Zoom'),
+        sg.ReadButton('Zoom'),
         sg.Text('(toggle on/off, use arrows to navigate while zooming)'),
     ],
     [image_elem],
 ]
 
-form.Layout(layout)
+window.Layout(layout)
 
 # now define the buttons / events we want to handle
 enter_buttons = [chr(13), "Return:13"]
@@ -169,7 +169,7 @@ old_page = 0
 old_zoom = False
 
 while True:
-    button, value = form.Read()
+    button, value = window.Read()
     if button is None and (value is None or value['PageNumber'] is None):
         break
     if button in quit_buttons:

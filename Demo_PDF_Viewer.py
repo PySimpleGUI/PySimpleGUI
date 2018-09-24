@@ -24,7 +24,7 @@ into the four page quadrants (top-left, bottom-right, etc.).
 
 We also interpret keyboard events to support paging by PageDown / PageUp
 keys as if the resp. buttons were clicked. Similarly, we do not include
-a 'Quit' button. Instead, the ESCAPE key can be used, or cancelling the form.
+a 'Quit' button. Instead, the ESCAPE key can be used, or cancelling the window.
 
 To improve paging performance, we are not directly creating pixmaps from
 pages, but instead from the fitz.DisplayList of the page. A display list
@@ -35,6 +35,7 @@ pixmaps and page re-visits will re-use a once-created display list.
 import sys
 import fitz
 import PySimpleGUI as sg
+from sys import exit as exit
 from binascii import hexlify
 
 sg.ChangeLookAndFeel('GreenTan')
@@ -86,7 +87,7 @@ def get_page(pno, zoom=0):
     return pix.getPNGData()  # return the PNG image
 
 
-form = sg.FlexForm(title, return_keyboard_events=True, use_default_focus=False)
+window = sg.Window(title, return_keyboard_events=True, use_default_focus=False)
 
 cur_page = 0
 data = get_page(cur_page)  # show page 1 for start
@@ -95,22 +96,22 @@ goto = sg.InputText(str(cur_page + 1), size=(5, 1), do_not_clear=True)
 
 layout = [
     [
-        sg.ReadFormButton('Next'),
-        sg.ReadFormButton('Prev'),
+        sg.ReadButton('Next'),
+        sg.ReadButton('Prev'),
         sg.Text('Page:'),
         goto,
     ],
     [
         sg.Text("Zoom:"),
-        sg.ReadFormButton('Top-L'),
-        sg.ReadFormButton('Top-R'),
-        sg.ReadFormButton('Bot-L'),
-        sg.ReadFormButton('Bot-R'),
+        sg.ReadButton('Top-L'),
+        sg.ReadButton('Top-R'),
+        sg.ReadButton('Bot-L'),
+        sg.ReadButton('Bot-R'),
     ],
     [image_elem],
 ]
 
-form.Layout(layout)
+window.Layout(layout)
 my_keys = ("Next", "Next:34", "Prev", "Prior:33", "Top-L", "Top-R",
            "Bot-L", "Bot-R", "MouseWheel:Down", "MouseWheel:Up")
 zoom_buttons = ("Top-L", "Top-R", "Bot-L", "Bot-R")
@@ -120,7 +121,7 @@ old_zoom = 0  # used for zoom on/off
 # the zoom buttons work in on/off mode.
 
 while True:
-    button, value = form.ReadNonBlocking()
+    button, value = window.ReadNonBlocking()
     zoom = 0
     force_page = False
     if button is None and value is None:

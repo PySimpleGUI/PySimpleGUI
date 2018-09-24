@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import hashlib
+from sys import exit as exit
 
 """
     Create a secure login for your scripts without having to include your password 
@@ -7,7 +8,7 @@ import hashlib
     1. Choose a password
     2. Generate a hash code for your chosen password by running program and entering 'gui' as the password
     3. Type password into the GUI
-    4. Copy and paste hash code form GUI into variable named login_password_hash
+    4. Copy and paste hash code from GUI into variable named login_password_hash
     5. Run program again and test your login!
     6. Are you paying attention? The first person that can post an issue on GitHub with the
        matching password to the hash code in this example gets a $5 PayPal payment
@@ -20,12 +21,11 @@ def HashGeneratorGUI():
               [sg.T('SHA Hash'), sg.In('', size=(40,1), key='hash')],
               ]
 
-    form = sg.FlexForm('SHA Generator', auto_size_text=False, default_element_size=(10,1),
-                       text_justification='r', return_keyboard_events=True, grab_anywhere=False)
-    form.Layout(layout)
+    window = sg.Window('SHA Generator', auto_size_text=False, default_element_size=(10,1),
+                       text_justification='r', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
 
     while True:
-        button, values = form.Read()
+        button, values = window.Read()
         if button is None:
               exit(69)
 
@@ -35,7 +35,7 @@ def HashGeneratorGUI():
             sha1hash = hashlib.sha1()
             sha1hash.update(password_utf)
             password_hash = sha1hash.hexdigest()
-            form.FindElement('hash').Update(password_hash)
+            window.FindElement('hash').Update(password_hash)
         except:
             pass
 

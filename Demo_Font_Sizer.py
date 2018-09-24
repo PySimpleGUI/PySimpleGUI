@@ -7,10 +7,10 @@ fontSize = 12
 layout = [[sg.Spin([sz for sz in range(6, 172)], font=('Helvetica 20'), initial_value=fontSize, change_submits=True, key='spin'),
            sg.Slider(range=(6,172), orientation='h', size=(10,20), change_submits=True, key='slider', font=('Helvetica 20')),  sg.Text("Aa", size=(2, 1), font="Helvetica " + str(fontSize), key='text')]]
 sz = fontSize
-form = sg.FlexForm("Font size selector", grab_anywhere=False)
-form.Layout(layout)
+window = sg.Window("Font size selector", grab_anywhere=False)
+window.Layout(layout)
 while True:
-    button, values= form.Read()
+    button, values= window.Read()
     if button is None or button == 'Quit':
         break
     sz_spin = int(values['spin'])
@@ -19,8 +19,8 @@ while True:
     if sz != fontSize:
         fontSize = sz
         font = "Helvetica " + str(fontSize)
-        form.FindElement('text').Update(font=font)
-        form.FindElement('slider').Update(sz)
-        form.FindElement('spin').Update(sz)
+        window.FindElement('text').Update(font=font)
+        window.FindElement('slider').Update(sz)
+        window.FindElement('spin').Update(sz)
 
 print("Done.")

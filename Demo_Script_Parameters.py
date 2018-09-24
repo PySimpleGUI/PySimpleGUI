@@ -14,7 +14,7 @@ stores the result in the variable fname, just like the command line parsing did.
 '''
 
 if len(sys.argv) == 1:
-    button, (fname,) = sg.FlexForm('My Script').LayoutAndRead([[sg.T('Document to open')],
+    button, (fname,) = sg.Window('My Script').LayoutAndRead([[sg.T('Document to open')],
                                                            [sg.In(), sg.FileBrowse()],
                                                            [sg.Open(), sg.Cancel()]])
 else:

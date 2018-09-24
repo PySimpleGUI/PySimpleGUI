@@ -5,6 +5,6 @@ layout = [[sg.T('Calendar Test')],
           [sg.CalendarButton('Choose Date', target='input', key='date')],
           [sg.Ok(key=1)]]
 
-form = sg.FlexForm('Calendar', grab_anywhere=False)
-b,v = form.LayoutAndRead(layout)
+window = sg.Window('Calendar', grab_anywhere=False).Layout(layout)
+b,v = window.Read()
 sg.Popup(v['input'])

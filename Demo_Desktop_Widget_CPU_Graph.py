@@ -36,10 +36,10 @@ def main():
     layout = [  [sg.Quit( button_color=('white','black')), sg.T('', pad=((100,0),0), font='Any 15', key='output')],
                [sg.Graph(CANVAS_SIZE, (0,0), (SAMPLES,SAMPLE_MAX),background_color='black', key='graph')],]
 
-    form = sg.FlexForm('CPU Graph', grab_anywhere=True, keep_on_top=True, background_color='black', no_titlebar=True, use_default_focus=False).Layout(layout)
+    window = sg.Window('CPU Graph', grab_anywhere=True, keep_on_top=True, background_color='black', no_titlebar=True, use_default_focus=False).Layout(layout)
 
-    graph = form.FindElement('graph')
-    output = form.FindElement('output')
+    graph = window.FindElement('graph')
+    output = window.FindElement('output')
     # start cpu measurement thread
     thread = Thread(target=CPU_thread,args=(None,))
     thread.start()
@@ -48,7 +48,7 @@ def main():
     prev_x, prev_y = 0, 0
     while True:                                 # the Event Loop
         time.sleep(.5)
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         if button == 'Quit' or values is None:  # always give ths user a way out
             break
         # do CPU measurement and graph it
@@ -69,4 +69,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    exit(69)

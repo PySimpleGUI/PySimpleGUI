@@ -16,23 +16,22 @@ def DownloadSubtitlesGUI():
                 [sg.Text('Subtitle Grabber', size=(40, 1), font=('Any 15'))],
                 [sg.T('YouTube Link'),sg.In(default_text='',size=(60,1), key='link', do_not_clear=True) ],
                 [sg.Output(size=(90,20), font='Courier 12')],
-                [sg.ReadFormButton('Get List')],
-                [sg.T('Language Code'), combobox, sg.ReadFormButton('Download')],
-                [sg.SimpleButton('Exit', button_color=('white', 'firebrick3'))]
+                [sg.ReadButton('Get List')],
+                [sg.T('Language Code'), combobox, sg.ReadButton('Download')],
+                [sg.Button('Exit', button_color=('white', 'firebrick3'))]
                 ]
 
-    form = sg.FlexForm('Subtitle Grabber launcher', text_justification='r', default_element_size=(15,1), font=('Any 14'))
-    form.Layout(layout)
+    window = sg.Window('Subtitle Grabber launcher', text_justification='r', default_element_size=(15,1), font=('Any 14')).Layout(layout)
 
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     while True:
-        (button, gui) = form.Read()
+        (button, gui) = window.Read()
         if button in ('EXIT', None):
             break           # exit button clicked
         link = gui['link']
         if button is 'Get List':
             print('Getting list of subtitles....')
-            form.Refresh()
+            window.Refresh()
             command = [f'C:/Python/PycharmProjects/GooeyGUI/youtube-dl --list-subs {link}',]
             output = ExecuteCommandSubprocess(command, wait=True, quiet=True)
             lang_list = [o[:5].rstrip() for o in output.split('\n') if 'vtt' in o]
@@ -45,7 +44,7 @@ def DownloadSubtitlesGUI():
             if lang is '':
                 lang = 'en'
             print(f'Downloading subtitle for {lang}...')
-            form.Refresh()
+            window.Refresh()
             command = (f'C:/Python/PycharmProjects/GooeyGUI/youtube-dl --sub-lang {lang} --write-sub {link}',)
             ExecuteCommandSubprocess(command, wait=True)
             print('Done')

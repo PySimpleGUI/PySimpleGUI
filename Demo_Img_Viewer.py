@@ -57,7 +57,7 @@ def get_img_data(f, maxsize = (1200, 850), first = False):
 
 
 # create the form that also returns keyboard events
-form = sg.FlexForm('Image Browser', return_keyboard_events=True,
+window = sg.Window('Image Browser', return_keyboard_events=True,
                    location=(0, 0), use_default_focus=False)
 
 # make these 2 elements outside the layout as we want to "update" them later
@@ -72,18 +72,18 @@ col = [[filename_display_elem],
           [image_elem]]
 
 col_files = [[sg.Listbox(values = fnames, change_submits=True, size=(60, 30), key='listbox')],
-             [sg.ReadFormButton('Next', size=(8,2)), sg.ReadFormButton('Prev',
+             [sg.ReadButton('Next', size=(8,2)), sg.ReadButton('Prev',
                              size=(8,2)), file_num_display_elem]]
 
 layout = [[sg.Column(col_files), sg.Column(col)]]
 
-form.Layout(layout)          # Shows form on screen
+window.Layout(layout)          # Shows form on screen
 
 # loop reading the user input and displaying image, filename
 i=0
 while True:
     # read the form
-    button, values = form.Read()
+    button, values = window.Read()
 
     # perform button and keyboard operations
     if button is None:

@@ -33,7 +33,7 @@ def execute_command_nonblocking(command, *args):
 
 def Launcher2():
     sg.ChangeLookAndFeel('GreenTan')
-    form = sg.FlexForm('Script launcher')
+    window = sg.Window('Script launcher')
 
     filelist = glob.glob(LOCATION_OF_YOUR_SCRIPTS+'*.py')
     namesonly = []
@@ -43,14 +43,14 @@ def Launcher2():
     layout =  [
                 [sg.Listbox(values=namesonly, size=(30, 19), select_mode=sg.SELECT_MODE_EXTENDED, key='demolist'), sg.Output(size=(88, 20), font='Courier 10')],
                 [sg.Checkbox('Wait for program to complete', default=False, key='wait')],
-                [sg.ReadFormButton('Run'), sg.ReadFormButton('Shortcut 1'), sg.ReadFormButton('Fav Program'), sg.SimpleButton('EXIT')],
+                [sg.ReadButton('Run'), sg.ReadButton('Shortcut 1'), sg.ReadButton('Fav Program'), sg.Button('EXIT')],
                 ]
 
-    form.Layout(layout)
+    window.Layout(layout)
 
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     while True:
-        (button, value) = form.Read()
+        (button, value) = window.Read()
         if button in ('EXIT', None):
             break           # exit button clicked
         if button in ('Shortcut 1', 'Fav Program'):
@@ -60,7 +60,7 @@ def Launcher2():
         elif button is 'Run':
             for index, file in enumerate(value['demolist']):
                 print('Launching %s'%file)
-                form.Refresh()          # make the print appear immediately
+                window.Refresh()          # make the print appear immediately
                 if value['wait']:
                     execute_command_blocking(LOCATION_OF_YOUR_SCRIPTS + file)
                 else:

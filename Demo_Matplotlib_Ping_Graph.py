@@ -640,15 +640,13 @@ def draw(fig, canvas):
 def main():
     global g_my_globals
 
-    canvas_elem = sg.Canvas(size=SIZE, background_color='white')  # get the canvas we'll be drawing on
     # define the form layout
-    layout = [[canvas_elem, sg.ReadFormButton('Exit', pad=(0, (210, 0)))]]
+    layout = [[ sg.Canvas(size=SIZE, background_color='white',key='canvas') , sg.ReadButton('Exit', pad=(0, (210, 0)))]]
 
     # create the form and show it without the plot
-    form = sg.FlexForm('Ping Graph', background_color='white', grab_anywhere=True)
-    form.Layout(layout)
-    form.Finalize()
+    window = sg.Window('Ping Graph', background_color='white', grab_anywhere=True).Layout(layout).Finalize()
 
+    canvas_elem = window.FindElement('canvas')
     canvas = canvas_elem.TKCanvas
 
     fig = plt.figure(figsize=(3.1, 2.25), tight_layout={'pad':0})
@@ -659,7 +657,7 @@ def main():
     plt.tight_layout()
 
     while True:
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         if button is 'Exit' or values is None:
             exit(0)
 

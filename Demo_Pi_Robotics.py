@@ -17,18 +17,15 @@ def RemoteControlExample():
 
     sg.SetOptions(border_width=0, button_color=('black', back), background_color=back, element_background_color=back, text_element_background_color=back)
 
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
-
-    form_rows = [[sg.Text('Robotics Remote Control')],
+    layout = [[sg.Text('Robotics Remote Control')],
                  [sg.T('', justification='center', size=(19,1), key='status')],
                  [ sg.RealtimeButton('Forward', image_filename=image_forward, pad=((50,0),0))],
                  [ sg.RealtimeButton('Left', image_filename=image_left), sg.RealtimeButton('Right', image_filename=image_right, pad=((50,0), 0))],
                  [ sg.RealtimeButton('Reverse', image_filename=image_backward, pad=((50,0),0))],
                  [sg.T('')],
-                 [sg.Quit(button_color=('black', 'orange'))]
-                 ]
+                 [sg.Quit(button_color=('black', 'orange'))]]
 
-    form.LayoutAndRead(form_rows, non_blocking=True)
+    window = sg.Window('Robotics Remote Control', auto_size_text=True, grab_anywhere=False).Layout(layout)
 
     #
     # Some place later in your code...
@@ -38,32 +35,30 @@ def RemoteControlExample():
     # your program's main loop
     while (True):
         # This is the code that reads and updates your window
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         if button is not None:
-            form.FindElement('status').Update(button)
+            window.FindElement('status').Update(button)
         else:
-            form.FindElement('status').Update('')
+            window.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
         if button == 'Quit' or values is None:
             break
 
-    form.CloseNonBlockingForm()
+    window.CloseNonBlocking()
 
 
 def RemoteControlExample_NoGraphics():
     # Make a form, but don't use context manager
-    form = sg.FlexForm('Robotics Remote Control', auto_size_text=True, grab_anywhere=False)
 
-    form_rows = [[sg.Text('Robotics Remote Control', justification='center')],
+    layout = [[sg.Text('Robotics Remote Control', justification='center')],
                  [sg.T('', justification='center', size=(19,1), key='status')],
                  [sg.T(' '*8), sg.RealtimeButton('Forward')],
                  [ sg.RealtimeButton('Left'), sg.T('              '), sg.RealtimeButton('Right')],
                  [sg.T(' '*8), sg.RealtimeButton('Reverse')],
                  [sg.T('')],
-                 [sg.Quit(button_color=('black', 'orange'))]
-                 ]
+                 [sg.Quit(button_color=('black', 'orange'))]]
     # Display form to user
-    form.LayoutAndRead(form_rows, non_blocking=True)
+    window = sg.Window('Robotics Remote Control', auto_size_text=True, grab_anywhere=False).Layout(layout)
 
     #
     # Some place later in your code...
@@ -73,16 +68,16 @@ def RemoteControlExample_NoGraphics():
     # your program's main loop
     while (True):
         # This is the code that reads and updates your window
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         if button is not None:
-            form.FindElement('status').Update(button)
+            window.FindElement('status').Update(button)
         else:
-            form.FindElement('status').Update('')
+            window.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
         if button == 'Quit' or values is None:
             break
 
-    form.CloseNonBlockingForm()
+    window.CloseNonBlocking()
 
 
 
