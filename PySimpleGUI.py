@@ -1447,9 +1447,9 @@ class Tab(Element):
 
 
 # ---------------------------------------------------------------------- #
-#                           MultiTab                                     #
+#                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
-class MultiTab(Element):
+class TabGroup(Element):
     def __init__(self, layout, title_color=None, background_color=None, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
 
         self.UseDictionary = False
@@ -3173,7 +3173,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
                 form.TKNotebook.add(element.TKFrame, text=element.Title)
                 form.TKNotebook.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-                # form.TKNotebook.pack(row=0, sticky=tk.NW)
 
                 # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                 #     element.TKFrame.configure(background=element.BackgroundColor,
@@ -3181,28 +3180,28 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                             highlightcolor=element.BackgroundColor)
                 # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                 #     element.TKFrame.configure(foreground=element.TextColor)
-                # if element.BorderWidth is not None:
-                #     element.TKFrame.configure(borderwidth=element.BorderWidth)
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
-                #                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.BorderWidth is not None:
+                    element.TKFrame.configure(borderwidth=element.BorderWidth)
+                if element.Tooltip is not None:
+                    element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  MultiTab element  ------------------------- #
             elif element_type == ELEM_TYPE_MULTI_TAB:
                 element.TKNotebook = ttk.Notebook(tk_row_frame)
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
                 # element.TKNotebook.pack(side=tk.LEFT)
-                # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                #     element.TKNotebook.configure(background=element.BackgroundColor,
-                #                             highlightbackground=element.BackgroundColor,
-                #                             highlightcolor=element.BackgroundColor)
-                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                #     element.TKNotebook.configure(foreground=element.TextColor)
-                # if element.BorderWidth is not None:
-                #     element.TKNotebook.configure(borderwidth=element.BorderWidth)
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
-                #                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
+                    element.TKNotebook.configure(background=element.BackgroundColor,
+                                            highlightbackground=element.BackgroundColor,
+                                            highlightcolor=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    element.TKNotebook.configure(foreground=element.TextColor)
+                if element.BorderWidth is not None:
+                    element.TKNotebook.configure(borderwidth=element.BorderWidth)
+                if element.Tooltip is not None:
+                    element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
