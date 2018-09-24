@@ -2742,6 +2742,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [moshekaplan](https://github.com/moshekaplan)/**[tkinter_components](https://github.com/moshekaplan/tkinter_components)** wrote the code for the Calendar Chooser Element. It was lifted straight from GitHub
 * [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.
 * [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help
+* [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it
+* [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be one of the most critical constructs in PySimpleGUI
+
 
 
 ## How Do I
