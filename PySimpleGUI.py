@@ -4435,15 +4435,15 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
 
 
 def main():
-    with Window('Demo form..') as form:
-        form_rows = [[Text('You are running the PySimpleGUI.py file itself')],
-                     [Text('You should be importing it rather than running it', size=(50,2))],
-                     [Text('Here is your sample input form....')],
-                     [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
-                     [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-                     [Ok(), Cancel()]]
+    window =  Window('Demo window..')
+    window_rows = [[Text('You are running the PySimpleGUI.py file itself')],
+                 [Text('You should be importing it rather than running it', size=(50,2))],
+                 [Text('Here is your sample input window....')],
+                 [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
+                 [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
+                 [Ok(), Cancel()]]
 
-        button, (source, dest) = form.LayoutAndRead(form_rows)
+    button, (source, dest) = window.LayoutAndRead(window_rows)
 
 
 if __name__ == '__main__':

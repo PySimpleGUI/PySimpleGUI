@@ -1,13 +1,15 @@
 
-  
-![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
-  
+
+
+
+![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
+
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest) [![Python Version](https://img.shields.io/badge/Python-3-brightgreen.svg)](https://www.python.org/downloads/)
 
 
 # PySimpleGUI
- 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.6.0-red.svg?longCache=true&style=for-the-badge)
+
+![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.6.2-red.svg?longCache=true&style=for-the-badge)
 
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
@@ -22,16 +24,16 @@
 
 [Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
 
-Super-simple GUI to use... Powerfully customizable.    
+Super-simple GUI to use... Powerfully customizable.
 
 Home of the 1-line custom GUI and 1-line progress meter
-  
-Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.  
-  
+
+Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
+
 Looking for a GUI package to help with
 * Taking your Python code from the world of command lines and into the convenience of a GUI?  *
-* Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK? 
-* Into Machine Learning and are sick of the command line? 
+* Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?
+* Into Machine Learning and are sick of the command line?
 * How about distributing your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?
 
 Look no further, **you've found your GUI package**.
@@ -839,7 +841,7 @@ This little program has a typical Event Loop
         # ---- Process Button Clicks ---- #
        if button is None or button == 'Exit':
             break
-	   if button == 'Turn LED Off':
+      if button == 'Turn LED Off':
             turn_LED_off()
        elif button == 'Turn LED On':
             turn_LED_on()
@@ -1768,10 +1770,10 @@ Starting in version 2.9 you'll be able to do more complex layouts by using the C
 Columns are specified in exactly the same way as a window is, as a list of lists.
 
     def Column(layout - the list of rows that define the layout
-			   background_color - color of background
-			   size - size of visible portion of column
-			   pad - element padding to use when packing
-			   scrollable - bool. True if should add scrollbars
+            background_color - color of background
+            size - size of visible portion of column
+            pad - element padding to use when packing
+            scrollable - bool. True if should add scrollbars
 
 
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
@@ -1826,17 +1828,17 @@ The default background color for Columns is the same as the default window backg
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.
 
     def Frame(title - the label / title to put on frame
-    				  layout - list of rows of elements the frame contains
-    				  title_color - color of the title text
-    				  background_color - color of background
-    				  title_location - locations to put the title
-    				  relief - type of relief to use
-    				  size - size of Frame in characters. Do not use if you want frame to autosize
-    				  font - font to use for title
-    				  pad - element padding  to use when packing
-    				  border_width - how thick the line going around frame should be
-    				  key - key used to location the element
-    				  tooltip - tooltip text
+                  layout - list of rows of elements the frame contains
+                  title_color - color of the title text
+                  background_color - color of background
+                  title_location - locations to put the title
+                  relief - type of relief to use
+                  size - size of Frame in characters. Do not use if you want frame to autosize
+                  font - font to use for title
+                  pad - element padding  to use when packing
+                  border_width - how thick the line going around frame should be
+                  key - key used to location the element
+                  tooltip - tooltip text
 
 
 
@@ -1871,11 +1873,11 @@ In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter wid
 One such integration is with Matploplib and Pyplot.  There is a Demo program written that you can use as a design pattern to get an understanding of how to use the Canvas Widget once you get it.
 
     def Canvas(canvas - a tkinter canvasf if you created one. Normally not set
-    		   background_color - canvas color
-    		   size - size in pixels
-    		   pad - element padding for packing
-    		   key - key used to lookup element
-    		   tooltip - tooltip text
+             background_color - canvas color
+             size - size in pixels
+             pad - element padding for packing
+             key - key used to lookup element
+             tooltip - tooltip text
 
 The order of operations to obtain a tkinter Canvas Widget is:
 
@@ -2338,7 +2340,7 @@ Use realtime keyboard capture by calling
             if button == "OK":
                 print(button, value, "exiting")
                 break
-		    if button is not None:
+          if button is not None:
                 print(button)
             elif value is None:
                 break
@@ -2407,7 +2409,7 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
 |**Demo_Canvas.py** | window with a Canvas Element that is updated outside of the window
 |**Demo_Chat.py** | A chat window with scrollable history
 |**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project
-|**Demo_Color.py** | How to interact with color using RGB hex values and named colors 
+|**Demo_Color.py** | How to interact with color using RGB hex values and named colors
 |**Demo_Columns.py** | Using the Column Element to create more complex windows
 |**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility
 |**Demo_Cookbook_Browser.py** | Source code browser for all Recipes in Cookbook
@@ -2505,18 +2507,18 @@ Or beginning in version 2.9 you can choose from a look and feel using pre-define
 
 Valid values for the  description string are:
 
-		GreenTan
-		LightGreen
-		BluePurple
-		Purple
-		BlueMono
-		GreenMono
-		BrownBlue
-		BrightColors
-		NeutralBlue
-		Kayak
-		SandyBeach
-		TealMono
+      GreenTan
+      LightGreen
+      BluePurple
+      Purple
+      BlueMono
+      GreenMono
+      BrownBlue
+      BrightColors
+      NeutralBlue
+      Kayak
+      SandyBeach
+      TealMono
 
 To see the latest list of color choices, take a look at the bottom of the `PySimpleGUI.py` file where you'll find the `ChangLookAndFeel` function.
 
@@ -2662,8 +2664,8 @@ OneLineProgressMeter function added which gives you not only a one-line solution
 * Text Element relief setting
 * Keys as targets for buttons
 * New names for buttons:
-	* Button = SimpleButton
-	* RButton = ReadButton = ReadFormButton
+   * Button = SimpleButton
+   * RButton = ReadButton = ReadFormButton
 * Double clickable list entries
 * Auto sizing table widths works now
 * Feature DELETED - Scaling. Removed from all elements
@@ -2717,55 +2719,53 @@ It seemed quite natural to use Python's powerful list constructs when possible. 
 Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.
 
 You can also look up elements using their keys.  This is an excellent way to update elements in reaction to another element.  Call `form.FindElement(key)` to get the Element.
-  
-  
+
+
 ## Author
-MikeTheWatchGuy    
-   
+MikeTheWatchGuy
+
 ## Demo Code Contributors
 
  [JorjMcKie](https://github.com/JorjMcKie) - PDF and image viewers (plus a number of code suggestions)
 [Otherion](https://github.com/Otherion) - Table Demos Panda & CSV.  Loads of suggestions to the core APIs
 
-## License    
-    
-GNU Lesser General Public License (LGPL 3) +  
-    
-## Acknowledgments    
-    
-*  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence    
-* [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`  
+## License
+
+GNU Lesser General Public License (LGPL 3) +
+
+## Acknowledgments
+
+*  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence
+* [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`
 * [Ruud van der Ham](https://forum.pythonistacafe.com/u/Ruud) for all the help he's provided as a Python-mentor. Quite a few tricky bits of logic was supplied by Ruud. The dual-purpose return values scheme is Ruud's for example
 * **Numerous** users who provided feature suggestions!  Many of the cool features were suggested by others.  If you were one of them and are willing to take more credit, I'll list you here if you give me permission. Most are too modest
 * [moshekaplan](https://github.com/moshekaplan)/**[tkinter_components](https://github.com/moshekaplan/tkinter_components)** wrote the code for the Calendar Chooser Element. It was lifted straight from GitHub
 * [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.
 * [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help
-  
-    
-## How Do I    
-Finally, I must thank the fine folks at How Do I.    
-https://github.com/gleitz/howdoi    
-Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**    
-Here are the steps to run that application    
-    
-    Install howdoi:    
-          pip install howdoi    
-    Test your install:    
-          python -m howdoi howdoi.py    
-    To run it:    
-          Python HowDoI.py    
-    
-The pip command is all there is to the setup.    
-    
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.    
-For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.    
+
+
+## How Do I
+Finally, I must thank the fine folks at How Do I.
+https://github.com/gleitz/howdoi
+Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**
+Here are the steps to run that application
+
+    Install howdoi:
+          pip install howdoi
+    Test your install:
+          python -m howdoi howdoi.py
+    To run it:
+          Python HowDoI.py
+
+The pip command is all there is to the setup.
+
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.
+For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.
 
 ![howdoiwithhistory](https://user-images.githubusercontent.com/13696193/45064009-5fd61180-b07f-11e8-8ead-eb0d1ff3a6be.jpg)
 
-    
-    
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.    
-    
+
+
+In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
+
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
-
-
