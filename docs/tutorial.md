@@ -1,3 +1,5 @@
+
+
 # Add GUIs to your programs and scripts easily with PySimpleGUI
 
 NOTE -- PySimpleGUI requires Python3.  If you're running Python2, don't waste your time reading.
@@ -35,7 +37,7 @@ Most GUIs do one thing.... they collect information from the user and return it.
 
 What's expected from most GUIs is the button that was clicked (OK, cancel, save, yes, no, etc), and the values that were input by the user.  The essence of a GUI can be boiled down into a single line of code.
 
-This is exactly how PySimpleGUI works (for these simple kinds of GUIs).  When the call is made to display the GUI, execution does no return until a button is clicked that closes the form.
+This is exactly how PySimpleGUI works (for these simple kinds of GUIs).  When the call is made to display the GUI, execution does no return until a button is clicked that closes the window.
 
 There are more complex GUIs such as those that don't close after a button is clicked.  These resemble a windows program and also be created with PySimpleGUI.  A remote control interface for a robot and a chat window are a couple of examples where you want to keep the window open after a button is clicked.
 
@@ -53,8 +55,7 @@ Let's look at the first recipe from the book
 
     import PySimpleGUI as sg
 
-    # Very basic form.  Return values as a list
-    form = sg.FlexForm('Simple data entry form')  # begin with a blank form
+    # Very basic window.  Return values as a list
 
     layout = [
               [sg.Text('Please enter your Name, Address, Phone')],
@@ -64,12 +65,13 @@ Let's look at the first recipe from the book
               [sg.Submit(), sg.Cancel()]
              ]
 
-    button, values = form.LayoutAndRead(layout)
+    window = sg.Window('Simple data entry form').Layout(layout)
+    button, values = window.Read()
 
     print(button, values[0], values[1], values[2])
 
 
-It's a reasonably sized form.
+It's a reasonably sized window.
 
 
 ![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)
@@ -82,12 +84,11 @@ Not all GUIs take 5 minutes.  Some take 5 lines of code.  This is a GUI with a c
 
     import PySimpleGUI as sg
 
-    form = sg.FlexForm('My first GUI')
-
     layout = [ [sg.Text('Enter your name'), sg.InputText()],
                [sg.OK()] ]
 
-    button, (name,) = form.LayoutAndRead(layout)
+    window = sg.Window('My first GUI').Layout(layout)
+    button, (name,) = window.Read()
 
 
 ![myfirstgui](https://user-images.githubusercontent.com/13696193/44315412-d2918c80-a3f1-11e8-9eda-0d5d9bfefb0f.jpg)
@@ -107,8 +108,8 @@ Widgets are called Elements in PySimpleGUI.  This list of Elements are spelled e
       Folder Browse
       Color chooser
       Date picker
-      Read Form
-      Close form
+      Read window
+      Close window
       Realtime
   Checkbox
   Radio Button
@@ -124,7 +125,7 @@ Widgets are called Elements in PySimpleGUI.  This list of Elements are spelled e
   Column
   Graph
   Table
-  Tabbed forms
+  Tabbed windows
   Redirected Python Output/Errors to scrolling Window
 ```
 
@@ -141,7 +142,7 @@ You can also have short-cut Elements.  There are 2 types of shortcuts.  One is s
     Drop = InputCombo
     OptionMenu = InputOptionMenu
     CB - CBox = Check = Checkbox
-    RButton = ReadButton = ReadFormButton
+    RButton = ReadButton
     Button = SimpleButton
 
 A number of common buttons have been implemented as shortcuts.  These include:
@@ -168,31 +169,31 @@ The more generic button functions, that are also shortcuts
     RButton (ReadButton)
     RealtimeButton
 
-These are all of the GUI Widgets you have to choose from. If it's not in this list, it doesn't go in your form layout.  (Maybe... unless there's been an update with more features and this tutorial wasn't updated)
+These are all of the GUI Widgets you have to choose from. If it's not in this list, it doesn't go in your window layout.  (Maybe... unless there's been an update with more features and this tutorial wasn't updated)
 
 ### GUI Design Pattern
 
 The stuff that tends not to change in GUIs are the calls that setup and show the Window.  It's the layout of the Elements that changes from one program to another.   This is the code from above with the layout removed:
 
     import PySimpleGUI as sg
-    # Define your form here (it's a list of lists)
+    # Define your window here (it's a list of lists)
     layout = [[ your layout ]]
-    form = sg.FlexForm('Simple data entry form')
-    button, values = form.LayoutAndRead(layout)
+    window = sg.Window('Simple data entry window').Layout(layout)
+    button, values = window.Read()
 
 
  The flow for most GUIs is:
- * Create the Form object
+ * Create the window object
  * Define GUI as a list of lists
  * Show the GUI and get results
 
-Some forms act more like Windows programs. These forms have an "Event Loop".  Please see the readme for more info on these kinds of forms (Persistent Forms)
+Some windows act more like Windows programs. These windows have an "Event Loop".  Please see the readme for more info on these kinds of forms (Persistent windows)
 
 These are line for line what you see in design pattern above.
 
 ### GUI Layout
 
-To create your custom GUI, first break your form down into "rows".  You'll be defining your form one row at a time.  Then for each for, you'll be placing one Element after another, working from left to right.
+To create your custom GUI, first break your window down into "rows".  You'll be defining your window one row at a time.  Then for each for, you'll be placing one Element after another, working from left to right.
 
 The result is a "list of lists" that looks something like this:
 
@@ -206,18 +207,18 @@ The layout produced this window:
 
 ## Display GUI & Get Results
 
-Once you have your layout complete and you've copied over the lines of code that setup and show the form, it's time to look at how to display the form and get the values from the user.
+Once you have your layout complete and you've copied over the lines of code that setup and show the window, it's time to look at how to display the window and get the values from the user.
 
-First get a form.
-```    form = sg.FlexForm('Simple data entry form')   ```
+First get a window and display it.
+```    window = sg.Window('Simple data entry window').Layout(layout)   ```
 
-Then display the form and get the results.:
+Then read the window to get the button clicked and values.:
 
-    button, values = form.LayoutAndRead(layout)
+    button, values = window.Read()
 
-   Forms return 2 values, the text of the button that was clicked and a ***list of values*** the user entered into the form.  More advanced forms return the values as a **dictionary of values**,
+   windows return 2 values, the text of the button that was clicked and a ***list of values*** the user entered into the window.  More advanced windows return the values as a **dictionary of values**,
 
-If the example form was displayed and the user did nothing other than click the OK button, then the results would have been:
+If the example window was displayed and the user did nothing other than click the OK button, then the results would have been:
 
     button == 'OK'
     values == [False, False]
@@ -236,7 +237,7 @@ The most-commonly used display window is the `Popup`.  To display the results of
 
 ## Putting It All Together
 
-Now that you know the basics, let's put together a form that contains as many PySimpleGUI's elements as possible.  Also, just to give it a nice look, we'll change the "look and feel" to a green and tan color scheme.
+Now that you know the basics, let's put together a window that contains as many PySimpleGUI's elements as possible.  Also, just to give it a nice look, we'll change the "look and feel" to a green and tan color scheme.
 
     import PySimpleGUI as sg
 
@@ -247,7 +248,7 @@ Now that you know the basics, let's put together a form that contains as many Py
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
                [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
     layout = [
-        [sg.Text('All graphic widgets in one form!', size=(30, 1), font=("Helvetica", 25))],
+        [sg.Text('All graphic widgets in one window!', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Here is some text.... and a place to enter text')],
         [sg.InputText('This is my text')],
         [sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
@@ -268,8 +269,8 @@ Now that you know the basics, let's put together a form that contains as many Py
         [sg.Submit(), sg.Cancel()]
     ]
 
-    form = sg.FlexForm('Everything bagel', default_element_size=(40, 1))
-    button, values = form.LayoutAndRead(layout)
+    window = sg.Window('Everything bagel', default_element_size=(40, 1)).Layout(layout)
+    button, values = window.Read()
     sg.Popup(button, values)
 
 That may seem like a lot of code, but try coding this same GUI layout using any other GUI framework and it will be lengthier and what you see here.... by a WIDE margin.  10's of times longer.
@@ -291,7 +292,7 @@ If you have a script that uses the command line, you don't have to abandon it in
 This kind of logic is all that's needed:
 
     if len(sys.argv) == 1:
-    	# collect arguments from GUI
+       # collect arguments from GUI
     else:
         # collect arguements from sys.argv
 
@@ -318,6 +319,8 @@ Works on all systems that run tkinter, including the Raspberry Pi
 [Main manual](https://pysimplegui.readthedocs.io/en/latest/)
 
 [Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/)
+
+[Tutorial](http://tutorial.pysimplegui.org)
 
 ### Home Page (GitHub)
 
