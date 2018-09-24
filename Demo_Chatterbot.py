@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 from chatterbot import ChatBot
 import chatterbot.utils
+import sys
 
 '''
 Demo_Chatterbot.py
@@ -22,7 +23,7 @@ for i in range(MAX_PROG_BARS):
     texts.append(sg.T(' ' * 20, size=(20, 1), justification='right'))
     training_layout += [[texts[i], bars[i]],]       # add a single row
 
-training_form = sg.FlexForm('Training').Layout(training_layout)
+training_window = sg.Window('Training').Layout(training_layout)
 current_bar = 0
 
 # callback function for training runs
@@ -30,13 +31,13 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
     global current_bar
     global bars
     global texts
-    global training_form
-    # update the form and the bars
-    button, values = training_form.ReadNonBlocking()
-    if button is None and values is None:       # if user closed the form on us, exit
-        exit(69)
+    global training_window
+    # update the window and the bars
+    button, values = training_window.ReadNonBlocking()
+    if button is None and values is None:       # if user closed the window on us, exit
+        sys.exit(69)
     if bars[current_bar].UpdateBar(iteration_counter, max=total_items) is False:
-        exit(69)
+        sys.exit(69)
     texts[current_bar].Update(description)      # show the training dataset name
     if iteration_counter == total_items:
         current_bar += 1
@@ -53,13 +54,13 @@ chatbot.train("chatterbot.corpus.english")
 
 layout = [[sg.Output(size=(80, 20))],
           [sg.Multiline(size=(70, 5), enter_submits=True),
-           sg.ReadFormButton('SEND', bind_return_key=True), sg.ReadFormButton('EXIT')]]
+           sg.ReadButton('SEND', bind_return_key=True), sg.ReadButton('EXIT')]]
 
-form = sg.FlexForm('Chat Window', auto_size_text=True, default_element_size=(30, 2)).Layout(layout)
+window = sg.Window('Chat Window', auto_size_text=True, default_element_size=(30, 2)).Layout(layout)
 
 # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
 while True:
-    button, (value,) = form.Read()
+    button, (value,) = window.Read()
     if button is not 'SEND':
         break
     string = value.rstrip()

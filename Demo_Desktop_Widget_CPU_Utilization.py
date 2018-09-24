@@ -39,19 +39,20 @@ def main():
 
     # ----------------  Create Form  ----------------
     sg.ChangeLookAndFeel('Black')
-    form_rows = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0], justification='center', key='text')],
+    layout = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0], justification='center', key='text')],
                  [sg.Text('', size=(30, 8), font=('Courier New', 12),text_color='white', justification='left', key='processes')],
                  [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')],]
 
-    form = sg.FlexForm('CPU Utilization', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
-    form.Layout(form_rows)
+    window = sg.Window('CPU Utilization', no_titlebar=True, auto_size_buttons=False,
+                       keep_on_top=True, grab_anywhere=True).Layout(layout)
+
     # start cpu measurement thread
     thread = Thread(target=CPU_thread,args=(None,))
     thread.start()
     # ----------------  main loop  ----------------
     while (True):
         # --------- Read and update window --------
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
 
         # --------- Do Button Operations --------
         if values is None or button == 'Exit':
@@ -84,14 +85,13 @@ def main():
 
 
         # --------- Display timer in window --------
-        form.FindElement('text').Update('CPU {}'.format(cpu_percent))
-        form.FindElement('processes').Update(display_string)
+        window.FindElement('text').Update('CPU {}'.format(cpu_percent))
+        window.FindElement('processes').Update(display_string)
 
     # Broke out of main loop. Close the window.
-    form.CloseNonBlockingForm()
+    window.CloseNonBlocking()
     g_exit = True
     thread.join()
-    exit(69)
 
 if __name__ == "__main__":
     main()

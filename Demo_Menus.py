@@ -11,8 +11,8 @@ def SecondForm():
     layout = [[sg.Text('The second form is small \nHere to show that opening a window using a window works')],
               [sg.OK()]]
 
-    form = sg.FlexForm('Second Form')
-    b, v = form.LayoutAndRead(layout)
+    window = sg.Window('Second Form').Layout(layout)
+    b, v = window.Read()
 
 
 def TestMenus():
@@ -33,13 +33,12 @@ def TestMenus():
             [sg.In('Test', key='input', do_not_clear=True)]
               ]
 
-    form = sg.FlexForm("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,
-                       default_button_element_size=(12, 1))
-    form.Layout(layout)
+    window = sg.Window("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,
+                       default_button_element_size=(12, 1)).Layout(layout)
 
     # ------ Loop & Process button menu choices ------ #
     while True:
-        button, values = form.Read()
+        button, values = window.Read()
         if button is None or button == 'Exit':
             return
         print('Button = ', button)

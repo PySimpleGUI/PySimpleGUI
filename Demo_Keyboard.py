@@ -3,22 +3,22 @@ import PySimpleGUI as sg
 # Recipe for getting keys, one at a time as they are released
 # If want to use the space bar, then be sure and disable the "default focus"
 
-with sg.FlexForm("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as form:
-    layout = [[sg.Text("Press a key or scroll mouse")],
-              [sg.Text("", size=(18,1), key='text')],
-              [sg.SimpleButton("OK", key='OK')]]
+layout = [[sg.Text("Press a key or scroll mouse")],
+          [sg.Text("", size=(18,1), key='text')],
+          [sg.Button("OK", key='OK')]]
 
-    form.Layout(layout)
-    # ---===--- Loop taking in user input --- #
-    while True:
-        button, value = form.Read()
-        text_elem = form.FindElement('text')
-        if button in ("OK", None):
-            print(button, "exiting")
-            break
-        if len(button) == 1:
-            text_elem.Update(value='%s - %s' % (button, ord(button)))
-        if button is not None:
-            text_elem.Update(button)
+window = sg.Window("Keyboard Test", return_keyboard_events=True, use_default_focus=False).Layout(layout)
+
+# ---===--- Loop taking in user input --- #
+while True:
+    button, value = window.Read()
+    text_elem = window.FindElement('text')
+    if button in ("OK", None):
+        print(button, "exiting")
+        break
+    if len(button) == 1:
+        text_elem.Update(value='%s - %s' % (button, ord(button)))
+    if button is not None:
+        text_elem.Update(button)
 
 

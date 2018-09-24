@@ -1,11 +1,12 @@
 import csv
 import PySimpleGUI as sg
+import sys
 
 def table_example():
     filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
     # --- populate table with file contents --- #
     if filename == '':
-        exit(69)
+        sys.exit(69)
     data = []
     header_list = []
     button = sg.PopupYesNo('Does this file have column names already?')
@@ -20,7 +21,7 @@ def table_example():
                     header_list = ['column' + str(x) for x in range(len(data[0]))]
             except:
                 sg.PopupError('Error reading file')
-                exit(69)
+                sys.exit(69)
     sg.SetOptions(element_padding=(0, 0))
 
     col_layout = [[sg.Table(values=data, headings=header_list, max_col_width=25,
@@ -29,18 +30,9 @@ def table_example():
     canvas_size = (13*10*len(header_list), 600)      # estimate canvas size - 13 pixels per char * 10 char per column * num columns
     layout = [[sg.Column(col_layout, size=canvas_size, scrollable=True)],]
 
-    form = sg.FlexForm('Table', grab_anywhere=False)
-    b, v = form.LayoutAndRead(layout)
+    window = sg.Window('Table', grab_anywhere=False).Layout(layout)
+    b, v = window.Read()
 
-    exit(69)
+    sys.exit(69)
 
 table_example()
-
-
-
-
-
-
-
-
-

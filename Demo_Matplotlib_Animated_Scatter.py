@@ -7,21 +7,19 @@ import tkinter as tk
 
 
 def main():
-    canvas_elem = sg.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
     # define the form layout
     layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
-              [canvas_elem],
-              [sg.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+              [sg.Canvas(size=(640, 480), key='canvas')],
+              [sg.ReadButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
-    form.Layout(layout)
-    form.Finalize()
+    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
 
+    canvas_elem = window.FindElement('canvas')
     canvas = canvas_elem.TKCanvas
 
     while True:
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         if button is 'Exit' or values is None:
             exit(69)
 

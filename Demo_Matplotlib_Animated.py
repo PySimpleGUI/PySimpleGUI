@@ -14,25 +14,23 @@ def main():
     ax.set_ylabel("Y axis")
     ax.grid()
 
-    canvas_elem = sg.Canvas(size=(640, 480))  # get the canvas we'll be drawing on
-    slider_elem = sg.Slider(range=(0, 10000), size=(60, 10), orientation='h')
     # define the form layout
     layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
-              [canvas_elem],
-              [slider_elem],
-              [sg.ReadFormButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+              [sg.Canvas(size=(640, 480), key='canvas')],
+              [sg.Slider(range=(0, 10000), size=(60, 10), orientation='h', key='slider')],
+              [sg.ReadButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI')
-    form.Layout(layout)
-    form.Finalize()
+    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
 
+    canvas_elem = window.FindElement('canvas')
+    slider_elem = window.FindElement('slider')
     graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
     canvas = canvas_elem.TKCanvas
 
     dpts = [randint(0, 10) for x in range(10000)]
     for i in range(len(dpts)):
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         if button is 'Exit' or values is None:
             exit(69)
 

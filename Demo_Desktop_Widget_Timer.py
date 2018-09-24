@@ -11,14 +11,13 @@ import time
 sg.ChangeLookAndFeel('Black')
 sg.SetOptions(element_padding=(0, 0))
 
-form_rows = [[sg.Text('')],
-             [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-             [sg.ReadFormButton('Pause', key='button', button_color=('white', '#001480')),
-              sg.ReadFormButton('Reset', button_color=('white', '#007339'), key='Reset'),
-              sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
+layout = [[sg.Text('')],
+         [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+         [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),
+          sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
+          sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
-form = sg.FlexForm('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
-form.Layout(form_rows)
+window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
 
 # ----------------  main loop  ----------------
 current_time = 0
@@ -27,12 +26,12 @@ start_time = int(round(time.time() * 100))
 while (True):
     # --------- Read and update window --------
     if not paused:
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
         current_time = int(round(time.time() * 100)) - start_time
     else:
-        button, values = form.Read()
+        button, values = window.Read()
     if button == 'button':
-        button = form.FindElement(button).GetText()
+        button = window.FindElement(button).GetText()
     # --------- Do Button Operations --------
     if values is None or button == 'Exit':
         break
@@ -43,16 +42,16 @@ while (True):
     elif button == 'Pause':
         paused = True
         paused_time = int(round(time.time() * 100))
-        element = form.FindElement('button')
+        element = window.FindElement('button')
         element.Update(text='Run')
     elif button == 'Run':
         paused = False
         start_time = start_time + int(round(time.time() * 100)) - paused_time
-        element = form.FindElement('button')
+        element = window.FindElement('button')
         element.Update(text='Pause')
 
     # --------- Display timer in window --------
-    form.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+    window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
                                                                   (current_time // 100) % 60,
                                                                   current_time % 100))
     time.sleep(.01)
@@ -60,4 +59,4 @@ while (True):
 # --------- After loop --------
 
 # Broke out of main loop. Close the window.
-form.CloseNonBlockingForm()
+window.CloseNonBlocking()

@@ -17,28 +17,28 @@ ROOT_PATH = './'
 def Launcher():
 
     # def print(line):
-    #     form.FindElement('output').Update(line)
+    #     window.FindElement('output').Update(line)
 
     sg.ChangeLookAndFeel('Dark')
 
     namesonly = [f for f in os.listdir(ROOT_PATH) if f.endswith('.py') ]
 
     sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)
+
     layout =  [[sg.Combo(values=namesonly, size=(35,30), key='demofile'),
-                sg.ReadFormButton('Run', button_color=('white', '#00168B')),
-                sg.ReadFormButton('Program 1'),
-                sg.ReadFormButton('Program 2'),
-                sg.ReadFormButton('Program 3', button_color=('white', '#35008B')),
-                sg.SimpleButton('EXIT', button_color=('white','firebrick3'))],
+                sg.ReadButton('Run', button_color=('white', '#00168B')),
+                sg.ReadButton('Program 1'),
+                sg.ReadButton('Program 2'),
+                sg.ReadButton('Program 3', button_color=('white', '#35008B')),
+                sg.Button('EXIT', button_color=('white','firebrick3'))],
                 [sg.T('', text_color='white', size=(50,1), key='output')]]
 
-    form = sg.FlexForm('Floating Toolbar', no_titlebar=True, keep_on_top=True)
+    window = sg.Window('Floating Toolbar', no_titlebar=True, keep_on_top=True).Layout(layout)
 
-    form.Layout(layout)
 
-    # ---===--- Loop taking in user input and using it to query HowDoI --- #
+    # ---===--- Loop taking in user input and executing appropriate program --- #
     while True:
-        (button, value) = form.Read()
+        (button, value) = window.Read()
         if button is 'EXIT' or button is None:
             break           # exit button clicked
         if button is 'Program 1':

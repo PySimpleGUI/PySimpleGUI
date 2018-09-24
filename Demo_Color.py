@@ -1639,7 +1639,7 @@ def show_all_colors_on_buttons():
     global reverse
     global colorhex
     global colors
-    form = sg.FlexForm('Colors on Buttons Demo', default_element_size=(3, 1), location=(0, 0), icon=MY_WINDOW_ICON, font=("Helvetica", 7))
+    window = sg.Window('Colors on Buttons Demo', default_element_size=(3, 1), location=(0, 0), icon=MY_WINDOW_ICON, font=("Helvetica", 7))
     row = []
     row_len = 20
     for i, c in enumerate(colors):
@@ -1649,11 +1649,11 @@ def show_all_colors_on_buttons():
         row.append(button1)
         row.append(button2)
         if (i+1) % row_len == 0:
-            form.AddRow(*row)
+            window.AddRow(*row)
             row = []
     if row != []:
-        form.AddRow(*row)
-    form.Show()
+        window.AddRow(*row)
+    window.Show()
 
 
 GoodColors = [('#0e6251', sg.RGB(255, 246, 122)),
@@ -1680,16 +1680,16 @@ def main():
                   [sg.Text('Demonstration of colors')],
                   [sg.Text('Enter a color name in text or hex #RRGGBB format')],
                   [sg.InputText(key='hex')],
-                  [sg.Listbox(list_of_colors, size=(20, 30), key='listbox'), sg.T('Or choose from list')],
-                  [sg.Submit(), sg.SimpleButton('Many buttons', button_color=('white', '#0e6251')), sg.ColorChooserButton( 'Chooser', target=(3,0)),  sg.Quit(),],
+                  [sg.Listbox(list_of_colors, size=(20, 30), bind_return_key=True, key='listbox'), sg.T('Or choose from list')],
+                  [sg.Submit(), sg.Button('Many buttons', button_color=('white', '#0e6251'), key='Many buttons'), sg.ColorChooserButton( 'Chooser', target=(3,0), key='Chooser'),  sg.Quit(),],
                   ]
                   # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
-        button, values = sg.FlexForm('Color Demo', auto_size_buttons=False).LayoutAndRead(layout)
+        button, values = sg.Window('Color Demo', auto_size_buttons=False).Layout(layout).Read()
 
         # -------  OUTPUT results portion  ------- #
-        if button == '' or button == 'Quit' or button is None:
+        if button == 'Quit' or button is None:
             exit(0)
-        elif button == 'Show me lots of colors!':
+        elif button == 'Many buttons':
                 show_all_colors_on_buttons()
 
         drop_down_value = values['listbox']
@@ -1711,7 +1711,7 @@ def main():
                   [sg.Button(button_text=color_name, button_color=(color_hex, complementary_hex))],
                   [sg.Button(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30, 1))],
                   ]
-        sg.FlexForm('Color demo', default_element_size=(100, 1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).LayoutAndRead(layout)
+        sg.Window('Color demo', default_element_size=(100, 1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).Layout(layout).Read()
 
 
 

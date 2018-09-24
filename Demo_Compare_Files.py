@@ -1,24 +1,28 @@
 import PySimpleGUI as sg
+import sys
 
-sg.SetOptions(button_color=sg.COLOR_SYSTEM_DEFAULT)
+# sg.SetOptions(button_color=sg.COLOR_SYSTEM_DEFAULT)
 
 def GetFilesToCompare():
-    with sg.FlexForm('File Compare') as form:
-        form_rows = [[sg.Text('Enter 2 files to comare')],
-                     [sg.Text('File 1', size=(15, 1)), sg.InputText(key='file1'), sg.FileBrowse()],
-                     [sg.Text('File 2', size=(15, 1)), sg.InputText(key='file2'), sg.FileBrowse(target='file2')],
-                     [sg.Submit(), sg.Cancel()]]
-        button, values = form.LayoutAndRead(form_rows)
+    form_rows = [[sg.Text('Enter 2 files to comare')],
+                 [sg.Text('File 1', size=(15, 1)), sg.InputText(key='file1'), sg.FileBrowse()],
+                 [sg.Text('File 2', size=(15, 1)), sg.InputText(key='file2'), sg.FileBrowse(target='file2')],
+                 [sg.Submit(), sg.Cancel()]]
+
+    window = sg.Window('File Compare')
+    button, values = window.Layout(form_rows).Read()
     return button, values
 
 def main():
     button, values = GetFilesToCompare()
     f1 = values['file1']
     f2 = values['file2']
+
     if any((button != 'Submit', f1 =='', f2 == '')):
         sg.PopupError('Operation cancelled')
-        exit(69)
+        sys.exit(69)
 
+    # --- This portion of the code is not GUI related ---
     with open(f1, 'rb') as file1:
         with open(f2, 'rb') as file2:
             a = file1.read()

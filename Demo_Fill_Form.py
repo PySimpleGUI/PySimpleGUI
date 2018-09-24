@@ -31,29 +31,29 @@ def Everything():
         [sg.Text('Choose A Folder', size=(35, 1))],
         [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
          sg.InputText('Default Folder', key='folder', do_not_clear=True), sg.FolderBrowse()],
-        [sg.ReadFormButton('Exit'),
-         sg.Text(' ' * 40), sg.ReadFormButton('SaveSettings'), sg.ReadFormButton('LoadSettings')]
+        [sg.ReadButton('Exit'),
+         sg.Text(' ' * 40), sg.ReadButton('SaveSettings'), sg.ReadButton('LoadSettings')]
     ]
 
-    form = sg.FlexForm('Form Fill Demonstration', default_element_size=(40, 1), grab_anywhere=False)
-    # button, values = form.LayoutAndRead(layout, non_blocking=True)
-    form.Layout(layout)
+    window = sg.Window('Form Fill Demonstration', default_element_size=(40, 1), grab_anywhere=False)
+    # button, values = window.LayoutAndRead(layout, non_blocking=True)
+    window.Layout(layout)
 
     while True:
-        button, values = form.Read()
+        button, values = window.Read()
 
         if button is 'SaveSettings':
             filename = sg.PopupGetFile('Save Settings', save_as=True, no_window=True)
-            form.SaveToDisk(filename)
+            window.SaveToDisk(filename)
             # save(values)
         elif button is 'LoadSettings':
             filename = sg.PopupGetFile('Load Settings', no_window=True)
-            form.LoadFromDisk(filename)
+            window.LoadFromDisk(filename)
             # load(form)
         elif button in ['Exit', None]:
             break
 
-    # form.CloseNonBlockingForm()
+    # window.CloseNonBlocking()
 
 
 if __name__ == '__main__':

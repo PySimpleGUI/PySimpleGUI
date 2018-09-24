@@ -30,25 +30,23 @@ def FlashLED():
 
 layout = [[rg.T('Raspberry Pi LEDs')],
            [rg.T('', size=(14, 1), key='output')],
-           [rg.ReadFormButton('Switch LED')],
-           [rg.ReadFormButton('Flash LED')],
-           [rg.Exit()]
-          ]
+           [rg.ReadButton('Switch LED')],
+           [rg.ReadButton('Flash LED')],
+           [rg.Exit()]]
 
-form = rg.FlexForm('Raspberry Pi GUI', grab_anywhere=False)
-form.Layout(layout)
+window = rg.Window('Raspberry Pi GUI', grab_anywhere=False).Layout(layout)
 
 while True:
-    button, values = form.Read()
+    button, values = window.Read()
     if button is None:
         break
 
     if button is 'Switch LED':
-        form.FindElement('output').Update(SwitchLED())
+        window.FindElement('output').Update(SwitchLED())
     elif button is 'Flash LED':
-        form.FindElement('output').Update('LED is Flashing')
-        form.ReadNonBlocking()
+        window.FindElement('output').Update('LED is Flashing')
+        window.ReadNonBlocking()
         FlashLED()
-        form.FindElement('output').Update('')
+        window.FindElement('output').Update('')
 
 rg.Popup('Done... exiting')

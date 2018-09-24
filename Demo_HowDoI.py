@@ -1,17 +1,6 @@
 import PySimpleGUI as sg
 import subprocess
 
-import ctypes
-import os
-import win32process
-
-# hwnd = ctypes.windll.kernel32.GetConsoleWindow()
-# if hwnd != 0:
-#     ctypes.windll.user32.ShowWindow(hwnd, 0)
-#     ctypes.windll.kernel32.CloseHandle(hwnd)
-#     _, pid = win32process.GetWindowThreadProcessId(hwnd)
-#     os.system('taskkill /PID ' + str(pid) + ' /f')
-
 
 # Test this command in a dos window if you are having trouble.
 HOW_DO_I_COMMAND =  'python -m howdoi.howdoi'
@@ -27,7 +16,7 @@ def HowDoI():
         2. Non-Window-Closing Buttons - These buttons will cause the form to return with the form's values, but doesn't close the form
     :return: never returns
     '''
-    # -------  Make a new FlexForm  ------- #
+    # -------  Make a new Window  ------- #
     sg.ChangeLookAndFeel('GreenTan')            # give our form a spiffy set of colors
 
     layout =  [
@@ -37,39 +26,38 @@ def HowDoI():
                   sg.Text('Num Answers',font='Helvetica 15'), sg.Checkbox('Display Full Text', key='full text', font='Helvetica 15'),
                 sg.T('Command History', font='Helvetica 15'), sg.T('', size=(40,3), text_color=sg.BLUES[0], key='history')],
                 [sg.Multiline(size=(85, 5), enter_submits=True, key='query', do_not_clear=False),
-                sg.ReadFormButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
-                sg.SimpleButton('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]
+                sg.ReadButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
+                sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]
               ]
 
-    form = sg.FlexForm('How Do I ??', default_element_size=(30, 2), icon=DEFAULT_ICON, font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True, no_titlebar=True)
-    form.Layout(layout)
+    window = sg.Window('How Do I ??', default_element_size=(30, 2), icon=DEFAULT_ICON, font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True, no_titlebar=True)
+    window.Layout(layout)
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     command_history = []
     history_offset = 0
     while True:
-        (button, value) = form.Read()
+        (button, value) = window.Read()
         if button is 'SEND':
             query = value['query'].rstrip()
             print(query)
             QueryHowDoI(query, value['Num Answers'], value['full text'])  # send the string to HowDoI
             command_history.append(query)
             history_offset = len(command_history)-1
-            form.FindElement('query').Update('')                       # manually clear input because keyboard events blocks clear
-            form.FindElement('history').Update('\n'.join(command_history[-3:]))
+            window.FindElement('query').Update('')                       # manually clear input because keyboard events blocks clear
+            window.FindElement('history').Update('\n'.join(command_history[-3:]))
         elif button is None or button is 'EXIT':            # if exit button or closed using X
             break
         elif 'Up' in button and len(command_history):                                # scroll back in history
             command = command_history[history_offset]
             history_offset -= 1 * (history_offset > 0)      # decrement is not zero
-            form.FindElement('query').Update(command)
+            window.FindElement('query').Update(command)
         elif 'Down' in button and len(command_history):                              # scroll forward in history
             history_offset += 1 * (history_offset < len(command_history)-1) # increment up to end of list
             command = command_history[history_offset]
-            form.FindElement('query').Update(command)
+            window.FindElement('query').Update(command)
         elif 'Escape' in button:                            # clear currently line
-            form.FindElement('query').Update('')
+            window.FindElement('query').Update('')
 
-    exit(69)
 
 def QueryHowDoI(Query, num_answers, full_text):
     '''

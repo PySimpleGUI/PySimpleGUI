@@ -113,10 +113,10 @@ layout = [[sg.Text('Plot test')],
           [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
 
 # create the form and show it without the plot
-form = sg.FlexForm('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
 
 # add the plot to the window
-fig_photo = draw_figure(form.FindElement('canvas').TKCanvas, fig)
+fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)
 
 # show it all again and get buttons
-button, values = form.Read()
+button, values = window.Read()

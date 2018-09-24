@@ -33,9 +33,9 @@ german_categories =('Use Default with no change',
 
 
 # the form layout
-form = sg.FlexForm('EBay Super Searcher', auto_size_text=True)
+window = sg.Window('EBay Super Searcher', auto_size_text=True)
 
-form2 =  sg.FlexForm('EBay Super Searcher', auto_size_text=False)
+form2 =  sg.Window('EBay Super Searcher', auto_size_text=False)
 
 layout_tab_1 = [[sg.Text('eBay Super Searcher!', size=(60,1), font=('helvetica', 15))],
   [sg.Text('Choose base configuration to run')],

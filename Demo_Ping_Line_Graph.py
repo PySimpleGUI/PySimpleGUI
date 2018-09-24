@@ -1,6 +1,7 @@
 from threading import Thread
 import time
 import PySimpleGUI as sg
+from sys import exit as exit
 
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -214,7 +215,7 @@ import os, sys, socket, struct, select, time, signal
 
 __description__ = 'A pure python ICMP ping implementation using raw sockets.'
 
-if sys.platform == "win32":
+if sys.platwindow == "win32":
     # On Windows, the best timer is time.clock()
     default_timer = time.clock
 else:
@@ -619,12 +620,11 @@ thread.start()
 
 layout = [  [sg.T('Ping times to Google.com', font='Any 18')],
            [sg.Canvas(size=(canvas_right, canvas_bottom), background_color='white', key='canvas')],
-           [sg.Quit()]
-           ]
+           [sg.Quit()] ]
 
-form = sg.FlexForm('Ping Times To Google.com', grab_anywhere=True).Layout(layout).Finalize()
+window = sg.Window('Ping Times To Google.com', grab_anywhere=True).Layout(layout).Finalize()
 
-canvas = form.FindElement('canvas').TKCanvas
+canvas = window.FindElement('canvas').TKCanvas
 
 prev_response_time = None
 i=0
@@ -632,7 +632,7 @@ prev_x, prev_y  = canvas_left, canvas_bottom
 while True:
     time.sleep(.2)
 
-    button, values = form.ReadNonBlocking()
+    button, values = window.ReadNonBlocking()
     if button == 'Quit' or values is None:
         break
 
