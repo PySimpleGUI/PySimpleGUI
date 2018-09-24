@@ -29,10 +29,8 @@ def main():
     layout = [  [sg.T('Ping times to Google.com', font='Any 12'), sg.Quit(pad=((100,0), 0), button_color=('white', 'black'))],
                [sg.Graph(CANVAS_SIZE, (0,0), (SAMPLES,500),background_color='black', key='graph')],]
 
-    window = sg.Window('Canvas test', grab_anywhere=True, background_color='black', no_titlebar=False, use_default_focus=False)
-    window.Layout(layout)
+    window = sg.Window('Canvas test', grab_anywhere=True, background_color='black', no_titlebar=False, use_default_focus=False).Layout(layout)
 
-    window.Finalize()
     graph = window.FindElement('graph')
 
     prev_response_time = None
