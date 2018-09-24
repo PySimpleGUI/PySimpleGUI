@@ -194,6 +194,8 @@ ELEM_TYPE_IMAGE = 30
 ELEM_TYPE_CANVAS = 40
 ELEM_TYPE_FRAME = 41
 ELEM_TYPE_GRAPH = 42
+ELEM_TYPE_TAB = 50
+ELEM_TYPE_MULTI_TAB = 51
 ELEM_TYPE_INPUT_SLIDER = 10
 ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
@@ -1379,6 +1381,121 @@ class Frame(Element):
         super().__del__()
 
 
+
+# ---------------------------------------------------------------------- #
+#                           Tab                                          #
+# ---------------------------------------------------------------------- #
+class Tab(Element):
+    def __init__(self, title, layout, title_color=None, background_color=None, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
+
+        self.UseDictionary = False
+        self.ReturnValues = None
+        self.ReturnValuesList = []
+        self.ReturnValuesDictionary = {}
+        self.DictionaryKeyCounter = 0
+        self.ParentWindow = None
+        self.Rows = []
+        self.TKFrame = None
+        self.Title = title
+        self.BorderWidth = border_width
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+
+        self.Layout(layout)
+
+        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        return
+
+    def AddRow(self, *args):
+        ''' Parms are a variable number of Elements '''
+        NumRows = len(self.Rows)               # number of existing rows is our row number
+        CurrentRowNumber = NumRows             # this row's number
+        CurrentRow = []                     # start with a blank row and build up
+        # -------------------------  Add the elements to a row  ------------------------- #
+        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+            element.Position = (CurrentRowNumber, i)
+            element.ParentContainer = self
+            CurrentRow.append(element)
+            if element.Key is not None:
+                self.UseDictionary = True
+        # -------------------------  Append the row to list of Rows  ------------------------- #
+        self.Rows.append(CurrentRow)
+
+    def Layout(self, rows):
+        for row in rows:
+            self.AddRow(*row)
+
+    def _GetElementAtLocation(self, location):
+        (row_num,col_num) = location
+        row = self.Rows[row_num]
+        element = row[col_num]
+        return element
+
+
+    def __del__(self):
+        for row in self.Rows:
+            for element in row:
+                element.__del__()
+        super().__del__()
+
+
+
+# ---------------------------------------------------------------------- #
+#                           MultiTab                                     #
+# ---------------------------------------------------------------------- #
+class MultiTab(Element):
+    def __init__(self, layout, title_color=None, background_color=None, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
+
+        self.UseDictionary = False
+        self.ReturnValues = None
+        self.ReturnValuesList = []
+        self.ReturnValuesDictionary = {}
+        self.DictionaryKeyCounter = 0
+        self.ParentWindow = None
+        self.Rows = []
+        self.TKNotebook = None
+        self.BorderWidth = border_width
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+
+        self.Layout(layout)
+
+        super().__init__(ELEM_TYPE_MULTI_TAB, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        return
+
+    def AddRow(self, *args):
+        ''' Parms are a variable number of Elements '''
+        NumRows = len(self.Rows)               # number of existing rows is our row number
+        CurrentRowNumber = NumRows             # this row's number
+        CurrentRow = []                     # start with a blank row and build up
+        # -------------------------  Add the elements to a row  ------------------------- #
+        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+            element.Position = (CurrentRowNumber, i)
+            element.ParentContainer = self
+            CurrentRow.append(element)
+            if element.Key is not None:
+                self.UseDictionary = True
+        # -------------------------  Append the row to list of Rows  ------------------------- #
+        self.Rows.append(CurrentRow)
+
+    def Layout(self, rows):
+        for row in rows:
+            self.AddRow(*row)
+
+    def _GetElementAtLocation(self, location):
+        (row_num,col_num) = location
+        row = self.Rows[row_num]
+        element = row[col_num]
+        return element
+
+
+    def __del__(self):
+        for row in self.Rows:
+            for element in row:
+                element.__del__()
+        super().__del__()
+
+
+
+
 # ---------------------------------------------------------------------- #
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
@@ -2041,6 +2158,14 @@ class Window:
         if element is None:
             print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
         return element
+
+
+    def UpdateElements(self, key_list, value_list):
+        for i, key in enumerate(key_list):
+            try:
+                self.FindElement(key).Update(value_list[i])
+            except:
+                pass
 
 
     def SaveToDisk(self, filename):
@@ -2998,6 +3123,42 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+            # -------------------------  Tab element  ------------------------- #
+            elif element_type == ELEM_TYPE_TAB:
+                element.TKFrame = ttk.Frame(form.TKNotebook)
+                PackFormIntoFrame(element, element.TKFrame, toplevel_form)
+                form.TKNotebook.add(element.TKFrame, text='foo')
+                form.TKNotebook.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                # form.TKNotebook.pack(row=0, sticky=tk.NW)
+
+                # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
+                #     element.TKFrame.configure(background=element.BackgroundColor,
+                #                             highlightbackground=element.BackgroundColor,
+                #                             highlightcolor=element.BackgroundColor)
+                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                #     element.TKFrame.configure(foreground=element.TextColor)
+                # if element.BorderWidth is not None:
+                #     element.TKFrame.configure(borderwidth=element.BorderWidth)
+                # if element.Tooltip is not None:
+                #     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
+                #                                     timeout=DEFAULT_TOOLTIP_TIME)
+            # -------------------------  MultiTab element  ------------------------- #
+            elif element_type == ELEM_TYPE_MULTI_TAB:
+                element.TKNotebook = ttk.Notebook(tk_row_frame)
+                PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
+
+                # element.TKNotebook.pack(side=tk.LEFT)
+                # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
+                #     element.TKNotebook.configure(background=element.BackgroundColor,
+                #                             highlightbackground=element.BackgroundColor,
+                #                             highlightcolor=element.BackgroundColor)
+                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                #     element.TKNotebook.configure(foreground=element.TextColor)
+                # if element.BorderWidth is not None:
+                #     element.TKNotebook.configure(borderwidth=element.BorderWidth)
+                # if element.Tooltip is not None:
+                #     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
+                #                                     timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -3170,6 +3331,7 @@ def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_A
     for num,x in enumerate(args):
         form, rows, tab_name = x
         form.AddRows(rows)
+        form.UseDictionary = True
 
         if DEFAULT_BACKGROUND_COLOR:
             framestyle.theme_use('framestyle')
