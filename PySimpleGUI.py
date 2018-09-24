@@ -318,7 +318,14 @@ class Element():
                     rc = self.FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
-
+                if element.Type == ELEM_TYPE_MULTI_TAB:
+                    rc = self.FindReturnKeyBoundButton(element)
+                    if rc is not None:
+                        return rc
+                if element.Type == ELEM_TYPE_TAB:
+                    rc = self.FindReturnKeyBoundButton(element)
+                    if rc is not None:
+                        return rc
         return None
 
     def TextClickedHandler(self, event):
@@ -2484,6 +2491,30 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.ReturnValues[0] is not None:         # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
+            if element.Type == ELEM_TYPE_MULTI_TAB:
+                element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
+                element.ReturnValuesList = []
+                element.ReturnValuesDictionary = {}
+                BuildResultsForSubform(element, initialize_only, top_level_form)
+                for item in element.ReturnValuesList:
+                    AddToReturnList(top_level_form, item)
+                if element.UseDictionary:
+                    top_level_form.UseDictionary = True
+                if element.ReturnValues[0] is not None:         # if a button was clicked
+                    button_pressed_text = element.ReturnValues[0]
+
+            if element.Type == ELEM_TYPE_TAB:
+                element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
+                element.ReturnValuesList = []
+                element.ReturnValuesDictionary = {}
+                BuildResultsForSubform(element, initialize_only, top_level_form)
+                for item in element.ReturnValuesList:
+                    AddToReturnList(top_level_form, item)
+                if element.UseDictionary:
+                    top_level_form.UseDictionary = True
+                if element.ReturnValues[0] is not None:         # if a button was clicked
+                    button_pressed_text = element.ReturnValues[0]
+
             if not initialize_only:
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
                     value=element.TKStringVar.get()
@@ -2544,7 +2575,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
             # if an input type element, update the results
             if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
                     element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME:
+                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME and element.Type != ELEM_TYPE_MULTI_TAB \
+                    and element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and element.Target == (None,None)) or \
@@ -2582,6 +2614,10 @@ def FillSubformWithValues(form, values_dict):
                 FillSubformWithValues(element, values_dict)
             if element.Type == ELEM_TYPE_FRAME:
                 FillSubformWithValues(element, values_dict)
+            if element.Type == ELEM_TYPE_MULTI_TAB:
+                FillSubformWithValues(element, values_dict)
+            if element.Type == ELEM_TYPE_TAB:
+                FillSubformWithValues(element, values_dict)
             try:
                 value = values_dict[element.Key]
             except:
@@ -2615,6 +2651,14 @@ def _FindElementFromKeyInSubForm(form, key):
                 if matching_elem is not None:
                     return matching_elem
             if element.Type == ELEM_TYPE_FRAME:
+                matching_elem = _FindElementFromKeyInSubForm(element, key)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_MULTI_TAB:
+                matching_elem = _FindElementFromKeyInSubForm(element, key)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_TAB:
                 matching_elem = _FindElementFromKeyInSubForm(element, key)
                 if matching_elem is not None:
                     return matching_elem
@@ -3127,7 +3171,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TAB:
                 element.TKFrame = ttk.Frame(form.TKNotebook)
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
-                form.TKNotebook.add(element.TKFrame, text='foo')
+                form.TKNotebook.add(element.TKFrame, text=element.Title)
                 form.TKNotebook.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # form.TKNotebook.pack(row=0, sticky=tk.NW)
 
