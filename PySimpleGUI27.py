@@ -1,10 +1,13 @@
 #!/usr/bin/python3
-import tkinter as tk
-from tkinter import filedialog
-from tkinter.colorchooser import askcolor
-from tkinter import ttk
-import tkinter.scrolledtext as tkst
-import tkinter.font
+import Tkinter as tk
+# import tkinter as tk
+import tkFileDialog
+import ttk
+import tkColorChooser
+import tkFont
+# from Tkinter import ttk
+# import Tkinter.scrolledtext as tkst
+# import Tkinter.font
 import datetime
 import sys
 import textwrap
@@ -1052,30 +1055,30 @@ class Button(Element):
             except: pass
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
+            folder_name = tkFileDialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
             if folder_name != '':
                 try:
                     strvar.set(folder_name)
                     self.TKStringVar.set(folder_name)
                 except: pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            file_name = tkFileDialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
-            color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
+            color = tkColorChooser.askcolor()  # show the 'get file' dialog box
             color = color[1]         # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+            file_name = tkFileDialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
             if file_name != '':
                 file_name = ';'.join(file_name)
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            file_name = tkFileDialog.asksaveasfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -2704,7 +2707,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
 
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
-        return tkinter.font.Font().measure('A')  # single character width
+        return tkFont.Font().measure('A')  # single character width
     # only set title on non-tabbed forms
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
