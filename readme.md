@@ -9,7 +9,7 @@
 
 # PySimpleGUI
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.6.2-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.8.0-red.svg?longCache=true&style=for-the-badge)
 
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
@@ -1971,22 +1971,80 @@ Let me say up front that the Table Element has Beta status. The reason is that s
 
 
 
-## Tabbed windows
-Tabbed windows are shown using the `ShowTabbedForm` call.  The call has the format
+## Tab and Tab Group Elements
 
-     results = ShowTabbedForm('Title for the form',
-                              (form,layout,'Tab 1 label'),
-                              (form2,layout2, 'Tab 2 label'), ...)
+Tabs have been a part of PySimpleGUI since the initial release.  However, the initial implementation applied tabs at the top level only. The entire window had to be tabbed.  There with other limitations that came along with that implementation.  That all changed in version 3.8.0 with the new elements - Tab and TabGroup.  The old implementation of Tabs was removed in version 3.8.0 as well.
 
-Each of the tabs of the form is in fact a window.  The same steps are taken to create the form as before.  A `Window` is created, then rows are filled with Elements, and finally the form is shown.  When calling `ShowTabbedForm`, each form is passed in as a tuple.  The tuple has  the format:  `(the form, the rows, a string shown on the tab)`
+Tabs are another "Container Element".  The other Container Elements include:
+* Frame
+* Column
 
-Results are returned as a list of lists.  For each form you'll get a list that's in the same format as a normal window. A single tab's values would be:
+You layout a Frame in exactly the same way as a Frame or Column elements, by passing in a list of elements.
 
-    (button, (values))
+How you place a Tab into a Window is different than Graph or Frame elements.  You cannot place a tab directly into a Window's layout.  It much first be placed into a TabGroup.  The  TabGroup can then be placed into the Window.
 
-Recall that values is a list as well.  Multiple tabs in the form would return like this:
+Let's look at this Window as an example:
 
-    ((button1, (values1)), (button2, (values2))
+![tabbed 1](https://user-images.githubusercontent.com/13696193/45992808-b10f6a80-c059-11e8-9746-ac71afd4d3d6.jpg)
+
+View of second tab:
+
+![tabbed 2](https://user-images.githubusercontent.com/13696193/45992809-b10f6a80-c059-11e8-94e6-3bf543c9b0bd.jpg)
+
+
+First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
+
+
+    tab1_layout =  [[sg.T('This is inside tab 1')]]
+
+    tab2_layout = [[sg.T('This is inside tab 2')],
+                   [sg.In(key='in')]]
+
+The layout for the entire window looks like this:
+
+    layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]])],
+              [sg.RButton('Read')]]
+
+The Window layout has the TabGroup and within the tab Group are the two Tab elements.
+
+One important thing to notice about all of these container Elements... they all take a "list of lists" at the layout.  They all have a layout that starts with `[[`
+
+You will want to keep this `[[ ]]` construct in your head a you're debugging your tabbed windows.  It's easy to overlook one or two necessary ['s
+
+As mentioned earlier, the old-style Tabs were limited to being at the Window-level only.  In other words, the tabs were equal in size to the entire window.  This is not the case with the "new-style" tabs.  This is why you're not going to be upset when you discover your old code no longer works with the new PySimpleGUI release.  It'll be worth the few moments it'll take to convert your code.
+
+Check out what's possible with the NEW Tabs!
+
+![tabs tabs tabs](https://user-images.githubusercontent.com/13696193/45993438-fd0fde80-c05c-11e8-9ed0-742f14d3070f.jpg)
+
+
+Check out Tabs 7 and 8.  We've got a Window with a Column containing Tabs 5 and 6.  On Tab 6 are... Tabs 7 and 8.
+
+As of Release 3.8.0, not all of *options* shown in the API definitions of the Tab and TabGroup Elements are working. They are there as placeholders.
+
+The definition of a TabGroup is
+
+     TabGroup(layout,
+	   		  title_color=None
+	   		  background_color=None
+	   		  font=None
+	   		  pad=None
+	   		  border_width=None
+	   		  key=None
+	   		  tooltip=None)
+
+The definition of a Tab Element is
+
+    Tab(title,
+        layout,
+        title_color=None,
+        background_color=None,
+        size=(None, None),font=None,
+        pad=None
+        border_width=None
+        key=None
+        tooltip=None)
+
 
   ## Colors ##
 Starting in version 2.5 you can change the background colors for the window and the Elements.
@@ -2592,6 +2650,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 03.05.01 | Sept 22, 2018 - See release notes
 | 03.05.02 | Sept 23, 2018 - See release notes
 | 03.06.00 | Sept 23, 2018 - Goodbye FlexForm, hello Window
+| 03.08.00 | Sept 25, 2018 - Tab and TabGroup Elements
+
 
 ### Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
@@ -2681,6 +2741,9 @@ OneLineProgressMeter function added which gives you not only a one-line solution
 #### 3.6.0
 * Renamed FlexForm to Window
 * Removed LookAndFeel capability from Mac platform.
+
+#### 3.8.0
+* Tab and TabGroup Elements - awesome new capabilities
 
 
 ### Upcoming

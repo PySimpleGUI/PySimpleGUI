@@ -195,7 +195,7 @@ ELEM_TYPE_CANVAS = 40
 ELEM_TYPE_FRAME = 41
 ELEM_TYPE_GRAPH = 42
 ELEM_TYPE_TAB = 50
-ELEM_TYPE_MULTI_TAB = 51
+ELEM_TYPE_TAB_GROUP = 51
 ELEM_TYPE_INPUT_SLIDER = 10
 ELEM_TYPE_INPUT_LISTBOX = 11
 ELEM_TYPE_OUTPUT = 300
@@ -318,7 +318,7 @@ class Element():
                     rc = self.FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
-                if element.Type == ELEM_TYPE_MULTI_TAB:
+                if element.Type == ELEM_TYPE_TAB_GROUP:
                     rc = self.FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
@@ -1393,7 +1393,7 @@ class Frame(Element):
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, border_width=None, key=None, tooltip=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1409,7 +1409,7 @@ class Tab(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color,  font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
@@ -1450,7 +1450,7 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    def __init__(self, layout, title_color=None, background_color=None, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, layout, title_color=None, background_color=None, font=None, pad=None, border_width=None, key=None, tooltip=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1465,7 +1465,7 @@ class TabGroup(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_MULTI_TAB, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
@@ -2491,7 +2491,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.ReturnValues[0] is not None:         # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
-            if element.Type == ELEM_TYPE_MULTI_TAB:
+            if element.Type == ELEM_TYPE_TAB_GROUP:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
                 element.ReturnValuesDictionary = {}
@@ -2575,7 +2575,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
             # if an input type element, update the results
             if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
                     element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME and element.Type != ELEM_TYPE_MULTI_TAB \
+                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME and element.Type != ELEM_TYPE_TAB_GROUP \
                     and element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
@@ -2614,7 +2614,7 @@ def FillSubformWithValues(form, values_dict):
                 FillSubformWithValues(element, values_dict)
             if element.Type == ELEM_TYPE_FRAME:
                 FillSubformWithValues(element, values_dict)
-            if element.Type == ELEM_TYPE_MULTI_TAB:
+            if element.Type == ELEM_TYPE_TAB_GROUP:
                 FillSubformWithValues(element, values_dict)
             if element.Type == ELEM_TYPE_TAB:
                 FillSubformWithValues(element, values_dict)
@@ -2654,7 +2654,7 @@ def _FindElementFromKeyInSubForm(form, key):
                 matching_elem = _FindElementFromKeyInSubForm(element, key)
                 if matching_elem is not None:
                     return matching_elem
-            if element.Type == ELEM_TYPE_MULTI_TAB:
+            if element.Type == ELEM_TYPE_TAB_GROUP:
                 matching_elem = _FindElementFromKeyInSubForm(element, key)
                 if matching_elem is not None:
                     return matching_elem
@@ -3178,25 +3178,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKFrame.configure(background=element.BackgroundColor,
                                             highlightbackground=element.BackgroundColor,
                                             highlightcolor=element.BackgroundColor)
-                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                    element.TKFrame.configure(foreground=element.TextColor)
+                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                #     element.TKFrame.configure(foreground=element.TextColor)
                 if element.BorderWidth is not None:
                     element.TKFrame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  MultiTab element  ------------------------- #
-            elif element_type == ELEM_TYPE_MULTI_TAB:
+            # -------------------------  TabGroup element  ------------------------- #
+            elif element_type == ELEM_TYPE_TAB_GROUP:
                 element.TKNotebook = ttk.Notebook(tk_row_frame)
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
                 # element.TKNotebook.pack(side=tk.LEFT)
-                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    element.TKNotebook.configure(background=element.BackgroundColor,
-                                            highlightbackground=element.BackgroundColor,
-                                            highlightcolor=element.BackgroundColor)
-                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                    element.TKNotebook.configure(foreground=element.TextColor)
+                # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
+                #     element.TKNotebook.configure(background=element.BackgroundColor,
+                #                             highlightbackground=element.BackgroundColor,
+                #                             highlightcolor=element.BackgroundColor)
+                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                #     element.TKNotebook.configure(foreground=element.TextColor)
                 if element.BorderWidth is not None:
                     element.TKNotebook.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
