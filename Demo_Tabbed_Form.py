@@ -76,7 +76,7 @@ layout_tab_2.append([sg.InputText(size=(100,1), default_text='gruen -sara -quarz
 layout_tab_2.append([sg.Text('_' * 100, size=(75, 1))])
 layout_tab_2.append([sg.ReadButton('Submit', button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue'))])
 
-results = sg.ShowTabbedForm('eBay Super Searcher', (form,layout_tab_1,'Where To Save'), (form2, layout_tab_2, 'Categories & Search String'))
+results = sg.ShowTabbedForm('eBay Super Searcher', (form2, layout_tab_1,'Where To Save'), (form2, layout_tab_2, 'Categories & Search String'))
 
 
 
