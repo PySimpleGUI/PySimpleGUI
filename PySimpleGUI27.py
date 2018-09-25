@@ -1800,14 +1800,14 @@ class TKCalendar(ttk.Frame):
         self._calendar.tag_configure('header', background='grey90')
         self._calendar.insert('', 'end', values=cols, tag='header')
         # adjust its columns width
-        font = tkinter.font.Font()
+        font = tkFont.Font()
         maxwidth = max(font.measure(col) for col in cols)
         for col in cols:
             self._calendar.column(col, width=maxwidth, minwidth=maxwidth,
                 anchor='e')
 
     def __setup_selection(self, sel_bg, sel_fg):
-        self._font = tkinter.font.Font()
+        self._font = tkFont.Font()
         self._canvas = canvas = tk.Canvas(self._calendar,
             background=sel_bg, borderwidth=0, highlightthickness=0)
         canvas.text = canvas.create_text(0, 0, fill=sel_fg, anchor='w')
@@ -4261,7 +4261,7 @@ def ObjToString(obj, extra='    '):
 
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None), *args):
+def Popup(*args, **kwargs):
     """
     Popup - Display a popup box with as many parms as you wish to include
     :param args:
@@ -4281,59 +4281,93 @@ def Popup(button_color=None, background_color=None, text_color=None, button_type
     :param location:
     :return:
     """
+
+    # , button_color=None, background_color=None, text_color=None, button_type=, auto_close=, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)
+
     if not args:
         args_to_print = ['']
     else:
         args_to_print = args
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+
     if line_width != None:
         local_line_width = line_width
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location) as form:
-        max_line_total, total_lines = 0,0
-        for message in args_to_print:
-            # fancy code to check if string and convert if not is not need. Just always convert to string :-)
-            # if not isinstance(message, str): message = str(message)
-            message = str(message)
-            if message.count('\n'):
-                message_wrapped = message
-            else:
-                message_wrapped = textwrap.fill(message, local_line_width)
-            message_wrapped_lines = message_wrapped.count('\n')+1
-            longest_line_len = max([len(l) for l in message.split('\n')])
-            width_used = min(longest_line_len, local_line_width)
-            max_line_total = max(max_line_total, width_used)
-            # height = _GetNumLinesNeeded(message, width_used)
-            height = message_wrapped_lines
-            form.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
-            total_lines += height
+    form = FlexForm(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    max_line_total, total_lines = 0,0
+    for message in args_to_print:
+        # fancy code to check if string and convert if not is not need. Just always convert to string :-)
+        # if not isinstance(message, str): message = str(message)
+        message = str(message)
+        if message.count('\n'):
+            message_wrapped = message
+        else:
+            message_wrapped = textwrap.fill(message, local_line_width)
+        message_wrapped_lines = message_wrapped.count('\n')+1
+        longest_line_len = max([len(l) for l in message.split('\n')])
+        width_used = min(longest_line_len, local_line_width)
+        max_line_total = max(max_line_total, width_used)
+        # height = _GetNumLinesNeeded(message, width_used)
+        height = message_wrapped_lines
+        form.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
+        total_lines += height
 
-        pad = max_line_total-15 if max_line_total > 15 else 1
-        pad =1
-        if non_blocking:
-            PopupButton = DummyButton
-        else:
-            PopupButton = SimpleButton
-        # show either an OK or Yes/No depending on paramater
-        if button_type is POPUP_BUTTONS_YES_NO:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False,  text_color=text_color, background_color=background_color), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
-        elif button_type is POPUP_BUTTONS_CANCELLED:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is POPUP_BUTTONS_ERROR:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is POPUP_BUTTONS_OK_CANCEL:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color,  background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
-                        PopupButton('Cancel', size=(5, 1), button_color=button_color))
-        elif button_type is POPUP_BUTTONS_NO_BUTTONS:
-            pass
-        else:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+    pad = max_line_total-15 if max_line_total > 15 else 1
+    pad =1
+    if non_blocking:
+        PopupButton = DummyButton
+    else:
+        PopupButton = SimpleButton
+    # show either an OK or Yes/No depending on paramater
+    if button_type is POPUP_BUTTONS_YES_NO:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False,  text_color=text_color, background_color=background_color), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
+    elif button_type is POPUP_BUTTONS_CANCELLED:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
+    elif button_type is POPUP_BUTTONS_ERROR:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True))
+    elif button_type is POPUP_BUTTONS_OK_CANCEL:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color,  background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
+                    PopupButton('Cancel', size=(5, 1), button_color=button_color))
+    elif button_type is POPUP_BUTTONS_NO_BUTTONS:
+        pass
+    else:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
 
-        if non_blocking:
-            button, values = form.ReadNonBlocking()
-        else:
-            button, values = form.Show()
+    if non_blocking:
+        button, values = form.ReadNonBlocking()
+    else:
+        button, values = form.Show()
 
     return button
 
@@ -4349,7 +4383,7 @@ def MsgBox(*args):
 
 
 # --------------------------- PopupNoButtons ---------------------------
-def PopupNoButtons(button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None), *args):
+def PopupNoButtons(*args, **kwargs):
     """
     Show a Popup but without any buttons
     :param args:
@@ -4368,13 +4402,42 @@ def PopupNoButtons(button_color=None, background_color=None, text_color=None, au
     :param location:
     :return:
     """
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None), *args):
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+
     Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=POPUP_BUTTONS_NO_BUTTONS,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
         font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, *args)
 
 
 # --------------------------- PopupNonBlocking ---------------------------
-def PopupNonBlocking(button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None), *args):
+def PopupNonBlocking(*args, **kwargs):
     """
     Show Popup box and immediately return (does not block)
     :param args:
@@ -4394,6 +4457,38 @@ def PopupNonBlocking(button_type=POPUP_BUTTONS_OK, button_color=None, background
     :param location:
     :return:
     """
+
+    # button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = True
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
         font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, *args)
@@ -4403,7 +4498,7 @@ PopupNoWait = PopupNonBlocking
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
-def PopupNoTitlebar(button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None,None),*args):
+def PopupNoTitlebar(*args, **kwargs):
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
     :param args:
@@ -4422,6 +4517,36 @@ def PopupNoTitlebar(button_type=POPUP_BUTTONS_OK, button_color=None, background_
     :param location:
     :return:
     """
+
+    # button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
         font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
@@ -4432,7 +4557,7 @@ PopupAnnoying = PopupNoTitlebar
 
 
 # --------------------------- PopupAutoClose ---------------------------
-def PopupAutoClose(button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),*args):
+def PopupAutoClose(*args, **kwargs):
     """
     Popup that closes itself after some time period
     :param args:
@@ -4452,6 +4577,39 @@ def PopupAutoClose(button_type=POPUP_BUTTONS_OK, button_color=None, background_c
     :param location:
     :return:
     """
+
+    # button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = True
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
         font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
@@ -4459,7 +4617,7 @@ def PopupAutoClose(button_type=POPUP_BUTTONS_OK, button_color=None, background_c
 PopupTimed = PopupAutoClose
 
 # --------------------------- PopupError ---------------------------
-def PopupError( button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),*args):
+def PopupError(*args, **kwargs):
     """
     Popup with colored button and 'Error' as button text
     :param args:
@@ -4478,11 +4636,42 @@ def PopupError( button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, 
     :param location:
     :return:
     """
+    #  button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = DEFAULT_ERROR_BUTTON_COLOR
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     Popup(button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 
 # --------------------------- PopupCancel ---------------------------
-def PopupCancel(button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),*args):
+def PopupCancel(*args, **kwargs):
     """
     Display Popup with "cancelled" button text
     :param args:
@@ -4501,10 +4690,40 @@ def PopupCancel(button_color=None, background_color=None, text_color=None, auto_
     :param location:
     :return:
     """
+
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     Popup( button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, *args)
 
 # --------------------------- PopupOK ---------------------------
-def PopupOK( button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),*args):
+def PopupOK(*args, **kwargs):
     """
     Display Popup with OK button only
     :param args:
@@ -4523,10 +4742,40 @@ def PopupOK( button_color=None, background_color=None, text_color=None, auto_clo
     :param location:
     :return:
     """
+
+ #   button_color = None, background_color = None, text_color = None, auto_close = False, auto_close_duration = None, non_blocking = False, icon = DEFAULT_WINDOW_ICON, line_width = None, font = None, no_titlebar = False, grab_anywhere = True, keep_on_top = False, location = ( None, None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     Popup(button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 # --------------------------- PopupOKCancel ---------------------------
-def PopupOKCancel(button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),*args):
+def PopupOKCancel(*args, **kwargs):
     """
     Display popup with OK and Cancel buttons
     :param args:
@@ -4545,10 +4794,40 @@ def PopupOKCancel(button_color=None, background_color=None, text_color=None, aut
     :param location:
     :return: OK, Cancel or None
     """
+
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     return Popup(button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 # --------------------------- PopupYesNo ---------------------------
-def PopupYesNo(button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),*args):
+def PopupYesNo(*args, **kwargs):
     """
     Display Popup with Yes and No buttons
     :param args:
@@ -4567,6 +4846,36 @@ def PopupYesNo(button_color=None, background_color=None, text_color=None, auto_c
     :param location:
     :return: Yes, No or None
     """
+
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
     return Popup(button_type=POPUP_BUTTONS_YES_NO, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 
