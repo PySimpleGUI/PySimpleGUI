@@ -1,10 +1,12 @@
 #!/usr/bin/python3
-import tkinter as tk
-from tkinter import filedialog
-from tkinter.colorchooser import askcolor
-from tkinter import ttk
-import tkinter.scrolledtext as tkst
-import tkinter.font
+import Tkinter as tk
+# import tkinter as tk
+import tkFileDialog
+import ttk
+# from Tkinter.colorchooser import askcolor
+# from Tkinter import ttk
+# import Tkinter.scrolledtext as tkst
+# import Tkinter.font
 import datetime
 import sys
 import textwrap
