@@ -9,8 +9,9 @@
 
 # PySimpleGUI
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_Version-3.8.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.0-red.svg?longCache=true&style=for-the-badge)
 
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.0-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -28,7 +29,11 @@ Super-simple GUI to use... Powerfully customizable.
 
 Home of the 1-line custom GUI and 1-line progress meter
 
-Note - ***Python3*** is required to run PySimpleGUI.  It takes advantage of some Python3 features that do not translate well into Python2.
+#### Note regarding Python versions
+As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is called PySimpleGUI. The Python 2.7 version is called PySimpleGUI27.  They are installed separately and the imports are different. See instructions in Installation section for more info.
+
+
+---------------------------------
 
 Looking for a GUI package to help with
 * Taking your Python code from the world of command lines and into the convenience of a GUI?  *
@@ -114,6 +119,7 @@ was the second.
 While simple to use, PySimpleGUI has significant depth to be explored by more advanced programmers.  The feature set goes way beyond the requirements of a beginner programmer, and into the  required features needed for complex GUIs.
 
     Features of PySimpleGUI include:
+	    Support for versions Python 2.7 and 3
         Text
         Single Line Input
         Buttons including these types:
@@ -238,7 +244,7 @@ Maybe there's no "there there".  ***Or*** maybe a simple GUI API will enable Pyt
   -----
 ## Getting Started with PySimpleGUI
 
-### Installing
+### Installing  Python 3
 
     pip install --upgrade PySimpleGUI
 
@@ -261,13 +267,19 @@ If for some reason you are unable to install using `pip`, don't worry, you can s
 ImportError: No module named tkinter
 ```
 then you need to install `tkinter`.  Be sure and get the Python 3 version.
-```
-sudo apt-get install python3-tk
-```
+
+```sudo apt-get install python3-tk  ```
+
+
+### Installing for Python 2.7
+
+    pip install --upgrade PySimpleGUI27
+
+Python 2.7 support is relatively new and the bugs are still being worked out.  I'm unsure what may need to be done to install tkinter for Python 2.7.  Will update this readme when more info is available
+
 
 ### Prerequisites
-
-Python 3
+Python 2.7 or Python 3
 tkinter
 
 PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It has been tested on Windows.  Runs on Windows, Mac, Linux, Raspberry Pi.  Even runs on `pypy3`.
@@ -277,7 +289,7 @@ PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It
 If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this ReadMe
 
 
-## Using
+## Using  - Python 3
 
 To use in your code, simply import....
  `import PySimpleGUI as sg`
@@ -290,6 +302,12 @@ Then use either "high level" API calls or build your own windows.
 
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom window appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
+
+## Using  - Python 2.7
+
+Those using Python 2.7 will import a different module name
+ `import PySimpleGUI27 as sg`
+
 
 ---
 ## APIs
@@ -2650,7 +2668,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 03.05.01 | Sept 22, 2018 - See release notes
 | 03.05.02 | Sept 23, 2018 - See release notes
 | 03.06.00 | Sept 23, 2018 - Goodbye FlexForm, hello Window
-| 03.08.00 | Sept 25, 2018 - Tab and TabGroup Elements
+| 03.08.00 | Sept 25, 2018 - Tab and TabGroup Elements\
+| 01.01.00 for 2.7 | Sept 25, 2018 - First release for 2.7
 
 
 ### Release Notes
@@ -2745,6 +2764,9 @@ OneLineProgressMeter function added which gives you not only a one-line solution
 #### 3.8.0
 * Tab and TabGroup Elements - awesome new capabilities
 
+#### 1.0.0 Python 2.7
+It's official.  There is a 2.7 version of PySimpleGUI!
+
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -2835,3 +2857,6 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
+
+

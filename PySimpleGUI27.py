@@ -5,6 +5,7 @@ import tkFileDialog
 import ttk
 import tkColorChooser
 import tkFont
+import ScrolledText
 # from Tkinter import ttk
 # import Tkinter.scrolledtext as tkst
 # import Tkinter.font
@@ -2998,7 +2999,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
                 width, height = element_size
-                element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
+                element.TKText = ScrolledText.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
                 element.TKText.insert(1.0, default_text)                    # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
@@ -3909,9 +3910,9 @@ def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files
         except:
             pass
         if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tkFileDialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tkFileDialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
         root.destroy()
         return filename
 
