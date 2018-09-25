@@ -3169,17 +3169,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
-                element.TKFrame = ttk.Frame(form.TKNotebook)
+                element.TKFrame = tk.Frame(form.TKNotebook)
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
                 form.TKNotebook.add(element.TKFrame, text=element.Title)
-                form.TKNotebook.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                form.TKNotebook.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
 
-                # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                #     element.TKFrame.configure(background=element.BackgroundColor,
-                #                             highlightbackground=element.BackgroundColor,
-                #                             highlightcolor=element.BackgroundColor)
-                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                #     element.TKFrame.configure(foreground=element.TextColor)
+                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
+                    element.TKFrame.configure(background=element.BackgroundColor,
+                                            highlightbackground=element.BackgroundColor,
+                                            highlightcolor=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    element.TKFrame.configure(foreground=element.TextColor)
                 if element.BorderWidth is not None:
                     element.TKFrame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
@@ -3289,7 +3289,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='sw', padx=DEFAULT_MARGINS[0], expand=True)
+        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=True)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         if not toplevel_form.IsTabbedForm:
