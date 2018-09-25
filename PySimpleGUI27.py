@@ -3034,7 +3034,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
                 width = element_size[0]
-                fnt = tkinter.font.Font()
+                fnt = tkFont.Font()
                 char_width = fnt.measure('A')       # single character width
                 progress_length = width*char_width
                 progress_width = element_size[1]
@@ -3448,7 +3448,7 @@ def ConvertArgsToSingleString(*args):
 
 # ============================== ProgressMeter  =====#
 # ===================================================#
-def _ProgressMeter(title, max_value, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE,  border_width=None, grab_anywhere=True,  *args):
+def _ProgressMeter(title, max_value, *args, **kwargs):
     '''
     Create and show a form on tbe caller's behalf.
     :param title:
@@ -3461,6 +3461,23 @@ def _ProgressMeter(title, max_value, orientation=None, bar_color=(None,None), bu
     :param StyleOffset:
     :return: ProgressBar object that is in the form
     '''
+
+    # title, max_value, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE,  border_width=None, grab_anywhere=True,  *args
+
+    try: orientation = kwargs['orientation']
+    except: orientation = None
+    try: bar_color = kwargs['bar_color']
+    except: bar_color = (None, None)
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: size = kwargs['size']
+    except: size = DEFAULT_PROGRESS_BAR_SIZE
+    try: border_width = kwargs['border_width']
+    except: border_width = None
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = True
+
+
     local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
     bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color,  border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
