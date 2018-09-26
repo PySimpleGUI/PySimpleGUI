@@ -20,7 +20,7 @@
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.1-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.0-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.3-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
