@@ -53,7 +53,7 @@ A simple GUI with default values.  Results returned in a dictionary.
               [sg.Text('Name', size=(15, 1)), sg.InputText('name', key='name')],
               [sg.Text('Address', size=(15, 1)), sg.InputText('address', key='address')],
               [sg.Text('Phone', size=(15, 1)), sg.InputText('phone', key='phone')],
-              [sg.Submit(), sg.Cancel()]    
+              [sg.Submit(), sg.Cancel()]
              ]
 
     window = sg.Window('Simple data entry GUI').Layout(layout)
@@ -316,29 +316,6 @@ This recipe shows just how easy it is to add a progress meter to your code.
         sg.OneLineProgressMeter('One Line Meter Example', i+1, 1000, 'key')
 
 
------
-## Tabbed Window
-Tabbed Windows are **easy** to make and use in PySimpleGUI.  You simple may your layouts for each tab and then instead of `LayoutAndRead` you call `ShowTabbedForm`.  Results are returned as a list of form results.  Each tab acts like a single window.
-
-
-![tabbed form](https://user-images.githubusercontent.com/13696193/43956352-cffa6564-9c71-11e8-971b-2b395a668bf3.jpg)
-
-    import PySimpleGUI as sg
-
-    layout_tab_1 = [[sg.Text('First tab', size=(20, 1), font=('helvetica', 15))],                  [sg.InputText(), sg.Text('Enter some info')],
-                    [sg.Submit(button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue'))]]
-
-    layout_tab_2 = [[sg.Text('Second Tab', size=(20, 1), font=('helvetica', 15))],
-                    [sg.InputText(), sg.Text('Enter some info')],
-                    [sg.Submit(button_color=('red', 'yellow')), sg.Cancel(button_color=('white', 'blue'))]]
-
-    window = sg.Window('')
-    form2 = sg.Window('')
-
-    results = sg.ShowTabbedForm('Tabbed form example', (form, layout_tab_1, 'First Tab'),
-                                    (form2, layout_tab_2, 'Second Tab'))
-
-    sg.Popup(results)
 
 -----
 ## Button Graphics (Media Player)

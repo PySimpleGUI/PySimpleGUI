@@ -5,7 +5,7 @@
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
-![Awesome Meter](https://img.shields.io/badge/Awesomeness_Rating-100%-yellow.svg)
+ ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
  ![Python Version](https://img.shields.io/badge/Python-3-yellow.svg) ![Python Version](https://img.shields.io/badge/Python-2.7-yellow.svg)
 
 
@@ -268,14 +268,18 @@ Some users have found that upgrading required using an extra flag on the pip `--
 
     pip install --upgrade --no-cache-dir
 
+On some versions of Linux you will need to first install pip.  Need the Chicken before you can get the Egg (get it... Egg?)
+
+`sudo apt install python3-pip `
+
 If for some reason you are unable to install using `pip`, don't worry, you can still import PySimpleGUI by downloading the file PySimleGUI.py and placing it in your folder along with the application that is importing it.
 
 `tkinter` is a requirement for PySimpleGUI (the only requirement).  Some OS variants, such as Ubuntu, do not some with `tkinter` already installed.  If you get an error similar to:
 ```
 ImportError: No module named tkinter
 ```
-then you need to install `tkinter`.  Be sure and get the Python 3 version.
-
+then yosudou need to install `tkinter`.  Be sure and get the Python 3 version.
+`
 ```sudo apt-get install python3-tk  ```
 
 
@@ -285,12 +289,44 @@ then you need to install `tkinter`.  Be sure and get the Python 3 version.
 
 Python 2.7 support is relatively new and the bugs are still being worked out.  I'm unsure what may need to be done to install tkinter for Python 2.7.  Will update this readme when more info is available
 
+Like above, you may have to install either pip or tkinter.  To do this on Python 2.7:
+
+`sudo apt install python-pip`
+
+`sudo apt install python-tkinter`
+
+### Testing your installation
+
+Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.
+
+#### Instructions for Python 2.7:
+```
+python
+>>> import PySimpleGUI27
+>>> PySimpleGUI27.main()
+```
+
+#### Instructions for Python 3:
+
+```
+python3
+>>> import PySimpleGUI27
+>>> PySimpleGUI27.main()
+```
+
+You will see a sample window in the center of your screen.  If it's not installed correctly you are likely to get an error message during one of those commands
+
+Here is the window you should see:
+
+![sample window](https://user-images.githubusercontent.com/13696193/46097669-79efa500-c190-11e8-885c-e5d4d5d09ea6.jpg)
+
+
 
 ### Prerequisites
 Python 2.7 or Python 3
 tkinter
 
-PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It has been tested on Windows.  Runs on Windows, Mac, Linux, Raspberry Pi.  Even runs on `pypy3`.
+PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It has been tested on Windows, Mac, Linux, Raspberry Pi.  Even runs on `pypy3`.
 
 ### EXE file creation
 
@@ -316,6 +352,9 @@ Yes, it's just that easy to have a window appear on the screen using Python.  Wi
 Those using Python 2.7 will import a different module name
  `import PySimpleGUI27 as sg`
 
+## Code Samples Assume Python 3
+
+While all of the code examples you will see in this Readme and the  Cookbook assume Python 3 and thus have an `import PySimpleGUI` at the top, you can run ***all*** of this code on Python 2.7 by changing the import statement to `import PySimpleGUI27`
 
 ---
 ## APIs
@@ -2478,6 +2517,16 @@ You can use Update to do things like:
 * Change the choices in a list
 * etc
 
+  ### Updating Multiple Elements
+  If you have a large number of Elements to update, you can call `Window.UpdateElements()`.
+
+`    UpdateElements(key_list,
+			       value_list)`
+
+`key_list` - list of keys for elements you wish to update
+`value_list` - list of values, one for each key
+
+    window.UpdateElements(('name', 'address', 'phone'), ('Fred Flintstone', '123 Rock Quarry Road', '555#'))
 
 
 ## Sample Applications
@@ -2569,6 +2618,15 @@ That's all... Run your  `my_program.exe`  file on the Windows machine of your ch
 (famous last words that screw up just about anything being referenced)
 
 Your EXE file should run without creating a "shell window". Only the GUI window should show up on your taskbar.
+
+If you get a crash with something like:
+```
+ValueError: script '.......\src\tkinter' not found
+```
+
+Then try adding **`--hidden-import tkinter`** to your command
+
+
 
 ## Fun Stuff
 Here are some things to try if you're bored or want to further customize
