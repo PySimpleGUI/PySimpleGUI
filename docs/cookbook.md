@@ -6,6 +6,17 @@
 
 You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.  Study them to get an idea of what design patterns to follow.
 
+The Recipes in this Cookbook all assume you're running on a Python3 machine.  If you are running Python 2.7 then your code will differ by 2 character.  Replace the import statement:
+
+    import PySimpleGUI as sg
+
+with
+
+    import PySimpleGUI27 as sg
+
+There is a short section in the Readme with instruction on installing PySimpleGUI
+
+
 ## Simple Data Entry - Return Values As List
 Same GUI screen except the return values are in a list instead of a dictionary and doesn't have initial values.
 
@@ -42,7 +53,7 @@ A simple GUI with default values.  Results returned in a dictionary.
               [sg.Text('Name', size=(15, 1)), sg.InputText('name', key='name')],
               [sg.Text('Address', size=(15, 1)), sg.InputText('address', key='address')],
               [sg.Text('Phone', size=(15, 1)), sg.InputText('phone', key='phone')],
-              [sg.Submit(), sg.Cancel()]
+              [sg.Submit(), sg.Cancel()]    
              ]
 
     window = sg.Window('Simple data entry GUI').Layout(layout)
@@ -302,7 +313,7 @@ This recipe shows just how easy it is to add a progress meter to your code.
     import PySimpleGUI as sg
 
     for i in range(1000):
-        sg.OneLineProgressMeter('One Line Meter Example', i+1, 1000, 'mymeter')
+        sg.OneLineProgressMeter('One Line Meter Example', i+1, 1000, 'key')
 
 
 -----
@@ -530,9 +541,10 @@ you can write this line of code for the exact same result (OK, two lines with th
 
 --------------------
 ## Multiple Columns
-Starting in version 2.9 you can use the Column Element.  A Column is required when you have a tall element to the left of smaller elements.
 
-This example uses a Column.  There is a Listbox on the left that is 3 rows high.  To the right of it are 3 single rows of text and input. These 3 rows are in a Column Element.
+A Column is required when you have a tall element to the left of smaller elements.
+
+In this example, there is a Listbox on the left that is 3 rows high.  To the right of it are 3 single rows of text and input. These 3 rows are in a Column Element.
 
 To make it easier to see the Column in the window, the Column background has been shaded blue.  The code is wordier than normal due to the blue shading.  Each element in the column needs to have the color set to match blue background.
 
@@ -1221,6 +1233,37 @@ In this example we're defining our graph to be from -100, -100 to +100,+100.  Th
       graph.DrawPoint((x,y), color='red')
 
     button, values = window.Read()
+
+## Tabs
+
+Tabs bring not only an extra level of sophistication to your window layout, they give you extra room to add more elements.  Tabs are one of the 3 container Elements, Elements that hold or contain other Elements.  The other two are the Column and Frame Elements.
+
+
+![tabs](https://user-images.githubusercontent.com/13696193/46049479-97732f00-c0fc-11e8-8015-5bbed8bd88bb.jpg)
+
+
+
+```
+import PySimpleGUI as sg
+
+tab1_layout =  [[sg.T('This is inside tab 1')]]
+
+tab2_layout = [[sg.T('This is inside tab 2')],
+               [sg.In(key='in')]]
+
+layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, tooltip='tip'), sg.Tab('Tab 2', tab2_layout)]], tooltip='TIP2')],
+          [sg.RButton('Read')]]
+
+window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout)
+
+while True:
+    button, v = window.Read()
+    print(button,values)
+    if button is None:           # always,  always give a way out!
+        break
+```
+
+
 
 
 ## Creating a Windows .EXE File

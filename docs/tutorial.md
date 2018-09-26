@@ -2,7 +2,7 @@
 
 # Add GUIs to your programs and scripts easily with PySimpleGUI
 
-NOTE -- PySimpleGUI requires Python3.  If you're running Python2, don't waste your time reading.
+PySimpleGUI now supports BOTH Python 2.7 and Python 3
 
 ## Introduction
 Few people run Python programs by double clicking the .py file as if it were a .exe file.  When a typical user (non-programmer types) double clicks an exe file, they expect it to pop open with a window they can interact with.  While GUIs, using tkinter, are possible using standard Python installations, it's unlikely many programs do this.
@@ -46,7 +46,7 @@ There are more complex GUIs such as those that don't close after a button is cli
 When is PySimpleGUI useful?  ***Immediately***, anytime you've got a GUI need.  It will take under 5 minutes for you to create and try your GUI.  With those kinds of times, what do you have to lose trying it?
 
 The best way to go about making your GUI in under 5 minutes is to copy one of the GUIs from the [PySimpleGUI Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/).  Follow these steps:
-* Install PySimpleGUI
+* Install PySimpleGUI    (see short section in readme on installation)
 *  Find a GUI that looks similar to what you want to create
 * Copy code from Cookbook
 * Paste into your IDE and run
@@ -77,6 +77,19 @@ It's a reasonably sized window.
 ![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)
 
 If you only need to collect a few values and they're all basically strings, then you would copy this recipe and modify it to suit your needs.
+
+### Python 2.7 Differences
+
+The only noticeable difference between PySimpleGUI code running under Python 2.7 and one running on Python 3 is the import statement.
+
+Python 3.x:
+
+    import PySimpleGUI as sg
+
+Python 2.7:
+
+    import PySimpleGUI27 as sg
+
 
 ## The 5-line GUI
 
