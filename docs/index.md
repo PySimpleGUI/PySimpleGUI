@@ -310,8 +310,8 @@ python
 
 ```
 python3
->>> import PySimpleGUI27
->>> PySimpleGUI27.main()
+>>> import PySimpleGUI
+>>> PySimpleGUI.main()
 ```
 
 You will see a sample window in the center of your screen.  If it's not installed correctly you are likely to get an error message during one of those commands
