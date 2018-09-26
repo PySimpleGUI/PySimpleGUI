@@ -4,12 +4,21 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest) [![Python Version](https://img.shields.io/badge/Python-3-brightgreen.svg)](https://www.python.org/downloads/)
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
+![Awesome Meter](https://img.shields.io/badge/Awesomeness_Rating-100%-yellow.svg)
+ ![Python Version](https://img.shields.io/badge/Python-3-yellow.svg) ![Python Version](https://img.shields.io/badge/Python-2.7-yellow.svg)
+
+
+
+
 
 
 # PySimpleGUI
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.0-red.svg?longCache=true&style=for-the-badge)
+
+## Now supports both Python 2.7 & 3
+
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.1-red.svg?longCache=true&style=for-the-badge)
 
   ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.0-blue.svg?longCache=true&style=for-the-badge)
 
@@ -21,8 +30,6 @@
 
 [Brief Tutorial](https://pysimplegui.readthedocs.io/en/latest/tutorial/)
 
-[OpenSource Article](https://opensource.com/article/18/8/pysimplegui)
-
 [Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
 
 Super-simple GUI to use... Powerfully customizable.
@@ -30,16 +37,17 @@ Super-simple GUI to use... Powerfully customizable.
 Home of the 1-line custom GUI and 1-line progress meter
 
 #### Note regarding Python versions
-As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is called PySimpleGUI. The Python 2.7 version is called PySimpleGUI27.  They are installed separately and the imports are different. See instructions in Installation section for more info.
+As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is named PySimpleGUI. The Python 2.7 version is named PySimpleGUI27.  They are installed separately and the imports are different. See instructions in Installation section for more info.
 
 
----------------------------------
+------------------------------------------------------------------------
 
-Looking for a GUI package to help with
+
+Looking for a GUI package?
 * Taking your Python code from the world of command lines and into the convenience of a GUI?  *
 * Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?
 * Into Machine Learning and are sick of the command line?
-* How about distributing your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?
+* Would like to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?
 
 Look no further, **you've found your GUI package**.
 
