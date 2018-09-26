@@ -947,15 +947,24 @@ class Output(Element):
         :param size: Size of field in characters
         :param background_color: Color for Element. Text or RGB Hex
         '''
-        self.TKOut = None
+        self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_OUTPUT,  size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
 
+
+    @property
+    def TKOut(self):
+        if self._TKOut is None:
+            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
+            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
+        return self._TKOut
+
+
     def __del__(self):
         try:
-            self.TKOut.__del__()
+            self._TKOut.__del__()
         except:
             pass
         super().__del__()
@@ -1244,7 +1253,7 @@ class Canvas(Element):
     def TKCanvas(self):
         if self._TKCanvas is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.FlexForm("My Form").Layout(layout).Finalize() ***')
+            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
 
@@ -1300,6 +1309,11 @@ class Graph(Element):
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
 
+    def DrawText(self, text, location, color='black', font=None):
+        converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
+        return self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color)
+
+
     def Erase(self):
         self._TKCanvas2.delete('all')
 
@@ -1322,7 +1336,7 @@ class Graph(Element):
     def TKCanvas(self):
         if self._TKCanvas2 is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.FlexForm("My Form").Layout(layout).Finalize() ***')
+            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas2
 
     def __del__(self):
@@ -1959,7 +1973,7 @@ class Window:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=None, keep_on_top=False):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -2165,15 +2179,6 @@ class Window:
         if element is None:
             print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
         return element
-
-
-    def UpdateElements(self, key_list, value_list):
-        for i, key in enumerate(key_list):
-            try:
-                self.FindElement(key).Update(value_list[i])
-            except:
-                pass
-
 
     def SaveToDisk(self, filename):
         try:
@@ -3076,10 +3081,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font, pad=element.Pad)
-                element.TKOut.pack(side=tk.LEFT, expand=True, fill='both')
+                element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font, pad=element.Pad)
+                element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
@@ -3533,7 +3538,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,No
     local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
     bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color,  border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
-    form = FlexForm(title, auto_size_text=True, grab_anywhere=grab_anywhere)
+    form = Window(title, auto_size_text=True, grab_anywhere=grab_anywhere)
 
     # Form using a horizontal bar
     if local_orientation[0].lower() == 'h':
@@ -3781,7 +3786,7 @@ class DebugWin():
     def __init__(self, size=(None, None)):
         # Show a form that's a running counter
         win_size = size if size !=(None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.form = FlexForm('Debug Window', auto_size_text=True, font=('Courier New', 12))
+        self.form = Window('Debug Window', auto_size_text=True, font=('Courier New', 12))
         self.output_element = Output(size=win_size)
         self.form_rows = [[Text('EasyPrint Output')],
                      [self.output_element],
@@ -3844,7 +3849,7 @@ def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, au
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
-    with FlexForm(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration) as form:
+    with Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration) as form:
         max_line_total, max_line_width, total_lines, height_computed = 0,0,0,0
         complete_output = ''
         for message in args:
@@ -3917,7 +3922,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
         root.destroy()
         return folder_name
 
-    with FlexForm(title=message, icon=icon, auto_size_text=True, button_color=button_color, background_color=background_color,
+    with Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, background_color=background_color,
                   font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location) as form:
         layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
                   [InputText(default_text=default_path, size=size), FolderBrowse()],
@@ -3969,7 +3974,7 @@ def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files
 
     browse_button =  SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
 
-    with FlexForm(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font, background_color=background_color,
+    with Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font, background_color=background_color,
                   no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location) as form:
         layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
                   [InputText(default_text=default_path, size=size), browse_button],
@@ -4003,7 +4008,7 @@ def PopupGetText(message, default_text='', password_char='', size=(None,None), b
     :param location:
     :return: Text entered or None if window was closed
     """
-    with FlexForm(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    with Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                   background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location) as form:
         layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
                   [InputText(default_text=default_text, size=size, password_char=password_char)],
@@ -4359,7 +4364,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with FlexForm(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location) as form:
+    with Window(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location) as form:
         max_line_total, total_lines = 0,0
         for message in args_to_print:
             # fancy code to check if string and convert if not is not need. Just always convert to string :-)

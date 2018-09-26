@@ -18,9 +18,9 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.1-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.2-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.3-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.4-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -2832,6 +2832,14 @@ OneLineProgressMeter function added which gives you not only a one-line solution
 
 #### 1.0.0 Python 2.7
 It's official.  There is a 2.7 version of PySimpleGUI!
+
+#### 3.8.2
+* Exposed `TKOut` in Output Element
+* `DrawText` added to Graph Elements
+* Removed `Window.UpdateElements`
+* `Window.grab_anywere` defaults to False
+*
+
 
 
 ### Upcoming
