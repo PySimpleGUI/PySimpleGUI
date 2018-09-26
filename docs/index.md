@@ -20,7 +20,7 @@
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.1-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.0-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.3-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -310,8 +310,8 @@ python
 
 ```
 python3
->>> import PySimpleGUI27
->>> PySimpleGUI27.main()
+>>> import PySimpleGUI
+>>> PySimpleGUI.main()
 ```
 
 You will see a sample window in the center of your screen.  If it's not installed correctly you are likely to get an error message during one of those commands
