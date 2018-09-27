@@ -348,7 +348,10 @@ class Element():
         MyForm = self.ParentForm
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        self.ParentForm.LastButtonClicked = ''
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
@@ -356,7 +359,10 @@ class Element():
         MyForm = self.ParentForm
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        self.ParentForm.LastButtonClicked = ''
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
@@ -731,7 +737,10 @@ class Spin(Element):
     def SpinChangedHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        self.ParentForm.LastButtonClicked = ''
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
@@ -1608,7 +1617,10 @@ class Slider(Element):
     def SliderChangedHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        self.ParentForm.LastButtonClicked = ''
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
