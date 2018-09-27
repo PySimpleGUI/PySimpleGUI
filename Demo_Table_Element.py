@@ -1,6 +1,11 @@
-import csv
-import PySimpleGUI as sg
+#!/usr/bin/env python
 import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
+import csv
+
 
 filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
 # --- populate table with file contents --- #

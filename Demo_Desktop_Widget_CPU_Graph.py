@@ -1,8 +1,13 @@
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 import time
 import random
 import psutil
 from threading import Thread
-import PySimpleGUI as sg
 
 
 STEP_SIZE=3

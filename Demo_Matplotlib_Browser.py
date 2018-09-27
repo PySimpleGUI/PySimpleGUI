@@ -1,4 +1,9 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
@@ -247,7 +252,7 @@ def PyplotLineStyles():
 
     # For each line style, add a text annotation with a small offset from
     # the reference point (0 in Axes coords, y tick value in Data coords).
-    reference_transwindow = blended_transform_factory(ax.transAxes, ax.transData)
+    reference_transform = blended_transform_factory(ax.transAxes, ax.transData)
     for i, (name, linestyle) in enumerate(linestyles.items()):
         ax.annotate(str(linestyle), xy=(0.0, i), xycoords=reference_transform,
                     xytext=(-6, -12), textcoords='offset points', color="blue",

@@ -1,7 +1,12 @@
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 import cv2 as cv
 from PIL import Image
 import tempfile
-import PySimpleGUI as sg
 import os
 from sys import exit as exit
 

@@ -1,11 +1,16 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 
 tab1_layout =  [[sg.T('This is inside tab 1')]]
 
 tab2_layout = [[sg.T('This is inside tab 2')],
                [sg.In(key='in')]]
 
-layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, tooltip='tip'), sg.Tab('Tab 2', tab2_layout)]], tooltip='TIP2')],
+layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]])],
           [sg.RButton('Read')]]
 
 window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout)

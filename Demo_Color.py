@@ -1,4 +1,9 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 
 MY_WINDOW_ICON = 'E:\\TheRealMyDocs\\Icons\\The Planets\\jupiter.ico'
 reverse = {}

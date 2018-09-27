@@ -1,6 +1,9 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
 import sys
-
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 # sg.SetOptions(button_color=sg.COLOR_SYSTEM_DEFAULT)
 
 def GetFilesToCompare():

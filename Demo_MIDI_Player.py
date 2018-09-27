@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 import os
-import PySimpleGUI as g
 import mido
 import time
 import sys
@@ -32,17 +37,17 @@ class PlayerGUI():
 
         # ---------------------- DEFINION OF CHOOSE WHAT TO PLAY GUI ----------------------------
 
-        layout = [[g.Text('MIDI File Player', font=("Helvetica", 15), size=(20, 1), text_color='green')],
-                      [g.Text('File Selection', font=("Helvetica", 15), size=(20, 1))],
-                      [g.Text('Single File Playback', justification='right'), g.InputText(size=(65, 1), key='midifile'), g.FileBrowse(size=(10, 1), file_types=(("MIDI files", "*.mid"),))],
-                      [g.Text('Or Batch Play From This Folder', auto_size_text=False, justification='right'), g.InputText(size=(65, 1), key='folder'), g.FolderBrowse(size=(10, 1))],
-                      [g.Text('_' * 250, auto_size_text=False, size=(100, 1))],
-                      [g.Text('Choose MIDI Output Device', size=(22, 1)),
-                       g.Listbox(values=self.PortList, size=(30, len(self.PortList) + 1), key='device')],
-                      [g.Text('_' * 250, auto_size_text=False, size=(100, 1))],
-                      [g.SimpleButton('PLAY', size=(12, 2), button_color=('red', 'white'), font=("Helvetica", 15), bind_return_key=True), g.Text(' ' * 2, size=(4, 1)), g.Cancel(size=(8, 2), font=("Helvetica", 15))]]
+        layout = [[sg.Text('MIDI File Player', font=("Helvetica", 15), size=(20, 1), text_color='green')],
+                  [sg.Text('File Selection', font=("Helvetica", 15), size=(20, 1))],
+                  [sg.Text('Single File Playback', justification='right'), sg.InputText(size=(65, 1), key='midifile'), sg.FileBrowse(size=(10, 1), file_types=(("MIDI files", "*.mid"),))],
+                  [sg.Text('Or Batch Play From This Folder', auto_size_text=False, justification='right'), sg.InputText(size=(65, 1), key='folder'), sg.FolderBrowse(size=(10, 1))],
+                  [sg.Text('_' * 250, auto_size_text=False, size=(100, 1))],
+                  [sg.Text('Choose MIDI Output Device', size=(22, 1)),
+                   sg.Listbox(values=self.PortList, size=(30, len(self.PortList) + 1), key='device')],
+                  [sg.Text('_' * 250, auto_size_text=False, size=(100, 1))],
+                  [sg.SimpleButton('PLAY', size=(12, 2), button_color=('red', 'white'), font=("Helvetica", 15), bind_return_key=True), sg.Text(' ' * 2, size=(4, 1)), sg.Cancel(size=(8, 2), font=("Helvetica", 15))]]
 
-        window = g.Window('MIDI File Player', auto_size_text=False, default_element_size=(30, 1), font=("Helvetica", 12)).Layout(layout)
+        window = sg.Window('MIDI File Player', auto_size_text=False, default_element_size=(30, 1), font=("Helvetica", 12)).Layout(layout)
         self.Window = window
         return window.Read()
 
@@ -55,23 +60,23 @@ class PlayerGUI():
         image_next = './ButtonGraphics/Next.png'
         image_exit = './ButtonGraphics/Exit.png'
 
-        self.TextElem = g.T('Song loading....', size=(70,5 + NumFiles), font=("Helvetica", 14), auto_size_text=False)
-        self.SliderElem = g.Slider(range=(1,100), size=(50, 8), orientation='h', text_color='#f0f0f0')
+        self.TextElem = sg.T('Song loading....', size=(70, 5 + NumFiles), font=("Helvetica", 14), auto_size_text=False)
+        self.SliderElem = sg.Slider(range=(1, 100), size=(50, 8), orientation='h', text_color='#f0f0f0')
         layout = [
-                    [g.T('MIDI File Player', size=(30,1), font=("Helvetica", 25))],
+                    [sg.T('MIDI File Player', size=(30, 1), font=("Helvetica", 25))],
                     [self.TextElem],
                     [self.SliderElem],
-                    [g.ReadFormButton('PAUSE', button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_pause,  image_size=(50,50),image_subsample=2, border_width=0), g.T(' '),
-                    g.ReadFormButton('NEXT', button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_next, image_size=(50,50),image_subsample=2, border_width=0), g.T(' '),
-                    g.ReadFormButton('Restart Song',  button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_restart,  image_size=(50,50), image_subsample=2, border_width=0), g.T(' '),
-                    g.SimpleButton('EXIT',  button_color=g.TRANSPARENT_BUTTON,
-                                     image_filename=image_exit, image_size=(50,50), image_subsample=2, border_width=0,)]
+                    [sg.ReadFormButton('PAUSE', button_color=sg.TRANSPARENT_BUTTON,
+                                       image_filename=image_pause, image_size=(50,50), image_subsample=2, border_width=0), sg.T(' '),
+                     sg.ReadFormButton('NEXT', button_color=sg.TRANSPARENT_BUTTON,
+                                       image_filename=image_next, image_size=(50,50), image_subsample=2, border_width=0), sg.T(' '),
+                     sg.ReadFormButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
+                                       image_filename=image_restart, image_size=(50,50), image_subsample=2, border_width=0), sg.T(' '),
+                     sg.SimpleButton('EXIT', button_color=sg.TRANSPARENT_BUTTON,
+                                     image_filename=image_exit, image_size=(50,50), image_subsample=2, border_width=0, )]
                   ]
 
-        window = g.FlexForm('MIDI File Player', default_element_size=(30,1),font=("Helvetica", 25)).Layout(layout).Finalize()
+        window = sg.FlexForm('MIDI File Player', default_element_size=(30, 1), font=("Helvetica", 25)).Layout(layout).Finalize()
         self.Window = window
 
 
@@ -118,12 +123,12 @@ def main():
 
     button, values = pback.PlayerChooseSongGUI()
     if button != 'PLAY':
-        g.PopupCancel('Cancelled...\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
+        sg.PopupCancel('Cancelled...\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
         sys.exit(69)
     if values['device']:
         midi_port = values['device'][0]
     else:
-        g.PopupCancel('No devices found\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
+        sg.PopupCancel('No devices found\nAutoclose in 2 sec...', auto_close=True, auto_close_duration=2)
 
     batch_folder = values['folder']
     midi_filename = values['midifile']
@@ -136,7 +141,7 @@ def main():
         filelist = [midi_filename,]
         filetitles = [os.path.basename(midi_filename),]
     else:
-        g.PopupError('*** Error - No MIDI files specified ***')
+        sg.PopupError('*** Error - No MIDI files specified ***')
         sys.exit(666)
 
     # ------ LOOP THROUGH MULTIPLE FILES --------------------------------------------------------- #
@@ -160,7 +165,7 @@ def main():
             mid = mido.MidiFile(filename=midi_filename)
         except:
             print('****** Exception trying to play MidiFile filename = {}***************'.format(midi_filename))
-            g.PopupError('Exception trying to play MIDI file:', midi_filename, 'Skipping file')
+            sg.PopupError('Exception trying to play MIDI file:', midi_filename, 'Skipping file')
             continue
 
         # Build list of data contained in MIDI File using only track 0

@@ -1,4 +1,9 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 
 # Here, have some windows on me....
 [sg.PopupNoWait(location=(10*x,0)) for x in range(10)]

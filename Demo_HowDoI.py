@@ -1,4 +1,9 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 import subprocess
 
 
@@ -30,7 +35,7 @@ def HowDoI():
                 sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]
               ]
 
-    window = sg.Window('How Do I ??', default_element_size=(30, 2), icon=DEFAULT_ICON, font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True, no_titlebar=True)
+    window = sg.Window('How Do I ??', default_element_size=(30, 2), icon=DEFAULT_ICON, font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True, no_titlebar=True, grab_anywhere=True)
     window.Layout(layout)
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     command_history = []

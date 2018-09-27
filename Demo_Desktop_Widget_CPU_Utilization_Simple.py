@@ -1,4 +1,10 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
+
 import psutil
 
 # ----------------  Create Form  ----------------
