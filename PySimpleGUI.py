@@ -374,6 +374,16 @@ class Element():
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()
+
+    def TabGroupSelectHandler(self, event):
+        MyForm = self.ParentForm
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()
+
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -1523,7 +1533,7 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    def __init__(self, layout, title_color=None, background_color=None, font=None, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, layout, title_color=None, background_color=None, font=None, pad=None, border_width=None, key=None, tooltip=None, change_submits=False):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1535,6 +1545,7 @@ class TabGroup(Element):
         self.TKNotebook = None
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.ChangeSubmits = change_submits
 
         self.Layout(layout)
 
@@ -2651,13 +2662,18 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             element.TKText.delete('1.0', tk.END)
                     except:
                         value = None
+                elif element.Type == ELEM_TYPE_TAB_GROUP:
+                    try:
+                        value=element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
+                    except:
+                        value = None
             else:
                 value = None
 
             # if an input type element, update the results
             if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
                     element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME and element.Type != ELEM_TYPE_TAB_GROUP \
+                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME \
                     and element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
@@ -3282,6 +3298,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                             highlightcolor=element.BackgroundColor)
                 # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                 #     element.TKNotebook.configure(foreground=element.TextColor)
+                if element.ChangeSubmits:
+                    element.TKNotebook.bind('<<NotebookTabChanged>>', element.TabGroupSelectHandler)
                 if element.BorderWidth is not None:
                     element.TKNotebook.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
