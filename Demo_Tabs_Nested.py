@@ -1,8 +1,13 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
+
 sg.ChangeLookAndFeel('GreenTan')
 tab2_layout = [[sg.T('This is inside tab 2')],
-               [sg.T('Tabs can be anywhere now!')]
-               ]
+               [sg.T('Tabs can be anywhere now!')]]
 
 tab1_layout = [[sg.T('Type something here and click button'), sg.In(key='in')]]
 
@@ -21,8 +26,7 @@ layout = [[sg.T('My Window!')], [sg.Frame('A Frame', layout=
     [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]]), sg.TabGroup([[sg.Tab('Tab3', tab3_layout), sg.Tab('Tab 4', tab4_layout)]])]])],
     [sg.T('This text is on a row with a column'),sg.Column(layout=[[sg.T('In a column')],
     [sg.TabGroup([[sg.Tab('Tab 5', tab5_layout), sg.Tab('Tab 6', tab6_layout)]])],
-          [sg.RButton('Click me')]])],
-          ]
+          [sg.RButton('Click me')]])],]
 
 window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout).Finalize()
 

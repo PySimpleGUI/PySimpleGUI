@@ -1,6 +1,11 @@
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 from threading import Thread
 import time
-import PySimpleGUI as sg
 from sys import exit as exit
 
 # !/usr/bin/env python3
@@ -215,7 +220,7 @@ import os, sys, socket, struct, select, time, signal
 
 __description__ = 'A pure python ICMP ping implementation using raw sockets.'
 
-if sys.platwindow == "win32":
+if sys.platform == "win32":
     # On Windows, the best timer is time.clock()
     default_timer = time.clock
 else:

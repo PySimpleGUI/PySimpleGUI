@@ -1,7 +1,14 @@
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 import math
-import PySimpleGUI as sg
 
-layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]
+
+layout = [[sg.T('Example of Using Math with a Graph', justification='center', size=(40,1), relief=sg.RELIEF_RAISED)],
+    [sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]
 
 window = sg.Window('Graph of Sine Function', grab_anywhere=True).Layout(layout).Finalize()
 graph = window.FindElement('graph')

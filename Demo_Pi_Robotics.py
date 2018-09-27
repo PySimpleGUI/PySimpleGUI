@@ -1,4 +1,9 @@
-import PySimpleGUI as sg
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] < 3:
+    import PySimpleGUI27 as sg
+else:
+    import PySimpleGUI as sg
 
 # Robotics design pattern
 # Uses Realtime Buttons to simulate the controls for a robot
