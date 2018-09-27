@@ -489,6 +489,8 @@ class InputCombo(Element):
         elif disabled == False:
             self.TKCombo['state'] = 'enable'
 
+    def Current(self, newindex=None):
+        return self.TKCombo.current(newindex)
 
     def __del__(self):
         try:
