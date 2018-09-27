@@ -5,7 +5,7 @@ layout = [
            [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue'), sg.ReadButton('Move')]
            ]
 
-window = sg.Window('Graph test').Layout(layout)
+window = sg.Window('Graph test').Layout(layout).Finalize()
 
 graph = window.FindElement('graph')
 circle = graph.DrawCircle((75,75), 25, fill_color='black',line_color='white')
