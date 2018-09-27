@@ -2077,6 +2077,20 @@ class Window:
         self.GrabAnywhere = grab_anywhere
         self.KeepOnTop = keep_on_top
         self.ForceTopLevel = force_toplevel
+        self._elements = {}
+
+    # ---- window['element'] syntax for finding elements (with lookup caching)
+    def __getitem__(self, key):
+        if key not in self._elements.keys():
+            self._elements[key] = self.FindElement(key)
+        return self._elements[key]
+
+    # ---- window['element'] = foo syntax for updating elements
+    def __setitem__(self, key, value):
+        if isinstance(value, list):
+            self[key].Update(None, value)
+        else:
+            self[key].Update(value)
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
