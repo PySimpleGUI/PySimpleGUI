@@ -2762,7 +2762,10 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                 except Exception as e:
                     print(e)
                 sub_menu_info = _
-            top_menu.add_command(label=sub_menu_info, underline=pos-1, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+            if sub_menu_info == '---':
+                top_menu.add('separator')
+            else:
+                top_menu.add_command(label=sub_menu_info, underline=pos-1, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -3233,12 +3236,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
-                menu_def = (('File', ('Open', 'Save')),
-                            ('Help', 'About...'),)
-                            # ('Help',))
-
                 menu_def = element.MenuDefinition
-
                 element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)    # create the menubar
                 menubar = element.TKMenu
                 for menu_entry in menu_def:
@@ -3255,7 +3253,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos-1)
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
-
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
