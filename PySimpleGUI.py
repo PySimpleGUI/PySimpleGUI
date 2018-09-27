@@ -5,6 +5,7 @@ from tkinter.colorchooser import askcolor
 from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
+import tkinter.messagebox as tkm
 import datetime
 import sys
 import textwrap
@@ -4457,7 +4458,7 @@ def ObjToString(obj, extra='    '):
 
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def Popup(*args, no_window=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None), **options):
     """
     Popup - Display a popup box with as many parms as you wish to include
     :param args:
@@ -4477,6 +4478,15 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     :param location:
     :return:
     """
+    if no_window:
+        root = tk.Tk()
+        try:
+            root.attributes('-alpha',0)
+        except:
+            pass
+        tkm.showerror(message='\n'.join(args), **options)
+        root.destroy()
+        return
     if not args:
         args_to_print = ['']
     else:
@@ -4655,7 +4665,7 @@ def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, backg
 PopupTimed = PopupAutoClose
 
 # --------------------------- PopupError ---------------------------
-def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupError(*args, no_window=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None), **options):
     """
     Popup with colored button and 'Error' as button text
     :param args:
@@ -4674,7 +4684,7 @@ def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, no_window=no_window, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, **options)
 
 
 # --------------------------- PopupCancel ---------------------------
