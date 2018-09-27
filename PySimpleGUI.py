@@ -366,6 +366,14 @@ class Element():
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
+    def CheckboxHandler(self):
+        MyForm = self.ParentForm
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -646,7 +654,7 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, text, change_submits=False, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Check Box Element
         :param text:
@@ -659,6 +667,7 @@ class Checkbox(Element):
         self.Text = text
         self.InitialState = default
         self.Value = None
+        self.ChangeSubmits = change_submits
         self.TKCheckbutton = None
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
@@ -3064,6 +3073,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 default_value = element.InitialState
                 element.TKIntVar = tk.IntVar()
                 element.TKIntVar.set(default_value if default_value is not None else 0)
+                if element.ChangeSubmits:
+                    element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font, command=element.CheckboxHandler)
+                else:
                 element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font)
                 if default_value is None:
                     element.TKCheckbutton.configure(state='disable')
