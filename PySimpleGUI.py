@@ -1288,48 +1288,88 @@ class Graph(Element):
     def DrawLine(self, point_from, point_to, color='black', width=1):
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
         converted_point_to = self._convert_xy_to_canvas_xy(point_to[0], point_to[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
 
     def DrawPoint(self, point, size=2, color='black'):
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         return self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         return self._TKCanvas2.create_oval(converted_point[0]-radius, converted_point[1]-radius, converted_point[0]+radius, converted_point[1]+radius, fill=fill_color, outline=line_color)
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0],bottom_right[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
 
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1] )
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
 
     def DrawText(self, text, location, color='black', font=None):
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         return self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color)
 
 
     def Erase(self):
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         self._TKCanvas2.delete('all')
 
     def Update(self, background_color):
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         self._TKCanvas2.configure(background=background_color)
 
     def Move(self, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0,0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
         self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
 
     def MoveFigure(self, figure, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0,0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
+        if figure is None:
+            print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
+            print('Call Window.Finalize() prior to all graph operations')
+            return None
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
 
     @property
