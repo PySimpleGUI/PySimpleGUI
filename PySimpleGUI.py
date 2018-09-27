@@ -2941,7 +2941,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT:
-                    tkbutton.config(foreground=bc[0], background=bc[1])
+                    tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:           # if button has an image on it
@@ -3122,6 +3122,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
                     element.TKCheckbutton.configure(selectcolor=element.BackgroundColor)
+                    element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
                 element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
