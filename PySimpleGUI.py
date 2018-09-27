@@ -366,6 +366,24 @@ class Element():
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
+    def CheckboxHandler(self):
+        MyForm = self.ParentForm
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()
+
+    def TabGroupSelectHandler(self, event):
+        MyForm = self.ParentForm
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()
+
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -646,7 +664,7 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False, key=None, pad=None, tooltip=None):
         '''
         Check Box Element
         :param text:
@@ -661,6 +679,7 @@ class Checkbox(Element):
         self.Value = None
         self.TKCheckbutton = None
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX,  size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
@@ -1514,7 +1533,7 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    def __init__(self, layout, title_color=None, background_color=None, font=None, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, layout, title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, key=None, tooltip=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1526,6 +1545,7 @@ class TabGroup(Element):
         self.TKNotebook = None
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.ChangeSubmits = change_submits
 
         self.Layout(layout)
 
@@ -2628,13 +2648,18 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             element.TKText.delete('1.0', tk.END)
                     except:
                         value = None
+                elif element.Type == ELEM_TYPE_TAB_GROUP:
+                    try:
+                        value=element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
+                    except:
+                        value = None
             else:
                 value = None
 
             # if an input type element, update the results
             if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
                     element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME and element.Type != ELEM_TYPE_TAB_GROUP \
+                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME \
                     and element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
@@ -2729,7 +2754,15 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
     if type(sub_menu_info) is str:
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
-            top_menu.add_command(label=sub_menu_info, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+            pos = sub_menu_info.find('_&')
+            if pos != -1:
+                _ = sub_menu_info[:pos]
+                try:
+                    _ += sub_menu_info[pos+2:]
+                except Exception as e:
+                    print(e)
+                sub_menu_info = _
+            top_menu.add_command(label=sub_menu_info, underline=pos-1, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -2892,7 +2925,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT:
-                    tkbutton.config(foreground=bc[0], background=bc[1])
+                    tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:           # if button has an image on it
@@ -3064,12 +3097,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 default_value = element.InitialState
                 element.TKIntVar = tk.IntVar()
                 element.TKIntVar.set(default_value if default_value is not None else 0)
-                element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width, variable=element.TKIntVar, bd=border_depth, font=font)
+                if element.ChangeSubmits:
+                    element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                                                           variable=element.TKIntVar, bd=border_depth, font=font,
+                                                           command=element.CheckboxHandler)
+                else:
+                    element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                                                           variable=element.TKIntVar, bd=border_depth, font=font)
                 if default_value is None:
                     element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
                     element.TKCheckbutton.configure(selectcolor=element.BackgroundColor)
+                    element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
                 element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
@@ -3204,7 +3244,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY')
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff)
-                    menubar.add_cascade(label=menu_entry[0], menu=baritem)
+                    pos = menu_entry[0].find('_&')
+                    if pos != -1:
+                        _ = menu_entry[0][:pos]
+                        try:
+                            _ += menu_entry[0][pos+2:]
+                        except:
+                            pass
+                        menu_entry[0] = _
+                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos-1)
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
 
@@ -3256,6 +3304,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                             highlightcolor=element.BackgroundColor)
                 # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                 #     element.TKNotebook.configure(foreground=element.TextColor)
+                if element.ChangeSubmits:
+                    element.TKNotebook.bind('<<NotebookTabChanged>>', element.TabGroupSelectHandler)
                 if element.BorderWidth is not None:
                     element.TKNotebook.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
