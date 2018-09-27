@@ -1,16 +1,31 @@
 #!/usr/bin/python3
-import tkinter as tk
-from tkinter import filedialog
-from tkinter.colorchooser import askcolor
-from tkinter import ttk
-import tkinter.scrolledtext as tkst
-import tkinter.font
+import Tkinter as tk
+# import tkinter as tk
+import tkFileDialog
+import ttk
+import tkColorChooser
+import tkFont
+import ScrolledText
+# from Tkinter import ttk
+# import Tkinter.scrolledtext as tkst
+# import Tkinter.font
 import datetime
 import sys
 import textwrap
 import pickle
 import calendar
 
+import platform
+
+sVsn = platform.python_version()[0]
+
+if sVsn == '2':
+    __metaclass__ = type # required for Python v.2.X
+
+def fSuprArgs(self):
+    return () if sVsn != '2' else (self.__class__, self)
+
+# place *(fSuprArgs(self)) as parameter in every call to super(*(fSuprArgs(self)))
 
 g_time_start = 0
 g_time_end = 0
@@ -399,7 +414,7 @@ class InputText(Element):
         self.Focus = focus
         self.do_not_clear = do_not_clear
         self.Justification = justification
-        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_TEXT, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad,font=font, tooltip=tooltip)
 
 
     def Update(self, value=None, disabled=None):
@@ -417,7 +432,7 @@ class InputText(Element):
         return self.TKStringVar.get()
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
@@ -444,7 +459,7 @@ class InputCombo(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
     def Update(self, value=None, values=None, disabled=None):
         if values is not None:
@@ -471,7 +486,7 @@ class InputCombo(Element):
             self.TKCombo.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 Combo = InputCombo
@@ -496,7 +511,7 @@ class InputOptionMenu(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
     def Update(self, value=None, values=None, disabled=None):
         if values is not None:
@@ -520,7 +535,7 @@ class InputOptionMenu(Element):
             self.TKOptionMenu.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
@@ -558,7 +573,7 @@ class Listbox(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
 
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX,  size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_LISTBOX,  size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
     def Update(self, values=None, disabled=None):
         if disabled == True:
@@ -589,7 +604,7 @@ class Listbox(Element):
             self.TKListBox.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 
@@ -615,7 +630,7 @@ class Radio(Element):
         self.Value = None
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
 
     def Update(self, value=None, disabled=None):
         location = EncodeRadioRowCol(self.Position[0], self.Position[1])
@@ -634,7 +649,7 @@ class Radio(Element):
             self.TKRadio.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 # ---------------------------------------------------------------------- #
 #                           Checkbox                                     #
@@ -656,7 +671,7 @@ class Checkbox(Element):
         self.TKCheckbutton = None
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX,  size=size, auto_size_text=auto_size_text, font=font,
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_CHECKBOX,  size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
 
     def Get(self):
@@ -675,7 +690,7 @@ class Checkbox(Element):
 
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -708,7 +723,7 @@ class Spin(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, values=None, disabled=None):
@@ -740,7 +755,7 @@ class Spin(Element):
             self.TKSpinBox.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
@@ -763,7 +778,7 @@ class Multiline(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE,  size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_MULTILINE,  size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, disabled=None, append=False):
@@ -786,7 +801,7 @@ class Multiline(Element):
 
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 # ---------------------------------------------------------------------- #
 #                                       Text                             #
@@ -812,7 +827,7 @@ class Text(Element):
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
             bg = background_color
-        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
         return
 
     def Update(self, value = None, background_color=None, text_color=None, font=None):
@@ -829,7 +844,7 @@ class Text(Element):
 
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # -------------------------  Text Element lazy functions  ------------------------- #
@@ -947,27 +962,18 @@ class Output(Element):
         :param size: Size of field in characters
         :param background_color: Color for Element. Text or RGB Hex
         '''
-        self._TKOut = None
+        self.TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_OUTPUT,  size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
-
-
-    @property
-    def TKOut(self):
-        if self._TKOut is None:
-            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
-        return self._TKOut
-
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_OUTPUT,  size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
 
     def __del__(self):
         try:
-            self._TKOut.__del__()
+            self.TKOut.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 # ---------------------------------------------------------------------- #
 #                           Button Class                                 #
@@ -1007,7 +1013,7 @@ class Button(Element):
         self.DefaultValue = default_value
         self.InitialFolder = initial_folder
 
-        super().__init__(ELEM_TYPE_BUTTON,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_BUTTON,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     # Realtime button release callback
@@ -1050,30 +1056,30 @@ class Button(Element):
             except: pass
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
+            folder_name = tkFileDialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
             if folder_name != '':
                 try:
                     strvar.set(folder_name)
                     self.TKStringVar.set(folder_name)
                 except: pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            file_name = tkFileDialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
-            color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
+            color = tkColorChooser.askcolor()  # show the 'get file' dialog box
             color = color[1]         # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+            file_name = tkFileDialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
             if file_name != '':
                 file_name = ';'.join(file_name)
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            file_name = tkFileDialog.asksaveasfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -1151,7 +1157,7 @@ class Button(Element):
             self.TKButton.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1180,7 +1186,7 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(ELEM_TYPE_PROGRESS_BAR,  size=size, auto_size_text=auto_size_text, key=key, pad=pad)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_PROGRESS_BAR,  size=size, auto_size_text=auto_size_text, key=key, pad=pad)
         return
 
     # returns False if update failed
@@ -1200,7 +1206,7 @@ class ProgressBar(Element):
             self.TKProgressBar.__del__()
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 # ---------------------------------------------------------------------- #
 #                           Image                                        #
@@ -1217,7 +1223,7 @@ class Image(Element):
         self.tktext_label = None
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
-        super().__init__(ELEM_TYPE_IMAGE,  size=size, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_IMAGE,  size=size, pad=pad, key=key, tooltip=tooltip)
         return
 
     def Update(self, filename=None, data=None):
@@ -1235,7 +1241,7 @@ class Image(Element):
         self.tktext_label.image = image
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1246,7 +1252,7 @@ class Canvas(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
 
-        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color,  size=size, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_CANVAS, background_color=background_color,  size=size, pad=pad, key=key, tooltip=tooltip)
         return
 
     @property
@@ -1258,7 +1264,7 @@ class Canvas(Element):
 
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 
@@ -1275,7 +1281,7 @@ class Graph(Element):
         self._TKCanvas = None
         self._TKCanvas2 = None
 
-        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color,  size=canvas_size, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_GRAPH, background_color=background_color,  size=canvas_size, pad=pad, key=key, tooltip=tooltip)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
@@ -1288,88 +1294,50 @@ class Graph(Element):
     def DrawLine(self, point_from, point_to, color='black', width=1):
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
         converted_point_to = self._convert_xy_to_canvas_xy(point_to[0], point_to[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
 
     def DrawPoint(self, point, size=2, color='black'):
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         return self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         return self._TKCanvas2.create_oval(converted_point[0]-radius, converted_point[1]-radius, converted_point[0]+radius, converted_point[1]+radius, fill=fill_color, outline=line_color)
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0],bottom_right[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
 
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1] )
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
+
+
 
     def DrawText(self, text, location, color='black', font=None):
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         return self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color)
 
 
     def Erase(self):
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         self._TKCanvas2.delete('all')
 
     def Update(self, background_color):
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         self._TKCanvas2.configure(background=background_color)
 
     def Move(self, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0,0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
 
     def MoveFigure(self, figure, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0,0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
-        if figure is None:
-            print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
-            print('Call Window.Finalize() prior to all graph operations')
-            return None
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
 
     @property
@@ -1380,7 +1348,7 @@ class Graph(Element):
         return self._TKCanvas2
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1406,7 +1374,7 @@ class Frame(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
@@ -1439,7 +1407,7 @@ class Frame(Element):
         for row in self.Rows:
             for element in row:
                 element.__del__()
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 
@@ -1463,7 +1431,7 @@ class Tab(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color,  font=font, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color,  font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
@@ -1496,7 +1464,7 @@ class Tab(Element):
         for row in self.Rows:
             for element in row:
                 element.__del__()
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 
@@ -1519,7 +1487,7 @@ class TabGroup(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
@@ -1552,7 +1520,7 @@ class TabGroup(Element):
         for row in self.Rows:
             for element in row:
                 element.__del__()
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 
@@ -1588,7 +1556,7 @@ class Slider(Element):
         self.Resolution = 1 if resolution is None else resolution
         self.ChangeSubmits = change_submits
 
-        super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_INPUT_SLIDER,  size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, range=(None, None), disabled=None):
@@ -1612,7 +1580,7 @@ class Slider(Element):
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1698,7 +1666,7 @@ class Column(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key)
         return
 
     def AddRow(self, *args):
@@ -1735,7 +1703,7 @@ class Column(Element):
             del(self.TKFrame)
         except:
             pass
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1840,14 +1808,14 @@ class TKCalendar(ttk.Frame):
         self._calendar.tag_configure('header', background='grey90')
         self._calendar.insert('', 'end', values=cols, tag='header')
         # adjust its columns width
-        font = tkinter.font.Font()
+        font = tkFont.Font()
         maxwidth = max(font.measure(col) for col in cols)
         for col in cols:
             self._calendar.column(col, width=maxwidth, minwidth=maxwidth,
                 anchor='e')
 
     def __setup_selection(self, sel_bg, sel_fg):
-        self._font = tkinter.font.Font()
+        self._font = tkFont.Font()
         self._canvas = canvas = tk.Canvas(self._calendar,
             background=sel_bg, borderwidth=0, highlightthickness=0)
         canvas.text = canvas.create_text(0, 0, fill=sel_fg, anchor='w')
@@ -1960,7 +1928,7 @@ class Menu(Element):
         self.TKMenu = None
         self.Tearoff = tearoff
 
-        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color,  size=size, pad=pad, key=key)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_MENUBAR, background_color=background_color,  size=size, pad=pad, key=key)
         return
 
     def MenuItemChosenCallback(self, item_chosen):
@@ -1970,7 +1938,7 @@ class Menu(Element):
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 
@@ -1995,12 +1963,12 @@ class Table(Element):
         self.DisplayRowNumbers = display_row_numbers
         self.TKTreeview = None
 
-        super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color,  font=font, size=size, pad=pad, key=key, tooltip=tooltip)
+        super(*(fSuprArgs(self))).__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color,  font=font, size=size, pad=pad, key=key, tooltip=tooltip)
         return
 
 
     def __del__(self):
-        super().__del__()
+        super(*(fSuprArgs(self))).__del__()
 
 
 
@@ -2013,7 +1981,7 @@ class Window:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -2054,7 +2022,6 @@ class Window:
         self.NoTitleBar = no_titlebar
         self.GrabAnywhere = grab_anywhere
         self.KeepOnTop = keep_on_top
-        self.ForceTopLevel = force_toplevel
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2739,7 +2706,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
 
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
-        return tkinter.font.Font().measure('A')  # single character width
+        return tkFont.Font().measure('A')  # single character width
     # only set title on non-tabbed forms
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
@@ -3030,7 +2997,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
                 width, height = element_size
-                element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
+                element.TKText = ScrolledText.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
                 element.TKText.insert(1.0, default_text)                    # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
@@ -3066,7 +3033,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
                 width = element_size[0]
-                fnt = tkinter.font.Font()
+                fnt = tkFont.Font()
                 char_width = fnt.measure('A')       # single character width
                 progress_length = width*char_width
                 progress_width = element_size[1]
@@ -3122,10 +3089,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font, pad=element.Pad)
-                element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
+                element.TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font, pad=element.Pad)
+                element.TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  IMAGE Box element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
@@ -3385,100 +3352,12 @@ def ConvertFlexToTK(MyFlexForm):
 
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, fav_icon=DEFAULT_WINDOW_ICON, no_titlebar=False):
-    # takes as input (form, rows, tab name) for each tab
-    global _my_windows
-
-    uber = UberForm()
-    root = tk.Tk()
-    uber.TKroot = root
-    if title is not None:
-        root.title(title)
-    try:
-        root.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
-    except:
-        pass
-
-    _my_windows.Increment()
-
-    if not len(args):
-        print('******************* SHOW TABBED FORMS ERROR .... no arguments')
-        return
-    if DEFAULT_BACKGROUND_COLOR:
-        framestyle = ttk.Style()
-        try:
-            framestyle.theme_create('framestyle', parent='alt',
-                                settings={'TFrame':
-                                              {'configure':
-                                                   {'background': DEFAULT_BACKGROUND_COLOR,
-                                                    }}})
-        except: pass
-        # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-        # framestyle.theme_use('framestyle')
-    tab_control = ttk.Notebook(root)
-
-    for num,x in enumerate(args):
-        form, rows, tab_name = x
-        form.AddRows(rows)
-        form.UseDictionary = True
-
-        if DEFAULT_BACKGROUND_COLOR:
-            framestyle.theme_use('framestyle')
-        tab = ttk.Frame(tab_control)  # Create tab 1
-        # s.configure("my.Frame.TFrame", background=DEFAULT_BACKGROUND_COLOR)
-        tab_control.add(tab, text=tab_name)  # Add tab 1
-        # tab_control.configure(text='new text')
-        tab_control.grid(row=0, sticky=tk.W)
-        form.TKTabControl = tab_control
-        form.TKroot = tab
-        form.IsTabbedForm = True
-        form.ParentWindow = root
-        ConvertFlexToTK(form)
-        form.UberParent = uber
-        uber.AddForm(form)
-        uber.FormReturnValues.append(form.ReturnValues)
-
-    # dangerous??  or clever? use the final form as a callback for autoclose
-    id = root.after(auto_close_duration * 1000, form._AutoCloseAlarmCallback) if auto_close else 0
-    icon = fav_icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
-    try: uber.TKroot.iconbitmap(icon)
-    except: pass
-    try:
-        if no_titlebar:
-            uber.TKroot.wm_overrideredirect(True)
-    except:
-        pass
-
-    try:
-        root.attributes('-alpha', 255)             # hide window while building it. makes for smoother 'paint'
-    except:
-        pass
-    root.mainloop()
-
-    if uber.FormStayedOpen:
-        FormReturnValues = []
-        for form in uber.FormList:
-            BuildResults(form, False, form)
-            FormReturnValues.append(form.ReturnValues)
-        uber.FormReturnValues = FormReturnValues
-    # if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
-    #     return BuildResults(self, False, self)
-    if id: root.after_cancel(id)
-    uber.TKrootDestroyed = True
-    return uber.FormReturnValues
-
-# ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(my_flex_form):
     global _my_windows
 
     ow = _my_windows.NumOpenWindows
-
     # print('Starting TK open Windows = {}'.format(ow))
-    if not ow and not my_flex_form.ForceTopLevel:
-        root = tk.Tk()
-    else:
-        root = tk.Toplevel()
-
+    root = tk.Tk() if not ow else tk.Toplevel()
     try:
         root.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
     except:
@@ -3568,7 +3447,7 @@ def ConvertArgsToSingleString(*args):
 
 # ============================== ProgressMeter  =====#
 # ===================================================#
-def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE,  border_width=None, grab_anywhere=True):
+def _ProgressMeter(title, max_value, *args, **kwargs):
     '''
     Create and show a form on tbe caller's behalf.
     :param title:
@@ -3581,6 +3460,23 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,No
     :param StyleOffset:
     :return: ProgressBar object that is in the form
     '''
+
+    # title, max_value, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE,  border_width=None, grab_anywhere=True,  *args
+
+    try: orientation = kwargs['orientation']
+    except: orientation = None
+    try: bar_color = kwargs['bar_color']
+    except: bar_color = (None, None)
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: size = kwargs['size']
+    except: size = DEFAULT_PROGRESS_BAR_SIZE
+    try: border_width = kwargs['border_width']
+    except: border_width = None
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = True
+
+
     local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
     bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color,  border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
@@ -3685,7 +3581,7 @@ class EasyProgressMeterDataClass():
 
 
 # ============================== EasyProgressMeter  =====#
-def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None):
+def EasyProgressMeter(title, current_value, max_value, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None,  *args):
     '''
     A ONE-LINE progress meter. Add to your code where ever you need a meter. No need for a second
     function call before your loop. You've got enough code to write!
@@ -3758,7 +3654,7 @@ def EasyProgressMeterCancel(title, *args):
 _one_line_progress_meters = {}
 
 # ============================== OneLineProgressMeter  =====#
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=True):
+def OneLineProgressMeter(title, current_value, max_value, key, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=True,  *args):
 
     global _one_line_progress_meters
 
@@ -3772,7 +3668,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
         _one_line_progress_meters[key] = meter_data
         meter_data.ComputeProgressStats()
         message = "\n".join([line for line in meter_data.StatMessages])
-        meter_data.MeterID, meter_data.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size,  button_color=button_color, border_width=local_border_width, grab_anywhere=grab_anywhere)
+        meter_data.MeterID, meter_data.MeterText= _ProgressMeter(title, int(max_value), message, orientation=orientation, bar_color=bar_color, size=size,  button_color=button_color, border_width=local_border_width, grab_anywhere=grab_anywhere,*args)
         meter_data.ParentForm = meter_data.MeterID.ParentForm
         return True
 
@@ -3841,10 +3737,10 @@ class DebugWin():
         self.form.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
         return
 
-    def Print(self, *args, end=None, sep=None):
+    def Print(self, end=None, sep=None, *args):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
-        print(*args, sep=sepchar, end=endchar)
+        # print(sep=sepchar, end=endchar, *args)
         # for a in args:
         #     msg = str(a)
         #     print(msg, end="", sep=sepchar)
@@ -3857,30 +3753,30 @@ class DebugWin():
         self.form.CloseNonBlockingForm()
         self.form.__del__()
 
-def Print(*args, size=(None,None), end=None, sep=None):
-    EasyPrint(*args, size=size, end=end, sep=sep)
+def Print( size=(None,None), end=None, sep=None, *args):
+    EasyPrint(size=size, end=end, sep=sep, *args)
 
 def PrintClose():
     EasyPrintClose()
 
-def eprint(*args, size=(None,None), end=None, sep=None):
-    EasyPrint(*args, size=size, end=end, sep=sep)
+def eprint(size=(None,None), end=None, sep=None, *args):
+    EasyPrint(size=size, end=end, sep=sep, *args)
 
-def EasyPrint(*args, size=(None,None), end=None, sep=None):
+def EasyPrint(size=(None,None), end=None, sep=None, *args):
     global _easy_print_data
 
     if _easy_print_data  is None:
         _easy_print_data = DebugWin(size=size)
-    _easy_print_data.Print(*args, end=end, sep=sep)
+    _easy_print_data.Print(end=end, sep=sep, *args)
 
 
 
-def EasyPrintold(*args, size=(None,None), end=None, sep=None):
+def EasyPrintold(size=(None,None), end=None, sep=None, *args):
     if 'easy_print_data' not in EasyPrint.__dict__:     # use a function property to save DebugWin object (static variable)
         EasyPrint.easy_print_data = DebugWin(size=size)
     if EasyPrint.easy_print_data is None:
         EasyPrint.easy_print_data = DebugWin(size=size)
-    EasyPrint.easy_print_data.Print(*args, end=end, sep=sep)
+    EasyPrint.easy_print_data.Print( end=end, sep=sep,*args)
 
 def EasyPrintClose():
     if 'easy_print_data' in EasyPrint.__dict__:
@@ -3891,7 +3787,7 @@ def EasyPrintClose():
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None)):
+def ScrolledTextBox(button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), *args):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
@@ -4012,9 +3908,9 @@ def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files
         except:
             pass
         if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tkFileDialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tkFileDialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
         root.destroy()
         return filename
 
@@ -4381,7 +4277,7 @@ def ObjToString(obj, extra='    '):
 
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def Popup(*args, **kwargs):
     """
     Popup - Display a popup box with as many parms as you wish to include
     :param args:
@@ -4401,59 +4297,93 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     :param location:
     :return:
     """
+
+    # , button_color=None, background_color=None, text_color=None, button_type=, auto_close=, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)
+
     if not args:
         args_to_print = ['']
     else:
         args_to_print = args
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+
     if line_width != None:
         local_line_width = line_width
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    with Window(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location) as form:
-        max_line_total, total_lines = 0,0
-        for message in args_to_print:
-            # fancy code to check if string and convert if not is not need. Just always convert to string :-)
-            # if not isinstance(message, str): message = str(message)
-            message = str(message)
-            if message.count('\n'):
-                message_wrapped = message
-            else:
-                message_wrapped = textwrap.fill(message, local_line_width)
-            message_wrapped_lines = message_wrapped.count('\n')+1
-            longest_line_len = max([len(l) for l in message.split('\n')])
-            width_used = min(longest_line_len, local_line_width)
-            max_line_total = max(max_line_total, width_used)
-            # height = _GetNumLinesNeeded(message, width_used)
-            height = message_wrapped_lines
-            form.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
-            total_lines += height
+    form = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    max_line_total, total_lines = 0,0
+    for message in args_to_print:
+        # fancy code to check if string and convert if not is not need. Just always convert to string :-)
+        # if not isinstance(message, str): message = str(message)
+        message = str(message)
+        if message.count('\n'):
+            message_wrapped = message
+        else:
+            message_wrapped = textwrap.fill(message, local_line_width)
+        message_wrapped_lines = message_wrapped.count('\n')+1
+        longest_line_len = max([len(l) for l in message.split('\n')])
+        width_used = min(longest_line_len, local_line_width)
+        max_line_total = max(max_line_total, width_used)
+        # height = _GetNumLinesNeeded(message, width_used)
+        height = message_wrapped_lines
+        form.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
+        total_lines += height
 
-        pad = max_line_total-15 if max_line_total > 15 else 1
-        pad =1
-        if non_blocking:
-            PopupButton = DummyButton
-        else:
-            PopupButton = SimpleButton
-        # show either an OK or Yes/No depending on paramater
-        if button_type is POPUP_BUTTONS_YES_NO:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False,  text_color=text_color, background_color=background_color), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
-        elif button_type is POPUP_BUTTONS_CANCELLED:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is POPUP_BUTTONS_ERROR:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True))
-        elif button_type is POPUP_BUTTONS_OK_CANCEL:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color,  background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
-                        PopupButton('Cancel', size=(5, 1), button_color=button_color))
-        elif button_type is POPUP_BUTTONS_NO_BUTTONS:
-            pass
-        else:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+    pad = max_line_total-15 if max_line_total > 15 else 1
+    pad =1
+    if non_blocking:
+        PopupButton = DummyButton
+    else:
+        PopupButton = SimpleButton
+    # show either an OK or Yes/No depending on paramater
+    if button_type is POPUP_BUTTONS_YES_NO:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False,  text_color=text_color, background_color=background_color), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
+    elif button_type is POPUP_BUTTONS_CANCELLED:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
+    elif button_type is POPUP_BUTTONS_ERROR:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True))
+    elif button_type is POPUP_BUTTONS_OK_CANCEL:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color,  background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
+                    PopupButton('Cancel', size=(5, 1), button_color=button_color))
+    elif button_type is POPUP_BUTTONS_NO_BUTTONS:
+        pass
+    else:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
 
-        if non_blocking:
-            button, values = form.ReadNonBlocking()
-        else:
-            button, values = form.Show()
+    if non_blocking:
+        button, values = form.ReadNonBlocking()
+    else:
+        button, values = form.Show()
 
     return button
 
@@ -4469,7 +4399,7 @@ def MsgBox(*args):
 
 
 # --------------------------- PopupNoButtons ---------------------------
-def PopupNoButtons(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupNoButtons(*args, **kwargs):
     """
     Show a Popup but without any buttons
     :param args:
@@ -4488,13 +4418,42 @@ def PopupNoButtons(*args, button_color=None, background_color=None, text_color=N
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=POPUP_BUTTONS_NO_BUTTONS,
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None), *args):
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+
+    Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=POPUP_BUTTONS_NO_BUTTONS,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, *args)
 
 
 # --------------------------- PopupNonBlocking ---------------------------
-def PopupNonBlocking(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupNonBlocking(*args, **kwargs):
     """
     Show Popup box and immediately return (does not block)
     :param args:
@@ -4514,16 +4473,48 @@ def PopupNonBlocking(*args, button_type=POPUP_BUTTONS_OK, button_color=None, bac
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
+
+    # button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = True
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, *args)
 
 
 PopupNoWait = PopupNonBlocking
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
-def PopupNoTitlebar(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupNoTitlebar(*args, **kwargs):
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
     :param args:
@@ -4542,9 +4533,39 @@ def PopupNoTitlebar(*args, button_type=POPUP_BUTTONS_OK, button_color=None, back
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
+
+    # button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+        font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 PopupNoFrame = PopupNoTitlebar
 PopupNoBorder = PopupNoTitlebar
@@ -4552,7 +4573,7 @@ PopupAnnoying = PopupNoTitlebar
 
 
 # --------------------------- PopupAutoClose ---------------------------
-def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupAutoClose(*args, **kwargs):
     """
     Popup that closes itself after some time period
     :param args:
@@ -4572,14 +4593,47 @@ def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, backg
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
+
+    # button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = True
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    Popup(button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
         auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 PopupTimed = PopupAutoClose
 
 # --------------------------- PopupError ---------------------------
-def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupError(*args, **kwargs):
     """
     Popup with colored button and 'Error' as button text
     :param args:
@@ -4598,11 +4652,42 @@ def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    #  button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = DEFAULT_ERROR_BUTTON_COLOR
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: button_type = kwargs['button_type']
+    except: button_type = POPUP_BUTTONS_OK
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    Popup(button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 
 # --------------------------- PopupCancel ---------------------------
-def PopupCancel(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupCancel(*args, **kwargs):
     """
     Display Popup with "cancelled" button text
     :param args:
@@ -4621,10 +4706,40 @@ def PopupCancel(*args, button_color=None, background_color=None, text_color=None
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    Popup( button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, *args)
 
 # --------------------------- PopupOK ---------------------------
-def PopupOK(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupOK(*args, **kwargs):
     """
     Display Popup with OK button only
     :param args:
@@ -4643,10 +4758,40 @@ def PopupOK(*args, button_color=None, background_color=None, text_color=None, au
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+ #   button_color = None, background_color = None, text_color = None, auto_close = False, auto_close_duration = None, non_blocking = False, icon = DEFAULT_WINDOW_ICON, line_width = None, font = None, no_titlebar = False, grab_anywhere = True, keep_on_top = False, location = ( None, None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    Popup(button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 # --------------------------- PopupOKCancel ---------------------------
-def PopupOKCancel(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupOKCancel(*args, **kwargs):
     """
     Display popup with OK and Cancel buttons
     :param args:
@@ -4665,10 +4810,40 @@ def PopupOKCancel(*args, button_color=None, background_color=None, text_color=No
     :param location:
     :return: OK, Cancel or None
     """
-    return Popup(*args, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    return Popup(button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 # --------------------------- PopupYesNo ---------------------------
-def PopupYesNo(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupYesNo(*args, **kwargs):
     """
     Display Popup with Yes and No buttons
     :param args:
@@ -4687,7 +4862,37 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
     :param location:
     :return: Yes, No or None
     """
-    return Popup(*args, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+    # button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None),
+
+    try: button_color = kwargs['button_color']
+    except: button_color = None
+    try: background_color = kwargs['background_color']
+    except: background_color = None
+    try: text_color = kwargs['text_color']
+    except: text_color = None
+    try: auto_close = kwargs['auto_close']
+    except: auto_close = False
+    try: auto_close_duration = kwargs['auto_close_duration']
+    except: auto_close_duration = None
+    try: non_blocking = kwargs['non_blocking']
+    except: non_blocking = False
+    try: icon = kwargs['icon']
+    except: icon = DEFAULT_WINDOW_ICON
+    try: line_width = kwargs['line_width']
+    except: line_width = None
+    try: font = kwargs['font']
+    except: font = None
+    try: no_titlebar = kwargs['no_titlebar']
+    except: no_titlebar = False
+    try: grab_anywhere = kwargs['grab_anywhere']
+    except: grab_anywhere = None
+    try: keep_on_top = kwargs['keep_on_top']
+    except: keep_on_top = False
+    try: location = kwargs['location']
+    except: location = (None, None)
+
+    return Popup(button_type=POPUP_BUTTONS_YES_NO, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location,*args)
 
 
 def main():
