@@ -3636,7 +3636,7 @@ def ConvertArgsToSingleString(*args):
 
 # ============================== ProgressMeter  =====#
 # ===================================================#
-def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE,  border_width=None, grab_anywhere=True):
+def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE,  border_width=None, grab_anywhere=False):
     '''
     Create and show a form on tbe caller's behalf.
     :param title:
@@ -3826,7 +3826,7 @@ def EasyProgressMeterCancel(title, *args):
 _one_line_progress_meters = {}
 
 # ============================== OneLineProgressMeter  =====#
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=True):
+def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None,None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
 
     global _one_line_progress_meters
 
@@ -4008,7 +4008,7 @@ PopupScrolled = ScrolledTextBox
 #     (True if Submit was pressed, false otherwise)                      #
 # ---------------------------------------------------------------------- #
 
-def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None, None)):
+def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Display popup with text entry field and browse button. Browse for folder
     :param message:
@@ -4052,7 +4052,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
 #####################################
 # PopupGetFile                      #
 #####################################
-def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display popup with text entry field and browse button. Browse for file
 
@@ -4104,7 +4104,7 @@ def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files
 #####################################
 # PopupGetText                      #
 #####################################
-def PopupGetText(message, default_text='', password_char='', size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupGetText(message, default_text='', password_char='', size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display Popup with text entry field
     :param message:
@@ -4449,7 +4449,7 @@ def ObjToString(obj, extra='    '):
 
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Popup - Display a popup box with as many parms as you wish to include
     :param args:
@@ -4537,7 +4537,7 @@ def MsgBox(*args):
 
 
 # --------------------------- PopupNoButtons ---------------------------
-def PopupNoButtons(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupNoButtons(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Show a Popup but without any buttons
     :param args:
@@ -4562,7 +4562,7 @@ def PopupNoButtons(*args, button_color=None, background_color=None, text_color=N
 
 
 # --------------------------- PopupNonBlocking ---------------------------
-def PopupNonBlocking(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupNonBlocking(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Show Popup box and immediately return (does not block)
     :param args:
@@ -4620,7 +4620,7 @@ PopupAnnoying = PopupNoTitlebar
 
 
 # --------------------------- PopupAutoClose ---------------------------
-def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Popup that closes itself after some time period
     :param args:
@@ -4647,7 +4647,7 @@ def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, backg
 PopupTimed = PopupAutoClose
 
 # --------------------------- PopupError ---------------------------
-def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Popup with colored button and 'Error' as button text
     :param args:
@@ -4670,7 +4670,7 @@ def PopupError(*args, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=
 
 
 # --------------------------- PopupCancel ---------------------------
-def PopupCancel(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupCancel(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display Popup with "cancelled" button text
     :param args:
@@ -4692,7 +4692,7 @@ def PopupCancel(*args, button_color=None, background_color=None, text_color=None
     Popup(*args, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 # --------------------------- PopupOK ---------------------------
-def PopupOK(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupOK(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display Popup with OK button only
     :param args:
@@ -4714,7 +4714,7 @@ def PopupOK(*args, button_color=None, background_color=None, text_color=None, au
     Popup(*args, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 # --------------------------- PopupOKCancel ---------------------------
-def PopupOKCancel(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupOKCancel(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display popup with OK and Cancel buttons
     :param args:
@@ -4736,7 +4736,7 @@ def PopupOKCancel(*args, button_color=None, background_color=None, text_color=No
     return Popup(*args, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 # --------------------------- PopupYesNo ---------------------------
-def PopupYesNo(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=True, keep_on_top=False, location=(None,None)):
+def PopupYesNo(*args, button_color=None, background_color=None, text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display Popup with Yes and No buttons
     :param args:
