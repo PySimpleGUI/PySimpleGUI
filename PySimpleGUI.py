@@ -470,13 +470,14 @@ class InputCombo(Element):
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
-    def Update(self, value=None, values=None, disabled=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
                 self.TKCombo.current(0)
             except: pass
             self.Values = values
+        if value is not None:
             for index, v in enumerate(self.Values):
                 if v == value:
                     try:
@@ -484,6 +485,12 @@ class InputCombo(Element):
                     except: pass
                     self.DefaultValue = value
                     break
+        if set_to_index is not None:
+            try:
+                self.TKCombo.current(set_to_index)
+                self.DefaultValue = self.Values[set_to_index]
+            except:
+                pass
         if disabled == True:
             self.TKCombo['state'] = 'disable'
         elif disabled == False:
@@ -2762,18 +2769,14 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
     if type(sub_menu_info) is str:
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
-            pos = sub_menu_info.find('_&')
+            pos = sub_menu_info.find('&')
             if pos != -1:
-                _ = sub_menu_info[:pos]
-                try:
-                    _ += sub_menu_info[pos+2:]
-                except Exception as e:
-                    print(e)
-                sub_menu_info = _
+                if pos == 0 or sub_menu_info[pos-1] != "\\":
+                    sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos+1:]
             if sub_menu_info == '---':
                 top_menu.add('separator')
             else:
-                top_menu.add_command(label=sub_menu_info, underline=pos-1, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                top_menu.add_command(label=sub_menu_info, underline=pos, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -3250,15 +3253,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY')
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff)
-                    pos = menu_entry[0].find('_&')
+                    pos = menu_entry[0].find('&')
                     if pos != -1:
-                        _ = menu_entry[0][:pos]
-                        try:
-                            _ += menu_entry[0][pos+2:]
-                        except:
-                            pass
-                        menu_entry[0] = _
-                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos-1)
+                        if pos == 0 or menu_entry[0][pos-1] != "\\":
+                            menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos+1:]
+                        menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos)
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
@@ -4052,7 +4051,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
 #####################################
 # PopupGetFile                      #
 #####################################
-def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
+def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display popup with text entry field and browse button. Browse for file
 
@@ -4080,9 +4079,9 @@ def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files
         except:
             pass
         if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tk.filedialog.asksaveasfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tk.filedialog.askopenfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
         root.destroy()
         return filename
 
