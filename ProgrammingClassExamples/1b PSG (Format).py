@@ -16,7 +16,7 @@ sg.SetOptions (background_color = 'LightBlue',
 #adjust widths
 layout = [
    [sg.Text('Celcius', size =(12,1)), sg.InputText(size = (8,1))],
-    [sg.Submit()],
+    [sg.Submit()]
    ]
 
 window = sg.Window('Converter').Layout(layout)   

@@ -31,7 +31,11 @@ pixmaps and page re-visits will re-use a once-created display list.
 """
 import sys
 import fitz
-import PySimpleGUI as sg
+import sys
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 import tkinter as tk
 from PIL import Image, ImageTk
 import time

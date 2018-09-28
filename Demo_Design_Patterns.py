@@ -9,7 +9,11 @@ These are the accepted design patterns that cover the two primary use cases
 # ---------------------------------#
 # DESIGN PATTERN 1 - Simple Window #
 # ---------------------------------#
-import PySimpleGUI as sg
+import sys
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 layout = [[ sg.Text('My layout') ]]
 
@@ -20,7 +24,11 @@ button, value = window.Read()
 # -------------------------------------#
 # DESIGN PATTERN 2 - Persistent Window #
 # -------------------------------------#
-import PySimpleGUI as sg
+import sys
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 layout = [[ sg.Text('My layout') ]]
 
@@ -34,7 +42,11 @@ while True:     # Event Loop
 # ------------------------------------------------------------------#
 # DESIGN PATTERN 3 - Persistent Window with "early update" required #
 # ------------------------------------------------------------------#
-import PySimpleGUI as sg
+import sys
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 layout = [[ sg.Text('My layout') ]]
 
