@@ -35,15 +35,8 @@ def draw_figure(canvas, figure, loc=(0, 0)):
     figure_x, figure_y, figure_w, figure_h = figure.bbox.bounds
     figure_w, figure_h = int(figure_w), int(figure_h)
     photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
-
-    # Position: convert from top-left anchor to center anchor
     canvas.create_image(loc[0] + figure_w/2, loc[1] + figure_h/2, image=photo)
-
-    # Unfortunately, there's no accessor for the pointer to the native renderer
     tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-
-    # Return a handle which contains a reference to the photo object
-    # which must be kept live or else the picture disappears
     return photo
 
 #------------------------------- PASTE YOUR MATPLOTLIB CODE HERE -------------------------------
@@ -94,25 +87,14 @@ plt.plot(x, y)
 plt.yscale('logit')
 plt.title('logit')
 plt.grid(True)
-# Format the minor tick labels of the y-axis into empty strings with
-# `NullFormatter`, to avoid cumbering the axis with too many labels.
 plt.gca().yaxis.set_minor_formatter(NullFormatter())
-# Adjust the subplot layout, because the logit one may take more space
-# than usual, due to y-tick labels like "1 - 10^{-3}"
 plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25,
                     wspace=0.35)
-
+fig = plt.gcf()      # if using Pyplot then get the figure from the plot
+figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
 #------------------------------- END OF YOUR MATPLOTLIB CODE -------------------------------
 
-# ****** Comment out this line if not using Pyplot ******
-fig = plt.gcf()      # if using Pyplot then get the figure from the plot
-
-# -------------------------------- GUI Starts Here -------------------------------#
-# fig = your figure you want to display.  Assumption is that 'fig' holds the      #
-#       information to display.                                                   #
-# --------------------------------------------------------------------------------#
-figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 # define the form layout
 layout = [[sg.Text('Plot test', font='Any 18')],
           [sg.Canvas(size=(figure_w, figure_h), key='canvas')],
