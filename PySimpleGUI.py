@@ -2760,14 +2760,18 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
     if type(sub_menu_info) is str:
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
-            pos = sub_menu_info.find('&')
+            pos = sub_menu_info.find('_&')
             if pos != -1:
-                if pos == 0 or sub_menu_info[pos-1] != "\\":
-                    sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos+1:]
+                _ = sub_menu_info[:pos]
+                try:
+                    _ += sub_menu_info[pos+2:]
+                except Exception as e:
+                    print(e)
+                sub_menu_info = _
             if sub_menu_info == '---':
                 top_menu.add('separator')
             else:
-                top_menu.add_command(label=sub_menu_info, underline=pos, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                top_menu.add_command(label=sub_menu_info, underline=pos-1, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -3244,11 +3248,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY')
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff)
-                    pos = menu_entry[0].find('&')
+                    pos = menu_entry[0].find('_&')
                     if pos != -1:
-                        if pos == 0 or menu_entry[0][pos-1] != "\\":
-                            menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos+1:]
-                        menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos)
+                        _ = menu_entry[0][:pos]
+                        try:
+                            _ += menu_entry[0][pos+2:]
+                        except:
+                            pass
+                        menu_entry[0] = _
+                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos-1)
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
