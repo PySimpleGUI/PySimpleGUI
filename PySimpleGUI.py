@@ -487,7 +487,7 @@ class InputCombo(Element):
         elif value is not None:
             try:
                 if isinstance(value, str):
-                    self.TKCombo.current(self.TKCombo.index(value))
+                    self.TKCombo.set(self.TKCombo.index(value))
                 elif isinstance(value, int):
                     self.TKCombo.current(value)
             except: pass
