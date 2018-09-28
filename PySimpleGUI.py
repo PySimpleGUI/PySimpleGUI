@@ -483,8 +483,16 @@ class InputCombo(Element):
                         self.TKCombo.current(index)
                     except: pass
                     self.DefaultValue = value
-                    break
-        if disabled == True:
+
+        elif value is not None:
+            try:
+                if isinstance(value, str):
+                    self.TKCombo.current(self.TKCombo.index(value))
+                elif isinstance(value, int):
+                    self.TKCombo.current(value)
+            except: pass
+                
+        elif disabled == True:
             self.TKCombo['state'] = 'disable'
         elif disabled == False:
             self.TKCombo['state'] = 'enable'
