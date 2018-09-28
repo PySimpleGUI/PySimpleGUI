@@ -4,9 +4,11 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)  ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)
+![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
- ![Python Version](https://img.shields.io/badge/Python-3-yellow.svg) ![Python Version](https://img.shields.io/badge/Python-2.7-yellow.svg)
+ ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
 
 
@@ -18,7 +20,7 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.2-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.3-red.svg?longCache=true&style=for-the-badge)
 
   ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.4-blue.svg?longCache=true&style=for-the-badge)
 
@@ -37,7 +39,7 @@ Super-simple GUI to use... Powerfully customizable.
 Home of the 1-line custom GUI and 1-line progress meter
 
 #### Note regarding Python versions
-As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is named PySimpleGUI. The Python 2.7 version is named PySimpleGUI27.  They are installed separately and the imports are different. See instructions in Installation section for more info.
+As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.
 
 
 ------------------------------------------------------------------------
@@ -68,7 +70,7 @@ Or how about a ***custom GUI*** in 1 line of code?
 ![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
 
 
-  Build beautiful customized windows that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve your real problems.   Look through the Cookbook, find a matching recipe, copy, paste and be up and running with a GUI in minutes.  This is the process PySimpleGUI was designed to work within.
+  Build beautiful customized windows that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve your real problems.   Look through the Cookbook, find a matching recipe, copy, paste, run within minutes.  This is the process PySimpleGUI was designed to facilitate.
 
 
 ![borderless grayed buttons](https://user-images.githubusercontent.com/13696193/45168664-d848e980-b1c9-11e8-886e-63279ae4017f.jpg)
@@ -1029,16 +1031,16 @@ This is the definition of the Window object:
         button_color=None,Font=None,
         progress_bar_color=(None,None),
         background_color=None
-        is_tabbed_form=False,
         border_depth=None,
         auto_close=False,
         auto_close_duration=DEFAULT_AUTOCLOSE_TIME,
         icon=DEFAULT_WINDOW_ICON,
+        force_toplevel=False
         return_keyboard_events=False,
         use_default_focus=True,
         text_justification=None,
         no_titlebar=False,
-        grab_anywhere=True
+        grab_anywhere=False
         keep_on_top=False):
 
 
@@ -1053,11 +1055,11 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        button_color - Default color for buttons (foreground, background). Can be text or hex
        progress_bar_color - Foreground and background colors for progress bars
        background_color - Color of the window background
-       is_tabbed_form - Bool. If True then window is a tabbed window
        border_depth - Amount of 'bezel' to put on input boxes, buttons, etc.
        auto_close - Bool.  If True window will autoclose
        auto_close_duration - Duration in seconds before window closes
        icon - .ICO file that will appear on the Task Bar and end of Title Bar
+       force_top_level - Bool. If set causes a tk.Tk window to be used as primary window rather than tk.TopLevel. Used to get around Matplotlib problem
        return_keyboard_events - if True key presses are returned as buttons
        use_default_focus - if True and no focus set, then automatically set a focus
        text_justification - Justification to use for Text Elements in this window
@@ -1102,6 +1104,24 @@ It is turned off for non-blocking because there is a warning message printed out
 
 To keep a window on top of all other windows on the screen, set keep_on_top = True when the window is created.  This feature makes for floating toolbars that are very helpful and always visible on your desktop.
 
+### Window Methods (things you can do with a Window object)
+
+There are a few methods (functions) that you will see in this document that act on Windows.  The ones you will primarily be calling are:
+
+    window.Layout(layout) - Turns your definition of the Window into Window
+    window.Finalize() - creates the tkinter objects for the Window. Normally you do not call this
+    window.Read() - Read the Windows values and get the button / key that caused the Read to return
+    window.ReadNonBlocking() - Same as Read but will return right away
+    window.Refresh() - Use if updating elements and want to show the updates prior to the nex Read
+    window.Fill(values_dict) - Fill each Element with entry from the dictionary passed in
+    window.SaveToDisk(filename) - Save the Window's values to disk
+    window.LoadFromDisk(filename) - Load the Window's values from disk
+    window.CloseNonBlocking() - When done, for good, reading a non-blocking window
+    window.Disable() - Use to disable the window inpurt when opening another window on top of the primnary  Window
+    window.Enable() - Re-enable a Disabled window
+    window.FindElement(key) - Returns the element that has a matching key value
+
+
 
 ## Elements
 "Elements" are the building blocks used to create windows.  Some GUI APIs use the term "Widget" to describe these graphic elements.
@@ -1130,6 +1150,7 @@ To keep a window on top of all other windows on the screen, set keep_on_top = Tr
      Graph
      Image
      Table
+     Tab, TabGroup
      Async/Non-Blocking Windows
      Tabbed windows
      Persistent Windows
@@ -1269,7 +1290,7 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
                     do_not_clear=False,
                     key=None,
                     focus=False
-                    )
+
 .
 
      default_text - Text initially shown in the input box
@@ -1299,19 +1320,29 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
 ![combobox](https://user-images.githubusercontent.com/13696193/44959860-b565bf00-aec3-11e8-82fe-dbe41252458b.jpg)
 
     InputCombo(values,    ,
-               size=(None, None),
-               auto_size_text=None,
-               background_color = None,
-               text_color = None,
-               key = None)
+               default_value=None
+               size=(None, None)
+               auto_size_text=None
+               background_color=None
+               text_color=None
+               change_submits=False
+               disabled=False
+               key=None
+               pad=None
+               tooltip=None
 .
 
      values - Choices to be displayed. List of strings
+     default_value - which value should be initially chosen
      size - (width, height) of element in characters
      auto_size_text - Bool. True if size should fit the text length
      background_color - color to use for the input field background
      text_color - color to use for the typed text
-     key = Dictionary key to use for return values
+     change_submits - Bool. If set causes Read to immediately return if the selected value changes
+     disabled - Bool. If set will disable changes
+     key - Dictionary key to use for return values
+     pad - (x,y) Amount of padding to put around element in pixels
+     tooltip -  Text string. If set, hovering over field will popup the text
 
 #### Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
@@ -1382,6 +1413,7 @@ Sliders have a couple of slider-specific settings as well as appearance settings
               size=(None, None),
               font=None,
               background_color = None,
+              change_submits = False,
               text_color = None,
               key = None) ):
 .
@@ -1401,6 +1433,7 @@ Sliders have a couple of slider-specific settings as well as appearance settings
        auto_size_text - Bool. True if size should fit the text
        background_color - color to use for the input field background
        text_color - color to use for the typed text
+       change_submits - causes window read to immediately return if the checkbox value changes
        key = Dictionary key to use for return values
 
 #### Radio Button Element
@@ -1450,6 +1483,7 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
              font=None,
              background_color = None,
              text_color = None,
+             change_submits = False
              key = None):
 .
 
@@ -1460,6 +1494,7 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
      font- Font type and size for text display
      background_color - color to use for the background
      text_color - color to use for the typed text
+     change_submits - causes window read to immediately return if the checkbox value changes
      key = Dictionary key to use for return values
 
 
@@ -1488,6 +1523,7 @@ An up/down spinner control.  The valid values are passed in as a list.
      font - Font type and size for text display
      background_color - color to use for the background
      text_color - color to use for the typed text
+     change_submits - causes window read to immediately return if the spinner value changes
      key = Dictionary key to use for return values
 
 ### Button Element
@@ -2095,6 +2131,7 @@ The definition of a TabGroup is
 	   		  font=None
 	   		  pad=None
 	   		  border_width=None
+	   		  change_submits = False
 	   		  key=None
 	   		  tooltip=None)
 
@@ -2107,6 +2144,7 @@ The definition of a Tab Element is
         size=(None, None),font=None,
         pad=None
         border_width=None
+        change_submits=False
         key=None
         tooltip=None)
 
@@ -2838,8 +2876,19 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * `DrawText` added to Graph Elements
 * Removed `Window.UpdateElements`
 * `Window.grab_anywere` defaults to False
-*
 
+#### 3.8.3
+* Listbox, Slider, Combobox, Checkbox,  Spin, Tab Group - if change_submits is set, will return the Element's key rather than ''
+* Added change_submits capability to Checkbox, Tab Group
+* Combobox - Can set value to an Index into the Values table rather than the Value itself
+* Warnings added to Drawing routines for Graph element (rather than crashing)
+* Window - can "force top level" window to be used rather than a normal window.  Means that instead of calling Tk to get a window, will call TopLevel to get the window
+* Window Disable / Enable - Disables events (button clicks, etc) for a Window.  Use this when you open a second window and want to disable the first window from doing anything. This will simulate a 'dialog box'
+* Tab Group returns a value with Window is Read.  Return value is the string of the selected tab
+* Turned off grab_anywhere for Popups
+* New parameter, default_extension, for PopupGetFile
+* Keyboard shortcuts for menu items. Can hold ALT key to select items in men
+* Removed old-style Tabs - Risky change because it hit fundamental window packing and creation. Will also break any old code using this style tab (sorry folks this is how progress happens)
 
 
 ### Upcoming
@@ -2902,8 +2951,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.
 * [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help
 * [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it
-* [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be one of the most critical constructs in PySimpleGUI
-
+* [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be
+* one of the most critical constructs in PySimpleGUI
+* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...
 
 
 ## How Do I

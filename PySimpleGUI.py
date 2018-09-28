@@ -1121,10 +1121,7 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
             # if the form is tabbed, must collect all form's results and destroy all forms
-            if self.ParentForm.IsTabbedForm:
-                self.ParentForm.UberParent._Close()
-            else:
-                self.ParentForm._Close()
+            self.ParentForm._Close()
             self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
@@ -1137,15 +1134,10 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.IsTabbedForm:
-                self.ParentForm.UberParent.FormStayedOpen = True
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # this is a return type button so GET RESULTS and destroy window
             # if the form is tabbed, must collect all form's results and destroy all forms
-            if self.ParentForm.IsTabbedForm:
-                self.ParentForm.UberParent._Close()
-            else:
-                self.ParentForm._Close()
+            self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.Decrement()
@@ -2053,7 +2045,7 @@ class Window:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, is_tabbed_form=False, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -2063,7 +2055,6 @@ class Window:
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
-        self.IsTabbedForm = is_tabbed_form
         self.ParentWindow = None
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
@@ -3405,17 +3396,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=True)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
-        if not toplevel_form.IsTabbedForm:
-            toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
-        else: toplevel_form.ParentWindow.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
+        toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
     return
 
 
 def ConvertFlexToTK(MyFlexForm):
     master = MyFlexForm.TKroot
     # only set title on non-tabbed forms
-    if not MyFlexForm.IsTabbedForm:
-        master.title(MyFlexForm.Title)
+    master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
     try:
         if MyFlexForm.NoTitleBar:
@@ -3424,8 +3412,6 @@ def ConvertFlexToTK(MyFlexForm):
         pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
     #....................................... DONE creating and laying out window ..........................#
-    if MyFlexForm.IsTabbedForm:
-        master = MyFlexForm.ParentWindow
     screen_width = master.winfo_screenwidth()      # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
@@ -3451,88 +3437,6 @@ def ConvertFlexToTK(MyFlexForm):
     return
 
 
-# ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def ShowTabbedForm(title, *args, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, fav_icon=DEFAULT_WINDOW_ICON, no_titlebar=False):
-    # takes as input (form, rows, tab name) for each tab
-    global _my_windows
-
-    uber = UberForm()
-    root = tk.Tk()
-    uber.TKroot = root
-    if title is not None:
-        root.title(title)
-    try:
-        root.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
-    except:
-        pass
-
-    _my_windows.Increment()
-
-    if not len(args):
-        print('******************* SHOW TABBED FORMS ERROR .... no arguments')
-        return
-    if DEFAULT_BACKGROUND_COLOR:
-        framestyle = ttk.Style()
-        try:
-            framestyle.theme_create('framestyle', parent='alt',
-                                settings={'TFrame':
-                                              {'configure':
-                                                   {'background': DEFAULT_BACKGROUND_COLOR,
-                                                    }}})
-        except: pass
-        # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-        # framestyle.theme_use('framestyle')
-    tab_control = ttk.Notebook(root)
-
-    for num,x in enumerate(args):
-        form, rows, tab_name = x
-        form.AddRows(rows)
-        form.UseDictionary = True
-
-        if DEFAULT_BACKGROUND_COLOR:
-            framestyle.theme_use('framestyle')
-        tab = ttk.Frame(tab_control)  # Create tab 1
-        # s.configure("my.Frame.TFrame", background=DEFAULT_BACKGROUND_COLOR)
-        tab_control.add(tab, text=tab_name)  # Add tab 1
-        # tab_control.configure(text='new text')
-        tab_control.grid(row=0, sticky=tk.W)
-        form.TKTabControl = tab_control
-        form.TKroot = tab
-        form.IsTabbedForm = True
-        form.ParentWindow = root
-        ConvertFlexToTK(form)
-        form.UberParent = uber
-        uber.AddForm(form)
-        uber.FormReturnValues.append(form.ReturnValues)
-
-    # dangerous??  or clever? use the final form as a callback for autoclose
-    id = root.after(auto_close_duration * 1000, form._AutoCloseAlarmCallback) if auto_close else 0
-    icon = fav_icon if not _my_windows.user_defined_icon else _my_windows.user_defined_icon
-    try: uber.TKroot.iconbitmap(icon)
-    except: pass
-    try:
-        if no_titlebar:
-            uber.TKroot.wm_overrideredirect(True)
-    except:
-        pass
-
-    try:
-        root.attributes('-alpha', 255)             # hide window while building it. makes for smoother 'paint'
-    except:
-        pass
-    root.mainloop()
-
-    if uber.FormStayedOpen:
-        FormReturnValues = []
-        for form in uber.FormList:
-            BuildResults(form, False, form)
-            FormReturnValues.append(form.ReturnValues)
-        uber.FormReturnValues = FormReturnValues
-    # if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
-    #     return BuildResults(self, False, self)
-    if id: root.after_cancel(id)
-    uber.TKrootDestroyed = True
-    return uber.FormReturnValues
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(my_flex_form):
