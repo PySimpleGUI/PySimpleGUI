@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 MY_WINDOW_ICON = 'E:\\TheRealMyDocs\\Icons\\The Planets\\jupiter.ico'
 reverse = {}
@@ -1702,10 +1702,14 @@ def main():
         if hex_input == '' and len(drop_down_value) == 0:
             continue
 
-        if hex_input is not '' and hex_input[0] == '#':
-            color_hex = hex_input.upper()
-            color_name = get_name_from_hex(hex_input)
-        elif drop_down_value is not None:
+        if len(hex_input) != 0:
+            if hex_input[0] == '#':
+                color_hex = hex_input.upper()
+                color_name = get_name_from_hex(hex_input)
+            else:
+                color_name = hex_input
+                color_hex = get_hex_from_name(color_name)
+        elif drop_down_value is not None and len(drop_down_value) != 0:
             color_name = drop_down_value[0]
             color_hex  = get_hex_from_name(color_name)
 

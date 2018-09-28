@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 # GUI for switching an LED on and off to GPIO14
 
 # GPIO and time library:
@@ -32,13 +32,13 @@ def FlashLED():
         GPIO.output(14, GPIO.LOW)
         time.sleep(0.5)
 
-layout = [[rg.T('Raspberry Pi LEDs')],
-           [rg.T('', size=(14, 1), key='output')],
-           [rg.ReadButton('Switch LED')],
-           [rg.ReadButton('Flash LED')],
-           [rg.Exit()]]
+layout = [[sg.T('Raspberry Pi LEDs')],
+           [sg.T('', size=(14, 1), key='output')],
+           [sg.ReadButton('Switch LED')],
+           [sg.ReadButton('Flash LED')],
+           [sg.Exit()]]
 
-window = rg.Window('Raspberry Pi GUI', grab_anywhere=False).Layout(layout)
+window = sg.Window('Raspberry Pi GUI', grab_anywhere=False).Layout(layout)
 
 while True:
     button, values = window.Read()
@@ -53,4 +53,4 @@ while True:
         FlashLED()
         window.FindElement('output').Update('')
 
-rg.Popup('Done... exiting')
+sg.Popup('Done... exiting')

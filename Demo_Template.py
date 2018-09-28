@@ -1,14 +1,14 @@
-#choose one of these are your starting point
+#choose one of these are your starting point.  Copy, paste, have fun
 
 # ---------------------------------#
 # DESIGN PATTERN 1 - Simple Window #
 # ---------------------------------#
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 layout = [[ sg.Text('My layout') ]]
 
@@ -21,10 +21,10 @@ button, value = window.Read()
 # -------------------------------------#
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 layout = [[ sg.Text('My layout') ]]
 

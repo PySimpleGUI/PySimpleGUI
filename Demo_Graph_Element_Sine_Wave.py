@@ -1,16 +1,20 @@
-#!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 import math
 
-
-layout = [[sg.T('Example of Using Math with a Graph', justification='center', size=(40,1), relief=sg.RELIEF_RAISED)],
-    [sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]
+layout = [[sg.T('Example of Using Math with a Graph', justification='center',
+                size=(50,1), relief=sg.RELIEF_SUNKEN)],
+          [sg.Graph(canvas_size=(400, 400),
+                   graph_bottom_left=(-105,-105),
+                   graph_top_right=(105,105),
+                   background_color='white',
+                   key='graph')],]
 
 window = sg.Window('Graph of Sine Function', grab_anywhere=True).Layout(layout).Finalize()
+
 graph = window.FindElement('graph')
 
 # Draw axis
@@ -26,6 +30,7 @@ for y in range(-100, 101, 20):
     graph.DrawLine((-3,y), (3,y))
     if y != 0:
         graph.DrawText( y, (-10,y), color='blue')
+
 
 # Draw Graph
 for x in range(-100,100):

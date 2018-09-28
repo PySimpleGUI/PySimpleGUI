@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 import sys
-
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
-import time
+else:
+    import PySimpleGUI27 as sg
+
 import random
 import sys
 
@@ -47,6 +46,7 @@ def main():
     while True:
         # time.sleep(.2)
         button, values = window.ReadNonBlocking()
+        print(button, values)
         if button == 'Quit' or values is None:
             break
         graph_offset = random.randint(-10, 10)

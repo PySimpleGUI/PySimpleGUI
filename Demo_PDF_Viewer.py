@@ -34,7 +34,10 @@ pixmaps and page re-visits will re-use a once-created display list.
 """
 import sys
 import fitz
-import PySimpleGUI as sg
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 from sys import exit as exit
 from binascii import hexlify
 

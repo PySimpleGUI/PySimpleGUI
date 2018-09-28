@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 import matplotlib
 matplotlib.use('TkAgg')
@@ -114,12 +114,12 @@ fig = plt.gcf()      # if using Pyplot then get the figure from the plot
 # --------------------------------------------------------------------------------#
 figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 # define the form layout
-layout = [[sg.Text('Plot test')],
+layout = [[sg.Text('Plot test', font='Any 18')],
           [sg.Canvas(size=(figure_w, figure_h), key='canvas')],
           [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
 
 # create the form and show it without the plot
-window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', force_toplevel=True).Layout(layout).Finalize()
 
 # add the plot to the window
 fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)

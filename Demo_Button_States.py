@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
-
+else:
+    import PySimpleGUI27 as sg
 """
 Demonstrates using a "tight" layout with a Dark theme.
 Shows how button states can be controlled by a user application.  The program manages the disabled/enabled
