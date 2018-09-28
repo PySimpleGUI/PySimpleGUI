@@ -224,7 +224,7 @@ class ToolTip:
     (inspired by https://stackoverflow.com/a/36221216)
     """
 
-    def __init__(self, widget, text, timeout=1000):
+    def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME):
         self.widget = widget
         self.text = text
         self.timeout = timeout
@@ -256,7 +256,7 @@ class ToolTip:
         if self.tipwindow:
             return
         x = self.widget.winfo_rootx() + 20
-        y = self.widget.winfo_rooty() + self.widget.winfo_height() + 1
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() - 20
         self.tipwindow = tk.Toplevel(self.widget)
         self.tipwindow.wm_overrideredirect(True)
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
@@ -2347,6 +2347,14 @@ class Window:
 
     def OnClosingCallback(self):
         return
+
+
+    def Disable(self):
+        self.TKroot.grab_set_global()
+
+    def Enable(self):
+        self.TKroot.grab_release()
+
 
     def __enter__(self):
         return self
