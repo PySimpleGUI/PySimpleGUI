@@ -4052,7 +4052,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
 #####################################
 # PopupGetFile                      #
 #####################################
-def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
+def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
     Display popup with text entry field and browse button. Browse for file
 
@@ -4080,9 +4080,9 @@ def PopupGetFile(message, default_path='',save_as=False, file_types=(("ALL Files
         except:
             pass
         if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tk.filedialog.asksaveasfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types)  # show the 'get file' dialog box
+            filename = tk.filedialog.askopenfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
         root.destroy()
         return filename
 
