@@ -2786,7 +2786,11 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
             if i != len(sub_menu_info) - 1:
                 if type(sub_menu_info[i+1]) == list:
                     new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                    top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu)
+                    pos = sub_menu_info[i].find('&')
+                    if pos != -1:
+                        if pos == 0 or sub_menu_info[i][pos-1] != "\\":
+                            sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos+1:]
+                    top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
                     AddMenuItem(new_menu, sub_menu_info[i+1], element, is_sub_menu=True)
                     i += 1  # skip the next one
                 else:

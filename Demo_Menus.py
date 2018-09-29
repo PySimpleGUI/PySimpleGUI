@@ -27,9 +27,9 @@ def TestMenus():
     sg.SetOptions(element_padding=(0, 0))
 
     # ------ Menu Definition ------ #
-    menu_def = [['File', ['Open', 'Save', 'Properties']],
-                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
-                ['Help', 'About...'],]
+    menu_def = [['&File', ['&Open', '&Save', 'Prope&rties']],
+                ['&Edit', ['&Paste', ['Spe&cial', 'Norma&l',], 'Und&o'],],
+                ['&Help', 'Ab&out...'],]
 
     # ------ GUI Defintion ------ #
     layout = [
