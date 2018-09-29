@@ -470,7 +470,19 @@ class InputCombo(Element):
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None):
+    def Update(self, value=None, values=None, disabled=None):
+        '''
+        Allows updating of value list, and selecting value by string or index
+        :param value: value to be selected or None
+        :param values: list of values to populate InputCombo
+        :param disabled: update disabled status
+        :examples:
+            combo = InputCombo(['A','B','C'])
+            combo.Update(None, ['A','B','C','D','E'])   # sets value list and selects 'A' value
+            combo.Update('B', ['A','B','C','D'])        # sets value list and selects 'B' value
+            combo.Update('B')                           # selects 'B' value by string
+            combo.Update(1)                             # selects 'B' value by index
+        '''
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -484,14 +496,16 @@ class InputCombo(Element):
                         self.TKCombo.current(index)
                     except: pass
                     self.DefaultValue = value
-                    break
-        if set_to_index is not None:
+
+        elif value is not None:
             try:
-                self.TKCombo.current(set_to_index)
-                self.DefaultValue = self.Values[set_to_index]
-            except:
-                pass
-        if disabled == True:
+                if isinstance(value, str):
+                    self.TKCombo.set(self.TKCombo.index(value))
+                elif isinstance(value, int):
+                    self.TKCombo.current(value)
+            except: pass
+                
+        elif disabled == True:
             self.TKCombo['state'] = 'disable'
         elif disabled == False:
             self.TKCombo['state'] = 'enable'
@@ -2045,7 +2059,7 @@ class Window:
     '''
     Display a user defined for and return the filled in data
     '''
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -2086,6 +2100,7 @@ class Window:
         self.GrabAnywhere = grab_anywhere
         self.KeepOnTop = keep_on_top
         self.ForceTopLevel = force_toplevel
+        self.Resizable = resizable
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2760,18 +2775,14 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
     if type(sub_menu_info) is str:
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
-            pos = sub_menu_info.find('_&')
+            pos = sub_menu_info.find('&')
             if pos != -1:
-                _ = sub_menu_info[:pos]
-                try:
-                    _ += sub_menu_info[pos+2:]
-                except Exception as e:
-                    print(e)
-                sub_menu_info = _
+                if pos == 0 or sub_menu_info[pos-1] != "\\":
+                    sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos+1:]
             if sub_menu_info == '---':
                 top_menu.add('separator')
             else:
-                top_menu.add_command(label=sub_menu_info, underline=pos-1, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                top_menu.add_command(label=sub_menu_info, underline=pos, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -2779,7 +2790,11 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
             if i != len(sub_menu_info) - 1:
                 if type(sub_menu_info[i+1]) == list:
                     new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                    top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu)
+                    pos = sub_menu_info[i].find('&')
+                    if pos != -1:
+                        if pos == 0 or sub_menu_info[i][pos-1] != "\\":
+                            sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos+1:]
+                    top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
                     AddMenuItem(new_menu, sub_menu_info[i+1], element, is_sub_menu=True)
                     i += 1  # skip the next one
                 else:
@@ -3248,15 +3263,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY')
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff)
-                    pos = menu_entry[0].find('_&')
+                    pos = menu_entry[0].find('&')
                     if pos != -1:
-                        _ = menu_entry[0][:pos]
-                        try:
-                            _ += menu_entry[0][pos+2:]
-                        except:
-                            pass
-                        menu_entry[0] = _
-                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos-1)
+                        if pos == 0 or menu_entry[0][pos-1] != "\\":
+                            menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos+1:]
+                        menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos)                        
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
@@ -3476,7 +3487,7 @@ def StartupTK(my_flex_form):
 
     if my_flex_form.KeepOnTop:
         root.wm_attributes("-topmost", 1)
-
+    
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
@@ -3487,6 +3498,9 @@ def StartupTK(my_flex_form):
         root.attributes('-alpha', 255)             # hide window while building it. makes for smoother 'paint'
     except:
         pass
+    
+    if not my_flex_form.Resizable:
+        my_flex_form.TKroot.resizable(False, False)     #prevent user from resizing the window with dragging
 
     if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
         root.bind("<KeyRelease>", my_flex_form._KeyboardCallback)
