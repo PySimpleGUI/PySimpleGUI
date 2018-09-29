@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 sg.ChangeLookAndFeel('GreenTan')
 tab2_layout = [[sg.T('This is inside tab 2')],

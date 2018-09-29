@@ -4,6 +4,8 @@
 
 import PySimpleGUI as sg
 
+#use of Column to help with layout - vertical sliders take up space
+
 column1 = [
     [sg.Text('Pick operation', size = (15,1), font = ('Calibri', 12, 'bold'))],
 [sg.InputCombo(['Add','Subtract','Multiply','Divide'], size = (10,6))],
@@ -20,8 +22,12 @@ layout = [
       sg.Slider(range = (-9, 9),orientation = 'v', size = (5, 20), default_value = 0),
      sg.Text('   '), sg.Column(column1), sg.Column(column2)]]
 
-window = sg.Window('Enter & Display Data', grab_anywhere=False).Layout(layout)
+#added grab_anywhere to when moving slider, who window doesn't move.
 
+window = sg.Window('Enter & Display Data',grab_anywhere = False).Layout(layout)
+
+#Get selection from combo: value[2]
+#Slider values: value[0] and value[1]
 while True:
     button, value = window.Read()
     if button is not None:
@@ -31,11 +37,10 @@ while True:
             result = value[0] * value[1]
         elif value[2] == 'Subtract':
             result = value[0] - value[1]
-        elif value[2] == 'Divide':
+        elif value[2] == 'Divide':              #check for zero
             if value[1] ==0:
                 sg.Popup('Second value can\'t be zero')
-                if value[0] == 0:
-                    result = 'NA'
+                result = 'NA'
             else:
                 result = value[0] / value[1]
         window.FindElement('result').Update(result)              

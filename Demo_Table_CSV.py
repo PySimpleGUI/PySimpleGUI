@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 import csv
-import sys
+
 
 def table_example():
     filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))

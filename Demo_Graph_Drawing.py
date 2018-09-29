@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0,0), graph_top_right=(400, 400), background_color='red', key='graph')],
            [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue'), sg.ReadButton('Move')]]

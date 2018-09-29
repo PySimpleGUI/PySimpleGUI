@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
-
+else:
+    import PySimpleGUI27 as sg
 """
     Demonstration of MENUS!
     How do menus work?  Like buttons is how.
@@ -33,7 +32,7 @@ def TestMenus():
 
     # ------ GUI Defintion ------ #
     layout = [
-            [sg.Menu(menu_def, tearoff=True)],
+            [sg.Menu(menu_def, tearoff=False)],
               [sg.Output(size=(60,20))],
             [sg.In('Test', key='input', do_not_clear=True)]
               ]
@@ -49,7 +48,9 @@ def TestMenus():
         print('Button = ', button)
         # ------ Process menu choices ------ #
         if button == 'About...':
+            window.Disable()
             sg.Popup('About this program','Version 1.0', 'PySimpleGUI rocks...')
+            window.Enable()
         elif button == 'Open':
             filename = sg.PopupGetFile('file to open', no_window=True)
             print(filename)

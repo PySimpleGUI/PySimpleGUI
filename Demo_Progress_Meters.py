@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 from time import sleep
 from sys import exit as exit
 
@@ -24,44 +24,66 @@ from sys import exit as exit
     The simple case is that you want to add a single meter to your code.  The one-line solution
 """
 
-
-# Display a progress meter in work loop. User is not allowed to break out of the loop
-for i in range(10000):
-    if i % 5 == 0: sg.OneLineProgressMeter('My 1-line progress meter', i+1, 10000, 'single')
-
-# Display a progress meter. Allow user to break out of loop using cancel button
-for i in range(10000):
-    if not sg.OneLineProgressMeter('My 1-line progress meter', i+1, 10000, 'single'):
-        break
+def DemoOneLineProgressMeter():
+    # Display a progress meter. Allow user to break out of loop using cancel button
+    for i in range(1000):
+        if not sg.OneLineProgressMeter('My 1-line progress meter', i+1, 1000, 'meter key' ):
+            break
 
 
-layout = [
-            [sg.T('One-Line Progress Meter Demo', font=('Any 18'))],
-            [sg.T('Outer Loop Count', size=(15,1), justification='r'), sg.In(default_text='100', size=(5,1), key='CountOuter', do_not_clear=True),
-             sg.T('Delay'), sg.In(default_text='10', key='TimeOuter', size=(5,1), do_not_clear=True), sg.T('ms')],
-            [sg.T('Inner Loop Count', size=(15,1), justification='r'), sg.In(default_text='100', size=(5,1), key='CountInner', do_not_clear=True) ,
-             sg.T('Delay'), sg.In(default_text='10', key='TimeInner', size=(5,1), do_not_clear=True), sg.T('ms')],
-            [sg.Button('Show', pad=((0,0), 3), bind_return_key=True), sg.T('me the meters!')]
-          ]
+    layout = [
+                [sg.T('One-Line Progress Meter Demo', font=('Any 18'))],
+                [sg.T('Outer Loop Count', size=(15,1), justification='r'), sg.In(default_text='100', size=(5,1), key='CountOuter', do_not_clear=True),
+                 sg.T('Delay'), sg.In(default_text='10', key='TimeOuter', size=(5,1), do_not_clear=True), sg.T('ms')],
+                [sg.T('Inner Loop Count', size=(15,1), justification='r'), sg.In(default_text='100', size=(5,1), key='CountInner', do_not_clear=True) ,
+                 sg.T('Delay'), sg.In(default_text='10', key='TimeInner', size=(5,1), do_not_clear=True), sg.T('ms')],
+                [sg.Button('Show', pad=((0,0), 3), bind_return_key=True), sg.T('me the meters!')]
+              ]
 
-window = sg.Window('One-Line Progress Meter Demo').Layout(layout)
+    window = sg.Window('One-Line Progress Meter Demo').Layout(layout)
 
-while True:
-    button, values = window.Read()
-    if button is None:
-        break
-    if button == 'Show':
-        max_outer = int(values['CountOuter'])
-        max_inner = int(values['CountInner'])
-        delay_inner = int(values['TimeInner'])
-        delay_outer = int(values['TimeOuter'])
-        for i in range(max_outer):
-            if not sg.OneLineProgressMeter('Outer Loop', i+1, max_outer, 'outer'):
-                break
-            sleep(delay_outer/1000)
-            for j in range(max_inner):
-                if not sg.OneLineProgressMeter('Inner Loop', j+1, max_inner, 'inner'):
+    while True:
+        button, values = window.Read()
+        if button is None:
+            break
+        if button == 'Show':
+            max_outer = int(values['CountOuter'])
+            max_inner = int(values['CountInner'])
+            delay_inner = int(values['TimeInner'])
+            delay_outer = int(values['TimeOuter'])
+            for i in range(max_outer):
+                if not sg.OneLineProgressMeter('Outer Loop', i+1, max_outer, 'outer'):
                     break
-                sleep(delay_inner/1000)
+                sleep(delay_outer/1000)
+                for j in range(max_inner):
+                    if not sg.OneLineProgressMeter('Inner Loop', j+1, max_inner, 'inner'):
+                        break
+                    sleep(delay_inner/1000)
 
-exit(69)
+'''
+    Make your own progress meter!  
+    Embed the meter right into your window
+'''
+
+def CustomMeter():
+    # layout the form
+    layout = [[sg.Text('A custom progress meter')],
+              [sg.ProgressBar(10000, orientation='h', size=(20,20), key='progress')],
+              [sg.Cancel()]]
+
+    # create the form`
+    window = sg.Window('Custom Progress Meter').Layout(layout)
+    progress_bar = window.FindElement('progress')
+    # loop that would normally do something useful
+    for i in range(10000):
+        # check to see if the cancel button was clicked and exit loop if clicked
+        button, values = window.ReadNonBlocking()
+        if button == 'Cancel' or values == None:
+            break
+        # update bar with loop value +1 so that bar eventually reaches the maximum
+        progress_bar.UpdateBar(i+1)
+    # done with loop... need to destroy the window as it's still open
+    window.CloseNonBlocking()
+
+CustomMeter()
+DemoOneLineProgressMeter()

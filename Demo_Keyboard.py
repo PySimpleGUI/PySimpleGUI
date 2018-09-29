@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] < 3:
-    import PySimpleGUI27 as sg
-else:
+if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
 
 # Recipe for getting keys, one at a time as they are released
 # If want to use the space bar, then be sure and disable the "default focus"
