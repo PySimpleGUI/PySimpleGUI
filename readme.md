@@ -20,7 +20,7 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.3-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.4-red.svg?longCache=true&style=for-the-badge)
 
   ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.4-blue.svg?longCache=true&style=for-the-badge)
 
