@@ -6,18 +6,23 @@ else:
     import PySimpleGUI27 as sg
 
 # Here, have some windows on me....
-[sg.PopupNoWait(location=(10*x,0)) for x in range(10)]
+[sg.PopupNoWait(location=(500+100*x,500)) for x in range(10)]
 
-print (sg.PopupYesNo('Yes No'))
+answer = sg.PopupYesNo('Do not worry about all those open windows... they will disappear at the end', 'Are you OK with that?')
 
-print(sg.PopupGetText('Get text', location=(1000,200)))
-print(sg.PopupGetFile('Get file'))
-print(sg.PopupGetFolder('Get folder'))
+if answer == 'No':
+    sg.PopupCancel('OK, we will destroy those windows as soon as you close this window')
+    sys.exit()
+
+sg.PopupNonBlocking('Your answer was',answer, location=(1000,600))
+
+text = sg.PopupGetText('This is a call to PopopGetText', location=(1000,200))
+sg.PopupGetFile('Get file')
+sg.PopupGetFolder('Get folder')
 
 
 sg.Popup('Simple popup')
 
-sg.PopupNonBlocking('Non Blocking', location=(500,500))
 sg.PopupNoTitlebar('No titlebar')
 sg.PopupNoBorder('No border')
 sg.PopupNoFrame('No frame')

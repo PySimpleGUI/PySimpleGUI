@@ -10,7 +10,8 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 
-layout = [[ sg.Text('My layout') ]]
+layout = [[ sg.Text('My layout') ],
+          [ sg.Button('Next Window')]]
 
 window = sg.Window('My window').Layout(layout)
 button, value = window.Read()
@@ -26,7 +27,8 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 
-layout = [[ sg.Text('My layout') ]]
+layout = [[ sg.Text('My layout') ],
+          [ sg.RButton('Read The Window')]]
 
 window = sg.Window('My new window').Layout(layout)
 
@@ -34,3 +36,4 @@ while True:     # Event Loop
     button, value = window.Read()
     if button is None:
         break
+    print(button, value)
