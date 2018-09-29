@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
+    import PySimpleGUI_mod as sg
 else:
     import PySimpleGUI27 as sg
 """
@@ -26,9 +26,10 @@ def TestMenus():
     sg.SetOptions(element_padding=(0, 0))
 
     # ------ Menu Definition ------ #
-    menu_def = [['File', ['O_&pen', 'Save', '---', 'Properties']],
-                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
-                ['Help', 'About...'],]
+    menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit' ]],
+                ['&Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
+                [''
+                 '&Help', '&About...'],]
 
     # ------ GUI Defintion ------ #
     layout = [
@@ -48,9 +49,9 @@ def TestMenus():
         print('Button = ', button)
         # ------ Process menu choices ------ #
         if button == 'About...':
-            window.Disable()
-            sg.Popup('About this program','Version 1.0', 'PySimpleGUI rocks...')
-            window.Enable()
+            window.Hide()
+            sg.Popup('About this program','Version 1.0', 'PySimpleGUI rocks...', grab_anywhere=True)
+            window.UnHide()
         elif button == 'Open':
             filename = sg.PopupGetFile('file to open', no_window=True)
             print(filename)

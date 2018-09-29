@@ -3873,35 +3873,35 @@ def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, au
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
-    with Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration) as form:
-        max_line_total, max_line_width, total_lines, height_computed = 0,0,0,0
-        complete_output = ''
-        for message in args:
-            # fancy code to check if string and convert if not is not need. Just always convert to string :-)
-            # if not isinstance(message, str): message = str(message)
-            message = str(message)
-            longest_line_len = max([len(l) for l in message.split('\n')])
-            width_used = min(longest_line_len, width)
-            max_line_total = max(max_line_total, width_used)
-            max_line_width = width
-            lines_needed = _GetNumLinesNeeded(message, width_used)
-            height_computed += lines_needed
-            complete_output += message + '\n'
-            total_lines += lines_needed
-        height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
-        if height:
-            height_computed = height
-        form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
-        pad = max_line_total-15 if max_line_total > 15 else 1
-        # show either an OK or Yes/No depending on paramater
-        if yes_no:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
-            button, values = form.Read()
-            return button
-        else:
-            form.AddRow(Text('', size=(pad, 1), auto_size_text=False), SimpleButton('OK', size=(5, 1), button_color=button_color))
+    form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration)
+    max_line_total, max_line_width, total_lines, height_computed = 0,0,0,0
+    complete_output = ''
+    for message in args:
+        # fancy code to check if string and convert if not is not need. Just always convert to string :-)
+        # if not isinstance(message, str): message = str(message)
+        message = str(message)
+        longest_line_len = max([len(l) for l in message.split('\n')])
+        width_used = min(longest_line_len, width)
+        max_line_total = max(max_line_total, width_used)
+        max_line_width = width
+        lines_needed = _GetNumLinesNeeded(message, width_used)
+        height_computed += lines_needed
+        complete_output += message + '\n'
+        total_lines += lines_needed
+    height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
+    if height:
+        height_computed = height
+    form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
+    pad = max_line_total-15 if max_line_total > 15 else 1
+    # show either an OK or Yes/No depending on paramater
+    if yes_no:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
         button, values = form.Read()
         return button
+    else:
+        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Button('OK', size=(5, 1), button_color=button_color))
+    button, values = form.Read()
+    return button
 
 
 PopupScrolled = ScrolledTextBox

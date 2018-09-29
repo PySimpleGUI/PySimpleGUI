@@ -8,9 +8,9 @@ else:
 sg.ChangeLookAndFeel('GreenTan')
 
 # ------ Menu Definition ------ #
-menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],
-            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
-            ['Help', 'About...'], ]
+menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
+            ['&Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+            ['&Help', '&About...'], ]
 
 # ------ Column Definition ------ #
 column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
