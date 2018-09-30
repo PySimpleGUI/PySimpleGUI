@@ -204,6 +204,7 @@ ELEM_TYPE_MENUBAR = 600
 ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
 ELEM_TYPE_TABLE = 700
+ELEM_TYPE_ERROR = 666
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -1989,7 +1990,7 @@ class TKCalendar(ttk.Frame):
 
 
 # ---------------------------------------------------------------------- #
-#                           Canvas                                       #
+#                           Menu                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=True, pad=None, key=None):
@@ -2039,6 +2040,35 @@ class Table(Element):
 
     def __del__(self):
         super().__del__()
+
+
+
+
+# ---------------------------------------------------------------------- #
+#                           Error Element                                #
+# ---------------------------------------------------------------------- #
+class ErrorElement(Element):
+    def __init__(self, key=None):
+
+        self.Key = key
+        super().__init__(ELEM_TYPE_ERROR, key=key)
+
+        return
+
+    def Update(self, *args, **kwargs):
+        Popup('Keyword error', self.Key, 'Hey duffus, you gave me a bad key and now you\'re trying to do an update.', 'You need to stop this madness and check your spelling')
+        return
+
+
+    def MenuItemChosenCallback(self, item_chosen):
+        # print('IN MENU ITEM CALLBACK', item_chosen)
+        self.ParentForm.LastButtonClicked = item_chosen
+        self.ParentForm.FormRemainedOpen = True
+        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
+    def __del__(self):
+        super().__del__()
+
 
 
 
@@ -2188,6 +2218,7 @@ class Window:
         except:
             pass
 
+
     def Read(self):
         self.NonBlocking = False
         if self.TKrootDestroyed:
@@ -2207,6 +2238,7 @@ class Window:
             return BuildResults(self, False, self)
         else:
             return self.ReturnValues
+
 
     def ReadNonBlocking(self, Message=''):
         if self.TKrootDestroyed:
@@ -2238,7 +2270,6 @@ class Window:
         return self
 
 
-
     def Refresh(self):
         if self.TKrootDestroyed:
             return
@@ -2256,6 +2287,7 @@ class Window:
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+            return ErrorElement(key=key)
         return element
 
     def SaveToDisk(self, filename):
