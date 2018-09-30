@@ -3401,7 +3401,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         value = [i] + value
                     id = treeview.insert('', 'end', text=value, values=value)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKTreeview.configure(background=element.BackgroundColor)
+                    ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    ttk.Style().configure("Treeview", foreground=element.TextColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
