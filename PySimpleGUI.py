@@ -1576,6 +1576,12 @@ class TabGroup(Element):
         element = row[col_num]
         return element
 
+    def FindKeyFromTabName(self, tab_name):
+        for row in self.Rows:
+            for element in row:
+                if element.Title == tab_name:
+                    return element.Key
+        return None
 
     def __del__(self):
         for row in self.Rows:
@@ -2663,6 +2669,9 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
                         value=element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
+                        tab_key = element.FindKeyFromTabName(value)
+                        if tab_key is not None:
+                            value = tab_key
                     except:
                         value = None
             else:
