@@ -20,7 +20,7 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.4-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.3-red.svg?longCache=true&style=for-the-badge)
 
   ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.4-blue.svg?longCache=true&style=for-the-badge)
 
@@ -176,7 +176,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Save / Load window to/from disk
         Borderless (no titlebar) windows
         Always on top windows
-        Menus
+        Menus with ALT-hotkey
         Tooltips
         Clickable links
         No async programming required (no callbacks to worry about)
@@ -2141,12 +2141,16 @@ The definition of a Tab Element is
         layout,
         title_color=None,
         background_color=None,
-        size=(None, None),font=None,
+        font=None,
         pad=None
         border_width=None
-        change_submits=False
         key=None
         tooltip=None)
+
+
+### Reading Tab Groups
+
+Tab Groups now return a value when a Read returns.  They return which tab is currently selected.  There is also a change_submits parameter that can be set that causes a Read to return if a Tab in that group is selected / changed.  The key or title belonging to the Tab that was switched to will be returned as the value
 
 
   ## Colors ##
@@ -2523,6 +2527,24 @@ They menu_def layout produced this window:
 ![menu](https://user-images.githubusercontent.com/13696193/45306723-56b7cb00-b4eb-11e8-8cbd-faef0c90f8b4.jpg)
 
 
+You have used ALT-key in other Windows programs to navigate menus.  For example Alt-F+X exits the program.  The Alt-F pulls down the File menu.  The X selects the entry marked Exit.
+
+The good news is that PySimpleGUI allows you to create the same kind of menus!  Your program can play with the big-boys.  And, it's trivial to do.
+
+All that's required is for your to add an "&" in front of the letter you want to appear with an underscore.  When you hold the Alt key down you will see the menu with underlines that you marked.
+
+One other little bit of polish you can add are separators in your list.  To add a line in your list of menu choices, create a menu entry that looks like this: ` '---'`
+
+This is an example Menu with underlines and a separator.
+
+```
+# ------ Menu Definition ------ #
+menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit'  ]],
+            ['&Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
+            ['&Help', '&About...'],]
+```
+  And this is the spiffy menu it produced:
+  ![menus with shortcuts](https://user-images.githubusercontent.com/13696193/46251674-f5b74f00-c427-11e8-95c6-547adc59041b.jpg)
 
 
 ## Updating Elements
@@ -2890,6 +2912,12 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * Keyboard shortcuts for menu items. Can hold ALT key to select items in men
 * Removed old-style Tabs - Risky change because it hit fundamental window packing and creation. Will also break any old code using this style tab (sorry folks this is how progress happens)
 
+#### 3.8.3
+
+* Fix for Menus.
+* Fixed tabled colors. Now they work
+* Fixed returning keys for tabs
+*
 
 ### Upcoming
 Make suggestions people!  Future release features
