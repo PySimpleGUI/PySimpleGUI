@@ -2056,7 +2056,11 @@ class ErrorElement(Element):
         return
 
     def Update(self, *args, **kwargs):
-        Popup('Keyword error', self.Key, 'Hey duffus, you gave me a bad key and now you\'re trying to do an update.', 'You need to stop this madness and check your spelling')
+        PopupError('Keyword error',
+            'You need to stop this madness and check your spelling',
+            'Bad key = {}'.format(self.Key),
+            'Your bad line of code may resemble this:',
+              'window.FindElement("{}")'.format(self.Key))
         return
 
 
