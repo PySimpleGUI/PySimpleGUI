@@ -1591,8 +1591,6 @@ class TabGroup(Element):
         super().__del__()
 
 
-
-
 # ---------------------------------------------------------------------- #
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
@@ -2012,7 +2010,6 @@ class Menu(Element):
         super().__del__()
 
 
-
 # ---------------------------------------------------------------------- #
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
@@ -2042,8 +2039,6 @@ class Table(Element):
         super().__del__()
 
 
-
-
 # ---------------------------------------------------------------------- #
 #                           Error Element                                #
 # ---------------------------------------------------------------------- #
@@ -2051,8 +2046,8 @@ class ErrorElement(Element):
     def __init__(self, key=None):
 
         self.Key = key
-        super().__init__(ELEM_TYPE_ERROR, key=key)
 
+        super().__init__(ELEM_TYPE_ERROR, key=key)
         return
 
     def Update(self, *args, **kwargs):
@@ -2061,7 +2056,7 @@ class ErrorElement(Element):
             'Bad key = {}'.format(self.Key),
             'Your bad line of code may resemble this:',
               'window.FindElement("{}")'.format(self.Key))
-        return
+        return self
 
 
     def MenuItemChosenCallback(self, item_chosen):
@@ -2072,9 +2067,6 @@ class ErrorElement(Element):
 
     def __del__(self):
         super().__del__()
-
-
-
 
 
 
@@ -2276,15 +2268,17 @@ class Window:
 
     def Refresh(self):
         if self.TKrootDestroyed:
-            return
+            return self
         try:
             rc = self.TKroot.update()
         except:
             pass
+        return self
 
 
     def Fill(self, values_dict):
         FillFormWithValues(self, values_dict)
+        return self
 
 
     def FindElement(self, key):

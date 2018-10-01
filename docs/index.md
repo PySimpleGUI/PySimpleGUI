@@ -20,7 +20,7 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.3-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.5-red.svg?longCache=true&style=for-the-badge)
 
   ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.4-blue.svg?longCache=true&style=for-the-badge)
 
@@ -33,6 +33,9 @@
 [Brief Tutorial](https://pysimplegui.readthedocs.io/en/latest/tutorial/)
 
 [Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)
+
+[Docs in PDF Format](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/docs)
+
 
 Super-simple GUI to use... Powerfully customizable.
 
@@ -1089,6 +1092,8 @@ Be sure an provide your user an "exit" button or they will not be able to close 
 Windows with no titlebar rely on the grab anywhere option to be enabled or else you will be unable to move the window.
 
 Windows without a titlebar can be used to easily create a floating launcher.
+
+Linux users!  Note that this setting has side effects for some of the other Elements.  Multi-line input doesn't work at all, for example  So, use with caution.
 
 
 ![floating launcher](https://user-images.githubusercontent.com/13696193/45258246-71bafb80-b382-11e8-9f5e-79421e6c00bb.jpg)
@@ -2796,6 +2801,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 03.06.00 | Sept 23, 2018 - Goodbye FlexForm, hello Window
 | 03.08.00 | Sept 25, 2018 - Tab and TabGroup Elements\
 | 01.01.00 for 2.7 | Sept 25, 2018 - First release for 2.7
+| 03.08.04 | Sept 30, 2017 - See release notes
 
 
 ### Release Notes
@@ -2912,12 +2918,14 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * Keyboard shortcuts for menu items. Can hold ALT key to select items in men
 * Removed old-style Tabs - Risky change because it hit fundamental window packing and creation. Will also break any old code using this style tab (sorry folks this is how progress happens)
 
-#### 3.8.3
+#### 3.8.5
 
 * Fix for Menus.
-* Fixed tabled colors. Now they work
+* Fixed table colors. Now they work
 * Fixed returning keys for tabs
-*
+* Window Hide / UnHide methods
+* Changed all Popups to remove context manager
+* Error checking for Graphing objects and for Element Updates
 
 ### Upcoming
 Make suggestions people!  Future release features
