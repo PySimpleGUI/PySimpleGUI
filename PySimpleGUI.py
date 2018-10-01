@@ -1,16 +1,24 @@
 #!/usr/bin/python3
-import tkinter as tk
-from tkinter import filedialog
-from tkinter.colorchooser import askcolor
-from tkinter import ttk
-import tkinter.scrolledtext as tkst
-import tkinter.font
-import datetime
 import sys
+if sys.version_info[0] >= 3:
+    import tkinter as tk
+    from tkinter import filedialog
+    from tkinter.colorchooser import askcolor
+    from tkinter import ttk
+    import tkinter.scrolledtext as tkst
+    import tkinter.font
+else:
+    import Tkinter as tk
+    import tkFileDialog
+    import ttk
+    import tkColorChooser
+    import tkFont
+    import ScrolledText
+
+import datetime
 import textwrap
 import pickle
 import calendar
-
 
 g_time_start = 0
 g_time_end = 0
@@ -127,9 +135,6 @@ TITLE_LOCATION_TOP_LEFT = tk.NW
 TITLE_LOCATION_TOP_RIGHT = tk.NE
 TITLE_LOCATION_BOTTOM_LEFT = tk.SW
 TITLE_LOCATION_BOTTOM_RIGHT = tk.SE
-
-
-
 
 
 # DEFAULT_METER_ORIENTATION = 'Vertical'
@@ -1533,7 +1538,7 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    def __init__(self, layout, title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, layout, tab_location=None, title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, key=None, tooltip=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1546,6 +1551,7 @@ class TabGroup(Element):
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ChangeSubmits = change_submits
+        self.TabLocation = tab_location
 
         self.Layout(layout)
 
@@ -2051,7 +2057,7 @@ class ErrorElement(Element):
         return
 
     def Update(self, *args, **kwargs):
-        PopupError('Keyword error',
+        PopupError('Keyword error in Update',
             'You need to stop this madness and check your spelling',
             'Bad key = {}'.format(self.Key),
             'Your bad line of code may resemble this:',
@@ -2285,6 +2291,12 @@ class Window:
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+            if element is None:
+                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+                PopupError('Keyword error in FindElement Call',
+                           'Bad key = {}'.format(key),
+                           'Your bad line of code may resemble this:',
+                           'window.FindElement("{}")'.format(key))
             return ErrorElement(key=key)
         return element
 
@@ -3335,7 +3347,22 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
-                element.TKNotebook = ttk.Notebook(tk_row_frame)
+
+                if element.TabLocation is not None:
+                    style = ttk.Style(tk_row_frame)
+                    if element.TabLocation == 'left':
+                        style.configure('customtab.TNotebook', tabposition='ws')
+                    elif element.TabLocation == 'right':
+                        style.configure('customtab.TNotebook', tabposition='es')
+                    elif element.TabLocation == 'top':
+                        style.configure('customtab.TNotebook', tabposition='nw')
+                    elif element.TabLocation == 'bottom':
+                        style.configure('customtab.TNotebook', tabposition='sw')
+
+                    element.TKNotebook = ttk.Notebook(tk_row_frame, style='customtab.TNotebook')
+                else:
+                    element.TKNotebook = ttk.Notebook(tk_row_frame)
+
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
                 # element.TKNotebook.pack(side=tk.LEFT)
