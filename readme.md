@@ -2,6 +2,7 @@
 
 
 
+
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)
@@ -20,7 +21,7 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.5-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.6-red.svg?longCache=true&style=for-the-badge)
 
   ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.4-blue.svg?longCache=true&style=for-the-badge)
 
@@ -132,7 +133,7 @@ was the second.
 While simple to use, PySimpleGUI has significant depth to be explored by more advanced programmers.  The feature set goes way beyond the requirements of a beginner programmer, and into the  required features needed for complex GUIs.
 
     Features of PySimpleGUI include:
-	    Support for versions Python 2.7 and 3
+       Support for versions Python 2.7 and 3
         Text
         Single Line Input
         Buttons including these types:
@@ -2131,14 +2132,14 @@ As of Release 3.8.0, not all of *options* shown in the API definitions of the Ta
 The definition of a TabGroup is
 
      TabGroup(layout,
-	   		  title_color=None
-	   		  background_color=None
-	   		  font=None
-	   		  pad=None
-	   		  border_width=None
-	   		  change_submits = False
-	   		  key=None
-	   		  tooltip=None)
+               title_color=None
+               background_color=None
+               font=None
+               pad=None
+               border_width=None
+               change_submits = False
+               key=None
+               tooltip=None)
 
 The definition of a Tab Element is
 
@@ -2586,7 +2587,7 @@ You can use Update to do things like:
   If you have a large number of Elements to update, you can call `Window.UpdateElements()`.
 
 `    UpdateElements(key_list,
-			       value_list)`
+                value_list)`
 
 `key_list` - list of keys for elements you wish to update
 `value_list` - list of values, one for each key
@@ -2918,7 +2919,7 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * Keyboard shortcuts for menu items. Can hold ALT key to select items in men
 * Removed old-style Tabs - Risky change because it hit fundamental window packing and creation. Will also break any old code using this style tab (sorry folks this is how progress happens)
 
-#### 3.8.5
+#### 3.8.6
 
 * Fix for Menus.
 * Fixed table colors. Now they work
@@ -3017,6 +3018,3 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.
 
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
-
-
-
