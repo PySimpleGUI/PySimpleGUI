@@ -23,7 +23,7 @@
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.0-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.0-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.1-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -291,7 +291,16 @@ then yosudou need to install `tkinter`.  Be sure and get the Python 3 version.
 
 ### Installing for Python 2.7
 
-    pip install --upgrade PySimpleGUI27
+`  pip install --upgrade PySimpleGUI27`
+  or
+` pip2 install --upgrade PySimpleGUI27`
+
+You may need to also install "future" for version 2.7
+
+    pip install future
+  or
+`      pip2 install future`
+
 
 Python 2.7 support is relatively new and the bugs are still being worked out.  I'm unsure what may need to be done to install tkinter for Python 2.7.  Will update this readme when more info is available
 
@@ -300,6 +309,8 @@ Like above, you may have to install either pip or tkinter.  To do this on Python
 `sudo apt install python-pip`
 
 `sudo apt install python-tkinter`
+
+
 
 ### Testing your installation
 
