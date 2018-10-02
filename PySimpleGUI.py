@@ -15,6 +15,7 @@ else:
     import tkFont
     import ScrolledText
 
+import types
 import datetime
 import textwrap
 import pickle
@@ -2813,33 +2814,72 @@ def _FindElementFromKeyInSubForm(form, key):
                 return element
 
 
-def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-    if type(sub_menu_info) is str:
-        if not is_sub_menu and not skip:
-            # print(f'Adding command {sub_menu_info}')
-            pos = sub_menu_info.find('&')
-            if pos != -1:
-                if pos == 0 or sub_menu_info[pos-1] != "\\":
-                    sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos+1:]
-            if sub_menu_info == '---':
-                top_menu.add('separator')
-            else:
-                top_menu.add_command(label=sub_menu_info, underline=pos, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
-    else:
-        i = 0
-        while i < (len(sub_menu_info)):
-            item = sub_menu_info[i]
-            if i != len(sub_menu_info) - 1:
-                if type(sub_menu_info[i+1]) == list:
-                    new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                    top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu)
-                    AddMenuItem(new_menu, sub_menu_info[i+1], element, is_sub_menu=True)
-                    i += 1  # skip the next one
+
+if sys.version_info[0] >= 3:
+    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+        if type(sub_menu_info) is str:
+            if not is_sub_menu and not skip:
+                # print(f'Adding command {sub_menu_info}')
+                pos = sub_menu_info.find('&')
+                if pos != -1:
+                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
+                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
+                if sub_menu_info == '---':
+                    top_menu.add('separator')
+                else:
+                    top_menu.add_command(label=sub_menu_info, underline=pos,
+                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+        else:
+            i = 0
+            while i < (len(sub_menu_info)):
+                item = sub_menu_info[i]
+                if i != len(sub_menu_info) - 1:
+                    if type(sub_menu_info[i + 1]) == list:
+                        new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
+                        pos = sub_menu_info[i].find('&')
+                        if pos != -1:
+                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
+                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
+                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                        i += 1  # skip the next one
+                    else:
+                        AddMenuItem(top_menu, item, element)
                 else:
                     AddMenuItem(top_menu, item, element)
-            else:
-                AddMenuItem(top_menu, item, element)
-            i += 1
+                i += 1
+else:
+    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+        if isinstance(sub_menu_info, types.StringType):
+            if not is_sub_menu and not skip:
+                # print(f'Adding command {sub_menu_info}')
+                pos = sub_menu_info.find('&')
+                if pos != -1:
+                    if pos == 0 or sub_menu_info[pos-1] != "\\":
+                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos+1:]
+                if sub_menu_info == '---':
+                    top_menu.add('separator')
+                else:
+                    top_menu.add_command(label=sub_menu_info, underline=pos, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+        else:
+            i = 0
+            while i < (len(sub_menu_info)):
+                item = sub_menu_info[i]
+                if i != len(sub_menu_info) - 1:
+                    if not isinstance(sub_menu_info[i+1], types.StringType):
+                        new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
+                        pos = sub_menu_info[i].find('&')
+                        if pos != -1:
+                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
+                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
+                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                        i += 1  # skip the next one
+                    else:
+                        AddMenuItem(top_menu, item, element)
+                else:
+                    AddMenuItem(top_menu, item, element)
+                i += 1
 
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   TK CODE STARTS HERE ====================================================== #
@@ -3365,13 +3405,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
-                # element.TKNotebook.pack(side=tk.LEFT)
-                # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                #     element.TKNotebook.configure(background=element.BackgroundColor,
-                #                             highlightbackground=element.BackgroundColor,
-                #                             highlightcolor=element.BackgroundColor)
-                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                #     element.TKNotebook.configure(foreground=element.TextColor)
                 if element.ChangeSubmits:
                     element.TKNotebook.bind('<<NotebookTabChanged>>', element.TabGroupSelectHandler)
                 if element.BorderWidth is not None:
