@@ -21,9 +21,9 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3_Version-3.8.6-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.0-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.0.4-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.0-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -2801,8 +2801,11 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 03.05.02 | Sept 23, 2018 - See release notes
 | 03.06.00 | Sept 23, 2018 - Goodbye FlexForm, hello Window
 | 03.08.00 | Sept 25, 2018 - Tab and TabGroup Elements\
-| 01.01.00 for 2.7 | Sept 25, 2018 - First release for 2.7
-| 03.08.04 | Sept 30, 2017 - See release notes
+| 01.00.00 for 2.7 | Sept 25, 2018 - First release for 2.7
+| 03.08.04 | Sept 30, 2018 - See release notes
+| 03.09.00 | Oct 1, 2018 |
+| 2.7 01.01.00 | Oct 1, 2018
+
 
 
 ### Release Notes
@@ -2928,6 +2931,12 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * Changed all Popups to remove context manager
 * Error checking for Graphing objects and for Element Updates
 
+### 3.9.0 & 1.1.0
+* The FIRST UNIFIED version of the code!
+* Python 2.7 got a TON of features . Look back to 1.0 release for the list
+* Tab locations - Can place Tabs on top, bottom, left, right now instead of only the top
+
+
 ### Upcoming
 Make suggestions people!  Future release features
 
@@ -2991,6 +3000,7 @@ GNU Lesser General Public License (LGPL 3) +
 * [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be
 * one of the most critical constructs in PySimpleGUI
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...
+* [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)
 
 
 ## How Do I
