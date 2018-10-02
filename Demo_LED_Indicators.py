@@ -27,12 +27,12 @@ def SetLED(window, key, color):
     graph.DrawCircle((0, 0), 10, fill_color=color, line_color=color)
 
 
-layout = [[sg.Text('My layout')],
+layout = [[sg.Text('My Status Report')],
           [sg.Text('CPU Use'), LEDIndicator('_cpu_')],
           [sg.Text('RAM'), LEDIndicator('_ram_')],
           [sg.Text('Temperature'), LEDIndicator('_temp_')],
           [sg.Text('Server 1'), LEDIndicator('_server1_')],
-          [sg.RButton('Read The Window'), sg.Exit()]]
+          [sg.Exit()]]
 
 window = sg.Window('My new window', default_element_size=(12, 1), auto_size_text=False).Layout(layout).Finalize()
 
