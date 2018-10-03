@@ -1539,7 +1539,7 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    def __init__(self, layout, tab_location=None, title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, key=None, tooltip=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1547,6 +1547,7 @@ class TabGroup(Element):
         self.ReturnValuesDictionary = {}
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
+        self.SelectedTitleColor = selected_title_color
         self.Rows = []
         self.TKNotebook = None
         self.BorderWidth = border_width
@@ -3395,25 +3396,36 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
 
+                custom_style = str(element.Key)+'customtab.TNotebook'
+                style = ttk.Style(tk_row_frame)
                 if element.TabLocation is not None:
-                    style = ttk.Style(tk_row_frame)
-                    custom_style = str(element.Key)+'customtab.TNotebook'
-                    if element.TabLocation == 'left':
-                        style.configure(custom_style, tabposition='ws')
-                    elif element.TabLocation == 'right':
-                        style.configure(custom_style, tabposition='es')
-                    elif element.TabLocation == 'bottom':
-                        style.configure(custom_style, tabposition='sw')
-                    else:
-                        style.configure(custom_style, tabposition='nw')
-
-                    element.TKNotebook = ttk.Notebook(tk_row_frame, style=custom_style)
-                else:
-                    element.TKNotebook = ttk.Notebook(tk_row_frame)
+                    position_dict = {'left':'w','right':'e', 'top':'n', 'bottom':'s', 'lefttop':'wn', 'leftbottom':'ws', 'righttop':'en', 'rightbottom':'es', 'bottomleft':'sw', 'bottomright':'se', 'topleft':'nw', 'topright':'ne'}
+                    try:
+                        tab_position = position_dict[element.TabLocation]
+                    except:
+                        tab_position = position_dict['top']
+                    style.configure(custom_style, tabposition=tab_position)
 
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    ttk.Style().configure(str(element.Key)+'customtab.TNotebook', background=element.BackgroundColor)
+                    style.configure(custom_style, background=element.BackgroundColor, foreground='purple')
 
+
+                # style.theme_create("yummy", parent="alt", settings={
+                #     "TNotebook": {"configure": {"tabmargins": [2, 5, 2, 0]}},
+                #     "TNotebook.Tab": {
+                #         "configure": {"padding": [5, 1], "background": mygreen},
+                #         "map": {"background": [("selected", myred)],
+                #                 "expand": [("selected", [1, 1, 1, 0])]}}})
+
+                # style.configure(custom_style+'.Tab', background='red')
+                if element.SelectedTitleColor != None:
+                    style.map(custom_style+'.Tab', foreground=[("selected",element.SelectedTitleColor)])
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    style.configure(custom_style+'.Tab', foreground=element.TextColor)
+                # style.configure(custom_style, background='blue', foreground='yellow')
+
+
+                element.TKNotebook = ttk.Notebook(tk_row_frame, style=custom_style)
 
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
