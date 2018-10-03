@@ -3397,21 +3397,22 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.TabLocation is not None:
                     style = ttk.Style(tk_row_frame)
+                    custom_style = str(element.Key)+'customtab.TNotebook'
                     if element.TabLocation == 'left':
-                        style.configure('customtab.TNotebook', tabposition='ws')
+                        style.configure(custom_style, tabposition='ws')
                     elif element.TabLocation == 'right':
-                        style.configure('customtab.TNotebook', tabposition='es')
-                    elif element.TabLocation == 'top':
-                        style.configure('customtab.TNotebook', tabposition='nw')
+                        style.configure(custom_style, tabposition='es')
                     elif element.TabLocation == 'bottom':
-                        style.configure('customtab.TNotebook', tabposition='sw')
+                        style.configure(custom_style, tabposition='sw')
+                    else:
+                        style.configure(custom_style, tabposition='nw')
 
-                    element.TKNotebook = ttk.Notebook(tk_row_frame, style='customtab.TNotebook')
+                    element.TKNotebook = ttk.Notebook(tk_row_frame, style=custom_style)
                 else:
                     element.TKNotebook = ttk.Notebook(tk_row_frame)
 
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    ttk.Style().configure("TNotebook", background=element.BackgroundColor)
+                    ttk.Style().configure(str(element.Key)+'customtab.TNotebook', background=element.BackgroundColor)
 
 
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
