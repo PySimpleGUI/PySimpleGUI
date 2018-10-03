@@ -3380,6 +3380,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                             highlightcolor=element.BackgroundColor)
                 # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                 #     element.TKFrame.configure(foreground=element.TextColor)
+
+                # ttk.Style().configure("TNotebook", background='red')
+                # ttk.Style().map("TNotebook.Tab", background=[("selected", 'orange')],
+                #             foreground=[("selected", 'green')])
+                # ttk.Style().configure("TNotebook.Tab", background='blue', foreground='yellow')
+
+
                 if element.BorderWidth is not None:
                     element.TKFrame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
@@ -3402,6 +3409,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKNotebook = ttk.Notebook(tk_row_frame, style='customtab.TNotebook')
                 else:
                     element.TKNotebook = ttk.Notebook(tk_row_frame)
+
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    ttk.Style().configure("TNotebook", background=element.BackgroundColor)
+
 
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
