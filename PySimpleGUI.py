@@ -885,7 +885,7 @@ T = Text
 # ---------------------------------------------------------------------- #
 
 class TKProgressBar():
-    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE, relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH, orientation='horizontal', BarColor=(None,None)):
+    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE, relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH, orientation='horizontal', BarColor=(None,None), key=None):
         self.Length = length
         self.Width = width
         self.Max = max
@@ -897,11 +897,11 @@ class TKProgressBar():
             s = ttk.Style()
             s.theme_use(style)
             if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(length)+str(width)+"my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+                s.configure(str(key)+"my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
             else:
-                s.configure(str(length)+str(width)+"my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width, thickness=width)
+                s.configure(str(key)+"my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width, thickness=width)
 
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style=str(length)+str(width)+'my.Horizontal.TProgressbar', length=length, orient=tk.HORIZONTAL, mode='determinate')
+            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style=str(key)+'my.Horizontal.TProgressbar', length=length, orient=tk.HORIZONTAL, mode='determinate')
         else:
             s = ttk.Style()
             s.theme_use(style)
@@ -3230,7 +3230,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bar_color = element.BarColor
                 else:
                     bar_color = DEFAULT_PROGRESS_BAR_COLOR
-                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief, style=element.BarStyle )
+                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief, style=element.BarStyle, key=element.Key )
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
