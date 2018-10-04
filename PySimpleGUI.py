@@ -3939,7 +3939,7 @@ class DebugWin():
         self.output_element = Output(size=win_size)
         self.form_rows = [[Text('EasyPrint Output')],
                      [self.output_element],
-                     [Quit()]]
+                     [DummyButton('Quit')]]
         self.form.AddRows(self.form_rows)
         self.form.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
         return
@@ -4353,6 +4353,10 @@ def ChangeLookAndFeel(index):
 
     # look and feel table
     look_and_feel =  {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':0},
+                      # ∩(^-^)∩
+                      'Topanga': {'BACKGROUND': '#282923', 'TEXT': '#E7DB74', 'INPUT': '#393a32',
+                      'TEXT_INPUT': '#E7C855','SCROLL': '#E7C855', 'BUTTON': ('#E7C855', '#284B5A'),
+                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
@@ -4519,7 +4523,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    form = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    window = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
     max_line_total, total_lines = 0,0
     for message in args_to_print:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -4535,34 +4539,32 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         max_line_total = max(max_line_total, width_used)
         # height = _GetNumLinesNeeded(message, width_used)
         height = message_wrapped_lines
-        form.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
+        window.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
         total_lines += height
 
-    pad = max_line_total-15 if max_line_total > 15 else 1
-    pad =1
     if non_blocking:
-        PopupButton = DummyButton
+        PopupButton = DummyButton       # important to use or else button will close other windows too!
     else:
-        PopupButton = SimpleButton
+        PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if button_type is POPUP_BUTTONS_YES_NO:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False,  text_color=text_color, background_color=background_color), PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True), PopupButton('No', button_color=button_color))
+        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20,5),3)), PopupButton('No', button_color=button_color))
     elif button_type is POPUP_BUTTONS_CANCELLED:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True))
+        window.AddRow(PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
     elif button_type is POPUP_BUTTONS_ERROR:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color, background_color=background_color), PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True))
+        window.AddRow(PopupButton('Error', size=(6,1), button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
     elif button_type is POPUP_BUTTONS_OK_CANCEL:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, text_color=text_color,  background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True),
-                    PopupButton('Cancel', size=(5, 1), button_color=button_color))
+        window.AddRow(PopupButton('OK', size=(5,1), button_color=button_color, focus=True, bind_return_key=True),
+                    PopupButton('Cancel', size=(5,1), button_color=button_color))
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True))
+        window.AddRow(PopupButton('OK', size=(5,1), button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
 
     if non_blocking:
-        button, values = form.ReadNonBlocking()
+        button, values = window.ReadNonBlocking()
     else:
-        button, values = form.Show()
+        button, values = window.Show()
 
     return button
 
