@@ -23,7 +23,7 @@
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.0-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.1-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.0-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -1193,7 +1193,7 @@ Building a window is simply making lists of Elements.  Each list is a row in the
                [row 2 element, row 2 element, row 2 element] ]
 The code is a crude representation of the GUI, laid out in text.
 
-####  Text Element
+##  Text Element
 
     layout = [[sg.Text('This is what a Text Element looks like')]]
 
@@ -1257,7 +1257,7 @@ A `True` value for `auto_size_text`, when placed on Text Elements, indicates tha
 **Shortcut functions**
 The shorthand functions for `Text` are `Txt` and `T`
 
-####  Multiline Text Element
+##  Multiline Text Element
 
     layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
 
@@ -1288,10 +1288,10 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
 
      size - Size of element (width, height) in characters
 
-###  Input Elements
+##  Input Elements
   These make up the majority of the window definition.  Optional variables at the Element level override the window level values (e.g. `size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.
 
-#### Text Input Element
+## Text Input Element
 
     layout = [[sg.InputText('Default text')]]
 
@@ -1329,7 +1329,7 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 
 
-#### Combo Element
+## Combo Element
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
     layout = [[sg.InputCombo(['choice 1', 'choice 2'])]]
@@ -1361,7 +1361,7 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
      pad - (x,y) Amount of padding to put around element in pixels
      tooltip -  Text string. If set, hovering over field will popup the text
 
-#### Listbox Element
+## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
     layout = [[sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
@@ -1414,7 +1414,7 @@ The `select_mode` option can be a string or a constant value defined as a variab
 ListBoxes can cause a window to return from a Read call.  If the flag change_submits is set, then when a user makes a selection, the Read immediately returns.
 Another way ListBoxes can cause Reads to return is if the flag bind_return_key is set.  If True, then if the user presses the return key while an entry is selected, then the Read returns.  Also, if this flag is set, if the user double-clicks an entry it will return from the Read.
 
-#### Slider Element
+## Slider Element
 
 Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
 
@@ -1453,7 +1453,7 @@ Sliders have a couple of slider-specific settings as well as appearance settings
        change_submits - causes window read to immediately return if the checkbox value changes
        key = Dictionary key to use for return values
 
-#### Radio Button Element
+## Radio Button Element
 
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
@@ -1484,7 +1484,7 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
      key = Dictionary key to use for return values
 
 
-#### Checkbox Element
+## Checkbox Element
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
 
     layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My second Checkbox!')]]
@@ -1515,7 +1515,7 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
      key = Dictionary key to use for return values
 
 
-#### Spin Element
+## Spin Element
 
 An up/down spinner control.  The valid values are passed in as a list.
 
@@ -1543,7 +1543,7 @@ An up/down spinner control.  The valid values are passed in as a list.
      change_submits - causes window read to immediately return if the spinner value changes
      key = Dictionary key to use for return values
 
-### Button Element
+## Button Element
 
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a window, whether it be Submit or Cancel, one way or another a button is involved in all windows.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
@@ -1813,7 +1813,7 @@ The Enter Key can be "bound" to a particular button so that when the key is pres
 If there are more than 1 button on a window, the FIRST button that is of type Close window or Read window is used.  First is determined by scanning the window, top to bottom and left to right.
 
  ---
-#### ProgressBar
+## ProgressBar  Element
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.
 
 The **easiest** way to get progress meters into your code is to use the `OneLineProgressMeter` API.  This consists of a pair of functions, `OneLineProgressMeter` and `OneLineProgressMeterCancel`.  You can easily cancel any progress meter by calling it with the current value = max value.  This will mark the meter as expired and close the window.
@@ -1882,7 +1882,7 @@ Here's a complete solution for a chat-window using an Async window with an Outpu
     ChatBot()
 
 -------------------
-## Columns
+## Column Element
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.
 
 Columns are specified in exactly the same way as a window is, as a list of lists.
@@ -1941,7 +1941,7 @@ The default background color for Columns is the same as the default window backg
 
 
 ----
-## Frames (Labelled Frames, Frames with a title)
+## Frame Element (Labelled Frames, Frames with a title)
 
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.
 
