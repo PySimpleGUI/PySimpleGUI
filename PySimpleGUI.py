@@ -137,6 +137,14 @@ TITLE_LOCATION_TOP_RIGHT = tk.NE
 TITLE_LOCATION_BOTTOM_LEFT = tk.SW
 TITLE_LOCATION_BOTTOM_RIGHT = tk.SE
 
+THEME_DEFAULT = 'default'
+THEME_WINNATIVE = 'winnative'
+THEME_CLAM = 'clam'
+THEME_ALT = 'alt'
+THEME_CLASSIC = 'classic'
+THEME_VISTA = 'vista'
+THEME_XPNATIVE = 'xpnative'
+
 
 # DEFAULT_METER_ORIENTATION = 'Vertical'
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
@@ -1550,7 +1558,7 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1563,6 +1571,7 @@ class TabGroup(Element):
         self.TKNotebook = None
         self.TabCount = 0
         self.BorderWidth = border_width
+        self.Theme = theme
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ChangeSubmits = change_submits
         self.TabLocation = tab_location
@@ -3415,6 +3424,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 custom_style = str(element.Key)+'customtab.TNotebook'
                 style = ttk.Style(tk_row_frame)
+                if element.Theme is not None:
+                    style.theme_use(element.Theme)
                 if element.TabLocation is not None:
                     position_dict = {'left':'w','right':'e', 'top':'n', 'bottom':'s', 'lefttop':'wn', 'leftbottom':'ws', 'righttop':'en', 'rightbottom':'es', 'bottomleft':'sw', 'bottomright':'se', 'topleft':'nw', 'topright':'ne'}
                     try:
@@ -3425,7 +3436,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style.configure(custom_style, background=element.BackgroundColor, foreground='purple')
-
 
                 # style.theme_create("yummy", parent="alt", settings={
                 #     "TNotebook": {"configure": {"tabmargins": [2, 5, 2, 0]}},
