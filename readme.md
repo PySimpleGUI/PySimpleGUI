@@ -1021,7 +1021,7 @@ You will find it much easier to write code using PySimpleGUI if you use an IDE s
     Control-Q (when cursor is on function name) brings up a box with the function definition
     Control-P (when cursor inside function call "()") shows a list of parameters and their default values
 
-## Synchronous windows
+### Synchronous windows
 The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI window/dialog box.
 You've already seen a number of examples above that use blocking windows.  Anytime you see a context manager used (see the `with` statement) it's most likely a blocking window.  You can examine the show calls to be sure.  If the window is a non-blocking window, it must indicate that in the call to `window.show`.
 
@@ -1029,7 +1029,7 @@ NON-BLOCKING window call:
 
           window.Show(non_blocking=True)
 
-### Beginning a window
+## Window Object - Beginning a window
 The first step is to create the window object using the desired window customization.
 
     with Window('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as window:
@@ -1140,7 +1140,7 @@ There are a few methods (functions) that you will see in this document that act 
 
 
 
-## Elements
+# Elements
 "Elements" are the building blocks used to create windows.  Some GUI APIs use the term "Widget" to describe these graphic elements.
 
      Text
@@ -2201,7 +2201,7 @@ This call sets all of the different color options.
 
 
 
-## Global Settings
+# Global Settings
 **Global Settings**
 Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
 
@@ -2403,9 +2403,20 @@ The new thing in this example is the call use of the Update method for the Text 
 
 Note the `else` statement on the for loop.  This is needed because we're about to exit the loop while the window is still open.  The user has not closed the window using the X nor a button so it's up to the caller to close the window using `CloseNonBlocking`.
 
+
+
 ## Updating Elements (changing elements in active window)
 
 Persistent windows remain open and thus continue to interact with the user after the Read has returned.  Often the program wishes to communicate results (output information) or change an Element's values (such as populating a List Element).
+
+You can use Update to do things like:
+* Have one Element (appear to) make a change to another Element
+* Disable a button, slider, input field, etc
+* Change a button's text
+* Change an Element's text or background color
+* Add text to a scrolling output window
+* Change the choices in a list
+* etc
 
 The way this is done is via an Update method that is available for nearly all of the Elements.  Here is an example of a program that uses a persistent window that is updated.
 
@@ -2413,9 +2424,6 @@ The way this is done is via an Update method that is available for nearly all of
 
 
 In some programs these updates happen in response to another Element.  This program takes a Spinner and a Slider's input values and uses them to resize a Text Element.  The Spinner and Slider are on the left, the Text element being changed is on the right.
-
-
-
 
 
     # Testing async window, see if can have a slider
@@ -2466,6 +2474,16 @@ It works as follows.  The call to `window.FindElement` returns the Element objec
 
 The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used as targets in  Button calls.
 
+   ### Updating Multiple Elements
+  If you have a large number of Elements to update, you can call `Window.UpdateElements()`.
+
+`    UpdateElements(key_list,
+                value_list)`
+
+`key_list` - list of keys for elements you wish to update
+`value_list` - list of values, one for each key
+
+    window.UpdateElements(('name', 'address', 'phone'), ('Fred Flintstone', '123 Rock Quarry Road', '555#'))
 
 
 ## Keyboard & Mouse Capture
@@ -2564,46 +2582,6 @@ menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit'  ]],
   ![menus with shortcuts](https://user-images.githubusercontent.com/13696193/46251674-f5b74f00-c427-11e8-95c6-547adc59041b.jpg)
 
 
-## Updating Elements
-
-This is a somewhat advanced topic...
-
-Typically you perform Element updates in response to events from other Elements.  An example is that when you click a button some text on the window changes to red.  You can change the Element's attributes, or at least some of them, and the Element's value.
-
-In some source code examples you will find an older techique for updating elements that did not involve keys.  If you see a technique in the code that does not use keys, then know that there is a version using keys that is easier.
-
-Here's the key's version....
-We have an InputText field that we want to update.  When the Element was created we used this call:
-
-    sg.Input(key='input')
-
-To update or change the value for that Input Element, we use this construct:
-
-    window.FindElement('input').Update('new text')
-
-Using the '.' makes the code shorter.  The FindElement call returns an Element.  We then call that Element's Update function.
-
-See the Font Sizer demo for example source code.
-
-You can use Update to do things like:
-* Have one Element (appear to) make a change to another Element
-* Disable a button, slider, input field, etc
-* Change a button's text
-* Change an Element's text or background color
-* Add text to a scrolling output window
-* Change the choices in a list
-* etc
-
-  ### Updating Multiple Elements
-  If you have a large number of Elements to update, you can call `Window.UpdateElements()`.
-
-`    UpdateElements(key_list,
-                value_list)`
-
-`key_list` - list of keys for elements you wish to update
-`value_list` - list of values, one for each key
-
-    window.UpdateElements(('name', 'address', 'phone'), ('Fred Flintstone', '123 Rock Quarry Road', '555#'))
 
 
 ## Sample Applications
@@ -2667,7 +2645,7 @@ Use the example programs as a starting basis for your GUI.  Copy, paste, modify 
   * [PyMuPDF](https://github.com/rk700/PyMuPDF)
 
 
-## Creating a Windows .EXE File
+# Creating a Windows .EXE File
 
 It's possible to create a single .EXE file that can be distributed to Windows users. There is no requirement to install the Python interpreter on the PC you wish to run it on. Everything it needs is in the one EXE file, assuming you're running a somewhat up to date version of Windows.
 
@@ -2819,7 +2797,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 
 
 
-### Release Notes
+## Release Notes
 2.3 - Sliders, Listbox's and Image elements (oh my!)
 
 If using Progress Meters, avoid cancelling them when you have another window open.  It could lead to future windows being blank. It's being worked on.
