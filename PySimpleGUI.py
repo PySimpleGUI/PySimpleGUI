@@ -1142,8 +1142,7 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
-        elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # this is a return type button so GET RESULTS and destroy window
-            # if the form is tabbed, must collect all form's results and destroy all forms
+        elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
@@ -1482,7 +1481,7 @@ class Frame(Element):
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False, border_width=None, key=None, tooltip=None):
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -1494,6 +1493,9 @@ class Tab(Element):
         self.TKFrame = None
         self.Title = title
         self.BorderWidth = border_width
+        self.Disabled = disabled
+        self.ParentNotebook = None
+        self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
@@ -1519,6 +1521,15 @@ class Tab(Element):
     def Layout(self, rows):
         for row in rows:
             self.AddRow(*row)
+        return self
+
+    def Update(self, disabled = None):  # TODO Disable / enable of tabs is not complete
+        if disabled is None:
+            return
+        self.Disabled = disabled
+        state = 'disabled' if disabled is True else 'normal'
+        self.ParentNotebook.tab(self.TabID, state=state)
+        return self
 
     def _GetElementAtLocation(self, location):
         (row_num,col_num) = location
@@ -1550,6 +1561,7 @@ class TabGroup(Element):
         self.SelectedTitleColor = selected_title_color
         self.Rows = []
         self.TKNotebook = None
+        self.TabCount = 0
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ChangeSubmits = change_submits
@@ -3372,9 +3384,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TAB:
                 element.TKFrame = tk.Frame(form.TKNotebook)
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
-                form.TKNotebook.add(element.TKFrame, text=element.Title)
+                if element.Disabled:
+                    form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
+                else:
+                    form.TKNotebook.add(element.TKFrame, text=element.Title)
                 form.TKNotebook.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
-
+                element.ParentNotebook = form.TKNotebook
+                element.TabID = form.TabCount
+                form.TabCount += 1
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     element.TKFrame.configure(background=element.BackgroundColor,
                                             highlightbackground=element.BackgroundColor,
