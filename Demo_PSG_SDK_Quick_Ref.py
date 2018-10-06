@@ -66,12 +66,13 @@ CheckBox(   text,
 
 descriptions = {'Text':desc_text, 'InputText':desc_inputtext, 'CheckBox':desc_checkbox}
 
-layout = [[sg.Text('Persistent window')],
+layout = [[sg.Text('The PySimpleGUI SDK Quick Reference Guide',font='Any 15', relief=sg.RELIEF_RAISED)],
           [sg.Listbox(values=element_list, size=(15,len(element_list)), key='_in_', change_submits=True),
-           sg.Text(desc_text, size=(40,15),font=('Consolas 13'), key='_out_')],
+           sg.Text(desc_text, size=(40,15),font=('Consolas 13'), text_color='darkblue', key='_out_')],
           [sg.RButton('Read'), sg.Exit()]]
 
-window = sg.Window('Window that stays open').Layout(layout)
+window = sg.Window('Window that stays open',
+                   font = 'Any 12').Layout(layout)
 
 while True:
     button, values = window.Read()
