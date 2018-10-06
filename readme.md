@@ -69,7 +69,7 @@ Or how about a ***custom GUI*** in 1 line of code?
 
     import PySimpleGUI as sg
 
-    button, (filename,) = sg.Window('Get filename example'). LayoutAndRead([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
+    button, (filename,) = sg.Window('Get filename example'). Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ]).Read()
 
 ![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
 
@@ -217,7 +217,7 @@ An example of many widgets used on a single window.  A little further down you'l
      sg.FolderBrowse()],
     [sg.Submit(), sg.Cancel(), sg.Button('Customized', button_color=('white', 'green'))]]
 
-    button, values  = sg.Window('Everything bagel', auto_size_text=True, default_element_size=(40, 1)).LayoutAndRead(layout)
+    button, values  = sg.Window('Everything bagel', auto_size_text=True, default_element_size=(40, 1)).Layout(layout).Read()
 
 
 
@@ -673,7 +673,7 @@ Finally we can put it all together into a program that will display our window.
               [sg.Input()],
               [sg.OK()] ]
 
-    button, (number,) = sg.Window('Enter a number example').LayoutAndRead(layout)
+    button, (number,) = sg.Window('Enter a number example').Layout(layout).Read()
 
     sg.Popup(button, number)
 
@@ -691,7 +691,7 @@ Writing the code for this one is just as straightforward.  There is one tricky t
               [sg.Input(), sg.FileBrowse()],
               [sg.OK(), sg.Cancel()] ]
 
-    button, (number,) = sg.Window('Get filename example').LayoutAndRead(layout)
+    button, (number,) = sg.Window('Get filename example').Layout(layout).Read()
 
     sg.Popup(button, number)
 
@@ -702,63 +702,61 @@ Read on for detailed instructions on the calls that show the window and return y
 
 # Copy these design patterns!
 
-All of your PySimpleGUI programs will utilize one of these 3 design patterns depending on the type of window you're implementing.
+All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.
 
 
-## Pattern 1 - Single read windows
+## Pattern 1 - Read into list or dictionary (**The Most Common** Pattern)
 
-This is the most basic design pattern.  Use this for windows that are shown to the user 1 time.  The input values are gathered and returned to the program
+This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times)
 
-    window_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
+It's unusual to assign the values returned from the read call directly into user variables.  Usually the variables are grouped together into a list or dictionary of multiple return values.
+
+```python
+import PySimpleGUI as sg
+
+window_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                  [sg.InputText(), sg.FileBrowse()],
                  [sg.Submit(), sg.Cancel()]]
 
-    window = sg.Window('SHA-1 & 256 Hash')
+window = sg.Window('SHA-1 & 256 Hash').Layout(window_rows)
 
-    button, (source_filename,) = window.LayoutAndRead(window_rows)
+button, values = window.Read()
 
- ----
-
-## Pattern 2 - Single-read window "chained"
-
-Python has a ***beautiful*** way of compacting code known as "chaining".  You take the output from one function and feed it as input to the next.  Notice in the first example how a window is first obtained by calling Window and then that window is then read.  It's possible to combine the creation of the window with the read.  This design pattern does exactly that, chain together the window creation and the window reading.
-
-    window_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
-                 [sg.InputText(), sg.FileBrowse()],
-                 [sg.Submit(), sg.Cancel()]]
-
-    button, (source_filename,) = sg.Window('SHA-1 & 256 Hash').LayoutAndRead(window_rows)
+source_filename = values[0]
+```
 
 
-## Pattern 3 - Persistent window (multiple reads)
+## Pattern 2 - Persistent window (multiple reads using an event loop)
 
 Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.
 
-This is done by splitting the LayoutAndRead call apart into a Layout call and a Read call.  Note how chaining is again used.  In this case a window is created by calling Window which is then passed on to the Layout method.  The Layout method returns the window value so that it can be stored and used later in the program to Read the window.
+This code will present a window and will print values until the user clicks the exit button or closes window using an X.
 
-    import PySimpleGUI as sg
+```python
+import PySimpleGUI as sg
 
-    layout = [[sg.Text('Persistent window')],
-              [sg.RButton('Turn LED On')],
-              [sg.RButton('Turn LED Off')],
-              [sg.Exit()]]
+layout = [[sg.Text('Persistent window')],
+          [sg.Input()],
+          [sg.RButton('Read'), sg.Exit()]]
 
-    window = sg.Window('Raspberry Pi GUI').Layout(layout)
+window = sg.Window('Window that stays open').Layout(layout)
 
-    while True:
-        button, values = window.Read()
-        if button is None:
-            break
+while True:
+    button, values = window.Read()
+    if button is None or button == 'Exit':
+        break
+    print(button, values)
+```
 
 
-### How GUI Programming in Python Should Look?  At least for beginners
+### How GUI Programming in Python Should Look?  At least for beginners ?
 
-Why is Python such a great teaching language and yet no GUI framework exists that lends itself to the basic building blocks of Python, the list or dictionary?  PySimpleGUI set out to be a Pythonic solution to the GUI problem.  Whether it achieved this goal is debatable, but it was an attempt just the same.
+While one goal was making it simple to create a GUI another just as important goal was to do it in a Pythonic manner. Whether it achieved this goal is debatable, but it was an attempt just the same.
 
-The key to custom windows in PySimpleGUI is to view windows as ROWS of  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.
+The key to custom windows in PySimpleGUI is to view windows as ROWS of  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.
 
  Let's dissect this little program
-
+ ```python
     import PySimpleGUI as sg
 
     layout = [[sg.Text('Rename files or folders')],
@@ -768,8 +766,8 @@ The key to custom windows in PySimpleGUI is to view windows as ROWS of  Elements
 
     window = sg.Window('Rename Files or Folders')
 
-    button, (folder_path, file_path) = window.LayoutAndRead(layout)
-
+    button, values = window.Layout(layout).Read()
+   ```
 
 
 ![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
@@ -794,12 +792,14 @@ And what about those return values?  Most people simply want to show a window, g
 For return values the window is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
 
 In our example window, there are 2 fields, so the return values from this window will be a list with 2 values in it.
+  ```python
+  button, values = window.Read()
+  folder_path, file_path = values
+  ```
 
-    button, (folder_path, file_path) = window.LayoutAndRead(layout)
+In one statement we both show the window and read the user's inputs.  In the next the *list* of return values is split into individual variables `folder_path` and `file_path`.
 
-In the statement that shows and reads the window, the two input fields are directly assigned to the caller's variables `folder_path` and `file_path`, ready to use.  No parsing no callbacks.
-
-Isn't this what almost every Python programmer looking for a GUI wants??  Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of GUI code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  I chose 4.
+Isn't this what a Python programmer looking for a GUI wants? Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of GUI code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  Most would choose 4.
 
 
 ## Return values
@@ -810,30 +810,23 @@ Isn't this what almost every Python programmer looking for a GUI wants??  Someth
 
    By default return values are a list of values, one entry for each input field.
 
-   Return information from Window, SG's primary window builder interface, is in this format:
+   Return information from Window, PSG's primary window builder interface, is in this format:
 
     button, (value1, value2, ...)
 
 Each of the Elements that are Input Elements will have a value in the list of return values.  You can unpack your GUI directly into the variables you want to use.
 
-    button, (filename, folder1, folder2, should_overwrite) = window.LayoutAndRead(window_rows)
+    button, (filename, folder1, folder2, should_overwrite) = sg.Window('My title').Layout(window_rows).Read()
 
-  Or, you can unpack the return results separately.
+  Or, more commonly, you can unpack the return results separately.
 
-    button, values = window.LayoutAndRead(window_rows)
-    filename, folder1, folder2, should_overwrite = values
-
-If you have a SINGLE value being returned, it is written this way:
-
-    button, (value1,) = window.LayoutAndRead(window_rows)
-
-
- Another way of parsing the return values is to store the list of values into a variable representing the list of values and then index each individual value.  This is not the preferred way of doing it.
-
-     button, value_list = window.LayoutAndRead(window_rows)
-     value1 = value_list[0]
-     value2 = value_list[1]
+```python
+button, values = sg.Window('My title').Layout(window_rows).Read()
+button, value_list = window.Layout(window_rows).Read()
+value1 = value_list[0]
+value2 = value_list[1]
      ...
+```
 
 ### Return values as a dictionary
 
@@ -841,11 +834,7 @@ For windows longer than 3 or 4 fields you will want to use a dictionary to help 
 
 The most common window read statement you'll encounter looks something like this:
 
-    button, values = window.LayoutAndRead(layout)
-
-or
-
-    button, values = window.Read()
+window = sg.Window("My title").Layout(layout).Read()
 
 All of your return values will be stored in the variable `values`.   When using the dictionary return values, the `values` variable is a dictionary.
 
@@ -866,7 +855,7 @@ Let's take a look at your first dictionary-based window.
               [sg.Submit(), sg.Cancel()]
              ]
 
-    button, values = window.LayoutAndRead(layout)
+    button, values = window.Layout(layout).Read()
 
     sg.Popup(button, values, values['name'], values['address'], values['phone'])
 
@@ -890,7 +879,7 @@ None is returned when the user clicks the X to close a window.
 If your window has an event loop where it is read over and over, remember to give your user an "out".  You should always check for a None value and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:
 
     while True:
-        button, values= window.Read()
+        button, values = window.Read()
         if button is None or button == 'Quit':
             break
 
@@ -904,50 +893,43 @@ Let's take a Pi demo program as an example.  This program shows a GUI window, ge
 
 This little program has a typical Event Loop
 
-![pi leds](https://user-images.githubusercontent.com/13696193/45448517-8cea7b80-b6a0-11e8-8dbe-eeefea2e93c1.jpg)
+![readme example](https://user-images.githubusercontent.com/13696193/46566965-f4d65f80-c8f6-11e8-91a3-8cebad0cba90.jpg)
 
 
 
-    import PySimpleGUI as sg
-    layout = [[sg.T('Raspberry Pi LEDs')],
-              [sg.RButton('Turn LED On')],
-              [sg.RButton('Turn LED Off')],
-              [sg.Exit()]]
+```python
+import PySimpleGUI as sg
 
-    window = sg.Window('Raspberry Pi).Layout(layout)
+layout = [[sg.Text('Click read to read the input value')],
+          [sg.Input()],
+          [sg.RButton('Read'), sg.Exit()]]
 
-    # ---- Event Loop ---- #
-    while True:
-        button, values = window.Read()
+window = sg.Window('Persistent GUI Window').Layout(layout)
 
-        # ---- Process Button Clicks ---- #
-       if button is None or button == 'Exit':
-            break
-      if button == 'Turn LED Off':
-            turn_LED_off()
-       elif button == 'Turn LED On':
-            turn_LED_on()
-
-    # ---- After Event Loop ---- #
-    sg.Popup('Done... exiting')
+while True:
+    button, values = window.Read()
+    if button is None or button == 'Exit':
+        break
+    print(button, values)
+```
 
 
 
 In the Event Loop we are reading the window and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)
 
-The way buttons are presented to the caller in PySimpleGUI is ***not*** how *most* GUI frameworks handle button clicks.  Most GUI frameworks, including tkinter, use ***callback*** functions, a function you define would be called when a button is clicked.  This requires you to write code where data is shared.
+The way buttons are presented to the caller in PySimpleGUI is ***not*** how *most* GUI frameworks handle button clicks.  Most GUI frameworks, including tkinter, use ***callback*** functions, a function you define would be called when a button is clicked.  This requires you to write asynchronous code, a concept beginners often stumble on and one that presents a barrier.
 
-There is a more communications that have to happen between parts of your program when using callbacks.  Callbacks can break your program's logic apart and scatter it.  One of the larger hurdles for beginners to GUI programming are these callback functions.
+There is a more communications that have to happen between parts of your program when using callbacks.  Callbacks break apart your program's logic apart and scatter it.  One of the larger hurdles for beginners to GUI programming are these callback functions.
 
-PySimpleGUI was specifically designed in a way that callbacks would not be required.  There is no coordination between one function and another required.  You simply read your button click and take appropriate action at the same location as when you .
+PySimpleGUI was specifically designed in a way so that callbacks would not be required.  There is no coordination between one function and another required.  You simply read your button click and take appropriate action at the same location in the code as when you read the button value.
 
 Whether or not this is a "proper" design for GUI programs can be debated.  It's not a terrible trade-off to run your own event loop and having a functioning GUI application versus one that maybe never gets written because callback functions were too much to grasp.
 
----
+  ---
 
 ## All Widgets / Elements
 
-This code utilizes as many of the elements in one window as possible.
+This code utilizes many of the common Elements.  It does not include Tabs/Tab Groups.
 
     import PySimpleGUI as sg
 
@@ -1004,14 +986,14 @@ This is a somewhat complex window with quite a bit of custom sizing to make thin
 
    ![everything bagel](https://user-images.githubusercontent.com/13696193/45914128-87163800-be0e-11e8-9a83-7ee5960e88b9.jpg)
 
-Clicking the Submit button caused the window call to return.  The call to Popup resulted in this dialog box.
+Clicking the Submit button caused the window call to return.  The call to Popup resulted in this window.
 
 ![everything bagel reseults](https://user-images.githubusercontent.com/13696193/45914129-87aece80-be0e-11e8-8aae-9a483a9ad4a6.jpg)
 
 
-**`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the window using something other than a button, then `button` will be `None`.
+**`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the window using something other than a button, then `button` will be `None`.   It is ***vitally*** ***important*** that your code contain the proper checks for None.  Always give your users a way out of the window.  Otherwise you'll end up  with windows that never properly close.
 
-You can see in the Popup that the values returned are a list.  Each input field in the window generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
+You can see in the results Popup window that the values returned are a list.  Each input field in the window generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
 
 ---
 # Building Custom windows
@@ -1023,11 +1005,9 @@ You will find it much easier to write code using PySimpleGUI if you use an IDE s
 
 ### Synchronous windows
 The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI window/dialog box.
-You've already seen a number of examples above that use blocking windows.  Anytime you see a context manager used (see the `with` statement) it's most likely a blocking window.  You can examine the show calls to be sure.  If the window is a non-blocking window, it must indicate that in the call to `window.show`.
+You've already seen a number of examples above that use blocking windows.  The call to look for that will show you non-blocking windows are calls to `ReadNonBlocking()`.  You can read more about Async windows at the end of this document.
 
-NON-BLOCKING window call:
 
-          window.Show(non_blocking=True)
 
 ## Window Object - Beginning a window
 The first step is to create the window object using the desired window customization.
@@ -1083,10 +1063,10 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        keep_on_top - if True then window will always stop on top of other windows on the screen.  Great for floating toolbars.
 
 
-#### Window Location
+### Window Location
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.
 
-#### Sizes
+### Sizes
 Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
 
 The default Element size for PySimpleGUI is `(45,1)`.
@@ -1095,7 +1075,7 @@ Sizes can be set at the element level, or in this case, the size variables apply
 
 There are a couple of widgets where one of the size values is in pixels rather than characters.  This is true for Progress Meters and Sliders.  The second parameter is the 'height' in pixels.
 
-#### No Titlebar
+### No Titlebar
 
 Should you wish to create cool looking windows that are clean with no windows titlebar, use the no_titlebar option when creating the window.
 
@@ -1111,13 +1091,13 @@ Linux users!  Note that this setting has side effects for some of the other Elem
 ![floating launcher](https://user-images.githubusercontent.com/13696193/45258246-71bafb80-b382-11e8-9f5e-79421e6c00bb.jpg)
 
 
-#### Grab Anywhere
+### Grab Anywhere
 
 This is a feature unique to PySimpleGUI.  The default is ENABLED.... unless the window is a non-blocking window.
 
 It is turned off for non-blocking because there is a warning message printed out if the user closes a non-blocking window using a button with grab_anywhere enabled.  There is no harm in these messages, but it may be distressing to the user.    Should you wish to enable for a non-blocking window, simply get grab_anywhere = True when you create the window.
 
-#### Always on top
+### Always on top
 
 To keep a window on top of all other windows on the screen, set keep_on_top = True when the window is created.  This feature makes for floating toolbars that are very helpful and always visible on your desktop.
 
@@ -1782,7 +1762,7 @@ Here is the code to make, show and get results from this window:
                  [sg.Quit(button_color=('black', 'orange'))]
                  ]
 
-    window.LayoutAndRead(window_rows, non_blocking=True)
+    window.Layout(window_rows, non_blocking=True).Read()
 
 Somewhere later in your code will be your main event loop. This is where you do your polling of devices, do input/output, etc.  It's here that you will read your window's buttons.
 
@@ -1928,7 +1908,7 @@ This code produced the above window.
     # Display the window and get values
     # If you're willing to not use the "context manager" design pattern, then it's possible
     # to collapse the window display and read down to a single line of code.
-    button, values = sg.Window('Compact 1-line window with column').LayoutAndRead(layout)
+    button, values = sg.Window('Compact 1-line window with column').Layout(layout).Read()
 
     sg.Popup(button, values, line_width=200)
 
@@ -2348,7 +2328,7 @@ Setup
 
        window = Window()
        window_rows = .....
-       window.LayoutAndRead(window_rows, non_blocking=True)
+       window.Layout(window_rows, non_blocking=True).Read()
 
 
 Periodic refresh
@@ -2359,7 +2339,7 @@ If you need to close the window
 
     window.CloseNonBlocking()
 
-Rather than the usual `window.LayoutAndRead()` call, we're manually adding the rows (doing the layout) and then showing the window.  After the window is shown, you simply call `window.ReadNonBlocking()` every now and then.
+Rather than the usual `window.Layout().Read()` call, we're manually adding the rows (doing the layout) and then showing the window.  After the window is shown, you simply call `window.ReadNonBlocking()` every now and then.
 
 When you are ready to close the window (assuming the window wasn't closed by the user or a button click) you simply call `window.CloseNonBlocking()`
 
@@ -2379,7 +2359,7 @@ See the sample code on the GitHub named Demo Media Player for another example of
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), key='output')    ],
                  [sg.Button('Quit')]]
     # Layout the rows of the window and perform a read. Indicate the window is non-blocking!
-    window.LayoutAndRead(window_rows, non_blocking=True)
+    window.Layout(window_rows).ReadNonBlocking()
 
     #
     # Some place later in your code...
