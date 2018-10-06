@@ -4373,13 +4373,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
 # Predefined settings that will change the colors and styles #
 # of the elements.                                           #
 ##############################################################
-def ChangeLookAndFeel(index):
-    if sys.platform == 'darwin':
-        print('*** Changing look and feel is not supported on Mac platform ***')
-        return
-
-    # look and feel table
-    look_and_feel =  {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':0},
+LOOK_AND_FEEL_TABLE = {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':0},
                       # ∩(^-^)∩
                       'Topanga': {'BACKGROUND': '#282923', 'TEXT': '#E7DB74', 'INPUT': '#393a32',
                       'TEXT_INPUT': '#E7C855','SCROLL': '#E7C855', 'BUTTON': ('#E7C855', '#284B5A'),
@@ -4468,8 +4462,18 @@ def ChangeLookAndFeel(index):
 
                       'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#183440'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0}
                       }
+
+def ChangeLookAndFeel(index):
+    global LOOK_AND_FEEL_TABLE
+
+    if sys.platform == 'darwin':
+        print('*** Changing look and feel is not supported on Mac platform ***')
+        return
+
+    # look and feel table
+
     try:
-        colors = look_and_feel[index]
+        colors = LOOK_AND_FEEL_TABLE[index]
 
         SetOptions(background_color=colors['BACKGROUND'],
                       text_element_background_color=colors['BACKGROUND'],
