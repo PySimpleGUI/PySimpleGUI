@@ -43,7 +43,7 @@ def main():
     # sg.ChangeLookAndFeel('Dark')
     layout = [[sg.Text('Process Killer - Choose one or more processes',
                        size=(45,1), font=('Helvetica', 15))],
-                 [sg.Listbox(values=[], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='_processes_')],
+                 [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='_processes_')],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
                 [sg.RButton('Refresh'), sg.RButton('Kill', button_color=('white','red')),
                  sg.Exit(button_color=('white', 'firebrick4'))]]
