@@ -13,7 +13,10 @@ Text(   text
         justification=None
         pad=None
         key=None
-        tooltip=None)"""
+        tooltip=None)
+        
+Shortcuts: Txt, T        
+"""
 
 desc_inputtext = """
 InputText(  default_text =''
@@ -29,6 +32,8 @@ InputText(  default_text =''
             key=None
             focus=False
             pad=None)
+            
+Shortcuts: In, Input
 """
 
 
@@ -44,6 +49,8 @@ InputCombo( values
             key=None
             pad=None
             tooltip=None)
+            
+Shortcuts: Combo, DropDown, Drop            
 """
 
 desc_inputoptionmenu = """
@@ -56,6 +63,8 @@ InputOptionMenu(values
                 key=None
                 pad=None
                 tooltip=None)
+                
+Shortcuts: OptionMenu 
 """
 
 desc_listbox = """
@@ -86,6 +95,8 @@ CheckBox(   text
             key=None
             pad=None
             tooltip=None)
+
+Shortcuts: CB, CBox, Check             
 """
 
 desc_radio = """
@@ -332,6 +343,23 @@ Window( title
         keep_on_top=False)
 """
 
+desc_button_types = """
+There are multiple button types / names to choose from
+SimpleButton = Button
+ReadFormButton = ReadButton = RButton
+RealtimeButton
+DummyButton
+FolderBrowse
+FileBrowse
+FilesBrowse
+FileSaveAs = SaveAs
+CalendarButton
+ColorChooserButton
+    Shortcuts - Normal buttons with predefined text
+Save, Open, OK, Ok, Cancel, Quit, Exit, Yes, No, Help
+
+"""
+
 element_list = ('Window',
                 'Text',
                 'InputText',
@@ -351,7 +379,8 @@ element_list = ('Window',
                 'Image',
                 'Table',
                 'Tab',
-                'TabGroup')
+                'TabGroup',
+                'Button Types')
 
 
 
@@ -368,10 +397,11 @@ descriptions = {'Window':desc_window, 'Text':desc_text, 'InputText':desc_inputte
                 'Image':desc_image,
                 'Table':desc_table,
                 'Tab':desc_tab,
-                'TabGroup': desc_tabgroup}
+                'TabGroup': desc_tabgroup,
+                'Button Types':desc_button_types}
 
 layout = [[sg.Text('The PySimpleGUI SDK Quick Reference Guide',font='Any 15', relief=sg.RELIEF_RAISED)],
-          [sg.Listbox(values=element_list, size=(15,len(element_list)+3), key='_in_', change_submits=True, font=('Consolas 12')),
+          [sg.Listbox(values=element_list, size=(15,len(element_list)+2), key='_in_', change_submits=True, font=('Consolas 12')),
            sg.Text(desc_text, size=(55,25),font=('Consolas 13'), text_color='darkblue', key='_out_')],
           [sg.RButton('Read'), sg.Exit()]]
 
