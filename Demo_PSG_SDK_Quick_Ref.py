@@ -402,10 +402,10 @@ descriptions = {'Window':desc_window, 'Text':desc_text, 'InputText':desc_inputte
 
 layout = [[sg.Text('The PySimpleGUI SDK Quick Reference Guide',font='Any 15', relief=sg.RELIEF_RAISED)],
           [sg.Listbox(values=element_list, size=(15,len(element_list)+2), key='_in_', change_submits=True, font=('Consolas 12')),
-           sg.Text(desc_text, size=(55,25),font=('Consolas 13'), text_color='darkblue', key='_out_')],
-          [sg.RButton('Read'), sg.Exit()]]
+           sg.Text(desc_text, size=(55,25),font=('Consolas 13'), text_color='darkblue', key='_out_')]]
 
-window = sg.Window('Window that stays open',
+
+window = sg.Window('PySimpleGUI SDK Quick Reference',
                    font = 'Any 12').Layout(layout)
 
 while True:
