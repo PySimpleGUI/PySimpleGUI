@@ -39,7 +39,8 @@ def kill_proc_tree(pid, sig=signal.SIGTERM, include_parent=True,
 def main():
 
     # ----------------  Create Form  ----------------
-    sg.ChangeLookAndFeel('Topanga')
+    # sg.ChangeLookAndFeel('Topanga')
+
     layout = [[sg.Text('Process Killer - Choose one or more processes',
                        size=(45,1), font=('Helvetica', 15))],
               [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='_processes_')],
