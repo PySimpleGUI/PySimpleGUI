@@ -46,7 +46,7 @@ def main():
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.T('Filter by typing name', font='ANY 14'), sg.In(size=(15,1), font='any 14', key='_filter_')],
               [sg.RButton('Refresh'),
-               sg.RButton('Kill', button_color=('white','red')),
+               sg.RButton('Kill', button_color=('white','red'), bind_return_key=True),
                sg.Exit(button_color=('white', 'sea green'))]]
 
     window = sg.Window('Process Killer',
@@ -96,9 +96,6 @@ def main():
                 if values['_filter_'] in line.lower():
                     new_output.append(line)
             window.FindElement('_processes_').Update(new_output)
-
-
-
 
 
 if __name__ == "__main__":
