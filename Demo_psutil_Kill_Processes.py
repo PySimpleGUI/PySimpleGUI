@@ -63,7 +63,6 @@ def main():
     while (True):
         # --------- Read and update window --------
         button, values = window.Read()
-        print(button)
         if 'Mouse' in button or 'Control' in button or 'Shift' in button:
             continue
         # --------- Do Button Operations --------
