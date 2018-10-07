@@ -42,61 +42,65 @@ def main():
     # sg.ChangeLookAndFeel('Topanga')
 
     layout = [[sg.Text('Process Killer - Choose one or more processes',
-                       size=(45,1), font=('Helvetica', 15))],
+                       size=(45,1), font=('Helvetica', 15), text_color='red')],
               [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='_processes_')],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.T('Filter by typing name', font='ANY 14'), sg.In(size=(15,1), font='any 14', key='_filter_')],
-              [sg.RButton('Refresh'),
+              [sg.RButton('Sort by Name', ),
+               sg.RButton('Sort by % CPU', button_color=('white', 'DarkOrange2')),
                sg.RButton('Kill', button_color=('white','red'), bind_return_key=True),
                sg.Exit(button_color=('white', 'sea green'))]]
 
     window = sg.Window('Process Killer',
                        keep_on_top=True,
                        auto_size_buttons=False,
-                       default_button_element_size=(9,1),
+                       default_button_element_size=(12,1),
                        return_keyboard_events=True,
-                       grab_anywhere=False).Layout(layout)
+                       ).Layout(layout)
 
-    proc_list = []
+    display_list = None
     # ----------------  main loop  ----------------
     while (True):
         # --------- Read and update window --------
         button, values = window.Read()
-
+        print(button)
+        if 'Mouse' in button or 'Control' in button or 'Shift' in button:
+            continue
         # --------- Do Button Operations --------
         if values is None or button == 'Exit':
             break
 
-        if button == 'Refresh':
+        if button == 'Sort by Name':
             psutil.cpu_percent(interval=1)
             procs = psutil.process_iter()
-            top = {proc.name(): (proc.cpu_percent(), proc.pid) for proc in procs}
-
-            # cpu_percent = psutil.cpu_percent(interval=interval)       # if don't wan to use a task
-
-            # --------- Create list of top % CPU porocesses --------
-
-            top_sorted = sorted(top.items(), key=operator.itemgetter(0), reverse=False)
-            if top_sorted:
-                top_sorted.pop(0)
-            proc_list = []
-            for proc, pair in top_sorted:
-                cpu, pid = pair
-                proc_list.append('{:5d} {:5.2f}  {}\n'.format(pid, cpu/10, proc))
-
-            window.FindElement('_processes_').Update(proc_list)
+            all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
+            sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(1), reverse=False)
+            display_list = []
+            for process in sorted_by_cpu_procs:
+                display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
+            window.FindElement('_processes_').Update(display_list)
         elif button == 'Kill':
             processes_to_kill = values['_processes_']
             for proc in processes_to_kill:
                 pid = int(proc[0:5])
                 if sg.PopupYesNo('About to kill {} {}'.format(pid, proc[13:]), keep_on_top=True) == 'Yes':
                     kill_proc_tree(pid=pid)
+        elif button == 'Sort by % CPU':
+            psutil.cpu_percent(interval=1)
+            procs = psutil.process_iter()
+            all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
+            sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(0), reverse=True)
+            display_list = []
+            for process in sorted_by_cpu_procs:
+                display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
+            window.FindElement('_processes_').Update(display_list)
         else:
-            new_output = []
-            for line in proc_list:
-                if values['_filter_'] in line.lower():
-                    new_output.append(line)
-            window.FindElement('_processes_').Update(new_output)
+            if display_list is not None:
+                new_output = []
+                for line in display_list:
+                    if values['_filter_'] in line.lower():
+                        new_output.append(line)
+                window.FindElement('_processes_').Update(new_output)
 
 
 if __name__ == "__main__":
