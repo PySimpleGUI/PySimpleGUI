@@ -42,7 +42,7 @@ def main():
     # sg.ChangeLookAndFeel('Topanga')
 
     layout = [[sg.Text('Process Killer - Choose one or more processes',
-                       size=(45,1), font=('Helvetica', 15))],
+                       size=(45,1), font=('Helvetica', 15), text_color='red')],
               [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='_processes_')],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.T('Filter by typing name', font='ANY 14'), sg.In(size=(15,1), font='any 14', key='_filter_')],
