@@ -619,7 +619,6 @@ class Listbox(Element):
             self.Values = values
 
 
-
     def SetValue(self, values):
         for index, item in enumerate(self.Values):
             try:
@@ -629,6 +628,9 @@ class Listbox(Element):
                     self.TKListbox.selection_clear(index)
             except: pass
         self.DefaultValues = values
+
+    def GetListValues(self):
+        return self.Values
 
     def __del__(self):
         try:
@@ -2088,11 +2090,9 @@ class ErrorElement(Element):
         return self
 
 
-    def MenuItemChosenCallback(self, item_chosen):
-        # print('IN MENU ITEM CALLBACK', item_chosen)
-        self.ParentForm.LastButtonClicked = item_chosen
-        self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+    def Get(self):
+        return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
+
 
     def __del__(self):
         super().__del__()
@@ -2237,9 +2237,12 @@ class Window:
             else:
                 window = self
             if window:
-                window._Close()
-                self.TKroot.quit()
-                self.RootNeedsDestroying = True
+                if window.NonBlocking:
+                    self.CloseNonBlockingForm()
+                else:
+                    window._Close()
+                    self.TKroot.quit()
+                    self.RootNeedsDestroying = True
         except:
             pass
 
@@ -2481,6 +2484,14 @@ class UberForm():
 
     def __del__(self):
         return
+
+# ################################################################################
+# ################################################################################
+#  END OF ELEMENT DEFINITIONS
+# ################################################################################
+# ################################################################################
+
+
 
 # =========================================================================== #
 # Button Lazy Functions so the caller doesn't have to define a bunch of stuff #
@@ -3170,7 +3181,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
-                max_line_len = max([len(str(l)) for l in element.Values])
+                max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
                 if auto_size_text is False: width=element_size[0]
                 else: width = max_line_len
                 listbox_frame = tk.Frame(tk_row_frame)
@@ -4662,6 +4673,33 @@ def PopupNonBlocking(*args, button_type=POPUP_BUTTONS_OK, button_color=None, bac
 
 
 PopupNoWait = PopupNonBlocking
+
+
+
+# --------------------------- PopupQuick - a NonBlocking, Self-closing Popup  ---------------------------
+def PopupQuick(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None, auto_close=True, auto_close_duration=1, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
+    """
+    Show Popup box that doesn't block and closes itself
+    :param args:
+    :param button_type:
+    :param button_color:
+    :param background_color:
+    :param text_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param non_blocking:
+    :param icon:
+    :param line_width:
+    :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
+    :param location:
+    :return:
+    """
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
+        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
+        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
