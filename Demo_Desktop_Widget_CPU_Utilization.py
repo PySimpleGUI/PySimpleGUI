@@ -45,12 +45,16 @@ def main():
 
     # ----------------  Create Form  ----------------
     sg.ChangeLookAndFeel('Black')
-    layout = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0], justification='center', key='text')],
+    layout = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0],
+                       justification='center', key='text')],
                  [sg.Text('', size=(30, 8), font=('Courier New', 12),text_color='white', justification='left', key='processes')],
-                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')],]
+                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0), size=(9,1)),
+                  sg.Spin([x+1 for x in range(10)], 1, key='spin')],]
 
-    window = sg.Window('CPU Utilization', no_titlebar=True, auto_size_buttons=False,
-                       keep_on_top=True, grab_anywhere=True).Layout(layout)
+    window = sg.Window('CPU Utilization',
+                       no_titlebar=True,
+                       keep_on_top=True,
+                       grab_anywhere=True).Layout(layout)
 
     # start cpu measurement thread
     thread = Thread(target=CPU_thread,args=(None,))

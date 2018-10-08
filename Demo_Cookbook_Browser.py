@@ -277,7 +277,7 @@ def CallbackSimulation():
             break
 
     # All done!
-    sg.PopupOk('Done')
+    sg.PopupOK('Done')
 
 def RealtimeButtons():
     """

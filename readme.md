@@ -21,9 +21,9 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.1-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.0-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.2-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -2774,6 +2774,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 03.08.04 | Sept 30, 2018 - See release notes
 | 03.09.00 | Oct 1, 2018 |
 | 2.7 01.01.00 | Oct 1, 2018
+| 2.7 01.01.02 | Oct 8, 2018
+| 03.09.01 | Oct 8, 2018
 
 
 
@@ -2905,6 +2907,20 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * Python 2.7 got a TON of features . Look back to 1.0 release for the list
 * Tab locations - Can place Tabs on top, bottom, left, right now instead of only the top
 
+### 3.9.1 & 1.1.2
+* Tab features
+	* Themes
+	* Enable / Disable
+	* Tab text colors
+	* Selected tab color
+* New GetListValues method for Listbox
+* Can now have multiple progress bars in 1 window
+* Fix for closing debug-output window with other windows open
+* Topanga Look and Feel setting
+* User can create new look and feel settings / can access the look and feel table
+* New PopupQuick call. Shows a non-blocking popup window with auto-close
+* Tree Element partially done (don't use despite it showing up)
+
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -2943,6 +2959,9 @@ Want to view your form's results as a dictionary instead of a list... no problem
 
 You can also look up elements using their keys.  This is an excellent way to update elements in reaction to another element.  Call `form.FindElement(key)` to get the Element.
 
+**Named / Optional Parameters**
+This is a language feature that is featured **heavily**  in all of the API calls, both functions and classes.  Elements are configured, in-place, by setting one or more optional parameters.  For example, a Text element's color is chosen by setting the optional `text_color` parameter.
+
 
 ## Author
 MikeTheWatchGuy
@@ -2970,7 +2989,7 @@ GNU Lesser General Public License (LGPL 3) +
 * one of the most critical constructs in PySimpleGUI
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...
 * [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)
-
+* Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.
 
 ## How Do I
 Finally, I must thank the fine folks at How Do I.

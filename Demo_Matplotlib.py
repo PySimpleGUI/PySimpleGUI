@@ -23,22 +23,6 @@ Basic steps are:
 """
 
 
-def draw_figure(canvas, figure, loc=(0, 0)):
-    """ Draw a matplotlib figure onto a Tk canvas
-
-    loc: location of top-left corner of figure on canvas in pixels.
-
-    Inspired by matplotlib source: lib/matplotlib/backends/backend_tkagg.py
-    """
-    figure_canvas_agg = FigureCanvasAgg(figure)
-    figure_canvas_agg.draw()
-    figure_x, figure_y, figure_w, figure_h = figure.bbox.bounds
-    figure_w, figure_h = int(figure_w), int(figure_h)
-    photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
-    canvas.create_image(loc[0] + figure_w/2, loc[1] + figure_h/2, image=photo)
-    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-    return photo
-
 #------------------------------- PASTE YOUR MATPLOTLIB CODE HERE -------------------------------
 
 import numpy as np
@@ -95,7 +79,28 @@ figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
 #------------------------------- END OF YOUR MATPLOTLIB CODE -------------------------------
 
-# define the form layout
+#------------------------------- Beginning of Matplotlib helper code -----------------------
+
+
+def draw_figure(canvas, figure, loc=(0, 0)):
+    """ Draw a matplotlib figure onto a Tk canvas
+
+    loc: location of top-left corner of figure on canvas in pixels.
+
+    Inspired by matplotlib source: lib/matplotlib/backends/backend_tkagg.py
+    """
+    figure_canvas_agg = FigureCanvasAgg(figure)
+    figure_canvas_agg.draw()
+    figure_x, figure_y, figure_w, figure_h = figure.bbox.bounds
+    figure_w, figure_h = int(figure_w), int(figure_h)
+    photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
+    canvas.create_image(loc[0] + figure_w/2, loc[1] + figure_h/2, image=photo)
+    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
+    return photo
+
+#------------------------------- Beginning of GUI CODE -------------------------------
+
+# define the window layout
 layout = [[sg.Text('Plot test', font='Any 18')],
           [sg.Canvas(size=(figure_w, figure_h), key='canvas')],
           [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]

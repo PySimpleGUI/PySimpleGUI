@@ -16,29 +16,33 @@ import random
 """
 
 
-def LEDIndicator(key):
-    return sg.Graph(canvas_size=(30, 30), graph_bottom_left=(-20, -20), graph_top_right=(20, 20),
-                    pad=(0, 0), key=key)
-
+def LEDIndicator(key=None, radius=30):
+    return sg.Graph(canvas_size=(radius, radius),
+             graph_bottom_left=(-radius, -radius),
+             graph_top_right=(radius, radius),
+             pad=(0, 0), key=key)
 
 def SetLED(window, key, color):
     graph = window.FindElement(key)
     graph.Erase()
-    graph.DrawCircle((0, 0), 10, fill_color=color, line_color=color)
+    graph.DrawCircle((0, 0), 12, fill_color=color, line_color=color)
 
 
-layout = [[sg.Text('My Status Report')],
+layout = [[sg.Text('My LED Status Indicators', size=(20,1))],
           [sg.Text('CPU Use'), LEDIndicator('_cpu_')],
           [sg.Text('RAM'), LEDIndicator('_ram_')],
           [sg.Text('Temperature'), LEDIndicator('_temp_')],
           [sg.Text('Server 1'), LEDIndicator('_server1_')],
-          [sg.Exit()]]
+          [sg.RButton('Exit')]]
 
 window = sg.Window('My new window', default_element_size=(12, 1), auto_size_text=False).Layout(layout).Finalize()
 
 i = 0
 while True:  # Event Loop
     button, value = window.ReadNonBlocking()
+    if button == 'Exit':
+        window.CloseNonBlocking()
+        break
     if value is None:
         break
     i += 1

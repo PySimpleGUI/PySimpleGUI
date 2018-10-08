@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 if sys.version_info[0] >= 3:
-    import PySimpleGUI_mod as sg
+    import PySimpleGUI as sg
 else:
     import PySimpleGUI27 as sg
 """
@@ -20,26 +20,26 @@ def SecondForm():
 
 
 def TestMenus():
-    import PySimpleGUI as sg
+
 
     sg.ChangeLookAndFeel('LightGreen')
     sg.SetOptions(element_padding=(0, 0))
 
     # ------ Menu Definition ------ #
-    menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit' ]],
-                ['&Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
-                [''
-                 '&Help', '&About...'],]
+    menu_def = [['&File', ['&Open', '&Save', '&Properties', 'E&xit' ]],
+                ['&Edit', ['&Paste', ['Special', 'Normal',], 'Undo'],],
+                ['&Toolbar', ['---', 'Command &1', 'Command &2', '---', 'Command &3', 'Command &4']],
+                ['&Help', '&About...'],]
 
     # ------ GUI Defintion ------ #
     layout = [
-            [sg.Menu(menu_def, tearoff=False)],
+            [sg.Menu(menu_def, tearoff=True)],
               [sg.Output(size=(60,20))],
             [sg.In('Test', key='input', do_not_clear=True)]
               ]
 
-    window = sg.Window("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,
-                       default_button_element_size=(12, 1)).Layout(layout)
+    window = sg.Window("Windows-like program", default_element_size=(12, 1), auto_size_text=False,
+                       auto_size_buttons=False, default_button_element_size=(12, 1)).Layout(layout)
 
     # ------ Loop & Process button menu choices ------ #
     while True:
@@ -57,7 +57,5 @@ def TestMenus():
             print(filename)
         elif button == 'Properties':
             SecondForm()
-
-
 
 TestMenus()

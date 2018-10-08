@@ -20,7 +20,7 @@ column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='cente
 
 layout = [
     [sg.Menu(menu_def, tearoff=True)],
-    [sg.Text('All graphic widgets in one form!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+    [sg.Text('All graphic widgets in one Window!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, text_color='midnightblue')],
     [sg.Text('Here is some text.... and a place to enter text')],
     [sg.InputText('This is my text')],
     [sg.Frame(layout=[

@@ -11,6 +11,7 @@ else:
     Shows a big chart of colors... give it a few seconds to create it
     Once large window is shown, you can click on any color and another window will popup 
     showing both white and black text on that color
+    Uses TOOLTIPS to show the hex values for the colors.  Hover over a color and a tooltip will show you the RGB
     You will find the list of tkinter colors here:
          http://www.tcl.tk/man/tcl8.5/TkCmd/colors.htm
     
@@ -670,7 +671,7 @@ color_map = {
 }
 
 
-sg.SetOptions(button_element_size=(12,1), element_padding=(0,0), auto_size_buttons=False, border_width=1)
+sg.SetOptions(button_element_size=(12,1), element_padding=(0,0), auto_size_buttons=False, border_width=1, tooltip_time=100)
 
 layout = [[sg.Text('Hover mouse to see RGB value, click for white & black text', text_color='blue', font='Any 15', relief=sg.RELIEF_SUNKEN, justification='center', size=(100,1), background_color='light green', pad=(0,(0,20))),]]
 row = []
@@ -689,5 +690,5 @@ while True:
     if b is None:
         break
     # -- Create a secondary window that shows white and black text on chosen color
-    layout2 =[[sg.Button(b, button_color=('white', b), tooltip=color_map[b]), sg.Button(b, button_color=('black', b), tooltip=color_map[b])] ]
-    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).Read()
+    layout2 =[[sg.DummyButton(b, button_color=('white', b), tooltip=color_map[b]), sg.DummyButton(b, button_color=('black', b), tooltip=color_map[b])] ]
+    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).ReadNonBlocking()
