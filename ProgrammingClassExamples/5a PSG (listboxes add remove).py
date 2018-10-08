@@ -12,11 +12,12 @@ column1 = [
      [sg.InputText( size = (15,1), key = 'add'), sg.ReadButton('Add')],
     [sg.ReadButton('Delete selected entry')]]
 
-List = ['Austalia', 'Canada', 'Greece']         #initial listbox entries
+#initial listbox entries
+List = ['Austalia', 'Canada', 'Greece']         
 
 #add initial List  to listbox
 layout = [
-    [sg.Listbox(values=[l for l in List], size = (30,8), key ='listbox'),
+    [sg.Listbox(values=[l for l in List], size = (30,8), key ='_listbox_'),
      sg.Column(column1)]]
 
 window = sg.Window('Listbox').Layout(layout)
@@ -24,16 +25,20 @@ window = sg.Window('Listbox').Layout(layout)
 while True:
     button, value = window.Read()
     if button is not None:
-                                                    #value[listbox] returns a list
-        if button == 'Delete selected entry':       #using value[listbox][0] give the string
-            if value['listbox'] == []:               #ensure something is selected
+        #value[listbox] returns a list
+        #using value[listbox][0] gives the string
+        if button == 'Delete selected entry':
+            #ensure something is selected
+            if value['_listbox_'] == []:               
                 sg.Popup('Error','You must select a Country')
             else:
-                List.remove(value['listbox'][0])    #find and remove this
+                #find and remove this
+                List.remove(value['_listbox_'][0])  
         if button == 'Add':
-            List.append(value['add'])           #add string in add box to list
-        List.sort()                             #sort
+            #add string in add box to list
+            List.append(value['add'])          
+        List.sort()                         
         #update listbox
-        window.FindElement('listbox').Update(List)
+        window.FindElement('_listbox_').Update(List)
     else:
         break  

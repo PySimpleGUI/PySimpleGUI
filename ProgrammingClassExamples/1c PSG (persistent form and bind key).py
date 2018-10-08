@@ -19,14 +19,17 @@ sg.SetOptions (background_color = 'LightBlue',
 layout = [ [sg.Text('Enter a Temperature in Celcius')],
     [sg.Text('Celcius', size =(8,1)), sg.InputText(size = (15,1))],
     [sg.Text('Result', size =(8,1)), sg.InputText(size = (15,1))],
-    [sg.ReadButton('Submit', bind_return_key = True)]]      #Return = button press
-
+    [sg.ReadButton('Submit', bind_return_key = True)]]
+#Return = button press
 window = sg.Window('Converter').Layout(layout) 
 
 while True:
-    button, value = window.Read()   #get result
-    if button is not None:          #break out of loop is button not pressed.
+    #get result
+    button, value = window.Read()
+    #break out of loop is button not pressed.
+    if button is not None:         
         fahrenheit = round(9/5*float(value[0]) +32, 1)
-        window.FindElement(1).Update(fahrenheit)   #put result in 2nd input box                
+        #put result in 2nd input box
+        window.FindElement(1).Update(fahrenheit)                  
     else:
         break
