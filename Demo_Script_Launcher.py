@@ -53,7 +53,7 @@ def Launcher2():
 
     window.Layout(layout)
 
-    # ---===--- Loop taking in user input and using it to query HowDoI --- #
+    # ---===--- Loop taking in user input  --- #
     while True:
         (button, value) = window.Read()
         if button in ('EXIT', None):

@@ -35,7 +35,7 @@ while True:
     if button == 'Clear':  # clear keys if clear button
         keys_entered = ''
     elif button in '1234567890':
-        keys_entere=d = values['input']  # get what's been entered so far
+        keys_entered = values['input']  # get what's been entered so far
         keys_entered += button  # add the new digit
     elif button == 'Submit':
         keys_entered = values['input']

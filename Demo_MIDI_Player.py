@@ -76,7 +76,7 @@ class PlayerGUI():
                                      image_filename=image_exit, image_size=(50,50), image_subsample=2, border_width=0, )]
                   ]
 
-        window = sg.FlexForm('MIDI File Player', default_element_size=(30, 1), font=("Helvetica", 25)).Layout(layout).Finalize()
+        window = sg.Window('MIDI File Player', default_element_size=(30, 1), font=("Helvetica", 25)).Layout(layout).Finalize()
         self.Window = window
 
 
@@ -87,7 +87,7 @@ class PlayerGUI():
     # ------------------------------------------------------------------------- #
     def PlayerPlaybackGUIUpdate(self, DisplayString):
         window = self.Window
-        if 'window' not in locals() or window is None:          # if the form has been destoyed don't mess with it
+        if 'window' not in locals() or window is None:          # if the widnow has been destoyed don't mess with it
             return PLAYER_COMMAND_EXIT
         self.TextElem.Update(DisplayString)
         button, (values) = window.ReadNonBlocking()

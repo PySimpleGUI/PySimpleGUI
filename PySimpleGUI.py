@@ -15,6 +15,7 @@ else:
     import tkFont
     import ScrolledText
 
+
 import types
 import datetime
 import textwrap
@@ -218,6 +219,7 @@ ELEM_TYPE_MENUBAR = 600
 ELEM_TYPE_PROGRESS_BAR = 200
 ELEM_TYPE_BLANK = 100
 ELEM_TYPE_TABLE = 700
+ELEM_TYPE_TREE = 800
 ELEM_TYPE_ERROR = 666
 
 # -------------------------  Popup Buttons Types  ------------------------- #
@@ -2045,7 +2047,7 @@ class Menu(Element):
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, scrollable=None, font=None, justification='right', text_color=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, font=None, justification='right', text_color=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
         self.Values = values
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
@@ -2056,7 +2058,6 @@ class Table(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TextColor = text_color
         self.Justification = justification
-        self.Scrollable = scrollable
         self.InitialState = None
         self.SelectMode = select_mode
         self.DisplayRowNumbers = display_row_numbers
@@ -2068,6 +2069,37 @@ class Table(Element):
 
     def __del__(self):
         super().__del__()
+
+
+
+# ---------------------------------------------------------------------- #
+#                           Tree                                         #
+# ---------------------------------------------------------------------- #
+class Tree(Element):
+    def __init__(self, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None):
+        self.ColumnHeadings = headings
+        self.ColumnsToDisplay = visible_column_map
+        self.ColumnWidths = col_widths
+        self.MaxColumnWidth = max_col_width
+        self.DefaultColumnWidth = def_col_width
+        self.AutoSizeColumns = auto_size_columns
+        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.TextColor = text_color
+        self.Justification = justification
+        self.InitialState = None
+        self.SelectMode = select_mode
+        self.NumRows = num_rows
+        self.TKTreeview = None
+
+        super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color,  font=font,  pad=pad, key=key, tooltip=tooltip)
+        return
+
+
+    def __del__(self):
+        super().__del__()
+
+
+
 
 
 # ---------------------------------------------------------------------- #
@@ -2915,7 +2947,9 @@ else:
                 i += 1
 
 # ------------------------------------------------------------------------------------------------------------------ #
+# ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   TK CODE STARTS HERE ====================================================== #
+# ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
 
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
@@ -3560,6 +3594,48 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+            # -------------------------  Tree element  ------------------------- #
+            elif element_type == ELEM_TYPE_TREE:
+                width, height = element_size
+                if element.Justification == 'left':             # justification
+                    anchor = tk.W
+                elif element.Justification == 'right':
+                    anchor = tk.E
+                else:
+                    anchor = tk.CENTER
+
+                if element.ColumnsToDisplay is None:            # Which cols to display
+                    displaycolumns = element.ColumnHeadings
+                else:
+                    displaycolumns = []
+                    for i, should_display in enumerate(element.ColumnsToDisplay):
+                        if should_display:
+                            displaycolumns.append(element.ColumnHeadings[i])
+                column_headings= element.ColumnHeadings
+                # ------------- GET THE TREEVIEW WIDGET -------------
+                element.TKTreeview = ttk.Treeview(tk_row_frame, columns=column_headings,
+                                                  displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
+                treeview = element.TKTreeview
+                for i, heading in enumerate(element.ColumnHeadings):    # Configure cols + headings
+                    treeview.heading(heading, text=heading)
+                    if element.AutoSizeColumns:
+                        width = min(element.MaxColumnWidth, len(heading))
+                    else:
+                        try:
+                            width = element.ColumnWidths[i]
+                        except:
+                            width = element.DefaultColumnWidth
+                    treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+                # ----- configure colors -----
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    ttk.Style().configure("Treeview", foreground=element.TextColor)
+
+                element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
+                if element.Tooltip is not None:                         # tooltip
+                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+
         #............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
@@ -4385,7 +4461,6 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
 # of the elements.                                           #
 ##############################################################
 LOOK_AND_FEEL_TABLE = {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':0},
-                      # ∩(^-^)∩
                       'Topanga': {'BACKGROUND': '#282923', 'TEXT': '#E7DB74', 'INPUT': '#393a32',
                       'TEXT_INPUT': '#E7C855','SCROLL': '#E7C855', 'BUTTON': ('#E7C855', '#284B5A'),
                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},

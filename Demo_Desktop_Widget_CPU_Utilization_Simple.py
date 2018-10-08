@@ -10,12 +10,17 @@ import psutil
 
 # ----------------  Create Form  ----------------
 sg.ChangeLookAndFeel('Black')
-layout = [[sg.Text('')],
-             [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-             [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0)),
-              sg.Spin([x + 1 for x in range(10)], 1, key='spin')]]
-# Layout the rows of the form and perform a read. Indicate the form is non-blocking!
-window = sg.Window('CPU Meter', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
+
+layout = [[sg.Text('CPU Utilization')],
+          [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='_text_')],
+          [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0), size=(9,1)),
+           sg.Spin([x + 1 for x in range(10)], 1, key='_spin_')]]
+
+# Layout the rows of the Window
+window = sg.Window('CPU Meter',
+                   no_titlebar=True,
+                   keep_on_top=True,
+                   grab_anywhere=True).Layout(layout)
 
 # ----------------  main loop  ----------------
 while (True):
@@ -26,7 +31,7 @@ while (True):
     if values is None or button == 'Exit':
         break
     try:
-        interval = int(values['spin'])
+        interval = int(values['_spin_'])
     except:
         interval = 1
 
@@ -34,7 +39,7 @@ while (True):
 
     # --------- Display timer in window --------
 
-    window.FindElement('text').Update(f'CPU {cpu_percent:02.0f}%')
+    window.FindElement('_text_').Update(f'CPU {cpu_percent:02.0f}%')
 
 # Broke out of main loop. Close the window.
 window.CloseNonBlocking()

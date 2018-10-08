@@ -6,7 +6,7 @@ else:
     import PySimpleGUI27 as sg
 
 # Here, have some windows on me....
-[sg.PopupNoWait(location=(500+100*x,500)) for x in range(10)]
+[sg.PopupNoWait('No-wait Popup', location=(500+100*x,500)) for x in range(10)]
 
 answer = sg.PopupYesNo('Do not worry about all those open windows... they will disappear at the end', 'Are you OK with that?')
 
@@ -26,7 +26,6 @@ sg.Popup('Simple popup')
 sg.PopupNoTitlebar('No titlebar')
 sg.PopupNoBorder('No border')
 sg.PopupNoFrame('No frame')
-# sg.PopupNoButtons('No Buttons')        # don't mix with non-blocking... disaster ahead...
 sg.PopupCancel('Cancel')
 sg.PopupOKCancel('OK Cancel')
 sg.PopupAutoClose('Autoclose')

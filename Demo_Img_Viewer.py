@@ -22,9 +22,9 @@ Dependecies
 Python v3
 PIL
 """
-# Get the folder containing the images from the user
-rc, folder = sg.GetPathBox('Image Browser', 'Image folder to open', default_path='')
-if not rc or not folder:
+# Get the folder containin:g the images from the user
+folder = sg.PopupGetFolder('Image folder to open', default_path='')
+if not folder:
     sg.PopupCancel('Cancelling')
     raise SystemExit()
 
@@ -89,7 +89,7 @@ i=0
 while True:
     # read the form
     button, values = window.Read()
-
+    print(button, values)
     # perform button and keyboard operations
     if button is None:
         break
@@ -103,7 +103,7 @@ while True:
         if i < 0:
             i = num_files + i
         filename = os.path.join(folder, fnames[i])
-    elif button in ('Read', ''):            # something from the listbox
+    elif button == 'listbox':            # something from the listbox
         f = values["listbox"][0]            # selected filename
         filename = os.path.join(folder, f)  # read this file
         i = fnames.index(f)                 # update running index

@@ -11,7 +11,7 @@ layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0,0), graph_top_r
 window = sg.Window('Graph test').Layout(layout).Finalize()
 
 graph = window.FindElement('graph')
-circle = graph.DrawCircle((75,75), 25, fill_color='black',line_color='white')
+circle =graph .DrawCircle((75,75), 25, fill_color='black',line_color='white')
 point = graph.DrawPoint((75,75), 10, color='green')
 oval = graph.DrawOval((25,300), (100,280), fill_color='purple', line_color='purple' )
 rectangle = graph.DrawRectangle((25,300), (100,280), line_color='purple' )

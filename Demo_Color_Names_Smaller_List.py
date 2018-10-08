@@ -109,5 +109,5 @@ while True:
     if b is None:
         break
     # -- Create a secondary window that shows white and black text on chosen color
-    layout2 =[[sg.Button(b, button_color=('white', b)), sg.Button(b, button_color=('black', b))] ]
-    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).Read()
+    layout2 =[[sg.DummyButton(b, button_color=('white', b)), sg.DummyButton(b, button_color=('black', b))] ]
+    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).ReadNonBlocking()
