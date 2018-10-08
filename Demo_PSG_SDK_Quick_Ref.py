@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 
-
 desc_text = """
 Text(   text
         size=(None, None)
@@ -14,7 +13,7 @@ Text(   text
         pad=None
         key=None
         tooltip=None)
-        
+
 Shortcuts: Txt, T        
 """
 
@@ -32,10 +31,9 @@ InputText(  default_text =''
             key=None
             focus=False
             pad=None)
-            
+
 Shortcuts: In, Input
 """
-
 
 desc_inputcombo = """
 InputCombo( values
@@ -49,7 +47,7 @@ InputCombo( values
             key=None
             pad=None
             tooltip=None)
-            
+
 Shortcuts: Combo, DropDown, Drop            
 """
 
@@ -63,7 +61,7 @@ InputOptionMenu(values
                 key=None
                 pad=None
                 tooltip=None)
-                
+
 Shortcuts: OptionMenu 
 """
 
@@ -126,7 +124,6 @@ Spin(   values
         pad=None
         tooltip=None)
 """
-
 
 desc_multiline = """
 MultiLine(  default_text=''
@@ -244,7 +241,6 @@ Tab(title
     tooltip=None)
 """
 
-
 desc_tabgroup = """
 TabGroup(   layout
             tab_location=None
@@ -259,7 +255,6 @@ TabGroup(   layout
             key=None
             tooltip=None)
 """
-
 
 desc_slider = """
 Slider( range=(None,None)
@@ -279,6 +274,22 @@ Slider( range=(None,None)
 """
 
 
+desc_spin = """
+Spin(   values
+        initial_value=None
+        change_submits=False
+        size=(None, None)
+        auto_size_text=None
+        font=None
+        background_color=None
+        text_color=None
+        key=None
+        pad=None
+        tooltip=None)
+"""
+
+
+
 desc_column = """
 Column( layout
         background_color = None
@@ -296,7 +307,6 @@ Menu(   menu_definition
         pad=None
         key=None)
 """
-
 
 desc_table = """
 Table(  values
@@ -368,6 +378,7 @@ element_list = ('Window',
                 'Listbox',
                 'InputCombo',
                 'Slider',
+                'Spinner',
                 'Multiline',
                 'Output',
                 'ProgressBar',
@@ -382,31 +393,55 @@ element_list = ('Window',
                 'TabGroup',
                 'Button Types')
 
+descriptions = {'Window': desc_window, 'Text': desc_text, 'InputText': desc_inputtext, 'CheckBox': desc_checkbox,
+                'RadioButton': desc_radio, 'Listbox': desc_listbox, 'Slider': desc_slider, 'Spinner':desc_spin, 'Multiline': desc_multiline,
+                'Output': desc_output, 'ProgressBar': desc_progressbar, 'OptionMenu': desc_inputoptionmenu,
+                'InputCombo': desc_inputcombo, 'Menu': desc_menu, 'Frame': desc_frame, 'Column': desc_column,
+                'Graph': desc_graph, 'Image': desc_image, 'Table': desc_table, 'Tab': desc_tab,
+                'TabGroup': desc_tabgroup, 'Button Types': desc_button_types}
 
 
-descriptions = {'Window':desc_window, 'Text':desc_text, 'InputText':desc_inputtext, 'CheckBox':desc_checkbox,
-                'RadioButton' : desc_radio, 'Listbox':desc_listbox, 'Slider':desc_slider, 'Multiline':desc_multiline,
-                'Output':desc_output,
-                'ProgressBar':desc_progressbar,
-                'OptionMenu':desc_inputoptionmenu,
-                'InputCombo':desc_inputcombo,
-                'Menu':desc_menu,
-                'Frame':desc_frame,
-                'Column': desc_column,
-                'Graph':desc_graph,
-                'Image':desc_image,
-                'Table':desc_table,
-                'Tab':desc_tab,
-                'TabGroup': desc_tabgroup,
-                'Button Types':desc_button_types}
+tab_text = [[sg.Column([[sg.T('This is sample text')],[ sg.Text(desc_text,  font=('Consolas 12'))]])]]
+tab_input = [[sg.Column([[sg.Input(size=(15,1))],[sg.Text(desc_inputtext, font=('Consolas 12'))]])]]
+tab_checkbox = [[sg.Column([[sg.Checkbox('Checkbox', size=(15,1))],[sg.Text(desc_checkbox, font=('Consolas 12'))]])]]
+tab_radio = [[sg.Column([[sg.Radio('Radio Button', group_id=1, size=(15,1))],[sg.Text(desc_radio, font=('Consolas 12'))]])]]
+tab_listbox = [[sg.Column([[sg.Listbox(values=[1,2,3,4] ,size=(15,4))],[sg.Text(desc_listbox, font=('Consolas 12'))]])]]
+tab_slider = [[sg.Column([[sg.Slider((1,100), orientation='h', size=(15,15))],[sg.Text(desc_slider, font=('Consolas 12'))]])]]
+tab_spinner = [[sg.Column([[sg.Spin((1,2,3,4,5),initial_value=1,size=(15,1))],[sg.Text(desc_spin, font=('Consolas 12'))]])]]
+tab_multiline = [[sg.Column([[sg.Multiline(size=(15,1))],[sg.Text(desc_multiline, font=('Consolas 12'))]])]]
+tab_output= [[sg.Column([[sg.Text(desc_output, font=('Consolas 12'))]])]]
+tab_progressbar = [[sg.Column([[sg.Text(desc_progressbar, font=('Consolas 12'))]])]]
+tab_optionmenu = [[sg.Column([[sg.OptionMenu([1,2,3,4,5], size=(15,1))],[sg.Text(desc_inputoptionmenu, font=('Consolas 12'))]])]]
+tab_combo = [[sg.Column([[sg.Combo([1,2,3,4,5], size=(15,1))],[sg.Text(desc_inputoptionmenu, font=('Consolas 12'))]])]]
+tab_frame = [[sg.Column([[sg.Frame('Frame',[[sg.T('     ')]], size=(15,1))],[sg.Text(desc_frame, font=('Consolas 12'))]])]]
+tab_column = [[sg.Column([[]],size=(15,1))],[sg.Text(desc_column, font=('Consolas 12'))]]
+tab_graph = [[sg.Text(desc_graph, font=('Consolas 12'))]]
+tab_tab = [[sg.Text(desc_tab, font=('Consolas 12'))]]
+tab_tabgroup = [[sg.Text(desc_tabgroup, font=('Consolas 12'))]]
+tab_image = [[sg.Text(desc_image, font=('Consolas 12'))]]
+tab_table = [[sg.Text(desc_table, font=('Consolas 12'))]]
+tab_window = [[sg.Text(desc_window, font=('Consolas 12'))]]
 
-layout = [[sg.Text('The PySimpleGUI SDK Quick Reference Guide',font='Any 15', relief=sg.RELIEF_RAISED)],
-          [sg.Listbox(values=element_list, size=(15,len(element_list)+2), key='_in_', change_submits=True, font=('Consolas 12')),
-           sg.Text(desc_text, size=(55,25),font=('Consolas 13'), text_color='darkblue', key='_out_')]]
+layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
+                            sg.Tab('Text',tab_text),  sg.Tab('InputText', tab_input), sg.Tab('Checkbox', tab_checkbox),
+                         sg.Tab('Radio',tab_radio), sg.Tab('Listbox', tab_listbox), sg.Tab('Slider', tab_slider),
+                         sg.Tab('Spinner',tab_spinner), sg.Tab('Multiline', tab_multiline),
+                         sg.Tab('Output', tab_output),
+                         sg.Tab('ProgressBar', tab_progressbar),
+                         sg.Tab('OptionMenu', tab_optionmenu), sg.Tab('Frame', tab_frame),
+                         sg.Tab('Combo', tab_combo), sg.Tab('Column', tab_column),
+                         sg.Tab('Graph', tab_graph), sg.Tab('Image', tab_image),
+                         sg.Tab('Table', tab_table),
+                         sg.Tab('Tab', tab_tab), sg.Tab('TabGroup', tab_tabgroup),
+                         ]], tab_location='lefttop', title_color='blue', selected_title_color='red')]]
 
+# layout = [[sg.Text('The PySimpleGUI SDK Quick Reference Guide', font='Any 15', relief=sg.RELIEF_RAISED)],
+#           [sg.Listbox(values=element_list, size=(15, len(element_list) + 2), key='_in_', change_submits=True,
+#                       font=('Consolas 12')),
+#            sg.Text(desc_text, size=(55, 25), font=('Consolas 13'), text_color='darkblue', key='_out_')]]
 
 window = sg.Window('PySimpleGUI SDK Quick Reference',
-                   font = 'Any 12').Layout(layout)
+                   font='Any 12').Layout(layout)
 
 while True:
     button, values = window.Read()
@@ -415,6 +450,7 @@ while True:
     element = values['_in_'][0]
     try:
         desc = descriptions[element]
-    except: desc = ''
+    except:
+        desc = ''
     window.FindElement('_out_').Update(desc)
     # print(button, values)
