@@ -10,11 +10,11 @@ sg.SetOptions (font = ('Arial', 10, 'bold'))
             
 
 layout = [ [sg.Text('Enter a Temperature in Celcius')],
-    [sg.Text('Celcius', size =(8,1)), sg.InputText(size = (15,1),key = 'input')],
-    [sg.Text('Result', size =(8,1)), sg.InputText(size = (15,1),key = 'result')],
+    [sg.Text('Celcius', size =(8,1)), sg.InputText(size = (15,1),key = '_input_')],
+    [sg.Text('Result', size =(8,1)), sg.InputText(size = (15,1),key = '_result_')],
     [sg.ReadButton('Submit', bind_return_key = True)]]  
 
-window = sg.FlexForm('Temp Converter').Layout(layout) 
+window = sg.Window('Temp Converter').Layout(layout) 
 
 while True:
     button, value = window.Read() 
@@ -22,13 +22,13 @@ while True:
         #catch program errors for text, floats or blank entry:
         #Also validation for range [0, 50]
         try:
-            if float(value['input']) > 50 or float(value['input']) <0:
+            if float(value['_input_']) > 50 or float(value['_input_']) <0:
                 sg.Popup('Error','Out of range')
             else:
-                fahrenheit = round(9/5*int(value['input']) +32, 1)
-                window.FindElement('result').Update(fahrenheit)  #put result in text box
+                fahrenheit = round(9/5*int(value['_input_']) +32, 1)
+                window.FindElement('_result_').Update(fahrenheit)
         except ValueError:
-                sg.Popup('Error','Please try again')             #display error
+                sg.Popup('Error','Please try again')        
        
     else:
         break

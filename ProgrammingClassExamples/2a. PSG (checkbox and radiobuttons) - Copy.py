@@ -4,18 +4,20 @@
 
 import PySimpleGUI as sg
 
-sg.ChangeLookAndFeel('GreenTan')                #Set colour scheme
-sg.SetOptions (font =('Calibri',12,'bold')  )   #and font
+#Set colour scheme and font
+sg.ChangeLookAndFeel('GreenTan')                
+sg.SetOptions (font =('Calibri',12,'bold')) 
 
 
 
-#One checkbox and three radio buttons (grouped as 'Radio1' 
+#One checkbox and three radio buttons (grouped as 'Radio1')
+#value[0] - checkbox, Value[1-3] radiobutton selection
 layout = [[sg.Text('Membership Calculator', font = ('Calibri', 16, 'bold'))],
-          [sg.Checkbox(' Student? 10% off', size = (25,1)),      #value[0]
+          [sg.Checkbox(' Student? 10% off', size = (25,1)),      
            sg.ReadButton('Display Cost', size = (14,1))],
-          [sg.Radio('1 month $50', 'Radio1', default = True), #value[1]
-          sg.Radio('3 months $100', 'Radio1'),                #value[2]
-        sg.Radio('1 year $300', 'Radio1')],                    #value[3]
+          [sg.Radio('1 month $50', 'Radio1', default = True), 
+          sg.Radio('3 months $100', 'Radio1'),                
+        sg.Radio('1 year $300', 'Radio1')],                    
           [sg.Text('', size = (30,1), justification = 'center', font =('Calibri', 16, 'bold'),  key = 'result')]]
 
 window = sg.Window('Gym Membership').Layout(layout)
@@ -30,11 +32,13 @@ while True:
         else:
             cost = 300
         if value[0]:
-            cost = cost*0.9         #apply discount
+            #apply discount
+            cost = cost*0.9         
 
         #format as currency $ symbol and 2 d.p. - make a string
         result = str(' Cost: ' + '${:.2f}'.format(cost))
-        window.FindElement('result').Update(result)           #put the result in Textbox
+         #put the result in Textbox
+        window.FindElement('result').Update(result)           
 
     else:
         break

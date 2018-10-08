@@ -8,11 +8,11 @@ import PySimpleGUI as sg
 
 column1 = [
     [sg.Text('Pick operation', size = (15,1), font = ('Calibri', 12, 'bold'))],
-[sg.InputCombo(['Add','Subtract','Multiply','Divide'], size = (10,6))],
+    [sg.InputCombo(['Add','Subtract','Multiply','Divide'], size = (10,6))],
     [sg.Text('', size =(1,4))]]
 column2 = [
     [sg.ReadButton('Submit', font = ('Calibri', 12, 'bold'), button_color = ('White', 'Red'))],
-      [sg.Text('Result:', font = ('Calibri', 12, 'bold'))],[sg.InputText(size = (12,1), key = 'result')]
+    [sg.Text('Result:', font = ('Calibri', 12, 'bold'))],[sg.InputText(size = (12,1), key = '_result_')]
     ]
             
 
@@ -20,7 +20,7 @@ layout = [
     [sg.Text('Slider and Combo box demo', font = ('Calibri', 14,'bold'))],
     [sg.Slider(range = (-9, 9),orientation = 'v', size = (5,20), default_value = 0),
       sg.Slider(range = (-9, 9),orientation = 'v', size = (5, 20), default_value = 0),
-     sg.Text('   '), sg.Column(column1), sg.Column(column2)]]
+      sg.Text('   '), sg.Column(column1), sg.Column(column2)]]
 
 #added grab_anywhere to when moving slider, who window doesn't move.
 
@@ -43,6 +43,6 @@ while True:
                 result = 'NA'
             else:
                 result = value[0] / value[1]
-        window.FindElement('result').Update(result)              
+        window.FindElement('_result_').Update(result)              
     else:
         break  

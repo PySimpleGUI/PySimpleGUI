@@ -4,19 +4,23 @@
 
 import PySimpleGUI as sg
 
+#layout, Text, Input,button on line below
 layout = [
-   [sg.Text('Celcius'), sg.InputText()],            #layout, Text, Input
-    [sg.Submit()],                                  #button on line below
+   [sg.Text('Celcius'), sg.InputText()],            
+    [sg.Submit()],                                
    ]
 
 #setup window with Title
 window = sg.Window('Temperature Converter').Layout(layout)
 
-button, value = window.Read()                   #get value (part of a list)
+#get value (part of a list)
+button, value = window.Read()                  
 
-fahrenheit = round(9/5*float(value[0]) +32, 1)  #convert and create string
+#convert and create string
+fahrenheit = round(9/5*float(value[0]) +32, 1)  
 result =  'Temperature in Fahrenheit is: ' + str(fahrenheit)
-sg.Popup('Result', result)                      #display in Popup
+#display in Popup
+sg.Popup('Result', result)                     
 
 
 

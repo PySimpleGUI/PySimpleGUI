@@ -11,7 +11,7 @@ layout = [
     sg.Spin([sz for sz in range (-9,10)], size = (2,1), initial_value = 0),
     sg.Text('Pick operation ->', size = (15,1)),
     sg.InputCombo(['Add','Subtract','Multiply','Divide'], size = (8,6))],
-    [sg.Text('Result:   ')],[sg.InputText(size = (5,1), key = 'result'),
+    [sg.Text('Result:   ')],[sg.InputText(size = (5,1), key = '_result_'),
      sg.ReadButton('Calculate', button_color = ('White', 'Red'))]]
 
 window = sg.Window('Enter & Display Data', grab_anywhere= False).Layout(layout)
@@ -34,6 +34,6 @@ while True:
                 result = 'NA'
             else:
                 result = round( val[0] / val[1], 3)
-        window.FindElement('result').Update(result)              
+        window.FindElement('_result_').Update(result)              
     else:
         break  
