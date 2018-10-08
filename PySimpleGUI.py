@@ -483,6 +483,7 @@ class InputCombo(Element):
         self.ChangeSubmits = change_submits
         self.TKCombo = None
         self.InitializeAsDisabled = disabled
+        self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -531,7 +532,7 @@ Drop = InputCombo
 #                           Option Menu                                  #
 # ---------------------------------------------------------------------- #
 class InputOptionMenu(Element):
-    def __init__(self, values, default_value=None,  size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_value=None,  size=(None, None), disabled=False, auto_size_text=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -542,6 +543,7 @@ class InputOptionMenu(Element):
         self.Values = values
         self.DefaultValue = default_value
         self.TKOptionMenu = None
+        self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -579,7 +581,7 @@ OptionMenu = InputOptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False, size=(None, None), disabled = False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Listbox Element
         :param values:
@@ -593,6 +595,7 @@ class Listbox(Element):
         self.TKListbox = None
         self.ChangeSubmits = change_submits
         self.BindReturnKey = bind_return_key
+        self.Disabled = disabled
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -648,7 +651,7 @@ class Listbox(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    def __init__(self, text, group_id, default=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
+    def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
         '''
         Radio Button Element
         :param text:
@@ -664,6 +667,7 @@ class Radio(Element):
         self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
+        self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
@@ -691,7 +695,7 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False, key=None, pad=None, tooltip=None):
+    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
         '''
         Check Box Element
         :param text:
@@ -705,6 +709,7 @@ class Checkbox(Element):
         self.InitialState = default
         self.Value = None
         self.TKCheckbutton = None
+        self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits
 
@@ -743,7 +748,7 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, change_submits=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Spin Box Element
         :param values:
@@ -757,6 +762,7 @@ class Spin(Element):
         self.DefaultValue = initial_value
         self.ChangeSubmits = change_submits
         self.TKSpinBox = None
+        self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -801,7 +807,7 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None, tooltip=None):
+    def __init__(self, default_text='', enter_submits = False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None, tooltip=None):
         '''
         Input Multi-line Element
         :param default_text:
@@ -817,6 +823,7 @@ class Multiline(Element):
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
+        self.Disabled = disabled
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE,  size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
         return
@@ -1028,7 +1035,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,  file_types=(("ALL Files", "*.*"),), initial_folder=None, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element - Specifies all types of buttons
         :param button_type:
@@ -1061,6 +1068,7 @@ class Button(Element):
         self.TKCal = None
         self.DefaultValue = default_value
         self.InitialFolder = initial_folder
+        self.Disabled = disabled
 
         super().__init__(ELEM_TYPE_BUTTON,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
         return
@@ -1630,7 +1638,7 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, change_submits=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider
         :param range:
@@ -1656,6 +1664,7 @@ class Slider(Element):
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
         self.ChangeSubmits = change_submits
+        self.Disabled = disabled
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
@@ -3120,6 +3129,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
+                if element.Disabled == True:
+                    element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
@@ -3146,8 +3157,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.focus_set()
                 if element.Disabled:
                     element.TKEntry['state'] = 'disabled'
-                else:
-                    element.TKEntry['state'] = 'normal'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
@@ -3199,6 +3208,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.current(0)
                 if element.ChangeSubmits:
                     element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
+                if element.Disabled == True:
+                    element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
@@ -3217,6 +3228,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
                 element.TKOptionMenu.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                if element.Disabled == True:
+                    element.TKOptionMenu['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  LISTBOX element  ------------------------- #
@@ -3245,6 +3258,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element.ReturnKeyHandler)
                     element.TKListbox.bind('<Double-Button-1>', element.ReturnKeyHandler)
+                if element.Disabled == True:
+                    element.TKListbox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
@@ -3264,6 +3279,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.focus_set()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(fg=text_color)
+                if element.Disabled == True:
+                    element.TKText['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
@@ -3279,7 +3296,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                            variable=element.TKIntVar, bd=border_depth, font=font)
-                if default_value is None:
+                if default_value is None or element.Disabled:
                     element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
@@ -3327,6 +3344,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.configure(selectcolor=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKRadio.configure(fg=text_color)
+                if element.Disabled:
+                    element.TKRadio['state'] = 'disabled'
                 element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -3345,6 +3364,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox.configure(fg=text_color)
                 if element.ChangeSubmits:
                     element.TKSpinBox.bind('<ButtonRelease-1>', element.SpinChangedHandler)
+                if element.Disabled == True:
+                    element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  OUTPUT element  ------------------------- #
@@ -3543,6 +3564,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 element.TKScale = tkscale
+                if element.Disabled == True:
+                    element.TKScale['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
