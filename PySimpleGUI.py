@@ -423,7 +423,7 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', size=(None, None), auto_size_text=None, password_char='',
+    def __init__(self, default_text ='', size=(None, None), disabled=False, auto_size_text=None, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
@@ -440,6 +440,7 @@ class InputText(Element):
         self.Focus = focus
         self.do_not_clear = do_not_clear
         self.Justification = justification
+        self.Disabled = disabled
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
 
 
@@ -1251,7 +1252,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
         '''
         Image Element
         :param filename:
@@ -1260,9 +1261,10 @@ class Image(Element):
         self.Filename = filename
         self.Data = data
         self.tktext_label = None
+        self.BackgroundColor = background_color
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
-        super().__init__(ELEM_TYPE_IMAGE,  size=size, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_IMAGE,  size=size, background_color=background_color, pad=pad, key=key, tooltip=tooltip)
         return
 
     def Update(self, filename=None, data=None):
@@ -3142,6 +3144,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKEntry.focus_set()
+                if element.Disabled:
+                    element.TKEntry['state'] = 'disabled'
+                else:
+                    element.TKEntry['state'] = 'normal'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
@@ -3367,6 +3373,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
                     else:
                         element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
+                    if element.BackgroundColor is not None:
+                        element.tktext_label.config(background=element.BackgroundColor)
+
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
                     element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
