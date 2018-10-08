@@ -4219,7 +4219,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse()],
-              [Ok(), Cancel()]]
+              [Ok(size=(5,1)), Cancel(size=(5,1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, background_color=background_color,
                   font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -4273,7 +4273,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
-              [Ok(), Cancel()]]
+              [Ok(size=(6,1)), Cancel(size=(6,1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font, background_color=background_color,
                   no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -4309,7 +4309,7 @@ def PopupGetText(message, default_text='', password_char='', size=(None,None), b
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, password_char=password_char)],
-              [Ok(), Cancel()]]
+              [Ok(size=(5,1)), Cancel(size=(5,1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                   background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -4697,14 +4697,14 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if button_type is POPUP_BUTTONS_YES_NO:
-        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20,5),3)), PopupButton('No', button_color=button_color))
+        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20,5),3), size=(5,1)), PopupButton('No', button_color=button_color, size=(5,1)))
     elif button_type is POPUP_BUTTONS_CANCELLED:
         window.AddRow(PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
     elif button_type is POPUP_BUTTONS_ERROR:
         window.AddRow(PopupButton('Error', size=(6,1), button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
     elif button_type is POPUP_BUTTONS_OK_CANCEL:
-        window.AddRow(PopupButton('OK', size=(5,1), button_color=button_color, focus=True, bind_return_key=True),
-                    PopupButton('Cancel', size=(5,1), button_color=button_color))
+        window.AddRow(PopupButton('OK', size=(6,1), button_color=button_color, focus=True, bind_return_key=True),
+                    PopupButton('Cancel', size=(6,1), button_color=button_color))
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
