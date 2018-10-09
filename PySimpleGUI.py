@@ -2677,6 +2677,11 @@ class Window:
     def UnHide(self):
         self.TKroot.deiconify()
 
+    def Disapper(self):
+        self.TKroot.attributes('-alpha', 0)
+
+    def Reappear(self):
+        self.TKroot.attributes('-alpha', 255)
 
     def __enter__(self):
         return self
