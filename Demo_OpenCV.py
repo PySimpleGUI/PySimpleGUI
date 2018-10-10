@@ -6,8 +6,7 @@ else:
     import PySimpleGUI27 as sg
 import cv2 as cv
 from PIL import Image
-import tempfile
-import os
+import io
 from sys import exit as exit
 
 """
@@ -18,9 +17,7 @@ a temp file.  Clearly... clearly... this is not the optimal solution and one is 
 Until then enjoy it working somewhat slowly.
 """
 
-
 def main():
-    # filename = 'C:/Python/MIDIVideo/PlainVideos/- 08-30 Ted Talk/TED Talk Short - Video+.mp4'
     filename = sg.PopupGetFile('Filename to play')
     if filename is None:
         exit(69)
@@ -38,18 +35,13 @@ def main():
               [sg.ReadButton('Exit', size=(10, 2), pad=((600, 0), 3), font='Helvetica 14')]]
 
     # create the window and show it without the plot
-    window = sg.Window('Demo Application - OpenCV Integration', no_titlebar=False, location=(0,0))
-    window.Layout(layout)
-    window.ReadNonBlocking()
-
+    window = sg.Window('Demo Application - OpenCV Integration', no_titlebar=False, location=(0,0)).Layout(layout)
 
     # ---===--- LOOP through video file by frame --- #
     i = 0
-    temp_filename = next(tempfile._get_candidate_names()) + '.png'
     while vidFile.isOpened():
         button, values = window.ReadNonBlocking()
         if button is 'Exit' or values is None:
-            os.remove(temp_filename)
             exit(69)
         ret, frame = vidFile.read()
         if not ret:  # if out of data stop looping
@@ -58,9 +50,12 @@ def main():
         window.FindElement('slider').Update(i)
         i += 1
 
-        with open(temp_filename, 'wb') as f:
-            Image.fromarray(frame).save(temp_filename, 'PNG')  # save the PIL image as file
-            window.FindElement('image').Update(filename=temp_filename)
+        # let img be the PIL image
+        img = Image.fromarray(frame)  # create PIL image from frame
+        bio = io.BytesIO()  # a binary memory resident stream
+        img.save(bio, format= 'PNG')  # save image as png to it
+        imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
+        window.FindElement('image').Update(data=imgbytes)
 
 
 main()
