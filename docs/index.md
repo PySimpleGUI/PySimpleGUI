@@ -2067,6 +2067,52 @@ Let me say up front that the Table Element has Beta status. The reason is that s
               tooltip - tooltip text
 
 
+## Tree Element
+
+The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.
+
+```
+class Tree(data=None - data in TreeData format
+		   headings=None - list of strings representing your headings
+		   visible_column_map=None - list of bools indicating which columns to display
+		   col_widths=None - list of column widths
+		   col0_width=10 - width of the first column which has the text data
+		   def_col_width=10 - default column width
+		   auto_size_columns=True - if true will autosize columns (currenly only sizes to col heading width)
+		   max_col_width=20 - max width for columns in characters
+		   select_mode=None - not yet used
+		   font=None - the display font
+		   justification='right' - justification for data display
+		   text_color=None- color of text to display
+		   background_color=None - background color
+		   num_rows=None - number of rows to display
+		   pad=None - element padding
+		   key=None - key for element
+		   tooltip=None - tooltip
+```
+
+Unlike Tables there is no standard format for trees.  Thus the data structure passed to the Tree Element must be constructed.  This is done using the TreeData class.  The process is as follows:
+* Get a TreeData Object
+* "Insert" data into the tree
+* Pass the filled in TreeData object to Tree Element
+
+To "insert" data into the tree the TreeData method Insert is called.
+
+`Insert(parent_key, key, display_text, values)`
+
+To indicate insertion at the head of the tree, use a parent key of "".  So, every top-level node in the tree will have a parent node = ""
+
+This code creates a TreeData object and populates with 3 values
+```python
+treedata = sg.TreeData()
+
+treedata.Insert("", '_A_', 'A', [1,2,3])
+treedata.Insert("", '_B_', 'B', [4,5,6])
+treedata.Insert("_A_", '_A1_', 'A1', ['can','be','anything'])
+```
+
+Note that you can use the same values for display_text and keys.  The only thing you have to watch for is that you cannot repeat keys.
+
 
 
 ## Tab and Tab Group Elements

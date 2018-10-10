@@ -2249,7 +2249,7 @@ class Table(Element):
 #                           Tree                                         #
 # ---------------------------------------------------------------------- #
 class Tree(Element):
-    def __init__(self, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None):
+    def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None):
         '''
         Tree Element
         :param headings:
@@ -2268,6 +2268,7 @@ class Tree(Element):
         :param key:
         :param tooltip:
         '''
+        self.TreeData = data
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
         self.ColumnWidths = col_widths
@@ -2280,16 +2281,52 @@ class Tree(Element):
         self.InitialState = None
         self.SelectMode = select_mode
         self.NumRows = num_rows
+        self.Col0Width = col0_width
         self.TKTreeview = None
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color,  font=font,  pad=pad, key=key, tooltip=tooltip)
         return
 
 
+
     def __del__(self):
         super().__del__()
 
 
+class TreeData(object):
+    class Node(object):
+        def __init__(self, parent, key, text, values):
+            self.parent = parent
+            self.children = []
+            self.key = key
+            self.text = text
+            self.values = values
+
+        def _Add(self, node):
+            self.children.append(node)
+
+    def __init__(self):
+        self.tree_dict = {}
+        self.root_node = self.Node("", "", 'root', [])
+        self.tree_dict [""] = self.root_node
+
+    def _AddNode(self, key, node):
+        self.tree_dict[key] = node
+
+    def Insert(self, parent, key, text, values):
+        node = self.Node(parent, key, text,values)
+        self.tree_dict[key] = node
+        parent_node = self.tree_dict[parent]
+        parent_node._Add(node)
+
+    def Print(self):
+        self._print_node(self.root_node)
+
+    def _print_node(self, node):
+        print(f'Node: {node.text}')
+        print(f'Children = {[c.text for c in node.children]}')
+        for node in node.children:
+            self._print_node(node)
 
 
 
@@ -2662,6 +2699,7 @@ class Window:
     CloseNonBlockingForm = CloseNonBlocking
 
     def OnClosingCallback(self):
+        # print('Got closing callback')
         return
 
 
@@ -2677,7 +2715,7 @@ class Window:
     def UnHide(self):
         self.TKroot.deiconify()
 
-    def Disapper(self):
+    def Disappear(self):
         self.TKroot.attributes('-alpha', 0)
 
     def Reappear(self):
@@ -3801,7 +3839,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
-                width, height = element_size
+                height = element.NumRows
                 if element.Justification == 'left':             # justification
                     anchor = tk.W
                 elif element.Justification == 'right':
@@ -3819,18 +3857,28 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 column_headings= element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
                 element.TKTreeview = ttk.Treeview(tk_row_frame, columns=column_headings,
-                                                  displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
+                                                  displaycolumns=displaycolumns, show='tree headings', height=height, selectmode=element.SelectMode, )
                 treeview = element.TKTreeview
                 for i, heading in enumerate(element.ColumnHeadings):    # Configure cols + headings
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = min(element.MaxColumnWidth, len(heading))
+                        width = min(element.MaxColumnWidth, len(heading)+1)
                     else:
                         try:
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
                     treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+
+                def add_treeview_data(node):
+                    # print(f'Inserting {node.key} under parent {node.parent}')
+                    if node.key != '':
+                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values)
+                    for node in node.children:
+                        add_treeview_data(node)
+
+                add_treeview_data(element.TreeData.root_node)
+                treeview.column('#0', width=element.Col0Width*CharWidthInPixels(), anchor=anchor)
                 # ----- configure colors -----
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
@@ -3941,7 +3989,8 @@ def StartupTK(my_flex_form):
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
         my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
     if my_flex_form.NonBlocking:
-        my_flex_form.TKroot.protocol("WM_WINDOW_DESTROYED", my_flex_form.OnClosingCallback())
+        pass
+        # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:       # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.TKroot.mainloop()
@@ -4885,7 +4934,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     if non_blocking:
         button, values = window.ReadNonBlocking()
     else:
-        button, values = window.Show()
+        button, values = window.Read()
 
     return button
 
