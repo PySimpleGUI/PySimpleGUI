@@ -2200,7 +2200,7 @@ class Menu(Element):
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, font=None, justification='right', text_color=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, size=(None, None), pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2234,7 +2234,9 @@ class Table(Element):
         self.InitialState = None
         self.SelectMode = select_mode
         self.DisplayRowNumbers = display_row_numbers
+        self.NumRows = num_rows if num_rows is not None else size[1]
         self.TKTreeview = None
+        self.AlternatingRowColor = alternating_row_color
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color,  font=font, size=size, pad=pad, key=key, tooltip=tooltip)
         return
@@ -3781,7 +3783,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
-                width, height = element_size
+                height = element.NumRows
                 if element.Justification == 'left':
                     anchor = tk.W
                 elif element.Justification == 'right':
@@ -3828,7 +3830,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i] + value
-                    id = treeview.insert('', 'end', text=value, values=value)
+                    id = treeview.insert('', 'end', text=value, values=value, tag=i%2)
+                if element.AlternatingRowColor is not None:
+                    treeview.tag_configure(1, background=element.AlternatingRowColor)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
