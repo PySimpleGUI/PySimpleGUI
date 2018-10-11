@@ -1085,7 +1085,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element
         :param button_text:
@@ -1117,6 +1117,7 @@ class Button(Element):
         self.ButtonText = button_text
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
+        self.ImageData = image_data
         self.ImageSize = image_size
         self.ImageSubsample = image_subsample
         self.UserData = None
@@ -1239,7 +1240,7 @@ class Button(Element):
 
         return
 
-    def Update(self, value=None, text=None, button_color=(None, None), disabled=None):
+    def Update(self, value=None, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1254,6 +1255,24 @@ class Button(Element):
             self.TKButton['state'] = 'disabled'
         elif disabled == False:
             self.TKButton['state'] = 'normal'
+        # if image_data is not None:
+        #     if type(image_data) is bytes:
+        #         image = tk.PhotoImage(data=image_data)
+        #     else:
+        #         image = image_data
+        #     width, height = image.width, image.height
+        #     self.TKButton.config(image=image, width=width, height=height)
+        if image_data is not None:
+            image = tk.PhotoImage(data=image_data)
+            width, height = image.width(), image.height()
+            self.TKButton.config(image=image, width=width, height=height)
+            self.TKButton.image = image
+        if image_filename is not None:
+            self.TKButton.config(highlightthickness=0)
+            photo = tk.PhotoImage(file=image_filename)
+            width, height = photo.width(), photo.height()
+            self.TKButton.config(image=photo, width=width, height=height)
+            self.TKButton.image = photo
 
     def GetText(self):
         return self.ButtonText
@@ -2820,29 +2839,29 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def ReadButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
-    return Button( button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    return Button( button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 ReadFormButton = ReadButton
 RButton = ReadFormButton
 
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
-def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button( button_text=button_text,button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button( button_text=button_text,button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
-def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type= BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type= BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def CalendarButton(button_text, target=(None,None), image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def ColorChooserButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def ColorChooserButton(button_text, target=(None,None), image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
@@ -3332,6 +3351,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, width=width, height=height)
                     tkbutton.image = photo
+                if element.ImageData:           # if button has an image on it
+                    tkbutton.config(highlightthickness=0)
+                    photo = tk.PhotoImage(data=element.ImageData)
+                    if element.ImageSize != (None, None):
+                        width, height = element.ImageSize
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                    else:
+                        width, height = photo.width(), photo.height()
+                    tkbutton.config(image=photo, width=width, height=height)
+                    tkbutton.image = photo
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen+10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
@@ -3588,7 +3618,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  IMAGE Box element  ------------------------- #
+                # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
                     photo = tk.PhotoImage(file=element.Filename)
