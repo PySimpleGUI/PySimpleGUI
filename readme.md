@@ -1125,7 +1125,7 @@ You've already seen a number of examples above that use blocking windows.  The c
 
 
 
-## Window Object - Beginning a window
+# Window Object - Beginning a window
 The first step is to create the window object using the desired window customization.
 
     with Window('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as window:
@@ -1235,6 +1235,81 @@ There are a few methods (functions) that you will see in this document that act 
     window.Enable() - Re-enable a Disabled window
     window.FindElement(key) - Returns the element that has a matching key value
 
+## Window Methods
+
+There are a number of operations you can do on a window after you've created the window.  You call these after creating your Windows object.
+
+#### Layout(rows)
+
+Call to set the window layout.  Must be called prior to Read.  Most likely "chained" in line with the Window creation.
+
+```python
+window = sg.Window('My window title').Layout(layout)
+```
+#### Finalize()
+
+Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.
+
+#### Read()
+
+Read the Window's input values and button clicks in a blocking-fashion
+Returns button, values
+
+#### ReadNonBlocking()
+
+Read the Window's input values and button clicks but without blocking.  It will immediately return.
+
+#### Refresh()
+Cause changes to the window to be displayed on the screen.  Normally not needed unless the changes are immediately required or if it's going to be a while before another call to Read.
+
+#### Fill(values_dict)
+Populates the windows fields with the values shown in the dictionary.
+
+#### FindElement(key)
+
+Rerturns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown
+
+#### SaveToDisk(filename)
+
+Saves the window's values to disk
+
+#### LoadFromDisk(filename)
+
+Fills in a window's fields based on previously saved file
+
+#### GetScreenDimensions()
+
+Returns the size (w,h) of the screen in pixels
+
+#### CloseNonBlocking()
+
+Closes a non-blocking window
+
+#### Disable()
+
+Stops a window from  responding until Enable is called
+
+#### Enable()
+
+Re-enables a previously disabled window
+
+#### Hide()
+
+Completely hides a window, including removing from the taskbar
+
+#### UnHide()
+
+Restores a window hidden using Hide
+
+#### Disappear()
+
+Makes a window disappear while leaving the icon on the taskbar
+
+#### Reappear()
+
+Makes a window reappear that was previously made to disappear using Disappear()
+
+
 
 
 # Elements
@@ -1272,16 +1347,62 @@ There are a few methods (functions) that you will see in this document that act 
      Redirect Python Output/Errors to scrolling Window
      "Higher level" APIs (e.g. MessageBox, YesNobox, ...)
 
-#### Common Parameters
+## Common Element Parameters
 Some parameters that you  will see on almost all Elements are:
-key
-tooltip
+
+ - key   -  Used with window.FindElement and with return values
+ - tooltip   - Hover your mouse over the elemnt and you'll get a popup with this text
+ - size  - (width, height) - usually measured in characters-wide, rows-high.  Sometimes they mean pixels
+ - font - specifies the font family, size, etc
+ - colors - Color name or #RRGGBB string
+ - pad - Amount of padding to put around element
+
 
 #### Tooltip
 Tooltips are text boxes that popup next to an element if you hold your mouse over the top of it.  If you want to be extra kind to your window's user, then you can create tooltips for them by setting the parameter `tooltip` to some text string.  You will need to supply your own line breaks / text wrapping.  If you don't want to manually add them, then take a look at the standard library package `textwrap`.
 
 Tooltips are one of those "polish" items that really dress-up a GUI and show's a level of sophistication.  Go ahead, impress people, throw some tooltips into your GUI.
 
+#### Size
+Specifies the amount of room reserved for the Element.  For elements that are character based, such a Text, it is (# characters, # rows).  Sometimes it is a pixel measurement such as the Image element.  And sometimes a mix like on the Slider element (characters long by pixels wide).
+
+#### Colors
+A string representing color.  Anytime colors are involved, you can specify the tkinter color name such as 'lightblue' or an RGB hex value '#RRGGBB'.  For buttons, the color parameter is a tuple (text color, background color)
+
+#### Pad
+The amount of room around the element in pixels. The default value is (5,3) which means leave 5 pixels on each side of the x-axis and 3 pixels on each side of the y-axis.  You can change this on a global basis using a call to SetOptions, or on an element basis.
+
+If you want more pixels on one side than the other, then you can split the number into 2 number.  If you want 200 pixels on the left side, and 3 pixels on the right, the pad would be ((200,3), 3).  In this example, only the x-axis is split.
+
+#### Font
+Specifies the font family, size, and style.  Font families on Windows include:
+* Arial
+* Courier
+* Comic,
+* Fixedsys
+* Times
+* Verdana
+* Helvetica (the default I think)
+
+If you wish to leave the font family set to the default, you can put anything not matching one of the above names.  The examples use the family 'Any'.  You could use "default" if that's more clear.
+
+There are 2 formats that can be used... a string, and a tuple
+Tuple - (family, size, styles)
+String - "Family Size Styles"
+
+To specify an underlined, Helvetica font with a size of 15 the values would be
+('Helvetica', 15, 'underline italics')
+'Helvetica 15 underline italics'
+
+#### Key
+If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.
+Keys are a way for you to "tag" an Element with a value that will be used to identify that element.  After you put a key in an element's definition, the values returned from Read will use that key to tell you the value.  For example, if you have an input field:
+Input(key='mykey')
+And your read looks like this:
+button, values = Read()
+Then to get the input value from the read it would be:
+values['mykey']
+You also use the same key if you want to call Update on an element.  Please see the section below on Updates to understand that usage.
 
 
 ### Output Elements
@@ -1338,9 +1459,7 @@ The default font setting is
 
     ("Helvetica", 10)
 
-**Color** in PySimpleGUI are in one of two format.  They can be a single color or a color pair.  Buttons are an example of a color pair.
-
-    (foreground, background)
+**Color** in PySimpleGUI are in one of two formats - color name or RGB value.
 
  Individual colors are specified using either the color names as defined in tkinter or an RGB string of this format:
 
@@ -1349,11 +1468,21 @@ The default font setting is
 **auto_size_text**
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.
 
- - [ ] List item
-
 
 **Shortcut functions**
 The shorthand functions for `Text` are `Txt` and `T`
+
+### Text Methods
+
+#### Update
+```python
+ Update(value = None, background_color=None, text_color=None, font=None)
+```
+value - new value to set text element to
+background_color - new background color
+text_color - text color to display
+font - font to use to display
+
 
 ##  Multiline Text Element
 
@@ -1383,7 +1512,15 @@ This Element doubles as both an input and output Element.
     size - Element's size
     auto_size_text - Bool. Change width to match size of text
 
-#### Output Element
+### Multiline Methods
+```python
+Update(value=None, disabled=None, append=False):
+```
+value - string to set the text field to
+disabled - set to True to disable the element
+append - rather than replacing the current text with new text, add the new text onto the end
+
+## Output Element
 Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.  More on this later.
 
     window.AddRow(gg.Output(size=(100,20)))
@@ -1443,6 +1580,18 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`
 
 
+### TextInput Methods
+```python
+Update(value=None, disabled=None):
+Get()
+```
+Update - Change the Element
+value - new value to display in field
+disabled - if True will disable the element
+
+Get - Returns the current value for the element (you can get also from a call to Read)
+
+
 ## Combo Element
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
@@ -1474,6 +1623,17 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
      key - Dictionary key to use for return values
      pad - (x,y) Amount of padding to put around element in pixels
      tooltip -  Text string. If set, hovering over field will popup the text
+
+Shortcut functions - Combo, DropDown, Drop
+
+### Combo Methods
+```python
+Update(value=None, values=None, set_to_index=None, disabled=None)
+```
+value - change which value is current selected
+values - change list of choices
+set_to_index - change selection to a particular choice
+disable - if True will disable element
 
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
@@ -1530,6 +1690,22 @@ The `select_mode` option can be a string or a constant value defined as a variab
 ListBoxes can cause a window to return from a Read call.  If the flag change_submits is set, then when a user makes a selection, the Read immediately returns.
 Another way ListBoxes can cause Reads to return is if the flag bind_return_key is set.  If True, then if the user presses the return key while an entry is selected, then the Read returns.  Also, if this flag is set, if the user double-clicks an entry it will return from the Read.
 
+### Listbox Methods
+```python
+Update(values=None, disabled=None)
+SetValue(values)
+GetListValues()
+
+```
+Update - Change element
+values - new list of choices
+disabled - if True disables the element
+
+SetValue - Sets selection to one or more values
+
+GetListValues - Return the list of values to choose from
+
+
 ## Slider Element
 
 Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
@@ -1577,6 +1753,15 @@ Sliders have a couple of slider-specific settings as well as appearance settings
        key- Dictionary key to use for return values
        tooltip - Tooltip to display when hovered over wlement
 
+### Slider Methods
+```python
+Update(self, value=None, range=(None, None), disabled=None):
+```
+value - set current selection to value
+range - change range of valid values
+disabled - if True disables element
+
+
 ## Radio Button Element
 
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
@@ -1611,6 +1796,14 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
      key - Dictionary key to use for return values
      pad - padding around element
      tooltip - tooltip to show when mouse hovered over element
+
+
+### Radio Button Methods
+```python
+Update(value=None, disabled=None)
+```
+value - bool - if True change to selected
+disabled - if True disables the element
 
 
 ## Checkbox Element
@@ -1649,6 +1842,19 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
      pad - Padding around element in window
      tooltip - text to show when mouse is hovered over element
 
+Shortcut functions -   CBox, CB, Check
+
+### Checkbox Methods
+```python
+Update(value=None, disabled=None)
+Get()
+```
+Update - changes the element
+value - Bool if True checks the checkbox
+disabled - if True disables the element
+
+Get - returns current state
+
 
 ## Spin Element
 
@@ -1670,7 +1876,10 @@ An up/down spinner control.  The valid values are passed in as a list.
          key = None.
          pad = None,
          tooltip = None):
-.
+
+
+
+Parameter definitions
 
      values - List of valid values
      initial_value - String with initial value
@@ -1684,6 +1893,46 @@ An up/down spinner control.  The valid values are passed in as a list.
      key = Dictionary key to use for return values
      pad - padding around element in the window
      tooltip - text to show when mouse hovered over element
+
+### Spin Methods
+```python
+Update(value=None, values=None, disabled=None)
+```
+value - set the current value
+values - set available choices
+disabled - if True disables the element
+
+## Image Element
+
+Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format.  JPGs cannot be shown because tkinter does not naively support JPGs.  You can use the Python Imaging Library (PIL) package  to convert your image to PNG prior to calling PySimpleGUI if your images are in JPG format.
+
+     Image(filename=None,
+           data=None,
+           background_color=None,
+           size=(None, None),
+           pad=None,
+           key=None,
+           tooltip=None)
+
+Parameter definitions
+
+    filename - file name if the image is in a file
+    data - if image is in RAM (PIL format?)
+    background_color - Color of background
+    size - Size (Width, Height) of image in pixels
+    pad - Padding around Element in the window
+    key - Key used to find the element
+    tooltip - text to show when mouse if hovered over image
+
+### Image Methods
+
+Like other Elements, the Image Element has an update method.  Call Update if you want to change the image.
+
+    def Update(self, filename=None, data=None):
+
+
+Choose **either** a filename or in-ram data image to use to replace current image
+
 
 ## Button Element
 
@@ -1958,6 +2207,20 @@ This code produces a window where the Browse button only shows files of type .TX
 The Enter Key can be "bound" to a particular button so that when the key is pressed, it causes the window to return as if the button was clicked.  This is done using the `bind_return_key` parameter in the button calls.
 If there are more than 1 button on a window, the FIRST button that is of type Close window or Read window is used.  First is determined by scanning the window, top to bottom and left to right.
 
+
+### Button Methods
+```python
+Update(value=None, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None)
+GetText()
+```
+Update - Change the button element
+value - sets default value
+text - sets button text
+button color - (text, background)
+disabled - if True disables the button
+image_data - sets button image to in-ram image
+image_filename - sets button image using a file
+
  ---
 ## ProgressBar  Element
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.
@@ -2027,7 +2290,14 @@ Here's a complete solution for a chat-window using an Async window with an Outpu
 
     ChatBot()
 
--------------------
+### ProgressBar Methods
+```python
+UpdateBar(current_count, max=None)
+```
+current_count - sets the current value
+max - changes the max value
+
+
 ## Column Element
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.
 
@@ -2173,6 +2443,12 @@ To get a tkinter Canvas Widget from PySimpleGUI, follow these steps:
 See `Demo_Matplotlib.py` for a Recipe you can copy.
 
 
+### Canvas Methods
+
+TKCanvas - not a method but a property. Returns the tkinter Canvas Widget
+
+
+
 ## Graph Element
 
 All you math fans will enjoy this Element... and all you non-math fans will enjoy it too.
@@ -2207,6 +2483,34 @@ This Element is relatively new and may have some parameter additions or deletion
                       key -  key used to lookup element
                       tooltip - tooltip text
 
+### Graph Methods
+```python
+DrawLine(self, point_from, point_to, color='black', width=1)
+DrawPoint(self, point, size=2, color='black')
+DrawCircle(self, center_location, radius, fill_color=None, line_color='black')
+DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None)
+DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black')
+DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None)
+DrawText(self, text, location, color='black', font=None, angle=0)
+Erase(background_color)
+Update()
+Move(self, x_direction, y_direction)
+MoveFigure(self, figure, x_direction, y_direction)
+TKCanvas
+```
+All of the Drawing methods return a "figure" that can be used move the figure
+
+DrawLine - draws a line
+DrawPoint - draws a single point
+DrawCircle - draws a circle
+DrawOval - draws an oval
+DrawArc - draws an arc
+DrawRectangle - draws a rectangle
+DrawText - draws text
+Erase - erases entire graph
+Update - changes background color
+Move - moves everything an x,y direction
+MoveFigure - moves an individual figure
 
 
 ## Table Element
@@ -2363,6 +2667,13 @@ The definition of a Tab Element is
 Tab Groups now return a value when a Read returns.  They return which tab is currently selected.  There is also a change_submits parameter that can be set that causes a Read to return if a Tab in that group is selected / changed.  The key or title belonging to the Tab that was switched to will be returned as the value
 
 
+### Tab Element Methods
+```python
+Update(disabled = None)
+```
+WARNING - This Update method does not yet work!
+
+
 ## Colors
 Starting in version 2.5 you can change the background colors for the window and the Elements.
 
@@ -2473,7 +2784,7 @@ These settings apply to all windows `SetOptions`.  The Row options and Element o
 
 Each lower level overrides the settings of the higher level.  Once settings have been changed, they remain changed for the duration of the program (unless changed again).
 
-## Persistent windows (Window stays open after button click)
+# Persistent windows (Window stays open after button click)
 
 There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking windows (see the next section).  The other way is to use buttons that 'read' the window instead of 'close' the window when clicked.  The typical buttons you find in windows, including the shortcut buttons, close the window.  These include OK, Cancel, Submit, etc.  The Button Element also closes the window.
 
@@ -2598,7 +2909,7 @@ Note the `else` statement on the for loop.  This is needed because we're about t
 
 
 
-## Updating Elements (changing elements in active window)
+# Updating Elements (changing elements in active window)
 
 Persistent windows remain open and thus continue to interact with the user after the Read has returned.  Often the program wishes to communicate results (output information) or change an Element's values (such as populating a List Element).
 
@@ -2679,7 +2990,7 @@ The takeaway from this exercise is that keys are key in PySimpleGUI's design.  T
     window.UpdateElements(('name', 'address', 'phone'), ('Fred Flintstone', '123 Rock Quarry Road', '555#'))
 
 
-## Keyboard & Mouse Capture
+# Keyboard & Mouse Capture
 Beginning in version 2.10 you can capture keyboard key presses and mouse scroll-wheel events.   Keyboard keys can be used, for example, to detect the page-up and page-down keys for a PDF viewer.  To use this feature, there's a boolean setting in the Window call `return_keyboard_events` that is set to True in order to get keys returned along with buttons.
 
 Keys and scroll-wheel events are returned in exactly the same way as buttons.
@@ -2738,7 +3049,7 @@ Use realtime keyboard capture by calling
             elif value is None:
                 break
 
-## Menus
+# Menus
 
 Beginning in version 3.01 you can add a menubar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as button clicks, so be aware of your overall naming conventions.  If you have an Exit button and also an Exit menu option, then you won't be able to tell the difference when your window.Read returns.  Hopefully will not be a problem.
 
@@ -2777,7 +3088,7 @@ menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit'  ]],
 
 
 
-## Sample Applications
+# Sample Applications
 
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:
 
