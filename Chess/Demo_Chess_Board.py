@@ -1,16 +1,13 @@
 import PySimpleGUI as sg
 import os
-import io
-from PIL import Image, ImageDraw, ImageTk, ImageFont
-import sys
-from random import randint as rand
 import chess
 import chess.pgn
 import copy
+import time
 
 button_names = ('close', 'cookbook', 'cpu', 'github', 'pysimplegui', 'run', 'storage', 'timer')
-# path to the chess pieces
-CHESS_PATH = '.'
+
+CHESS_PATH = '.'        # path to the chess pieces
 
 BLANK = 0               # piece names
 PAWNB = 1
@@ -49,16 +46,8 @@ queenW = os.path.join(CHESS_PATH, 'queenW.png')
 kingB = os.path.join(CHESS_PATH, 'kingb.png')
 kingW = os.path.join(CHESS_PATH, 'kingw.png')
 
-
 images = {BISHOPB: bishopB, BISHOPW: bishopW, PAWNB: pawnB, PAWNW: pawnW, KNIGHTB: knightB, KNIGHTW: knightW,
           ROOKB: rookB, ROOKW: rookW, KINGB: kingB, KINGW: kingW, QUEENB: queenB, QUEENW: queenW, BLANK: blank}
-
-def get_a_move():
-    pgn = open('C:/Python/PycharmProjects/GooeyGUI/Chess/game.pgn')
-    first_game = chess.pgn.read_game(pgn)
-    for move in first_game.main_line():
-        print(move)
-        yield move
 
 def open_pgn_file(filename):
     pgn = open(filename)
@@ -73,14 +62,10 @@ def render_square(image, key, location):
         color = '#F0D9B5'
     return sg.RButton('', image_filename=image, size=(1, 1), button_color=('white', color), pad=(0, 0), key=key)
 
-
 def redraw_board(window, board):
     for i in range(8):
         for j in range(8):
-            if (i+j) % 2:
-                color = '#B58863'
-            else:
-                color = '#F0D9B5'
+            color = '#B58863' if (i+j) % 2 else '#F0D9B5'
             piece_image = images[board[i][j]]
             elem = window.FindElement(key=(i,j))
             elem.Update(button_color = ('white', color),
@@ -91,11 +76,12 @@ def PlayGame():
     menu_def = [['&File', ['&Open PGN File', 'E&xit' ]],
                 ['&Help', '&About...'],]
 
-    sg.SetOptions(auto_size_buttons=True, margins=(0,0))
+    # sg.SetOptions(margins=(0,0))
+    sg.ChangeLookAndFeel('GreenTan')
     # create initial board setup
     board = copy.deepcopy(initial_board)
     # the main board display layout
-    board_layout = [[sg.T('     ')] + [sg.T(f'{a}', pad=((23,27),0), font='Any 13') for a in 'abcdefgh']]
+    board_layout = [[sg.T('     ')] + [sg.T('{}'.format(a), pad=((23,27),0), font='Any 13') for a in 'abcdefgh']]
     # loop though board and create buttons with images
     for i in range(8):
         row = [sg.T(str(8-i)+'   ', font='Any 13')]
@@ -105,7 +91,7 @@ def PlayGame():
         row.append(sg.T(str(8-i)+'   ', font='Any 13'))
         board_layout.append(row)
     # add the labels across bottom of board
-    board_layout.append([sg.T('     ')] + [sg.T(f'{a}', pad=((23,27),0), font='Any 13') for a in 'abcdefgh'])
+    board_layout.append([sg.T('     ')] + [sg.T('{}'.format(a), pad=((23,27),0), font='Any 13') for a in 'abcdefgh'])
 
     # setup the controls on the right side of screen
     openings = ('Any', 'Defense', 'Attack', 'Trap', 'Gambit','Counter', 'Sicillian', 'English','French', 'Queen\'s openings', 'King\'s Openings','Indian Openings')
@@ -131,7 +117,7 @@ def PlayGame():
     layout = [[sg.Menu(menu_def, tearoff=False)],
               [sg.TabGroup([[sg.Tab('Board',board_tab),
                              sg.Tab('Controls', controls_layout),
-                             sg.Tab('Statistics', statistics_layout)]]),
+                             sg.Tab('Statistics', statistics_layout)]], title_color='red'),
                sg.Column(board_controls)],
               [sg.Text('Click anywhere on board for next move', font='_ 14')]]
 
@@ -164,6 +150,16 @@ def PlayGame():
             row = move_from // 8
             col = move_from % 8
             piece = board[row][col]         # get the move-from piece
+            button = window.FindElement(key=(row,col))
+            button.Update(button_color = ('white', 'red'))
+            window.Refresh()
+            time.sleep(.05)
+            button.Update(button_color = ('white', 'white'))
+            window.Refresh()
+            time.sleep(.05)
+            button.Update(button_color = ('white', 'red'))
+            window.Refresh()
+            time.sleep(.05)
             board[row][col] = BLANK         # place blank where piece was
             row = move_to // 8              # compute move-to square
             col = move_to % 8
