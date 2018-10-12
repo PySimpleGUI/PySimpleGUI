@@ -21,9 +21,9 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.1-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.3-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.2-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.3-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -133,7 +133,7 @@ was the second.
 While simple to use, PySimpleGUI has significant depth to be explored by more advanced programmers.  The feature set goes way beyond the requirements of a beginner programmer, and into the  required features needed for complex GUIs.
 
     Features of PySimpleGUI include:
-       Support for versions Python 2.7 and 3
+        Support for Python versions 2.7 and 3
         Text
         Single Line Input
         Buttons including these types:
@@ -157,6 +157,8 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Multi-line Text Input
         Scroll-able Output
         Images
+        Tables
+        Trees
         Progress Bar            Async/Non-Blocking Windows
         Tabbed windows
         Persistent Windows
@@ -431,11 +433,11 @@ Dictionaries are used by more advanced PySimpleGUI users.  You'll know that dict
 
 ---
 
-### High Level API Calls  - Popup's
+## High Level API Calls  - Popup's
 
 "High level calls" are those that start with "Popup".    They are the most basic form of communications with the user.   They are named after the type of window they create, a pop-up window.  These windows are meant to be short lived while, either delivering information or collecting it, and then quickly disappearing.
 
-### Popup Output
+## Popup Output
 
 Think of the `Popup` call as the GUI equivalent of a  `print` statement.  It's your way of displaying results to a user in the windowed world.  Each call to Popup will create a new Popup window.
 
@@ -465,14 +467,14 @@ The function `PopupTimed` or `PopupAutoClose` are popup windows that will automa
 Here is a quick-reference showing how the Popup calls look.
 
 
-    sg.Popup('Popup')
-    sg.PopupOk('PopupOk')
-    sg.PopupYesNo('PopupYesNo')
-    sg.PopupCancel('PopupCancel')
-    sg.PopupOkCancel('PopupOkCancel')
-    sg.PopupError('PopupError')
-    sg.PopupTimed('PopupTimed')
-    sg.PopupAutoClose('PopupAutoClose')
+    sg.Popup('Popup')  - Shows OK button
+    sg.PopupOk('PopupOk')  - Shows OK button
+    sg.PopupYesNo('PopupYesNo')  - Shows Yes and No buttons
+    sg.PopupCancel('PopupCancel')  - Shows Cancelled button
+    sg.PopupOkCancel('PopupOkCancel')  - Shows Ok and Cancel buttons
+    sg.PopupError('PopupError')  - Shows red error button
+    sg.PopupTimed('PopupTimed')  - Automatically closes
+    sg.PopupAutoClose('PopupAutoClose')  - Same as PopupTimed
 
 
 
@@ -489,6 +491,38 @@ Here is a quick-reference showing how the Popup calls look.
 ![snap0261](https://user-images.githubusercontent.com/13696193/44957396-14194180-aea0-11e8-8eef-bb2e1193ecfa.jpg)
 
 ![snap0264](https://user-images.githubusercontent.com/13696193/44957595-9e15da00-aea1-11e8-8909-6b6121b74509.jpg)
+
+
+    Popup(*args,  Variable number of arguments you want to display
+		  button_color=None, Color of buttons (text_color, background_color)
+		  background_color=None, Color of background
+		  text_color=None, Color of text
+		  button_type=POPUP_BUTTONS_OK, Type of button layout
+		  auto_close=False, If True window will automatically close
+		  auto_close_duration=None, Number of seconds for autoclose
+		  non_blocking=False, If True returns immediately
+		  icon=DEFAULT_WINDOW_ICON, Icon to use on the taskbar
+		  line_width=None, Width of lines in characters
+		  font=None, Font to use for characters
+		  no_titlebar=False, If True no titlebar will be shown
+		  grab_anywhere=False, If True can move window by grabbing anywhere
+		  keep_on_top=False, If True window will be on top of other windows
+		  location=(None,None)): (x,y) coordinates to show the window
+
+
+The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
+
+The choices for button_type are:
+```
+POPUP_BUTTONS_YES_NO
+POPUP_BUTTONS_CANCELLED
+POPUP_BUTTONS_ERROR
+POPUP_BUTTONS_OK_CANCEL
+POPUP_BUTTONS_OK
+POPUP_BUTTONS_NO_BUTTONS
+```
+Note that you should not call Popup yourself with different button_types.  Rely on the Popup function named that sets that value for you.  For example PopupYesNo will set the button type to POPUP_BUTTONS_YES_NO for you.
+
 
 #### Scrolled Output
 There is a scrolled version of Popups should you have a lot of information to display.
@@ -510,22 +544,39 @@ Note that the default max number of lines before scrolling happens is set to 50.
 
 The Popup call PopupNoWait or PopupNonBlocking will create a popup window and then immediately return control back to you.  All other popup functions will block, waiting for the user to close the popup window.
 
-This function is very handy for when you're **debugging** and want to display something as output but don't want to change the programs's overall timing by blocking.  Think of it like a `print` statement
-
-A word of ***caution***... Windows that are created after the NoWait Popup are "slaves" to the NoWait'd popup.  If you close the Popup, it will also lose the window the you created after the Popup.  A good rule of thumb is to leave the popup open while you're interacting with the rest of your program until you understand what happens when you close the NoWaitPopup.
+This function is very handy for when you're **debugging** and want to display something as output but don't want to change the programs's overall timing by blocking.  Think of it like a `print` statement. There are no return values on one of these Popups.
 
 
 
-### Popup Input
+## Popup Input
 
-There are Popup calls for single-item inputs. These follow the pattern of `Popup` followed by `Get` and then the type of item to get.
+There are Popup calls for single-item inputs. These follow the pattern of `Popup` followed by `Get` and then the type of item to get.  There are 3 of these input Popups to choose from, each with settings enabling customization.
 
  - `PopupGetString` - get a single line of text
  - `PopupGetFile` - get a filename
  - `PopupGetFolder` - get a folder name
 
-Rather than make  a custom window to get one data value, call the Popup input function to get the item from the user.
+Use these Popups instead of making  a custom window to get one data value, call the Popup input function to get the item from the user.  If you find the parameters are unable to create the kind of window you are looking for, then it's time for you to create your own window.
 
+### PopupGetText
+
+Use this Popup to get a ssingle line of text from the user.
+
+```
+PopupGetText(message,The message you wish to display with the input field
+		     default_text='', Text to initially fill into the input field
+		     password_char='', Passwork character if this is a password field
+		     size=(None,None), Size of the window
+		     button_color=None, Color to use for buttons (foreground, background)
+		     background_color=None, Background color for window
+		     text_color=None, Text color for window
+		     icon=DEFAULT_WINDOW_ICON, Icon to display on taskbar
+		     font=None, Font to use for text
+		     no_titlebar=False, If True no titlebar will be shown
+		     grab_anywhere=False, If True can grab anywhere to move the window
+		     keep_on_top=False, If True window will stay on top of other windows
+		     location=(None,None))  Location on screen to display window
+```
 
     import PySimpleGUI as sg
 
@@ -536,20 +587,82 @@ Rather than make  a custom window to get one data value, call the Popup input fu
 
 ![popup gettext response](https://user-images.githubusercontent.com/13696193/44957282-8721b880-ae9e-11e8-84ae-dc8bb30504a0.jpg)
 
+### PopupGetFile
+
+Gets a filename from the user.  There are options to configure the type of dialog box to show.  Normally an "Open File" dialog box is shown
+```
+PopupGetFile(message, Message to show in the window
+			 default_path='', Path browsing should start from
+			 default_extension='', Which filetype is the default
+			 save_as=False, Determines which dialog box stype to show
+			 file_types=(("ALL Files", "*.*"),), Which filetypes are displayed
+			 no_window=False, if True no window is displayed except the dialog box
+			 size=(None,None), Size of window
+			 button_color=None, Color of buttons
+			 background_color=None, Color of window background
+			 text_color=None, Color of text in window
+			 icon=DEFAULT_WINDOW_ICON, Icon to show on taskbar
+			 font=None, Font to use
+			 no_titlebar=False, If True does not display a titlebar
+			 grab_anywhere=False, if True can grab window anywhere to move it
+			 keep_on_top=False, if True window will be on top of others
+			 location=(None,None)) Location on screen to show window
+```
+
+If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this
+
+
+![snag-0060](https://user-images.githubusercontent.com/13696193/46761050-9831c680-cca1-11e8-8de9-68b15efe2c46.jpg)
+
+
+
+If you set the parameter save_As to True, then the dialog box looks like this:
+
+![snag-0061](https://user-images.githubusercontent.com/13696193/46761330-2b6afc00-cca2-11e8-953b-f6b5c5ce57f5.jpg)
+
+If you choose a filename that already exists, you'll get a warning popup box asking if it's OK.  You can also specify a file that doesn't exist.  With an "Open" dialog box you cannot choose a non-existing file.
+
+A typical call produces this window.
 
     text = sg.PopupGetFile('Please enter a file name')
     sg.Popup('Results', 'The value returned from PopupGetFile', text)
 
 ![popupgetfile](https://user-images.githubusercontent.com/13696193/44957857-2fd31680-aea5-11e8-8eb7-f6b91c202cc8.jpg)
 
+
+
+### PopupGetFolder
+
 The window created to get a folder name looks the same as the get a file name.  The difference is in what the browse button does.  `PopupGetFile` shows an Open File dialog box while `PopupGetFolder`  shows an Open Folder dialog box.
+
+```
+PopupGetFolder(message,  Message to display in window
+			   default_path='',  Path to start browsing
+			   no_window=False,  If True no window will be shown
+			   size=(None,None), Size of window
+			   button_color=None, Color of buttons
+			   background_color=None, Background color of window
+			   text_color=None,  Color of window text
+			   icon=DEFAULT_WINDOW_ICON, Icon to show on taskbar
+			   font=None,  Font to use for window
+			   no_titlebar=False,  If True no titlebar will be shown
+			   grab_anywhere=False,  If True can grab anywhere on window to move
+			   keep_on_top=False,  If True window will be on top
+			   location=(None, None))  Location on screen to create window
+```
+
+This is a typpical call
 
     text = sg.PopupGetFolder('Please enter a folder name')
     sg.Popup('Results', 'The value returned from PopupGetFolder', text)
 
 ![popupgetfolder](https://user-images.githubusercontent.com/13696193/44957861-45484080-aea5-11e8-926c-cf607a45251c.jpg)
 
-#### Progress Meters!
+
+
+
+
+## Progress Meters!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
 
 
@@ -578,7 +691,7 @@ With a little trickery you can provide a way to break out of your loop using the
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
 
-#### Debug Output
+## Debug Output
 Another call in the 'Easy' families of APIs is `EasyPrint`.  It will output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick a 'print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement
 
     print = sg.EasyPrint
@@ -592,6 +705,7 @@ There are a number of names for the same EasyPrint function.  `Print` is one of 
         sg.Print(i)
 
 ![snap0125](https://user-images.githubusercontent.com/13696193/43114979-a696189e-8ecf-11e8-83c7-473fcf0ccc66.jpg)
+
 Or if you didn't want to change your code:
 
     import PySimpleGUI as sg
@@ -600,11 +714,12 @@ Or if you didn't want to change your code:
     for i in range(100):
         print(i)
 
-Just like the standard print call, `EasyPrint` supports the `sep` and `end` keyword arguments.  Other names that can be used to call `EasyPrint` include Print, `eprint`,   If you want to close the window, call the function `EasyPrintClose`.
-
-A word of caution.  There are known problems when multiple PySimpleGUI windows are opened, particularly if the user closes them in an unusual way.  Not a reason to stay away from using it.  Just something to keep in mind if you encounter a problem.
+Just like the standard print call, `EasyPrint` supports the `sep` and `end` keyword arguments.  Other names that can be used to call `EasyPrint` include `Print`, `eprint`,   If you want to close the window, call the function `EasyPrintClose`.
 
 You can change the size of the debug window using the `SetOptions` call with the `debug_win_size` parameter.
+
+*A word of caution.*  There are known problems when multiple PySimpleGUI windows are opened.  If you open one of these debug windows, if you close it using the Quit button, it can have the side-effect of causing other visible windows to also close.  It's a known architectural issue.
+
 
 ---
 # Custom window API Calls  (Your First window)
@@ -620,7 +735,8 @@ Two other types of windows exist.
 It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.
 
 ## The window Designer
-The good news to newcomers to GUI programming is that PySimpleGUI has a window designer.  Better yet, the window designer requires no training and everyone knows how to use it.
+
+The good news to newcomers to GUI programming is that PySimpleGUI has a window designer.  Better yet, the window designer requires no training, no downloads, and everyone knows how to use it.
 
 ![gui0_1](https://user-images.githubusercontent.com/13696193/44159598-e2257400-a085-11e8-9b02-343e72cc75c3.JPG)
 
@@ -885,9 +1001,11 @@ If your window has an event loop where it is read over and over, remember to giv
 
 ## The Event Loop / Callback Functions
 
-All GUIs have one thing in common, an "event loop" or some kind. If your program shows a single window, collects the data and then executes the primary code of the program then you likely don't need an event loop.
+All GUIs have one thing in common, an "event loop".  Usually the GUI framework runs the event loop for you, but sometimes you want greater control and will run your own event loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.
 
-Event Loops are used in programs where the window ***stays open*** after button presses.  The program processes button clicks and user input in a loop called the event  loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.
+With PySimpleGUI if your window will remain open following button clicks, then your code will have an event loop. If your program shows a single window, collects the data and then has no other GUI interaction, then you don't need an event loop.
+
+There's nothing mysterious about event loops... they are loops where you take care of.... wait for it..... *events*.  Events are things like button clicks, key strokes, mouse scroll-wheel up/down.
 
 Let's take a Pi demo program as an example.  This program shows a GUI window, gets button presses, and uses them to control some LEDs.  It loops, reading user input and doing something with it.
 
@@ -912,8 +1030,6 @@ while True:
         break
     print(button, values)
 ```
-
-
 
 In the Event Loop we are reading the window and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)
 
@@ -996,14 +1112,14 @@ Clicking the Submit button caused the window call to return.  The call to Popup 
 You can see in the results Popup window that the values returned are a list.  Each input field in the window generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
 
 ---
-# Building Custom windows
+# Building Custom Windows
 
-You will find it much easier to write code using PySimpleGUI if you use an IDE such as PyCharm.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
+You will find it ***much easier*** to write code using PySimpleGUI if you use an IDE such as PyCharm.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
 
     Control-Q (when cursor is on function name) brings up a box with the function definition
     Control-P (when cursor inside function call "()") shows a list of parameters and their default values
 
-### Synchronous windows
+## Synchronous windows
 The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI window/dialog box.
 You've already seen a number of examples above that use blocking windows.  The call to look for that will show you non-blocking windows are calls to `ReadNonBlocking()`.  You can read more about Async windows at the end of this document.
 
@@ -1037,6 +1153,7 @@ This is the definition of the Window object:
         no_titlebar=False,
         grab_anywhere=False
         keep_on_top=False):
+
 
 
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `window` values.
@@ -1093,9 +1210,9 @@ Linux users!  Note that this setting has side effects for some of the other Elem
 
 ### Grab Anywhere
 
-This is a feature unique to PySimpleGUI.  The default is ENABLED.... unless the window is a non-blocking window.
+This is a feature unique to PySimpleGUI.
 
-It is turned off for non-blocking because there is a warning message printed out if the user closes a non-blocking window using a button with grab_anywhere enabled.  There is no harm in these messages, but it may be distressing to the user.    Should you wish to enable for a non-blocking window, simply get grab_anywhere = True when you create the window.
+Note - there is a warning message printed out if the user closes a non-blocking window using a button with grab_anywhere enabled.  There is no harm in these messages, but it may be distressing to the user.    Should you wish to enable for a non-blocking window, simply get grab_anywhere = True when you create the window.
 
 ### Always on top
 
@@ -1147,6 +1264,7 @@ There are a few methods (functions) that you will see in this document that act 
      Graph
      Image
      Table
+     Tree
      Tab, TabGroup
      Async/Non-Blocking Windows
      Tabbed windows
@@ -1243,12 +1361,21 @@ The shorthand functions for `Text` are `Txt` and `T`
 
 ![multiline](https://user-images.githubusercontent.com/13696193/44959853-b139a180-aec3-11e8-972f-f52188510c88.jpg)
 
-This Element doubles as both an input and output Element.  The `DefaultText` optional parameter is used to indicate what to output to the window.
+This Element doubles as both an input and output Element.
 
     Multiline(default_text='',
-           enter_submits = False,
+              enter_submits = False,
+              disabled=False,
+              autoscroll=False,
               size=(None, None),
-            auto_size_text=None)
+              auto_size_text=None,
+              background_color=None,
+              text_color=None,
+              do_not_clear=False,
+              key=None,
+              focus=False,
+              pad=None,
+              tooltip=None)
 .
 
     default_text - Text to display in the text box
@@ -1278,21 +1405,28 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
 ![inputtext 2](https://user-images.githubusercontent.com/13696193/44959861-b5fe5580-aec3-11e8-8040-53ec241b5079.jpg)
 
 
-      def InputText(default_text = '',
+      def InputText(default_text ='',
                     size=(None, None),
+                    disabled=False,
                     auto_size_text=None,
                     password_char='',
+                    justification=None,
                     background_color=None,
                     text_color=None,
+                    font=None,
+                    tooltip=None,
                     do_not_clear=False,
                     key=None,
-                    focus=False
+                    focus=False,
+                    pad=None):
+    '''
 
 .
 
      default_text - Text initially shown in the input box
      size - (width, height) of element in characters
      auto_size_text- Bool.  True is element should be sized to fit text
+     disabled - Bool If True the input is disabled
      password_char - Character that will be used to replace each entered character. Setting to a value indicates this field is a password entry field
      background_color - color to use for the input field background
      text_color - color to use for the typed text
@@ -1355,6 +1489,7 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
                  change_submits=False
                  bind_return_key=False
                  size=(None, None)
+                 disabled = False,
                  auto_size_text=None
                  font=None
                  background_color=None
@@ -1381,6 +1516,7 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
     change_submits - if True, the window read will return with a button value of ''
     bind_return_key - if the focus is on the listbox and the user presses return key, or if the user double clicks an item, then the read will return
     size - (width, height) of element in characters
+    disapled - Bool. If True element is disabled
     auto_size_text - Bool. True if size should fit the text length
     background_color - color to use for the input field background
     font - font to use for items in list
@@ -1403,20 +1539,26 @@ Sliders have a couple of slider-specific settings as well as appearance settings
 ![slider](https://user-images.githubusercontent.com/13696193/44959858-b4349200-aec3-11e8-9e25-c0fcf025d19e.jpg)
 
        Slider(range=(None,None),
-              default_value=None,
-              orientation=None,
-              border_width=None,
-              relief=None,
-              size=(None, None),
-              font=None,
-              background_color = None,
-              change_submits = False,
-              text_color = None,
-              key = None) ):
+		      default_value=None,
+		      resolution=None,
+		      orientation=None,
+		      border_width=None,
+		      relief=None,
+		      change_submits=False,
+		      disabled=False,
+		      size=(None, None),
+		      font=None,
+		      background_color=None,
+		      text_color=None,
+		      key=None,
+		      pad=None,
+		      tooltip=None)
+
 .
 
       range - (min, max) slider's range
       default_value - default setting (within range)
+      resolution - how much each 'tick' should represent. Default = 1
       orientation - 'horizontal' or 'vertical' ('h' or 'v' work)
       border_width - how deep the widget looks
       relief - relief style. Values are same as progress meter relief values.  Can be a constant or a string:
@@ -1427,11 +1569,13 @@ Sliders have a couple of slider-specific settings as well as appearance settings
          RELIEF_GROOVE= 'groove'
          RELIEF_SOLID = 'solid'
        size - (width, height) of element in characters
+       disabled - Bool If True slider is disabled
        auto_size_text - Bool. True if size should fit the text
        background_color - color to use for the input field background
        text_color - color to use for the typed text
        change_submits - causes window read to immediately return if the checkbox value changes
-       key = Dictionary key to use for return values
+       key- Dictionary key to use for return values
+       tooltip - Tooltip to display when hovered over wlement
 
 ## Radio Button Element
 
@@ -1445,23 +1589,28 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
            group_id,
            default=False,
            size=(None, None),
+           disabled = False,
            auto_size_text=None,
            font=None,
            background_color = None,
            text_color = None,
-           key = None)
+           key = None,
+           pad = None,
+           tooltip = None)
 
 .
 
      text - Text to display next to button
      group_id - Groups together multiple Radio Buttons. Can be any value
      default - Bool.  Initial state
-     size- (width, height) size of element in characters
+     size - (width, height) size of element in characters
      auto_size_text - Bool.  True if should size width to fit text
      font - Font type and size for text display
      background_color - color to use for the background
      text_color - color to use for the text
-     key = Dictionary key to use for return values
+     key - Dictionary key to use for return values
+     pad - padding around element
+     tooltip - tooltip to show when mouse hovered over element
 
 
 ## Checkbox Element
@@ -1481,18 +1630,24 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
              background_color = None,
              text_color = None,
              change_submits = False
-             key = None):
+             disabled = False,
+             key = None,
+             pad = None,
+             tooltip = None):
 .
 
      text - Text to display next to checkbox
      default- Bool + None.  Initial state. True = Checked, False = unchecked, None = Not available (grayed out)
      size - (width, height) size of element in characters
      auto_size_text- Bool.  True if should size width to fit text
+     disabled - Bool. If True element is disabled
      font- Font type and size for text display
      background_color - color to use for the background
      text_color - color to use for the typed text
      change_submits - causes window read to immediately return if the checkbox value changes
      key = Dictionary key to use for return values
+     pad - Padding around element in window
+     tooltip - text to show when mouse is hovered over element
 
 
 ## Spin Element
@@ -1505,12 +1660,16 @@ An up/down spinner control.  The valid values are passed in as a list.
 
     Spin(values,
          intiial_value=None,
+         disabled = False,
          size=(None, None),
+         change_submits = False,
          auto_size_text=None,
          font=None,
          background_color = None,
          text_color = None,
-         key = None):
+         key = None.
+         pad = None,
+         tooltip = None):
 .
 
      values - List of valid values
@@ -1518,10 +1677,13 @@ An up/down spinner control.  The valid values are passed in as a list.
      size - (width, height) size of element in characters
      auto_size_text - Bool.  True if should size width to fit text
      font - Font type and size for text display
+     disabled - Bool. If True element is disabled
      background_color - color to use for the background
      text_color - color to use for the typed text
      change_submits - causes window read to immediately return if the spinner value changes
      key = Dictionary key to use for return values
+     pad - padding around element in the window
+     tooltip - text to show when mouse hovered over element
 
 ## Button Element
 
@@ -1574,7 +1736,9 @@ The most basic Button element call to use is `Button`
            tooltip=None
            file_types=(("ALL Files", "*.*"),)
            initial_folder=None
+           disabled = False
            image_filename=None
+           image_data=None
            image_size=(None, None)
            image_subsample=None
            border_width=None
@@ -1596,7 +1760,9 @@ Parameters
     tooltip - tooltip text for the button
     file_types - the filetypes that will be used to match files
     initial_folder - starting path for folders and files
+    disabled = Bool If True button is disabled
     image_filename - image filename if there is a button image
+    image_data - in-RAM image to be displayed on button
     image_size - size of button image in pixels
     image_subsample - amount to reduce the size of the image
     border_width - width of border around button in pixels
@@ -2186,6 +2352,7 @@ The definition of a Tab Element is
         background_color=None,
         font=None,
         pad=None
+        disabled=False
         border_width=None
         key=None
         tooltip=None)
@@ -2196,7 +2363,7 @@ The definition of a Tab Element is
 Tab Groups now return a value when a Read returns.  They return which tab is currently selected.  There is also a change_submits parameter that can be set that causes a Read to return if a Tab in that group is selected / changed.  The key or title belonging to the Tab that was switched to will be returned as the value
 
 
-  ## Colors ##
+## Colors
 Starting in version 2.5 you can change the background colors for the window and the Elements.
 
 Your windows can go from this:
@@ -2822,6 +2989,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.7 01.01.00 | Oct 1, 2018
 | 2.7 01.01.02 | Oct 8, 2018
 | 03.09.01 | Oct 8, 2018
+| 3.9.3 & 1.1.3 | Oct 11, 2018
 
 
 
@@ -2966,6 +3134,30 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * User can create new look and feel settings / can access the look and feel table
 * New PopupQuick call. Shows a non-blocking popup window with auto-close
 * Tree Element partially done (don't use despite it showing up)
+
+### 3.9.3 & 1.1.3
+
+* Disabled setting when creating element for:
+   * Input
+  * Combo
+  * Option Menu
+  * Listbox
+  * Radio
+  * Checkbox
+  * Spinner
+  * Multiline
+  * Buttons
+  * Slider
+* Doc strings on all Elements updated
+* Buttons can take image data as well as image files
+* Button Update can change images
+* Images can have background color
+* Table element new num_rows parameter
+* Table Element new alternating_row_color parameter
+* Tree Element
+* Window Disappear / Reappear methods
+* Popup buttons resized to same size
+* Exposed look and feel table
 
 
 ### Upcoming
