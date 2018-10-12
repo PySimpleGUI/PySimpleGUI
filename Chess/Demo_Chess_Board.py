@@ -33,18 +33,18 @@ initial_board = [[ROOKB, KNIGHTB,  BISHOPB, KINGB, QUEENB, BISHOPB, KNIGHTB, ROO
                 [ROOKW, KNIGHTW, BISHOPW, KINGW, QUEENW, BISHOPW, KNIGHTW, ROOKW]]
 
 blank = os.path.join(CHESS_PATH, 'blank.png')
-bishopB = os.path.join(CHESS_PATH, 'bishopb.png')
-bishopW = os.path.join(CHESS_PATH, 'bishopw.png')
-pawnB = os.path.join(CHESS_PATH, 'pawnb.png')
-pawnW = os.path.join(CHESS_PATH, 'pawnw.png')
-knightB = os.path.join(CHESS_PATH, 'knightb.png')
-knightW = os.path.join(CHESS_PATH, 'knightw.png')
-rookB = os.path.join(CHESS_PATH, 'rookb.png')
-rookW = os.path.join(CHESS_PATH, 'rookw.png')
-queenB = os.path.join(CHESS_PATH, 'queenB.png')
-queenW = os.path.join(CHESS_PATH, 'queenW.png')
-kingB = os.path.join(CHESS_PATH, 'kingb.png')
-kingW = os.path.join(CHESS_PATH, 'kingw.png')
+bishopB = os.path.join(CHESS_PATH, 'nbishopb.png')
+bishopW = os.path.join(CHESS_PATH, 'nbishopw.png')
+pawnB = os.path.join(CHESS_PATH, 'npawnb.png')
+pawnW = os.path.join(CHESS_PATH, 'npawnw.png')
+knightB = os.path.join(CHESS_PATH, 'nknightb.png')
+knightW = os.path.join(CHESS_PATH, 'nknightw.png')
+rookB = os.path.join(CHESS_PATH, 'nrookb.png')
+rookW = os.path.join(CHESS_PATH, 'nrookw.png')
+queenB = os.path.join(CHESS_PATH, 'nqueenB.png')
+queenW = os.path.join(CHESS_PATH, 'nqueenW.png')
+kingB = os.path.join(CHESS_PATH, 'nkingb.png')
+kingW = os.path.join(CHESS_PATH, 'nkingw.png')
 
 images = {BISHOPB: bishopB, BISHOPW: bishopW, PAWNB: pawnB, PAWNW: pawnW, KNIGHTB: knightB, KNIGHTW: knightW,
           ROOKB: rookB, ROOKW: rookW, KINGB: kingB, KINGW: kingW, QUEENB: queenB, QUEENW: queenW, BLANK: blank}
@@ -121,10 +121,7 @@ def PlayGame():
                sg.Column(board_controls)],
               [sg.Text('Click anywhere on board for next move', font='_ 14')]]
 
-    window = sg.Window('Chess',
-                       default_button_element_size=(12,1),
-                       auto_size_buttons=False,
-                       icon='kingb.ico').Layout(layout)
+    window = sg.Window('Chess', default_button_element_size=(12,1), auto_size_buttons=False, icon='kingb.ico').Layout(layout)
 
     # ---===--- Loop taking in user input --- #
     i = 0
@@ -147,22 +144,15 @@ def PlayGame():
             window.FindElement('_movelist_').Update(value='{}   {}\n'.format(i+1, str(move)), append=True)
             move_from = move.from_square    # parse the move-from and move-to squares
             move_to = move.to_square
-            row = move_from // 8
-            col = move_from % 8
+            row, col = move_from // 8, move_from % 8
             piece = board[row][col]         # get the move-from piece
             button = window.FindElement(key=(row,col))
-            button.Update(button_color = ('white', 'red'))
-            window.Refresh()
-            time.sleep(.05)
-            button.Update(button_color = ('white', 'white'))
-            window.Refresh()
-            time.sleep(.05)
-            button.Update(button_color = ('white', 'red'))
-            window.Refresh()
-            time.sleep(.05)
+            for x in range(3):
+                button.Update(button_color = ('white' , 'red' if x % 2 else 'white'))
+                window.Refresh()
+                time.sleep(.05)
             board[row][col] = BLANK         # place blank where piece was
-            row = move_to // 8              # compute move-to square
-            col = move_to % 8
+            row, col = move_to // 8, move_to % 8  # compute move-to square
             board[row][col] = piece         # place piece in the move-to square
             redraw_board(window, board)
             i += 1
