@@ -1,5 +1,5 @@
+![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
-  
 
 # The PySimpleGUI Cookbook
 
@@ -1189,27 +1189,44 @@ Use the Graph Element to draw points, lines, circles, rectangles using ***your**
 
 In this example we're defining our graph to be from -100, -100 to +100,+100.  That means that zero is in the middle of the drawing.  You define this graph description in your call to Graph.
 
-![snap0354](https://user-images.githubusercontent.com/13696193/45861485-cd9a6280-bd3a-11e8-83ea-32ca42dc9f3a.jpg)
+
+![graph markers](https://user-images.githubusercontent.com/13696193/46113087-01eaa480-c1bb-11e8-9784-0dbb4ce728b0.jpg)
+
+
+```
+import math
+import PySimpleGUI as sg
+
+layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]
+
+window = sg.Window('Graph of Sine Function', grab_anywhere=True).Layout(layout).Finalize()
+graph = window.FindElement('graph')
+
+# Draw axis
+graph.DrawLine((-100,0), (100,0))
+graph.DrawLine((0,-100), (0,100))
+
+for x in range(-100, 101, 20):
+    graph.DrawLine((x,-3), (x,3))
+    if x != 0:
+        graph.DrawText( x, (x,-10), color='green')
+
+for y in range(-100, 101, 20):
+    graph.DrawLine((-3,y), (3,y))
+    if y != 0:
+        graph.DrawText( y, (-10,y), color='blue')
+
+# Draw Graph
+for x in range(-100,100):
+    y = math.sin(x/20)*50
+    graph.DrawCircle((x,y), 1, line_color='red', fill_color='red')
+
+button, values = window.Read()
+```
 
 
 
-    import math
-    import PySimpleGUI as sg
 
-    layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-100,-100), graph_top_right=(100,100), background_color='white', key='graph')],]
-
-    window = sg.Window('Graph of Sine Function').Layout(layout)
-    window.Finalize()
-    graph = window.FindElement('graph')
-
-    graph.DrawLine((-100,0), (100,0))
-    graph.DrawLine((0,-100), (0,100))
-
-    for x in range(-100,100):
-        y = math.sin(x/20)*50
-      graph.DrawPoint((x,y), color='red')
-
-    button, values = window.Read()
 
 ## Tabs
 

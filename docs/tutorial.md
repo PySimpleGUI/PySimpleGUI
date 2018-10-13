@@ -1,4 +1,4 @@
-
+![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 # Add GUIs to your programs and scripts easily with PySimpleGUI
 
