@@ -14,7 +14,7 @@ def Launcher():
                 [sg.ReadFormButton('Make EXE',bind_return_key=True),
                  sg.SimpleButton('Quit', button_color=('white','firebrick3')),]]
 
-    window = sg.Window('Script launcher',
+    window = sg.Window('PySimpleGUI EXE Maker',
                        auto_size_text=False,
                        auto_size_buttons=False,
                        default_element_size=(20,1,),
@@ -41,17 +41,17 @@ def Launcher():
         command_line = 'pyinstaller -wF "{}" {} {} {} {}'.format(source_file, icon_option, workpath_option, dispath_option, specpath_option)
 
         if button is 'Make EXE':
-            try:
-                print(command_line)
-                print('Making EXE... this will take a while.. the program has NOT locked up...')
-                window.Refresh()
-                # print('Running command {}'.format(command_line))
-                runCommand(command_line)
-                shutil.rmtree(folder_to_remove)
-                os.remove(file_to_remove)
-                print('**** DONE ****')
-            except:
-                sg.PopupError('Something went wrong')
+            # try:
+            print(command_line)
+            print('Making EXE... this will take a while.. the program has NOT locked up...')
+            window.Refresh()
+            # print('Running command {}'.format(command_line))
+            runCommand(command_line)
+            shutil.rmtree(folder_to_remove)
+            os.remove(file_to_remove)
+            print('**** DONE ****')
+            # except:
+            #     sg.PopupError('Something went wrong')
 
 
 def runCommand(cmd, timeout=None):
