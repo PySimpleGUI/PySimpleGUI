@@ -11,15 +11,15 @@ layout = [[sg.Text("Hold down a key")],
 window = sg.Window("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False).Layout(layout)
 
 while True:
-    button, value = window.ReadNonBlocking()
+    event, values = window.ReadNonBlocking()
 
-    if button == "OK":
-        print(button, value, "exiting")
+    if event == "OK":
+        print(event, values, "exiting")
         break
-    if button is not None:
-        if len(button) == 1:
-            print('%s - %s'%(button, ord(button)))
+    if event is not None:
+        if len(event) == 1:
+            print('%s - %s' % (event, ord(event)))
         else:
-            print(button)
-    elif value is None:
+            print(event)
+    elif values is None:
         break

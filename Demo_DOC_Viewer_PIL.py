@@ -173,16 +173,16 @@ old_page = 0
 old_zoom = False
 
 while True:
-    button, value = window.Read()
-    if button is None and (value is None or value['PageNumber'] is None):
+    event, value = window.Read()
+    if event is None and (value is None or value['PageNumber'] is None):
         break
-    if button in quit_buttons:
+    if event in quit_buttons:
         break
 
     zoom_pressed = False
     zoom = False
 
-    if button in enter_buttons:
+    if event in enter_buttons:
         try:
             cur_page = int(value['PageNumber']) - 1  # check if valid
             while cur_page < 0:
@@ -190,19 +190,19 @@ while True:
         except:
             cur_page = 0  # this guy's trying to fool me
 
-    elif button in next_buttons:
+    elif event in next_buttons:
         cur_page += 1
-    elif button in prev_buttons:
+    elif event in prev_buttons:
         cur_page -= 1
-    elif button == Up:
+    elif event == Up:
         zoom = (clip_pos, 0, -1)
-    elif button == Down:
+    elif event == Down:
         zoom = (clip_pos, 0, 1)
-    elif button == Left:
+    elif event == Left:
         zoom = (clip_pos, -1, 0)
-    elif button == Right:
+    elif event == Right:
         zoom = (clip_pos, 1, 0)
-    elif button == "Zoom":
+    elif event == "Zoom":
         zoom_pressed = True
         zoom = (clip_pos, 0, 0)
 
@@ -228,7 +228,7 @@ while True:
     old_zoom = zoom_pressed or zoom
 
     # update page number field
-    if button in my_keys:
+    if event in my_keys:
         goto.Update(str(cur_page + 1))
 
 

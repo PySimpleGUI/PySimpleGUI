@@ -155,19 +155,19 @@ def pong():
         bat2.draw()
 
         # ------------- Read the form, get keypresses -------------
-        button, values = window.ReadNonBlocking()
+        event, values = window.ReadNonBlocking()
         # ------------- If quit  -------------
-        if button is None and values is None or button == 'Quit':
+        if event is None and values is None or event == 'Quit':
             exit(69)
         # ------------- Keypresses -------------
-        if button is not None:
-            if button.startswith('Up'):
+        if event is not None:
+            if event.startswith('Up'):
                 bat2.up(2)
-            elif button.startswith('Down'):
+            elif event.startswith('Down'):
                 bat2.down(2)
-            elif button == 'w':
+            elif event == 'w':
                 bat1.up(1)
-            elif button == 's':
+            elif event == 's':
                 bat1.down(1)
 
         if ball1.checkwin():

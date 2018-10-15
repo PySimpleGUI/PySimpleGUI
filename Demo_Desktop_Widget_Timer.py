@@ -32,25 +32,25 @@ start_time = int(round(time.time() * 100))
 while (True):
     # --------- Read and update window --------
     if not paused:
-        button, values = window.ReadNonBlocking()
+        event, values = window.ReadNonBlocking()
         current_time = int(round(time.time() * 100)) - start_time
     else:
-        button, values = window.Read()
-    if button == 'button':
-        button = window.FindElement(button).GetText()
+        event, values = window.Read()
+    if event == 'button':
+        event = window.FindElement(event).GetText()
     # --------- Do Button Operations --------
-    if values is None or button == 'Exit':
+    if values is None or event == 'Exit':
         break
-    if button is 'Reset':
+    if event is 'Reset':
         start_time = int(round(time.time() * 100))
         current_time = 0
         paused_time = start_time
-    elif button == 'Pause':
+    elif event == 'Pause':
         paused = True
         paused_time = int(round(time.time() * 100))
         element = window.FindElement('button')
         element.Update(text='Run')
-    elif button == 'Run':
+    elif event == 'Run':
         paused = False
         start_time = start_time + int(round(time.time() * 100)) - paused_time
         element = window.FindElement('button')

@@ -14,8 +14,8 @@ sz = fontSize
 window = sg.Window("Font size selector", grab_anywhere=False)
 window.Layout(layout)
 while True:
-    button, values= window.Read()
-    if button is None or button == 'Quit':
+    event, values= window.Read()
+    if event is None or event == 'Quit':
         break
     sz_spin = int(values['spin'])
     sz_slider = int(values['slider'])

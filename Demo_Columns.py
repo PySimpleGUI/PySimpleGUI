@@ -19,7 +19,7 @@ layout = [[sg.Listbox(values=('Listbox Item 1', 'Listbox Item 2', 'Listbox Item 
           [sg.OK()]]
 
 # Display the window and get values
-button, values = sg.Window('Compact 1-line form with column').Layout(layout).Read()
+event, values = sg.Window('Compact 1-line form with column').Layout(layout).Read()
 
-sg.Popup(button, values, line_width=200)
+sg.Popup(event, values, line_width=200)
 

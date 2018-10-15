@@ -14,8 +14,8 @@ def GetFilesToCompare():
                  [sg.Submit(), sg.Cancel()]]
 
     window = sg.Window('File Compare')
-    button, values = window.Layout(form_rows).Read()
-    return button, values
+    event, values = window.Layout(form_rows).Read()
+    return event, values
 
 def main():
     button, values = GetFilesToCompare()

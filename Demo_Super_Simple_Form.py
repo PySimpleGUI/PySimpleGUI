@@ -18,6 +18,6 @@ layout = [
         ]
 
 window = sg.Window('Simple Data Entry Window').Layout(layout)
-button, values = window.Read()
+event, values = window.Read()
 
-sg.Popup(button, values, values['name'], values['address'], values['phone'])
+sg.Popup(event, values, values['name'], values['address'], values['phone'])

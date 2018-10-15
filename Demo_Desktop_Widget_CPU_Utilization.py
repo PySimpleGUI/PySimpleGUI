@@ -62,10 +62,10 @@ def main():
     # ----------------  main loop  ----------------
     while (True):
         # --------- Read and update window --------
-        button, values = window.ReadNonBlocking()
+        event, values = window.ReadNonBlocking()
 
         # --------- Do Button Operations --------
-        if values is None or button == 'Exit':
+        if values is None or event == 'Exit':
             break
         try:
             g_interval = int(values['spin'])

@@ -33,7 +33,7 @@ window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(la
 print('Are there enough tabs for you?')
 
 while True:
-    button, values = window.Read()
-    print(button,values)
-    if button is None:           # always,  always give a way out!
+    event, values = window.Read()
+    print(event, values)
+    if event is None:           # always,  always give a way out!
         break

@@ -638,8 +638,8 @@ prev_x, prev_y  = canvas_left, canvas_bottom
 while True:
     time.sleep(.2)
 
-    button, values = window.ReadNonBlocking()
-    if button == 'Quit' or values is None:
+    event, values = window.ReadNonBlocking()
+    if event == 'Quit' or values is None:
         break
 
     if g_response_time is None or prev_response_time == g_response_time:

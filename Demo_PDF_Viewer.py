@@ -124,20 +124,20 @@ old_zoom = 0  # used for zoom on/off
 # the zoom buttons work in on/off mode.
 
 while True:
-    button, value = window.ReadNonBlocking()
+    event, values = window.ReadNonBlocking()
     zoom = 0
     force_page = False
-    if button is None and value is None:
+    if event is None and values is None:
         break
-    if button is None:
+    if event is None:
         continue
 
-    if button in ("Escape:27",):  # this spares me a 'Quit' button!
+    if event in ("Escape:27",):  # this spares me a 'Quit' button!
         break
     # print("hex(button)", hexlify(button.encode()))
-    if button[0] == chr(13):  # surprise: this is 'Enter'!
+    if event[0] == chr(13):  # surprise: this is 'Enter'!
         try:
-            cur_page = int(value[0]) - 1  # check if valid
+            cur_page = int(values[0]) - 1  # check if valid
             while cur_page < 0:
                 cur_page += page_count
         except:
@@ -145,17 +145,17 @@ while True:
         goto.Update(str(cur_page + 1))
         # goto.TKStringVar.set(str(cur_page + 1))
 
-    elif button in ("Next", "Next:34", "MouseWheel:Down"):
+    elif event in ("Next", "Next:34", "MouseWheel:Down"):
         cur_page += 1
-    elif button in ("Prev", "Prior:33", "MouseWheel:Up"):
+    elif event in ("Prev", "Prior:33", "MouseWheel:Up"):
         cur_page -= 1
-    elif button == "Top-L":
+    elif event == "Top-L":
         zoom = 1
-    elif button == "Top-R":
+    elif event == "Top-R":
         zoom = 2
-    elif button == "Bot-L":
+    elif event == "Bot-L":
         zoom = 3
-    elif button == "Bot-R":
+    elif event == "Bot-R":
         zoom = 4
 
     # sanitize page number
@@ -169,7 +169,7 @@ while True:
         zoom = old_zoom = 0
         force_page = True
 
-    if button in zoom_buttons:
+    if event in zoom_buttons:
         if 0 < zoom == old_zoom:
             zoom = 0
             force_page = True
@@ -184,6 +184,6 @@ while True:
     old_zoom = zoom
 
     # update page number field
-    if button in my_keys or not value[0]:
+    if event in my_keys or not values[0]:
         goto.Update(str(cur_page + 1))
         # goto.TKStringVar.set(str(cur_page + 1))

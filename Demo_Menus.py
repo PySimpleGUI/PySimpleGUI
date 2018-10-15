@@ -43,19 +43,19 @@ def TestMenus():
 
     # ------ Loop & Process button menu choices ------ #
     while True:
-        button, values = window.Read()
-        if button is None or button == 'Exit':
+        event, values = window.Read()
+        if event is None or event == 'Exit':
             return
-        print('Button = ', button)
+        print('Event = ', event)
         # ------ Process menu choices ------ #
-        if button == 'About...':
-            window.Hide()
+        if event == 'About...':
+            # window.Hide()
             sg.Popup('About this program','Version 1.0', 'PySimpleGUI rocks...', grab_anywhere=True)
-            window.UnHide()
-        elif button == 'Open':
+            # window.UnHide()
+        elif event == 'Open':
             filename = sg.PopupGetFile('file to open', no_window=True)
             print(filename)
-        elif button == 'Properties':
+        elif event == 'Properties':
             SecondForm()
 
 TestMenus()

@@ -55,18 +55,18 @@ def Launcher2():
 
     # ---===--- Loop taking in user input  --- #
     while True:
-        (button, value) = window.Read()
-        if button in ('EXIT', None):
+        event, values = window.Read()
+        if event in ('EXIT', None):
             break           # exit button clicked
-        if button in ('Shortcut 1', 'Fav Program'):
+        if event in ('Shortcut 1', 'Fav Program'):
             print('Quickly launch your favorite programs using these shortcuts')
             print('Or  copy files to your github folder.  Or anything else you type on the command line')
             # copyfile(source, dest)
-        elif button is 'Run':
-            for index, file in enumerate(value['demolist']):
+        elif event is 'Run':
+            for index, file in enumerate(values['demolist']):
                 print('Launching %s'%file)
                 window.Refresh()          # make the print appear immediately
-                if value['wait']:
+                if values['wait']:
                     execute_command_blocking(LOCATION_OF_YOUR_SCRIPTS + file)
                 else:
                     execute_command_nonblocking(LOCATION_OF_YOUR_SCRIPTS + file)

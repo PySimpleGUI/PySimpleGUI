@@ -18,8 +18,9 @@ import turtle
 
 
 layout = [[ sg.Text('My layout') ],
-          [sg.Canvas(size=(500,500), key='_canvas_')],
-          [ sg.RButton('F'), sg.RButton('B'), sg.RButton('L'), sg.RButton('R')]]
+          [sg.Canvas(size=(800,800), key='_canvas_')],
+          [ sg.RButton('F'), sg.RButton('B'), sg.RButton('L'), sg.RButton('R')],
+          [sg.RButton('Spiral'), sg.RButton('Inside Out'), sg.RButton('Circles')]]
 
 window = sg.Window('My new window').Layout(layout).Finalize()
 
@@ -28,20 +29,56 @@ canvas = window.FindElement('_canvas_').TKCanvas
 t = turtle.RawTurtle(canvas)
 t.pencolor("#ff0000") # Red
 
-t.penup()   # Regarding one of the comments
-t.pendown() # Regarding one of the comments
+t.penup()
+t.pendown()
 
 while True:     # Event Loop
-    button, value = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         break
 
-    if button == 'F':
+    if event == 'F':
         t.forward(100)
-    elif button == 'B':
+    elif event == 'B':
         t.back(100)
-    elif button == 'L':
+    elif event == 'L':
         t.left(90)
-    elif button == 'R':
+    elif event == 'R':
         t.right(90)
-
+    elif event == 'Spiral':
+        canvas.config(bg='light green')
+        t.color("blue")
+        def sqrfunc(size):
+            for i in range(4):
+                t.fd(size)
+                t.left(90)
+                size = size - 5
+        sqrfunc(146)
+        sqrfunc(126)
+        sqrfunc(106)
+        sqrfunc(86)
+        sqrfunc(66)
+        sqrfunc(46)
+        sqrfunc(26)
+    elif event == 'Inside Out':
+        canvas.config(bg = "light green")
+        t.color("blue")
+        def sqrfunc(size):
+            for i in range(4):
+                t.fd(size)
+                t.left(90)
+                size = size + 5
+        sqrfunc(6)
+        sqrfunc(26)
+        sqrfunc(46)
+        sqrfunc(66)
+        sqrfunc(86)
+        sqrfunc(106)
+        sqrfunc(126)
+        sqrfunc(146)
+    elif event == 'Circles':
+        t.speed(0)
+        for i in range(400):
+            t.circle(2 * i*.25)
+            t.circle(-2 * i*.25)
+            t.left(i)

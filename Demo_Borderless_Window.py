@@ -11,6 +11,7 @@ Turn off padding in order to get a really tight looking layout.
 
 sg.ChangeLookAndFeel('Dark')
 sg.SetOptions(element_padding=(0, 0))
+
 layout = [[sg.T('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User 2'), size=(20, 1)),
            sg.T('0', size=(8, 1))],
           [sg.T('Customer:', pad=((3, 0), 0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20, 1)),
@@ -22,15 +23,20 @@ layout = [[sg.T('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User
            sg.ReadButton('Submit', button_color=('gray60', 'springgreen4')),
            sg.Button('Exit', button_color=('white', '#00406B'))]]
 
-window = sg.Window("Time Tracker", default_element_size=(12, 1), text_justification='r', auto_size_text=False,
-                   auto_size_buttons=False, no_titlebar=True,
+window = sg.Window("Borderless Window",
+                   default_element_size=(12, 1),
+                   text_justification='r',
+                   auto_size_text=False,
+                   auto_size_buttons=False,
+                   no_titlebar=True,
+                   grab_anywhere=True,
                    default_button_element_size=(12, 1))
 
 window.Layout(layout)
 
 while True:
-    button, values = window.Read()
-    if button is None or button == 'Exit':
+    event, values = window.Read()
+    if event is None or event == 'Exit':
         break
 
 

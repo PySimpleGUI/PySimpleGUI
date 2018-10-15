@@ -5,6 +5,12 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 
+from PySimpleGUI import Print as print
+
+
+print('test')
+sg.PopupGetFile('Get file', save_as=True,file_types=(("ALL Files", "*.jpg")))
+
 # Here, have some windows on me....
 [sg.PopupNoWait('No-wait Popup', location=(500+100*x,500)) for x in range(10)]
 

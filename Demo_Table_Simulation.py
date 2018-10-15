@@ -37,13 +37,13 @@ def TableSimulation():
     window = sg.Window('Table', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
 
     while True:
-        button, values = window.Read()
+        event, values = window.Read()
         # --- Process buttons --- #
-        if button is None or button == 'Exit':
+        if event is None or event == 'Exit':
             break
-        elif button == 'About...':
+        elif event == 'About...':
             sg.Popup('Demo of table capabilities')
-        elif button == 'Open':
+        elif event == 'Open':
             filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
             # --- populate table with file contents --- #
             if filename is not None:

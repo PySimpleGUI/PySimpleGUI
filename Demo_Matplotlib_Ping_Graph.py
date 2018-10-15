@@ -662,8 +662,8 @@ def main():
     plt.tight_layout()
 
     while True:
-        button, values = window.ReadNonBlocking()
-        if button is 'Exit' or values is None:
+        event, values = window.ReadNonBlocking()
+        if event is 'Exit' or values is None:
             exit(0)
 
         run_a_ping_and_graph()

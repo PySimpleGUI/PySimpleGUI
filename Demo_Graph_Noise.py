@@ -45,9 +45,9 @@ def main():
     graph_value = 250
     while True:
         # time.sleep(.2)
-        button, values = window.ReadNonBlocking()
-        print(button, values)
-        if button == 'Quit' or values is None:
+        event, values = window.ReadNonBlocking()
+        print(event, values)
+        if event == 'Quit' or values is None:
             break
         graph_offset = random.randint(-10, 10)
         graph_value = graph_value + graph_offset

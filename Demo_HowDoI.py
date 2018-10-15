@@ -41,26 +41,26 @@ def HowDoI():
     command_history = []
     history_offset = 0
     while True:
-        (button, value) = window.Read()
-        if button is 'SEND':
-            query = value['query'].rstrip()
-            print(query)
-            QueryHowDoI(query, value['Num Answers'], value['full text'])  # send the string to HowDoI
+        event, values = window.Read()
+        if event == 'SEND':
+            query = values['query'].rstrip()
+            # print(query)
+            QueryHowDoI(query, values['Num Answers'], values['full text'])  # send the string to HowDoI
             command_history.append(query)
             history_offset = len(command_history)-1
             window.FindElement('query').Update('')                       # manually clear input because keyboard events blocks clear
             window.FindElement('history').Update('\n'.join(command_history[-3:]))
-        elif button is None or button is 'EXIT':            # if exit button or closed using X
+        elif event == None or event == 'EXIT':            # if exit button or closed using X
             break
-        elif 'Up' in button and len(command_history):                                # scroll back in history
+        elif 'Up' in event and len(command_history):                                # scroll back in history
             command = command_history[history_offset]
             history_offset -= 1 * (history_offset > 0)      # decrement is not zero
             window.FindElement('query').Update(command)
-        elif 'Down' in button and len(command_history):                              # scroll forward in history
+        elif 'Down' in event and len(command_history):                              # scroll forward in history
             history_offset += 1 * (history_offset < len(command_history)-1) # increment up to end of list
             command = command_history[history_offset]
             window.FindElement('query').Update(command)
-        elif 'Escape' in button:                            # clear currently line
+        elif 'Escape' in event:                            # clear currently line
             window.FindElement('query').Update('')
 
 

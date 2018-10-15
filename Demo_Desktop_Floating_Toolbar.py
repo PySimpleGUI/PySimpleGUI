@@ -44,19 +44,19 @@ def Launcher():
 
     # ---===--- Loop taking in user input and executing appropriate program --- #
     while True:
-        (button, value) = window.Read()
-        if button is 'EXIT' or button is None:
+        (event, values) = window.Read()
+        if event == 'EXIT' or event is None:
             break           # exit button clicked
-        if button is 'Program 1':
+        if event == 'Program 1':
             print('Run your program 1 here!')
-        elif button is 'Program 2':
+        elif event == 'Program 2':
             print('Run your program 2 here!')
-        elif button is 'Run':
-            file = value['demofile']
+        elif event == 'Run':
+            file = values['demofile']
             print('Launching %s'%file)
             ExecuteCommandSubprocess('python', os.path.join(ROOT_PATH, file))
         else:
-            print(button)
+            print(event)
 
 def ExecuteCommandSubprocess(command, *args, wait=False):
     try:

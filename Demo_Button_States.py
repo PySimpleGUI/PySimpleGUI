@@ -30,22 +30,22 @@ for key, state in {'_Start_': False, '_Stop_': True, '_Reset_': True, '_Submit_'
 
 recording = have_data = False
 while True:
-    button, values = window.Read()
-    print(button)
-    if button is None:
+    event, values = window.Read()
+    print(event)
+    if event is None:
         sys.exit(69)
-    if button == '_Start_':
+    if event == '_Start_':
         for key, state in {'_Start_':True, '_Stop_':False, '_Reset_':False, '_Submit_':True}.items():
             window.FindElement(key).Update(disabled=state)
         recording = True
-    elif button ==  '_Stop_' and recording:
+    elif event ==  '_Stop_' and recording:
         [window.FindElement(key).Update(disabled=value) for key,value in {'_Start_':False, '_Stop_':True, '_Reset_':False, '_Submit_':False}.items()]
         recording = False
         have_data = True
-    elif button == '_Reset_':
+    elif event == '_Reset_':
         [window.FindElement(key).Update(disabled=value) for key,value in {'_Start_':False, '_Stop_':True, '_Reset_':True, '_Submit_':True}.items()]
         recording = False
         have_data = False
-    elif button is '_Submit_' and have_data:
+    elif event is '_Submit_' and have_data:
         [window.FindElement(key).Update(disabled=value) for key,value in {'_Start_':False, '_Stop_':True, '_Reset_':True, '_Submit_':False}.items()]
         recording = False

@@ -47,7 +47,7 @@ def main():
 
     #===== Add a click me button for fun and SHOW the window ===== ===== ===== ===== ===== =====  =====#
     window.AddRow(sg.Button('Click ME!'))
-    (button, value) = window.Show()               # show it!
+    event, values = window.Read()               # show it!
 
 
 if __name__ == '__main__':

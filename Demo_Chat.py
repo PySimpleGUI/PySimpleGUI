@@ -21,12 +21,12 @@ window = sg.Window('Chat window', default_element_size=(30, 2), font=('Helvetica
 
 # ---===--- Loop taking in user input and using it  --- #
 while True:
-    (button, value) = window.Read()
-    if button is 'SEND':
+    (event, value) = window.Read()
+    if event is 'SEND':
         query = value['query'].rstrip()
         # EXECUTE YOUR COMMAND HERE
         print('The command you entered was {}'.format(query))
-    elif button is None or button is 'EXIT':            # quit if exit button or X
+    elif event is None or event == 'EXIT':            # quit if exit button or X
         break
 sys.exit(69)
 

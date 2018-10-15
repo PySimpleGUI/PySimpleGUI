@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 import sys
+
+from Demo_Turtle import canvas
+
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
@@ -21,12 +24,16 @@ if filename is not None:
 
 sg.SetOptions(element_padding=(0, 0))
 
-col_layout = [[sg.Table(values=data[1:][:], headings=[data[0][x] for x in range(len(data[0]))], max_col_width=25,
-                        auto_size_columns=True, display_row_numbers=True, justification='right', size=(None, len(data)))]]
+headings = [data[0][x] for x in range(len(data[0]))]
 
-layout = [[sg.Column(col_layout, size=(1200,600), scrollable=True)],]
+col_layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
+                        auto_size_columns=True, display_row_numbers=True, justification='right', num_rows=len(data), alternating_row_color='lightblue')]]
+
+canvas_size = (13 * 10 * len(headings), 600)  # estimate canvas size - 13 pixels per char * 10 per column * num columns
+
+layout = [[sg.Column(col_layout, size=canvas_size, scrollable=True)],]
 window = sg.Window('Table', grab_anywhere=False).Layout(layout)
 
-b, v = window.Read()
+event, values = window.Read()
 
 sys.exit(69)

@@ -27,11 +27,11 @@ window = sg.Window('Spinner simulation').Layout(layout)
 # --- Event Loop --- #
 counter = 0
 while True:
-    button, value = window.Read()
+    event, values = window.Read()
 
-    if button == 'Ok' or button is None:    # be nice to your user, always have an exit from your form
+    if event == 'Ok' or event is None:    # be nice to your user, always have an exit from your form
         break
 
     # --- do spinner stuff --- #
-    counter += 1 if button =='+' else -1 if button == '-' else 0
+    counter += 1 if event == '+' else -1 if event == '-' else 0
     window.FindElement('spin').Update(counter)

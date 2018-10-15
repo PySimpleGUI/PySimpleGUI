@@ -16,17 +16,18 @@ point = graph.DrawPoint((75,75), 10, color='green')
 oval = graph.DrawOval((25,300), (100,280), fill_color='purple', line_color='purple' )
 rectangle = graph.DrawRectangle((25,300), (100,280), line_color='purple' )
 line = graph.DrawLine((0,0), (100,100))
-
+arc = graph.DrawArc((0,0), (400,400), 160, 10, style='arc' ,arc_color='blue')
 while True:
-    button, values = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         break
-    if button is 'Blue':
+    if event is 'Blue':
         graph.TKCanvas.itemconfig(circle, fill = "Blue")
-    elif button is 'Red':
+    elif event is 'Red':
         graph.TKCanvas.itemconfig(circle, fill = "Red")
-    elif button is 'Move':
+    elif event is 'Move':
         graph.MoveFigure(point, 10,10)
         graph.MoveFigure(circle, 10,10)
         graph.MoveFigure(oval, 10,10)
         graph.MoveFigure(rectangle, 10,10)
+        graph.MoveFigure(arc, 10,10)

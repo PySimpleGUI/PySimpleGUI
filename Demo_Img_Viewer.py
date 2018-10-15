@@ -88,22 +88,22 @@ window.Layout(layout)          # Shows form on screen
 i=0
 while True:
     # read the form
-    button, values = window.Read()
-    print(button, values)
+    event, values = window.Read()
+    print(event, values)
     # perform button and keyboard operations
-    if button is None:
+    if event is None:
         break
-    elif button in ('Next', 'MouseWheel:Down', 'Down:40', 'Next:34'):
+    elif event in ('Next', 'MouseWheel:Down', 'Down:40', 'Next:34'):
         i += 1
         if i >= num_files:
             i -= num_files
         filename = os.path.join(folder, fnames[i])
-    elif button in ('Prev', 'MouseWheel:Up', 'Up:38', 'Prior:33'):
+    elif event in ('Prev', 'MouseWheel:Up', 'Up:38', 'Prior:33'):
         i -= 1
         if i < 0:
             i = num_files + i
         filename = os.path.join(folder, fnames[i])
-    elif button == 'listbox':            # something from the listbox
+    elif event == 'listbox':            # something from the listbox
         f = values["listbox"][0]            # selected filename
         filename = os.path.join(folder, f)  # read this file
         i = fnames.index(f)                 # update running index

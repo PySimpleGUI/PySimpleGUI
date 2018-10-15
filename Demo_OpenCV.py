@@ -40,8 +40,8 @@ def main():
     # ---===--- LOOP through video file by frame --- #
     i = 0
     while vidFile.isOpened():
-        button, values = window.ReadNonBlocking()
-        if button is 'Exit' or values is None:
+        event, values = window.ReadNonBlocking()
+        if event is 'Exit' or values is None:
             exit(69)
         ret, frame = vidFile.read()
         if not ret:  # if out of data stop looping

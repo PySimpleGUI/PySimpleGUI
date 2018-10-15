@@ -1689,12 +1689,12 @@ def main():
                   [sg.Submit(), sg.Button('Many buttons', button_color=('white', '#0e6251'), key='Many buttons'), sg.ColorChooserButton( 'Chooser', target=(3,0), key='Chooser'),  sg.Quit(),],
                   ]
                   # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
-        button, values = sg.Window('Color Demo', auto_size_buttons=False).Layout(layout).Read()
+        event, values = sg.Window('Color Demo', auto_size_buttons=False).Layout(layout).Read()
 
         # -------  OUTPUT results portion  ------- #
-        if button == 'Quit' or button is None:
+        if event == 'Quit' or event is None:
             exit(0)
-        elif button == 'Many buttons':
+        elif event == 'Many buttons':
                 show_all_colors_on_buttons()
 
         drop_down_value = values['listbox']

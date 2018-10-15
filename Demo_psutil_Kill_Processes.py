@@ -62,14 +62,14 @@ def main():
     # ----------------  main loop  ----------------
     while (True):
         # --------- Read and update window --------
-        button, values = window.Read()
-        if 'Mouse' in button or 'Control' in button or 'Shift' in button:
+        event, values = window.Read()
+        if 'Mouse' in event or 'Control' in event or 'Shift' in event:
             continue
         # --------- Do Button Operations --------
-        if values is None or button == 'Exit':
+        if values is None or event == 'Exit':
             break
 
-        if button == 'Sort by Name':
+        if event == 'Sort by Name':
             psutil.cpu_percent(interval=1)
             procs = psutil.process_iter()
             all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
@@ -78,13 +78,16 @@ def main():
             for process in sorted_by_cpu_procs:
                 display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
             window.FindElement('_processes_').Update(display_list)
-        elif button == 'Kill':
+        elif event == 'Kill':
             processes_to_kill = values['_processes_']
             for proc in processes_to_kill:
                 pid = int(proc[0:5])
-                if sg.PopupYesNo('About to kill {} {}'.format(pid, proc[13:]), keep_on_top=True) == 'Yes':
-                    kill_proc_tree(pid=pid)
-        elif button == 'Sort by % CPU':
+                if sg.PopupYesNo('About to kill {} {}'.format(pid, proc[12:]), keep_on_top=True) == 'Yes':
+                    try:
+                        kill_proc_tree(pid=pid)
+                    except:
+                        sg.PopupAutoClose('Error killing process', auto_close_duration=1)
+        elif event == 'Sort by % CPU':
             psutil.cpu_percent(interval=1)
             procs = psutil.process_iter()
             all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
@@ -104,3 +107,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    sys.exit(0)

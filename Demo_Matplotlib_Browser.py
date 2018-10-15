@@ -886,10 +886,10 @@ canvas_elem = window.FindElement('canvas')
 multiline_elem= window.FindElement('multiline')
 
 while True:
-    button, values = window.Read()
-    print(button)
+    event, values = window.Read()
+    print(event)
     # show it all again and get buttons
-    if button is None or button is 'Exit':
+    if event is None or event is 'Exit':
         break
 
     try:
