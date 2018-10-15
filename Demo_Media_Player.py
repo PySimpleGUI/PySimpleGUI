@@ -57,12 +57,12 @@ def MediaPlayerGUI():
     # Our event loop
     while(True):
         # Read the form (this call will not block)
-        button, values = window.ReadNonBlocking()
-        if button == 'Exit':
+        event, values = window.ReadNonBlocking()
+        if event == 'Exit':
             break
         # If a button was pressed, display it on the GUI by updating the text element
-        if button:
-            window.FindElement('output').Update(button)
+        if event:
+            window.FindElement('output').Update(event)
 
 MediaPlayerGUI()
 

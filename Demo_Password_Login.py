@@ -30,8 +30,8 @@ def HashGeneratorGUI():
                        text_justification='r', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
 
     while True:
-        button, values = window.Read()
-        if button is None:
+        event, values = window.Read()
+        if event is None:
               exit(69)
 
         password = values['password']

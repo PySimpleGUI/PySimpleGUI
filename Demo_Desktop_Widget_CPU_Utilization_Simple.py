@@ -25,10 +25,10 @@ window = sg.Window('CPU Meter',
 # ----------------  main loop  ----------------
 while (True):
     # --------- Read and update window --------
-    button, values = window.ReadNonBlocking()
+    event, values = window.ReadNonBlocking()
 
     # --------- Do Button Operations --------
-    if values is None or button == 'Exit':
+    if values is None or event == 'Exit':
         break
     try:
         interval = int(values['_spin_'])

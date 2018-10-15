@@ -31,13 +31,13 @@ def table_example():
     # sg.SetOptions(element_padding=(0, 0))
 
     col_layout = [[sg.Table(values=data, headings=header_list, display_row_numbers=True,
-                            auto_size_columns=False, size=(None, len(data)))]]
+                            auto_size_columns=False, num_rows=len(data))]]
 
     canvas_size = (13*10*len(header_list), 600)      # estimate canvas size - 13 pixels per char * 10 per column * num columns
     layout = [[sg.Column(col_layout, size=canvas_size, scrollable=True)]]
 
     window = sg.Window('Table', grab_anywhere=False)
-    b, v = window.LayoutAndRead(layout)
+    event, values = window.LayoutAndRead(layout)
 
     sys.exit(69)
 

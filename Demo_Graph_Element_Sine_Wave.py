@@ -34,7 +34,7 @@ for y in range(-100, 101, 20):
 
 # Draw Graph
 for x in range(-100,100):
-    y = math.sin(x/20)*50
+    y = math.sin(x/30)*50
     graph.DrawCircle((x,y), 1, line_color='red', fill_color='red')
 
-button, values = window.Read()
+event, values = window.Read()

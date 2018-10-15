@@ -41,13 +41,13 @@ layout = [[sg.T('Raspberry Pi LEDs')],
 window = sg.Window('Raspberry Pi GUI', grab_anywhere=False).Layout(layout)
 
 while True:
-    button, values = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         break
 
-    if button is 'Switch LED':
+    if event is 'Switch LED':
         window.FindElement('output').Update(SwitchLED())
-    elif button is 'Flash LED':
+    elif event is 'Flash LED':
         window.FindElement('output').Update('LED is Flashing')
         window.ReadNonBlocking()
         FlashLED()

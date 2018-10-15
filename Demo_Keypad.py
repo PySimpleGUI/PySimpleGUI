@@ -29,15 +29,15 @@ window = sg.Window('Keypad', default_button_element_size=(5, 2), auto_size_butto
 # Loop forever reading the form's values, updating the Input field
 keys_entered = ''
 while True:
-    button, values = window.Read()  # read the form
-    if button is None:  # if the X button clicked, just exit
+    event, values = window.Read()  # read the form
+    if event is None:  # if the X button clicked, just exit
         break
-    if button == 'Clear':  # clear keys if clear button
+    if event == 'Clear':  # clear keys if clear button
         keys_entered = ''
-    elif button in '1234567890':
+    elif event in '1234567890':
         keys_entered = values['input']  # get what's been entered so far
-        keys_entered += button  # add the new digit
-    elif button == 'Submit':
+        keys_entered += event  # add the new digit
+    elif event == 'Submit':
         keys_entered = values['input']
         window.FindElement('out').Update(keys_entered)  # output the final string
 

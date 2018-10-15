@@ -11,5 +11,5 @@ layout = [[sg.T('Calendar Test')],
           [sg.Ok(key=1)]]
 
 window = sg.Window('Calendar', grab_anywhere=False).Layout(layout)
-b,v = window.Read()
-sg.Popup(v['input'])
+event,values = window.Read()
+sg.Popup(values['input'])

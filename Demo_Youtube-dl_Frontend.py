@@ -30,11 +30,11 @@ def DownloadSubtitlesGUI():
 
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     while True:
-        (button, gui) = window.Read()
-        if button in ('EXIT', None):
+        event, values = window.Read()
+        if event in ('EXIT', None):
             break           # exit button clicked
-        link = gui['link']
-        if button is 'Get List':
+        link = values['link']
+        if event is 'Get List':
             print('Getting list of subtitles....')
             window.Refresh()
             command = [f'C:/Python/PycharmProjects/GooeyGUI/youtube-dl --list-subs {link}',]
@@ -44,8 +44,8 @@ def DownloadSubtitlesGUI():
             combobox.Update(values=lang_list)
             print('Done')
 
-        elif button is 'Download':
-            lang = gui['lang']
+        elif event is 'Download':
+            lang = values['lang']
             if lang is '':
                 lang = 'en'
             print(f'Downloading subtitle for {lang}...')

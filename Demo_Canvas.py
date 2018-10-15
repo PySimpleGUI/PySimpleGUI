@@ -15,10 +15,10 @@ window = sg.Window('Canvas test').Layout(layout).Finalize()
 cir = window.FindElement('canvas').TKCanvas.create_oval(50, 50, 100, 100)
 
 while True:
-    button, values = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         break
-    if button is 'Blue':
+    if event is 'Blue':
         window.FindElement('canvas').TKCanvas.itemconfig(cir, fill = "Blue")
-    elif button is 'Red':
+    elif event is 'Red':
         window.FindElement('canvas').TKCanvas.itemconfig(cir, fill = "Red")

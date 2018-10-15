@@ -16,14 +16,14 @@ window = sg.Window("Keyboard Test", return_keyboard_events=True, use_default_foc
 
 # ---===--- Loop taking in user input --- #
 while True:
-    button, value = window.Read()
+    event, values = window.Read()
     text_elem = window.FindElement('text')
-    if button in ("OK", None):
-        print(button, "exiting")
+    if event in ("OK", None):
+        print(event, "exiting")
         break
-    if len(button) == 1:
-        text_elem.Update(value='%s - %s' % (button, ord(button)))
-    if button is not None:
-        text_elem.Update(button)
+    if len(event) == 1:
+        text_elem.Update(value='%s - %s' % (event, ord(event)))
+    if event is not None:
+        text_elem.Update(event)
 
 

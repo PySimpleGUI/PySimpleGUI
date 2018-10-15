@@ -6,6 +6,6 @@ layout = [[sg.Text('What is your name?')],
 
 window = sg.Window('Title of Window').Layout(layout)
 
-button, values = window.Read()
+event, values = window.Read()
 
 sg.Popup('Hello {}'.format(values[0]))

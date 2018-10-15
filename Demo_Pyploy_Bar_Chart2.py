@@ -76,4 +76,4 @@ window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', for
 fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)
 
 # show it all again and get buttons
-button, values = window.Read()
+event, values = window.Read()

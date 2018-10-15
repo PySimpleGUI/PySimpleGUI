@@ -22,8 +22,10 @@ layout = [[ sg.Text('Tree Test') ],
 
 window = sg.Window('Tree Element Test').Layout(layout)
 
+print(treedata)
+
 while True:     # Event Loop
-    button, value = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         break
-    print(button, value)
+    print(event, values)

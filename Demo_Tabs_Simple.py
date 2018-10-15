@@ -19,8 +19,7 @@ window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(la
 
 
 while True:
-    b, v = window.Read()
-    sg.PopupNonBlocking('button = %s'%b,'Values dictionary', v)
-    print(b,v)
-    if b is None:           # always,  always give a way out!
+    event, values = window.Read()
+    sg.PopupNonBlocking('button = %s' % event, 'Values dictionary', values)
+    if event is None:           # always,  always give a way out!
         break

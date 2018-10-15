@@ -6,7 +6,6 @@ else:
     import PySimpleGUI27 as sg
 import csv
 
-
 def table_example():
     filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
     # --- populate table with file contents --- #
@@ -29,14 +28,19 @@ def table_example():
                 sys.exit(69)
     sg.SetOptions(element_padding=(0, 0))
 
-    col_layout = [[sg.Table(values=data, headings=header_list, max_col_width=25,
-                            auto_size_columns=True, justification='right', size=(None, len(data)))]]
+    col_layout = [[sg.Table(values=data,
+                            headings=header_list,
+                            max_col_width=25,
+                            auto_size_columns=True,
+                            justification='right',
+                            alternating_row_color='lightblue',
+                            num_rows=len(data))]]
 
     canvas_size = (13*10*len(header_list), 600)      # estimate canvas size - 13 pixels per char * 10 char per column * num columns
     layout = [[sg.Column(col_layout, size=canvas_size, scrollable=True)],]
 
     window = sg.Window('Table', grab_anywhere=False).Layout(layout)
-    b, v = window.Read()
+    event, values = window.Read()
 
     sys.exit(69)
 

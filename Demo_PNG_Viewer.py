@@ -42,21 +42,21 @@ window = sg.Window('Image Browser', return_keyboard_events=True, location=(0,0),
 i=0
 while True:
 
-    button, values = window.Read()
+    event, values = window.Read()
     # --------------------- Button & Keyboard ---------------------
-    if button is None:
+    if event is None:
         break
-    elif button in ('Next', 'MouseWheel:Down', 'Down:40', 'Next:34') and i < len(png_files)-1:
+    elif event in ('Next', 'MouseWheel:Down', 'Down:40', 'Next:34') and i < len(png_files)-1:
         i += 1
-    elif button in ('Prev', 'MouseWheel:Up', 'Up:38', 'Prior:33') and i > 0:
+    elif event in ('Prev', 'MouseWheel:Up', 'Up:38', 'Prior:33') and i > 0:
         i -= 1
-    elif button == 'Exit':
+    elif event == 'Exit':
         exit(69)
 
-    filename = folder + '/' + values['listbox'][0] if button == 'Read' else png_files[i]
+    filename = folder + '/' + values['listbox'][0] if event == 'Read' else png_files[i]
 
     # ----------------- Menu choices -----------------
-    if button == 'Open Folder':
+    if event == 'Open Folder':
         newfolder = sg.PopupGetFolder('New folder', no_window=True)
         if newfolder is None:
             continue
@@ -66,7 +66,7 @@ while True:
         window.FindElement('listbox').Update(values=filenames_only)
         window.Refresh()
         i = 0
-    elif button == 'About':
+    elif event == 'About':
         sg.Popup('Demo PNG Viewer Program', 'Please give PySimpleGUI a try!')
 
     # update window with new image

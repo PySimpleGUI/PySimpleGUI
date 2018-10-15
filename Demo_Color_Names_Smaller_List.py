@@ -105,9 +105,9 @@ window = sg.Window('Color Viewer', grab_anywhere=False, font=('any 9')).Layout(l
 
 # -- Event loop --
 while True:
-    b, v = window.Read()
-    if b is None:
+    event, values = window.Read()
+    if event is None:
         break
     # -- Create a secondary window that shows white and black text on chosen color
-    layout2 =[[sg.DummyButton(b, button_color=('white', b)), sg.DummyButton(b, button_color=('black', b))] ]
+    layout2 =[[sg.DummyButton(event, button_color=('white', event)), sg.DummyButton(event, button_color=('black', event))]]
     sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).ReadNonBlocking()

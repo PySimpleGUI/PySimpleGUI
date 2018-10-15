@@ -66,8 +66,8 @@ window = sg.Window('Chat Window', auto_size_text=True, default_element_size=(30,
 
 # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
 while True:
-    button, (value,) = window.Read()
-    if button is not 'SEND':
+    event, (value,) = window.Read()
+    if event is not 'SEND':
         break
     string = value.rstrip()
     print('     '+string)

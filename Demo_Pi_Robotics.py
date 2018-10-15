@@ -40,13 +40,13 @@ def RemoteControlExample():
     # your program's main loop
     while (True):
         # This is the code that reads and updates your window
-        button, values = window.ReadNonBlocking()
-        if button is not None:
-            window.FindElement('status').Update(button)
+        event, values = window.ReadNonBlocking()
+        if event is not None:
+            window.FindElement('status').Update(event)
         else:
             window.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
-        if button == 'Quit' or values is None:
+        if event == 'Quit' or values is None:
             break
 
     window.CloseNonBlocking()
@@ -73,13 +73,13 @@ def RemoteControlExample_NoGraphics():
     # your program's main loop
     while (True):
         # This is the code that reads and updates your window
-        button, values = window.ReadNonBlocking()
-        if button is not None:
-            window.FindElement('status').Update(button)
+        event, values = window.ReadNonBlocking()
+        if event is not None:
+            window.FindElement('status').Update(event)
         else:
             window.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
-        if button == 'Quit' or values is None:
+        if event == 'Quit' or values is None:
             break
 
     window.CloseNonBlocking()

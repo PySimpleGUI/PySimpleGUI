@@ -22,8 +22,8 @@ def PopupDropDown(title, text, values):
     window = sg.Window(title).Layout([[sg.Text(text)],
                                       [sg.DropDown(values, key='_drop')],
                                       [sg.OK(), sg.Cancel()]])
-    button, values = window.Read()
-    return None if button != 'OK' else values['_drop']
+    event, values = window.Read()
+    return None if event != 'OK' else values['_drop']
 
 
 # -----------------------  Calling your PopupDropDown function -----------------------

@@ -90,16 +90,16 @@ class PlayerGUI():
         if 'window' not in locals() or window is None:          # if the widnow has been destoyed don't mess with it
             return PLAYER_COMMAND_EXIT
         self.TextElem.Update(DisplayString)
-        button, (values) = window.ReadNonBlocking()
+        event, (values) = window.ReadNonBlocking()
         if values is None:
             return PLAYER_COMMAND_EXIT
-        if button == 'PAUSE':
+        if event == 'PAUSE':
             return PLAYER_COMMAND_PAUSE
-        elif button == 'EXIT':
+        elif event == 'EXIT':
             return PLAYER_COMMAND_EXIT
-        elif button == 'NEXT':
+        elif event == 'NEXT':
             return PLAYER_COMMAND_NEXT
-        elif button == 'Restart Song':
+        elif event == 'Restart Song':
             return PLAYER_COMMAND_RESTART_SONG
         return PLAYER_COMMAND_NONE
 

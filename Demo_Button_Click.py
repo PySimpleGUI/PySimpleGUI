@@ -24,7 +24,7 @@ window.FindElement('submit').Update(disabled=True)
 
 recording = have_data = False
 while True:
-    button, values = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         sys.exit(69)
     winsound.PlaySound("ButtonClick.wav", 1)

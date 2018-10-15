@@ -26,13 +26,13 @@ def StatusOutputExample():
     i=0
     while (True):
         # This is the code that reads and updates your window
-        button, values = window.ReadNonBlocking()
+        event, values = window.ReadNonBlocking()
         window.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
-        if button == 'Quit' or values is None:
+        if event == 'Quit' or values is None:
             break
-        if button == 'LED On':
+        if event == 'LED On':
             print('Turning on the LED')
-        elif button == 'LED Off':
+        elif event == 'LED Off':
             print('Turning off the LED')
 
         i += 1

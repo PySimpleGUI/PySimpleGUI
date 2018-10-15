@@ -46,17 +46,17 @@ def Everything():
     window.Layout(layout)
 
     while True:
-        button, values = window.Read()
+        event, values = window.Read()
 
-        if button is 'SaveSettings':
+        if event is 'SaveSettings':
             filename = sg.PopupGetFile('Save Settings', save_as=True, no_window=True)
             window.SaveToDisk(filename)
             # save(values)
-        elif button is 'LoadSettings':
+        elif event is 'LoadSettings':
             filename = sg.PopupGetFile('Load Settings', no_window=True)
             window.LoadFromDisk(filename)
             # load(form)
-        elif button in ['Exit', None]:
+        elif event in ['Exit', None]:
             break
 
     # window.CloseNonBlocking()

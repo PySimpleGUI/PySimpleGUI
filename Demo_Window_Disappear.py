@@ -11,11 +11,11 @@ layout = [[ sg.Text('My Window') ],
 window = sg.Window('My window').Layout(layout)
 
 while True:
-    button, value = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         break
-    if button == 'Disappear':
-        window.Disapper()
+    if event == 'Disappear':
+        window.Disappear()
         sg.Popup('Click OK to make window reappear')
         window.Reappear()
 

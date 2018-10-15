@@ -39,8 +39,8 @@ window = sg.Window('My new window', default_element_size=(12, 1), auto_size_text
 
 i = 0
 while True:  # Event Loop
-    button, value = window.ReadNonBlocking()
-    if button == 'Exit':
+    event, value = window.ReadNonBlocking()
+    if event == 'Exit':
         window.CloseNonBlocking()
         break
     if value is None:

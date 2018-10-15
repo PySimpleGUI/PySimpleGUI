@@ -14,7 +14,7 @@ layout = [[ sg.Text('My layout') ],
           [ sg.Button('Next Window')]]
 
 window = sg.Window('My window').Layout(layout)
-button, value = window.Read()
+event, values = window.Read()
 
 
 # -------------------------------------#
@@ -33,7 +33,7 @@ layout = [[ sg.Text('My layout') ],
 window = sg.Window('My new window').Layout(layout)
 
 while True:     # Event Loop
-    button, value = window.Read()
-    if button is None:
+    event, values = window.Read()
+    if event is None:
         break
-    print(button, value)
+    print(event, values)

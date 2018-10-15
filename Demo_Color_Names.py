@@ -673,12 +673,21 @@ color_map = {
 
 sg.SetOptions(button_element_size=(12,1), element_padding=(0,0), auto_size_buttons=False, border_width=1, tooltip_time=100)
 
-layout = [[sg.Text('Hover mouse to see RGB value, click for white & black text', text_color='blue', font='Any 15', relief=sg.RELIEF_SUNKEN, justification='center', size=(100,1), background_color='light green', pad=(0,(0,20))),]]
+#start layout with the tittle
+layout = [[sg.Text('Hover mouse to see RGB value, click for white & black text',
+                   text_color='blue',
+                   font='Any 15',
+                   relief=sg.RELIEF_SUNKEN,
+                   justification='center',
+                   size=(100,1),
+                   background_color='light green',
+                   pad=(0,(0,20))),]]
+
+# -- Create primary color viewer window by building rows and appending to layout --
 row = []
-# -- Create primary color viewer window --
 for i, color in enumerate(color_map):
     row.append(sg.RButton(color, button_color=('black', color), key=color, tooltip=color_map[color]))
-    if (i+1) % 15 == 0:
+    if (i+1) % 15 == 0:         # every 15 buttons make a new row
         layout.append(row)
         row = []
 
@@ -686,9 +695,9 @@ window = sg.Window('Color Viewer', grab_anywhere=False, font=('any 9')).Layout(l
 
 # -- Event loop --
 while True:
-    b, v = window.Read()
-    if b is None:
+    event, values = window.Read()
+    if event is None:
         break
     # -- Create a secondary window that shows white and black text on chosen color
-    layout2 =[[sg.DummyButton(b, button_color=('white', b), tooltip=color_map[b]), sg.DummyButton(b, button_color=('black', b), tooltip=color_map[b])] ]
+    layout2 =[[sg.DummyButton(event, button_color=('white', event), tooltip=color_map[event]), sg.DummyButton(event, button_color=('black', event), tooltip=color_map[event])] ]
     sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).ReadNonBlocking()

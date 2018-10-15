@@ -36,8 +36,8 @@ def main():
 
     dpts = [randint(0, 10) for x in range(10000)]
     for i in range(len(dpts)):
-        button, values = window.ReadNonBlocking()
-        if button is 'Exit' or values is None:
+        event, values = window.ReadNonBlocking()
+        if event is 'Exit' or values is None:
             exit(69)
 
         slider_elem.Update(i)

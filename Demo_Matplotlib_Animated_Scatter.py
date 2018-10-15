@@ -26,8 +26,8 @@ def main():
     canvas = canvas_elem.TKCanvas
 
     while True:
-        button, values = window.ReadNonBlocking()
-        if button is 'Exit' or values is None:
+        event, values = window.ReadNonBlocking()
+        if event is 'Exit' or values is None:
             exit(69)
 
         def PyplotScatterWithLegend():

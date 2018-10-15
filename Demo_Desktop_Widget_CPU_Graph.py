@@ -54,8 +54,8 @@ def main():
     prev_x, prev_y = 0, 0
     while True:                                 # the Event Loop
         time.sleep(.5)
-        button, values = window.ReadNonBlocking()
-        if button == 'Quit' or values is None:  # always give ths user a way out
+        event, values = window.ReadNonBlocking()
+        if event == 'Quit' or values is None:  # always give ths user a way out
             break
         # do CPU measurement and graph it
         current_cpu = int(g_cpu_percent*10)
