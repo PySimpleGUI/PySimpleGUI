@@ -196,31 +196,31 @@ BUTTON_TYPE_COLOR_CHOOSER = 40
 
 # -------------------------  Element types  ------------------------- #
 # class ElementType(Enum):
-ELEM_TYPE_TEXT = 1
-ELEM_TYPE_INPUT_TEXT = 20
-ELEM_TYPE_INPUT_COMBO = 21
-ELEM_TYPE_INPUT_OPTION_MENU = 22
-ELEM_TYPE_INPUT_RADIO = 5
-ELEM_TYPE_INPUT_MULTILINE = 7
-ELEM_TYPE_INPUT_CHECKBOX = 8
-ELEM_TYPE_INPUT_SPIN = 9
-ELEM_TYPE_BUTTON = 3
-ELEM_TYPE_IMAGE = 30
-ELEM_TYPE_CANVAS = 40
-ELEM_TYPE_FRAME = 41
-ELEM_TYPE_GRAPH = 42
-ELEM_TYPE_TAB = 50
-ELEM_TYPE_TAB_GROUP = 51
-ELEM_TYPE_INPUT_SLIDER = 10
-ELEM_TYPE_INPUT_LISTBOX = 11
-ELEM_TYPE_OUTPUT = 300
-ELEM_TYPE_COLUMN = 555
-ELEM_TYPE_MENUBAR = 600
-ELEM_TYPE_PROGRESS_BAR = 200
-ELEM_TYPE_BLANK = 100
-ELEM_TYPE_TABLE = 700
-ELEM_TYPE_TREE = 800
-ELEM_TYPE_ERROR = 666
+ELEM_TYPE_TEXT = 'text'
+ELEM_TYPE_INPUT_TEXT = 'input'
+ELEM_TYPE_INPUT_COMBO = 'combo'
+ELEM_TYPE_INPUT_OPTION_MENU = 'option menu'
+ELEM_TYPE_INPUT_RADIO = 'radio'
+ELEM_TYPE_INPUT_MULTILINE = 'multiline'
+ELEM_TYPE_INPUT_CHECKBOX = 'checkbox'
+ELEM_TYPE_INPUT_SPIN = 'spind'
+ELEM_TYPE_BUTTON = 'button'
+ELEM_TYPE_IMAGE = 'image'
+ELEM_TYPE_CANVAS = 'canvas'
+ELEM_TYPE_FRAME = 'frame'
+ELEM_TYPE_GRAPH = 'graph'
+ELEM_TYPE_TAB = 'tab'
+ELEM_TYPE_TAB_GROUP = 'tabgroup'
+ELEM_TYPE_INPUT_SLIDER = 'slider'
+ELEM_TYPE_INPUT_LISTBOX = 'listbox'
+ELEM_TYPE_OUTPUT = 'output'
+ELEM_TYPE_COLUMN = 'column'
+ELEM_TYPE_MENUBAR = 'menubar'
+ELEM_TYPE_PROGRESS_BAR = 'progressbar'
+ELEM_TYPE_BLANK = 'blank'
+ELEM_TYPE_TABLE = 'table'
+ELEM_TYPE_TREE = 'tree'
+ELEM_TYPE_ERROR = 'error'
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -1240,7 +1240,7 @@ class Button(Element):
 
         return
 
-    def Update(self, value=None, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
+    def Update(self, text=None,  button_color=(None, None), value=None, disabled=None, image_data=None, image_filename=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1476,6 +1476,16 @@ class Graph(Element):
             return None
         return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
 
+
+    def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
+        converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1] )
+        converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
+        tkstyle = tk.PIESLICE if style is None else style
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
+        return self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], extent=extent, start=start_angle, style=tkstyle, outline=arc_color)
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1] )
@@ -2340,15 +2350,19 @@ class TreeData(object):
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
 
-    def Print(self):
-        self._print_node(self.root_node)
+    # def _print_node(self, node):
+    #     # print(f'Node: {node.text}')
+    #     # print(f'Children = {[c.text for c in node.children]}')
+    #     for node in node.children:
+    #         self._print_node(node)
 
-    def _print_node(self, node):
-        print(f'Node: {node.text}')
-        print(f'Children = {[c.text for c in node.children]}')
-        for node in node.children:
-            self._print_node(node)
+    def __repr__(self):
+        return self._NodeStr(self.root_node, 1)
 
+    def _NodeStr(self, node, level):
+        return '\n'.join(
+            [str(node.key) + ' : ' + str(node.text)] +
+            [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
 
 
 # ---------------------------------------------------------------------- #
@@ -3499,8 +3513,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 vsb.pack(side=tk.LEFT, fill='y')
                 listbox_frame.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
                 if element.BindReturnKey:
-                    element.TKListbox.bind('<Return>', element.ReturnKeyHandler)
-                    element.TKListbox.bind('<Double-Button-1>', element.ReturnKeyHandler)
+                    element.TKListbox.bind('<Return>', element.ListboxSelectHandler)
+                    element.TKListbox.bind('<Double-Button-1>', element.ListboxSelectHandler)
                 if element.Disabled == True:
                     element.TKListbox['state'] = 'disabled'
                 if element.Tooltip is not None:
@@ -3730,7 +3744,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ttk.Style().map("TNotebook.Tab", background=[("selected", 'orange')],
                 #             foreground=[("selected", 'green')])
                 # ttk.Style().configure("TNotebook.Tab", background='blue', foreground='yellow')
-
 
                 if element.BorderWidth is not None:
                     element.TKFrame.configure(borderwidth=element.BorderWidth)
@@ -4460,7 +4473,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
     :param grab_anywhere:
     :param keep_on_top:
     :param location:
-    :return: Contents of text field. None if closed using X
+    :return: Contents of text field. None if closed using X or cancelled
     """
     if no_window:
         root = tk.Tk()
@@ -4492,10 +4505,10 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
 #####################################
 def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
     """
-    Display popup with text entry field and browse button. Browse for file
-
+        Display popup with text entry field and browse button. Browse for file
     :param message:
     :param default_path:
+    :param default_extension:
     :param save_as:
     :param file_types:
     :param no_window:
@@ -4509,7 +4522,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
     :param grab_anywhere:
     :param keep_on_top:
     :param location:
-    :return:
+    :return:  string representing the path chosen, None if cancelled or window closed with X
     """
     if no_window:
         root = tk.Tk()
@@ -4747,17 +4760,74 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
 # Predefined settings that will change the colors and styles #
 # of the elements.                                           #
 ##############################################################
-LOOK_AND_FEEL_TABLE = {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT, 'SCROLL': COLOR_SYSTEM_DEFAULT, 'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR, 'PROGRESS': COLOR_SYSTEM_DEFAULT, 'BORDER': 1,'SLIDER_DEPTH':1, 'PROGRESS_DEPTH':0},
-                      'Topanga': {'BACKGROUND': '#282923', 'TEXT': '#E7DB74', 'INPUT': '#393a32',
-                      'TEXT_INPUT': '#E7C855','SCROLL': '#E7C855', 'BUTTON': ('#E7C855', '#284B5A'),
-                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+LOOK_AND_FEEL_TABLE = {'SystemDefault':
+                      {'BACKGROUND' : COLOR_SYSTEM_DEFAULT,
+                       'TEXT': COLOR_SYSTEM_DEFAULT,
+                       'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT,
+                       'SCROLL': COLOR_SYSTEM_DEFAULT,
+                       'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
+                       'PROGRESS': COLOR_SYSTEM_DEFAULT,
+                       'BORDER': 1,'SLIDER_DEPTH':1,
+                       'PROGRESS_DEPTH':0},
 
-                      'GreenTan': {'BACKGROUND' : '#9FB8AD', 'TEXT': COLOR_SYSTEM_DEFAULT, 'INPUT':'#F7F3EC','TEXT_INPUT' : 'black','SCROLL': '#F7F3EC', 'BUTTON': ('white', '#475841'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                       'Reddit': {'BACKGROUND': '#ffffff',
+                                  'TEXT': '#1a1a1b',
+                                  'INPUT': '#dae0e6',
+                                  'TEXT_INPUT': '#222222',
+                                  'SCROLL': '#a5a4a4',
+                                  'BUTTON': ('white', '#0079d3'),
+                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                  'BORDER': 1,
+                                  'SLIDER_DEPTH': 0,
+                                  'PROGRESS_DEPTH': 0,
+                                  'ACCENT1' : '#ff5414',
+                                  'ACCENT2' : '#33a8ff',
+                                  'ACCENT3' : '#dbf0ff'},
 
-                      'Dark': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'gray30',
-                                   'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                   'PROGRESS_DEPTH': 0},
+                      'Topanga': {'BACKGROUND': '#282923',
+                                  'TEXT': '#E7DB74',
+                                  'INPUT': '#393a32',
+                                  'TEXT_INPUT': '#E7C855',
+                                  'SCROLL': '#E7C855',
+                                  'BUTTON': ('#E7C855', '#284B5A'),
+                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                  'BORDER': 1,'SLIDER_DEPTH':0,
+                                  'PROGRESS_DEPTH':0},
+
+                      'GreenTan': {'BACKGROUND' : '#9FB8AD',
+                                   'TEXT': COLOR_SYSTEM_DEFAULT,
+                                   'INPUT':'#F7F3EC','TEXT_INPUT' : 'black',
+                                   'SCROLL': '#F7F3EC',
+                                   'BUTTON': ('white', '#475841'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1,'SLIDER_DEPTH':0,
+                                   'PROGRESS_DEPTH':0},
+
+                      'Dark': {'BACKGROUND': 'gray25',
+                               'TEXT': 'white',
+                               'INPUT': 'gray30',
+                               'TEXT_INPUT': 'white',
+                               'SCROLL': 'gray44',
+                               'BUTTON': ('white', '#004F00'),
+                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                               'BORDER': 1,
+                               'SLIDER_DEPTH': 0,
+                               'PROGRESS_DEPTH': 0},
+
+                       'LightGreen': {'BACKGROUND': '#B7CECE',
+                                      'TEXT': 'black',
+                                      'INPUT': '#FDFFF7',
+                                      'TEXT_INPUT': 'black',
+                                      'SCROLL': '#FDFFF7',
+                                      'BUTTON': ('white', '#658268'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 1,
+                                      'SLIDER_DEPTH': 0,
+                                      'ACCENT1': '#76506d',
+                                      'ACCENT2': '#5148f1',
+                                      'ACCENT3': '#0a1c84',
+                                      'PROGRESS_DEPTH': 0},
+
 
                       'Dark2': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'white',
                                'TEXT_INPUT': 'black', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
@@ -4804,8 +4874,6 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'T
                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                'PROGRESS_DEPTH': 0},
 
-                      'LightGreen' :{'BACKGROUND' : '#B7CECE', 'TEXT': 'black', 'INPUT':'#FDFFF7','TEXT_INPUT' : 'black', 'SCROLL': '#FDFFF7','BUTTON': ('white', '#658268'), 'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER':1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
-
                       'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF','TEXT_INPUT' : 'black', 'SCROLL': '#E0F5FF','BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
 
                       'Purple': {'BACKGROUND': '#B0AAC2', 'TEXT': 'black', 'INPUT': '#F2EFE8','SCROLL': '#F2EFE8','TEXT_INPUT' : 'black',
@@ -4836,8 +4904,11 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault': {'BACKGROUND' : COLOR_SYSTEM_DEFAULT, 'T
                       'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#183440'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0}
                       }
 
+def ListOfLookAndFeelValues():
+    return list(LOOK_AND_FEEL_TABLE.keys())
+
 def ChangeLookAndFeel(index):
-    global LOOK_AND_FEEL_TABLE
+    # global LOOK_AND_FEEL_TABLE
 
     if sys.platform == 'darwin':
         print('*** Changing look and feel is not supported on Mac platform ***')

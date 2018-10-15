@@ -435,7 +435,7 @@ class Element(object):
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', size=(None, None), auto_size_text=None, password_char='',
+    def __init__(self, default_text ='', size=(None, None), disabled=False, auto_size_text=None, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
@@ -452,6 +452,7 @@ class InputText(Element):
         self.Focus = focus
         self.do_not_clear = do_not_clear
         self.Justification = justification
+        self.Disabled = disabled
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
 
 
@@ -494,6 +495,7 @@ class InputCombo(Element):
         self.ChangeSubmits = change_submits
         self.TKCombo = None
         self.InitializeAsDisabled = disabled
+        self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -541,18 +543,25 @@ Drop = InputCombo
 # ---------------------------------------------------------------------- #
 #                           Option Menu                                  #
 # ---------------------------------------------------------------------- #
-class InputOptionMenu(Element):
-    def __init__(self, values, default_value=None,  size=(None, None), auto_size_text=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+class OptionMenu(Element):
+    def __init__(self, values, default_value=None,  size=(None, None), disabled=False, auto_size_text=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
-        Input Combo Box Element (also called Dropdown box)
+        InputOptionMenu
         :param values:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
-        :param background_color: Color for Element. Text or RGB Hex
+        :param default_value:
+        :param size:
+        :param disabled:
+        :param auto_size_text:
+        :param background_color:
+        :param text_color:
+        :param key:
+        :param pad:
+        :param tooltip:
         '''
         self.Values = values
         self.DefaultValue = default_value
         self.TKOptionMenu = None
+        self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -584,26 +593,36 @@ class InputOptionMenu(Element):
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
-OptionMenu = InputOptionMenu
+InputOptionMenu = OptionMenu
 
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False, size=(None, None), disabled = False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Listbox Element
         :param values:
-        :param select_mode: SELECT_MODE_BROWSE, SELECT_MODE_EXTENDED, SELECT_MODE_MULTIPLE, SELECT_MODE_SINGLE
+        :param default_values:
+        :param select_mode:
+        :param change_submits:
+        :param bind_return_key:
+        :param size:
+        :param disabled:
+        :param auto_size_text:
         :param font:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
-        :param background_color: Color for Element. Text or RGB Hex        '''
+        :param background_color:
+        :param text_color:
+        :param key:
+        :param pad:
+        :param tooltip:
+        '''
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
         self.ChangeSubmits = change_submits
         self.BindReturnKey = bind_return_key
+        self.Disabled = disabled
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
             self.SelectMode = SELECT_MODE_BROWSE
         elif select_mode == LISTBOX_SELECT_MODE_EXTENDED:
@@ -659,22 +678,28 @@ class Listbox(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    def __init__(self, text, group_id, default=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
+    def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
         '''
         Radio Button Element
         :param text:
         :param group_id:
         :param default:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
-        :param background_color: Color for Element. Text or RGB Hex
+        :param disabled:
+        :param size:
+        :param auto_size_text:
+        :param background_color:
+        :param text_color:
         :param font:
+        :param key:
+        :param pad:
+        :param tooltip:
         '''
         self.InitialState = default
         self.Text = text
         self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
+        self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
@@ -702,20 +727,27 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False, key=None, pad=None, tooltip=None):
+    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
         '''
-        Check Box Element
+        Checkbox Element
         :param text:
         :param default:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
-        :param background_color: Color for Element. Text or RGB Hex
+        :param size:
+        :param auto_size_text:
         :param font:
+        :param background_color:
+        :param text_color:
+        :param change_submits:
+        :param disabled:
+        :param key:
+        :param pad:
+        :param tooltip:
         '''
         self.Text = text
         self.InitialState = default
         self.Value = None
         self.TKCheckbutton = None
+        self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits
 
@@ -754,20 +786,27 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, change_submits=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
-        Spin Box Element
+        Spinner Element
         :param values:
         :param initial_value:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
-        :param background_color: Color for Element. Text or RGB Hex
+        :param disabled:
+        :param change_submits:
+        :param size:
+        :param auto_size_text:
         :param font:
+        :param background_color:
+        :param text_color:
+        :param key:
+        :param pad:
+        :param tooltip:
         '''
         self.Values = values
         self.DefaultValue = initial_value
         self.ChangeSubmits = change_submits
         self.TKSpinBox = None
+        self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -812,14 +851,22 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None, tooltip=None):
+    def __init__(self, default_text='', enter_submits = False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None, tooltip=None):
         '''
-        Input Multi-line Element
+        Multiline Element
         :param default_text:
         :param enter_submits:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
-        :param background_color: Color for Element. Text or RGB Hex
+        :param disabled:
+        :param autoscroll:
+        :param size:
+        :param auto_size_text:
+        :param background_color:
+        :param text_color:
+        :param do_not_clear:
+        :param key:
+        :param focus:
+        :param pad:
+        :param tooltip:
         '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
@@ -828,6 +875,7 @@ class Multiline(Element):
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
+        self.Disabled = disabled
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE,  size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
         return
@@ -860,14 +908,19 @@ class Multiline(Element):
 class Text(Element):
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None, text_color=None, background_color=None,justification=None, pad=None, key=None, tooltip=None):
         '''
-        Text Element - Displays text in your form.  Can be updated in non-blocking forms
-        :param text: The text to display
-        :param size: Size of Element in Characters
-        :param auto_size_text: True if the field should shrink to fit the text
-        :param font: Font name and size ("name", size)
-        :param text_color: Text Color name or RGB hex value '#RRGGBB'
-        :param background_color: Background color for text (name or RGB Hex)
-        :param justification: 'left', 'right', 'center'
+        Text Element
+        :param text:
+        :param size:
+        :param auto_size_text:
+        :param click_submits:
+        :param relief:
+        :param font:
+        :param text_color:
+        :param background_color:
+        :param justification:
+        :param pad:
+        :param key:
+        :param tooltip:
         '''
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
@@ -1009,9 +1062,14 @@ class TKOutput(tk.Frame):
 class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None, key=None):
         '''
-        Output Element - reroutes stdout, stderr to this window
-        :param size: Size of field in characters
-        :param background_color: Color for Element. Text or RGB Hex
+        Output Element
+        :param size:
+        :param background_color:
+        :param text_color:
+        :param pad:
+        :param font:
+        :param tooltip:
+        :param key:
         '''
         self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -1039,21 +1097,29 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,  file_types=(("ALL Files", "*.*"),), initial_folder=None, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
-        Button Element - Specifies all types of buttons
+        Button Element
+        :param button_text:
         :param button_type:
         :param target:
-        :param button_text:
+        :param tooltip:
         :param file_types:
+        :param initial_folder:
+        :param disabled:
         :param image_filename:
         :param image_size:
         :param image_subsample:
         :param border_width:
-        :param size: Size of field in characters
+        :param size:
         :param auto_size_button:
         :param button_color:
+        :param default_value:
         :param font:
+        :param bind_return_key:
+        :param focus:
+        :param pad:
+        :param key:
         '''
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
@@ -1063,6 +1129,7 @@ class Button(Element):
         self.ButtonText = button_text
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
+        self.ImageData = image_data
         self.ImageSize = image_size
         self.ImageSubsample = image_subsample
         self.UserData = None
@@ -1072,6 +1139,7 @@ class Button(Element):
         self.TKCal = None
         self.DefaultValue = default_value
         self.InitialFolder = initial_folder
+        self.Disabled = disabled
 
         super().__init__(ELEM_TYPE_BUTTON,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
         return
@@ -1184,7 +1252,7 @@ class Button(Element):
 
         return
 
-    def Update(self, value=None, text=None, button_color=(None, None), disabled=None):
+    def Update(self, value=None, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1199,6 +1267,24 @@ class Button(Element):
             self.TKButton['state'] = 'disabled'
         elif disabled == False:
             self.TKButton['state'] = 'normal'
+        # if image_data is not None:
+        #     if type(image_data) is bytes:
+        #         image = tk.PhotoImage(data=image_data)
+        #     else:
+        #         image = image_data
+        #     width, height = image.width, image.height
+        #     self.TKButton.config(image=image, width=width, height=height)
+        if image_data is not None:
+            image = tk.PhotoImage(data=image_data)
+            width, height = image.width(), image.height()
+            self.TKButton.config(image=image, width=width, height=height)
+            self.TKButton.image = image
+        if image_filename is not None:
+            self.TKButton.config(highlightthickness=0)
+            photo = tk.PhotoImage(file=image_filename)
+            width, height = photo.width(), photo.height()
+            self.TKButton.config(image=photo, width=width, height=height)
+            self.TKButton.image = photo
 
     def GetText(self):
         return self.ButtonText
@@ -1217,15 +1303,17 @@ class Button(Element):
 class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None, key=None, pad=None):
         '''
-        Progress Bar Element
+        ProgressBar Element
         :param max_value:
         :param orientation:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
+        :param size:
+        :param auto_size_text:
         :param bar_color:
         :param style:
         :param border_width:
         :param relief:
+        :param key:
+        :param pad:
         '''
         self.MaxValue = max_value
         self.TKProgressBar = None
@@ -1263,18 +1351,24 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
         '''
         Image Element
         :param filename:
-        :param size: Size of field in characters
+        :param data:
+        :param background_color:
+        :param size:
+        :param pad:
+        :param key:
+        :param tooltip:
         '''
         self.Filename = filename
         self.Data = data
         self.tktext_label = None
+        self.BackgroundColor = background_color
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
-        super().__init__(ELEM_TYPE_IMAGE,  size=size, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_IMAGE,  size=size, background_color=background_color, pad=pad, key=key, tooltip=tooltip)
         return
 
     def Update(self, filename=None, data=None):
@@ -1300,6 +1394,15 @@ class Image(Element):
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+        '''
+        Canvas Element
+        :param canvas:
+        :param background_color:
+        :param size:
+        :param pad:
+        :param key:
+        :param tooltip:
+        '''
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
 
@@ -1325,7 +1428,16 @@ class Canvas(Element):
 # ---------------------------------------------------------------------- #
 class Graph(Element):
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, key=None, tooltip=None):
-
+        '''
+        Graph Element
+        :param canvas_size:
+        :param graph_bottom_left:
+        :param graph_top_right:
+        :param background_color:
+        :param pad:
+        :param key:
+        :param tooltip:
+        '''
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
@@ -1446,7 +1558,21 @@ class Graph(Element):
 # ---------------------------------------------------------------------- #
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None , relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
-
+        '''
+        Frame Element
+        :param title:
+        :param layout:
+        :param title_color:
+        :param background_color:
+        :param title_location:
+        :param relief:
+        :param size:
+        :param font:
+        :param pad:
+        :param border_width:
+        :param key:
+        :param tooltip:
+        '''
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -1506,7 +1632,19 @@ class Frame(Element):
 # ---------------------------------------------------------------------- #
 class Tab(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False, border_width=None, key=None, tooltip=None):
-
+        '''
+        Tab Element
+        :param title:
+        :param layout:
+        :param title_color:
+        :param background_color:
+        :param font:
+        :param pad:
+        :param disabled:
+        :param border_width:
+        :param key:
+        :param tooltip:
+        '''
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -1575,7 +1713,21 @@ class Tab(Element):
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
-
+        '''
+        TabGroup Element
+        :param layout:
+        :param tab_location:
+        :param title_color:
+        :param selected_title_color:
+        :param background_color:
+        :param font:
+        :param change_submits:
+        :param pad:
+        :param border_width:
+        :param theme:
+        :param key:
+        :param tooltip:
+        '''
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -1640,9 +1792,9 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, change_submits=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
-        Slider
+        Slider Element
         :param range:
         :param default_value:
         :param resolution:
@@ -1650,13 +1802,14 @@ class Slider(Element):
         :param border_width:
         :param relief:
         :param change_submits:
-        :param scale:
+        :param disabled:
         :param size:
         :param font:
         :param background_color:
         :param text_color:
         :param key:
         :param pad:
+        :param tooltip:
         '''
         self.TKScale = None
         self.Range = (1,10) if range == (None, None) else range
@@ -1666,6 +1819,7 @@ class Slider(Element):
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
         self.ChangeSubmits = change_submits
+        self.Disabled = disabled
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
@@ -1766,6 +1920,15 @@ class TkScrollableFrame(tk.Frame):
 # ---------------------------------------------------------------------- #
 class Column(Element):
     def __init__(self, layout, background_color = None, size=(None, None), pad=None, scrollable=False, key=None):
+        '''
+        Column Element
+        :param layout:
+        :param background_color:
+        :param size:
+        :param pad:
+        :param scrollable:
+        :param key:
+        '''
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -2037,6 +2200,15 @@ class TKCalendar(tkinter.ttk.Frame):
 # ---------------------------------------------------------------------- #
 class Menu(Element):
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=True, pad=None, key=None):
+        '''
+        Menu Element
+        :param menu_definition:
+        :param background_color:
+        :param size:
+        :param tearoff:
+        :param pad:
+        :param key:
+        '''
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
         self.TKMenu = None
@@ -2059,7 +2231,27 @@ class Menu(Element):
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, font=None, justification='right', text_color=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+        '''
+        Table Element
+        :param values:
+        :param headings:
+        :param visible_column_map:
+        :param col_widths:
+        :param def_col_width:
+        :param auto_size_columns:
+        :param max_col_width:
+        :param select_mode:
+        :param display_row_numbers:
+        :param font:
+        :param justification:
+        :param text_color:
+        :param background_color:
+        :param size:
+        :param pad:
+        :param key:
+        :param tooltip:
+        '''
         self.Values = values
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
@@ -2073,7 +2265,9 @@ class Table(Element):
         self.InitialState = None
         self.SelectMode = select_mode
         self.DisplayRowNumbers = display_row_numbers
+        self.NumRows = num_rows if num_rows is not None else size[1]
         self.TKTreeview = None
+        self.AlternatingRowColor = alternating_row_color
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color,  font=font, size=size, pad=pad, key=key, tooltip=tooltip)
         return
@@ -2088,7 +2282,26 @@ class Table(Element):
 #                           Tree                                         #
 # ---------------------------------------------------------------------- #
 class Tree(Element):
-    def __init__(self, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None):
+    def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None):
+        '''
+        Tree Element
+        :param headings:
+        :param visible_column_map:
+        :param col_widths:
+        :param def_col_width:
+        :param auto_size_columns:
+        :param max_col_width:
+        :param select_mode:
+        :param font:
+        :param justification:
+        :param text_color:
+        :param background_color:
+        :param num_rows:
+        :param pad:
+        :param key:
+        :param tooltip:
+        '''
+        self.TreeData = data
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
         self.ColumnWidths = col_widths
@@ -2101,16 +2314,52 @@ class Tree(Element):
         self.InitialState = None
         self.SelectMode = select_mode
         self.NumRows = num_rows
+        self.Col0Width = col0_width
         self.TKTreeview = None
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color,  font=font,  pad=pad, key=key, tooltip=tooltip)
         return
 
 
+
     def __del__(self):
         super().__del__()
 
 
+class TreeData(object):
+    class Node(object):
+        def __init__(self, parent, key, text, values):
+            self.parent = parent
+            self.children = []
+            self.key = key
+            self.text = text
+            self.values = values
+
+        def _Add(self, node):
+            self.children.append(node)
+
+    def __init__(self):
+        self.tree_dict = {}
+        self.root_node = self.Node("", "", 'root', [])
+        self.tree_dict [""] = self.root_node
+
+    def _AddNode(self, key, node):
+        self.tree_dict[key] = node
+
+    def Insert(self, parent, key, text, values):
+        node = self.Node(parent, key, text,values)
+        self.tree_dict[key] = node
+        parent_node = self.tree_dict[parent]
+        parent_node._Add(node)
+
+    def Print(self):
+        self._print_node(self.root_node)
+
+    def _print_node(self, node):
+        # print(f'Node: {node.text}')
+        # print(f'Children = {[c.text for c in node.children]}')
+        for node in node.children:
+            self._print_node(node)
 
 
 
@@ -2119,7 +2368,10 @@ class Tree(Element):
 # ---------------------------------------------------------------------- #
 class ErrorElement(Element):
     def __init__(self, key=None):
-
+        '''
+        Error Element
+        :param key:
+        '''
         self.Key = key
 
         super().__init__(ELEM_TYPE_ERROR, key=key)
@@ -2147,10 +2399,32 @@ class ErrorElement(Element):
 #                       Window CLASS                                      #
 # ------------------------------------------------------------------------- #
 class Window(object):
-    '''
-    Display a user defined for and return the filled in data
-    '''
+
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False):
+        '''
+        Window
+        :param title:
+        :param default_element_size:
+        :param default_button_element_size:
+        :param auto_size_text:
+        :param auto_size_buttons:
+        :param location:
+        :param button_color:
+        :param font:
+        :param progress_bar_color:
+        :param background_color:
+        :param border_depth:
+        :param auto_close:
+        :param auto_close_duration:
+        :param icon:
+        :param force_toplevel:
+        :param return_keyboard_events:
+        :param use_default_focus:
+        :param text_justification:
+        :param no_titlebar:
+        :param grab_anywhere:
+        :param keep_on_top:
+        '''
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -2173,7 +2447,6 @@ class Window(object):
         self.TKAfterID = None
         self.ProgressBarColor = progress_bar_color
         self.AutoCloseDuration = auto_close_duration
-        self.UberParent = None
         self.RootNeedsDestroying = False
         self.Shown = False
         self.ReturnValues = None
@@ -2276,10 +2549,7 @@ class Window(object):
 
     def _AutoCloseAlarmCallback(self):
         try:
-            if self.UberParent:
-                window = self.UberParent
-            else:
-                window = self
+            window = self
             if window:
                 if window.NonBlocking:
                     self.CloseNonBlockingForm()
@@ -2462,6 +2732,7 @@ class Window(object):
     CloseNonBlockingForm = CloseNonBlocking
 
     def OnClosingCallback(self):
+        # print('Got closing callback')
         return
 
 
@@ -2477,6 +2748,11 @@ class Window(object):
     def UnHide(self):
         self.TKroot.deiconify()
 
+    def Disappear(self):
+        self.TKroot.attributes('-alpha', 0)
+
+    def Reappear(self):
+        self.TKroot.attributes('-alpha', 255)
 
     def __enter__(self):
         return self
@@ -2497,38 +2773,6 @@ class Window(object):
 FlexForm = Window
 
 
-# ------------------------------------------------------------------------- #
-#                       UberForm CLASS                                      #
-#   Used to make forms into TABS (it's  trick)                              #
-# ------------------------------------------------------------------------- #
-class UberForm(object):
-    FormList = None         # list of all the forms in this window
-    FormReturnValues = None
-    TKroot = None           # tk root for the overall window
-    TKrootDestroyed = False
-    def __init__(self):
-        self.FormList = []
-        self.FormReturnValues = []
-        self.TKroot = None
-        self.TKrootDestroyed = False
-        self.FormStayedOpen = False
-
-    def AddForm(self, form):
-        self.FormList.append(form)
-
-    def _Close(self):
-        self.FormReturnValues = []
-        for form in self.FormList:
-            form._Close()
-            self.FormReturnValues.append(form.ReturnValues)
-        if not self.TKrootDestroyed:
-            self.TKrootDestroyed = True
-            self.TKroot.destroy()
-            _my_windows.Decrement()
-
-    def __del__(self):
-        return
-
 # ################################################################################
 # ################################################################################
 #  END OF ELEMENT DEFINITIONS
@@ -2543,93 +2787,93 @@ class UberForm(object):
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(button_text='Browse', target=(ThisRow, -1),  initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FolderBrowse(button_text='Browse', target=(ThisRow, -1),  initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse( button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FileBrowse( button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
-def FilesBrowse(button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),),  initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target,  file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FilesBrowse(button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False, initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target,  file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileSaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, tooltip=None,size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FileSaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False,  tooltip=None,size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
-def SaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),),initial_folder=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def SaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),),initial_folder=None, disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
-def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled,  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
-def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
-    return Button( button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button( button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
-def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
-def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, tooltip=None, font=None,focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None,focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, tooltip=None, font=None,focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None,focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
-def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
-def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
-def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, tooltip=None, font=None, bind_return_key=True, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip,  size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip,  size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None,font=None,tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def SimpleButton(button_text, image_filename=None, image_size=(None, None), image_subsample=None, border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip,  size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def ReadButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button( button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    return Button( button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 ReadFormButton = ReadButton
 RButton = ReadFormButton
 
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
-def RealtimeButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button( button_text=button_text,button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button( button_text=button_text,button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
-def DummyButton(button_text, image_filename=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type= BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type= BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def CalendarButton(button_text, target=(None,None), image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def ColorChooserButton(button_text, target=(None,None), image_filename=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def ColorChooserButton(button_text, target=(None,None), image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text,button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
@@ -2967,7 +3211,6 @@ else:
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
-    # only set title on non-tabbed forms
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
@@ -3120,6 +3363,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, width=width, height=height)
                     tkbutton.image = photo
+                if element.ImageData:           # if button has an image on it
+                    tkbutton.config(highlightthickness=0)
+                    photo = tk.PhotoImage(data=element.ImageData)
+                    if element.ImageSize != (None, None):
+                        width, height = element.ImageSize
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                    else:
+                        width, height = photo.width(), photo.height()
+                    tkbutton.config(image=photo, width=width, height=height)
+                    tkbutton.image = photo
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen+10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
@@ -3130,6 +3384,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
+                if element.Disabled == True:
+                    element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
@@ -3154,6 +3410,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKEntry.focus_set()
+                if element.Disabled:
+                    element.TKEntry['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
@@ -3205,6 +3463,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.current(0)
                 if element.ChangeSubmits:
                     element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
+                if element.Disabled == True:
+                    element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
@@ -3223,6 +3483,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
                 element.TKOptionMenu.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                if element.Disabled == True:
+                    element.TKOptionMenu['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  LISTBOX element  ------------------------- #
@@ -3251,6 +3513,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element.ReturnKeyHandler)
                     element.TKListbox.bind('<Double-Button-1>', element.ReturnKeyHandler)
+                if element.Disabled == True:
+                    element.TKListbox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
@@ -3270,6 +3534,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.focus_set()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(fg=text_color)
+                if element.Disabled == True:
+                    element.TKText['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
@@ -3285,7 +3551,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                            variable=element.TKIntVar, bd=border_depth, font=font)
-                if default_value is None:
+                if default_value is None or element.Disabled:
                     element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
@@ -3333,6 +3599,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.configure(selectcolor=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKRadio.configure(fg=text_color)
+                if element.Disabled:
+                    element.TKRadio['state'] = 'disabled'
                 element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -3351,6 +3619,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox.configure(fg=text_color)
                 if element.ChangeSubmits:
                     element.TKSpinBox.bind('<ButtonRelease-1>', element.SpinChangedHandler)
+                if element.Disabled == True:
+                    element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  OUTPUT element  ------------------------- #
@@ -3360,7 +3630,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  IMAGE Box element  ------------------------- #
+                # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
                     photo = tk.PhotoImage(file=element.Filename)
@@ -3379,6 +3649,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
                     else:
                         element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
+                    if element.BackgroundColor is not None:
+                        element.tktext_label.config(background=element.BackgroundColor)
+
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
                     element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
@@ -3546,11 +3819,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
                 element.TKScale = tkscale
+                if element.Disabled == True:
+                    element.TKScale['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
-                width, height = element_size
+                height = element.NumRows
                 if element.Justification == 'left':
                     anchor = tk.W
                 elif element.Justification == 'right':
@@ -3597,7 +3872,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i] + value
-                    id = treeview.insert('', 'end', text=value, values=value)
+                    id = treeview.insert('', 'end', text=value, values=value, tag=i%2)
+                if element.AlternatingRowColor is not None:
+                    treeview.tag_configure(1, background=element.AlternatingRowColor)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
@@ -3608,7 +3885,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
-                width, height = element_size
+                height = element.NumRows
                 if element.Justification == 'left':             # justification
                     anchor = tk.W
                 elif element.Justification == 'right':
@@ -3626,18 +3903,28 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 column_headings= element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
                 element.TKTreeview = tkinter.ttk.Treeview(tk_row_frame, columns=column_headings,
-                                                  displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
+                                                  displaycolumns=displaycolumns, show='tree headings', height=height, selectmode=element.SelectMode, )
                 treeview = element.TKTreeview
                 for i, heading in enumerate(element.ColumnHeadings):    # Configure cols + headings
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = min(element.MaxColumnWidth, len(heading))
+                        width = min(element.MaxColumnWidth, len(heading)+1)
                     else:
                         try:
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
                     treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+
+                def add_treeview_data(node):
+                    # print(f'Inserting {node.key} under parent {node.parent}')
+                    if node.key != '':
+                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values)
+                    for node in node.children:
+                        add_treeview_data(node)
+
+                add_treeview_data(element.TreeData.root_node)
+                treeview.column('#0', width=element.Col0Width*CharWidthInPixels(), anchor=anchor)
                 # ----- configure colors -----
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
@@ -3660,7 +3947,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 def ConvertFlexToTK(MyFlexForm):
     master = MyFlexForm.TKroot
-    # only set title on non-tabbed forms
     master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
     try:
@@ -3749,7 +4035,8 @@ def StartupTK(my_flex_form):
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
         my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
     if my_flex_form.NonBlocking:
-        my_flex_form.TKroot.protocol("WM_WINDOW_DESTROYED", my_flex_form.OnClosingCallback())
+        pass
+        # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:       # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.TKroot.mainloop()
@@ -4271,7 +4558,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse()],
-              [Ok(), Cancel()]]
+              [Ok(size=(5,1)), Cancel(size=(5,1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, background_color=background_color,
                   font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -4325,7 +4612,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
-              [Ok(), Cancel()]]
+              [Ok(size=(6,1)), Cancel(size=(6,1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font, background_color=background_color,
                   no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -4361,7 +4648,7 @@ def PopupGetText(message, default_text='', password_char='', size=(None,None), b
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, password_char=password_char)],
-              [Ok(), Cancel()]]
+              [Ok(size=(5,1)), Cancel(size=(5,1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                   background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -4659,7 +4946,7 @@ def ChangeLookAndFeel(index):
                       element_text_color=colors['TEXT'],
                       input_text_color=colors['TEXT_INPUT'])
     except:    # most likely an index out of range
-        pass
+        print('** Warning - Look and Feel value not valid. Change your ChangeLookAndFeel call. **')
 
 
 
@@ -4777,14 +5064,14 @@ def Popup(*args, **_3to2kwargs):
         PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if button_type is POPUP_BUTTONS_YES_NO:
-        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20,5),3)), PopupButton('No', button_color=button_color))
+        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20,5),3), size=(5,1)), PopupButton('No', button_color=button_color, size=(5,1)))
     elif button_type is POPUP_BUTTONS_CANCELLED:
         window.AddRow(PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
     elif button_type is POPUP_BUTTONS_ERROR:
         window.AddRow(PopupButton('Error', size=(6,1), button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
     elif button_type is POPUP_BUTTONS_OK_CANCEL:
-        window.AddRow(PopupButton('OK', size=(5,1), button_color=button_color, focus=True, bind_return_key=True),
-                    PopupButton('Cancel', size=(5,1), button_color=button_color))
+        window.AddRow(PopupButton('OK', size=(6,1), button_color=button_color, focus=True, bind_return_key=True),
+                    PopupButton('Cancel', size=(6,1), button_color=button_color))
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
@@ -4793,7 +5080,7 @@ def Popup(*args, **_3to2kwargs):
     if non_blocking:
         button, values = window.ReadNonBlocking()
     else:
-        button, values = window.Show()
+        button, values = window.Read()
 
     return button
 
