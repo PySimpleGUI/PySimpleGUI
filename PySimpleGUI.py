@@ -2681,6 +2681,8 @@ class Window:
         except:
             pass
 
+    def Minimize(self):
+        self.TKroot.iconify()
 
 
     def StartMove(self, event):
