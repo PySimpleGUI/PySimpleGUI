@@ -303,6 +303,26 @@ Spin(   values
 """
 
 
+desc_tree = """
+Tree( data=None,
+      headings=None, 
+      visible_column_map=None, 
+      col_widths=None, 
+      col0_width=10, 
+      def_col_width=10, 
+      auto_size_columns=True, 
+      max_col_width=20, 
+      select_mode=None, 
+      font=None, 
+      justification='right', 
+      text_color=None, 
+      background_color=None, 
+      num_rows=None, 
+      pad=None, 
+      key=None, 
+      tooltip=None):
+"""
+
 
 desc_column = """
 Column( layout
@@ -313,14 +333,6 @@ Column( layout
         key=None)
 """
 
-desc_menu = """
-Menu(   menu_definition
-        background_color=None
-        size=(None, None)
-        tearoff=True
-        pad=None
-        key=None)
-"""
 
 desc_table = """
 Table(  values
@@ -367,6 +379,15 @@ Window( title
         keep_on_top=False)
 """
 
+desc_menu= """
+   Menu(menu_definition
+        background_color=None
+        size=(None, None)
+        tearoff=True
+        pad=None
+        key=None)
+"""
+
 desc_button_types = """
 There are multiple button types / names to choose from
 SimpleButton = Button
@@ -382,6 +403,60 @@ ColorChooserButton
     Shortcuts - Normal buttons with predefined text
 Save, Open, OK, Ok, Cancel, Quit, Exit, Yes, No, Help
 
+"""
+
+
+desc_popup= """
+  Popup(button_color=None
+        background_color=None
+        text_color=None
+        button_type=POPUP_BUTTONS_OK
+        auto_close=False
+        auto_close_duration=None
+        non_blocking=False
+        icon=DEFAULT_WINDOW_ICON
+        line_width=None
+        font=None
+        no_titlebar=False
+        grab_anywhere=False
+        keep_on_top=False
+        location=(None,None))
+"""
+
+
+
+desc_popups = """
+PopupScrolled
+PopupGetFolder
+PopupGetFile
+PopupGetText
+POopup
+PopupNoButtons
+PopupNonBlocking = PopupNoWait
+PopupQuick
+PopupNoTitleBar = PopupNoFrame = PopupNoBorder = PopupAnnoying
+PopupAutoClose = PopupTimed
+PopupError
+PopupCancel
+PopupOK
+PopupOKCancel
+PopupYesNo
+"""
+
+
+
+desc_one_line_progress_meter = """
+   OneLineProgressMeter(title
+                        current_value
+                        max_value
+                        key
+                        *args
+                        orientation=None
+                        bar_color=(None,None)
+                        button_color=None
+                        size=DEFAULT_PROGRESS_BAR_SIZE
+                        border_width=None
+                        grab_anywhere=False):
 """
 
 element_list = ('Window',
@@ -411,7 +486,7 @@ descriptions = {'Window': desc_window, 'Text': desc_text, 'InputText': desc_inpu
                 'RadioButton': desc_radio, 'Listbox': desc_listbox, 'Slider': desc_slider, 'Spinner':desc_spin, 'Multiline': desc_multiline,
                 'Output': desc_output, 'ProgressBar': desc_progressbar, 'OptionMenu': desc_inputoptionmenu,
                 'InputCombo': desc_inputcombo, 'Menu': desc_menu, 'Frame': desc_frame, 'Column': desc_column,
-                'Graph': desc_graph, 'Image': desc_image, 'Table': desc_table, 'Tab': desc_tab,
+                'Graph': desc_graph, 'Image': desc_image, 'Table': desc_table, 'Tree': desc_tree,'Tab': desc_tab,
                 'TabGroup': desc_tabgroup, 'Button Types': desc_button_types}
 
 
@@ -434,6 +509,12 @@ tab_tab = [[sg.Text(desc_tab, font=('Consolas 12'))]]
 tab_tabgroup = [[sg.Text(desc_tabgroup, font=('Consolas 12'))]]
 tab_image = [[sg.Text(desc_image, font=('Consolas 12'))]]
 tab_table = [[sg.Text(desc_table, font=('Consolas 12'))]]
+tab_tree = [[sg.Text(desc_tree, font=('Consolas 12'))]]
+tab_menu = [[sg.Text(desc_menu, font=('Consolas 12'))]]
+tab_button_types = [[sg.Text(desc_button_types, font=('Consolas 12'))]]
+tab_popup = [[sg.Text(desc_popup, font=('Consolas 12'))]]
+tab_popups = [[sg.Text(desc_popups, font=('Consolas 12'))]]
+tab_one_line_prog_meter = [[sg.Text(desc_one_line_progress_meter, font=('Consolas 12'))]]
 tab_window = [[sg.Text(desc_window, font=('Consolas 12'))]]
 
 layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
@@ -445,17 +526,23 @@ layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
                          sg.Tab('Slider', tab_slider),
                          sg.Tab('Spinner',tab_spinner),
                          sg.Tab('Multiline', tab_multiline),
-                         sg.Tab('Output', tab_output),
-                         sg.Tab('ProgressBar', tab_progressbar),
                          sg.Tab('OptionMenu', tab_optionmenu),
                          sg.Tab('Combo', tab_combo),
                          sg.Tab('Image', tab_image),
+                         sg.Tab('Output', tab_output),
                          sg.Tab('Table', tab_table),
+                         sg.Tab('Tree', tab_tree),
                          sg.Tab('Graph', tab_graph),
+                         sg.Tab('ProgressBar', tab_progressbar),
                          sg.Tab('Frame', tab_frame),
                          sg.Tab('Column', tab_column),
                          sg.Tab('Tab', tab_tab),
                          sg.Tab('TabGroup', tab_tabgroup),
+                         sg.Tab('Menu', tab_menu),
+                         sg.Tab('Button Types', tab_button_types),
+                         sg.Tab('Popup', tab_popup),
+                         sg.Tab('Popups', tab_popups),
+                         sg.Tab('One Line Prog Meter', tab_one_line_prog_meter),
                          ]], tab_location='lefttop', title_color='blue', selected_title_color='red')]]
 
 # layout = [[sg.Text('The PySimpleGUI SDK Quick Reference Guide', font='Any 15', relief=sg.RELIEF_RAISED)],
@@ -464,7 +551,8 @@ layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
 #            sg.Text(desc_text, size=(55, 25), font=('Consolas 13'), text_color='darkblue', key='_out_')]]
 
 window = sg.Window('PySimpleGUI SDK Quick Reference',
-                   font='Any 12').Layout(layout)
+                   font='Any 12',
+                   grab_anywhere=True).Layout(layout)
 
 while True:
     event, values = window.Read()
