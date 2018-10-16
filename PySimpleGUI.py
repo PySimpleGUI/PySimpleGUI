@@ -3363,7 +3363,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
-                    tkbutton.config(image=photo, width=width, height=height)
+                    tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
                     tkbutton.image = photo
                 if element.ImageData:           # if button has an image on it
                     tkbutton.config(highlightthickness=0)
@@ -3374,7 +3374,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
-                    tkbutton.config(image=photo, width=width, height=height)
+                    tkbutton.config(image=photo, compound=tk.CENTER,  width=width, height=height)
                     tkbutton.image = photo
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen+10)  # set wrap to width of widget
