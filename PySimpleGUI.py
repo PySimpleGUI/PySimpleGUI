@@ -1790,7 +1790,7 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
         :param range:
@@ -1818,6 +1818,7 @@ class Slider(Element):
         self.Resolution = 1 if resolution is None else resolution
         self.ChangeSubmits = change_submits
         self.Disabled = disabled
+        self.TickInterval = tick_interval
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
@@ -1934,9 +1935,12 @@ class Column(Element):
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
         self.Rows = []
-        # self.ParentForm = None
         self.TKFrame = None
         self.Scrollable = scrollable
+        # self.ImageFilename = image_filename
+        # self.ImageData = image_data
+        # self.ImageSize = image_size
+        # self.ImageSubsample = image_subsample
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
@@ -2197,7 +2201,7 @@ class TKCalendar(ttk.Frame):
 #                           Menu                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=True, pad=None, key=None):
+    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None):
         '''
         Menu Element
         :param menu_definition:
@@ -3273,7 +3277,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
-
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
@@ -3652,7 +3655,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
                     if element.BackgroundColor is not None:
-                        element.tktext_label.config(background=element.BackgroundColor)
+                        element.tktext_label.config(background=element.BackgroundColor);
 
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
@@ -3808,9 +3811,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     range_from = element.Range[0]
                     range_to = element.Range[1]
                 if element.ChangeSubmits:
-                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, command=element.SliderChangedHandler)
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, tickinterval=element.TickInterval, command=element.SliderChangedHandler)
                 else:
-                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font)
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font
+                                       , tickinterval=element.TickInterval)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
@@ -4408,7 +4412,7 @@ def EasyPrintClose():
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None)):
+def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None)):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
@@ -4443,7 +4447,7 @@ def ScrolledTextBox(*args, button_color=None, yes_no=False, auto_close=False, au
     return button
 
 
-PopupScrolled = ScrolledTextBox
+ScrolledTextBox = PopupScrolled
 
 # ---------------------------------------------------------------------- #
 #  GetPathBox                                                            #
