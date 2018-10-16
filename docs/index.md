@@ -23,9 +23,9 @@
 
 ## Now supports both Python 2.7 & 3
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.3-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.9.4-red.svg?longCache=true&style=for-the-badge)
 
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.3-blue.svg?longCache=true&style=for-the-badge)
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.1.4-blue.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)
 
@@ -3355,6 +3355,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 2.7 01.01.02 | Oct 8, 2018
 | 03.09.01 | Oct 8, 2018
 | 3.9.3 & 1.1.3 | Oct 11, 2018
+| 3.9.4 & 1.1.4 | Oct 16, 2018
 
 
 
@@ -3523,6 +3524,19 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * Window Disappear / Reappear methods
 * Popup buttons resized to same size
 * Exposed look and feel table
+
+###  3.9.4 & 1.1.4
+
+* Parameter order change for Button.Update so that new button ext is at front
+* New Graph.DrawArc method
+* Slider tick interval parameter for labeling sliders
+* Menu tearoff now disabled by default
+* Tree Data printing simplified and made prettier
+* Window resizable parameter.  Defaults to not resizable
+* Button images can have text over them now
+* BUG fix in listbox double-click.  First bug fix in months
+* New Look And Feel capability.  List predefined settings using ListOfLookAndFeelValues
+
 
 
 ### Upcoming
