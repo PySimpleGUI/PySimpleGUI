@@ -2430,6 +2430,7 @@ class Window:
         :param no_titlebar:
         :param grab_anywhere:
         :param keep_on_top:
+        :param resizable:
         '''
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
@@ -2471,6 +2472,7 @@ class Window:
         self.KeepOnTop = keep_on_top
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
+        self.AlphaChannel = 255
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2673,6 +2675,14 @@ class Window:
         return screen_width, screen_height
 
 
+    def Move(self, x, y):
+        try:
+            self.TKroot.geometry("+%s+%s" % (x, y))
+        except:
+            pass
+
+
+
     def StartMove(self, event):
         try:
             self.TKroot.x = event.x
@@ -2760,6 +2770,14 @@ class Window:
 
     def Reappear(self):
         self.TKroot.attributes('-alpha', 255)
+
+    def SetAlpha(self, alpha):
+        '''
+        Change the window's transparency
+        :param alpha: From 0 to 1 with 0 being completely transparent
+        :return:
+        '''
+        self.TKroot.attributes('-alpha', alpha)
 
     def __enter__(self):
         return self
@@ -3354,8 +3372,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT:
+                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                elif bc[1] == COLOR_SYSTEM_DEFAULT:
+                    tkbutton.config(foreground=bc[0])
+
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:           # if button has an image on it
