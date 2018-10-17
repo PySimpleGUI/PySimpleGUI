@@ -52,7 +52,7 @@ def main():
                            keep_on_top=True)
         if recording:
             ret, frame = cap.read()
-            imgbytes=cv2.imencode('.png', cv2.cvtColor(frame,cv2.COLOR_BGR2RGB))[1].tobytes() #ditto
+            imgbytes=cv2.imencode('.png', frame)[1].tobytes() #ditto
             window.FindElement('image').Update(data=imgbytes)
 
 main()
