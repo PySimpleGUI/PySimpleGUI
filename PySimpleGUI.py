@@ -1314,7 +1314,6 @@ class ProgressBar(Element):
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         super().__init__(ELEM_TYPE_PROGRESS_BAR,  size=size, auto_size_text=auto_size_text, key=key, pad=pad)
-        return
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
@@ -1790,7 +1789,7 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None,None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
         :param range:
@@ -1819,8 +1818,11 @@ class Slider(Element):
         self.ChangeSubmits = change_submits
         self.Disabled = disabled
         self.TickInterval = tick_interval
+        temp_size = size
+        if temp_size == (None, None):
+            temp_size = (20,20) if orientation.startswith('h') else (8,20)
 
-        super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=temp_size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, range=(None, None), disabled=None):
@@ -2473,6 +2475,8 @@ class Window:
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
         self._AlphaChannel = alpha_channel
+        self.Timeout = (None, None)
+        self.TimerCancelled = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2570,7 +2574,18 @@ class Window:
             pass
 
 
-    def Read(self):
+    def _TimeoutAlarmCallback(self):
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        if self.TimerCancelled:
+            return
+        self.LastButtonClicked = self.Timeout[0]
+        self.FormRemainedOpen = True
+        self.TKroot.quit()               # kick the users out of the mainloop
+
+
+    def Read(self, timeout=(None, None)):
+        self.Timeout = timeout
         self.NonBlocking = False
         if self.TKrootDestroyed:
             return None, None
@@ -2578,7 +2593,11 @@ class Window:
             self.Show()
         else:
             InitializeResults(self)
+            if timeout != (None, None):
+                self.TimerCancelled = False
+                self.TKAfterID = self.TKroot.after(self.Timeout[1], self._TimeoutAlarmCallback)
             self.TKroot.mainloop()
+            self.TimerCancelled = True
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.Decrement()
@@ -4077,12 +4096,16 @@ def StartupTK(my_flex_form):
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
         my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
+
+    if my_flex_form.Timeout != (None, None):
+        my_flex_form.TKAfterID = root.after(my_flex_form.Timeout[1], my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
         pass
         # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:       # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.TKroot.mainloop()
+        my_flex_form.TimerCancelled = True
         # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
             _my_windows.Decrement()
@@ -4871,79 +4894,211 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'PROGRESS_DEPTH': 0},
 
 
-                      'Dark2': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'white',
-                               'TEXT_INPUT': 'black', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
-
-                      'Black': {'BACKGROUND': 'black', 'TEXT': 'white', 'INPUT': 'gray30',
-                               'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('black', 'white'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
-
-                      'Tan': {'BACKGROUND': '#fdf6e3', 'TEXT': '#268bd1', 'INPUT': '#eee8d5',
-                                'TEXT_INPUT': '#6c71c3', 'SCROLL': '#eee8d5', 'BUTTON': ('white', '#063542'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'Dark2': {'BACKGROUND': 'gray25',
+                                'TEXT': 'white',
+                                'INPUT': 'white',
+                                'TEXT_INPUT': 'black',
+                                'SCROLL': 'gray44',
+                                'BUTTON': ('white', '#004F00'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH': 0,
                                 'PROGRESS_DEPTH': 0},
 
-                      'TanBlue': {'BACKGROUND': '#e5dece', 'TEXT': '#063289', 'INPUT': '#f9f8f4',
-                              'TEXT_INPUT': '#242834', 'SCROLL': '#eee8d5', 'BUTTON': ('white', '#063289'),
-                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'Black': {'BACKGROUND': 'black',
+                                'TEXT': 'white',
+                                'INPUT': 'gray30',
+                                'TEXT_INPUT': 'white',
+                                'SCROLL': 'gray44',
+                                'BUTTON': ('black', 'white'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH': 0,
+                                'PROGRESS_DEPTH': 0},
+
+                      'Tan': {'BACKGROUND': '#fdf6e3',
+                              'TEXT': '#268bd1',
+                              'INPUT': '#eee8d5',
+                              'TEXT_INPUT': '#6c71c3',
+                              'SCROLL': '#eee8d5',
+                              'BUTTON': ('white', '#063542'),
+                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                              'BORDER': 1,
+                              'SLIDER_DEPTH': 0,
                               'PROGRESS_DEPTH': 0},
 
-                      'DarkTanBlue': {'BACKGROUND': '#242834', 'TEXT': '#dfe6f8', 'INPUT': '#97755c',
-                                  'TEXT_INPUT': 'white', 'SCROLL': '#a9afbb', 'BUTTON': ('white', '#063289'),
-                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'TanBlue': {'BACKGROUND': '#e5dece',
+                                  'TEXT': '#063289',
+                                  'INPUT': '#f9f8f4',
+                                  'TEXT_INPUT': '#242834',
+                                  'SCROLL': '#eee8d5',
+                                  'BUTTON': ('white', '#063289'),
+                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                  'BORDER': 1,
+                                  'SLIDER_DEPTH': 0,
                                   'PROGRESS_DEPTH': 0},
 
-                      'DarkAmber': {'BACKGROUND': '#2c2825', 'TEXT': '#fdcb52', 'INPUT': '#705e52',
-                                   'TEXT_INPUT': '#fdcb52', 'SCROLL': '#705e52', 'BUTTON': ('black', '#fdcb52'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'DarkTanBlue': {'BACKGROUND': '#242834',
+                                      'TEXT': '#dfe6f8',
+                                      'INPUT': '#97755c',
+                                      'TEXT_INPUT': 'white',
+                                      'SCROLL': '#a9afbb',
+                                      'BUTTON': ('white', '#063289'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 1,
+                                      'SLIDER_DEPTH': 0,
+                                      'PROGRESS_DEPTH': 0},
+
+                      'DarkAmber': {'BACKGROUND': '#2c2825',
+                                    'TEXT': '#fdcb52',
+                                    'INPUT': '#705e52',
+                                    'TEXT_INPUT': '#fdcb52',
+                                    'SCROLL': '#705e52',
+                                    'BUTTON': ('black', '#fdcb52'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH': 0,
+                                    'PROGRESS_DEPTH': 0},
+
+                      'DarkBlue': {'BACKGROUND': '#1a2835',
+                                   'TEXT': '#d1ecff',
+                                   'INPUT': '#335267',
+                                   'TEXT_INPUT': '#acc2d0',
+                                   'SCROLL': '#1b6497',
+                                   'BUTTON': ('black', '#fafaf8'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1, 'SLIDER_DEPTH': 0,
                                    'PROGRESS_DEPTH': 0},
 
-                      'DarkBlue': {'BACKGROUND': '#1a2835', 'TEXT': '#d1ecff', 'INPUT': '#335267',
-                              'TEXT_INPUT': '#acc2d0', 'SCROLL': '#1b6497', 'BUTTON': ('black', '#fafaf8'),
-                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                              'PROGRESS_DEPTH': 0},
-
-                      'Reds': {'BACKGROUND': '#280001', 'TEXT': 'white', 'INPUT': '#d8d584',
-                               'TEXT_INPUT': 'black', 'SCROLL': '#763e00', 'BUTTON': ('black', '#daad28'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'Reds': {'BACKGROUND': '#280001',
+                               'TEXT': 'white',
+                               'INPUT': '#d8d584',
+                               'TEXT_INPUT': 'black',
+                               'SCROLL': '#763e00',
+                               'BUTTON': ('black', '#daad28'),
+                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                               'BORDER': 1,
+                               'SLIDER_DEPTH': 0,
                                'PROGRESS_DEPTH': 0},
 
-                      'Green': {'BACKGROUND': '#82a459', 'TEXT': 'black', 'INPUT': '#d8d584',
-                               'TEXT_INPUT': 'black', 'SCROLL': '#e3ecf3', 'BUTTON': ('white', '#517239'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
+                      'Green': {'BACKGROUND': '#82a459',
+                                'TEXT': 'black',
+                                'INPUT': '#d8d584',
+                                'TEXT_INPUT': 'black',
+                                'SCROLL': '#e3ecf3',
+                                'BUTTON': ('white', '#517239'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH': 0,
+                                'PROGRESS_DEPTH': 0},
 
-                      'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF','TEXT_INPUT' : 'black', 'SCROLL': '#E0F5FF','BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BluePurple': {'BACKGROUND' : '#A5CADD',
+                                     'TEXT': '#6E266E',
+                                     'INPUT':'#E0F5FF',
+                                     'TEXT_INPUT' : 'black',
+                                     'SCROLL': '#E0F5FF',
+                                     'BUTTON': ('white', '#303952'),
+                                     'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR,
+                                     'BORDER': 1,
+                                     'SLIDER_DEPTH':0,
+                                     'PROGRESS_DEPTH':0},
 
-                      'Purple': {'BACKGROUND': '#B0AAC2', 'TEXT': 'black', 'INPUT': '#F2EFE8','SCROLL': '#F2EFE8','TEXT_INPUT' : 'black',
-                                     'BUTTON': ('black', '#C2D4D8'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'Purple': {'BACKGROUND': '#B0AAC2',
+                                 'TEXT': 'black',
+                                 'INPUT': '#F2EFE8',
+                                 'SCROLL': '#F2EFE8',
+                                 'TEXT_INPUT' : 'black',
+                                 'BUTTON': ('black', '#C2D4D8'),
+                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                 'BORDER': 1,
+                                 'SLIDER_DEPTH':0,
+                                 'PROGRESS_DEPTH':0},
 
-                      'BlueMono': {'BACKGROUND': '#AAB6D3', 'TEXT': 'black', 'INPUT': '#F1F4FC','SCROLL': '#F1F4FC','TEXT_INPUT' : 'black',
-                                     'BUTTON': ('white', '#7186C7'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BlueMono': {'BACKGROUND': '#AAB6D3',
+                                   'TEXT': 'black',
+                                   'INPUT': '#F1F4FC',
+                                   'SCROLL': '#F1F4FC',
+                                   'TEXT_INPUT' : 'black',
+                                   'BUTTON': ('white', '#7186C7'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1,
+                                   'SLIDER_DEPTH':0,
+                                   'PROGRESS_DEPTH':0},
 
-                      'GreenMono': {'BACKGROUND': '#A8C1B4', 'TEXT': 'black', 'INPUT': '#DDE0DE', 'SCROLL': '#E3E3E3','TEXT_INPUT' : 'black',
-                                   'BUTTON': ('white', '#6D9F85'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'GreenMono': {'BACKGROUND': '#A8C1B4',
+                                    'TEXT': 'black',
+                                    'INPUT': '#DDE0DE',
+                                    'SCROLL': '#E3E3E3',
+                                    'TEXT_INPUT' : 'black',
+                                    'BUTTON': ('white', '#6D9F85'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH':0,
+                                    'PROGRESS_DEPTH':0},
 
-                      'BrownBlue': {'BACKGROUND': '#64778d', 'TEXT': 'white', 'INPUT': '#f0f3f7', 'SCROLL': '#A6B2BE','TEXT_INPUT' : 'black', 'BUTTON': ('white', '#283b5b'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BrownBlue': {'BACKGROUND': '#64778d',
+                                    'TEXT': 'white',
+                                    'INPUT': '#f0f3f7',
+                                    'SCROLL': '#A6B2BE',
+                                    'TEXT_INPUT' : 'black',
+                                    'BUTTON': ('white', '#283b5b'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH':0,
+                                    'PROGRESS_DEPTH':0},
 
-                      'BrightColors': {'BACKGROUND': '#b4ffb4', 'TEXT': 'black', 'INPUT': '#ffff64','SCROLL': '#ffb482','TEXT_INPUT' : 'black', 'BUTTON': ('black', '#ffa0dc'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BrightColors': {'BACKGROUND': '#b4ffb4',
+                                       'TEXT': 'black',
+                                       'INPUT': '#ffff64',
+                                       'SCROLL': '#ffb482',
+                                       'TEXT_INPUT' : 'black',
+                                       'BUTTON': ('black', '#ffa0dc'),
+                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                       'BORDER': 1,
+                                       'SLIDER_DEPTH':0,
+                                       'PROGRESS_DEPTH':0},
 
-                      'NeutralBlue': {'BACKGROUND': '#92aa9d', 'TEXT': 'black', 'INPUT': '#fcfff6',
-                                       'SCROLL': '#fcfff6', 'TEXT_INPUT': 'black', 'BUTTON': ('black', '#d0dbbd'),
-                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'NeutralBlue': {'BACKGROUND': '#92aa9d',
+                                      'TEXT': 'black',
+                                      'INPUT': '#fcfff6',
+                                      'SCROLL': '#fcfff6',
+                                      'TEXT_INPUT': 'black',
+                                      'BUTTON': ('black', '#d0dbbd'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 1,
+                                      'SLIDER_DEPTH':0,
+                                      'PROGRESS_DEPTH':0},
 
-                      'Kayak': {'BACKGROUND': '#a7ad7f', 'TEXT': 'black', 'INPUT': '#e6d3a8',
-                                      'SCROLL': '#e6d3a8', 'TEXT_INPUT': 'black', 'BUTTON': ('white', '#5d907d'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'Kayak': {'BACKGROUND': '#a7ad7f',
+                                'TEXT': 'black',
+                                'INPUT': '#e6d3a8',
+                                'SCROLL': '#e6d3a8',
+                                'TEXT_INPUT': 'black',
+                                'BUTTON': ('white', '#5d907d'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH':0,
+                                'PROGRESS_DEPTH':0},
 
-                      'SandyBeach': {'BACKGROUND': '#efeccb', 'TEXT': '#012f2f', 'INPUT': '#e6d3a8',
-                                'SCROLL': '#e6d3a8', 'TEXT_INPUT': '#012f2f', 'BUTTON': ('white', '#046380'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'SandyBeach': {'BACKGROUND': '#efeccb',
+                                     'TEXT': '#012f2f',
+                                     'INPUT': '#e6d3a8',
+                                     'SCROLL': '#e6d3a8',
+                                     'TEXT_INPUT': '#012f2f',
+                                     'BUTTON': ('white', '#046380'),
+                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                     'BORDER': 1,'SLIDER_DEPTH':0,
+                                     'PROGRESS_DEPTH':0},
 
-                      'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#183440'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0}
+                      'TealMono': {'BACKGROUND': '#a8cfdd',
+                                   'TEXT': 'black',
+                                   'INPUT': '#dfedf2','SCROLL': '#dfedf2',
+                                   'TEXT_INPUT' : 'black',
+                                   'BUTTON': ('white', '#183440'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1,
+                                   'SLIDER_DEPTH':0,
+                                   'PROGRESS_DEPTH':0}
                       }
 
 def ListOfLookAndFeelValues():
@@ -5346,15 +5501,14 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
 
 
 def main():
-    window =  Window('Demo window..')
-    window_rows = [[Text('You are running the PySimpleGUI.py file itself')],
+    layout = [[Text('You are running the PySimpleGUI.py file itself')],
                  [Text('You should be importing it rather than running it', size=(50,2))],
                  [Text('Here is your sample input window....')],
                  [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
                  [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
                  [Ok(), Cancel()]]
 
-    button, (source, dest) = window.LayoutAndRead(window_rows)
+    button, values = Window('Demo window..').Layout(layout).Read()
 
 
 if __name__ == '__main__':
