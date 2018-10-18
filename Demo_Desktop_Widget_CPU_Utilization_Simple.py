@@ -14,28 +14,28 @@ sg.ChangeLookAndFeel('Black')
 layout = [[sg.Text('CPU Utilization')],
           [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='_text_')],
           [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0), size=(9,1)),
-           sg.Spin([x + 1 for x in range(10)], 1, key='_spin_')]]
+           sg.Spin([x + 1 for x in range(10)], 3, key='_spin_')]]
 
 # Layout the rows of the Window
 window = sg.Window('CPU Meter',
                    no_titlebar=True,
                    keep_on_top=True,
-                   grab_anywhere=True).Layout(layout)
+                   grab_anywhere=True).Layout(layout).Finalize()
 
 # ----------------  main loop  ----------------
+interval = 10            # For the first one, make it quick
 while (True):
     # --------- Read and update window --------
-    event, values = window.ReadNonBlocking()
-
+    event, values = window.Read(timeout=interval)
     # --------- Do Button Operations --------
-    if values is None or event == 'Exit':
+    if event is None or event == 'Exit':
         break
-    try:
-        interval = int(values['_spin_'])
-    except:
-        interval = 1
 
-    cpu_percent = psutil.cpu_percent(interval=interval)
+    interval = int(values['_spin_'])*1000
+
+
+
+    cpu_percent = psutil.cpu_percent(interval=1)
 
     # --------- Display timer in window --------
 

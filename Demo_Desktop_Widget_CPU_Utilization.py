@@ -49,7 +49,7 @@ def main():
                        justification='center', key='text')],
                  [sg.Text('', size=(30, 8), font=('Courier New', 12),text_color='white', justification='left', key='processes')],
                  [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0), size=(9,1)),
-                  sg.Spin([x+1 for x in range(10)], 1, key='spin')],]
+                  sg.Spin([x+1 for x in range(10)], 3, key='spin')],]
 
     window = sg.Window('CPU Utilization',
                        no_titlebar=True,
@@ -59,25 +59,19 @@ def main():
     # start cpu measurement thread
     thread = Thread(target=CPU_thread,args=(None,))
     thread.start()
+    timeout_value = 1             # make first read really quick
+    g_interval = 1
     # ----------------  main loop  ----------------
     while (True):
         # --------- Read and update window --------
-        event, values = window.ReadNonBlocking()
-
+        event, values = window.Read(timeout=timeout_value, timeout_key='Timeout')
         # --------- Do Button Operations --------
-        if values is None or event == 'Exit':
+        if event is None or event == 'Exit':
             break
-        try:
-            g_interval = int(values['spin'])
-        except:
-            g_interval = 1
 
-        # cpu_percent = psutil.cpu_percent(interval=interval)       # if don't wan to use a task
+        timeout_value = int(values['spin']) * 1000
+
         cpu_percent = g_cpu_percent
-
-        # let the GUI run ever 700ms regardless of CPU polling time. makes window be more responsive
-        time.sleep(.7)
-
         display_string = ''
         if g_procs:
             # --------- Create list of top % CPU porocesses --------
@@ -93,13 +87,10 @@ def main():
             for proc, cpu in top_sorted:
                 display_string += '{:2.2f} {}\n'.format(cpu/10, proc)
 
-
-        # --------- Display timer in window --------
+        # --------- Display timer and proceses in window --------
         window.FindElement('text').Update('CPU {}'.format(cpu_percent))
         window.FindElement('processes').Update(display_string)
 
-    # Broke out of main loop. Close the window.
-    window.CloseNonBlocking()
     g_exit = True
     thread.join()
 
