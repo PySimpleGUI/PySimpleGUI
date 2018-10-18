@@ -2418,7 +2418,7 @@ class ErrorElement(Element):
 # ------------------------------------------------------------------------- #
 class Window(object):
 
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False):
         '''
         Window
         :param title:
@@ -2442,6 +2442,7 @@ class Window(object):
         :param no_titlebar:
         :param grab_anywhere:
         :param keep_on_top:
+        :param resizable:
         '''
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
@@ -2483,6 +2484,7 @@ class Window(object):
         self.KeepOnTop = keep_on_top
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
+        self._AlphaChannel = alpha_channel
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2685,6 +2687,16 @@ class Window(object):
         return screen_width, screen_height
 
 
+    def Move(self, x, y):
+        try:
+            self.TKroot.geometry("+%s+%s" % (x, y))
+        except:
+            pass
+
+    def Minimize(self):
+        self.TKroot.iconify()
+
+
     def StartMove(self, event):
         try:
             self.TKroot.x = event.x
@@ -2772,6 +2784,25 @@ class Window(object):
 
     def Reappear(self):
         self.TKroot.attributes('-alpha', 255)
+
+    def SetAlpha(self, alpha):
+        '''
+        Change the window's transparency
+        :param alpha: From 0 to 1 with 0 being completely transparent
+        :return:
+        '''
+        self._AlphaChannel = alpha
+        self.TKroot.attributes('-alpha', alpha)
+
+    @property
+    def AlphaChannel(self):
+        return self._AlphaChannel
+
+    @AlphaChannel.setter
+    def AlphaChannel(self, alpha):
+        self._AlphaChannel = alpha
+        self.TKroot.attributes('-alpha', alpha)
+
 
     def __enter__(self):
         return self
@@ -3366,8 +3397,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT:
+                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                elif bc[1] == COLOR_SYSTEM_DEFAULT:
+                    tkbutton.config(foreground=bc[0])
+
                 element.TKButton = tkbutton          # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:           # if button has an image on it
@@ -4041,7 +4075,7 @@ def StartupTK(my_flex_form):
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
 
     try:
-        root.attributes('-alpha', 255)             # hide window while building it. makes for smoother 'paint'
+        root.attributes('-alpha', my_flex_form.AlphaChannel)             # Make window visible again
     except:
         pass
 
