@@ -2475,7 +2475,8 @@ class Window:
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
         self._AlphaChannel = alpha_channel
-        self.Timeout = (None, None)
+        self.Timeout = None
+        self.TimeoutKey = '_timeout_'
         self.TimerCancelled = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
@@ -2579,13 +2580,14 @@ class Window:
         # modify the Results table in the parent FlexForm object
         if self.TimerCancelled:
             return
-        self.LastButtonClicked = self.Timeout[0]
+        self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
         self.TKroot.quit()               # kick the users out of the mainloop
 
 
-    def Read(self, timeout=(None, None)):
+    def Read(self, timeout=None, timeout_key='_timeout_'):
         self.Timeout = timeout
+        self.TimeoutKey = timeout_key
         self.NonBlocking = False
         if self.TKrootDestroyed:
             return None, None
@@ -2593,9 +2595,9 @@ class Window:
             self.Show()
         else:
             InitializeResults(self)
-            if timeout != (None, None):
+            if timeout != None:
                 self.TimerCancelled = False
-                self.TKAfterID = self.TKroot.after(self.Timeout[1], self._TimeoutAlarmCallback)
+                self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.TKroot.mainloop()
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
@@ -4097,8 +4099,8 @@ def StartupTK(my_flex_form):
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
         my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
 
-    if my_flex_form.Timeout != (None, None):
-        my_flex_form.TKAfterID = root.after(my_flex_form.Timeout[1], my_flex_form._TimeoutAlarmCallback)
+    if my_flex_form.Timeout != None:
+        my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
         pass
         # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
