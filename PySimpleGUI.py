@@ -423,13 +423,12 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', size=(None, None), disabled=False, auto_size_text=None, password_char='',
+    def __init__(self, default_text ='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
         :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
         :param password_char: If non-blank, will display this character for every character typed
         :param background_color: Color for Element. Text or RGB Hex
         '''
@@ -441,7 +440,7 @@ class InputText(Element):
         self.do_not_clear = do_not_clear
         self.Justification = justification
         self.Disabled = disabled
-        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
 
 
     def Update(self, value=None, disabled=None):
@@ -470,7 +469,7 @@ Input = InputText
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
-    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None, readonly=False):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -482,14 +481,15 @@ class InputCombo(Element):
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits
         self.TKCombo = None
-        self.InitializeAsDisabled = disabled
+        # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
+        self.Readonly=readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -514,6 +514,10 @@ class InputCombo(Element):
             self.TKCombo['state'] = 'disable'
         elif disabled == False:
             self.TKCombo['state'] = 'enable'
+            if readonly is not None:
+                self.Readonly = readonly
+            if self.Readonly:
+                self.TKCombo['state']='readonly'
 
 
     def __del__(self):
@@ -2272,10 +2276,23 @@ class Table(Element):
         self.NumRows = num_rows if num_rows is not None else size[1]
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
+        self.SelectedRows = []
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color,  font=font, size=size, pad=pad, key=key, tooltip=tooltip)
         return
 
+
+    def treeview_selected(self, event):
+        selections = self.TKTreeview.selection()
+        self.SelectedRows = [int(x[1:], 16)-1 for x in selections]
+            # ttk.Treeview.selection
+        # print(select)
+        # self.TKTreeview.TreeSelection.get_selected_rows()
+        #
+        # iid = self.TKTreeview.focus()
+        # # item = self.Values[iid]
+        # print('Selected item iid: %s' % iid)
+        # #self.process_directory(iid, path)
 
     def __del__(self):
         super().__del__()
@@ -2546,10 +2563,15 @@ class Window:
         return self.ReturnValues
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
-    def SetIcon(self, icon):
-        self.WindowIcon = icon
+    def SetIcon(self, icon=None, pngbase64=None):
+        if pngbase64 != None:
+            img = tkinter.PhotoImage(data=pngbase64)
+            wicon = img
+        else:
+            wicon = icon
+        self.WindowIcon = wicon
         try:
-            self.TKroot.iconbitmap(icon)
+            self.TKroot.iconbitmap(wicon)
         except: pass
 
     def _GetElementAtLocation(self, location):
@@ -3097,19 +3119,31 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             value = tab_key
                     except:
                         value = None
+                elif element.Type == ELEM_TYPE_TABLE:
+                    value = element.SelectedRows
             else:
                 value = None
 
             # if an input type element, update the results
-            if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
-                    element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME \
+            if element.Type != ELEM_TYPE_BUTTON and \
+                    element.Type != ELEM_TYPE_TEXT and \
+                    element.Type != ELEM_TYPE_IMAGE and\
+                    element.Type != ELEM_TYPE_OUTPUT and \
+                    element.Type != ELEM_TYPE_PROGRESS_BAR and \
+                    element.Type!= ELEM_TYPE_COLUMN and \
+                    element.Type != ELEM_TYPE_FRAME \
                     and element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
-            elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and element.Target == (None,None)) or \
-                    (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_COLOR_CHOOSER and element.Target == (None,None)) or \
-                (element.Type == ELEM_TYPE_BUTTON and element.Key is not None and (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
+            elif (element.Type == ELEM_TYPE_BUTTON and
+                  element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and
+                  element.Target == (None,None)) or \
+                    (element.Type == ELEM_TYPE_BUTTON and
+                     element.BType == BUTTON_TYPE_COLOR_CHOOSER and
+                     element.Target == (None,None)) or \
+                (element.Type == ELEM_TYPE_BUTTON
+                 and element.Key is not None and
+                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
@@ -3510,8 +3544,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.configure(height=element.Size[1])
                 # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
-                if element.InitializeAsDisabled:
-                    element.TKCombo['state'] = 'disabled'
+
+                # if element.InitializeAsDisabled:
+                #     element.TKCombo['state'] = 'disabled'
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
@@ -3524,7 +3559,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.current(0)
                 if element.ChangeSubmits:
                     element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
-                if element.Disabled == True:
+                if element.Readonly:
+                    element.TKCombo['state']='readonly'
+                if element.Disabled is True:            # note overrides readonly if disabled
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -3930,6 +3967,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.DefaultColumnWidth
 
                     treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+                # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i] + value
@@ -3941,6 +3979,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
+
                 element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
