@@ -4,10 +4,8 @@ if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
     import PySimpleGUI27 as sg
-import cv2 as cv
-from PIL import Image
+import cv2
 import numpy as np
-import io
 from sys import exit as exit
 
 """
@@ -31,7 +29,7 @@ def main():
     window.Layout(layout).Finalize()
 
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
-    cap = cv.VideoCapture(0)
+    cap = cv2.VideoCapture(0)
     recording = False
     while True:
         event, values = window.ReadNonBlocking()
@@ -42,10 +40,8 @@ def main():
             recording = True
         elif event == 'Stop':
             recording = False
-            img = Image.new('RGB', (640, 480), (255, 255, 255))
-            bio = io.BytesIO()  # a binary memory resident stream
-            img.save(bio, format='PNG')  # save image as png to it
-            imgbytes = bio.getvalue()
+            img = np.full((480, 640),255)
+            imgbytes=cv2.imencode('.png', img)[1].tobytes() #this is faster, shorter and needs less includes
             window.FindElement('image').Update(data=imgbytes)
         elif event == 'About':
             sg.PopupNoWait('Made with PySimpleGUI',
@@ -56,14 +52,7 @@ def main():
                            keep_on_top=True)
         if recording:
             ret, frame = cap.read()
-
-            gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-
-            # let img be the PIL image
-            img = Image.fromarray(gray)  # create PIL image from frame
-            bio = io.BytesIO()  # a binary memory resident stream
-            img.save(bio, format= 'PNG')  # save image as png to it
-            imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
+            imgbytes=cv2.imencode('.png', frame)[1].tobytes() #ditto
             window.FindElement('image').Update(data=imgbytes)
 
 main()
