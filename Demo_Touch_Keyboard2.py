@@ -61,8 +61,8 @@ class keyboard():
 class GUI():
     def __init__(self):
         layout = [[sg.Text('Enter Text')],
-                  [sg.Input(size=(17, 1), key='input1', )],
-                  [sg.InputText(size=(17, 1), key='input2')],
+                  [sg.Input(size=(17, 1), key='input1', do_not_clear=True )],
+                  [sg.InputText(size=(17, 1), key='input2', do_not_clear=True)],
                   [sg.ReadButton('on-screen keyboard', key='keyboard')],
                   [sg.ReadButton('close', key='close')]]
 
@@ -75,7 +75,7 @@ class GUI():
             cur_focus = self.mainWindow.FindElementWithFocus()
             if cur_focus is not None:
                 self.focus = cur_focus
-            event, values = self.mainWindow.ReadNonBlocking()
+            event, values = self.mainWindow.Read(timeout=200, timeout_key='timeout')
             if self.focus is not None:
                 self.keyboard.update(self.focus)
             if event == 'keyboard':
