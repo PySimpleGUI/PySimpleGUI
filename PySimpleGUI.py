@@ -2683,13 +2683,15 @@ class Window:
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-            if element is None:
-                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-                PopupError('Keyword error in FindElement Call',
-                           'Bad key = {}'.format(key),
-                           'Your bad line of code may resemble this:',
-                           'window.FindElement("{}")'.format(key))
+            PopupError('Keyword error in FindElement Call',
+                       'Bad key = {}'.format(key),
+                       'Your bad line of code may resemble this:',
+                       'window.FindElement("{}")'.format(key))
             return ErrorElement(key=key)
+        return element
+
+    def FindElementWithFocus(self):
+        element = _FindElementWithFocusInSubForm(self)
         return element
 
     def SaveToDisk(self, filename):
@@ -3228,6 +3230,29 @@ def _FindElementFromKeyInSubForm(form, key):
                 return element
 
 
+def _FindElementWithFocusInSubForm(form):
+    for row_num, row in enumerate(form.Rows):
+        for col_num, element in enumerate(row):
+            if element.Type == ELEM_TYPE_COLUMN:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_FRAME:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_TAB_GROUP:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_TAB:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_INPUT_TEXT:
+                if element.TKEntry is not None:
+                    if element.TKEntry is element.TKEntry.focus_get():
+                        return element
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
