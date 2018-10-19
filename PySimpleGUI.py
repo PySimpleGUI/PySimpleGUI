@@ -470,7 +470,7 @@ Input = InputText
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
-    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None, readonly=False):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -482,8 +482,9 @@ class InputCombo(Element):
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits
         self.TKCombo = None
-        self.InitializeAsDisabled = disabled
+        # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
+        self.Readonly=readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
@@ -513,7 +514,14 @@ class InputCombo(Element):
         if disabled == True:
             self.TKCombo['state'] = 'disable'
         elif disabled == False:
-            self.TKCombo['state'] = 'enable'
+            if self.Readonly:
+                self.TKCombo['state']='readonly'
+            else:
+                self.TKCombo['state'] = 'enable'
+        elif readonly is not None:
+            self.Readonly=readonly
+            if readonly and not self.Disabled:
+                self.TKCombo['state']='readonly'
 
 
     def __del__(self):
@@ -3510,8 +3518,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.configure(height=element.Size[1])
                 # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
-                if element.InitializeAsDisabled:
-                    element.TKCombo['state'] = 'disabled'
+                if element.Readonly:
+                    element.TKCombo['state']='readonly'
+                # if element.InitializeAsDisabled:
+                #     element.TKCombo['state'] = 'disabled'
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
