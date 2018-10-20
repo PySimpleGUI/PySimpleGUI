@@ -23,9 +23,9 @@
       
 ## Now supports both Python 2.7 & 3      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.10.1-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.10.2-red.svg?longCache=true&style=for-the-badge)      
       
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.1-blue.svg?longCache=true&style=for-the-badge)      
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.2-blue.svg?longCache=true&style=for-the-badge)      
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -3637,6 +3637,11 @@ It's official.  There is a 2.7 version of PySimpleGUI!
 * Window.Move allows moving window anywhere on screen
 * Window.Minimize will minimize to taskbar
 * Button background color can be set to system default (i.e. not changed)
+
+### 3.10.2 & 1.2.2
+Emergency patch release... going out same day as previous release
+* The timeout timer for the new Read with timer wasn't being properly shut down
+* The Image.Update method appears to not have been written correctly.  It didn't handle base64 images like the other elements that deal with images (buttons)
 
 
     
