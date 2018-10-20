@@ -2307,14 +2307,16 @@ class Table(Element):
 
     def Update(self, values=None):
         if values is not None:
-            self.TKTreeview.delete(*self.TKTreeview.get_children())
-            for i, value in enumerate(self.Values):
+            children = self.TKTreeview.get_children()
+            for i in children:
+                self.TKTreeview.detach(i)
+                self.TKTreeview.delete(i)
+            children = self.TKTreeview.get_children()
+            # self.TKTreeview.delete(*self.TKTreeview.get_children())
+            for i, value in enumerate(values):
                 if self.DisplayRowNumbers:
                     value = [i] + value
-                id = self.TKTreeview.insert('', 'end', text=value, values=value, tag=i % 2)
-                if i == 4:
-                    break
-
+                id = self.TKTreeview.insert('', 'end', text=i, iid=i+1, values=value, tag=i % 2)
             if self.AlternatingRowColor is not None:
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
             self.Values = values
@@ -2322,15 +2324,7 @@ class Table(Element):
 
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
-        self.SelectedRows = [int(x[1:], 16)-1 for x in selections]
-            # ttk.Treeview.selection
-        # print(select)
-        # self.TKTreeview.TreeSelection.get_selected_rows()
-        #
-        # iid = self.TKTreeview.focus()
-        # # item = self.Values[iid]
-        # print('Selected item iid: %s' % iid)
-        # #self.process_directory(iid, path)
+        self.SelectedRows = [int(x)-1 for x in selections]
 
 
     def __del__(self):
@@ -3425,7 +3419,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     col_frame = tk.Frame(tk_row_frame)
                     PackFormIntoFrame(element, col_frame, toplevel_form)
 
-                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
@@ -4035,7 +4029,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i] + value
-                    id = treeview.insert('', 'end', text=value, values=value, tag=i%2)
+                    id = treeview.insert('', 'end', text=value, iid=i+1, values=value, tag=i%2)
                 if element.AlternatingRowColor is not None:
                     treeview.tag_configure(1, background=element.AlternatingRowColor)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -4045,6 +4039,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
 
+                scrollbar = tk.Scrollbar(tk_row_frame)
+                scrollbar.pack(side=tk.RIGHT, fill='y')
+                scrollbar.config(command=treeview.yview)
+
+                treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
