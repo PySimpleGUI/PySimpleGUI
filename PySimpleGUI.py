@@ -186,6 +186,7 @@ def RGB(red,green,blue): return '#%02x%02x%02x' % (red,green,blue)
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
 BUTTON_TYPE_BROWSE_FILES = 21
+BUTTON_TYPE_READ_BROWSE_FILE = 27
 BUTTON_TYPE_SAVEAS_FILE = 3
 BUTTON_TYPE_CLOSES_WIN = 5
 BUTTON_TYPE_CLOSES_WIN_ONLY = 6
@@ -1217,6 +1218,21 @@ class Button(Element):
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.Decrement()
+        elif self.BType == BUTTON_TYPE_READ_BROWSE_FILE:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
+            print("GOT HERE")
+            # first, get the filename
+            file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            if file_name != '':
+                strvar.set(file_name)
+                self.TKStringVar.set(file_name)
+            # second, get the results table built
+            # modify the Results table in the parent FlexForm object
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = self.ButtonText
+            self.ParentForm.FormRemainedOpen = True
+            self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
         elif self.BType == BUTTON_TYPE_READ_FORM:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1226,6 +1242,7 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
             self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
+
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
@@ -2877,6 +2894,10 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1),  initial_folder=Non
 def FileBrowse( button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
+# -------------------------  READ FILE BROWSE Element lazy function  ------------------------- #
+def ReadFileBrowse( button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_BROWSE_FILE, target=target, file_types=file_types,initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False, initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target,  file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
@@ -2942,7 +2963,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
 
 ReadFormButton = ReadButton
 RButton = ReadFormButton
-
+RFileBrowse = ReadFileBrowse
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
@@ -3145,7 +3166,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                      element.Target == (None,None)) or \
                 (element.Type == ELEM_TYPE_BUTTON
                  and element.Key is not None and
-                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
+                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER, BUTTON_TYPE_READ_BROWSE_FILE))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
