@@ -39,6 +39,25 @@ def TimerStop():
     g_time_delta = g_time_end - g_time_start
     print(g_time_delta)
 
+
+"""
+    Welcome to the "core" PySimpleGUI code....
+    
+    It's a mess.... really... it's a mess internally... it's the external-facing interfaces that
+    are not a mess.  The Elements and the methods for them are well-designed.
+    PEP8 - this code is far far from PEP8 compliant. 
+    It was written PRIOR to learning that PEP8 existed. 
+     
+    The variable and function naming in particular are not compliant.  There is
+    liberal use of CamelVariableAndFunctionNames.  If you've got a serious enough problem with this
+    that you'll pass on this package, then that's your right and I invite you to do so.  However, if
+    perhaps you're a practical thinker where it's the results that matter, then you'll have no
+    trouble with this code base.  There is consisency however.  
+    
+    I truly hope you get a lot of enjoyment out of using PySimpleGUI.  It came from good intentions.
+"""
+
+
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
@@ -61,8 +80,12 @@ PURPLES = ("#480656","#4F2398","#380474")
 GREENS = ("#01826B","#40A860","#96D2AB", "#00A949","#003532")
 YELLOWS = ("#F3FB62", "#F0F595")
 TANS = ("#FFF9D5","#F4EFCF","#DDD8BA")
-NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#000000'), (YELLOWS[0], PURPLES[1]),
-               (YELLOWS[0], GREENS[3]), (YELLOWS[0], BLUES[2]))
+NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]),
+                      ('#000000','#FFFFFF'),
+                      ('#FFFFFF', '#000000'),
+                      (YELLOWS[0], PURPLES[1]),
+                      (YELLOWS[0], GREENS[3]),
+                      (YELLOWS[0], BLUES[2]))
 
 COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
 if sys.platform == 'darwin':
@@ -2282,6 +2305,21 @@ class Table(Element):
         return
 
 
+    def Update(self, values=None):
+        if values is not None:
+            self.TKTreeview.delete(*self.TKTreeview.get_children())
+            for i, value in enumerate(self.Values):
+                if self.DisplayRowNumbers:
+                    value = [i] + value
+                id = self.TKTreeview.insert('', 'end', text=value, values=value, tag=i % 2)
+                if i == 4:
+                    break
+
+            if self.AlternatingRowColor is not None:
+                self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
+            self.Values = values
+
+
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x[1:], 16)-1 for x in selections]
@@ -2293,6 +2331,7 @@ class Table(Element):
         # # item = self.Values[iid]
         # print('Selected item iid: %s' % iid)
         # #self.process_directory(iid, path)
+
 
     def __del__(self):
         super().__del__()

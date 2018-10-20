@@ -51,6 +51,25 @@ def TimerStop():
     g_time_delta = g_time_end - g_time_start
     print(g_time_delta)
 
+
+"""
+    Welcome to the "core" PySimpleGUI code....
+    
+    It's a mess.... really... it's a mess internally... it's the external-facing interfaces that
+    are not a mess.  The Elements and the methods for them are well-designed.
+    PEP8 - this code is far far from PEP8 compliant. 
+    It was written PRIOR to learning that PEP8 existed. 
+     
+    The variable and function naming in particular are not compliant.  There is
+    liberal use of CamelVariableAndFunctionNames.  If you've got a serious enough problem with this
+    that you'll pass on this package, then that's your right and I invite you to do so.  However, if
+    perhaps you're a practical thinker where it's the results that matter, then you'll have no
+    trouble with this code base.  There is consisency however.  
+    
+    I truly hope you get a lot of enjoyment out of using PySimpleGUI.  It came from good intentions.
+"""
+
+
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
 DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
@@ -73,8 +92,12 @@ PURPLES = ("#480656","#4F2398","#380474")
 GREENS = ("#01826B","#40A860","#96D2AB", "#00A949","#003532")
 YELLOWS = ("#F3FB62", "#F0F595")
 TANS = ("#FFF9D5","#F4EFCF","#DDD8BA")
-NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]), ('#000000','#FFFFFF'),('#FFFFFF', '#000000'), (YELLOWS[0], PURPLES[1]),
-               (YELLOWS[0], GREENS[3]), (YELLOWS[0], BLUES[2]))
+NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]),
+                      ('#000000','#FFFFFF'),
+                      ('#FFFFFF', '#000000'),
+                      (YELLOWS[0], PURPLES[1]),
+                      (YELLOWS[0], GREENS[3]),
+                      (YELLOWS[0], BLUES[2]))
 
 COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
 if sys.platform == 'darwin':
@@ -435,13 +458,12 @@ class Element(object):
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', size=(None, None), disabled=False, auto_size_text=None, password_char='',
+    def __init__(self, default_text ='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
         :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
         :param password_char: If non-blank, will display this character for every character typed
         :param background_color: Color for Element. Text or RGB Hex
         '''
@@ -453,7 +475,7 @@ class InputText(Element):
         self.do_not_clear = do_not_clear
         self.Justification = justification
         self.Disabled = disabled
-        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
 
 
     def Update(self, value=None, disabled=None):
@@ -482,7 +504,7 @@ Input = InputText
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
-    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None, readonly=False):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -494,14 +516,15 @@ class InputCombo(Element):
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits
         self.TKCombo = None
-        self.InitializeAsDisabled = disabled
+        # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
+        self.Readonly=readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -526,6 +549,10 @@ class InputCombo(Element):
             self.TKCombo['state'] = 'disable'
         elif disabled == False:
             self.TKCombo['state'] = 'enable'
+            if readonly is not None:
+                self.Readonly = readonly
+            if self.Readonly:
+                self.TKCombo['state']='readonly'
 
 
     def __del__(self):
@@ -1326,7 +1353,6 @@ class ProgressBar(Element):
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         super().__init__(ELEM_TYPE_PROGRESS_BAR,  size=size, auto_size_text=auto_size_text, key=key, pad=pad)
-        return
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
@@ -1802,7 +1828,7 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None,None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None,None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
         :param range:
@@ -1831,8 +1857,11 @@ class Slider(Element):
         self.ChangeSubmits = change_submits
         self.Disabled = disabled
         self.TickInterval = tick_interval
+        temp_size = size
+        if temp_size == (None, None):
+            temp_size = (20,20) if orientation.startswith('h') else (8,20)
 
-        super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=temp_size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, range=(None, None), disabled=None):
@@ -2282,9 +2311,38 @@ class Table(Element):
         self.NumRows = num_rows if num_rows is not None else size[1]
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
+        self.SelectedRows = []
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color,  font=font, size=size, pad=pad, key=key, tooltip=tooltip)
         return
+
+
+    def Update(self, values=None):
+        if values is not None:
+            self.TKTreeview.delete(*self.TKTreeview.get_children())
+            for i, value in enumerate(self.Values):
+                if self.DisplayRowNumbers:
+                    value = [i] + value
+                id = self.TKTreeview.insert('', 'end', text=value, values=value, tag=i % 2)
+                if i == 4:
+                    break
+
+            if self.AlternatingRowColor is not None:
+                self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
+            self.Values = values
+
+
+    def treeview_selected(self, event):
+        selections = self.TKTreeview.selection()
+        self.SelectedRows = [int(x[1:], 16)-1 for x in selections]
+            # ttk.Treeview.selection
+        # print(select)
+        # self.TKTreeview.TreeSelection.get_selected_rows()
+        #
+        # iid = self.TKTreeview.focus()
+        # # item = self.Values[iid]
+        # print('Selected item iid: %s' % iid)
+        # #self.process_directory(iid, path)
 
 
     def __del__(self):
@@ -2485,6 +2543,9 @@ class Window(object):
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
         self._AlphaChannel = alpha_channel
+        self.Timeout = None
+        self.TimeoutKey = '_timeout_'
+        self.TimerCancelled = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2553,10 +2614,15 @@ class Window(object):
         return self.ReturnValues
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
-    def SetIcon(self, icon):
-        self.WindowIcon = icon
+    def SetIcon(self, icon=None, pngbase64=None):
+        if pngbase64 != None:
+            img = tkinter.PhotoImage(data=pngbase64)
+            wicon = img
+        else:
+            wicon = icon
+        self.WindowIcon = wicon
         try:
-            self.TKroot.iconbitmap(icon)
+            self.TKroot.iconbitmap(wicon)
         except: pass
 
     def _GetElementAtLocation(self, location):
@@ -2582,7 +2648,19 @@ class Window(object):
             pass
 
 
-    def Read(self):
+    def _TimeoutAlarmCallback(self):
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        if self.TimerCancelled:
+            return
+        self.LastButtonClicked = self.TimeoutKey
+        self.FormRemainedOpen = True
+        self.TKroot.quit()               # kick the users out of the mainloop
+
+
+    def Read(self, timeout=None, timeout_key='_timeout_'):
+        self.Timeout = timeout
+        self.TimeoutKey = timeout_key
         self.NonBlocking = False
         if self.TKrootDestroyed:
             return None, None
@@ -2590,7 +2668,11 @@ class Window(object):
             self.Show()
         else:
             InitializeResults(self)
+            if timeout != None:
+                self.TimerCancelled = False
+                self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.TKroot.mainloop()
+            self.TimerCancelled = True
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.Decrement()
@@ -2652,13 +2734,15 @@ class Window(object):
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-            if element is None:
-                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-                PopupError('Keyword error in FindElement Call',
-                           'Bad key = {}'.format(key),
-                           'Your bad line of code may resemble this:',
-                           'window.FindElement("{}")'.format(key))
+            PopupError('Keyword error in FindElement Call',
+                       'Bad key = {}'.format(key),
+                       'Your bad line of code may resemble this:',
+                       'window.FindElement("{}")'.format(key))
             return ErrorElement(key=key)
+        return element
+
+    def FindElementWithFocus(self):
+        element = _FindElementWithFocusInSubForm(self)
         return element
 
     def SaveToDisk(self, filename):
@@ -3088,19 +3172,31 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             value = tab_key
                     except:
                         value = None
+                elif element.Type == ELEM_TYPE_TABLE:
+                    value = element.SelectedRows
             else:
                 value = None
 
             # if an input type element, update the results
-            if element.Type != ELEM_TYPE_BUTTON and element.Type != ELEM_TYPE_TEXT and element.Type != ELEM_TYPE_IMAGE and\
-                    element.Type != ELEM_TYPE_OUTPUT and element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and element.Type != ELEM_TYPE_FRAME \
+            if element.Type != ELEM_TYPE_BUTTON and \
+                    element.Type != ELEM_TYPE_TEXT and \
+                    element.Type != ELEM_TYPE_IMAGE and\
+                    element.Type != ELEM_TYPE_OUTPUT and \
+                    element.Type != ELEM_TYPE_PROGRESS_BAR and \
+                    element.Type!= ELEM_TYPE_COLUMN and \
+                    element.Type != ELEM_TYPE_FRAME \
                     and element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
-            elif (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and element.Target == (None,None)) or \
-                    (element.Type == ELEM_TYPE_BUTTON and element.BType == BUTTON_TYPE_COLOR_CHOOSER and element.Target == (None,None)) or \
-                (element.Type == ELEM_TYPE_BUTTON and element.Key is not None and (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
+            elif (element.Type == ELEM_TYPE_BUTTON and
+                  element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and
+                  element.Target == (None,None)) or \
+                    (element.Type == ELEM_TYPE_BUTTON and
+                     element.BType == BUTTON_TYPE_COLOR_CHOOSER and
+                     element.Target == (None,None)) or \
+                (element.Type == ELEM_TYPE_BUTTON
+                 and element.Key is not None and
+                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
@@ -3185,6 +3281,29 @@ def _FindElementFromKeyInSubForm(form, key):
                 return element
 
 
+def _FindElementWithFocusInSubForm(form):
+    for row_num, row in enumerate(form.Rows):
+        for col_num, element in enumerate(row):
+            if element.Type == ELEM_TYPE_COLUMN:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_FRAME:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_TAB_GROUP:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_TAB:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_INPUT_TEXT:
+                if element.TKEntry is not None:
+                    if element.TKEntry is element.TKEntry.focus_get():
+                        return element
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
@@ -3501,8 +3620,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.configure(height=element.Size[1])
                 # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
-                if element.InitializeAsDisabled:
-                    element.TKCombo['state'] = 'disabled'
+
+                # if element.InitializeAsDisabled:
+                #     element.TKCombo['state'] = 'disabled'
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
@@ -3515,7 +3635,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.current(0)
                 if element.ChangeSubmits:
                     element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
-                if element.Disabled == True:
+                if element.Readonly:
+                    element.TKCombo['state']='readonly'
+                if element.Disabled is True:            # note overrides readonly if disabled
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -3921,6 +4043,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.DefaultColumnWidth
 
                     treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+                # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i] + value
@@ -3932,6 +4055,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
+
                 element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -4089,12 +4214,16 @@ def StartupTK(my_flex_form):
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
         my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
+
+    if my_flex_form.Timeout != None:
+        my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
         pass
         # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:       # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.TKroot.mainloop()
+        my_flex_form.TimerCancelled = True
         # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
             _my_windows.Decrement()
@@ -4955,79 +5084,211 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'PROGRESS_DEPTH': 0},
 
 
-                      'Dark2': {'BACKGROUND': 'gray25', 'TEXT': 'white', 'INPUT': 'white',
-                               'TEXT_INPUT': 'black', 'SCROLL': 'gray44', 'BUTTON': ('white', '#004F00'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
-
-                      'Black': {'BACKGROUND': 'black', 'TEXT': 'white', 'INPUT': 'gray30',
-                               'TEXT_INPUT': 'white', 'SCROLL': 'gray44', 'BUTTON': ('black', 'white'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
-
-                      'Tan': {'BACKGROUND': '#fdf6e3', 'TEXT': '#268bd1', 'INPUT': '#eee8d5',
-                                'TEXT_INPUT': '#6c71c3', 'SCROLL': '#eee8d5', 'BUTTON': ('white', '#063542'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'Dark2': {'BACKGROUND': 'gray25',
+                                'TEXT': 'white',
+                                'INPUT': 'white',
+                                'TEXT_INPUT': 'black',
+                                'SCROLL': 'gray44',
+                                'BUTTON': ('white', '#004F00'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH': 0,
                                 'PROGRESS_DEPTH': 0},
 
-                      'TanBlue': {'BACKGROUND': '#e5dece', 'TEXT': '#063289', 'INPUT': '#f9f8f4',
-                              'TEXT_INPUT': '#242834', 'SCROLL': '#eee8d5', 'BUTTON': ('white', '#063289'),
-                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'Black': {'BACKGROUND': 'black',
+                                'TEXT': 'white',
+                                'INPUT': 'gray30',
+                                'TEXT_INPUT': 'white',
+                                'SCROLL': 'gray44',
+                                'BUTTON': ('black', 'white'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH': 0,
+                                'PROGRESS_DEPTH': 0},
+
+                      'Tan': {'BACKGROUND': '#fdf6e3',
+                              'TEXT': '#268bd1',
+                              'INPUT': '#eee8d5',
+                              'TEXT_INPUT': '#6c71c3',
+                              'SCROLL': '#eee8d5',
+                              'BUTTON': ('white', '#063542'),
+                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                              'BORDER': 1,
+                              'SLIDER_DEPTH': 0,
                               'PROGRESS_DEPTH': 0},
 
-                      'DarkTanBlue': {'BACKGROUND': '#242834', 'TEXT': '#dfe6f8', 'INPUT': '#97755c',
-                                  'TEXT_INPUT': 'white', 'SCROLL': '#a9afbb', 'BUTTON': ('white', '#063289'),
-                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'TanBlue': {'BACKGROUND': '#e5dece',
+                                  'TEXT': '#063289',
+                                  'INPUT': '#f9f8f4',
+                                  'TEXT_INPUT': '#242834',
+                                  'SCROLL': '#eee8d5',
+                                  'BUTTON': ('white', '#063289'),
+                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                  'BORDER': 1,
+                                  'SLIDER_DEPTH': 0,
                                   'PROGRESS_DEPTH': 0},
 
-                      'DarkAmber': {'BACKGROUND': '#2c2825', 'TEXT': '#fdcb52', 'INPUT': '#705e52',
-                                   'TEXT_INPUT': '#fdcb52', 'SCROLL': '#705e52', 'BUTTON': ('black', '#fdcb52'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'DarkTanBlue': {'BACKGROUND': '#242834',
+                                      'TEXT': '#dfe6f8',
+                                      'INPUT': '#97755c',
+                                      'TEXT_INPUT': 'white',
+                                      'SCROLL': '#a9afbb',
+                                      'BUTTON': ('white', '#063289'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 1,
+                                      'SLIDER_DEPTH': 0,
+                                      'PROGRESS_DEPTH': 0},
+
+                      'DarkAmber': {'BACKGROUND': '#2c2825',
+                                    'TEXT': '#fdcb52',
+                                    'INPUT': '#705e52',
+                                    'TEXT_INPUT': '#fdcb52',
+                                    'SCROLL': '#705e52',
+                                    'BUTTON': ('black', '#fdcb52'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH': 0,
+                                    'PROGRESS_DEPTH': 0},
+
+                      'DarkBlue': {'BACKGROUND': '#1a2835',
+                                   'TEXT': '#d1ecff',
+                                   'INPUT': '#335267',
+                                   'TEXT_INPUT': '#acc2d0',
+                                   'SCROLL': '#1b6497',
+                                   'BUTTON': ('black', '#fafaf8'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1, 'SLIDER_DEPTH': 0,
                                    'PROGRESS_DEPTH': 0},
 
-                      'DarkBlue': {'BACKGROUND': '#1a2835', 'TEXT': '#d1ecff', 'INPUT': '#335267',
-                              'TEXT_INPUT': '#acc2d0', 'SCROLL': '#1b6497', 'BUTTON': ('black', '#fafaf8'),
-                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                              'PROGRESS_DEPTH': 0},
-
-                      'Reds': {'BACKGROUND': '#280001', 'TEXT': 'white', 'INPUT': '#d8d584',
-                               'TEXT_INPUT': 'black', 'SCROLL': '#763e00', 'BUTTON': ('black', '#daad28'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                      'Reds': {'BACKGROUND': '#280001',
+                               'TEXT': 'white',
+                               'INPUT': '#d8d584',
+                               'TEXT_INPUT': 'black',
+                               'SCROLL': '#763e00',
+                               'BUTTON': ('black', '#daad28'),
+                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                               'BORDER': 1,
+                               'SLIDER_DEPTH': 0,
                                'PROGRESS_DEPTH': 0},
 
-                      'Green': {'BACKGROUND': '#82a459', 'TEXT': 'black', 'INPUT': '#d8d584',
-                               'TEXT_INPUT': 'black', 'SCROLL': '#e3ecf3', 'BUTTON': ('white', '#517239'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
+                      'Green': {'BACKGROUND': '#82a459',
+                                'TEXT': 'black',
+                                'INPUT': '#d8d584',
+                                'TEXT_INPUT': 'black',
+                                'SCROLL': '#e3ecf3',
+                                'BUTTON': ('white', '#517239'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH': 0,
+                                'PROGRESS_DEPTH': 0},
 
-                      'BluePurple': {'BACKGROUND' : '#A5CADD', 'TEXT': '#6E266E', 'INPUT':'#E0F5FF','TEXT_INPUT' : 'black', 'SCROLL': '#E0F5FF','BUTTON': ('white', '#303952'),'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BluePurple': {'BACKGROUND' : '#A5CADD',
+                                     'TEXT': '#6E266E',
+                                     'INPUT':'#E0F5FF',
+                                     'TEXT_INPUT' : 'black',
+                                     'SCROLL': '#E0F5FF',
+                                     'BUTTON': ('white', '#303952'),
+                                     'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR,
+                                     'BORDER': 1,
+                                     'SLIDER_DEPTH':0,
+                                     'PROGRESS_DEPTH':0},
 
-                      'Purple': {'BACKGROUND': '#B0AAC2', 'TEXT': 'black', 'INPUT': '#F2EFE8','SCROLL': '#F2EFE8','TEXT_INPUT' : 'black',
-                                     'BUTTON': ('black', '#C2D4D8'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'Purple': {'BACKGROUND': '#B0AAC2',
+                                 'TEXT': 'black',
+                                 'INPUT': '#F2EFE8',
+                                 'SCROLL': '#F2EFE8',
+                                 'TEXT_INPUT' : 'black',
+                                 'BUTTON': ('black', '#C2D4D8'),
+                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                 'BORDER': 1,
+                                 'SLIDER_DEPTH':0,
+                                 'PROGRESS_DEPTH':0},
 
-                      'BlueMono': {'BACKGROUND': '#AAB6D3', 'TEXT': 'black', 'INPUT': '#F1F4FC','SCROLL': '#F1F4FC','TEXT_INPUT' : 'black',
-                                     'BUTTON': ('white', '#7186C7'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BlueMono': {'BACKGROUND': '#AAB6D3',
+                                   'TEXT': 'black',
+                                   'INPUT': '#F1F4FC',
+                                   'SCROLL': '#F1F4FC',
+                                   'TEXT_INPUT' : 'black',
+                                   'BUTTON': ('white', '#7186C7'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1,
+                                   'SLIDER_DEPTH':0,
+                                   'PROGRESS_DEPTH':0},
 
-                      'GreenMono': {'BACKGROUND': '#A8C1B4', 'TEXT': 'black', 'INPUT': '#DDE0DE', 'SCROLL': '#E3E3E3','TEXT_INPUT' : 'black',
-                                   'BUTTON': ('white', '#6D9F85'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'GreenMono': {'BACKGROUND': '#A8C1B4',
+                                    'TEXT': 'black',
+                                    'INPUT': '#DDE0DE',
+                                    'SCROLL': '#E3E3E3',
+                                    'TEXT_INPUT' : 'black',
+                                    'BUTTON': ('white', '#6D9F85'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH':0,
+                                    'PROGRESS_DEPTH':0},
 
-                      'BrownBlue': {'BACKGROUND': '#64778d', 'TEXT': 'white', 'INPUT': '#f0f3f7', 'SCROLL': '#A6B2BE','TEXT_INPUT' : 'black', 'BUTTON': ('white', '#283b5b'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BrownBlue': {'BACKGROUND': '#64778d',
+                                    'TEXT': 'white',
+                                    'INPUT': '#f0f3f7',
+                                    'SCROLL': '#A6B2BE',
+                                    'TEXT_INPUT' : 'black',
+                                    'BUTTON': ('white', '#283b5b'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH':0,
+                                    'PROGRESS_DEPTH':0},
 
-                      'BrightColors': {'BACKGROUND': '#b4ffb4', 'TEXT': 'black', 'INPUT': '#ffff64','SCROLL': '#ffb482','TEXT_INPUT' : 'black', 'BUTTON': ('black', '#ffa0dc'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'BrightColors': {'BACKGROUND': '#b4ffb4',
+                                       'TEXT': 'black',
+                                       'INPUT': '#ffff64',
+                                       'SCROLL': '#ffb482',
+                                       'TEXT_INPUT' : 'black',
+                                       'BUTTON': ('black', '#ffa0dc'),
+                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                       'BORDER': 1,
+                                       'SLIDER_DEPTH':0,
+                                       'PROGRESS_DEPTH':0},
 
-                      'NeutralBlue': {'BACKGROUND': '#92aa9d', 'TEXT': 'black', 'INPUT': '#fcfff6',
-                                       'SCROLL': '#fcfff6', 'TEXT_INPUT': 'black', 'BUTTON': ('black', '#d0dbbd'),
-                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'NeutralBlue': {'BACKGROUND': '#92aa9d',
+                                      'TEXT': 'black',
+                                      'INPUT': '#fcfff6',
+                                      'SCROLL': '#fcfff6',
+                                      'TEXT_INPUT': 'black',
+                                      'BUTTON': ('black', '#d0dbbd'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 1,
+                                      'SLIDER_DEPTH':0,
+                                      'PROGRESS_DEPTH':0},
 
-                      'Kayak': {'BACKGROUND': '#a7ad7f', 'TEXT': 'black', 'INPUT': '#e6d3a8',
-                                      'SCROLL': '#e6d3a8', 'TEXT_INPUT': 'black', 'BUTTON': ('white', '#5d907d'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'Kayak': {'BACKGROUND': '#a7ad7f',
+                                'TEXT': 'black',
+                                'INPUT': '#e6d3a8',
+                                'SCROLL': '#e6d3a8',
+                                'TEXT_INPUT': 'black',
+                                'BUTTON': ('white', '#5d907d'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH':0,
+                                'PROGRESS_DEPTH':0},
 
-                      'SandyBeach': {'BACKGROUND': '#efeccb', 'TEXT': '#012f2f', 'INPUT': '#e6d3a8',
-                                'SCROLL': '#e6d3a8', 'TEXT_INPUT': '#012f2f', 'BUTTON': ('white', '#046380'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0},
+                      'SandyBeach': {'BACKGROUND': '#efeccb',
+                                     'TEXT': '#012f2f',
+                                     'INPUT': '#e6d3a8',
+                                     'SCROLL': '#e6d3a8',
+                                     'TEXT_INPUT': '#012f2f',
+                                     'BUTTON': ('white', '#046380'),
+                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                     'BORDER': 1,'SLIDER_DEPTH':0,
+                                     'PROGRESS_DEPTH':0},
 
-                      'TealMono': {'BACKGROUND': '#a8cfdd', 'TEXT': 'black', 'INPUT': '#dfedf2','SCROLL': '#dfedf2', 'TEXT_INPUT' : 'black', 'BUTTON': ('white', '#183440'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1,'SLIDER_DEPTH':0, 'PROGRESS_DEPTH':0}
+                      'TealMono': {'BACKGROUND': '#a8cfdd',
+                                   'TEXT': 'black',
+                                   'INPUT': '#dfedf2','SCROLL': '#dfedf2',
+                                   'TEXT_INPUT' : 'black',
+                                   'BUTTON': ('white', '#183440'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1,
+                                   'SLIDER_DEPTH':0,
+                                   'PROGRESS_DEPTH':0}
                       }
 
 def ListOfLookAndFeelValues():
@@ -5724,15 +5985,14 @@ def PopupYesNo(*args, **_3to2kwargs):
 
 
 def main():
-    window =  Window('Demo window..')
-    window_rows = [[Text('You are running the PySimpleGUI.py file itself')],
+    layout = [[Text('You are running the PySimpleGUI.py file itself')],
                  [Text('You should be importing it rather than running it', size=(50,2))],
                  [Text('Here is your sample input window....')],
                  [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
                  [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
                  [Ok(), Cancel()]]
 
-    button, (source, dest) = window.LayoutAndRead(window_rows)
+    button, values = Window('Demo window..').Layout(layout).Read()
 
 
 if __name__ == '__main__':
