@@ -3148,25 +3148,32 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 value = None
 
             # if an input type element, update the results
-            if element.Type != ELEM_TYPE_BUTTON and \
-                    element.Type != ELEM_TYPE_TEXT and \
-                    element.Type != ELEM_TYPE_IMAGE and\
-                    element.Type != ELEM_TYPE_OUTPUT and \
-                    element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and \
-                    element.Type != ELEM_TYPE_FRAME \
-                    and element.Type != ELEM_TYPE_TAB:
+            if (element.Type != ELEM_TYPE_BUTTON
+                and element.Type != ELEM_TYPE_TEXT
+                and element.Type != ELEM_TYPE_IMAGE
+                and element.Type != ELEM_TYPE_OUTPUT
+                and element.Type != ELEM_TYPE_PROGRESS_BAR
+                and element.Type != ELEM_TYPE_COLUMN
+                and element.Type != ELEM_TYPE_FRAME
+                and element.Type != ELEM_TYPE_TAB
+            ):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
-            elif (element.Type == ELEM_TYPE_BUTTON and
-                  element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and
-                  element.Target == (None,None)) or \
-                    (element.Type == ELEM_TYPE_BUTTON and
-                     element.BType == BUTTON_TYPE_COLOR_CHOOSER and
-                     element.Target == (None,None)) or \
-                (element.Type == ELEM_TYPE_BUTTON
-                 and element.Key is not None and
-                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER, BUTTON_TYPE_READ_BROWSE_FILE))):
+
+            elif ((element.Type == ELEM_TYPE_BUTTON
+                   and element.BType == BUTTON_TYPE_CALENDAR_CHOOSER
+                   and element.Target == (None,None))
+                  or (element.Type == ELEM_TYPE_BUTTON
+                      and element.BType == BUTTON_TYPE_COLOR_CHOOSER
+                      and element.Target == (None,None))
+                  or (element.Type == ELEM_TYPE_BUTTON
+                      and element.Key is not None
+                      and (element.BType in (BUTTON_TYPE_SAVEAS_FILE,
+                                             BUTTON_TYPE_BROWSE_FILE,
+                                             BUTTON_TYPE_BROWSE_FILES,
+                                             BUTTON_TYPE_BROWSE_FOLDER,
+                                             BUTTON_TYPE_READ_BROWSE_FILE,
+                      )))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
