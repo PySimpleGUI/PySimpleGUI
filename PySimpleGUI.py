@@ -1389,10 +1389,10 @@ class Image(Element):
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
-            if type(data) is bytes:
-                image = tk.PhotoImage(data=data)
-            else:
-                image = data
+            # if type(data) is bytes:
+            image = tk.PhotoImage(data=data)
+            # else:
+                # image = data
         else: return
         width, height = image.width(), image.height()
         self.tktext_label.configure(image=image, width=width, height=height)
@@ -2654,6 +2654,10 @@ class Window:
                 self.TimerCancelled = False
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.TKroot.mainloop()
+            try:
+                self.TKroot.after_cancel(self.TKAfterID)
+            except:
+                pass
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
