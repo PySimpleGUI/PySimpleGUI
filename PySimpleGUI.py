@@ -3985,6 +3985,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
+                frame = tk.Frame(tk_row_frame)
+
                 height = element.NumRows
                 if element.Justification == 'left':
                     anchor = tk.W
@@ -4012,7 +4014,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DisplayRowNumbers:       # if display row number, tack on the numbers to front of columns
                     displaycolumns = ['Row',] + displaycolumns
                     column_headings = ['Row',] + element.ColumnHeadings
-                element.TKTreeview = ttk.Treeview(tk_row_frame, columns=column_headings,
+                element.TKTreeview = ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
@@ -4043,12 +4045,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
 
-                scrollbar = tk.Scrollbar(tk_row_frame)
+
+
+                scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
 
                 treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
+                frame.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tree element  ------------------------- #
