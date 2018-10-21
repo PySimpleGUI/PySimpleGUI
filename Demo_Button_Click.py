@@ -5,6 +5,9 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 
+if not sys.platform.startswith('win'):
+    sg.PopupError('Sorry, you gotta be on Windows')
+    sys.exit()
 import winsound
 
 
