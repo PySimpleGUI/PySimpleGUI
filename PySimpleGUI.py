@@ -2748,6 +2748,8 @@ class Window:
         self.TKroot.quit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key='_timeout_'):
+        if timeout == 0:
+            return self.ReadNonBlocking()
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
