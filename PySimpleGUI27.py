@@ -12,6 +12,7 @@ from builtins import object
 from future import standard_library
 standard_library.install_aliases()
 import sys
+
 if sys.version_info[0] >= 3:
     import tkinter as tk
     from tkinter import filedialog
@@ -27,7 +28,6 @@ else:
     import tkinter.font
     import tkinter.scrolledtext
 
-
 import types
 import datetime
 import textwrap
@@ -39,10 +39,13 @@ g_time_end = 0
 g_time_delta = 0
 
 import time
+
+
 def TimerStart():
     global g_time_start
 
     g_time_start = time.time()
+
 
 def TimerStop():
     global g_time_delta, g_time_end
@@ -69,45 +72,44 @@ def TimerStop():
     I truly hope you get a lot of enjoyment out of using PySimpleGUI.  It came from good intentions.
 """
 
-
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
-DEFAULT_ELEMENT_SIZE = (45,1)           # In CHARACTERS
-DEFAULT_BUTTON_ELEMENT_SIZE = (10,1)           # In CHARACTERS
-DEFAULT_MARGINS = (10,5)                # Margins for each LEFT/RIGHT margin is first term
-DEFAULT_ELEMENT_PADDING = (5,3)         # Padding between elements (row, col) in pixels
+DEFAULT_ELEMENT_SIZE = (45, 1)  # In CHARACTERS
+DEFAULT_BUTTON_ELEMENT_SIZE = (10, 1)  # In CHARACTERS
+DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
+DEFAULT_ELEMENT_PADDING = (5, 3)  # Padding between elements (row, col) in pixels
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
 DEFAULT_TEXT_JUSTIFICATION = 'left'
 DEFAULT_BORDER_WIDTH = 1
-DEFAULT_AUTOCLOSE_TIME = 3              # time in seconds to show an autoclose form
-DEFAULT_DEBUG_WINDOW_SIZE = (80,20)
-DEFAULT_WINDOW_LOCATION = (None,None)
+DEFAULT_AUTOCLOSE_TIME = 3  # time in seconds to show an autoclose form
+DEFAULT_DEBUG_WINDOW_SIZE = (80, 20)
+DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
 #################### COLOR STUFF ####################
-BLUES = ("#082567","#0A37A3","#00345B")
-PURPLES = ("#480656","#4F2398","#380474")
-GREENS = ("#01826B","#40A860","#96D2AB", "#00A949","#003532")
+BLUES = ("#082567", "#0A37A3", "#00345B")
+PURPLES = ("#480656", "#4F2398", "#380474")
+GREENS = ("#01826B", "#40A860", "#96D2AB", "#00A949", "#003532")
 YELLOWS = ("#F3FB62", "#F0F595")
-TANS = ("#FFF9D5","#F4EFCF","#DDD8BA")
+TANS = ("#FFF9D5", "#F4EFCF", "#DDD8BA")
 NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]),
-                      ('#000000','#FFFFFF'),
+                      ('#000000', '#FFFFFF'),
                       ('#FFFFFF', '#000000'),
                       (YELLOWS[0], PURPLES[1]),
                       (YELLOWS[0], GREENS[3]),
                       (YELLOWS[0], BLUES[2]))
 
-COLOR_SYSTEM_DEFAULT = '1234567890'           # Colors should never be this long
+COLOR_SYSTEM_DEFAULT = '1234567890'  # Colors should never be this long
 if sys.platform == 'darwin':
-    DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT   # Foreground, Background (None, None) == System Default
-    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT       # Colors should never be this long
+    DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Foreground, Background (None, None) == System Default
+    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Colors should never be this long
 else:
-    DEFAULT_BUTTON_COLOR = ('white', BLUES[0])    # Foreground, Background (None, None) == System Default
-    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])           # Colors should never be this long
+    DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
+    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never be this long
 
-DEFAULT_ERROR_BUTTON_COLOR =("#FFFFFF", "#FF0000")
+DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
@@ -128,7 +130,7 @@ DEFAULT_SCROLLBAR_COLOR = None
 
 # A transparent button is simply one that matches the background
 TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')
-#--------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
 RELIEF_RAISED = 'raised'
 RELIEF_SUNKEN = 'sunken'
@@ -137,15 +139,15 @@ RELIEF_RIDGE = 'ridge'
 RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
-DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')     # a nice green progress bar
-DEFAULT_PROGRESS_BAR_SIZE = (25,20)         # Size of Progress Bar (characters for length, pixels for width)
-DEFAULT_PROGRESS_BAR_BORDER_WIDTH=1
+DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')  # a nice green progress bar
+DEFAULT_PROGRESS_BAR_SIZE = (25, 20)  # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
-PROGRESS_BAR_STYLES = ('default','winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
+PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 DEFAULT_PROGRESS_BAR_STYLE = 'default'
 DEFAULT_METER_ORIENTATION = 'Horizontal'
 DEFAULT_SLIDER_ORIENTATION = 'vertical'
-DEFAULT_SLIDER_BORDER_WIDTH=1
+DEFAULT_SLIDER_BORDER_WIDTH = 1
 DEFAULT_SLIDER_RELIEF = tk.FLAT
 DEFAULT_FRAME_RELIEF = tk.GROOVE
 
@@ -181,14 +183,13 @@ THEME_CLASSIC = 'classic'
 THEME_VISTA = 'vista'
 THEME_XPNATIVE = 'xpnative'
 
-
 # DEFAULT_METER_ORIENTATION = 'Vertical'
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
-ThisRow = 555666777         # magic number
-
+ThisRow = 555666777  # magic number
 
 # DEFAULT_WINDOW_ICON = ''
 MESSAGE_BOX_LINE_WIDTH = 60
+
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows(object):
@@ -204,19 +205,22 @@ class MyWindows(object):
         self.NumOpenWindows += 1
         # print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
 
-_my_windows = MyWindows()            # terrible hack using globals... means need a class for collecing windows
+
+_my_windows = MyWindows()  # terrible hack using globals... means need a class for collecing windows
+
 
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
 # ====================================================================== #
-def RGB(red,green,blue): return '#%02x%02x%02x' % (red,green,blue)
+def RGB(red, green, blue): return '#%02x%02x%02x' % (red, green, blue)
+
 
 # ====================================================================== #
 # Enums for types                                                        #
 # ====================================================================== #
 # -------------------------  Button types  ------------------------- #
-#todo Consider removing the Submit, Cancel types... they are just 'RETURN' type in reality
-#uncomment this line and indent to go back to using Enums
+# todo Consider removing the Submit, Cancel types... they are just 'RETURN' type in reality
+# uncomment this line and indent to go back to using Enums
 # class ButtonType(Enum):
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
@@ -280,7 +284,7 @@ class ToolTip(object):
         self.widget = widget
         self.text = text
         self.timeout = timeout
-        #self.wraplength = wraplength if wraplength else widget.winfo_screenwidth() // 2
+        # self.wraplength = wraplength if wraplength else widget.winfo_screenwidth() // 2
         self.tipwindow = None
         self.id = None
         self.x = self.y = 0
@@ -333,7 +337,8 @@ class ToolTip(object):
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element(object):
-    def __init__(self, type,  size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
+                 key=None, pad=None, tooltip=None):
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -346,13 +351,13 @@ class Element(object):
         self.TKEntry = None
         self.TKImage = None
 
-        self.ParentForm=None
-        self.ParentContainer=None     # will be a Form, Column, or Frame element
+        self.ParentForm = None
+        self.ParentContainer = None  # will be a Form, Column, or Frame element
         self.TextInputDefault = None
-        self.Position = (0,0)       # Default position Row 0, Col 0
+        self.Position = (0, 0)  # Default position Row 0, Col 0
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
         self.TextColor = text_color if text_color is not None else DEFAULT_ELEMENT_TEXT_COLOR
-        self.Key = key             # dictionary key for return values
+        self.Key = key  # dictionary key for return values
         self.Tooltip = tooltip
         self.TooltipObject = None
 
@@ -388,13 +393,11 @@ class Element(object):
         self.ParentForm.FormRemainedOpen = True
         self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-
     def ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
         button_element = self.FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
             button_element.ButtonCallBack()
-
 
     def ListboxSelectHandler(self, event):
         MyForm = self.ParentForm
@@ -454,12 +457,15 @@ class Element(object):
         except:
             pass
 
+
 # ---------------------------------------------------------------------- #
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text ='', size=(None, None), disabled=False, password_char='',
-                 justification=None, background_color=None, text_color=None, font=None, tooltip=None, do_not_clear=False, key=None, focus=False, pad=None):
+    def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
+                 justification=None, background_color=None, text_color=None, font=None, tooltip=None,
+                 change_submits=False,
+                 do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -475,8 +481,9 @@ class InputText(Element):
         self.do_not_clear = do_not_clear
         self.Justification = justification
         self.Disabled = disabled
-        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad, font=font, tooltip=tooltip)
-
+        self.ChangeSubmits = change_submits
+        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
+                         font=font, tooltip=tooltip)
 
     def Update(self, value=None, disabled=None):
         if disabled is True:
@@ -486,7 +493,8 @@ class InputText(Element):
         if value is not None:
             try:
                 self.TKStringVar.set(value)
-            except: pass
+            except:
+                pass
             self.DefaultText = value
 
     def Get(self):
@@ -500,11 +508,14 @@ class InputText(Element):
 In = InputText
 Input = InputText
 
+
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
-    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None, readonly=False):
+    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
+                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
+                 readonly=False):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -518,25 +529,28 @@ class InputCombo(Element):
         self.TKCombo = None
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
-        self.Readonly=readonly
+        self.Readonly = readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
                 self.TKCombo.current(0)
-            except: pass
+            except:
+                pass
             self.Values = values
         if value is not None:
             for index, v in enumerate(self.Values):
                 if v == value:
                     try:
                         self.TKCombo.current(index)
-                    except: pass
+                    except:
+                        pass
                     self.DefaultValue = value
                     break
         if set_to_index is not None:
@@ -552,8 +566,7 @@ class InputCombo(Element):
             if readonly is not None:
                 self.Readonly = readonly
             if self.Readonly:
-                self.TKCombo['state']='readonly'
-
+                self.TKCombo['state'] = 'readonly'
 
     def __del__(self):
         try:
@@ -562,16 +575,19 @@ class InputCombo(Element):
             pass
         super().__del__()
 
+
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 Combo = InputCombo
 DropDown = InputCombo
 Drop = InputCombo
 
+
 # ---------------------------------------------------------------------- #
 #                           Option Menu                                  #
 # ---------------------------------------------------------------------- #
 class OptionMenu(Element):
-    def __init__(self, values, default_value=None,  size=(None, None), disabled=False, auto_size_text=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         InputOptionMenu
         :param values:
@@ -592,7 +608,8 @@ class OptionMenu(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
     def Update(self, value=None, values=None, disabled=None):
         if values is not None:
@@ -602,14 +619,14 @@ class OptionMenu(Element):
                 if v == value:
                     try:
                         self.TKStringVar.set(value)
-                    except: pass
+                    except:
+                        pass
                     self.DefaultValue = value
                     break
         if disabled == True:
             self.TKOptionMenu['state'] = 'disabled'
         elif disabled == False:
             self.TKOptionMenu['state'] = 'normal'
-
 
     def __del__(self):
         try:
@@ -622,11 +639,14 @@ class OptionMenu(Element):
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
 InputOptionMenu = OptionMenu
 
+
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False, size=(None, None), disabled = False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False,
+                 size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
+                 text_color=None, key=None, pad=None, tooltip=None):
         '''
         Listbox Element
         :param values:
@@ -663,8 +683,8 @@ class Listbox(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX,  size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
+                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
     def Update(self, values=None, disabled=None):
         if disabled == True:
@@ -678,7 +698,6 @@ class Listbox(Element):
             self.TKListbox.selection_set(0, 0)
             self.Values = values
 
-
     def SetValue(self, values):
         for index, item in enumerate(self.Values):
             try:
@@ -686,7 +705,8 @@ class Listbox(Element):
                     self.TKListbox.selection_set(index)
                 else:
                     self.TKListbox.selection_clear(index)
-            except: pass
+            except:
+                pass
         self.DefaultValues = values
 
     def GetListValues(self):
@@ -700,12 +720,12 @@ class Listbox(Element):
         super().__del__()
 
 
-
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
+    def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
+                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
         '''
         Radio Button Element
         :param text:
@@ -729,14 +749,17 @@ class Radio(Element):
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font, background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
+                         background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
+                         tooltip=tooltip)
 
     def Update(self, value=None, disabled=None):
         location = EncodeRadioRowCol(self.Position[0], self.Position[1])
         if value is not None:
             try:
                 self.TKIntVar.set(location)
-            except: pass
+            except:
+                pass
             self.InitialState = value
         if disabled == True:
             self.TKRadio['state'] = 'disabled'
@@ -750,11 +773,13 @@ class Radio(Element):
             pass
         super().__del__()
 
+
 # ---------------------------------------------------------------------- #
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
+                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
         '''
         Checkbox Element
         :param text:
@@ -778,8 +803,9 @@ class Checkbox(Element):
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX,  size=size, auto_size_text=auto_size_text, font=font,
-                         background_color=background_color, text_color=self.TextColor, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
+                         background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
+                         tooltip=tooltip)
 
     def Get(self):
         return self.TKIntVar.get()
@@ -789,12 +815,12 @@ class Checkbox(Element):
             try:
                 self.TKIntVar.set(value)
                 self.InitialState = value
-            except: pass
+            except:
+                pass
         if disabled == True:
             self.TKCheckbutton.configure(state='disabled')
         elif disabled == False:
             self.TKCheckbutton.configure(state='normal')
-
 
     def __del__(self):
         super().__del__()
@@ -813,7 +839,9 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None),
+                 auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
+                 tooltip=None):
         '''
         Spinner Element
         :param values:
@@ -837,7 +865,8 @@ class Spin(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font,background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
+                         key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, values=None, disabled=None):
@@ -849,13 +878,13 @@ class Spin(Element):
         if value is not None:
             try:
                 self.TKStringVar.set(value)
-            except: pass
+            except:
+                pass
         self.DefaultValue = value
         if disabled == True:
             self.TKSpinBox.configure(state='disabled')
         elif disabled == False:
             self.TKSpinBox.configure(state='normal')
-
 
     def SpinChangedHandler(self, event):
         # first, get the results table built
@@ -874,11 +903,14 @@ class Spin(Element):
             pass
         super().__del__()
 
+
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits = False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False, pad=None, tooltip=None):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
+                 auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False,
+                 pad=None, tooltip=None):
         '''
         Multiline Element
         :param default_text:
@@ -904,7 +936,8 @@ class Multiline(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE,  size=size, auto_size_text=auto_size_text, background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, disabled=None, append=False):
@@ -913,7 +946,8 @@ class Multiline(Element):
                 if not append:
                     self.TKText.delete('1.0', tk.END)
                 self.TKText.insert(tk.END, value)
-            except: pass
+            except:
+                pass
             self.DefaultText = value
         if self.Autoscroll:
             self.TKText.see(tk.END)
@@ -923,17 +957,18 @@ class Multiline(Element):
             self.TKText.configure(state='normal')
 
     def Get(self):
-        return  self.TKText.get(1.0, tk.END)
-
+        return self.TKText.get(1.0, tk.END)
 
     def __del__(self):
         super().__del__()
+
 
 # ---------------------------------------------------------------------- #
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None, text_color=None, background_color=None,justification=None, pad=None, key=None, tooltip=None):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None,
+                 text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
         '''
         Text Element
         :param text:
@@ -958,12 +993,13 @@ class Text(Element):
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
             bg = background_color
-        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
         return
 
-    def Update(self, value = None, background_color=None, text_color=None, font=None):
+    def Update(self, value=None, background_color=None, text_color=None, font=None):
         if value is not None:
-            self.DisplayText=value
+            self.DisplayText = value
             stringvar = self.TKStringVar
             stringvar.set(value)
         if background_color is not None:
@@ -972,7 +1008,6 @@ class Text(Element):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
-
 
     def __del__(self):
         super().__del__()
@@ -989,7 +1024,9 @@ T = Text
 # ---------------------------------------------------------------------- #
 
 class TKProgressBar(object):
-    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE, relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH, orientation='horizontal', BarColor=(None,None), key=None):
+    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
+                 relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
+                 orientation='horizontal', BarColor=(None, None), key=None):
         self.Length = length
         self.Width = width
         self.Max = max
@@ -1001,19 +1038,27 @@ class TKProgressBar(object):
             s = tkinter.ttk.Style()
             s.theme_use(style)
             if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(key)+"my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+                s.configure(str(key) + "my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1],
+                            troughrelief=relief, borderwidth=border_width, thickness=width)
             else:
-                s.configure(str(key)+"my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width, thickness=width)
+                s.configure(str(key) + "my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width,
+                            thickness=width)
 
-            self.TKProgressBarForReal = tkinter.ttk.Progressbar(root, maximum=self.Max, style=str(key)+'my.Horizontal.TProgressbar', length=length, orient=tk.HORIZONTAL, mode='determinate')
+            self.TKProgressBarForReal = tkinter.ttk.Progressbar(root, maximum=self.Max,
+                                                        style=str(key) + 'my.Horizontal.TProgressbar', length=length,
+                                                        orient=tk.HORIZONTAL, mode='determinate')
         else:
             s = tkinter.ttk.Style()
             s.theme_use(style)
             if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(length)+str(width)+"my.Vertical.TProgressbar", background=BarColor[0], troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
+                s.configure(str(length) + str(width) + "my.Vertical.TProgressbar", background=BarColor[0],
+                            troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
             else:
-                s.configure(str(length)+str(width)+"my.Vertical.TProgressbar",  troughrelief=relief, borderwidth=border_width, thickness=width)
-            self.TKProgressBarForReal = tkinter.ttk.Progressbar(root,  maximum=self.Max, style=str(length)+str(width)+'my.Vertical.TProgressbar', length=length, orient=tk.VERTICAL, mode='determinate')
+                s.configure(str(length) + str(width) + "my.Vertical.TProgressbar", troughrelief=relief,
+                            borderwidth=border_width, thickness=width)
+            self.TKProgressBarForReal = tkinter.ttk.Progressbar(root, maximum=self.Max,
+                                                        style=str(length) + str(width) + 'my.Vertical.TProgressbar',
+                                                        length=length, orient=tk.VERTICAL, mode='determinate')
 
     def Update(self, count=None, max=None):
         if max is not None:
@@ -1026,7 +1071,8 @@ class TKProgressBar(object):
         if count is not None:
             try:
                 self.TKProgressBarForReal['value'] = count
-            except: return False
+            except:
+                return False
         return True
 
     def __del__(self):
@@ -1034,6 +1080,7 @@ class TKProgressBar(object):
             self.TKProgressBarForReal.__del__()
         except:
             pass
+
 
 # ---------------------------------------------------------------------- #
 #                           TKOutput                                     #
@@ -1082,12 +1129,14 @@ class TKOutput(tk.Frame):
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
+
 # ---------------------------------------------------------------------- #
 #                           Output                                       #
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class Output(Element):
-    def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None, key=None):
+    def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
+                 key=None):
         '''
         Output Element
         :param size:
@@ -1102,8 +1151,8 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_OUTPUT,  size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
-
+        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
+                         tooltip=tooltip, key=key)
 
     @property
     def TKOut(self):
@@ -1112,7 +1161,6 @@ class Output(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKOut
 
-
     def __del__(self):
         try:
             self._TKOut.__del__()
@@ -1120,11 +1168,16 @@ class Output(Element):
             pass
         super().__del__()
 
+
 # ---------------------------------------------------------------------- #
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, default_value = None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,
+                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None,
+                 image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None),
+                 auto_size_button=None, button_color=None, default_value=None, font=None, bind_return_key=False,
+                 focus=False, pad=None, key=None):
         '''
         Button Element
         :param button_text:
@@ -1168,7 +1221,7 @@ class Button(Element):
         self.InitialFolder = initial_folder
         self.Disabled = disabled
 
-        super().__init__(ELEM_TYPE_BUTTON,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     # Realtime button release callback
@@ -1197,6 +1250,7 @@ class Button(Element):
             if target[1] < 0:
                 target[1] = self.Position[1] + target[1]
         strvar = None
+        should_submit_window = False
         if target == (None, None):
             strvar = self.TKStringVar
         else:
@@ -1209,6 +1263,10 @@ class Button(Element):
             try:
                 strvar = target_element.TKStringVar
             except: pass
+            try:
+                if target_element.ChangeSubmits:
+                    should_submit_window = True
+            except: pass
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
@@ -1216,15 +1274,17 @@ class Button(Element):
                 try:
                     strvar.set(folder_name)
                     self.TKStringVar.set(folder_name)
-                except: pass
+                except:
+                    pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
+                                                      initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
             color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
-            color = color[1]         # save only the #RRGGBB portion
+            color = color[1]  # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
@@ -1234,7 +1294,8 @@ class Button(Element):
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
+                                                        initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -1246,13 +1307,12 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
-            # if the form is tabbed, must collect all form's results and destroy all forms
             self.ParentForm._Close()
             self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.Decrement()
-        elif self.BType == BUTTON_TYPE_READ_FORM:                   # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
+        elif self.BType == BUTTON_TYPE_READ_FORM:  # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
             if self.Key is not None:
@@ -1260,26 +1320,29 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
-            self.ParentForm.TKroot.quit()               # kick the users out of the mainloop
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.Decrement()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
+            should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
             self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element)
             self.TKCal.pack(expand=1, fill='both')
-            # self.ParentForm.TKRroot.mainloop()
             root.update()
-            # root.mainloop()
-            # root.update()
-            # strvar.set(ttkcal.selection)
+
+        if should_submit_window:
+            self.ParentForm.LastButtonClicked = target_element.Key
+            self.ParentForm.FormRemainedOpen = True
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
         return
 
-    def Update(self, text=None,  button_color=(None, None), value=None, disabled=None, image_data=None, image_filename=None):
+    def Update(self, text=None, button_color=(None, None), value=None, disabled=None, image_data=None,
+               image_filename=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1328,7 +1391,8 @@ class Button(Element):
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
-    def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None, key=None, pad=None):
+    def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
+                 style=None, border_width=None, relief=None, key=None, pad=None):
         '''
         ProgressBar Element
         :param max_value:
@@ -1352,7 +1416,7 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(ELEM_TYPE_PROGRESS_BAR,  size=size, auto_size_text=auto_size_text, key=key, pad=pad)
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad)
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
@@ -1373,11 +1437,13 @@ class ProgressBar(Element):
             pass
         super().__del__()
 
+
 # ---------------------------------------------------------------------- #
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
+                 tooltip=None):
         '''
         Image Element
         :param filename:
@@ -1394,7 +1460,8 @@ class Image(Element):
         self.BackgroundColor = background_color
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
-        super().__init__(ELEM_TYPE_IMAGE,  size=size, background_color=background_color, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
+                         tooltip=tooltip)
         return
 
     def Update(self, filename=None, data=None):
@@ -1404,8 +1471,9 @@ class Image(Element):
             # if type(data) is bytes:
             image = tk.PhotoImage(data=data)
             # else:
-                # image = data
-        else: return
+            # image = data
+        else:
+            return
         width, height = image.width(), image.height()
         self.tktext_label.configure(image=image, width=width, height=height)
         # self.tktext_label.configure(image=image)
@@ -1432,7 +1500,8 @@ class Canvas(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
 
-        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color,  size=size, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
+                         tooltip=tooltip)
         return
 
     @property
@@ -1442,18 +1511,16 @@ class Canvas(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
-
     def __del__(self):
         super().__del__()
-
-
 
 
 # ---------------------------------------------------------------------- #
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
-    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, key=None, tooltip=None):
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, key=None,
+                 tooltip=None):
         '''
         Graph Element
         :param canvas_size:
@@ -1470,7 +1537,8 @@ class Graph(Element):
         self._TKCanvas = None
         self._TKCanvas2 = None
 
-        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color,  size=canvas_size, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
+                         tooltip=tooltip)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
@@ -1495,7 +1563,9 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_point[0]-size, converted_point[1]-size, converted_point[0]+size, converted_point[1]+size, fill=color, outline=color )
+        return self._TKCanvas2.create_oval(converted_point[0] - size, converted_point[1] - size,
+                                           converted_point[0] + size, converted_point[1] + size, fill=color,
+                                           outline=color)
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
@@ -1503,36 +1573,41 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_point[0]-radius, converted_point[1]-radius, converted_point[0]+radius, converted_point[1]+radius, fill=fill_color, outline=line_color)
+        return self._TKCanvas2.create_oval(converted_point[0] - radius, converted_point[1] - radius,
+                                           converted_point[0] + radius, converted_point[1] + radius, fill=fill_color,
+                                           outline=line_color)
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
-        converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0],bottom_right[1])
+        converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
-
+        return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
+                                           converted_bottom_right[1], fill=fill_color, outline=line_color)
 
     def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
-        converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1] )
+        converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         tkstyle = tk.PIESLICE if style is None else style
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], extent=extent, start=start_angle, style=tkstyle, outline=arc_color)
+        return self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
+                                          converted_bottom_right[1], extent=extent, start=start_angle, style=tkstyle,
+                                          outline=arc_color)
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
-        converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1] )
+        converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0], converted_bottom_right[1], fill=fill_color, outline=line_color)
+        return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
+                                                converted_bottom_right[1], fill=fill_color, outline=line_color)
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
@@ -1540,9 +1615,9 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        text_id =  self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color, angle=angle)
+        text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
+                                              angle=angle)
         return text_id
-
 
     def Erase(self):
         if self._TKCanvas2 is None:
@@ -1559,9 +1634,9 @@ class Graph(Element):
         self._TKCanvas2.configure(background=background_color)
 
     def Move(self, x_direction, y_direction):
-        zero_converted = self._convert_xy_to_canvas_xy(0,0)
+        zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
-        shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
+        shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
@@ -1569,9 +1644,9 @@ class Graph(Element):
         self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
 
     def MoveFigure(self, figure, x_direction, y_direction):
-        zero_converted = self._convert_xy_to_canvas_xy(0,0)
+        zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
-        shift_amount = (shift_converted[0]-zero_converted[0], shift_converted[1]-zero_converted[1])
+        shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
         if figure is None:
             print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
             print('Call Window.Finalize() prior to all graph operations')
@@ -1593,7 +1668,9 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None , relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 tooltip=None):
         '''
         Frame Element
         :param title:
@@ -1626,16 +1703,17 @@ class Frame(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color,  size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
+                         font=font, pad=pad, key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
-        NumRows = len(self.Rows)               # number of existing rows is our row number
-        CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = []                     # start with a blank row and build up
+        NumRows = len(self.Rows)  # number of existing rows is our row number
+        CurrentRowNumber = NumRows  # this row's number
+        CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
-        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+        for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -1649,11 +1727,10 @@ class Frame(Element):
             self.AddRow(*row)
 
     def _GetElementAtLocation(self, location):
-        (row_num,col_num) = location
+        (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
-
 
     def __del__(self):
         for row in self.Rows:
@@ -1662,12 +1739,12 @@ class Frame(Element):
         super().__del__()
 
 
-
 # ---------------------------------------------------------------------- #
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False, border_width=None, key=None, tooltip=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
+                 border_width=None, key=None, tooltip=None):
         '''
         Tab Element
         :param title:
@@ -1698,16 +1775,17 @@ class Tab(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color,  font=font, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
+                         key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
-        NumRows = len(self.Rows)               # number of existing rows is our row number
-        CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = []                     # start with a blank row and build up
+        NumRows = len(self.Rows)  # number of existing rows is our row number
+        CurrentRowNumber = NumRows  # this row's number
+        CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
-        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+        for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -1721,7 +1799,7 @@ class Tab(Element):
             self.AddRow(*row)
         return self
 
-    def Update(self, disabled = None):  # TODO Disable / enable of tabs is not complete
+    def Update(self, disabled=None):  # TODO Disable / enable of tabs is not complete
         if disabled is None:
             return
         self.Disabled = disabled
@@ -1730,11 +1808,10 @@ class Tab(Element):
         return self
 
     def _GetElementAtLocation(self, location):
-        (row_num,col_num) = location
+        (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
-
 
     def __del__(self):
         for row in self.Rows:
@@ -1743,12 +1820,12 @@ class Tab(Element):
         super().__del__()
 
 
-
 # ---------------------------------------------------------------------- #
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None, font=None, change_submits=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
+    def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
+                 font=None, change_submits=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
         '''
         TabGroup Element
         :param layout:
@@ -1782,16 +1859,17 @@ class TabGroup(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
+                         pad=pad, key=key, tooltip=tooltip)
         return
 
     def AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
-        NumRows = len(self.Rows)               # number of existing rows is our row number
-        CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = []                     # start with a blank row and build up
+        NumRows = len(self.Rows)  # number of existing rows is our row number
+        CurrentRowNumber = NumRows  # this row's number
+        CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
-        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+        for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -1805,7 +1883,7 @@ class TabGroup(Element):
             self.AddRow(*row)
 
     def _GetElementAtLocation(self, location):
-        (row_num,col_num) = location
+        (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
@@ -1828,7 +1906,9 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None,None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None,None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
+                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
         :param range:
@@ -1848,7 +1928,7 @@ class Slider(Element):
         :param tooltip:
         '''
         self.TKScale = None
-        self.Range = (1,10) if range == (None, None) else range
+        self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
@@ -1859,9 +1939,10 @@ class Slider(Element):
         self.TickInterval = tick_interval
         temp_size = size
         if temp_size == (None, None):
-            temp_size = (20,20) if orientation.startswith('h') else (8,20)
+            temp_size = (20, 20) if orientation.startswith('h') else (8, 20)
 
-        super().__init__(ELEM_TYPE_INPUT_SLIDER,  size=temp_size, font=font, background_color=background_color, text_color=text_color, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
+                         text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
 
     def Update(self, value=None, range=(None, None), disabled=None):
@@ -1869,8 +1950,9 @@ class Slider(Element):
             try:
                 self.TKIntVar.set(value)
                 if range != (None, None):
-                    self.TKScale.config(from_ = range[0], to_ = range[1])
-            except: pass
+                    self.TKScale.config(from_=range[0], to_=range[1])
+            except:
+                pass
             self.DefaultValue = value
         if disabled == True:
             self.TKScale['state'] = 'disabled'
@@ -1900,10 +1982,10 @@ class TkScrollableFrame(tk.Frame):
 
         # create a canvas object and a vertical scrollbar for scrolling it
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-        self.vscrollbar.pack(side='right', fill="y",  expand="false")
+        self.vscrollbar.pack(side='right', fill="y", expand="false")
 
         self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-        self.hscrollbar.pack(side='bottom', fill="x",  expand="false")
+        self.hscrollbar.pack(side='bottom', fill="x", expand="false")
 
         self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -1959,7 +2041,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color = None, size=(None, None), pad=None, scrollable=False, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, key=None):
         '''
         Column Element
         :param layout:
@@ -1991,11 +2073,11 @@ class Column(Element):
 
     def AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
-        NumRows = len(self.Rows)               # number of existing rows is our row number
-        CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = []                     # start with a blank row and build up
+        NumRows = len(self.Rows)  # number of existing rows is our row number
+        CurrentRowNumber = NumRows  # this row's number
+        CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
-        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+        for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -2009,18 +2091,17 @@ class Column(Element):
             self.AddRow(*row)
 
     def _GetElementAtLocation(self, location):
-        (row_num,col_num) = location
+        (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
-
 
     def __del__(self):
         for row in self.Rows:
             for element in row:
                 element.__del__()
         try:
-            del(self.TKFrame)
+            del (self.TKFrame)
         except:
             pass
         super().__del__()
@@ -2055,24 +2136,24 @@ class TKCalendar(tkinter.ttk.Frame):
         sel_fg = kw.pop('selectforeground', '#05640e')
 
         self._date = self.datetime(year, month, 1)
-        self._selection = None # no date selected
+        self._selection = None  # no date selected
         tkinter.ttk.Frame.__init__(self, master, **kw)
 
         # instantiate proper calendar class
         if locale is None:
             self._cal = calendar.TextCalendar(fwday)
         else:
-            self._cal =  calendar.LocaleTextCalendar(fwday, locale)
+            self._cal = calendar.LocaleTextCalendar(fwday, locale)
 
-        self.__setup_styles()       # creates custom styles
-        self.__place_widgets()      # pack/grid used widgets
-        self.__config_calendar()    # adjust calendar columns and setup tags
+        self.__setup_styles()  # creates custom styles
+        self.__place_widgets()  # pack/grid used widgets
+        self.__config_calendar()  # adjust calendar columns and setup tags
         # configure a canvas, and proper bindings, for selecting dates
         self.__setup_selection(sel_bg, sel_fg)
 
         # store items ids, used for insertion later
         self._items = [self._calendar.insert('', 'end', values='')
-                            for _ in range(6)]
+                       for _ in range(6)]
         # insert dates in the currently empty calendar
         self._build_calendar()
 
@@ -2132,12 +2213,12 @@ class TKCalendar(tkinter.ttk.Frame):
         maxwidth = max(font.measure(col) for col in cols)
         for col in cols:
             self._calendar.column(col, width=maxwidth, minwidth=maxwidth,
-                anchor='e')
+                                  anchor='e')
 
     def __setup_selection(self, sel_bg, sel_fg):
         self._font = tkinter.font.Font()
         self._canvas = canvas = tk.Canvas(self._calendar,
-            background=sel_bg, borderwidth=0, highlightthickness=0)
+                                          background=sel_bg, borderwidth=0, highlightthickness=0)
         canvas.text = canvas.create_text(0, 0, fill=sel_fg, anchor='w')
 
         canvas.bind('<ButtonPress-1>', lambda evt: canvas.place_forget())
@@ -2188,15 +2269,15 @@ class TKCalendar(tkinter.ttk.Frame):
             return
 
         item_values = widget.item(item)['values']
-        if not len(item_values): # row is empty for this month
+        if not len(item_values):  # row is empty for this month
             return
 
         text = item_values[int(column[1]) - 1]
-        if not text: # date is empty
+        if not text:  # date is empty
             return
 
         bbox = widget.bbox(item, column)
-        if not bbox: # calendar not visible yet
+        if not bbox:  # calendar not visible yet
             return
 
         # update and then show selection
@@ -2206,7 +2287,12 @@ class TKCalendar(tkinter.ttk.Frame):
         year, month = self._date.year, self._date.month
         try:
             self._TargetElement.Update(self.datetime(year, month, int(self._selection[0])))
-        except: pass
+            if self._TargetElement.ChangeSubmits:
+                self._TargetElement.ParentForm.LastButtonClicked = self._TargetElement.Key
+                self._TargetElement.ParentForm.FormRemainedOpen = True
+                self._TargetElement.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        except:
+            pass
 
     def _prev_month(self):
         """Updated calendar to show the previous month."""
@@ -2214,7 +2300,7 @@ class TKCalendar(tkinter.ttk.Frame):
 
         self._date = self._date - self.timedelta(days=1)
         self._date = self.datetime(self._date.year, self._date.month, 1)
-        self._build_calendar() # reconstuct calendar
+        self._build_calendar()  # reconstuct calendar
 
     def _next_month(self):
         """Update calendar to show the next month."""
@@ -2224,7 +2310,7 @@ class TKCalendar(tkinter.ttk.Frame):
         self._date = self._date + self.timedelta(
             days=calendar.monthrange(year, month)[1] + 1)
         self._date = self.datetime(self._date.year, self._date.month, 1)
-        self._build_calendar() # reconstruct calendar
+        self._build_calendar()  # reconstruct calendar
 
     # Properties
 
@@ -2257,7 +2343,7 @@ class Menu(Element):
         self.TKMenu = None
         self.Tearoff = tearoff
 
-        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color,  size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
 
     def MenuItemChosenCallback(self, item_chosen):
@@ -2274,7 +2360,10 @@ class Menu(Element):
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
+                 font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
+                 size=(None, None), pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2313,9 +2402,9 @@ class Table(Element):
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
 
-        super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color,  font=font, size=size, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
+                         size=size, pad=pad, key=key, tooltip=tooltip)
         return
-
 
     def Update(self, values=None):
         if values is not None:
@@ -2328,27 +2417,27 @@ class Table(Element):
             for i, value in enumerate(values):
                 if self.DisplayRowNumbers:
                     value = [i] + value
-                id = self.TKTreeview.insert('', 'end', text=i, iid=i+1, values=value, tag=i % 2)
+                id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
             if self.AlternatingRowColor is not None:
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
             self.Values = values
 
-
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
-        self.SelectedRows = [int(x)-1 for x in selections]
-
+        self.SelectedRows = [int(x) - 1 for x in selections]
 
     def __del__(self):
         super().__del__()
-
 
 
 # ---------------------------------------------------------------------- #
 #                           Tree                                         #
 # ---------------------------------------------------------------------- #
 class Tree(Element):
-    def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10, def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None):
+    def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None,
+                 justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
+                 tooltip=None):
         '''
         Tree Element
         :param headings:
@@ -2383,10 +2472,9 @@ class Tree(Element):
         self.Col0Width = col0_width
         self.TKTreeview = None
 
-        super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color,  font=font,  pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
+                         key=key, tooltip=tooltip)
         return
-
-
 
     def __del__(self):
         super().__del__()
@@ -2407,13 +2495,13 @@ class TreeData(object):
     def __init__(self):
         self.tree_dict = {}
         self.root_node = self.Node("", "", 'root', [])
-        self.tree_dict [""] = self.root_node
+        self.tree_dict[""] = self.root_node
 
     def _AddNode(self, key, node):
         self.tree_dict[key] = node
 
     def Insert(self, parent, key, text, values):
-        node = self.Node(parent, key, text,values)
+        node = self.Node(parent, key, text, values)
         self.tree_dict[key] = node
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
@@ -2449,20 +2537,17 @@ class ErrorElement(Element):
 
     def Update(self, *args, **kwargs):
         PopupError('Keyword error in Update',
-            'You need to stop this madness and check your spelling',
-            'Bad key = {}'.format(self.Key),
-            'Your bad line of code may resemble this:',
-              'window.FindElement("{}")'.format(self.Key))
+                   'You need to stop this madness and check your spelling',
+                   'Bad key = {}'.format(self.Key),
+                   'Your bad line of code may resemble this:',
+                   'window.FindElement("{}")'.format(self.Key))
         return self
-
 
     def Get(self):
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-
     def __del__(self):
         super().__del__()
-
 
 
 # ------------------------------------------------------------------------- #
@@ -2470,7 +2555,12 @@ class ErrorElement(Element):
 # ------------------------------------------------------------------------- #
 class Window(object):
 
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size = (None, None), auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel = False, alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False):
+    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None,
+                 progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
+                 auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
+                 alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False):
         '''
         Window
         :param title:
@@ -2499,9 +2589,10 @@ class Window(object):
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
-        self.Rows = []                     # a list of ELEMENTS for this row
+        self.Rows = []  # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
-        self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
+        self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
+        None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
@@ -2544,11 +2635,11 @@ class Window(object):
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
-        NumRows = len(self.Rows)               # number of existing rows is our row number
-        CurrentRowNumber = NumRows             # this row's number
-        CurrentRow = []                     # start with a blank row and build up
+        NumRows = len(self.Rows)  # number of existing rows is our row number
+        CurrentRowNumber = NumRows  # this row's number
+        CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
-        for i, element in enumerate(args):                    # Loop through list of elements and add them to the row
+        for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -2556,15 +2647,15 @@ class Window(object):
         self.Rows.append(CurrentRow)
 
     # ------------------------- Add Multiple Rows to Form ------------------------- #
-    def AddRows(self,rows):
+    def AddRows(self, rows):
         for row in rows:
             self.AddRow(*row)
 
-    def Layout(self,rows):
+    def Layout(self, rows):
         self.AddRows(rows)
         return self
 
-    def LayoutAndRead(self,rows, non_blocking=False):
+    def LayoutAndRead(self, rows, non_blocking=False):
         self.AddRows(rows)
         self.Show(non_blocking=non_blocking)
         return self.ReturnValues
@@ -2578,7 +2669,7 @@ class Window(object):
         # Compute num rows & num cols (it'll come in handy debugging)
         self.NumRows = len(self.Rows)
         self.NumCols = max(len(row) for row in self.Rows)
-        self.NonBlocking=non_blocking
+        self.NonBlocking = non_blocking
 
         # Search through entire form to see if any elements set the focus
         # if not, then will set the focus to the first input element
@@ -2617,10 +2708,11 @@ class Window(object):
         self.WindowIcon = wicon
         try:
             self.TKroot.iconbitmap(wicon)
-        except: pass
+        except:
+            pass
 
     def _GetElementAtLocation(self, location):
-        (row_num,col_num) = location
+        (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
@@ -2641,7 +2733,6 @@ class Window(object):
         except:
             pass
 
-
     def _TimeoutAlarmCallback(self):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
@@ -2649,8 +2740,7 @@ class Window(object):
             return
         self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
-        self.TKroot.quit()               # kick the users out of the mainloop
-
+        self.TKroot.quit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key='_timeout_'):
         self.Timeout = timeout
@@ -2682,7 +2772,6 @@ class Window(object):
         else:
             return self.ReturnValues
 
-
     def ReadNonBlocking(self, Message=''):
         if self.TKrootDestroyed:
             return None, None
@@ -2698,7 +2787,6 @@ class Window(object):
             # return None, None
         return BuildResults(self, False, self)
 
-
     def Finalize(self):
         if self.TKrootDestroyed:
             return self
@@ -2712,7 +2800,6 @@ class Window(object):
             # return None, None
         return self
 
-
     def Refresh(self):
         if self.TKrootDestroyed:
             return self
@@ -2722,11 +2809,9 @@ class Window(object):
             pass
         return self
 
-
     def Fill(self, values_dict):
         FillFormWithValues(self, values_dict)
         return self
-
 
     def FindElement(self, key):
         element = _FindElementFromKeyInSubForm(self, key)
@@ -2751,7 +2836,6 @@ class Window(object):
         except:
             print('*** Error saving form to disk ***')
 
-
     def LoadFromDisk(self, filename):
         try:
             with open(filename, 'rb') as df:
@@ -2759,15 +2843,12 @@ class Window(object):
         except:
             print('*** Error loading form to disk ***')
 
-
-
     def GetScreenDimensions(self):
         if self.TKrootDestroyed:
             return None, None
         screen_width = self.TKroot.winfo_screenwidth()  # get window info to move to middle of screen
         screen_height = self.TKroot.winfo_screenheight()
         return screen_width, screen_height
-
 
     def Move(self, x, y):
         try:
@@ -2778,18 +2859,19 @@ class Window(object):
     def Minimize(self):
         self.TKroot.iconify()
 
-
     def StartMove(self, event):
         try:
             self.TKroot.x = event.x
             self.TKroot.y = event.y
-        except: pass
+        except:
+            pass
 
     def StopMove(self, event):
         try:
             self.TKroot.x = None
             self.TKroot.y = None
-        except: pass
+        except:
+            pass
 
     def OnMotion(self, event):
         try:
@@ -2801,8 +2883,7 @@ class Window(object):
         except:
             pass
 
-
-    def _KeyboardCallback(self, event ):
+    def _KeyboardCallback(self, event):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         if event.char != '':
@@ -2813,7 +2894,7 @@ class Window(object):
             BuildResults(self, False, self)
         self.TKroot.quit()
 
-    def _MouseWheelCallback(self, event ):
+    def _MouseWheelCallback(self, event):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
@@ -2821,11 +2902,11 @@ class Window(object):
             BuildResults(self, False, self)
         self.TKroot.quit()
 
-
     def _Close(self):
         try:
             self.TKroot.update()
-        except: pass
+        except:
+            pass
         if not self.NonBlocking:
             BuildResults(self, False, self)
         if self.TKrootDestroyed:
@@ -2840,14 +2921,14 @@ class Window(object):
         try:
             self.TKroot.destroy()
             _my_windows.Decrement()
-        except: pass
+        except:
+            pass
 
     CloseNonBlockingForm = CloseNonBlocking
 
     def OnClosingCallback(self):
         # print('Got closing callback')
         return
-
 
     def Disable(self):
         self.TKroot.grab_set_global()
@@ -2885,7 +2966,6 @@ class Window(object):
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
 
-
     def __enter__(self):
         return self
 
@@ -2902,6 +2982,7 @@ class Window(object):
         # except:
         #     pass
 
+
 FlexForm = Window
 
 
@@ -2912,100 +2993,215 @@ FlexForm = Window
 # ################################################################################
 
 
-
 # =========================================================================== #
 # Button Lazy Functions so the caller doesn't have to define a bunch of stuff #
 # =========================================================================== #
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(button_text='Browse', target=(ThisRow, -1),  initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
+                 auto_size_button=None, button_color=None, disabled=False, font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse( button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False,
+               pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
-def FilesBrowse(button_text='Browse',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False, initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target,  file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
+                initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+                font=None, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileSaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False,  tooltip=None,size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+               disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+               pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
-def SaveAs(button_text='Save As...',target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),),initial_folder=None, disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types, initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+           disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+           pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
-def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True, disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled,  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
+         disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
-def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
-    return Button( button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
-def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
-def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None,focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color,font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False, bind_return_key=True, tooltip=None, font=None,focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
-def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
-def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+         font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
-def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+         font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=True, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip,  size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+       font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN,  tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
+         tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
+                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
+                  image_data=image_data, image_size=image_size, image_subsample=image_subsample,
+                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
-def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
-    return Button( button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, disabled=disabled, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
+               border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+               bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename,
+                  image_data=image_data, image_size=image_size, image_subsample=image_subsample,
+                  border_width=border_width, tooltip=tooltip, size=size, disabled=disabled,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 ReadFormButton = ReadButton
 RButton = ReadFormButton
 
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
-def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button( button_text=button_text,button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
+                   border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename,
+                  image_data=image_data, image_size=image_size, image_subsample=image_subsample,
+                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
-def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None),image_subsample=None,border_width=None,tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type= BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-# -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None,None), image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
+                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+                disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename,
+                  image_data=image_data, image_size=image_size, image_subsample=image_subsample,
+                  border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus,
+                  pad=pad, key=key)
+
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def ColorChooserButton(button_text, target=(None,None), image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,tooltip=None, border_width=None,  size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text,button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample,  border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+def CalendarButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
+                   image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
+                   button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
+                   key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
+                  image_filename=image_filename, image_data=image_data, image_size=image_size,
+                  image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
+# -------------------------  Calendar Chooser Button lazy function  ------------------------- #
+def ColorChooserButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
+                       image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
+                       button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
+                       key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target,
+                  image_filename=image_filename, image_data=image_data, image_size=image_size,
+                  image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
@@ -3016,26 +3212,30 @@ def AddToReturnDictionary(form, element, value):
     else:
         form.ReturnValuesDictionary[element.Key] = value
 
+
 def AddToReturnList(form, value):
     form.ReturnValuesList.append(value)
 
 
-#----------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  --------#
 def InitializeResults(form):
     BuildResults(form, True, form)
     return
 
-#=====  Radio Button RadVar encoding and decoding =====#
-#=====  The value is simply the row * 1000 + col  =====#
+
+# =====  Radio Button RadVar encoding and decoding =====#
+# =====  The value is simply the row * 1000 + col  =====#
 def DecodeRadioRowCol(RadValue):
-    row = RadValue//1000
-    col = RadValue%1000
-    return row,col
+    row = RadValue // 1000
+    col = RadValue % 1000
+    return row, col
+
 
 def EncodeRadioRowCol(row, col):
     RadValue = row * 1000 + col
     return RadValue
+
 
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
 # format of return values is
@@ -3055,9 +3255,10 @@ def BuildResults(form, initialize_only, top_level_form):
         top_level_form.LastButtonClicked = None
     return form.ReturnValues
 
+
 def BuildResultsForSubform(form, initialize_only, top_level_form):
     button_pressed_text = top_level_form.LastButtonClicked
-    for row_num,row in enumerate(form.Rows):
+    for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             value = None
             if element.Type == ELEM_TYPE_COLUMN:
@@ -3069,7 +3270,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
-                if element.ReturnValues[0] is not None:         # if a button was clicked
+                if element.ReturnValues[0] is not None:  # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
             if element.Type == ELEM_TYPE_FRAME:
@@ -3081,7 +3282,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
-                if element.ReturnValues[0] is not None:         # if a button was clicked
+                if element.ReturnValues[0] is not None:  # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
             if element.Type == ELEM_TYPE_TAB_GROUP:
@@ -3093,7 +3294,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
-                if element.ReturnValues[0] is not None:         # if a button was clicked
+                if element.ReturnValues[0] is not None:  # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
             if element.Type == ELEM_TYPE_TAB:
@@ -3105,25 +3306,25 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
-                if element.ReturnValues[0] is not None:         # if a button was clicked
+                if element.ReturnValues[0] is not None:  # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
             if not initialize_only:
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
-                    value=element.TKStringVar.get()
+                    value = element.TKStringVar.get()
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.TKIntVar.get()
                     value = (value != 0)
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
-                    RadVar=element.TKIntVar.get()
-                    this_rowcol = EncodeRadioRowCol(row_num,col_num)
+                    RadVar = element.TKIntVar.get()
+                    this_rowcol = EncodeRadioRowCol(row_num, col_num)
                     value = RadVar == this_rowcol
                 elif element.Type == ELEM_TYPE_BUTTON:
                     if top_level_form.LastButtonClicked == element.ButtonText:
                         button_pressed_text = top_level_form.LastButtonClicked
-                        if element.BType != BUTTON_TYPE_REALTIME:   # Do not clear realtime buttons
+                        if element.BType != BUTTON_TYPE_REALTIME:  # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
                     if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
                         try:
@@ -3136,35 +3337,35 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         except:
                             value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
-                    value=element.TKStringVar.get()
+                    value = element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
-                    value=element.TKStringVar.get()
+                    value = element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                     try:
-                        items=element.TKListbox.curselection()
+                        items = element.TKListbox.curselection()
                         value = [element.Values[int(item)] for item in items]
                     except:
                         value = ''
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
                     try:
-                        value=element.TKStringVar.get()
+                        value = element.TKStringVar.get()
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                     try:
-                        value=element.TKIntVar.get()
+                        value = element.TKIntVar.get()
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     try:
-                        value=element.TKText.get(1.0, tk.END)
+                        value = element.TKText.get(1.0, tk.END)
                         if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                             element.TKText.delete('1.0', tk.END)
                     except:
                         value = None
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
-                        value=element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
+                        value = element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
                         tab_key = element.FindKeyFromTabName(value)
                         if tab_key is not None:
                             value = tab_key
@@ -3178,23 +3379,24 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
             # if an input type element, update the results
             if element.Type != ELEM_TYPE_BUTTON and \
                     element.Type != ELEM_TYPE_TEXT and \
-                    element.Type != ELEM_TYPE_IMAGE and\
+                    element.Type != ELEM_TYPE_IMAGE and \
                     element.Type != ELEM_TYPE_OUTPUT and \
                     element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type!= ELEM_TYPE_COLUMN and \
+                    element.Type != ELEM_TYPE_COLUMN and \
                     element.Type != ELEM_TYPE_FRAME \
                     and element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and
                   element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and
-                  element.Target == (None,None)) or \
+                  element.Target == (None, None)) or \
                     (element.Type == ELEM_TYPE_BUTTON and
                      element.BType == BUTTON_TYPE_COLOR_CHOOSER and
-                     element.Target == (None,None)) or \
-                (element.Type == ELEM_TYPE_BUTTON
-                 and element.Key is not None and
-                 (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES, BUTTON_TYPE_BROWSE_FOLDER))):
+                     element.Target == (None, None)) or \
+                    (element.Type == ELEM_TYPE_BUTTON
+                     and element.Key is not None and
+                     (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES,
+                                        BUTTON_TYPE_BROWSE_FOLDER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
@@ -3203,11 +3405,13 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
         if form.ReturnKeyboardEvents and form.LastKeyboardEvent is not None:
             button_pressed_text = form.LastKeyboardEvent
             form.LastKeyboardEvent = None
-    except: pass
+    except:
+        pass
 
     try:
-        form.ReturnValuesDictionary.pop(None, None)     # clean up dictionary include None was included
-    except: pass
+        form.ReturnValuesDictionary.pop(None, None)  # clean up dictionary include None was included
+    except:
+        pass
 
     if not form.UseDictionary:
         form.ReturnValues = button_pressed_text, form.ReturnValuesList
@@ -3216,11 +3420,13 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
 
     return form.ReturnValues
 
+
 def FillFormWithValues(form, values_dict):
     FillSubformWithValues(form, values_dict)
 
+
 def FillSubformWithValues(form, values_dict):
-    for row_num,row in enumerate(form.Rows):
+    for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             value = None
             if element.Type == ELEM_TYPE_COLUMN:
@@ -3255,6 +3461,7 @@ def FillSubformWithValues(form, values_dict):
                 element.Update(value)
             elif element.Type == ELEM_TYPE_BUTTON:
                 element.Update(value)
+
 
 def _FindElementFromKeyInSubForm(form, key):
     for row_num, row in enumerate(form.Rows):
@@ -3303,6 +3510,7 @@ def _FindElementWithFocusInSubForm(form):
                     if element.TKEntry is element.TKEntry.focus_get():
                         return element
 
+
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
         if type(sub_menu_info) is str:
@@ -3343,18 +3551,19 @@ else:
                 # print(f'Adding command {sub_menu_info}')
                 pos = sub_menu_info.find('&')
                 if pos != -1:
-                    if pos == 0 or sub_menu_info[pos-1] != "\\":
-                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos+1:]
+                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
+                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
                 if sub_menu_info == '---':
                     top_menu.add('separator')
                 else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos, command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                    top_menu.add_command(label=sub_menu_info, underline=pos,
+                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
                 item = sub_menu_info[i]
                 if i != len(sub_menu_info) - 1:
-                    if not isinstance(sub_menu_info[i+1], types.StringType):
+                    if not isinstance(sub_menu_info[i + 1], types.StringType):
                         new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
                         pos = sub_menu_info[i].find('&')
                         if pos != -1:
@@ -3369,6 +3578,7 @@ else:
                     AddMenuItem(top_menu, item, element)
                 i += 1
 
+
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   TK CODE STARTS HERE ====================================================== #
@@ -3378,6 +3588,7 @@ else:
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
+
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
@@ -3400,9 +3611,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             else:
                 font = DEFAULT_FONT
             # -------  Determine Auto-Size setting on a cascading basis ------- #
-            if element.AutoSizeText is not None:            # if element overide
+            if element.AutoSizeText is not None:  # if element overide
                 auto_size_text = element.AutoSizeText
-            elif toplevel_form.AutoSizeText is not None:       # if form override
+            elif toplevel_form.AutoSizeText is not None:  # if form override
                 auto_size_text = toplevel_form.AutoSizeText
             else:
                 auto_size_text = DEFAULT_AUTOSIZE_TEXT
@@ -3411,48 +3622,52 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             text_color = element.TextColor
             # Determine Element size
             element_size = element.Size
-            if (element_size == (None, None) and element_type != ELEM_TYPE_BUTTON):      # user did not specify a size
+            if (element_size == (None, None) and element_type != ELEM_TYPE_BUTTON):  # user did not specify a size
                 element_size = toplevel_form.DefaultElementSize
             elif (element_size == (None, None) and element_type == ELEM_TYPE_BUTTON):
                 element_size = toplevel_form.DefaultButtonElementSize
-            else: auto_size_text = False                # if user has specified a size then it shouldn't autosize
+            else:
+                auto_size_text = False  # if user has specified a size then it shouldn't autosize
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 if element.Scrollable:
-                    col_frame = TkScrollableFrame(tk_row_frame)           # do not use yet!  not working
+                    col_frame = TkScrollableFrame(tk_row_frame)  # do not use yet!  not working
                     PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
                     col_frame.TKFrame.update()
-                    if element.Size == (None, None):            # if no size specified, use column width x column height/2
-                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),height=col_frame.TKFrame.winfo_reqheight()/2)
+                    if element.Size == (None, None):  # if no size specified, use column width x column height/2
+                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),
+                                                height=col_frame.TKFrame.winfo_reqheight() / 2)
                     else:
-                        col_frame.canvas.config(width=element.Size[0],height=element.Size[1])
+                        col_frame.canvas.config(width=element.Size[0], height=element.Size[1])
 
                     if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                         col_frame.canvas.config(background=element.BackgroundColor)
-                        col_frame.TKFrame.config(background=element.BackgroundColor, borderwidth =0, highlightthickness=0)
-                        col_frame.config(background=element.BackgroundColor, borderwidth =0, highlightthickness=0)
+                        col_frame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
+                                                 highlightthickness=0)
+                        col_frame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                 else:
                     col_frame = tk.Frame(tk_row_frame)
                     PackFormIntoFrame(element, col_frame, toplevel_form)
 
                 col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
+                    col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
+                                        highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
-                display_text = element.DisplayText         # text to display
+                display_text = element.DisplayText  # text to display
                 if auto_size_text is False:
-                    width, height=element_size
+                    width, height = element_size
                 else:
                     lines = display_text.split('\n')
                     max_line_len = max([len(l) for l in lines])
                     num_lines = len(lines)
-                    if max_line_len > element_size[0]:       # if text exceeds element size, the will have to wrap
+                    if max_line_len > element_size[0]:  # if text exceeds element size, the will have to wrap
                         width = element_size[0]
                     else:
-                        width=max_line_len
-                    height=num_lines
+                        width = max_line_len
+                    height = num_lines
                 # ---===--- LABEL widget create and place --- #
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
@@ -3467,9 +3682,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height, justify=justify, bd=border_depth, font=font)
+                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                                        justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                wraplen = tktext_label.winfo_reqwidth()+40  # width of widget in Pixels
+                wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
                 if not auto_size_text and height == 1:
                     wraplen = 0
                 # print("wraplen, width, height", wraplen, width, height)
@@ -3480,7 +3696,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], expand=True)
+                tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True)
                 element.TKText = tktext_label
                 if element.ClickSubmits:
                     tktext_label.bind('<Button-1>', element.TextClickedHandler)
@@ -3495,13 +3711,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 btype = element.BType
                 if element.AutoSizeButton is not None:
                     auto_size = element.AutoSizeButton
-                else: auto_size = toplevel_form.AutoSizeButtons
+                else:
+                    auto_size = toplevel_form.AutoSizeButtons
                 if auto_size is False or element.Size[0] is not None:
                     width, height = element_size
                 else:
                     width = 0
-                    height= toplevel_form.DefaultButtonElementSize[1]
-                if element.ButtonColor != (None, None)and element.ButtonColor != DEFAULT_BUTTON_COLOR:
+                    height = toplevel_form.DefaultButtonElementSize[1]
+                if element.ButtonColor != (None, None) and element.ButtonColor != DEFAULT_BUTTON_COLOR:
                     bc = element.ButtonColor
                 elif toplevel_form.ButtonColor != (None, None) and toplevel_form.ButtonColor != DEFAULT_BUTTON_COLOR:
                     bc = toplevel_form.ButtonColor
@@ -3509,9 +3726,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = DEFAULT_BUTTON_COLOR
                 border_depth = element.BorderWidth
                 if btype != BUTTON_TYPE_REALTIME:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth, font=font)
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,
+                                         command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth, font=font)
                 else:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth, font=font)
+                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT,
+                                         bd=border_depth, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
@@ -3519,9 +3738,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
 
-                element.TKButton = tkbutton          # not used yet but save the TK button in case
+                element.TKButton = tkbutton  # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
-                if element.ImageFilename:           # if button has an image on it
+                if element.ImageFilename:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
                     photo = tk.PhotoImage(file=element.ImageFilename)
                     if element.ImageSize != (None, None):
@@ -3532,7 +3751,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
                     tkbutton.image = photo
-                if element.ImageData:           # if button has an image on it
+                if element.ImageData:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
                     photo = tk.PhotoImage(data=element.ImageData)
                     if element.ImageSize != (None, None):
@@ -3541,11 +3760,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
-                    tkbutton.config(image=photo, compound=tk.CENTER,  width=width, height=height)
+                    tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
                     tkbutton.image = photo
                 if width != 0:
-                    tkbutton.configure(wraplength=wraplen+10)  # set wrap to width of widget
-                tkbutton.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
+                    tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
+                tkbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BindReturnKey:
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
@@ -3556,7 +3775,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
@@ -3569,13 +3789,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show, justify=justify)
+                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar,
+                                           bd=border_depth, font=font, show=show, justify=justify)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
-                element.TKEntry.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='x')
+                element.TKEntry.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='x')
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKEntry.focus_set()
@@ -3586,8 +3807,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 max_line_len = max([len(str(l)) for l in element.Values])
-                if auto_size_text is False: width=element_size[0]
-                else: width = max_line_len
+                if auto_size_text is False:
+                    width = element_size[0]
+                else:
+                    width = max_line_len
                 element.TKStringVar = tk.StringVar()
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     combostyle = tkinter.ttk.Style()
@@ -3596,24 +3819,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                 settings={'TCombobox':
                                                               {'configure':
                                                                    {'selectbackground': element.BackgroundColor,
-                                                                    'fieldbackground':  element.BackgroundColor,
+                                                                    'fieldbackground': element.BackgroundColor,
                                                                     'foreground': text_color,
-                                                                    'background':  element.BackgroundColor}
+                                                                    'background': element.BackgroundColor}
                                                                }})
                     except:
                         try:
                             combostyle.theme_settings('combostyle',
-                                                settings={'TCombobox':
-                                                              {'configure':
-                                                                   {'selectbackground': element.BackgroundColor,
-                                                                    'fieldbackground':  element.BackgroundColor,
-                                                                    'foreground': text_color,
-                                                                    'background':  element.BackgroundColor}
-                                                               }})
-                        except: pass
+                                                      settings={'TCombobox':
+                                                                    {'configure':
+                                                                         {'selectbackground': element.BackgroundColor,
+                                                                          'fieldbackground': element.BackgroundColor,
+                                                                          'foreground': text_color,
+                                                                          'background': element.BackgroundColor}
+                                                                     }})
+                        except:
+                            pass
                     # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
                     combostyle.theme_use('combostyle')
-                element.TKCombo = tkinter.ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar,font=font )
+                element.TKCombo = tkinter.ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
                 # element.TKCombo['state']='readonly'
@@ -3623,7 +3847,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKCombo['state'] = 'disabled'
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
-                element.TKCombo.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                element.TKCombo.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.DefaultValue:
                     for i, v in enumerate(element.Values):
                         if v == element.DefaultValue:
@@ -3634,39 +3858,45 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ChangeSubmits:
                     element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
                 if element.Readonly:
-                    element.TKCombo['state']='readonly'
-                if element.Disabled is True:            # note overrides readonly if disabled
+                    element.TKCombo['state'] = 'readonly'
+                if element.Disabled is True:  # note overrides readonly if disabled
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
-                if auto_size_text is False: width=element_size[0]
-                else: width = max_line_len
+                if auto_size_text is False:
+                    width = element_size[0]
+                else:
+                    width = max_line_len
                 element.TKStringVar = tk.StringVar()
                 default = element.DefaultValue if element.DefaultValue else element.Values[0]
                 element.TKStringVar.set(default)
-                element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar ,*element.Values)
-                element.TKOptionMenu.config(highlightthickness=0, font=font, width=width )
+                element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar, *element.Values)
+                element.TKOptionMenu.config(highlightthickness=0, font=font, width=width)
                 element.TKOptionMenu.config(borderwidth=border_depth)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKOptionMenu.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
-                element.TKOptionMenu.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                element.TKOptionMenu.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.Disabled == True:
                     element.TKOptionMenu['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
-                if auto_size_text is False: width=element_size[0]
-                else: width = max_line_len
+                if auto_size_text is False:
+                    width = element_size[0]
+                else:
+                    width = max_line_len
                 listbox_frame = tk.Frame(tk_row_frame)
                 element.TKStringVar = tk.StringVar()
-                element.TKListbox= tk.Listbox(listbox_frame, height=element_size[1], width=width, selectmode=element.SelectMode, font=font)
+                element.TKListbox = tk.Listbox(listbox_frame, height=element_size[1], width=width,
+                                               selectmode=element.SelectMode, font=font)
                 for index, item in enumerate(element.Values):
                     element.TKListbox.insert(tk.END, item)
                     if element.DefaultValues is not None and item in element.DefaultValues:
@@ -3681,24 +3911,26 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKListbox.configure(yscrollcommand=vsb.set)
                 element.TKListbox.pack(side=tk.LEFT)
                 vsb.pack(side=tk.LEFT, fill='y')
-                listbox_frame.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                listbox_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element.ListboxSelectHandler)
                     element.TKListbox.bind('<Double-Button-1>', element.ListboxSelectHandler)
                 if element.Disabled == True:
                     element.TKListbox['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
                 width, height = element_size
-                element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth,font=font)
-                element.TKText.insert(1.0, default_text)                    # set the default text
+                element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
+                                                              bd=border_depth, font=font)
+                element.TKText.insert(1.0, default_text)  # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                element.TKText.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                element.TKText.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
@@ -3731,23 +3963,27 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
-                element.TKCheckbutton.pack(side=tk.LEFT,padx=element.Pad[0], pady=element.Pad[1])
+                element.TKCheckbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
                 width = element_size[0]
                 fnt = tkinter.font.Font()
-                char_width = fnt.measure('A')       # single character width
-                progress_length = width*char_width
+                char_width = fnt.measure('A')  # single character width
+                progress_length = width * char_width
                 progress_width = element_size[1]
                 direction = element.Orientation
-                if element.BarColor != (None, None):    # if element has a bar color, use it
+                if element.BarColor != (None, None):  # if element has a bar color, use it
                     bar_color = element.BarColor
                 else:
                     bar_color = DEFAULT_PROGRESS_BAR_COLOR
-                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width, orientation=direction, BarColor=bar_color, border_width=element.BorderWidth, relief=element.Relief, style=element.BarStyle, key=element.Key )
+                element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width,
+                                                      orientation=direction, BarColor=bar_color,
+                                                      border_width=element.BorderWidth, relief=element.Relief,
+                                                      style=element.BarStyle, key=element.Key)
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
@@ -3755,17 +3991,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 default_value = element.InitialState
                 ID = element.GroupID
                 # see if ID has already been placed
-                value = EncodeRadioRowCol(row_num, col_num)     # value to set intvar to if this radio is selected
+                value = EncodeRadioRowCol(row_num, col_num)  # value to set intvar to if this radio is selected
                 if ID in toplevel_form.RadioDict:
                     RadVar = toplevel_form.RadioDict[ID]
                 else:
                     RadVar = tk.IntVar()
                     toplevel_form.RadioDict[ID] = RadVar
-                element.TKIntVar = RadVar                       # store the RadVar in Radio object
-                if default_value:                               # if this radio is the one selected, set RadVar to match
+                element.TKIntVar = RadVar  # store the RadVar in Radio object
+                if default_value:  # if this radio is the one selected, set RadVar to match
                     element.TKIntVar.set(value)
                 element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-                                                       variable=element.TKIntVar, value=value, bd=border_depth, font=font)
+                                                 variable=element.TKIntVar, value=value, bd=border_depth, font=font)
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
                     element.TKRadio.configure(selectcolor=element.BackgroundColor)
@@ -3773,7 +4009,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.configure(fg=text_color)
                 if element.Disabled:
                     element.TKRadio['state'] = 'disabled'
-                element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
+                element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
@@ -3781,7 +4017,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.TKStringVar = tk.StringVar()
-                element.TKSpinBox = tk.Spinbox(tk_row_frame, values=element.Values, textvariable=element.TKStringVar, width=width, bd=border_depth)
+                element.TKSpinBox = tk.Spinbox(tk_row_frame, values=element.Values, textvariable=element.TKStringVar,
+                                               width=width, bd=border_depth)
                 element.TKStringVar.set(element.DefaultValue)
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -3794,11 +4031,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled == True:
                     element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth, background_color=element.BackgroundColor, text_color=text_color, font=font, pad=element.Pad)
+                element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
+                                          background_color=element.BackgroundColor, text_color=text_color, font=font,
+                                          pad=element.Pad)
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -3813,12 +4053,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     print('*ERROR laying out form.... Image Element has no image specified*')
 
                 if photo is not None:
-                    if element_size == (None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
+                    if element_size == (
+                    None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
                         width, height = photo.width(), photo.height()
                     else:
                         width, height = element_size
                     if photo is not None:
-                        element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
+                        element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height,
+                                                        bd=border_depth)
                     else:
                         element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
                     if element.BackgroundColor is not None:
@@ -3826,9 +4068,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
-                    element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
+                    element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                     if element.Tooltip is not None:
-                        element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                        element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
+                                                        timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
@@ -3840,7 +4083,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 width, height = element_size
@@ -3856,11 +4100,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 menu_def = element.MenuDefinition
-                element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)    # create the menubar
+                element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)  # create the menubar
                 menubar = element.TKMenu
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY {menu_entry}')
@@ -3868,9 +4113,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     pos = menu_entry[0].find('&')
                     # print(pos)
                     if pos != -1:
-                        if pos == 0 or menu_entry[0][pos-1] != "\\":
-                            menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos+1:]
-                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline = pos)
+                        if pos == 0 or menu_entry[0][pos - 1] != "\\":
+                            menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
+                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
@@ -3880,7 +4125,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
                 labeled_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    labeled_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
+                    labeled_frame.configure(background=element.BackgroundColor,
+                                            highlightbackground=element.BackgroundColor,
+                                            highlightcolor=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     labeled_frame.configure(foreground=element.TextColor)
                 if font is not None:
@@ -3899,14 +4146,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
                 else:
                     form.TKNotebook.add(element.TKFrame, text=element.Title)
-                form.TKNotebook.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1])
+                form.TKNotebook.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
                 form.TabCount += 1
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     element.TKFrame.configure(background=element.BackgroundColor,
-                                            highlightbackground=element.BackgroundColor,
-                                            highlightcolor=element.BackgroundColor)
+                                              highlightbackground=element.BackgroundColor,
+                                              highlightcolor=element.BackgroundColor)
                 # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                 #     element.TKFrame.configure(foreground=element.TextColor)
 
@@ -3923,12 +4170,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
 
-                custom_style = str(element.Key)+'customtab.TNotebook'
+                custom_style = str(element.Key) + 'customtab.TNotebook'
                 style = tkinter.ttk.Style(tk_row_frame)
                 if element.Theme is not None:
                     style.theme_use(element.Theme)
                 if element.TabLocation is not None:
-                    position_dict = {'left':'w','right':'e', 'top':'n', 'bottom':'s', 'lefttop':'wn', 'leftbottom':'ws', 'righttop':'en', 'rightbottom':'es', 'bottomleft':'sw', 'bottomright':'se', 'topleft':'nw', 'topright':'ne'}
+                    position_dict = {'left': 'w', 'right': 'e', 'top': 'n', 'bottom': 's', 'lefttop': 'wn',
+                                     'leftbottom': 'ws', 'righttop': 'en', 'rightbottom': 'es', 'bottomleft': 'sw',
+                                     'bottomright': 'se', 'topleft': 'nw', 'topright': 'ne'}
                     try:
                         tab_position = position_dict[element.TabLocation]
                     except:
@@ -3947,11 +4196,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # style.configure(custom_style+'.Tab', background='red')
                 if element.SelectedTitleColor != None:
-                    style.map(custom_style+'.Tab', foreground=[("selected",element.SelectedTitleColor)])
+                    style.map(custom_style + '.Tab', foreground=[("selected", element.SelectedTitleColor)])
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    style.configure(custom_style+'.Tab', foreground=element.TextColor)
+                    style.configure(custom_style + '.Tab', foreground=element.TextColor)
                 # style.configure(custom_style, background='blue', foreground='yellow')
-
 
                 element.TKNotebook = tkinter.ttk.Notebook(tk_row_frame, style=custom_style)
 
@@ -3973,14 +4221,21 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Orientation[0] == 'v':
                     range_from = element.Range[1]
                     range_to = element.Range[0]
-                    slider_length += DEFAULT_MARGINS[1]*(element_size[0]*2)     # add in the padding
+                    slider_length += DEFAULT_MARGINS[1] * (element_size[0] * 2)  # add in the padding
                 else:
                     range_from = element.Range[0]
                     range_to = element.Range[1]
                 if element.ChangeSubmits:
-                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font, tickinterval=element.TickInterval, command=element.SliderChangedHandler)
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
+                                       from_=range_from, to_=range_to, resolution=element.Resolution,
+                                       length=slider_length, width=slider_width, bd=element.BorderWidth,
+                                       relief=element.Relief, font=font, tickinterval=element.TickInterval,
+                                       command=element.SliderChangedHandler)
                 else:
-                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar, from_=range_from, to_=range_to, resolution = element.Resolution, length=slider_length, width=slider_width , bd=element.BorderWidth, relief=element.Relief, font=font
+                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
+                                       from_=range_from, to_=range_to, resolution=element.Resolution,
+                                       length=slider_length, width=slider_width, bd=element.BorderWidth,
+                                       relief=element.Relief, font=font
                                        , tickinterval=element.TickInterval)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -3989,7 +4244,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
-                tkscale.pack(side=tk.LEFT, padx=element.Pad[0],pady=element.Pad[1])
+                tkscale.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 element.TKScale = tkscale
                 if element.Disabled == True:
                     element.TKScale['state'] = 'disabled'
@@ -3997,6 +4252,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
+                frame = tk.Frame(tk_row_frame)
+
                 height = element.NumRows
                 if element.Justification == 'left':
                     anchor = tk.W
@@ -4006,7 +4263,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     anchor = tk.CENTER
                 column_widths = {}
                 for row in element.Values:
-                    for i,col in enumerate(row):
+                    for i, col in enumerate(row):
                         col_width = min(len(str(col)), element.MaxColumnWidth)
                         try:
                             if col_width > column_widths[i]:
@@ -4020,15 +4277,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     for i, should_display in enumerate(element.ColumnsToDisplay):
                         if should_display:
                             displaycolumns.append(element.ColumnHeadings[i])
-                column_headings= element.ColumnHeadings
-                if element.DisplayRowNumbers:       # if display row number, tack on the numbers to front of columns
-                    displaycolumns = ['Row',] + displaycolumns
-                    column_headings = ['Row',] + element.ColumnHeadings
-                element.TKTreeview = tkinter.ttk.Treeview(tk_row_frame, columns=column_headings,
-                                                  displaycolumns=displaycolumns, show='headings', height=height, selectmode=element.SelectMode)
+                column_headings = element.ColumnHeadings
+                if element.DisplayRowNumbers:  # if display row number, tack on the numbers to front of columns
+                    displaycolumns = ['Row', ] + displaycolumns
+                    column_headings = ['Row', ] + element.ColumnHeadings
+                element.TKTreeview = tkinter.ttk.Treeview(frame, columns=column_headings,
+                                                  displaycolumns=displaycolumns, show='headings', height=height,
+                                                  selectmode=element.SelectMode)
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
-                    treeview.heading('Row', text='Row')         # make a dummy heading
+                    treeview.heading('Row', text='Row')  # make a dummy heading
                     treeview.column('Row', width=50, anchor=anchor)
                 for i, heading in enumerate(element.ColumnHeadings):
                     treeview.heading(heading, text=heading)
@@ -4040,61 +4298,65 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         except:
                             width = element.DefaultColumnWidth
 
-                    treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+                    treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i] + value
-                    id = treeview.insert('', 'end', text=value, iid=i+1, values=value, tag=i%2)
+                    id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i % 2)
                 if element.AlternatingRowColor is not None:
                     treeview.tag_configure(1, background=element.AlternatingRowColor)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    tkinter.ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
+                    tkinter.ttk.Style().configure("Treeview", background=element.BackgroundColor,
+                                          fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
 
-                scrollbar = tk.Scrollbar(tk_row_frame)
+                scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
 
                 treeview.configure(yscrollcommand=scrollbar.set)
-                element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
+                element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 height = element.NumRows
-                if element.Justification == 'left':             # justification
+                if element.Justification == 'left':  # justification
                     anchor = tk.W
                 elif element.Justification == 'right':
                     anchor = tk.E
                 else:
                     anchor = tk.CENTER
 
-                if element.ColumnsToDisplay is None:            # Which cols to display
+                if element.ColumnsToDisplay is None:  # Which cols to display
                     displaycolumns = element.ColumnHeadings
                 else:
                     displaycolumns = []
                     for i, should_display in enumerate(element.ColumnsToDisplay):
                         if should_display:
                             displaycolumns.append(element.ColumnHeadings[i])
-                column_headings= element.ColumnHeadings
+                column_headings = element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
                 element.TKTreeview = tkinter.ttk.Treeview(tk_row_frame, columns=column_headings,
-                                                  displaycolumns=displaycolumns, show='tree headings', height=height, selectmode=element.SelectMode, )
+                                                  displaycolumns=displaycolumns, show='tree headings', height=height,
+                                                  selectmode=element.SelectMode, )
                 treeview = element.TKTreeview
-                for i, heading in enumerate(element.ColumnHeadings):    # Configure cols + headings
+                for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = min(element.MaxColumnWidth, len(heading)+1)
+                        width = min(element.MaxColumnWidth, len(heading) + 1)
                     else:
                         try:
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
-                    treeview.column(heading, width=width*CharWidthInPixels(), anchor=anchor)
+                    treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
 
                 def add_treeview_data(node):
                     # print(f'Inserting {node.key} under parent {node.parent}')
@@ -4104,18 +4366,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         add_treeview_data(node)
 
                 add_treeview_data(element.TreeData.root_node)
-                treeview.column('#0', width=element.Col0Width*CharWidthInPixels(), anchor=anchor)
+                treeview.column('#0', width=element.Col0Width * CharWidthInPixels(), anchor=anchor)
                 # ----- configure colors -----
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    tkinter.ttk.Style().configure("Treeview", background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
+                    tkinter.ttk.Style().configure("Treeview", background=element.BackgroundColor,
+                                          fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
 
-                element.TKTreeview.pack(side=tk.LEFT,expand=True, padx=0, pady=0, fill='both')
-                if element.Tooltip is not None:                         # tooltip
-                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                if element.Tooltip is not None:  # tooltip
+                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
 
-        #............................DONE WITH ROW pack the row of widgets ..........................#
+        # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
         tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=True)
@@ -4135,31 +4399,30 @@ def ConvertFlexToTK(MyFlexForm):
     except:
         pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
-    #....................................... DONE creating and laying out window ..........................#
-    screen_width = master.winfo_screenwidth()      # get window info to move to middle of screen
+    # ....................................... DONE creating and laying out window ..........................#
+    screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
-        x,y = MyFlexForm.Location
+        x, y = MyFlexForm.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
-        x,y = DEFAULT_WINDOW_LOCATION
+        x, y = DEFAULT_WINDOW_LOCATION
     else:
-        master.update_idletasks()                   # don't forget to do updates or values are bad
+        master.update_idletasks()  # don't forget to do updates or values are bad
         win_width = master.winfo_width()
         win_height = master.winfo_height()
-        x = screen_width/2 -win_width/2
-        y = screen_height/2 - win_height/2
-        if y+win_height > screen_height:
-            y = screen_height-win_height
-        if x+win_width > screen_width:
-            x = screen_width-win_width
+        x = screen_width / 2 - win_width / 2
+        y = screen_height / 2 - win_height / 2
+        if y + win_height > screen_height:
+            y = screen_height - win_height
+        if x + win_width > screen_width:
+            x = screen_width - win_width
 
-    move_string = '+%i+%i'%(int(x),int(y))
+    move_string = '+%i+%i' % (int(x), int(y))
     master.geometry(move_string)
 
     master.update_idletasks()  # don't forget
 
     return
-
 
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
@@ -4175,7 +4438,7 @@ def StartupTK(my_flex_form):
         root = tk.Toplevel()
 
     try:
-        root.attributes('-alpha', 0)             # hide window while building it. makes for smoother 'paint'
+        root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except:
         pass
     # root.wm_overrideredirect(True)
@@ -4185,13 +4448,14 @@ def StartupTK(my_flex_form):
 
     my_flex_form.TKroot = root
     # Make moveable window
-    if (my_flex_form.GrabAnywhere is not False and not (my_flex_form.NonBlocking and my_flex_form.GrabAnywhere is not True)):
+    if (my_flex_form.GrabAnywhere is not False and not (
+            my_flex_form.NonBlocking and my_flex_form.GrabAnywhere is not True)):
         root.bind("<ButtonPress-1>", my_flex_form.StartMove)
         root.bind("<ButtonRelease-1>", my_flex_form.StopMove)
         root.bind("<B1-Motion>", my_flex_form.OnMotion)
 
     if not my_flex_form.Resizable:
-        root.resizable(False,False)
+        root.resizable(False, False)
 
     if my_flex_form.KeepOnTop:
         root.wm_attributes("-topmost", 1)
@@ -4203,7 +4467,7 @@ def StartupTK(my_flex_form):
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
 
     try:
-        root.attributes('-alpha', my_flex_form.AlphaChannel)             # Make window visible again
+        root.attributes('-alpha', my_flex_form.AlphaChannel)  # Make window visible again
     except:
         pass
 
@@ -4223,7 +4487,7 @@ def StartupTK(my_flex_form):
     if my_flex_form.NonBlocking:
         pass
         # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
-    else:       # it's a blocking form
+    else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.TKroot.mainloop()
         my_flex_form.TimerCancelled = True
@@ -4235,6 +4499,7 @@ def StartupTK(my_flex_form):
             my_flex_form.RootNeedsDestroying = False
     return
 
+
 # ==============================_GetNumLinesNeeded ==#
 # Helper function for determining how to wrap text   #
 # ===================================================#
@@ -4242,18 +4507,19 @@ def _GetNumLinesNeeded(text, max_line_width):
     if max_line_width == 0:
         return 1
     lines = text.split('\n')
-    num_lines = len(lines)                          # number of original lines of text
-    max_line_len = max([len(l) for l in lines])     # longest line
+    num_lines = len(lines)  # number of original lines of text
+    max_line_len = max([len(l) for l in lines])  # longest line
     lines_used = []
     for L in lines:
-        lines_used.append(len(L)//max_line_width + (len(L) % max_line_width > 0))       # fancy math to round up
+        lines_used.append(len(L) // max_line_width + (len(L) % max_line_width > 0))  # fancy math to round up
     total_lines_needed = sum(lines_used)
     return total_lines_needed
+
 
 # ==============================  PROGRESS METER ========================================== #
 
 def ConvertArgsToSingleString(*args):
-    max_line_total, width_used , total_lines, = 0,0,0
+    max_line_total, width_used, total_lines, = 0, 0, 0
     single_line_message = ''
     # loop through args and built a SINGLE string from them
     for message in args:
@@ -4281,7 +4547,7 @@ def _ProgressMeter(title, max_value, *args, **_3to2kwargs):
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
     if 'bar_color' in _3to2kwargs: bar_color = _3to2kwargs['bar_color']; del _3to2kwargs['bar_color']
-    else: bar_color = (None,None)
+    else: bar_color = (None, None)
     if 'orientation' in _3to2kwargs: orientation = _3to2kwargs['orientation']; del _3to2kwargs['orientation']
     else: orientation = None
     '''
@@ -4298,7 +4564,8 @@ def _ProgressMeter(title, max_value, *args, **_3to2kwargs):
     '''
     local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
-    bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color,  border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
+    bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color,
+                       border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
     form = Window(title, auto_size_text=True, grab_anywhere=grab_anywhere)
 
     # Form using a horizontal bar
@@ -4321,8 +4588,9 @@ def _ProgressMeter(title, max_value, *args, **_3to2kwargs):
         form.AddRow((Cancel(button_color=button_color)))
 
     form.NonBlocking = True
-    form.Show(non_blocking= True)
+    form.Show(non_blocking=True)
     return bar2, bar_text
+
 
 # ============================== ProgressMeterUpdate  =====#
 def _ProgressMeterUpdate(bar, value, text_elem, *args):
@@ -4332,7 +4600,7 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     :param value: int
     :return: True if not cancelled, OK....False if Error
     '''
-    global  _my_windows
+    global _my_windows
     if bar == None: return False
     if bar.BarExpired: return False
     message, w, h = ConvertArgsToSingleString(*args)
@@ -4343,18 +4611,20 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     if value >= bar.MaxValue or not rc:
         bar.BarExpired = True
         bar.ParentForm._Close()
-        if rc:                      # if update was OK but bar expired, decrement num windows
+        if rc:  # if update was OK but bar expired, decrement num windows
             _my_windows.Decrement()
     if bar.ParentForm.RootNeedsDestroying:
         try:
             bar.ParentForm.TKroot.destroy()
             # _my_windows.Decrement()
-        except: pass
+        except:
+            pass
         bar.ParentForm.RootNeedsDestroying = False
         bar.ParentForm.__del__()
         return False
 
     return rc
+
 
 # ============================== EASY PROGRESS METER ========================================== #
 # class to hold the easy meter info (a global variable essentialy)
@@ -4388,10 +4658,10 @@ class EasyProgressMeterDataClass(object):
         total_time_short = str(total_time).split(".")[0]
         self.StatMessages = [
             '{} of {}'.format(self.CurrentValue, self.MaxValue),
-            '{} %'.format(100*self.CurrentValue//self.MaxValue),
+            '{} %'.format(100 * self.CurrentValue // self.MaxValue),
             '',
-            ' {:6.2f} Iterations per Second'.format(self.CurrentValue/total_seconds),
-            ' {:6.2f} Seconds per Iteration'.format(total_seconds/(self.CurrentValue if self.CurrentValue else 1)),
+            ' {:6.2f} Iterations per Second'.format(self.CurrentValue / total_seconds),
+            ' {:6.2f} Seconds per Iteration'.format(total_seconds / (self.CurrentValue if self.CurrentValue else 1)),
             '',
             '{} Elapsed Time'.format(time_delta_short),
             '{} Time Remaining'.format(time_remaining_short),
@@ -4408,7 +4678,7 @@ def EasyProgressMeter(title, current_value, max_value, *args, **_3to2kwargs):
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
     if 'bar_color' in _3to2kwargs: bar_color = _3to2kwargs['bar_color']; del _3to2kwargs['bar_color']
-    else: bar_color = (None,None)
+    else: bar_color = (None, None)
     if 'orientation' in _3to2kwargs: orientation = _3to2kwargs['orientation']; del _3to2kwargs['orientation']
     else: orientation = None
     '''
@@ -4431,15 +4701,22 @@ def EasyProgressMeter(title, current_value, max_value, *args, **_3to2kwargs):
     # If the variable doesn't yet exist, then it will create it and initialize with the 3rd parameter
     EasyProgressMeter.Data = getattr(EasyProgressMeter, 'Data', EasyProgressMeterDataClass())
     # if no meter currently running
-    if EasyProgressMeter.Data.MeterID is None:           # Starting a new meter
-        print("Please change your call of EasyProgressMeter to use OneLineProgressMeter. EasyProgressMeter will be removed soon")
+    if EasyProgressMeter.Data.MeterID is None:  # Starting a new meter
+        print(
+            "Please change your call of EasyProgressMeter to use OneLineProgressMeter. EasyProgressMeter will be removed soon")
         if int(current_value) >= int(max_value):
             return False
-        del(EasyProgressMeter.Data)
+        del (EasyProgressMeter.Data)
         EasyProgressMeter.Data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
         EasyProgressMeter.Data.ComputeProgressStats()
         message = "\n".join([line for line in EasyProgressMeter.Data.StatMessages])
-        EasyProgressMeter.Data.MeterID, EasyProgressMeter.Data.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size,  button_color=button_color, border_width=local_border_width)
+        EasyProgressMeter.Data.MeterID, EasyProgressMeter.Data.MeterText = _ProgressMeter(title, int(max_value),
+                                                                                          message, *args,
+                                                                                          orientation=orientation,
+                                                                                          bar_color=bar_color,
+                                                                                          size=size,
+                                                                                          button_color=button_color,
+                                                                                          border_width=local_border_width)
         EasyProgressMeter.Data.ParentForm = EasyProgressMeter.Data.MeterID.ParentForm
         return True
     # if exactly the same values as before, then ignore.
@@ -4448,9 +4725,9 @@ def EasyProgressMeter(title, current_value, max_value, *args, **_3to2kwargs):
     if EasyProgressMeter.Data.MaxValue != int(max_value):
         EasyProgressMeter.Data.MeterID = None
         EasyProgressMeter.Data.ParentForm = None
-        del(EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass()            # setup a new progress meter
-        return True         # HAVE to return TRUE or else the new meter will thing IT is failing when it hasn't
+        del (EasyProgressMeter.Data)
+        EasyProgressMeter.Data = EasyProgressMeterDataClass()  # setup a new progress meter
+        return True  # HAVE to return TRUE or else the new meter will thing IT is failing when it hasn't
     EasyProgressMeter.Data.CurrentValue = int(current_value)
     EasyProgressMeter.Data.MaxValue = int(max_value)
     EasyProgressMeter.Data.ComputeProgressStats()
@@ -4458,23 +4735,26 @@ def EasyProgressMeter(title, current_value, max_value, *args, **_3to2kwargs):
     for line in EasyProgressMeter.Data.StatMessages:
         message = message + str(line) + '\n'
     message = "\n".join(EasyProgressMeter.Data.StatMessages)
-    args= args + (message,)
+    args = args + (message,)
     rc = _ProgressMeterUpdate(EasyProgressMeter.Data.MeterID, current_value,
                               EasyProgressMeter.Data.MeterText, *args)
     # if counter >= max then the progress meter is all done. Indicate none running
     if current_value >= EasyProgressMeter.Data.MaxValue or not rc:
         EasyProgressMeter.Data.MeterID = None
-        del(EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass()            # setup a new progress meter
-        return False     # even though at the end, return True so don't cause error with the app
-    return rc           # return whatever the update told us
+        del (EasyProgressMeter.Data)
+        EasyProgressMeter.Data = EasyProgressMeterDataClass()  # setup a new progress meter
+        return False  # even though at the end, return True so don't cause error with the app
+    return rc  # return whatever the update told us
 
 
 def EasyProgressMeterCancel(title, *args):
-    EasyProgressMeter.EasyProgressMeterData = getattr(EasyProgressMeter, 'EasyProgressMeterData', EasyProgressMeterDataClass())
+    EasyProgressMeter.EasyProgressMeterData = getattr(EasyProgressMeter, 'EasyProgressMeterData',
+                                                      EasyProgressMeterDataClass())
     if EasyProgressMeter.EasyProgressMeterData.MeterID is not None:
         # tell the normal meter update that we're at max value which will close the meter
-        rc = EasyProgressMeter(title, EasyProgressMeter.EasyProgressMeterData.MaxValue, EasyProgressMeter.EasyProgressMeterData.MaxValue, ' *** CANCELLING ***', 'Caller requested a cancel', *args)
+        rc = EasyProgressMeter(title, EasyProgressMeter.EasyProgressMeterData.MaxValue,
+                               EasyProgressMeter.EasyProgressMeterData.MaxValue, ' *** CANCELLING ***',
+                               'Caller requested a cancel', *args)
         return rc
     return True
 
@@ -4482,9 +4762,9 @@ def EasyProgressMeterCancel(title, *args):
 # global variable containing dictionary will all currently running one-line progress meters.
 _one_line_progress_meters = {}
 
+
 # ============================== OneLineProgressMeter  =====#
 def OneLineProgressMeter(title, current_value, max_value, key, *args, **_3to2kwargs):
-
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
     else: grab_anywhere = False
     if 'border_width' in _3to2kwargs: border_width = _3to2kwargs['border_width']; del _3to2kwargs['border_width']
@@ -4494,7 +4774,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, **_3to2kwa
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
     if 'bar_color' in _3to2kwargs: bar_color = _3to2kwargs['bar_color']; del _3to2kwargs['bar_color']
-    else: bar_color = (None,None)
+    else: bar_color = (None, None)
     if 'orientation' in _3to2kwargs: orientation = _3to2kwargs['orientation']; del _3to2kwargs['orientation']
     else: orientation = None
     global _one_line_progress_meters
@@ -4502,14 +4782,18 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, **_3to2kwa
     local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is not None else border_width
     try:
         meter_data = _one_line_progress_meters[key]
-    except:     # a new meater is starting
-        if int(current_value) >= int(max_value):     # if already expired then it's an old meter, ignore
+    except:  # a new meater is starting
+        if int(current_value) >= int(max_value):  # if already expired then it's an old meter, ignore
             return False
         meter_data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
         _one_line_progress_meters[key] = meter_data
         meter_data.ComputeProgressStats()
         message = "\n".join([line for line in meter_data.StatMessages])
-        meter_data.MeterID, meter_data.MeterText= _ProgressMeter(title, int(max_value), message, *args, orientation=orientation, bar_color=bar_color, size=size,  button_color=button_color, border_width=local_border_width, grab_anywhere=grab_anywhere)
+        meter_data.MeterID, meter_data.MeterText = _ProgressMeter(title, int(max_value), message, *args,
+                                                                  orientation=orientation, bar_color=bar_color,
+                                                                  size=size, button_color=button_color,
+                                                                  border_width=local_border_width,
+                                                                  grab_anywhere=grab_anywhere)
         meter_data.ParentForm = meter_data.MeterID.ParentForm
         return True
 
@@ -4523,14 +4807,14 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, **_3to2kwa
     for line in meter_data.StatMessages:
         message = message + str(line) + '\n'
     message = "\n".join(meter_data.StatMessages)
-    args= args + (message,)
+    args = args + (message,)
     rc = _ProgressMeterUpdate(meter_data.MeterID, current_value,
                               meter_data.MeterText, *args)
     # if counter >= max then the progress meter is all done. Indicate none running
     if current_value >= meter_data.MaxValue or not rc:
         del _one_line_progress_meters[key]
         return False
-    return rc           # return whatever the update told us
+    return rc  # return whatever the update told us
 
 
 def OneLineProgressMeterCancel(key):
@@ -4538,11 +4822,9 @@ def OneLineProgressMeterCancel(key):
 
     try:
         meter_data = _one_line_progress_meters[key]
-    except:     # meter is already deleted
+    except:  # meter is already deleted
         return
     OneLineProgressMeter('', meter_data.MaxValue, meter_data.MaxValue, key=key)
-
-
 
 
 # input is #RRGGBB
@@ -4560,20 +4842,20 @@ def GetComplimentaryHex(color):
     return comp_color
 
 
-
 # ========================  EasyPrint           =====#
 # ===================================================#
-_easy_print_data = None     # global variable... I'm cheating
+_easy_print_data = None  # global variable... I'm cheating
+
 
 class DebugWin(object):
     def __init__(self, size=(None, None)):
         # Show a form that's a running counter
-        win_size = size if size !=(None, None) else DEFAULT_DEBUG_WINDOW_SIZE
+        win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
         self.form = Window('Debug Window', auto_size_text=True, font=('Courier New', 12))
         self.output_element = Output(size=win_size)
         self.form_rows = [[Text('EasyPrint Output')],
-                     [self.output_element],
-                     [DummyButton('Quit')]]
+                          [self.output_element],
+                          [DummyButton('Quit')]]
         self.form.AddRows(self.form_rows)
         self.form.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
         return
@@ -4598,17 +4880,20 @@ class DebugWin(object):
         self.form.CloseNonBlockingForm()
         self.form.__del__()
 
+
 def Print(*args, **_3to2kwargs):
     if 'sep' in _3to2kwargs: sep = _3to2kwargs['sep']; del _3to2kwargs['sep']
     else: sep = None
     if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
     else: end = None
     if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
-    else: size = (None,None)
+    else: size = (None, None)
     EasyPrint(*args, size=size, end=end, sep=sep)
+
 
 def PrintClose():
     EasyPrintClose()
+
 
 def eprint(*args, **_3to2kwargs):
     if 'sep' in _3to2kwargs: sep = _3to2kwargs['sep']; del _3to2kwargs['sep']
@@ -4616,8 +4901,9 @@ def eprint(*args, **_3to2kwargs):
     if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
     else: end = None
     if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
-    else: size = (None,None)
+    else: size = (None, None)
     EasyPrint(*args, size=size, end=end, sep=sep)
+
 
 def EasyPrint(*args, **_3to2kwargs):
     if 'sep' in _3to2kwargs: sep = _3to2kwargs['sep']; del _3to2kwargs['sep']
@@ -4625,13 +4911,12 @@ def EasyPrint(*args, **_3to2kwargs):
     if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
     else: end = None
     if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
-    else: size = (None,None)
+    else: size = (None, None)
     global _easy_print_data
 
-    if _easy_print_data  is None:
+    if _easy_print_data is None:
         _easy_print_data = DebugWin(size=size)
     _easy_print_data.Print(*args, end=end, sep=sep)
-
 
 
 def EasyPrintold(*args, **_3to2kwargs):
@@ -4640,12 +4925,13 @@ def EasyPrintold(*args, **_3to2kwargs):
     if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
     else: end = None
     if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
-    else: size = (None,None)
-    if 'easy_print_data' not in EasyPrint.__dict__:     # use a function property to save DebugWin object (static variable)
+    else: size = (None, None)
+    if 'easy_print_data' not in EasyPrint.__dict__:  # use a function property to save DebugWin object (static variable)
         EasyPrint.easy_print_data = DebugWin(size=size)
     if EasyPrint.easy_print_data is None:
         EasyPrint.easy_print_data = DebugWin(size=size)
     EasyPrint.easy_print_data.Print(*args, end=end, sep=sep)
+
 
 def EasyPrintClose():
     if 'easy_print_data' in EasyPrint.__dict__:
@@ -4653,6 +4939,7 @@ def EasyPrintClose():
             EasyPrint.easy_print_data._Close()
         EasyPrint.easy_print_data = None
         # del EasyPrint.easy_print_data
+
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
@@ -4670,8 +4957,9 @@ def PopupScrolled(*args, **_3to2kwargs):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
-    form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration)
-    max_line_total, max_line_width, total_lines, height_computed = 0,0,0,0
+    form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
+                  auto_close_duration=auto_close_duration)
+    max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
@@ -4689,7 +4977,7 @@ def PopupScrolled(*args, **_3to2kwargs):
     if height:
         height_computed = height
     form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
-    pad = max_line_total-15 if max_line_total > 15 else 1
+    pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
     if yes_no:
         form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
@@ -4703,6 +4991,7 @@ def PopupScrolled(*args, **_3to2kwargs):
 
 ScrolledTextBox = PopupScrolled
 
+
 # ---------------------------------------------------------------------- #
 #  GetPathBox                                                            #
 #   Pre-made dialog that looks like this roughly                         #
@@ -4715,7 +5004,9 @@ ScrolledTextBox = PopupScrolled
 #     (True if Submit was pressed, false otherwise)                      #
 # ---------------------------------------------------------------------- #
 
-def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+def PopupGetFolder(message, default_path='', no_window=False, size=(None, None), button_color=None,
+                   background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
+                   grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Display popup with text entry field and browse button. Browse for folder
     :param message:
@@ -4745,10 +5036,12 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse()],
-              [Ok(size=(5,1)), Cancel(size=(5,1))]]
+              [Ok(size=(5, 1)), Cancel(size=(5, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, background_color=background_color,
-                  font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
+                    background_color=background_color,
+                    font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
+                    location=location)
 
     (button, input_values) = window.LayoutAndRead(layout)
 
@@ -4758,10 +5051,14 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None,None), 
         path = input_values[0]
         return path
 
+
 #####################################
 # PopupGetFile                      #
 #####################################
-def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),), no_window=False, size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
+def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
+                 no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
+                 icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
+                 location=(None, None)):
     """
         Display popup with text entry field and browse button. Browse for file
     :param message:
@@ -4789,20 +5086,23 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
         except:
             pass
         if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
+            filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
+                                                       defaultextension=default_extension)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
+            filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                     defaultextension=default_extension)  # show the 'get file' dialog box
         root.destroy()
         return filename
 
-    browse_button =  SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
+    browse_button = SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
-              [Ok(size=(6,1)), Cancel(size=(6,1))]]
+              [Ok(size=(6, 1)), Cancel(size=(6, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font, background_color=background_color,
-                  no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+                    background_color=background_color,
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
     (button, input_values) = window.Layout(layout).Read()
     if button != 'Ok':
@@ -4811,10 +5111,13 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
         path = input_values[0]
         return path
 
+
 #####################################
 # PopupGetText                      #
 #####################################
-def PopupGetText(message, default_text='', password_char='', size=(None,None), button_color=None, background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None,None)):
+def PopupGetText(message, default_text='', password_char='', size=(None, None), button_color=None,
+                 background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
+                 grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Display Popup with text entry field
     :param message:
@@ -4835,10 +5138,11 @@ def PopupGetText(message, default_text='', password_char='', size=(None,None), b
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, password_char=password_char)],
-              [Ok(size=(5,1)), Cancel(size=(5,1))]]
+              [Ok(size=(5, 1)), Cancel(size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
-                  background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
+                    location=location)
 
     (button, input_values) = window.Layout(layout).Read()
 
@@ -4866,20 +5170,21 @@ def SetGlobalIcon(icon):
 # ============================== SetOptions =========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetOptions(icon=None, button_color=None, element_size=(None,None), button_element_size=(None, None), margins=(None,None),
-               element_padding=(None,None),auto_size_text=None, auto_size_buttons=None, font=None, border_width=None,
+def SetOptions(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None),
+               margins=(None, None),
+               element_padding=(None, None), auto_size_text=None, auto_size_buttons=None, font=None, border_width=None,
                slider_border_width=None, slider_relief=None, slider_orientation=None,
                autoclose_time=None, message_box_line_width=None,
                progress_meter_border_depth=None, progress_meter_style=None,
                progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None,
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
-               scrollbar_color=None, text_color=None, element_text_color = None, debug_win_size=(None,None), window_location=(None,None),
+               scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
+               window_location=(None, None),
                tooltip_time=None):
-
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_BUTTON_ELEMENT_SIZE
-    global DEFAULT_MARGINS                # Margins for each LEFT/RIGHT margin is first term
+    global DEFAULT_MARGINS  # Margins for each LEFT/RIGHT margin is first term
     global DEFAULT_ELEMENT_PADDING  # Padding between elements (row, col) in pixels
     global DEFAULT_AUTOSIZE_TEXT
     global DEFAULT_AUTOSIZE_BUTTONS
@@ -4921,16 +5226,16 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
     if button_color != None:
         DEFAULT_BUTTON_COLOR = button_color
 
-    if element_size != (None,None):
+    if element_size != (None, None):
         DEFAULT_ELEMENT_SIZE = element_size
 
-    if button_element_size != (None,None):
+    if button_element_size != (None, None):
         DEFAULT_BUTTON_ELEMENT_SIZE = button_element_size
 
-    if margins != (None,None):
+    if margins != (None, None):
         DEFAULT_MARGINS = margins
 
-    if element_padding != (None,None):
+    if element_padding != (None, None):
         DEFAULT_ELEMENT_PADDING = element_padding
 
     if auto_size_text != None:
@@ -4939,7 +5244,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
     if auto_size_buttons != None:
         DEFAULT_AUTOSIZE_BUTTONS = auto_size_buttons
 
-    if font !=None:
+    if font != None:
         DEFAULT_FONT = font
 
     if border_width != None:
@@ -4990,10 +5295,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
     if element_background_color != None:
         DEFAULT_ELEMENT_BACKGROUND_COLOR = element_background_color
 
-    if window_location != (None,None):
+    if window_location != (None, None):
         DEFAULT_WINDOW_LOCATION = window_location
 
-    if debug_win_size != (None,None):
+    if debug_win_size != (None, None):
         DEFAULT_DEBUG_WINDOW_SIZE = debug_win_size
 
     if text_color != None:
@@ -5019,14 +5324,14 @@ def SetOptions(icon=None, button_color=None, element_size=(None,None), button_el
 # of the elements.                                           #
 ##############################################################
 LOOK_AND_FEEL_TABLE = {'SystemDefault':
-                      {'BACKGROUND' : COLOR_SYSTEM_DEFAULT,
-                       'TEXT': COLOR_SYSTEM_DEFAULT,
-                       'INPUT': COLOR_SYSTEM_DEFAULT,'TEXT_INPUT' : COLOR_SYSTEM_DEFAULT,
-                       'SCROLL': COLOR_SYSTEM_DEFAULT,
-                       'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
-                       'PROGRESS': COLOR_SYSTEM_DEFAULT,
-                       'BORDER': 1,'SLIDER_DEPTH':1,
-                       'PROGRESS_DEPTH':0},
+                           {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+                            'TEXT': COLOR_SYSTEM_DEFAULT,
+                            'INPUT': COLOR_SYSTEM_DEFAULT, 'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+                            'SCROLL': COLOR_SYSTEM_DEFAULT,
+                            'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
+                            'PROGRESS': COLOR_SYSTEM_DEFAULT,
+                            'BORDER': 1, 'SLIDER_DEPTH': 1,
+                            'PROGRESS_DEPTH': 0},
 
                        'Reddit': {'BACKGROUND': '#ffffff',
                                   'TEXT': '#1a1a1b',
@@ -5038,39 +5343,39 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                   'BORDER': 1,
                                   'SLIDER_DEPTH': 0,
                                   'PROGRESS_DEPTH': 0,
-                                  'ACCENT1' : '#ff5414',
-                                  'ACCENT2' : '#33a8ff',
-                                  'ACCENT3' : '#dbf0ff'},
+                                  'ACCENT1': '#ff5414',
+                                  'ACCENT2': '#33a8ff',
+                                  'ACCENT3': '#dbf0ff'},
 
-                      'Topanga': {'BACKGROUND': '#282923',
-                                  'TEXT': '#E7DB74',
-                                  'INPUT': '#393a32',
-                                  'TEXT_INPUT': '#E7C855',
-                                  'SCROLL': '#E7C855',
-                                  'BUTTON': ('#E7C855', '#284B5A'),
-                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                  'BORDER': 1,'SLIDER_DEPTH':0,
-                                  'PROGRESS_DEPTH':0},
-
-                      'GreenTan': {'BACKGROUND' : '#9FB8AD',
-                                   'TEXT': COLOR_SYSTEM_DEFAULT,
-                                   'INPUT':'#F7F3EC','TEXT_INPUT' : 'black',
-                                   'SCROLL': '#F7F3EC',
-                                   'BUTTON': ('white', '#475841'),
+                       'Topanga': {'BACKGROUND': '#282923',
+                                   'TEXT': '#E7DB74',
+                                   'INPUT': '#393a32',
+                                   'TEXT_INPUT': '#E7C855',
+                                   'SCROLL': '#E7C855',
+                                   'BUTTON': ('#E7C855', '#284B5A'),
                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                   'BORDER': 1,'SLIDER_DEPTH':0,
-                                   'PROGRESS_DEPTH':0},
+                                   'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                   'PROGRESS_DEPTH': 0},
 
-                      'Dark': {'BACKGROUND': 'gray25',
-                               'TEXT': 'white',
-                               'INPUT': 'gray30',
-                               'TEXT_INPUT': 'white',
-                               'SCROLL': 'gray44',
-                               'BUTTON': ('white', '#004F00'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                               'BORDER': 1,
-                               'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
+                       'GreenTan': {'BACKGROUND': '#9FB8AD',
+                                    'TEXT': COLOR_SYSTEM_DEFAULT,
+                                    'INPUT': '#F7F3EC', 'TEXT_INPUT': 'black',
+                                    'SCROLL': '#F7F3EC',
+                                    'BUTTON': ('white', '#475841'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                    'PROGRESS_DEPTH': 0},
+
+                       'Dark': {'BACKGROUND': 'gray25',
+                                'TEXT': 'white',
+                                'INPUT': 'gray30',
+                                'TEXT_INPUT': 'white',
+                                'SCROLL': 'gray44',
+                                'BUTTON': ('white', '#004F00'),
+                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                'BORDER': 1,
+                                'SLIDER_DEPTH': 0,
+                                'PROGRESS_DEPTH': 0},
 
                        'LightGreen': {'BACKGROUND': '#B7CECE',
                                       'TEXT': 'black',
@@ -5086,216 +5391,217 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'ACCENT3': '#0a1c84',
                                       'PROGRESS_DEPTH': 0},
 
+                       'Dark2': {'BACKGROUND': 'gray25',
+                                 'TEXT': 'white',
+                                 'INPUT': 'white',
+                                 'TEXT_INPUT': 'black',
+                                 'SCROLL': 'gray44',
+                                 'BUTTON': ('white', '#004F00'),
+                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                 'BORDER': 1,
+                                 'SLIDER_DEPTH': 0,
+                                 'PROGRESS_DEPTH': 0},
 
-                      'Dark2': {'BACKGROUND': 'gray25',
-                                'TEXT': 'white',
-                                'INPUT': 'white',
-                                'TEXT_INPUT': 'black',
-                                'SCROLL': 'gray44',
-                                'BUTTON': ('white', '#004F00'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                'BORDER': 1,
-                                'SLIDER_DEPTH': 0,
-                                'PROGRESS_DEPTH': 0},
+                       'Black': {'BACKGROUND': 'black',
+                                 'TEXT': 'white',
+                                 'INPUT': 'gray30',
+                                 'TEXT_INPUT': 'white',
+                                 'SCROLL': 'gray44',
+                                 'BUTTON': ('black', 'white'),
+                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                 'BORDER': 1,
+                                 'SLIDER_DEPTH': 0,
+                                 'PROGRESS_DEPTH': 0},
 
-                      'Black': {'BACKGROUND': 'black',
-                                'TEXT': 'white',
-                                'INPUT': 'gray30',
-                                'TEXT_INPUT': 'white',
-                                'SCROLL': 'gray44',
-                                'BUTTON': ('black', 'white'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                'BORDER': 1,
-                                'SLIDER_DEPTH': 0,
-                                'PROGRESS_DEPTH': 0},
-
-                      'Tan': {'BACKGROUND': '#fdf6e3',
-                              'TEXT': '#268bd1',
-                              'INPUT': '#eee8d5',
-                              'TEXT_INPUT': '#6c71c3',
-                              'SCROLL': '#eee8d5',
-                              'BUTTON': ('white', '#063542'),
-                              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                              'BORDER': 1,
-                              'SLIDER_DEPTH': 0,
-                              'PROGRESS_DEPTH': 0},
-
-                      'TanBlue': {'BACKGROUND': '#e5dece',
-                                  'TEXT': '#063289',
-                                  'INPUT': '#f9f8f4',
-                                  'TEXT_INPUT': '#242834',
-                                  'SCROLL': '#eee8d5',
-                                  'BUTTON': ('white', '#063289'),
-                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                  'BORDER': 1,
-                                  'SLIDER_DEPTH': 0,
-                                  'PROGRESS_DEPTH': 0},
-
-                      'DarkTanBlue': {'BACKGROUND': '#242834',
-                                      'TEXT': '#dfe6f8',
-                                      'INPUT': '#97755c',
-                                      'TEXT_INPUT': 'white',
-                                      'SCROLL': '#a9afbb',
-                                      'BUTTON': ('white', '#063289'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                      'BORDER': 1,
-                                      'SLIDER_DEPTH': 0,
-                                      'PROGRESS_DEPTH': 0},
-
-                      'DarkAmber': {'BACKGROUND': '#2c2825',
-                                    'TEXT': '#fdcb52',
-                                    'INPUT': '#705e52',
-                                    'TEXT_INPUT': '#fdcb52',
-                                    'SCROLL': '#705e52',
-                                    'BUTTON': ('black', '#fdcb52'),
-                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                    'BORDER': 1,
-                                    'SLIDER_DEPTH': 0,
-                                    'PROGRESS_DEPTH': 0},
-
-                      'DarkBlue': {'BACKGROUND': '#1a2835',
-                                   'TEXT': '#d1ecff',
-                                   'INPUT': '#335267',
-                                   'TEXT_INPUT': '#acc2d0',
-                                   'SCROLL': '#1b6497',
-                                   'BUTTON': ('black', '#fafaf8'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                   'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                   'PROGRESS_DEPTH': 0},
-
-                      'Reds': {'BACKGROUND': '#280001',
-                               'TEXT': 'white',
-                               'INPUT': '#d8d584',
-                               'TEXT_INPUT': 'black',
-                               'SCROLL': '#763e00',
-                               'BUTTON': ('black', '#daad28'),
+                       'Tan': {'BACKGROUND': '#fdf6e3',
+                               'TEXT': '#268bd1',
+                               'INPUT': '#eee8d5',
+                               'TEXT_INPUT': '#6c71c3',
+                               'SCROLL': '#eee8d5',
+                               'BUTTON': ('white', '#063542'),
                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
                                'BORDER': 1,
                                'SLIDER_DEPTH': 0,
                                'PROGRESS_DEPTH': 0},
 
-                      'Green': {'BACKGROUND': '#82a459',
-                                'TEXT': 'black',
+                       'TanBlue': {'BACKGROUND': '#e5dece',
+                                   'TEXT': '#063289',
+                                   'INPUT': '#f9f8f4',
+                                   'TEXT_INPUT': '#242834',
+                                   'SCROLL': '#eee8d5',
+                                   'BUTTON': ('white', '#063289'),
+                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                   'BORDER': 1,
+                                   'SLIDER_DEPTH': 0,
+                                   'PROGRESS_DEPTH': 0},
+
+                       'DarkTanBlue': {'BACKGROUND': '#242834',
+                                       'TEXT': '#dfe6f8',
+                                       'INPUT': '#97755c',
+                                       'TEXT_INPUT': 'white',
+                                       'SCROLL': '#a9afbb',
+                                       'BUTTON': ('white', '#063289'),
+                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                       'BORDER': 1,
+                                       'SLIDER_DEPTH': 0,
+                                       'PROGRESS_DEPTH': 0},
+
+                       'DarkAmber': {'BACKGROUND': '#2c2825',
+                                     'TEXT': '#fdcb52',
+                                     'INPUT': '#705e52',
+                                     'TEXT_INPUT': '#fdcb52',
+                                     'SCROLL': '#705e52',
+                                     'BUTTON': ('black', '#fdcb52'),
+                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                     'BORDER': 1,
+                                     'SLIDER_DEPTH': 0,
+                                     'PROGRESS_DEPTH': 0},
+
+                       'DarkBlue': {'BACKGROUND': '#1a2835',
+                                    'TEXT': '#d1ecff',
+                                    'INPUT': '#335267',
+                                    'TEXT_INPUT': '#acc2d0',
+                                    'SCROLL': '#1b6497',
+                                    'BUTTON': ('black', '#fafaf8'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                    'PROGRESS_DEPTH': 0},
+
+                       'Reds': {'BACKGROUND': '#280001',
+                                'TEXT': 'white',
                                 'INPUT': '#d8d584',
                                 'TEXT_INPUT': 'black',
-                                'SCROLL': '#e3ecf3',
-                                'BUTTON': ('white', '#517239'),
+                                'SCROLL': '#763e00',
+                                'BUTTON': ('black', '#daad28'),
                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
                                 'BORDER': 1,
                                 'SLIDER_DEPTH': 0,
                                 'PROGRESS_DEPTH': 0},
 
-                      'BluePurple': {'BACKGROUND' : '#A5CADD',
-                                     'TEXT': '#6E266E',
-                                     'INPUT':'#E0F5FF',
-                                     'TEXT_INPUT' : 'black',
-                                     'SCROLL': '#E0F5FF',
-                                     'BUTTON': ('white', '#303952'),
-                                     'PROGRESS':DEFAULT_PROGRESS_BAR_COLOR,
-                                     'BORDER': 1,
-                                     'SLIDER_DEPTH':0,
-                                     'PROGRESS_DEPTH':0},
-
-                      'Purple': {'BACKGROUND': '#B0AAC2',
+                       'Green': {'BACKGROUND': '#82a459',
                                  'TEXT': 'black',
-                                 'INPUT': '#F2EFE8',
-                                 'SCROLL': '#F2EFE8',
-                                 'TEXT_INPUT' : 'black',
-                                 'BUTTON': ('black', '#C2D4D8'),
+                                 'INPUT': '#d8d584',
+                                 'TEXT_INPUT': 'black',
+                                 'SCROLL': '#e3ecf3',
+                                 'BUTTON': ('white', '#517239'),
                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
                                  'BORDER': 1,
-                                 'SLIDER_DEPTH':0,
-                                 'PROGRESS_DEPTH':0},
+                                 'SLIDER_DEPTH': 0,
+                                 'PROGRESS_DEPTH': 0},
 
-                      'BlueMono': {'BACKGROUND': '#AAB6D3',
-                                   'TEXT': 'black',
-                                   'INPUT': '#F1F4FC',
-                                   'SCROLL': '#F1F4FC',
-                                   'TEXT_INPUT' : 'black',
-                                   'BUTTON': ('white', '#7186C7'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                   'BORDER': 1,
-                                   'SLIDER_DEPTH':0,
-                                   'PROGRESS_DEPTH':0},
-
-                      'GreenMono': {'BACKGROUND': '#A8C1B4',
-                                    'TEXT': 'black',
-                                    'INPUT': '#DDE0DE',
-                                    'SCROLL': '#E3E3E3',
-                                    'TEXT_INPUT' : 'black',
-                                    'BUTTON': ('white', '#6D9F85'),
-                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                    'BORDER': 1,
-                                    'SLIDER_DEPTH':0,
-                                    'PROGRESS_DEPTH':0},
-
-                      'BrownBlue': {'BACKGROUND': '#64778d',
-                                    'TEXT': 'white',
-                                    'INPUT': '#f0f3f7',
-                                    'SCROLL': '#A6B2BE',
-                                    'TEXT_INPUT' : 'black',
-                                    'BUTTON': ('white', '#283b5b'),
-                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                    'BORDER': 1,
-                                    'SLIDER_DEPTH':0,
-                                    'PROGRESS_DEPTH':0},
-
-                      'BrightColors': {'BACKGROUND': '#b4ffb4',
-                                       'TEXT': 'black',
-                                       'INPUT': '#ffff64',
-                                       'SCROLL': '#ffb482',
-                                       'TEXT_INPUT' : 'black',
-                                       'BUTTON': ('black', '#ffa0dc'),
-                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                       'BORDER': 1,
-                                       'SLIDER_DEPTH':0,
-                                       'PROGRESS_DEPTH':0},
-
-                      'NeutralBlue': {'BACKGROUND': '#92aa9d',
-                                      'TEXT': 'black',
-                                      'INPUT': '#fcfff6',
-                                      'SCROLL': '#fcfff6',
+                       'BluePurple': {'BACKGROUND': '#A5CADD',
+                                      'TEXT': '#6E266E',
+                                      'INPUT': '#E0F5FF',
                                       'TEXT_INPUT': 'black',
-                                      'BUTTON': ('black', '#d0dbbd'),
+                                      'SCROLL': '#E0F5FF',
+                                      'BUTTON': ('white', '#303952'),
                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
                                       'BORDER': 1,
-                                      'SLIDER_DEPTH':0,
-                                      'PROGRESS_DEPTH':0},
+                                      'SLIDER_DEPTH': 0,
+                                      'PROGRESS_DEPTH': 0},
 
-                      'Kayak': {'BACKGROUND': '#a7ad7f',
-                                'TEXT': 'black',
-                                'INPUT': '#e6d3a8',
-                                'SCROLL': '#e6d3a8',
-                                'TEXT_INPUT': 'black',
-                                'BUTTON': ('white', '#5d907d'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                'BORDER': 1,
-                                'SLIDER_DEPTH':0,
-                                'PROGRESS_DEPTH':0},
+                       'Purple': {'BACKGROUND': '#B0AAC2',
+                                  'TEXT': 'black',
+                                  'INPUT': '#F2EFE8',
+                                  'SCROLL': '#F2EFE8',
+                                  'TEXT_INPUT': 'black',
+                                  'BUTTON': ('black', '#C2D4D8'),
+                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                  'BORDER': 1,
+                                  'SLIDER_DEPTH': 0,
+                                  'PROGRESS_DEPTH': 0},
 
-                      'SandyBeach': {'BACKGROUND': '#efeccb',
-                                     'TEXT': '#012f2f',
-                                     'INPUT': '#e6d3a8',
-                                     'SCROLL': '#e6d3a8',
-                                     'TEXT_INPUT': '#012f2f',
-                                     'BUTTON': ('white', '#046380'),
+                       'BlueMono': {'BACKGROUND': '#AAB6D3',
+                                    'TEXT': 'black',
+                                    'INPUT': '#F1F4FC',
+                                    'SCROLL': '#F1F4FC',
+                                    'TEXT_INPUT': 'black',
+                                    'BUTTON': ('white', '#7186C7'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH': 0,
+                                    'PROGRESS_DEPTH': 0},
+
+                       'GreenMono': {'BACKGROUND': '#A8C1B4',
+                                     'TEXT': 'black',
+                                     'INPUT': '#DDE0DE',
+                                     'SCROLL': '#E3E3E3',
+                                     'TEXT_INPUT': 'black',
+                                     'BUTTON': ('white', '#6D9F85'),
                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                     'BORDER': 1,'SLIDER_DEPTH':0,
-                                     'PROGRESS_DEPTH':0},
+                                     'BORDER': 1,
+                                     'SLIDER_DEPTH': 0,
+                                     'PROGRESS_DEPTH': 0},
 
-                      'TealMono': {'BACKGROUND': '#a8cfdd',
-                                   'TEXT': 'black',
-                                   'INPUT': '#dfedf2','SCROLL': '#dfedf2',
-                                   'TEXT_INPUT' : 'black',
-                                   'BUTTON': ('white', '#183440'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                   'BORDER': 1,
-                                   'SLIDER_DEPTH':0,
-                                   'PROGRESS_DEPTH':0}
-                      }
+                       'BrownBlue': {'BACKGROUND': '#64778d',
+                                     'TEXT': 'white',
+                                     'INPUT': '#f0f3f7',
+                                     'SCROLL': '#A6B2BE',
+                                     'TEXT_INPUT': 'black',
+                                     'BUTTON': ('white', '#283b5b'),
+                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                     'BORDER': 1,
+                                     'SLIDER_DEPTH': 0,
+                                     'PROGRESS_DEPTH': 0},
+
+                       'BrightColors': {'BACKGROUND': '#b4ffb4',
+                                        'TEXT': 'black',
+                                        'INPUT': '#ffff64',
+                                        'SCROLL': '#ffb482',
+                                        'TEXT_INPUT': 'black',
+                                        'BUTTON': ('black', '#ffa0dc'),
+                                        'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                        'BORDER': 1,
+                                        'SLIDER_DEPTH': 0,
+                                        'PROGRESS_DEPTH': 0},
+
+                       'NeutralBlue': {'BACKGROUND': '#92aa9d',
+                                       'TEXT': 'black',
+                                       'INPUT': '#fcfff6',
+                                       'SCROLL': '#fcfff6',
+                                       'TEXT_INPUT': 'black',
+                                       'BUTTON': ('black', '#d0dbbd'),
+                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                       'BORDER': 1,
+                                       'SLIDER_DEPTH': 0,
+                                       'PROGRESS_DEPTH': 0},
+
+                       'Kayak': {'BACKGROUND': '#a7ad7f',
+                                 'TEXT': 'black',
+                                 'INPUT': '#e6d3a8',
+                                 'SCROLL': '#e6d3a8',
+                                 'TEXT_INPUT': 'black',
+                                 'BUTTON': ('white', '#5d907d'),
+                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                 'BORDER': 1,
+                                 'SLIDER_DEPTH': 0,
+                                 'PROGRESS_DEPTH': 0},
+
+                       'SandyBeach': {'BACKGROUND': '#efeccb',
+                                      'TEXT': '#012f2f',
+                                      'INPUT': '#e6d3a8',
+                                      'SCROLL': '#e6d3a8',
+                                      'TEXT_INPUT': '#012f2f',
+                                      'BUTTON': ('white', '#046380'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                      'PROGRESS_DEPTH': 0},
+
+                       'TealMono': {'BACKGROUND': '#a8cfdd',
+                                    'TEXT': 'black',
+                                    'INPUT': '#dfedf2', 'SCROLL': '#dfedf2',
+                                    'TEXT_INPUT': 'black',
+                                    'BUTTON': ('white', '#183440'),
+                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                    'BORDER': 1,
+                                    'SLIDER_DEPTH': 0,
+                                    'PROGRESS_DEPTH': 0}
+                       }
+
 
 def ListOfLookAndFeelValues():
     return list(LOOK_AND_FEEL_TABLE.keys())
+
 
 def ChangeLookAndFeel(index):
     # global LOOK_AND_FEEL_TABLE
@@ -5310,22 +5616,20 @@ def ChangeLookAndFeel(index):
         colors = LOOK_AND_FEEL_TABLE[index]
 
         SetOptions(background_color=colors['BACKGROUND'],
-                      text_element_background_color=colors['BACKGROUND'],
-                      element_background_color=colors['BACKGROUND'],
-                      text_color=colors['TEXT'],
-                      input_elements_background_color=colors['INPUT'],
-                      button_color=colors['BUTTON'],
-                      progress_meter_color=colors['PROGRESS'],
-                      border_width=colors['BORDER'],
-                      slider_border_width=colors['SLIDER_DEPTH'],
-                      progress_meter_border_depth=colors['PROGRESS_DEPTH'],
-                      scrollbar_color=(colors['SCROLL']),
-                      element_text_color=colors['TEXT'],
-                      input_text_color=colors['TEXT_INPUT'])
-    except:    # most likely an index out of range
+                   text_element_background_color=colors['BACKGROUND'],
+                   element_background_color=colors['BACKGROUND'],
+                   text_color=colors['TEXT'],
+                   input_elements_background_color=colors['INPUT'],
+                   button_color=colors['BUTTON'],
+                   progress_meter_color=colors['PROGRESS'],
+                   border_width=colors['BORDER'],
+                   slider_border_width=colors['SLIDER_DEPTH'],
+                   progress_meter_border_depth=colors['PROGRESS_DEPTH'],
+                   scrollbar_color=(colors['SCROLL']),
+                   element_text_color=colors['TEXT'],
+                   input_text_color=colors['TEXT_INPUT'])
+    except:  # most likely an index out of range
         print('** Warning - Look and Feel value not valid. Change your ChangeLookAndFeel call. **')
-
-
 
 
 # ============================== sprint ======#
@@ -5333,7 +5637,8 @@ def ChangeLookAndFeel(index):
 # Provides a crude 'print' mechanism but in a #
 # GUI environment                             #
 # ============================================#
-sprint=ScrolledTextBox
+sprint = ScrolledTextBox
+
 
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
 def ObjToStringSingleObj(obj):
@@ -5341,6 +5646,7 @@ def ObjToStringSingleObj(obj):
         return 'None'
     return str(obj.__class__) + '\n' + '\n'.join(
         (repr(item) + ' = ' + repr(obj.__dict__[item]) for item in sorted(obj.__dict__)))
+
 
 def ObjToString(obj, extra='    '):
     if obj is None:
@@ -5361,7 +5667,7 @@ def ObjToString(obj, extra='    '):
 
 def Popup(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5416,8 +5722,10 @@ def Popup(*args, **_3to2kwargs):
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
     title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    window = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
-    max_line_total, total_lines = 0,0
+    window = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color,
+                    auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    max_line_total, total_lines = 0, 0
     for message in args_to_print:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
         # if not isinstance(message, str): message = str(message)
@@ -5426,33 +5734,38 @@ def Popup(*args, **_3to2kwargs):
             message_wrapped = message
         else:
             message_wrapped = textwrap.fill(message, local_line_width)
-        message_wrapped_lines = message_wrapped.count('\n')+1
+        message_wrapped_lines = message_wrapped.count('\n') + 1
         longest_line_len = max([len(l) for l in message.split('\n')])
         width_used = min(longest_line_len, local_line_width)
         max_line_total = max(max_line_total, width_used)
         # height = _GetNumLinesNeeded(message, width_used)
         height = message_wrapped_lines
-        window.AddRow(Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
+        window.AddRow(
+            Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
         total_lines += height
 
     if non_blocking:
-        PopupButton = DummyButton       # important to use or else button will close other windows too!
+        PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
         PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if button_type is POPUP_BUTTONS_YES_NO:
-        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20,5),3), size=(5,1)), PopupButton('No', button_color=button_color, size=(5,1)))
+        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
+                                  size=(5, 1)), PopupButton('No', button_color=button_color, size=(5, 1)))
     elif button_type is POPUP_BUTTONS_CANCELLED:
-        window.AddRow(PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
+        window.AddRow(
+            PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 0), 3)))
     elif button_type is POPUP_BUTTONS_ERROR:
-        window.AddRow(PopupButton('Error', size=(6,1), button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
+        window.AddRow(PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True,
+                                  pad=((20, 0), 3)))
     elif button_type is POPUP_BUTTONS_OK_CANCEL:
-        window.AddRow(PopupButton('OK', size=(6,1), button_color=button_color, focus=True, bind_return_key=True),
-                    PopupButton('Cancel', size=(6,1), button_color=button_color))
+        window.AddRow(PopupButton('OK', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True),
+                      PopupButton('Cancel', size=(6, 1), button_color=button_color))
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
-        window.AddRow(PopupButton('OK', size=(5,1), button_color=button_color, focus=True, bind_return_key=True, pad=((20,0),3)))
+        window.AddRow(PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True,
+                                  pad=((20, 0), 3)))
 
     if non_blocking:
         button, values = window.ReadNonBlocking()
@@ -5460,7 +5773,6 @@ def Popup(*args, **_3to2kwargs):
         button, values = window.Read()
 
     return button
-
 
 
 # ==============================  MsgBox============#
@@ -5475,7 +5787,7 @@ def MsgBox(*args):
 # --------------------------- PopupNoButtons ---------------------------
 def PopupNoButtons(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5518,15 +5830,17 @@ def PopupNoButtons(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=POPUP_BUTTONS_NO_BUTTONS,
-        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+          button_type=POPUP_BUTTONS_NO_BUTTONS,
+          auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
+          line_width=line_width,
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 
 # --------------------------- PopupNonBlocking ---------------------------
 def PopupNonBlocking(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5572,19 +5886,20 @@ def PopupNonBlocking(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
-        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+          button_type=button_type,
+          auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
+          line_width=line_width,
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 
 PopupNoWait = PopupNonBlocking
 
 
-
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup  ---------------------------
 def PopupQuick(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5630,15 +5945,17 @@ def PopupQuick(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
-        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+          button_type=button_type,
+          auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
+          line_width=line_width,
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
 def PopupNoTitlebar(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5681,9 +5998,12 @@ def PopupNoTitlebar(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
-        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+          button_type=button_type,
+          auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
+          line_width=line_width,
+          font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
 
 PopupNoFrame = PopupNoTitlebar
 PopupNoBorder = PopupNoTitlebar
@@ -5693,7 +6013,7 @@ PopupAnnoying = PopupNoTitlebar
 # --------------------------- PopupAutoClose ---------------------------
 def PopupAutoClose(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5739,16 +6059,20 @@ def PopupAutoClose(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color, button_type=button_type,
-        auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon, line_width=line_width,
-        font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+          button_type=button_type,
+          auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
+          line_width=line_width,
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
 
 PopupTimed = PopupAutoClose
+
 
 # --------------------------- PopupError ---------------------------
 def PopupError(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5791,13 +6115,16 @@ def PopupError(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
+          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
+          auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
+          keep_on_top=keep_on_top, location=location)
 
 
 # --------------------------- PopupCancel ---------------------------
 def PopupCancel(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5840,12 +6167,16 @@ def PopupCancel(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color,
+          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
+          auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
+          keep_on_top=keep_on_top, location=location)
+
 
 # --------------------------- PopupOK ---------------------------
 def PopupOK(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5888,12 +6219,16 @@ def PopupOK(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    Popup(*args, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
+          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
+          auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
+          keep_on_top=keep_on_top, location=location)
+
 
 # --------------------------- PopupOKCancel ---------------------------
 def PopupOKCancel(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5936,12 +6271,16 @@ def PopupOKCancel(*args, **_3to2kwargs):
     :param location:
     :return: OK, Cancel or None
     """
-    return Popup(*args, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    return Popup(*args, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color,
+                 non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
+                 auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
 
 # --------------------------- PopupYesNo ---------------------------
 def PopupYesNo(*args, **_3to2kwargs):
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
-    else: location = (None,None)
+    else: location = (None, None)
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5984,16 +6323,20 @@ def PopupYesNo(*args, **_3to2kwargs):
     :param location:
     :return: Yes, No or None
     """
-    return Popup(*args, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color, text_color=text_color, non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+    return Popup(*args, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color, text_color=text_color,
+                 non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
+                 auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 
 def main():
     layout = [[Text('You are running the PySimpleGUI.py file itself')],
-                 [Text('You should be importing it rather than running it', size=(50,2))],
-                 [Text('Here is your sample input window....')],
-                 [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),FolderBrowse()],
-                 [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-                 [Ok(), Cancel()]]
+              [Text('You should be importing it rather than running it', size=(50, 2))],
+              [Text('Here is your sample input window....')],
+              [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
+               FolderBrowse()],
+              [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
+              [Ok(), Cancel()]]
 
     button, values = Window('Demo window..').Layout(layout).Read()
 
