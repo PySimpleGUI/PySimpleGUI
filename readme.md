@@ -459,7 +459,7 @@ The list of Popup output functions are
     PopupOk      
     PopupYesNo      
     PopupCancel      
-    PopupOkCancel      
+    PopupOKCancel      
     PopupError      
     PopupTimed, PopupAutoClose      
     PopupNoWait, PopupNonBlocking      
@@ -558,7 +558,7 @@ This function is very handy for when you're **debugging** and want to display so
       
 There are Popup calls for single-item inputs. These follow the pattern of `Popup` followed by `Get` and then the type of item to get.  There are 3 of these input Popups to choose from, each with settings enabling customization.    
       
- - `PopupGetString` - get a single line of text      
+ - `PopupGetText` - get a single line of text      
  - `PopupGetFile` - get a filename      
  - `PopupGetFolder` - get a folder name      
       
@@ -566,7 +566,7 @@ Use these Popups instead of making  a custom window to get one data value, call 
       
 ### PopupGetText      
     
-Use this Popup to get a ssingle line of text from the user.    
+Use this Popup to get a single line of text from the user.    
     
 ```    
 PopupGetText(message,The message you wish to display with the input field    
