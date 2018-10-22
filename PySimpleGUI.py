@@ -248,6 +248,7 @@ ELEM_TYPE_BLANK = 'blank'
 ELEM_TYPE_TABLE = 'table'
 ELEM_TYPE_TREE = 'tree'
 ELEM_TYPE_ERROR = 'error'
+ELEM_TYPE_SEPARATOR = 'separator'
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -1139,8 +1140,7 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key)
+        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
 
     @property
     def TKOut(self):
@@ -1430,8 +1430,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None):
+    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
         '''
         Image Element
         :param filename:
@@ -1656,9 +1655,7 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
-                 tooltip=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None, relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
         '''
         Frame Element
         :param title:
@@ -1725,6 +1722,28 @@ class Frame(Element):
             for element in row:
                 element.__del__()
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Separator                                    #
+#  Routes stdout, stderr to a scrolled window                            #
+# ---------------------------------------------------------------------- #
+class VerticalSeparator(Element):
+    def __init__(self,  pad=None):
+        '''
+        VerticalSeperator - A separator that spans only 1 row in a vertical fashion
+        :param pad:
+        '''
+        self.Orientation = 'vertical'       # for now only vertical works
+
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
+
+
+    def __del__(self):
+        super().__del__()
+
+VSeperator = VerticalSeparator
+VSep = VerticalSeparator
 
 
 # ---------------------------------------------------------------------- #
@@ -1894,9 +1913,7 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
         :param range:
@@ -2731,6 +2748,8 @@ class Window:
         self.TKroot.quit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key='_timeout_'):
+        if timeout == 0:
+            return self.ReadNonBlocking()
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
@@ -4223,8 +4242,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
                                        from_=range_from, to_=range_to, resolution=element.Resolution,
                                        length=slider_length, width=slider_width, bd=element.BorderWidth,
-                                       relief=element.Relief, font=font
-                                       , tickinterval=element.TickInterval)
+                                       relief=element.Relief, font=font, tickinterval=element.TickInterval)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
@@ -4366,6 +4384,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+            # -------------------------  Separator element  ------------------------- #
+            elif element_type == ELEM_TYPE_SEPARATOR:
+                separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
+                separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both',expand=True )
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets

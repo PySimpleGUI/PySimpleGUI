@@ -10,13 +10,20 @@ import datetime
 import calendar
 import forecastio
 
-NUM_COLS = 5
+NUM_COLS = 5                    # Changes number of days in forecast
+MY_LOCATION_LAT = 35.738387
+MY_LOCATION_LON = -79.203797
+DARKSKY_KEY =  "bb9b798d340e413869ea72ac1bea9742"     # *** INSERT YOUR DARKSKY KEY HERE **
 
 def led_clock():
     def update_weather():
-        api_key = "bb9b798d340e413869ea72ac1bea9742"        # *** INSERT YOUR DARKSKY KEY HERE **
-        lat = 35.738387
-        lng = -79.203797
+        """
+        Download weather data and then populates the GUI with results
+        :return:
+        """
+        api_key = DARKSKY_KEY
+        lat = MY_LOCATION_LAT
+        lng = MY_LOCATION_LON
         forecast = forecastio.load_forecast(api_key, lat, lng)
         daily = forecast.daily()
         max_temps = []
@@ -60,8 +67,8 @@ def led_clock():
     layout = [[sg.Column(clock, background_color='black')],
               [sg.Column(weather_cols[x], background_color='black') for x in range(NUM_COLS)],
 
-              [sg.RButton('Exit', button_color=('white', 'black'), image_data=orangeround[22:],
-                          tooltip='close window')]]
+              [sg.RButton('Exit', button_color=('black', 'black'),
+                          image_data=orangeround[22:], tooltip='close window', pad=((450,0),(10,0)))]]
     window = sg.Window('My new window',
                        background_color='black',
                        grab_anywhere=True,
