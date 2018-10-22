@@ -5,6 +5,8 @@ if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
     import PySimpleGUI27 as sg
+    sg.PopupError('Sorry, at the moment this program only runs on Python 3')
+    sys.exit()
 
 import email
 import imaplib
