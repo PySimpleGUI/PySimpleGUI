@@ -11,8 +11,8 @@ import calendar
 import forecastio
 
 ##### CHANGE these settings to match your location... check Google Maps #####
-MY_LOCATION_LAT = 35.738387
-MY_LOCATION_LON = -79.203797
+MY_LOCATION_LAT = 35.780086
+MY_LOCATION_LON = -79.638860
 ##### You need a free dark-sky key. You get 1000 calls a month for free #####
 DARKSKY_KEY =  "YOUR DARKSKY KEY GOES HERE"     # *** INSERT YOUR DARKSKY KEY HERE **
 
