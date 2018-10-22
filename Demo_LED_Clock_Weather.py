@@ -14,7 +14,7 @@ NUM_COLS = 5
 
 def led_clock():
     def update_weather():
-        api_key = "INSERT YOUR DARKSKY KEY HERE"        # *** INSERT YOUR DARKSKY KEY HERE **
+        api_key = "bb9b798d340e413869ea72ac1bea9742"        # *** INSERT YOUR DARKSKY KEY HERE **
         lat = 35.738387
         lng = -79.203797
         forecast = forecastio.load_forecast(api_key, lat, lng)
@@ -75,13 +75,12 @@ def led_clock():
     min1 = window.FindElement('_min1_')
     min2 = window.FindElement('_min2_')
 
-    last_update_time = 0
-    i = 0
+    i = last_update_time = 0
     while True:  # Event Loop
         event, values = window.Read(timeout=1000)
         if event in (None, 'Exit'):
             break
-
+        # update the clock
         now = datetime.datetime.now()
         real_hour = now.hour - 12 if now.hour > 12 else now.hour
         hour1_digit = led_digits[real_hour // 10]
@@ -94,6 +93,7 @@ def led_clock():
         else:
             colon_elem.Update(data=ledblank[22:])
         i += 1
+        # update weather
         if last_update_time == 0 or (now-last_update_time).seconds >= 60*60*6:
             print('*** Updating Weather ***')
             last_update_time = now
