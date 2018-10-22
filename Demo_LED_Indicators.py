@@ -39,9 +39,8 @@ window = sg.Window('My new window', default_element_size=(12, 1), auto_size_text
 
 i = 0
 while True:  # Event Loop
-    event, value = window.ReadNonBlocking()
-    if event == 'Exit':
-        window.CloseNonBlocking()
+    event, value = window.Read(timeout=400)
+    if event == 'Exit' or event is None:
         break
     if value is None:
         break
@@ -50,5 +49,3 @@ while True:  # Event Loop
     SetLED(window, '_ram_', 'green' if random.randint(1, 10) > 5 else 'red')
     SetLED(window, '_temp_', 'green' if random.randint(1, 10) > 5 else 'red')
     SetLED(window, '_server1_', 'green' if random.randint(1, 10) > 5 else 'red')
-
-    time.sleep(.400)
