@@ -10,10 +10,14 @@ import datetime
 import calendar
 import forecastio
 
-NUM_COLS = 5                    # Changes number of days in forecast
+##### CHANGE these settings to match your location... check Google Maps #####
 MY_LOCATION_LAT = 35.738387
 MY_LOCATION_LON = -79.203797
-DARKSKY_KEY =  "bb9b798d340e413869ea72ac1bea9742"     # *** INSERT YOUR DARKSKY KEY HERE **
+##### You need a free dark-sky key. You get 1000 calls a month for free #####
+DARKSKY_KEY =  "YOUR DARKSKY KEY GOES HERE"     # *** INSERT YOUR DARKSKY KEY HERE **
+
+NUM_COLS = 5                    # Changes number of days in forecast
+
 
 def led_clock():
     def update_weather():
