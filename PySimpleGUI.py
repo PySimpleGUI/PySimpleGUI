@@ -1140,7 +1140,8 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
-        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
+        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
+                         tooltip=tooltip, key=key)
 
     @property
     def TKOut(self):
@@ -1250,11 +1251,13 @@ class Button(Element):
                 target_element = self.ParentForm.FindElement(target)
             try:
                 strvar = target_element.TKStringVar
-            except: pass
+            except:
+                pass
             try:
                 if target_element.ChangeSubmits:
                     should_submit_window = True
-            except: pass
+            except:
+                pass
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
@@ -1430,7 +1433,8 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
+                 tooltip=None):
         '''
         Image Element
         :param filename:
@@ -1456,7 +1460,10 @@ class Image(Element):
             image = tk.PhotoImage(file=filename)
         elif data is not None:
             # if type(data) is bytes:
-            image = tk.PhotoImage(data=data)
+            try:
+                image = tk.PhotoImage(data=data)
+            except:
+                return  # an error likely means the window has closed so exit
             # else:
             # image = data
         else:
@@ -1655,7 +1662,9 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None, relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, tooltip=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 tooltip=None):
         '''
         Frame Element
         :param title:
@@ -1729,18 +1738,18 @@ class Frame(Element):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class VerticalSeparator(Element):
-    def __init__(self,  pad=None):
+    def __init__(self, pad=None):
         '''
         VerticalSeperator - A separator that spans only 1 row in a vertical fashion
         :param pad:
         '''
-        self.Orientation = 'vertical'       # for now only vertical works
+        self.Orientation = 'vertical'  # for now only vertical works
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
-
     def __del__(self):
         super().__del__()
+
 
 VSeperator = VerticalSeparator
 VSep = VerticalSeparator
@@ -1913,7 +1922,9 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None, border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
+                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
         :param range:
@@ -2597,7 +2608,7 @@ class Window:
         self.Rows = []  # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
         self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
-        None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
+            None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
@@ -2749,7 +2760,12 @@ class Window:
 
     def Read(self, timeout=None, timeout_key='_timeout_'):
         if timeout == 0:
-            return self.ReadNonBlocking()
+            event, values =  self.ReadNonBlocking()
+            if event is None:
+                event = timeout_key
+            if values is None:
+                event = None
+            return event, values
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
@@ -2932,6 +2948,8 @@ class Window:
             pass
 
     CloseNonBlockingForm = CloseNonBlocking
+    Close = CloseNonBlockingForm
+
 
     def OnClosingCallback(self):
         # print('Got closing callback')
@@ -3065,6 +3083,7 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
+# -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
          bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
@@ -4061,7 +4080,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if photo is not None:
                     if element_size == (
-                    None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
+                            None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
                         width, height = photo.width(), photo.height()
                     else:
                         width, height = element_size
@@ -4387,7 +4406,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
-                separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both',expand=True )
+                separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
