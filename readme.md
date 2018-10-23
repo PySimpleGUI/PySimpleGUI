@@ -23,9 +23,9 @@
       
 ## Now supports both Python 2.7 & 3      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.10.2-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.10.3-red.svg?longCache=true&style=for-the-badge)      
       
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.2-blue.svg?longCache=true&style=for-the-badge)      
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.3-blue.svg?longCache=true&style=for-the-badge)      
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -172,6 +172,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Complete control of colors, look and feel      
         Selection of pre-defined palettes      
         Button images      
+        Verticle Separator
         Return values as dictionary      
         Set focus      
         Bind return key to buttons      
@@ -477,7 +478,7 @@ Here is a quick-reference showing how the Popup calls look.
     sg.PopupOk('PopupOk')  - Shows OK button    
     sg.PopupYesNo('PopupYesNo')  - Shows Yes and No buttons    
     sg.PopupCancel('PopupCancel')  - Shows Cancelled button    
-    sg.PopupOkCancel('PopupOkCancel')  - Shows Ok and Cancel buttons    
+    sg.PopupOKCancel('PopupOKCancel')  - Shows OK and Cancel buttons    
     sg.PopupError('PopupError')  - Shows red error button    
     sg.PopupTimed('PopupTimed')  - Automatically closes    
     sg.PopupAutoClose('PopupAutoClose')  - Same as PopupTimed    
@@ -558,7 +559,7 @@ This function is very handy for when you're **debugging** and want to display so
       
 There are Popup calls for single-item inputs. These follow the pattern of `Popup` followed by `Get` and then the type of item to get.  There are 3 of these input Popups to choose from, each with settings enabling customization.    
       
- - `PopupGetString` - get a single line of text      
+ - `PopupGetText` - get a single line of text      
  - `PopupGetFile` - get a filename      
  - `PopupGetFolder` - get a folder name      
       
@@ -566,7 +567,7 @@ Use these Popups instead of making  a custom window to get one data value, call 
       
 ### PopupGetText      
     
-Use this Popup to get a ssingle line of text from the user.    
+Use this Popup to get a line of text from the user.    
     
 ```    
 PopupGetText(message,The message you wish to display with the input field    
@@ -1315,10 +1316,16 @@ Call to force a window to go through the final stages of initialization.  This w
     
 Read the Window's input values and button clicks in a blocking-fashion    
 Returns event, values.  Adding a timeout can be achieved by setting timeout=number of milliseconds before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event. 
+
+If you set the timeout = 0, then the Read will immediately return rather than waiting for input or for a timeout. This is the same as the old ReadNonBlocking call.
     
-#### ReadNonBlocking()    
+#### ReadNonBlocking()    (NO LONGER USED)
+    
+While this call will technically still work, it is being removed.  If you want to get the same result, call Read with timeout = 0.
     
 Read the Window's input values and button clicks but without blocking.  It will immediately return.    **Consider using Read with timeout instead!**
+
+Will consume 100% of your CPU if you do not have other blocking calls in your event loop.
     
 #### Refresh()    
 Cause changes to the window to be displayed on the screen.  Normally not needed unless the changes are immediately required or if it's going to be a while before another call to Read.    
@@ -1355,7 +1362,11 @@ Move window to (x,y) position on the screen
 #### Minimize()
 Sends the window to the taskbar
 
-#### CloseNonBlocking()    
+#### Close()
+
+Closes a window, blocking or non-blocking
+
+#### CloseNonBlocking()    (NO LONGER USED.. use Close instead)
     
 Closes a non-blocking window    
     
@@ -1408,7 +1419,8 @@ Sets the window's transparency.  0 is completely transparent.  1 is fully visibl
      Listbox      
      Slider      
      Multi-line Text Input      
-     Scroll-able Output      
+     Scroll-able Output  
+     Vertical Separator    
      Progress Bar      
      Option Menu      
      Menu      
@@ -1418,7 +1430,8 @@ Sets the window's transparency.  0 is completely transparent.  1 is fully visibl
      Image      
      Table      
      Tree    
-     Tab, TabGroup      
+     Tab, TabGroup    
+       
 
       
 ## Common Element Parameters      
@@ -1628,6 +1641,7 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
                     text_color=None,    
                     font=None,    
                     tooltip=None,    
+                    change_submits=False
                     do_not_clear=False,    
                     key=None,    
                     focus=False,    
@@ -1643,9 +1657,13 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
      password_char - Character that will be used to replace each entered character. Setting to a value indicates this field is a password entry field      
      background_color - color to use for the input field background      
      text_color - color to use for the typed text      
+     font - font used for the element
+     tooltip - what is shown when hovered over element (doesn't appear to work)
+     change_submits - if True, will cause a Window.Read to return if a button fills in the value
      do_not_clear - Bool. Normally windows clear when read, turn off clearing with this flag.      
      key = Dictionary key to use for return values      
      focus = Bool. True if this field should capture the focus (moves cursor to this field)      
+     pad - amount of room in pixels to leave around the element
       
  There are two methods that can be called:      
       
@@ -2310,7 +2328,20 @@ disabled - if True disables the button
 image_data - sets button image to in-ram image    
 image_filename - sets button image using a file    
     
- ---      
+
+## Vertical Separator Element    
+This element has limited usefulness and is being included more for completeness than anything else.  It will draw a line between elements.
+```python
+VerticalSeparator(pad=None)
+```
+  
+![snag-0129](https://user-images.githubusercontent.com/13696193/47376041-a92a0100-d6bf-11e8-8f5b-0c0df56cf0f3.jpg)
+      
+It works best when placed between columns or elements that span multiple rows.  If on a "normal" row with elements that are only 1 row high, then it will only span that one row.
+
+
+
+
 ## ProgressBar  Element    
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.      
       
@@ -2631,7 +2662,8 @@ The values returned from a `Window.Read` or `Window.ReadNonBlocking` call for th
 
 ### Update Call
 
-There is an Update method defined in the code for the Tree Element, however it has not been completely tested so the results are not to be trusted.  Use at your own risk...  Removing rows from a table seem to work.      
+The Update method can be used to make changes to a table that's already been displayed.  The call takes a single parameter, values, which is the new table to display.  The entire table is replaced.
+
 ```python
 def Update(self, values=None):
 ```
@@ -2888,49 +2920,25 @@ Each lower level overrides the settings of the higher level.  Once settings have
       
 There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking windows (see the next section).  The other way is to use buttons that 'read' the window instead of 'close' the window when clicked.  The typical buttons you find in windows, including the shortcut buttons, close the window.  These include OK, Cancel, Submit, etc.  The Button Element also closes the window.      
       
-The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The `Read` call will block, the `ReadNonBlocking` will not block.   
+The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The normal `Read` call with no parameters will block, a call with a `timeout` value of zero will not block.
 
 Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `ReadNonBlocking`.  If you do not want your input field to be cleared after a `ReadNonBlocking` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.  
 
 The reasoning behind this is that Persistent Windows are often "forms".  When "submitting" a form you want to have all of the fields left blank so the next entry of data will start with a fresh window.  Also, when implementing a "Chat Window" type of interface, after each read / send of the chat data, you want the input field cleared.  Think of it as a Texting application.  Would you want to have to clear your previous text if you want to send a second text?
       
-           
-## Asynchronous (Non-Blocking) windows      
-Not so fast buddy!!
-
-Non-blocking is generally reserved as a "last resort".  Too many times I've seen people use non-blocking reads when a blocking read will do just fine.
-
-
-
-Release 4.0 ushered in a hybrid approach to non-blocking calls.  That compromise came in the form of a read with a timeout.   You'll score much higher points on the impressive meter if you're able to use a lot less CPU time by using this type of read.
-
-So you want to be a wizard do ya?  Well go boldly!   But a good dose of caution is advised.
-
-Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.      It's important to be a good citizen.   Don't chew up CPU cycles needlessly.
-     
-The most legit time to use a non-blocking window is when you're working directly with hardware.  Maybe you're driving a serial bus.  If you look at the Event Loop in the Demo_OpenCV_Webcam.py program, you'll see that the read is a non-blocking read.  The point in the loop where you will block is the call to read frames from the webcam.  When a frame is available you want to quickly deliver it to the output device, so you don't want your GUI blocking on your.
-        
-Another example can be found in the demo for controlling a robot on a Raspberry Pi.  In that application you want to read the direction buttons, forward, backward, etc, and immediately take action.  
-
-However, even in this application it's not good to simply burn 100% of the CPU time in a tight spin loop.   Let's say your call to the GUI takes 10ms.  And your robot can react at a rate of 200ms.  If you do non-blocking reads without some kind of sleep, you'll be taking 100% of the CPU time needlessly. 
-
-Adding a sleep to your event loop will at least give other processes time to execute.  It will, however, starve your GUI. The entire time you're sleeping, your GUI isn't executing.
-
-It's for this reason that a new feature was just added in version 4.0, Read with a Timeout.  You can thing of this as an event loop, with a sleep, except that during the time the processor is sleeping your GUI is very operational, responding to the user for thinks like checkboxes, sliders, even button pushes will be instant feeling.  
-
-
 ## Read(timeout = t, timeout_key='timeout')
 
-The new Hybrid-Read!  Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, if you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking).
+Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, if you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
 
 One way of thinking of reads with timeouts:  
 > During the timeout time, you are "yielding" the processor to do other tasks.  
 
 But it gets better than just being a good citizen....**your GUI will be more responsive than if you used a non-blocking read**
 
-Let's say you had a device that you want to "poll" every 100ms.   The "easy way out" and the only way out until release 4.0 was this:
+Let's say you had a device that you want to "poll" every 100ms.   The "easy way out" and the only way out until recently was this:
 
 ```python
+# YOU SHOULD NOT DO THIS....
 while True:             # Event Loop  
 	event, values = window.ReadNonBlocking()  
 	read_my_hardware() # process my device here  
@@ -2943,6 +2951,7 @@ The new and better way....
 using the Read Timeout mechanism, the sleep goes away.
 
 ```python
+# This is the right way to poll for hardware
 while True:             # Event Loop  
 	event, values = window.Read(timeout = 100) 
 	read_my_hardware() # process my device here
@@ -2951,71 +2960,48 @@ while True:             # Event Loop
 This event loop will run every 100 ms.  You're making a Read call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
 
 
-### Instead of ReadNonBlocking --- Use `change_submits = True` or return_keyboard_events = True      
+## Non-Blocking Windows   (Asynchronous reads)
+
+A true non-blocking Window is achieved by calling Read with a timeout of 0.
+```python
+event, values = sg.Read(timeout=0)
+```
+Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.      It's important to be a good citizen.   Don't chew up CPU cycles needlessly.
+
+Non-blocking is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+
+There is a hybrid approach... a read with a timeout.   You'll score much higher points on the impressive meter if you're able to use a lot less CPU time by using this type of read.
+     
+The most legit time to use a non-blocking window is when you're working directly with hardware.  Maybe you're driving a serial bus.  If you look at the Event Loop in the Demo_OpenCV_Webcam.py program, you'll see that the read is a non-blocking read.  However, there is a place in the event loop where blocking occurs.   The point in the loop where you will block is the call to read frames from the webcam.  When a frame is available you want to quickly deliver it to the output device, so you don't want your GUI blocking.  You want the read from the hardware to block.
+        
+Another example can be found in the demo for controlling a robot on a Raspberry Pi.  In that application you want to read the direction buttons, forward, backward, etc, and immediately take action.  If you are using RealtimeButtons, your only option at the moment is to use non-blocking windows.  You have to set the timeout to zero if you want the buttons to be real-time responsive.
+
+However, with these buttons, adding a sleep to your event loop will at least give other processes time to execute.  It will, however, starve your GUI. The entire time you're sleeping, your GUI isn't executing.
+
       
-Any time you are thinking "I want an X Element to cause a Y Element to do something", then you want to use the `change_submits` option.      
+### Periodically Calling`Read`      
       
-***Instead of polling, try options that cause the window to return to you.***  By using non-blocking windows, you are *polling*.  You can indeed create your application by polling.  It will work.  But you're going to be maxing out your processor and may even take longer to react to an event than if you used another technique.      
-      
-**Examples**      
-      
-One example is you have an input field that changes as you press buttons on an on-screen keypad.      
-      
-![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)      
-      
-      
-      
-      
-### Periodically Calling`ReadNonBlocking`      
-      
-Let's say you do end up using ReadNonBlocking... then you've got some housekeeping to do.  It's up to you to periodically "refresh" the visible GUI.  The longer you wait between updates to your GUI the more sluggish your windows will feel.  It is up to you to make these calls or your GUI will freeze.      
+Let's say you do end up using non-blocking reads... then you've got some housekeeping to do.  It's up to you to periodically "refresh" the visible GUI.  The longer you wait between updates to your GUI the more sluggish your windows will feel.  It is up to you to make these calls or your GUI will freeze.      
       
 There are 2 methods of interacting with non-blocking windows.      
 1. Read the window just as you would a normal window      
 2. "Refresh" the window's values without reading the window. It's a quick operation meant to show the user the latest values      
       
- With asynchronous windows the window is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.ReadNonBlocking` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.      
+ With asynchronous windows the window is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.Read` on a periodic basis.  Several times a second or more will produce a reasonably snappy GUI.      
       
- #### Exiting a Non-Blocking window      
+ ## Exiting (Closing) a Persistent Window
       
-It's important to always provide a "way out" for your user.  Make sure you have provided a button or some other mechanism to exit.  Also be sure to check for closed windows in your code.  It  is possible for a window to look closed, but continue running your event loop.      
-      
-Typically when reading a window you check `if Button is None` to determine if a window was closed.  With NonBlocking windows, buttons will be None unless a button or a key was returned.  The way you determine if a window was closed in a non-blocking window  is to check **both** the button and the values are None.  Since button is normally None, you only need to test for `value is None` in your code.      
-      
-The proper code to check if the user has exited the window will be a polling-loop that looks something like this:      
-      
-    while True:      
-       event, values = window.ReadNonBlocking()      
-       if values is None or event == 'Quit':      
-          break      
-      
-      
-We're going to build an app that does the latter.  It's going to update our window with a running clock.      
-      
-The basic flow and functions you will be calling are:      
-Setup      
-      
-       window = Window()      
-       window_rows = .....      
-       window.Layout(window_rows, non_blocking=True).Read()      
-      
-      
-Periodic refresh      
-      
-    window.ReadNonBlocking()   or       window.Refresh()      
-      
-If you need to close the window      
-      
-    window.CloseNonBlocking()      
-      
-Rather than the usual `window.Layout().Read()` call, we're manually adding the rows (doing the layout) and then showing the window.  After the window is shown, you simply call `window.ReadNonBlocking()` every now and then.      
-      
-When you are ready to close the window (assuming the window wasn't closed by the user or a button click) you simply call `window.CloseNonBlocking()`      
-      
-**Example - Running timer that updates**      
+If your window has a button that closes the window, then PySimpleGUI will automatically close the window for you.  If all of your buttons are ReadButtons, then it'll be up to you to close the window when done.  
+To close a window, call the `Close` method.
+```python
+window.Close()
+```
+ 
+## Persistent Window Example - Running timer that updates
+   
 See the sample code on the GitHub named Demo Media Player for another example of Async windows.  We're going to make a window and update one of the elements of that window every .01 seconds.    Here's the entire code to do that.      
-      
-          
+
+```python 
     import PySimpleGUI as sg  
     import time  
       
@@ -3040,15 +3026,29 @@ See the sample code on the GitHub named Demo Media Player for another example of
         event, values = window.Read(timeout=10)  
         current_time = int(round(time.time() * 100)) - start_time  
         # --------- Display timer in window --------  
-      window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,  
+        window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,  
                                                                       (current_time // 100) % 60,  
                                                                       current_time % 100))
-      
+```      
   
 
 Previously this program was implemented using a sleep in the loop to control the clock tick.  This version uses the new timeout parameter.  The result is a window that reacts quicker then the one with the sleep and the accuracy is just as good. 
     
-        
+
+## Instead of a Non-blocking Read --- Use `change_submits = True` or return_keyboard_events = True      
+      
+Any time you are thinking "I want an X Element to cause a Y Element to do something", then you want to use the `change_submits` option.      
+      
+***Instead of polling, try options that cause the window to return to you.***  By using non-blocking windows, you are *polling*.  You can indeed create your application by polling.  It will work.  But you're going to be maxing out your processor and may even take longer to react to an event than if you used another technique.      
+      
+**Examples**      
+      
+One example is you have an input field that changes as you press buttons on an on-screen keypad.      
+      
+![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)      
+      
+      
+                         
     
 # Updating Elements (changing elements in active window)      
       
@@ -3444,7 +3444,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.9.3 & 1.1.3 | Oct 11, 2018   
 | 3.9.4 & 1.1.4 | Oct 16, 2018 
 | 3.10.1 & 1.2.1 | Oct 20, 2018 
-        
+| 3.10.3 & 1.2.3 | Oct 23, 2018         
       
       
 ## Release Notes      
@@ -3644,6 +3644,18 @@ Emergency patch release... going out same day as previous release
 * The Image.Update method appears to not have been written correctly.  It didn't handle base64 images like the other elements that deal with images (buttons)
 
 
+### 3.10.3 & 1.2.3
+
+* New element - Vertical Separator
+* New parameter for InputText - change_submits. If True will cause Read to return when a button fills in the InputText element
+* Read with timeout = 0 is same as read non blocking and is the new preferred method
+  * Will return event == None if window closed
+* New Close method will close all window types
+* Scrollbars for Tables automatically added (no need for a Column Element)
+* Table Update method complete
+* Turned off expand when packing row frame... was accidentally turned on (primary reason for this release)
+* Try added to Image Update so won't crash if bad image passed in
+
     
 ### Upcoming      
 Make suggestions people!  Future release features      
@@ -3713,6 +3725,8 @@ GNU Lesser General Public License (LGPL 3) +
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
 * [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
 * Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
+* [spectre6000](https://github.com/spectre6000) - Readme updates
+* [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
       
 ## How Do I      
 Finally, I must thank the fine folks at How Do I.      

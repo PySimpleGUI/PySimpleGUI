@@ -260,6 +260,7 @@ ELEM_TYPE_BLANK = 'blank'
 ELEM_TYPE_TABLE = 'table'
 ELEM_TYPE_TREE = 'tree'
 ELEM_TYPE_ERROR = 'error'
+ELEM_TYPE_SEPARATOR = 'separator'
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -1262,11 +1263,13 @@ class Button(Element):
                 target_element = self.ParentForm.FindElement(target)
             try:
                 strvar = target_element.TKStringVar
-            except: pass
+            except:
+                pass
             try:
                 if target_element.ChangeSubmits:
                     should_submit_window = True
-            except: pass
+            except:
+                pass
         filetypes = [] if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
@@ -1469,7 +1472,10 @@ class Image(Element):
             image = tk.PhotoImage(file=filename)
         elif data is not None:
             # if type(data) is bytes:
-            image = tk.PhotoImage(data=data)
+            try:
+                image = tk.PhotoImage(data=data)
+            except:
+                return  # an error likely means the window has closed so exit
             # else:
             # image = data
         else:
@@ -1737,6 +1743,28 @@ class Frame(Element):
             for element in row:
                 element.__del__()
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Separator                                    #
+#  Routes stdout, stderr to a scrolled window                            #
+# ---------------------------------------------------------------------- #
+class VerticalSeparator(Element):
+    def __init__(self, pad=None):
+        '''
+        VerticalSeperator - A separator that spans only 1 row in a vertical fashion
+        :param pad:
+        '''
+        self.Orientation = 'vertical'  # for now only vertical works
+
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
+
+    def __del__(self):
+        super().__del__()
+
+
+VSeperator = VerticalSeparator
+VSep = VerticalSeparator
 
 
 # ---------------------------------------------------------------------- #
@@ -2592,7 +2620,7 @@ class Window(object):
         self.Rows = []  # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
         self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
-        None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
+            None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
@@ -2743,6 +2771,13 @@ class Window(object):
         self.TKroot.quit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key='_timeout_'):
+        if timeout == 0:
+            event, values =  self.ReadNonBlocking()
+            if event is None:
+                event = timeout_key
+            if values is None:
+                event = None
+            return event, values
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
@@ -2925,6 +2960,8 @@ class Window(object):
             pass
 
     CloseNonBlockingForm = CloseNonBlocking
+    Close = CloseNonBlockingForm
+
 
     def OnClosingCallback(self):
         # print('Got closing callback')
@@ -3058,6 +3095,7 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
+# -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
          bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
@@ -4054,7 +4092,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if photo is not None:
                     if element_size == (
-                    None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
+                            None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
                         width, height = photo.width(), photo.height()
                     else:
                         width, height = element_size
@@ -4235,8 +4273,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
                                        from_=range_from, to_=range_to, resolution=element.Resolution,
                                        length=slider_length, width=slider_width, bd=element.BorderWidth,
-                                       relief=element.Relief, font=font
-                                       , tickinterval=element.TickInterval)
+                                       relief=element.Relief, font=font, tickinterval=element.TickInterval)
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
@@ -4378,11 +4415,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+            # -------------------------  Separator element  ------------------------- #
+            elif element_type == ELEM_TYPE_SEPARATOR:
+                separator = tkinter.ttk.Separator(tk_row_frame, orient=element.Orientation, )
+                separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=True)
+        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=False)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
