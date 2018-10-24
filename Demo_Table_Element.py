@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 import sys
 
-from Demo_Turtle import canvas
-
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
