@@ -14,7 +14,7 @@ import os
 '''
 
 layout = [[sg.Text('What would you like me to say?')],
-          [sg.Multiline(size=(40,10), enter_submits=True)],
+          [sg.Multiline(size=(60,10), enter_submits=True)],
           [sg.RButton('Speak', bind_return_key=True), sg.Exit()]]
 
 window = sg.Window('Google Text to Speech').Layout(layout)
