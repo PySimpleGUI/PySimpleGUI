@@ -31,9 +31,9 @@
       
 [ReadTheDocs](http://pysimplegui.readthedocs.io/)      
       
-[COOKBOOK!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)      
+[COOKBOOK!](https://pysimplegui.readthedocs.io/cookbook/)      
       
-[Brief Tutorial](https://pysimplegui.readthedocs.io/en/latest/tutorial/)      
+[Brief Tutorial](https://pysimplegui.readthedocs.io/tutorial/)      
       
 [Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)      
       
