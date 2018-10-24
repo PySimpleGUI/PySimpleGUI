@@ -1225,6 +1225,7 @@ class Button(Element):
             self.ParentForm.LastButtonClicked = self.Key
         else:
             self.ParentForm.LastButtonClicked = self.ButtonText
+        self.ParentForm.TKroot.quit()           # kick out of loop if read was called
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
@@ -2775,6 +2776,18 @@ class Window:
             self.Show()
         else:
             InitializeResults(self)
+            # if the last button clicked was realtime, emulate a read non-blocking
+            # the idea is to quickly return realtime buttons without any blocks until released
+            if self.LastButtonClickedWasRealtime:
+                try:
+                    rc = self.TKroot.update()
+                except:
+                    self.TKrootDestroyed = True
+                    _my_windows.Decrement()
+                results = BuildResults(self, False, self)
+                if results[0] != None and results[0] != timeout_key:
+                   return results
+            # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
