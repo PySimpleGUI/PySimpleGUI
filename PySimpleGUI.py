@@ -178,6 +178,9 @@ ThisRow = 555666777  # magic number
 # DEFAULT_WINDOW_ICON = ''
 MESSAGE_BOX_LINE_WIDTH = 60
 
+# Key representing a Read timeout
+TIMEOUT_KEY = '__timeout__'
+
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows():
@@ -380,7 +383,8 @@ class Element():
         else:
             self.ParentForm.LastButtonClicked = self.DisplayText
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
@@ -397,7 +401,8 @@ class Element():
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def ComboboxSelectHandler(self, event):
         MyForm = self.ParentForm
@@ -408,7 +413,8 @@ class Element():
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def CheckboxHandler(self):
         MyForm = self.ParentForm
@@ -417,7 +423,8 @@ class Element():
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
 
     def TabGroupSelectHandler(self, event):
         MyForm = self.ParentForm
@@ -426,7 +433,8 @@ class Element():
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
 
     def __del__(self):
         try:
@@ -883,7 +891,8 @@ class Spin(Element):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         try:
@@ -1225,7 +1234,8 @@ class Button(Element):
             self.ParentForm.LastButtonClicked = self.Key
         else:
             self.ParentForm.LastButtonClicked = self.ButtonText
-        self.ParentForm.TKroot.quit()           # kick out of loop if read was called
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
@@ -1300,7 +1310,8 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
             self.ParentForm._Close()
-            self.ParentForm.TKroot.quit()
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.Decrement()
@@ -1312,7 +1323,8 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+            if self.ParentForm.CurrentlyRunningMainloop:            # if this window is running the mainloop, kick out
+                self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
@@ -1329,7 +1341,8 @@ class Button(Element):
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
             self.ParentForm.FormRemainedOpen = True
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
         return
 
@@ -1984,7 +1997,8 @@ class Slider(Element):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -2367,7 +2381,8 @@ class Menu(Element):
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.ParentForm.LastButtonClicked = item_chosen
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -2622,6 +2637,7 @@ class Window:
         self.NonBlocking = False
         self.TKroot = None
         self.TKrootDestroyed = False
+        self.CurrentlyRunningMainloop = False
         self.FormRemainedOpen = False
         self.TKAfterID = None
         self.ProgressBarColor = progress_bar_color
@@ -2753,20 +2769,23 @@ class Window:
     def _TimeoutAlarmCallback(self):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
+        # print('TIMEOUT CALLBACK')
         if self.TimerCancelled:
+            # print('** timer was cancelled **')
             return
         self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
         self.TKroot.quit()  # kick the users out of the mainloop
 
-    def Read(self, timeout=None, timeout_key='_timeout_'):
-        if timeout == 0:
+    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+        if timeout == 0:                            # timeout of zero runs the old readnonblocking
             event, values =  self.ReadNonBlocking()
             if event is None:
                 event = timeout_key
             if values is None:
                 event = None
-            return event, values
+            return event, values                    # make event None if values was None and return
+        # Read with a timeout
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
@@ -2775,27 +2794,48 @@ class Window:
         if not self.Shown:
             self.Show()
         else:
+            # if already have a button waiting, the return previously built results
+            if self.LastButtonClicked is not None and not self.LastButtonClickedWasRealtime:
+                # print(f'*** Found previous clicked saved {self.LastButtonClicked}')
+                results = BuildResults(self, False, self)
+                self.LastButtonClicked = None
+                return results
             InitializeResults(self)
             # if the last button clicked was realtime, emulate a read non-blocking
             # the idea is to quickly return realtime buttons without any blocks until released
             if self.LastButtonClickedWasRealtime:
+                # print(f'RTime down {self.LastButtonClicked}' )
                 try:
                     rc = self.TKroot.update()
                 except:
                     self.TKrootDestroyed = True
                     _my_windows.Decrement()
+                    print('ROOT Destroyed')
                 results = BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
                    return results
+                else:
+                    pass
+
+                # else:
+                #     print("** REALTIME PROBLEM FOUND **", results)
+
             # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
+            self.CurrentlyRunningMainloop = True
+            # print(f'In main {self.Title}')
             self.TKroot.mainloop()
+            # print('Out main')
+            self.CurrentlyRunningMainloop = False
+            # if self.LastButtonClicked != TIMEOUT_KEY:
+            #     print(f'Window {self.Title} Last button clicked = {self.LastButtonClicked}')
             try:
                 self.TKroot.after_cancel(self.TKAfterID)
             except:
                 pass
+                # print('** tkafter cancel failed **')
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
@@ -2803,8 +2843,12 @@ class Window:
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
                 _my_windows.Decrement()
+        # Determine return values
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
-            return BuildResults(self, False, self)
+            results =  BuildResults(self, False, self)
+            if not self.LastButtonClickedWasRealtime:
+                self.LastButtonClicked = None
+            return results
         else:
             return self.ReturnValues
 
@@ -2820,6 +2864,7 @@ class Window:
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
+            # print("read failed")
             # return None, None
         return BuildResults(self, False, self)
 
@@ -2928,7 +2973,8 @@ class Window:
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
         if not self.NonBlocking:
             BuildResults(self, False, self)
-        self.TKroot.quit()
+        if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.quit()
 
     def _MouseWheelCallback(self, event):
         self.LastButtonClicked = None
@@ -2936,7 +2982,8 @@ class Window:
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
         if not self.NonBlocking:
             BuildResults(self, False, self)
-        self.TKroot.quit()
+        if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.quit()
 
     def _Close(self):
         try:
@@ -3003,6 +3050,12 @@ class Window:
     def AlphaChannel(self, alpha):
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
+
+    def BringToFront(self):
+        try:
+            self.TKroot.lift()
+        except:
+            pass
 
     def __enter__(self):
         return self
@@ -4531,7 +4584,9 @@ def StartupTK(my_flex_form):
         # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
+        my_flex_form.CurrentlyRunningMainloop = True
         my_flex_form.TKroot.mainloop()
+        my_flex_form.CurrentlyRunningMainloop = False
         my_flex_form.TimerCancelled = True
         # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
