@@ -1269,7 +1269,7 @@ class Button(Element):
                     should_submit_window = True
             except:
                 pass
-        filetypes = [] if self.FileTypes is None else self.FileTypes
+        filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
             if folder_name != '':
@@ -1279,6 +1279,7 @@ class Button(Element):
                 except:
                     pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
+            print('Browse button detected... filetypes is', filetypes)
             file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
                                                       initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
