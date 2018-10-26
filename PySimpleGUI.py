@@ -2467,7 +2467,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None,
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, font=None,
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
@@ -2500,6 +2500,7 @@ class Tree(Element):
         self.Justification = justification
         self.InitialState = None
         self.SelectMode = select_mode
+        self.ShowExpanded = show_expanded
         self.NumRows = num_rows
         self.Col0Width = col0_width
         self.TKTreeview = None
@@ -4461,7 +4462,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 def add_treeview_data(node):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
-                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values)
+                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded)
                     for node in node.children:
                         add_treeview_data(node)
 
@@ -4473,7 +4474,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
-
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.Tooltip is not None:  # tooltip
