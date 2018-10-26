@@ -2503,10 +2503,17 @@ class Tree(Element):
         self.NumRows = num_rows
         self.Col0Width = col0_width
         self.TKTreeview = None
+        self.SelectedRows = []
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
         return
+
+
+    def treeview_selected(self, event):
+        selections = self.TKTreeview.selection()
+        self.SelectedRows = [x for x in selections]
+
 
     def __del__(self):
         super().__del__()
@@ -3464,6 +3471,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = None
                 elif element.Type == ELEM_TYPE_TABLE:
+                    value = element.SelectedRows
+                elif element.Type == ELEM_TYPE_TREE:
                     value = element.SelectedRows
             else:
                 value = None
@@ -4466,6 +4475,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
 
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
