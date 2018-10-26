@@ -9,22 +9,21 @@ layout1 = [[ sg.Text('Window 1') ],
            [sg.Input(do_not_clear=True)],
           [ sg.RButton('Read')]]
 
-window1 = sg.Window('My new window', location=(800,800)).Layout(layout1)
+window1 = sg.Window('My new window', location=(800,500)).Layout(layout1)
 
 
 layout2 = [[ sg.Text('Window 2') ],
            [sg.Input(do_not_clear=False)],
           [ sg.RButton('Read')]]
 
-window2 = sg.Window('My new window', location=(800, 925)).Layout(layout2)
+window2 = sg.Window('My new window', location=(800, 625)).Layout(layout2)
 
 
 layout3 = [[ sg.Text('Window 3') ],
            [sg.Input(do_not_clear=False)],
           [ sg.RButton('Read')]]
 
-window3 = sg.Window('My new window', location=(800,1050)).Layout(layout3)
-
+window3 = sg.Window('My new window', location=(800,750), return_keyboard_events=True).Layout(layout3)
 
 
 while True:     # Event Loop
