@@ -1279,9 +1279,10 @@ class Button(Element):
                 except:
                     pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            print('Browse button detected... filetypes is', filetypes)
-            file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
-                                                      initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            if sys.platform == 'darwin':
+                file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            else:
+                file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -1291,13 +1292,19 @@ class Button(Element):
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+            if sys.platform == 'darwin':
+                file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
+            else:
+                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
             if file_name != '':
                 file_name = ';'.join(file_name)
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
+            if sys.platform == 'darwin':
+                file_name = tk.filedialog.asksaveasfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            else:
+                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
                                                         initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
