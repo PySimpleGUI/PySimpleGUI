@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
+
+layout1 = [[ sg.Text('Window 1') ],
+           [sg.Input(do_not_clear=True)],
+          [ sg.RButton('Read')]]
+
+window1 = sg.Window('My new window', location=(800,800)).Layout(layout1)
+
+
+layout2 = [[ sg.Text('Window 2') ],
+           [sg.Input(do_not_clear=False)],
+          [ sg.RButton('Read')]]
+
+window2 = sg.Window('My new window', location=(800, 925)).Layout(layout2)
+
+
+layout3 = [[ sg.Text('Window 3') ],
+           [sg.Input(do_not_clear=False)],
+          [ sg.RButton('Read')]]
+
+window3 = sg.Window('My new window', location=(800,1050)).Layout(layout3)
+
+
+
+while True:     # Event Loop
+    event, values = window1.Read(timeout=100)
+    if event is None:
+        break
+    elif event != '__timeout__':
+        print(event, values)
+
+    event, values = window2.Read(timeout=0)
+    if event is None:
+        break
+    elif event != '__timeout__':
+        print(event, values)
+
+    event, values = window3.Read(timeout=0)
+    if event is None:
+        break
+    elif event != '__timeout__':
+        print(event, values)
