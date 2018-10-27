@@ -96,8 +96,8 @@ def main():
     disk_graph_write = DashGraph(window.FindElement('_GRAPH_DISK_WRITE_'), diskio.write_bytes, '#be45be')
     disk_graph_read = DashGraph(window.FindElement('_GRAPH_DISK_READ_'), diskio.read_bytes, '#5681d8')
 
-    cpu_usage_graph = DashGraph(window.FindElement('_GRAPH_CPU_USAGE_'), 0, '#56d856')
-    mem_usage_graph = DashGraph(window.FindElement('_GRAPH_MEM_USAGE_'), 0, '#5681d8')
+    cpu_usage_graph = DashGraph(window.FindElement('_GRAPH_CPU_USAGE_'), 0, '#d34545')
+    mem_usage_graph = DashGraph(window.FindElement('_GRAPH_MEM_USAGE_'), 0, '#BE7C29')
 
     # ----------------  main loop  ----------------
     while (True):
