@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
@@ -189,6 +189,9 @@ ThisRow = 555666777  # magic number
 
 # DEFAULT_WINDOW_ICON = ''
 MESSAGE_BOX_LINE_WIDTH = 60
+
+# Key representing a Read timeout
+TIMEOUT_KEY = '__timeout__'
 
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
@@ -392,7 +395,8 @@ class Element(object):
         else:
             self.ParentForm.LastButtonClicked = self.DisplayText
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
@@ -409,7 +413,8 @@ class Element(object):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def ComboboxSelectHandler(self, event):
         MyForm = self.ParentForm
@@ -420,7 +425,8 @@ class Element(object):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def CheckboxHandler(self):
         MyForm = self.ParentForm
@@ -429,7 +435,8 @@ class Element(object):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
 
     def TabGroupSelectHandler(self, event):
         MyForm = self.ParentForm
@@ -438,7 +445,8 @@ class Element(object):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
 
     def __del__(self):
         try:
@@ -895,7 +903,8 @@ class Spin(Element):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         try:
@@ -1237,6 +1246,8 @@ class Button(Element):
             self.ParentForm.LastButtonClicked = self.Key
         else:
             self.ParentForm.LastButtonClicked = self.ButtonText
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
@@ -1270,7 +1281,7 @@ class Button(Element):
                     should_submit_window = True
             except:
                 pass
-        filetypes = [] if self.FileTypes is None else self.FileTypes
+        filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
             if folder_name != '':
@@ -1280,8 +1291,10 @@ class Button(Element):
                 except:
                     pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
-                                                      initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            if sys.platform == 'darwin':
+                file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            else:
+                file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -1291,13 +1304,19 @@ class Button(Element):
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+            if sys.platform == 'darwin':
+                file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
+            else:
+                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
             if file_name != '':
                 file_name = ';'.join(file_name)
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
+            if sys.platform == 'darwin':
+                file_name = tk.filedialog.asksaveasfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            else:
+                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
                                                         initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
@@ -1311,7 +1330,8 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
             self.ParentForm._Close()
-            self.ParentForm.TKroot.quit()
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 _my_windows.Decrement()
@@ -1323,7 +1343,8 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+            if self.ParentForm.CurrentlyRunningMainloop:            # if this window is running the mainloop, kick out
+                self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
@@ -1340,7 +1361,8 @@ class Button(Element):
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
             self.ParentForm.FormRemainedOpen = True
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
         return
 
@@ -1995,7 +2017,8 @@ class Slider(Element):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -2378,7 +2401,8 @@ class Menu(Element):
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.ParentForm.LastButtonClicked = item_chosen
         self.ParentForm.FormRemainedOpen = True
-        self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -2463,7 +2487,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, font=None,
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, font=None,
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
@@ -2496,13 +2520,21 @@ class Tree(Element):
         self.Justification = justification
         self.InitialState = None
         self.SelectMode = select_mode
+        self.ShowExpanded = show_expanded
         self.NumRows = num_rows
         self.Col0Width = col0_width
         self.TKTreeview = None
+        self.SelectedRows = []
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
         return
+
+
+    def treeview_selected(self, event):
+        selections = self.TKTreeview.selection()
+        self.SelectedRows = [x for x in selections]
+
 
     def __del__(self):
         super().__del__()
@@ -2633,6 +2665,7 @@ class Window(object):
         self.NonBlocking = False
         self.TKroot = None
         self.TKrootDestroyed = False
+        self.CurrentlyRunningMainloop = False
         self.FormRemainedOpen = False
         self.TKAfterID = None
         self.ProgressBarColor = progress_bar_color
@@ -2764,20 +2797,23 @@ class Window(object):
     def _TimeoutAlarmCallback(self):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
+        # print('TIMEOUT CALLBACK')
         if self.TimerCancelled:
+            # print('** timer was cancelled **')
             return
         self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
         self.TKroot.quit()  # kick the users out of the mainloop
 
-    def Read(self, timeout=None, timeout_key='_timeout_'):
-        if timeout == 0:
+    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+        if timeout == 0:                            # timeout of zero runs the old readnonblocking
             event, values =  self.ReadNonBlocking()
             if event is None:
                 event = timeout_key
             if values is None:
                 event = None
-            return event, values
+            return event, values                    # make event None if values was None and return
+        # Read with a timeout
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
@@ -2786,15 +2822,48 @@ class Window(object):
         if not self.Shown:
             self.Show()
         else:
+            # if already have a button waiting, the return previously built results
+            if self.LastButtonClicked is not None and not self.LastButtonClickedWasRealtime:
+                # print(f'*** Found previous clicked saved {self.LastButtonClicked}')
+                results = BuildResults(self, False, self)
+                self.LastButtonClicked = None
+                return results
             InitializeResults(self)
+            # if the last button clicked was realtime, emulate a read non-blocking
+            # the idea is to quickly return realtime buttons without any blocks until released
+            if self.LastButtonClickedWasRealtime:
+                # print(f'RTime down {self.LastButtonClicked}' )
+                try:
+                    rc = self.TKroot.update()
+                except:
+                    self.TKrootDestroyed = True
+                    _my_windows.Decrement()
+                    print('ROOT Destroyed')
+                results = BuildResults(self, False, self)
+                if results[0] != None and results[0] != timeout_key:
+                   return results
+                else:
+                    pass
+
+                # else:
+                #     print("** REALTIME PROBLEM FOUND **", results)
+
+            # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
+            self.CurrentlyRunningMainloop = True
+            # print(f'In main {self.Title}')
             self.TKroot.mainloop()
+            # print('Out main')
+            self.CurrentlyRunningMainloop = False
+            # if self.LastButtonClicked != TIMEOUT_KEY:
+            #     print(f'Window {self.Title} Last button clicked = {self.LastButtonClicked}')
             try:
                 self.TKroot.after_cancel(self.TKAfterID)
             except:
                 pass
+                # print('** tkafter cancel failed **')
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
@@ -2802,8 +2871,12 @@ class Window(object):
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
                 _my_windows.Decrement()
+        # Determine return values
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
-            return BuildResults(self, False, self)
+            results =  BuildResults(self, False, self)
+            if not self.LastButtonClickedWasRealtime:
+                self.LastButtonClicked = None
+            return results
         else:
             return self.ReturnValues
 
@@ -2819,6 +2892,7 @@ class Window(object):
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
+            # print("read failed")
             # return None, None
         return BuildResults(self, False, self)
 
@@ -2927,7 +3001,8 @@ class Window(object):
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
         if not self.NonBlocking:
             BuildResults(self, False, self)
-        self.TKroot.quit()
+        if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.quit()
 
     def _MouseWheelCallback(self, event):
         self.LastButtonClicked = None
@@ -2935,7 +3010,8 @@ class Window(object):
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
         if not self.NonBlocking:
             BuildResults(self, False, self)
-        self.TKroot.quit()
+        if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.quit()
 
     def _Close(self):
         try:
@@ -3002,6 +3078,12 @@ class Window(object):
     def AlphaChannel(self, alpha):
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
+
+    def BringToFront(self):
+        try:
+            self.TKroot.lift()
+        except:
+            pass
 
     def __enter__(self):
         return self
@@ -3410,6 +3492,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = None
                 elif element.Type == ELEM_TYPE_TABLE:
+                    value = element.SelectedRows
+                elif element.Type == ELEM_TYPE_TREE:
                     value = element.SelectedRows
             else:
                 value = None
@@ -4398,7 +4482,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 def add_treeview_data(node):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
-                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values)
+                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded)
                     for node in node.children:
                         add_treeview_data(node)
 
@@ -4410,8 +4494,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
-
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -4530,7 +4614,9 @@ def StartupTK(my_flex_form):
         # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
+        my_flex_form.CurrentlyRunningMainloop = True
         my_flex_form.TKroot.mainloop()
+        my_flex_form.CurrentlyRunningMainloop = False
         my_flex_form.TimerCancelled = True
         # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
