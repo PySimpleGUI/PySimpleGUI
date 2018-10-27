@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-import sys
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
@@ -70,9 +69,9 @@ def main():
                sg.Column([[Txt('Net In', key='_NET_IN_'),],
                           [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black', key='_GRAPH_IN_')]], pad=(0, 2))],
               [sg.Column([[Txt('Disk Read', key='_DISK_READ_')],
-                          [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black', key='_GRAPH_DISK_WRITE_')]], pad=(2,2)),
+                          [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black', key='_GRAPH_DISK_READ_')]], pad=(2,2)),
                sg.Column([[Txt('Disk Write', key='_DISK_WRITE_')],
-                          [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, GRAPH_HEIGHT), background_color='black', key='_GRAPH_DISK_READ_')]], pad=(0, 2))],
+                          [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, GRAPH_HEIGHT), background_color='black', key='_GRAPH_DISK_WRITE_')]], pad=(0, 2))],
               [sg.Column([[Txt('CPU Usage', key='_CPU_USAGE_')], [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black', key='_GRAPH_CPU_USAGE_')]], pad=(2,2)),
                sg.Column([[Txt('Memory Usage', key='_MEM_USAGE_')], [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black', key='_GRAPH_MEM_USAGE_')]], pad=(2, 2))]]
 
