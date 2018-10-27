@@ -11,25 +11,85 @@ import calendar
 import forecastio
 
 ##### CHANGE these settings to match your location... check Google Maps #####
-MY_LOCATION_LAT = 35.xxxxxx
-MY_LOCATION_LON = -79.xxxxxx
+MY_LOCATION_LAT = 35.000000
+MY_LOCATION_LON = -79.000000
 ##### You need a free dark-sky key. You get 1000 calls a month for free #####
-DARKSKY_KEY =  "YOUR API KEY GOES HERE"     # *** INSERT YOUR DARKSKY KEY HERE **
+DARKSKY_KEY =  "INSERT YOUR DARKSKY KEY HERE!"     # *** INSERT YOUR DARKSKY KEY HERE **
 
 NUM_COLS = 5                    # Changes number of days in forecast
 
 
-def led_clock():
-    def update_weather():
-        """
-        Download weather data and then populates the GUI with results
-        :return:
-        """
-        api_key = DARKSKY_KEY
-        lat = MY_LOCATION_LAT
-        lng = MY_LOCATION_LON
-        forecast = forecastio.load_forecast(api_key, lat, lng)
+class GUI():
+    def __init__(self):
+        self.api_key = DARKSKY_KEY
+        self.lat = MY_LOCATION_LAT
+        self.lng = MY_LOCATION_LON
+        self.blink_count = 0
+
+        sg.SetOptions(border_width=0, text_color='white', background_color='black', text_element_background_color='black')
+
+        # Create clock layout
+        clock = [
+            [sg.T('', pad=((120,0),0)),
+             sg.Image(data=ledblank[22:], key='_hour1_'),
+             sg.Image(data=ledblank[22:], key='_hour2_'),
+             sg.Image(data=ledblank[22:], key='_colon_'),
+             sg.Image(data=ledblank[22:], key='_min1_'),
+             sg.Image(data=ledblank[22:], key='_min2_')], ]
+
+        # Create the weather columns layout
+        weather_cols = []
+        for i in range(NUM_COLS):
+            weather_cols.append(
+                [[sg.T('', size=(4, 1), font='Any 20', justification='center', key='_DAY_' + str(i)), ],
+                 [sg.Image(data=w1[22:], background_color='black', key='_icon_'+str(i), pad=((4, 0), 3)), ],
+                 [sg.T('--', size=(3, 1), justification='center', font='Any 20', key='_high_' + str(i), pad=((10, 0), 3))],
+                 [sg.T('--', size=(3, 1), justification='center', font='Any 20', key='_low_' + str(i), pad=((10, 0), 3))]])
+
+        # Create the overall layout
+        layout = [[sg.Column(clock, background_color='black')],
+                  [sg.Column(weather_cols[x], background_color='black') for x in range(NUM_COLS)],
+
+                  [sg.RButton('Exit', button_color=('black', 'black'),
+                              image_data=orangeround[22:], tooltip='close window', pad=((450,0),(10,0)))]]
+
+        # Create the window
+        self.window = sg.Window('My new window',
+                           background_color='black',
+                           grab_anywhere=True,
+                           use_default_focus=False,
+                           no_titlebar=True,
+                           alpha_channel=.8,            # set an alpha channel if want transparent
+                           ).Layout(layout).Finalize()
+
+        self.colon_elem = self.window.FindElement('_colon_')
+        self.hour1 = self.window.FindElement('_hour1_')
+        self.hour2 = self.window.FindElement('_hour2_')
+        self.min1 = self.window.FindElement('_min1_')
+        self.min2 = self.window.FindElement('_min2_')
+
+
+    def update_clock(self):
+        # update the clock
+        now = datetime.datetime.now()
+        real_hour = now.hour - 12 if now.hour > 12 else now.hour
+        hour1_digit = led_digits[real_hour // 10]
+        self.hour1.Update(data=hour1_digit[22:])
+        self.hour2.Update(data=led_digits[real_hour % 10][22:])
+        self.min2.Update(data=led_digits[int(now.minute) % 10][22:])
+        self.min1.Update(data=led_digits[int(now.minute) // 10][22:])
+        # Blink the :
+        if self.blink_count % 2:
+            self.colon_elem.Update(data=ledcolon[22:])
+        else:
+            self.colon_elem.Update(data=ledblank[22:])
+        self.blink_count += 1
+
+    def update_weather(self):
+        forecast = forecastio.load_forecast(self.api_key, self.lat, self.lng)
         daily = forecast.daily()
+        today_weekday = datetime.datetime.today().weekday()
+
         max_temps = []
         min_temps = []
         daily_icons = []
@@ -39,76 +99,36 @@ def led_clock():
             min_temps.append(int(daily_data.d['temperatureMin']))
 
         for i in range(NUM_COLS):
-            max_element = window.FindElement('_high_' + str(i))
-            min_element = window.FindElement('_low_' + str(i))
-            icon_element = window.FindElement('_icon_' + str(i))
+            day_element = self.window.FindElement('_DAY_' + str(i))
+            max_element = self.window.FindElement('_high_' + str(i))
+            min_element = self.window.FindElement('_low_' + str(i))
+            icon_element = self.window.FindElement('_icon_' + str(i))
+            day_element.Update(calendar.day_abbr[(today_weekday + i) % 7])
             max_element.Update(max_temps[i])
             min_element.Update(min_temps[i])
             icon_element.Update(data=weather_icon_dict[daily_icons[i]][22:])
 
-    weather_icon_dict  ={'clear-day':w1, 'clear-night':w1, 'rain':w3, 'snow':w3, 'sleet':w3, 'wind':w3, 'fog':w3, 'cloudy':w4, 'partly-cloudy-day':w5, 'partly-cloudy-night':w5}
 
-    led_digits = [led0, led1, led2, led3, led4, led5, led6, led7, led8, led9]
-    sg.SetOptions(border_width=0, text_color='white', background_color='black', text_element_background_color='black')
+def led_clock():
 
-    clock = [
-        [sg.T('', pad=((120,0),0)),
-         sg.Image(data=ledblank[22:], key='_hour1_'),
-         sg.Image(data=ledblank[22:], key='_hour2_'),
-         sg.Image(data=ledblank[22:], key='_colon_'),
-         sg.Image(data=ledblank[22:], key='_min1_'),
-         sg.Image(data=ledblank[22:], key='_min2_')], ]
+    # Get the GUI object that is used to update the window
+    gui = GUI()
 
-    today_weekday = datetime.datetime.today().weekday()
-    weather_cols = []
-    for i in range(NUM_COLS):
-        weather_cols.append(
-            [[sg.T(calendar.day_abbr[(today_weekday + i) % 7], size=(4, 1), font='Any 20', justification='center'), ],
-             [sg.Image(data=w1[22:], background_color='black', key='_icon_'+str(i), pad=((4, 0), 3)), ],
-             [sg.T('--', size=(3, 1), justification='center', font='Any 20', key='_high_' + str(i), pad=((10, 0), 3))],
-             [sg.T('--', size=(3, 1), justification='center', font='Any 20', key='_low_' + str(i), pad=((10, 0), 3))]])
-
-    layout = [[sg.Column(clock, background_color='black')],
-              [sg.Column(weather_cols[x], background_color='black') for x in range(NUM_COLS)],
-
-              [sg.RButton('Exit', button_color=('black', 'black'),
-                          image_data=orangeround[22:], tooltip='close window', pad=((450,0),(10,0)))]]
-    window = sg.Window('My new window',
-                       background_color='black',
-                       grab_anywhere=True,
-                       use_default_focus=False,
-                       no_titlebar=True
-                       ).Layout(layout).Finalize()
-
-    colon_elem = window.FindElement('_colon_')
-    hour1 = window.FindElement('_hour1_')
-    hour2 = window.FindElement('_hour2_')
-    min1 = window.FindElement('_min1_')
-    min2 = window.FindElement('_min2_')
-
-    i = last_update_time = 0
-    while True:  # Event Loop
-        event, values = window.Read(timeout=1000)
+    # ---------- EVENT LOOP ----------
+    last_update_time = 0
+    while True:
+        # Wake up once a second to update the clock and weather
+        event, values = gui.window.Read(timeout=1000)
         if event in (None, 'Exit'):
             break
-        # update the clock
+        # update clock
+        gui.update_clock()
+        # update weather once ever 6 hours
         now = datetime.datetime.now()
-        real_hour = now.hour - 12 if now.hour > 12 else now.hour
-        hour1_digit = led_digits[real_hour // 10]
-        hour1.Update(data=hour1_digit[22:])
-        hour2.Update(data=led_digits[real_hour % 10][22:])
-        min2.Update(data=led_digits[int(now.minute) % 10][22:])
-        min1.Update(data=led_digits[int(now.minute) // 10][22:])
-        if i % 2:
-            colon_elem.Update(data=ledcolon[22:])
-        else:
-            colon_elem.Update(data=ledblank[22:])
-        i += 1
-        # update weather
         if last_update_time == 0 or (now-last_update_time).seconds >= 60*60*6:
             print('*** Updating Weather ***')
             last_update_time = now
-            update_weather()
+            gui.update_weather()
 
 
 led0 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAA8CAYAAADhR3NQAAAACXBIWXMAADBKAAAwSgHCONjjAAAEb0lEQVRoge2Zz4scRRTHP/WqunsDSQjiBvFHSBC8eRJRFAXFgCIYRVBPgrkoiBgU9U/w4iEgHjwEBT2IKHiIiBfBg4oB8SJ4CgHjIXpSE5Ls9HR9PUz1ZGa6dnZ2dmdnlXzh0TPV1a+/9erVq/eqHSB2GWzZBHK4TmpW7EpSIdfokuwE4jrv12QDk40LhNElNmapluFNZtws8bdEsQCCrb69zvEL0FP3DQLk0nUf6P6y1A8hSKAeKG6jNEmnQG8Xhe5cWZE5p5ZHy3mM1GHQz2Z6YGVF33ovgeqkZDukn65vVpVeDUFfr6wIM9k0UgdBa6DfvNc9VaWvErFeGuW80h8Z3Imi0PGqkkCny1KYyY+Q6qw+A64AtzUNn0k8GwI9M56oayLzxxABzjleCgFvxqleb3DDddd5NiT4dL01Rr6oa54pS9aKgqMSl+YgFoG9wFtm7JE42evRkyjJh54sqRZ9YFXi07rmLjMuJEWbXY0B+Ac4Dpysa2qmD6xDavSFnsEoVyVWm4bzEg35gLcRKYA7wuDXRsE561M28R8GVptFYQ5t/yYTj6aSagPnJKlJDNfsJtD2n3Uw3fdnVsNOo0PKwdKJ/YcstSDM71ObeHhR6FpqN04fsHS/2lGfmhU76lNbcvRF5eez7pkbOnpcr+McaPe03KCV6TdsvApccY4KqIESOGvG7yOb6bzT+6MEZvgYqRlkIRdTojypc5iGtnnysbLUFTMJ9Kv3OhLCIGV1Tm5O8c4JMz1fluon3WdC0KrZWDre2kc5Yk+GoJ+KQoeKQjg3mdjPJQGE9zpeFPq+KHRDCDlC6hSjMJjT6BzmPcSIYqSZc8omUQDRDOccagZaJ3V3/NcYJHT3ec8nzrHfORqzbXP02jke854PzSicoyHvo52pu9d7/ZlKq++81w1FIcw6Zt6MeBBmejQEXUw+ddp7VdN8qm280XtdSISupjrtTAja5/3At+Zw8uCccE5Hi0I9M8UR3aeqSjg3VvcNZ6U14T7nOJCWf8lgvu9uGm4fqXO1SWmfe9iMIkb6XItFtwA4N+bYHVfRxBy3NeCsSf809JOOUf2tk4+2zey/25HSWEZHTuvST/Jy9l86qRyWTuq6pWaFMqt6+aQybUsnlcPSSf3/LLUdxUTOqXN6px4vAsPD17bjVg7NQtpmRvfX4YY9K6kmdTjrPefSg3FiR58FbUV0JkZwDpOm6lj3g5HSzfPe82JR8EFdc8iMNTZvqQjsBz4GXi5L3kunw7C+W4xlnYdDGFYyfzinB8tS36Skr2H614Rp0j77elXpRDrYF+jzVJhkk7xRhgG45BzPlSWvNQ0PNQ29dK+ZU8Qg939nbY3LMfJGOinuzxLRA3DZjKfKkhdi5FjTcJVryd5WUQPv1zXnvOfdEDiwTr+xHP1ICHp6zx59lKasv4UpmyrO6ZWq0uNV1Skcxuq+9s9BMx6Jkb+20UKjiAzy/55zfAmdkJAtRrONC8KGX0ZHsQgL5ZCrvHfSKDNjV27I/wIpihClbBNQxAAAAABJRU5ErkJggg=='
@@ -146,6 +166,11 @@ w4 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAACXBI
 w5 = 'data:image/png;base64,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'
 
 orangeround = 'data:image/png;base64,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'
+
+weather_icon_dict = {'clear-day': w1, 'clear-night': w1, 'rain': w3, 'snow': w3, 'sleet': w3, 'wind': w3, 'fog': w3,
+                     'cloudy': w4, 'partly-cloudy-day': w5, 'partly-cloudy-night': w5}
+
+led_digits = [led0, led1, led2, led3, led4, led5, led6, led7, led8, led9]
 
 if __name__ == '__main__':
     led_clock()
