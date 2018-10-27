@@ -5402,7 +5402,10 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                    'BUTTON': ('#E7C855', '#284B5A'),
                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
                                    'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                   'PROGRESS_DEPTH': 0},
+                                   'PROGRESS_DEPTH': 0,
+                                   'ACCENT1': '#c15226',
+                                   'ACCENT2': '#7a4d5f',
+                                   'ACCENT3': '#889743'},
 
                        'GreenTan': {'BACKGROUND': '#9FB8AD',
                                     'TEXT': COLOR_SYSTEM_DEFAULT,
