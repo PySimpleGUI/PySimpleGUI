@@ -28,9 +28,9 @@ layout = [[ sg.Text('Test of reading input field') ],
           [sg.T('Disabled input submits'), sg.In(change_submits=True,
                                              do_not_clear=True,
                                              disabled=True,
-                                             key='_in1_'), sg.FileBrowse()],
+                                             key='_in5'), sg.FileBrowse()],
           [sg.T('This input clears after submit'),sg.In(change_submits=True,
-                                                        key='_in5_'), sg.FileBrowse()],
+                                                        key='_in6_'), sg.FileBrowse()],
           [ sg.RButton('Read')]]
 
 window = sg.Window('Demonstration of InputText with change_submits',
