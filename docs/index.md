@@ -23,9 +23,9 @@
       
 ## Now supports both Python 2.7 & 3      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.10.3-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.11.0-red.svg?longCache=true&style=for-the-badge)      
       
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.3-blue.svg?longCache=true&style=for-the-badge)      
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.11.0-blue.svg?longCache=true&style=for-the-badge)      
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -733,7 +733,7 @@ You can change the size of the debug window using the `SetOptions` call with the
       
 This is the FUN part of the programming of this GUI.  In order to really get the most out of the API, you should be using an IDE that supports auto complete or will show you the definition of the function.  This will make customizing go  smoother.      
       
-This first section on custom windows is for your typical, blocking, non-persistant window.  By this I mean, when you "show" the window, the function will not return until the user has clicked a button or closed the window.  When this happens, the window will be automatically closed.      
+This first section on custom windows is for your typical, blocking, non-persistent window.  By this I mean, when you "show" the window, the function will not return until the user has clicked a button or closed the window.  When this happens, the window will be automatically closed.      
       
 Two other types of windows exist.      
 1. Persistent window - rather than closing on button clicks, the show window function returns and the window continues to be visible.  This is good for applications like a chat window.      
@@ -869,6 +869,9 @@ while True:
     if event is None or event == 'Exit':      
         break      
     print(event, values)    
+
+window.Close()
+
 ```    
       
       
@@ -1289,12 +1292,13 @@ There are a few methods (functions) that you will see in this document that act 
     window.Fill(values_dict) - Fill each Element with entry from the dictionary passed in      
     window.SaveToDisk(filename) - Save the Window's values to disk      
     window.LoadFromDisk(filename) - Load the Window's values from disk      
-    window.CloseNonBlocking() - When done, for good, reading a non-blocking window      
+    window.Close() - To close your window, if a button hasn't already closed iit    
     window.Disable() - Use to disable the window inpurt when opening another window on top of the primnary  Window      
     window.Enable() - Re-enable a Disabled window      
     window.FindElement(key) - Returns the element that has a matching key value  
     window.Move(x,y) - Moves window to location x,y on screen'
     window.SetAlpha(alpha) - Changes window transparency
+    window.BringToFront() - Brings the window to the top of other windows on the screen
         
       
 ## Window Methods     
@@ -1610,16 +1614,20 @@ disabled - set to True to disable the element
 append - rather than replacing the current text with new text, add the new text onto the end    
     
 ## Output Element      
-Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.  More on this later.      
-      
-    window.AddRow(gg.Output(size=(100,20)))      
+Output re-routes `Stdout` to a scrolled text box. 
+
+Whatever you print will show up in this window.  
+
+Note that you will NOT see what you print until you call either window.Read or window.Refresh.  If you want to immediately see what was printed, call window.Refresh() immediately after your print statement.
+
+    layout = [[sg.Output(size=(80,10)]]         
       
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)      
-      
-    Output(size=(None, None))      
-.      
-      
-     size - Size of element (width, height) in characters      
+
+`Output(size=(None, None))     `
+
+size - Size of Output Element (width, height) in characters
+  
       
 ##  Input Elements      
   These make up the majority of the window definition.  Optional variables at the Element level override the window level values (e.g. `size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.      
@@ -2062,7 +2070,7 @@ Read window - This is a window button that will read a snapshot of all of the in
       
 Realtime - This is another async window button.  Normal button clicks occur after a button's click is released.  Realtime buttons report a click the entire time the button is held down.      
       
-Most programs will use a combination of shortcut button calls (Submit, Cancel, etc), plain buttons that close the window, and ReadForm buttons that keep the window open but returns control back to the caller.      
+Most programs will use a combination of shortcut button calls (Submit, Cancel, etc), plain buttons that close the window, and ReadButton buttons that keep the window open but returns control back to the caller.      
       
 Sometimes there are multiple names for the same function.  This is simply to make the job of the programmer quicker and easier.      
       
@@ -2122,7 +2130,7 @@ Parameters
     pad - (x,y) padding in pixels for packing the button      
     key - key used for finding the element      
       
-#### Pre-defined Buttons      
+### Shortcut, Pre-defined Buttons      
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, set the button text to match the function name and set the parameters to commonly used values. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:      
       
     OK      
@@ -2140,12 +2148,21 @@ These Pre-made buttons are some of the most important elements of all because th
     FilesBrowse      
     FileSaveAs      
     FolderBrowse      
-.      
+
+**IMPORT NOTE ABOUT SHORTCUT BUTTONS**
+Prior to release 3.11.0, these buttons closed the window.  Starting with 3.11 they will not close the window.  They act like RButtons (return the button text and do not close the window)
+
+If you are having trouble with these buttons closing your window, please check your installed version of PySimpleGUI by typing `pip list` at a command promt.  Prior to 3.11 these buttons close your window.  
+
+Using older versions, if you want a Submit() button that does not close the window, then you would instead use RButton('Submit')
+
     layout =  [[sg.OK(), sg.Cancel()]]      
       
 ![ok cancel 3](https://user-images.githubusercontent.com/13696193/44959927-aa5f5e80-aec4-11e8-86e1-5dc0b3a2b803.jpg)      
       
-  #### Button targets      
+
+
+### Button targets      
       
 The `FileBrowse`, `FolderBrowse`, `FileSaveAs` , `FilesSaveAs`, `CalendarButton`, `ColorChooserButton` buttons all fill-in values into another element located on the window.  The target can be a Text Element or an InputText Element.  The location of the element is specified by the `target` variable in the function call.      
       
@@ -2190,7 +2207,7 @@ See how much easier the key method is?
       
 **Save & Open Buttons**      
       
-There are 3 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use. To open several files at once, use the `FilesBrowse` button.  It will create a list of files that are separated by ';'      
+There are 4 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use. To open several files at once, use the `FilesBrowse` button.  It will create a list of files that are separated by ';'      
       
       
 ![open](https://user-images.githubusercontent.com/13696193/45243804-2b529780-b2c3-11e8-90dc-6c9061db2a1e.jpg)      
@@ -2263,7 +2280,7 @@ This is one you'll have to experiment with at this point.  Not up for an exhaust
 ![robot remote](https://user-images.githubusercontent.com/13696193/44959958-ff9b7000-aec4-11e8-99ea-7450926409be.jpg)      
       
       
-This window has 2 button types.  There's the normal "Simple Button" (Quit) and 4 "Realtime Buttons".      
+This window has 2 button types.  There's the normal "Read Button" (Quit) and 4 "Realtime Buttons".      
       
 Here is the code to make, show and get results from this window:      
 
@@ -2288,13 +2305,13 @@ window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(gui_ro
 # your program's main loop  
 while (True):  
     # This is the code that reads and updates your window  
-  event, values = window.ReadNonBlocking()  
+  event, values = window.Read(timeout=0)  
     if event is not None:  
         print(event)  
     if event == 'Quit'  or values is None:  
         break  
   
-window.CloseNonBlocking()  # Don't forget to close your window!
+window.Close()  # Don't forget to close your window!
 ```
 
 This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `window.ReadNonBlocking` will  return a button name matching the name on the button that was depressed or the key if there was a key assigned to the button.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons until a button is again clicked.      
@@ -2308,6 +2325,8 @@ This code produces a window where the Browse button only shows files of type .TX
       
     layout =  [[sg.In() ,sg.FileBrowse(file_types=(("Text Files", "*.txt"),))]]      
       
+NOTE - Mac users will not be able to use the file_types parameter.  tkinter has a bug on Macs that will crash the program is a file_type is attempted so that feature had to be removed.  Sorry about that!
+
   ***The ENTER key***      
        The ENTER key is an important part of data entry for windows.  There's a long  tradition of the enter key being used to quickly submit windows.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a window.      
       
@@ -2317,17 +2336,19 @@ If there are more than 1 button on a window, the FIRST button that is of type Cl
     
 ### Button Methods    
 ```python    
-Update(value=None, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None)    
+Update(text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None)
+
 GetText()    
 ```    
 Update - Change the button element    
-value - sets default value    
-text - sets button text    
-button color - (text, background)    
-disabled - if True disables the button    
-image_data - sets button image to in-ram image    
-image_filename - sets button image using a file    
+
+		text - sets button text    
+		button color - (text, background)    
+		disabled - if True disables the button    
+		image_data - sets button image to in-ram image    
+		image_filename - sets button image using a file    
     
+GetText - Returns the current text shown on a button
 
 ## Vertical Separator Element    
 This element has limited usefulness and is being included more for completeness than anything else.  It will draw a line between elements.
@@ -2372,13 +2393,13 @@ Another way of using a Progress Meter with PySimpleGUI is to build a custom wind
     # loop that would normally do something useful      
     for i in range(10000):      
         # check to see if the cancel button was clicked and exit loop if clicked      
-      event, values = window.ReadNonBlocking()      
-        if event == 'Cancel'  or values == None:      
+      event, values = window.Read(timeout=0)      
+        if event == 'Cancel'  or event is None:      
             break      
       # update bar with loop value +1 so that bar eventually reaches the maximum      
       progress_bar.UpdateBar(i + 1)      
     # done with loop... need to destroy the window as it's still open      
-    window.CloseNonBlocking())      
+    window.Close())      
       
       
 #### Output      
@@ -2683,6 +2704,7 @@ class Tree(data=None - data in TreeData format
          auto_size_columns=True - if true will autosize columns (currenly only sizes to col heading width)    
          max_col_width=20 - max width for columns in characters    
          select_mode=None - not yet used    
+         show_expanded - Bool - if True the tree will be fully expanded when shown
          font=None - the display font    
          justification='right' - justification for data display    
          text_color=None- color of text to display    
@@ -2713,8 +2735,9 @@ treedata.Insert("", '_B_', 'B', [4,5,6])
 treedata.Insert("_A_", '_A1_', 'A1', ['can','be','anything'])    
 ```    
     
-Note that you can use the same values for display_text and keys.  The only thing you have to watch for is that you cannot repeat keys.    
+Note that you ***can*** use the same values for display_text and keys.  The only thing you have to watch for is that you cannot repeat keys.    
     
+When Reading a window the Table Element will return a list of rows that are selected by the user.  The list will be empty is no rows are selected.    
     
       
 ## Tab and Tab Group Elements      
@@ -2918,6 +2941,8 @@ Each lower level overrides the settings of the higher level.  Once settings have
       
 # Persistent windows (Window stays open after button click)      
       
+Apologies that the next few pages are perhaps confusing.  There have been a number of changes recently in PySimpleGUI's Read calls that added some really cool stuff, but at the expense of being not so simple.  Part of the issue is an attempt to make sure existing code doesn't break.  These changes are all in the area of non-blocking reads and reads with timeouts.
+
 There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking windows (see the next section).  The other way is to use buttons that 'read' the window instead of 'close' the window when clicked.  The typical buttons you find in windows, including the shortcut buttons, close the window.  These include OK, Cancel, Submit, etc.  The Button Element also closes the window.      
       
 The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The normal `Read` call with no parameters will block, a call with a `timeout` value of zero will not block.
@@ -2925,7 +2950,28 @@ The `RButton` Element creates a button that when clicked will return control to 
 Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `ReadNonBlocking`.  If you do not want your input field to be cleared after a `ReadNonBlocking` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.  
 
 The reasoning behind this is that Persistent Windows are often "forms".  When "submitting" a form you want to have all of the fields left blank so the next entry of data will start with a fresh window.  Also, when implementing a "Chat Window" type of interface, after each read / send of the chat data, you want the input field cleared.  Think of it as a Texting application.  Would you want to have to clear your previous text if you want to send a second text?
+
+The design pattern for Persistent Windows was already shown to you earlier in the document... here it is for your convenience.
+
+```python    
+import PySimpleGUI as sg      
       
+layout = [[sg.Text('Persistent window')],      
+          [sg.Input()],      
+          [sg.RButton('Read'), sg.Exit()]]      
+      
+window = sg.Window('Window that stays open').Layout(layout)      
+      
+while True:      
+    event, values = window.Read()      
+    if event is None or event == 'Exit':      
+        break      
+    print(event, values)    
+
+window.Close()
+```    
+    
+  
 ## Read(timeout = t, timeout_key='timeout')
 
 Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, if you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
@@ -2962,10 +3008,37 @@ This event loop will run every 100 ms.  You're making a Read call, so anything t
 
 ## Non-Blocking Windows   (Asynchronous reads)
 
-A true non-blocking Window is achieved by calling Read with a timeout of 0.
+There are TWO ways to perform a non-blocking read.
+
+The "old way" was:
+```python
+event, values = sg.ReadNonBlocking()
+```
+The new way
 ```python
 event, values = sg.Read(timeout=0)
 ```
+You should use the new way if you're reading this for the first time.
+
+The difference in the 2 calls is in the value of event.  For ReadNonBlocking, event will be `None` if there are no other events to report.  There is a "problem" with this however.  With normal Read calls, an event value of None signified the window was closed.  For ReadNonBlocking, the way a closed window is returned is via the values variable being set to None.  
+
+
+## sg.TIMEOUT_KEY
+
+If you're using the new, timeout=0 method, then an event value of None signifies that the window was closed, just like a normal Read.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `timeout_key`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
+TIMEOUT_KEY = '__timeout__'
+
+If you wanted to test for "no event" in your loop, it would be written like this:
+```python
+while True:  
+    event, value = window.Read(timeout=0)  
+    if event is None:  
+        break # the use has closed the window  
+    if event == sg.TIMEOUT_KEY:  
+        print("Nothing happened")
+```
+
+
 Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.      It's important to be a good citizen.   Don't chew up CPU cycles needlessly.
 
 Non-blocking is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
@@ -3144,52 +3217,51 @@ Keyboard keys return 2 types of key events. For "normal" keys (a,b,c, etc), a si
       
 Key Sym is a string such as 'Control_L'.  The Key Code is a numeric representation of that key.  The left control key, when pressed will return the value 'Control_L:17'      
       
-    import PySimpleGUI as sg      
+    import PySimpleGUI as sg  
       
-    # Recipe for getting keys, one at a time as they are released      
-    # If want to use the space bar, then be sure and disable the "default focus"      
+    # Recipe for getting keys, one at a time as they are released  
+    # If want to use the space bar, then be sure and disable the "default focus"  
       
-    with sg.Window("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:      
-        text_elem = sg.Text("", size=(18,1))      
-        layout = [[sg.Text("Press a key or scroll mouse")],      
-                  [text_elem],      
-                  [sg.Button("OK")]]      
+    with sg.Window("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:  
+        text_elem = sg.Text("", size=(18, 1))  
+        layout = [[sg.Text("Press a key or scroll mouse")],  
+                  [text_elem],  
+                  [sg.Button("OK")]]  
       
-        window.Layout(layout)      
-        # ---===--- Loop taking in user input --- #      
-      while True:      
-            event, value = window.ReadNonBlocking()      
+        window.Layout(layout)  
+        # ---===--- Loop taking in user input --- #  
+    while True:  
+        event, value = window.Read()  
       
-            if event == "OK"  or (event is None and value is None):      
-                print(event, "exiting")      
-                break      
-            if eventis not None:      
-                text_elem.Update(event)      
+        if event == "OK"  or event is None:  
+            print(event, "exiting")  
+            break  
+       text_elem.Update(event)
+
+      
       
 You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.      
       
 ### Realtime Keyboard Capture      
 Use realtime keyboard capture by calling      
       
-    import PySimpleGUI as sg      
+    import PySimpleGUI as sg  
       
-    with sg.Window("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:      
-        layout = [[sg.Text("Hold down a key")],      
-                  [sg.Button("OK")]]      
+    with sg.Window("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:  
+        layout = [[sg.Text("Hold down a key")],  
+                  [sg.Button("OK")]]  
       
-        window.Layout(layout)      
+        window.Layout(layout)  
       
-        while True:      
-            event, value = window.ReadNonBlocking()      
-      
-            if event == "OK":      
-                print(event, value, "exiting")      
-                break      
-          if eventis not None:      
-                print(event)      
-            elif value is None:      
-                break      
-      
+        while True:  
+            event, value = window.Read(timeout=0)  
+            if event == "OK"  or event is None:  
+                print(event, value, "exiting")  
+                break  
+            if event != sg.TIMEOUT_KEY:  
+                print(event)
+
+
 # Menus      
       
 Beginning in version 3.01 you can add a menubar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as button clicks, so be aware of your overall naming conventions.  If you have an Exit button and also an Exit menu option, then you won't be able to tell the difference when your window.Read returns.  Hopefully will not be a problem.      
@@ -3444,7 +3516,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.9.3 & 1.1.3 | Oct 11, 2018   
 | 3.9.4 & 1.1.4 | Oct 16, 2018 
 | 3.10.1 & 1.2.1 | Oct 20, 2018 
-| 3.10.3 & 1.2.3 | Oct 23, 2018         
+| 3.10.3 & 1.2.3 | Oct 23, 2018     
+| 3.11.0 & 1.11.0 | Oct 28, 2018    
       
       
 ## Release Notes      
@@ -3655,6 +3728,17 @@ Emergency patch release... going out same day as previous release
 * Table Update method complete
 * Turned off expand when packing row frame... was accidentally turned on (primary reason for this release)
 * Try added to Image Update so won't crash if bad image passed in
+
+### 3.11.0 & 1.11.0
+* Syncing up the second digit of the releases so that they stay in sync better.  the 2.7 release is built literally from the 3.x code so they really are the same
+* Reworked Read call... significantly.
+* Realtime buttons work with timeouts or blocking read
+* Removed default value parm on Buttons and Button Updates
+* New Tree Element parm show_expanded. Causes Tree to be shown as fully expanded
+* Tree Element now returns which rows are selected when Read
+* New Window method BringToFront
+* Shortcut buttons no longer close windows!
+* Added CloseButton, CButton that closes the windows
 
     
 ### Upcoming      
