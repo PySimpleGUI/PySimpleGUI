@@ -4683,7 +4683,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, N
         bar_text = Text(single_line_message, size=(width, height + 3), auto_size_text=True)
         form.AddRow(bar_text)
         form.AddRow((bar2))
-        form.AddRow((Cancel(button_color=button_color)))
+        form.AddRow((CloseButton('Cancel', button_color=button_color)))
     else:
         single_line_message, width, height = ConvertArgsToSingleString(*args)
         bar2.TextToDisplay = single_line_message
@@ -4691,7 +4691,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, N
         bar2.CurrentValue = 0
         bar_text = Text(single_line_message, size=(width, height + 3), auto_size_text=True)
         form.AddRow(bar2, bar_text)
-        form.AddRow((Cancel(button_color=button_color)))
+        form.AddRow((CloseButton('Cancel', button_color=button_color)))
 
     form.NonBlocking = True
     form.Show(non_blocking=True)
@@ -5040,165 +5040,6 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
 
 ScrolledTextBox = PopupScrolled
 
-
-# ---------------------------------------------------------------------- #
-#  GetPathBox                                                            #
-#   Pre-made dialog that looks like this roughly                         #
-#       MESSAGE                                                          #
-#        __________________________                                      #
-#       |__________________________| (BROWSE)                            #
-#       (SUBMIT)  (CANCEL)                                               #
-#  RETURNS two values:                                                   #
-#    True/False, path                                                    #
-#     (True if Submit was pressed, false otherwise)                      #
-# ---------------------------------------------------------------------- #
-
-def PopupGetFolder(message, default_path='', no_window=False, size=(None, None), button_color=None,
-                   background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Display popup with text entry field and browse button. Browse for folder
-    :param message:
-    :param default_path:
-    :param no_window:
-    :param size:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param icon:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
-    :return: Contents of text field. None if closed using X or cancelled
-    """
-    if no_window:
-        root = tk.Tk()
-        try:
-            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-        except:
-            pass
-        folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
-        root.destroy()
-        return folder_name
-
-    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), FolderBrowse()],
-              [Ok(size=(5, 1)), Cancel(size=(5, 1))]]
-
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
-                    background_color=background_color,
-                    font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                    location=location)
-
-    (button, input_values) = window.LayoutAndRead(layout)
-
-    if button != 'Ok':
-        return None
-    else:
-        path = input_values[0]
-        return path
-
-
-#####################################
-# PopupGetFile                      #
-#####################################
-def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
-                 no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
-                 icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                 location=(None, None)):
-    """
-        Display popup with text entry field and browse button. Browse for file
-    :param message:
-    :param default_path:
-    :param default_extension:
-    :param save_as:
-    :param file_types:
-    :param no_window:
-    :param size:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param icon:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
-    :return:  string representing the path chosen, None if cancelled or window closed with X
-    """
-    if no_window:
-        root = tk.Tk()
-        try:
-            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-        except:
-            pass
-        if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
-                                                       defaultextension=default_extension)  # show the 'get file' dialog box
-        else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types,
-                                                     defaultextension=default_extension)  # show the 'get file' dialog box
-        root.destroy()
-        return filename
-
-    browse_button = SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
-
-    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), browse_button],
-              [Ok(size=(6, 1)), Cancel(size=(6, 1))]]
-
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
-                    background_color=background_color,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
-
-    (button, input_values) = window.Layout(layout).Read()
-    if button != 'Ok':
-        return None
-    else:
-        path = input_values[0]
-        return path
-
-
-#####################################
-# PopupGetText                      #
-#####################################
-def PopupGetText(message, default_text='', password_char='', size=(None, None), button_color=None,
-                 background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
-                 grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Display Popup with text entry field
-    :param message:
-    :param default_text:
-    :param password_char:
-    :param size:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param icon:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
-    :return: Text entered or None if window was closed
-    """
-
-    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
-              [InputText(default_text=default_text, size=size, password_char=password_char)],
-              [Ok(size=(5, 1)), Cancel(size=(5, 1))]]
-
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
-                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                    location=location)
-
-    (button, input_values) = window.Layout(layout).Read()
-
-    if button != 'Ok':
-        return None
-    else:
-        return input_values[0]
 
 
 # ============================== SetGlobalIcon ======#
@@ -5773,7 +5614,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
-        PopupButton = Button
+        PopupButton = CloseButton
     # show either an OK or Yes/No depending on paramater
     if button_type is POPUP_BUTTONS_YES_NO:
         window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
@@ -6109,6 +5950,160 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
                  grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+
+##############################################################################
+#   The PopupGet_____ functions - Will return user input                     #
+##############################################################################
+
+# --------------------------- PopupGetFolder ---------------------------
+
+
+def PopupGetFolder(message, default_path='', no_window=False, size=(None, None), button_color=None,
+                   background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
+                   grab_anywhere=False, keep_on_top=False, location=(None, None)):
+    """
+    Display popup with text entry field and browse button. Browse for folder
+    :param message:
+    :param default_path:
+    :param no_window:
+    :param size:
+    :param button_color:
+    :param background_color:
+    :param text_color:
+    :param icon:
+    :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
+    :param location:
+    :return: Contents of text field. None if closed using X or cancelled
+    """
+    if no_window:
+        root = tk.Tk()
+        try:
+            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        except:
+            pass
+        folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
+        root.destroy()
+        return folder_name
+
+    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
+              [InputText(default_text=default_path, size=size), FolderBrowse()],
+              [CloseButton('Ok', size=(5, 1)), CloseButton('Cancel', size=(5, 1))]]
+
+    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
+                    background_color=background_color,
+                    font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
+                    location=location)
+
+    (button, input_values) = window.LayoutAndRead(layout)
+
+    if button != 'Ok':
+        return None
+    else:
+        path = input_values[0]
+        return path
+
+
+# --------------------------- PopupGetFile ---------------------------
+
+def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
+                 no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
+                 icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
+                 location=(None, None)):
+    """
+        Display popup with text entry field and browse button. Browse for file
+    :param message:
+    :param default_path:
+    :param default_extension:
+    :param save_as:
+    :param file_types:
+    :param no_window:
+    :param size:
+    :param button_color:
+    :param background_color:
+    :param text_color:
+    :param icon:
+    :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
+    :param location:
+    :return:  string representing the path chosen, None if cancelled or window closed with X
+    """
+    if no_window:
+        root = tk.Tk()
+        try:
+            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        except:
+            pass
+        if save_as:
+            filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
+                                                       defaultextension=default_extension)  # show the 'get file' dialog box
+        else:
+            filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                     defaultextension=default_extension)  # show the 'get file' dialog box
+        root.destroy()
+        return filename
+
+    browse_button = SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
+
+    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
+              [InputText(default_text=default_path, size=size), browse_button],
+              [CloseButton('Ok', size=(6, 1)), CloseButton('Cancel', size=(6, 1))]]
+
+    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+                    background_color=background_color,
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+    (button, input_values) = window.Layout(layout).Read()
+    if button != 'Ok':
+        return None
+    else:
+        path = input_values[0]
+        return path
+
+
+# --------------------------- PopupGetText ---------------------------
+
+def PopupGetText(message, default_text='', password_char='', size=(None, None), button_color=None,
+                 background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
+                 grab_anywhere=False, keep_on_top=False, location=(None, None)):
+    """
+    Display Popup with text entry field
+    :param message:
+    :param default_text:
+    :param password_char:
+    :param size:
+    :param button_color:
+    :param background_color:
+    :param text_color:
+    :param icon:
+    :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
+    :param location:
+    :return: Text entered or None if window was closed
+    """
+
+    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
+              [InputText(default_text=default_text, size=size, password_char=password_char)],
+              [CloseButton('Ok', size=(5, 1)), CloseButton('Cancel', size=(5, 1))]]
+
+    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
+                    location=location)
+
+    (button, input_values) = window.Layout(layout).Read()
+
+    if button != 'Ok':
+        return None
+    else:
+        return input_values[0]
+
 
 
 def main():
