@@ -1658,7 +1658,6 @@ class Graph(Element):
     def MoveFigure(self, figure, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
-        shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
         if figure is None:
             print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
@@ -3245,6 +3244,12 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
+
+# -------------------------  CLOSE BUTTON Element lazy function  ------------------------- #
+def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename, image_data=image_data, image_size=image_size, image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, auto_size_button=auto_size_button, button_color=button_color, font=font, bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+CButton = CloseButton
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
