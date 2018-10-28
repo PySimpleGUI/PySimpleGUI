@@ -1171,7 +1171,7 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    def __init__(self, button_text='', button_type=BUTTON_TYPE_CLOSES_WIN, target=(None, None), tooltip=None,
+    def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None,
                  image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None),
                  auto_size_button=None, button_color=None, font=None, bind_return_key=False,
