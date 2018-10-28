@@ -59,15 +59,15 @@ def main():
     sg.SetOptions(element_padding=(0,0), margins=(1,1), border_width=0)
 
     # ----------------  Create Layout  ----------------
-    graphs = []
+    layout = [[ sg.RButton('', image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window'),
+                sg.Text('     CPU Core Usage')] ]
+
+    # add on the graphs
     for rows in range(num_cores//NUM_COLS+1):
         row = []
         for cols in range(min(num_cores-rows*NUM_COLS, NUM_COLS)):
             row.append(GraphColumn('CPU '+str(rows*NUM_COLS+cols), '_CPU_'+str(rows*NUM_COLS+cols)))
-        graphs.append(row)
-
-    layout = [[ sg.RButton('', image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window'), sg.Text('     CPU Core Usage')],
-              *graphs,]
+        layout.append(row)
 
     # ----------------  Create Window  ----------------
     window = sg.Window('PSG System Dashboard',
