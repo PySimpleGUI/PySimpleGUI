@@ -4436,8 +4436,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
-
                 treeview.configure(yscrollcommand=scrollbar.set)
+
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 if element.Tooltip is not None:
@@ -4445,6 +4445,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
+                frame = tk.Frame(tk_row_frame)
+
                 height = element.NumRows
                 if element.Justification == 'left':  # justification
                     anchor = tk.W
@@ -4462,7 +4464,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             displaycolumns.append(element.ColumnHeadings[i])
                 column_headings = element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
-                element.TKTreeview = ttk.Treeview(tk_row_frame, columns=column_headings,
+                element.TKTreeview = ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='tree headings', height=height,
                                                   selectmode=element.SelectMode, )
                 treeview = element.TKTreeview
@@ -4492,7 +4494,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
+
+                scrollbar = tk.Scrollbar(frame)
+                scrollbar.pack(side=tk.RIGHT, fill='y')
+                scrollbar.config(command=treeview.yview)
+                treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
