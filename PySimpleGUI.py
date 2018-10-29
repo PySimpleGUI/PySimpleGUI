@@ -1215,6 +1215,7 @@ class Button(Element):
         self.BindReturnKey = bind_return_key
         self.Focus = focus
         self.TKCal = None
+        self.CalendarCloseWhenChosen = None
         self.InitialFolder = initial_folder
         self.Disabled = disabled
 
@@ -1341,7 +1342,7 @@ class Button(Element):
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element)
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
 
@@ -2154,7 +2155,7 @@ class TKCalendar(ttk.Frame):
     datetime = calendar.datetime.datetime
     timedelta = calendar.datetime.timedelta
 
-    def __init__(self, master=None, target_element=None, **kw):
+    def __init__(self, master=None, target_element=None, close_when_chosen=True, **kw):
         """
         WIDGET-SPECIFIC OPTIONS
 
@@ -2172,6 +2173,8 @@ class TKCalendar(ttk.Frame):
 
         self._date = self.datetime(year, month, 1)
         self._selection = None  # no date selected
+        self._master = master
+        self.close_when_chosen = close_when_chosen
         ttk.Frame.__init__(self, master, **kw)
 
         # instantiate proper calendar class
@@ -2328,6 +2331,8 @@ class TKCalendar(ttk.Frame):
                 self._TargetElement.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         except:
             pass
+        if self.close_when_chosen:
+            self._master.destroy()
 
     def _prev_month(self):
         """Updated calendar to show the previous month."""
@@ -3290,15 +3295,17 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
+def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                    key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
+    button =  Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    button.CalendarCloseWhenChosen = close_when_date_chosen
+    return button
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
