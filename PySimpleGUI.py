@@ -2404,7 +2404,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), pad=None, key=None, tooltip=None):
+                 size=(None, None), change_submits=False, pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2442,6 +2442,7 @@ class Table(Element):
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
@@ -2467,6 +2468,16 @@ class Table(Element):
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
+        if self.ChangeSubmits:
+            MyForm = self.ParentForm
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
+
 
     def __del__(self):
         super().__del__()
@@ -2477,7 +2488,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, font=None,
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, font=None,
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
@@ -2515,6 +2526,7 @@ class Tree(Element):
         self.Col0Width = col0_width
         self.TKTreeview = None
         self.SelectedRows = []
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
@@ -2524,7 +2536,15 @@ class Tree(Element):
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [x for x in selections]
-
+        if self.ChangeSubmits:
+            MyForm = self.ParentForm
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
 
     def __del__(self):
         super().__del__()
@@ -4439,7 +4459,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview.configure(yscrollcommand=scrollbar.set)
 
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
-                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
