@@ -12,6 +12,8 @@ else:
 """
 layout = [[ sg.Text('Test of reading input field') ],
           [sg.T('This input is normal'), sg.In()],
+          [sg.T('This input change submits'), sg.In(change_submits=True)],
+          [sg.T('This multiline input change submits'), sg.Multiline(change_submits=True, do_not_clear=True)],
           [sg.T('This input is normal'), sg.In(), sg.FileBrowse()],
           [sg.T('File Browse submits'), sg.In(change_submits=True,
                                              do_not_clear=True,
