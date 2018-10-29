@@ -436,6 +436,17 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
+    def KeyboardHandler(self, event):
+        MyForm = self.ParentForm
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+
+
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -907,7 +918,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False,
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False, key=None, focus=False,
                  pad=None, tooltip=None):
         '''
         Multiline Element
@@ -933,6 +944,7 @@ class Multiline(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
         self.Disabled = disabled
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip)
@@ -3931,6 +3943,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar,
                                            bd=border_depth, font=font, show=show, justify=justify)
+                if element.ChangeSubmits:
+                    element.TKEntry.bind('<Key>', element.KeyboardHandler)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(background=element.BackgroundColor)
@@ -4071,6 +4085,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.configure(background=element.BackgroundColor)
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                if element.ChangeSubmits:
+                    element.TKText.bind('<Key>', element.KeyboardHandler)
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
