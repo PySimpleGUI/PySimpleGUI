@@ -50,7 +50,7 @@ class GUI():
         layout = [[sg.Column(clock, background_color='black')],
                   [sg.Column(weather_cols[x], background_color='black') for x in range(NUM_COLS)],
 
-                  [sg.RButton('Exit', button_color=('black', 'black'),
+                  [sg.Button('Exit', button_color=('black', 'black'),
                               image_data=orangeround[22:], tooltip='close window', pad=((450,0),(10,0)))]]
 
         # Create the window

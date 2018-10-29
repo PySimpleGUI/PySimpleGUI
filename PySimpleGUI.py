@@ -2457,6 +2457,7 @@ class Table(Element):
             if self.AlternatingRowColor is not None:
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
             self.Values = values
+            self.SelectedRows = []
 
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
@@ -5991,7 +5992,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse()],
-              [CloseButton('Ok', size=(5, 1)), CloseButton('Cancel', size=(5, 1))]]
+              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
@@ -6052,7 +6053,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
-              [CloseButton('Ok', size=(6, 1)), CloseButton('Cancel', size=(6, 1))]]
+              [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
@@ -6091,7 +6092,7 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, password_char=password_char)],
-              [CloseButton('Ok', size=(5, 1)), CloseButton('Cancel', size=(5, 1))]]
+              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,

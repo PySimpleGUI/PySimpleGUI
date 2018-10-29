@@ -46,9 +46,9 @@ def main():
               [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='_processes_')],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.T('Filter by typing name', font='ANY 14'), sg.In(size=(15,1), font='any 14', key='_filter_')],
-              [sg.RButton('Sort by Name', ),
-               sg.RButton('Sort by % CPU', button_color=('white', 'DarkOrange2')),
-               sg.RButton('Kill', button_color=('white','red'), bind_return_key=True),
+              [sg.Button('Sort by Name', ),
+               sg.Button('Sort by % CPU', button_color=('white', 'DarkOrange2')),
+               sg.Button('Kill', button_color=('white','red'), bind_return_key=True),
                sg.Exit(button_color=('white', 'sea green'))]]
 
     window = sg.Window('Process Killer',
@@ -63,12 +63,14 @@ def main():
     while (True):
         # --------- Read and update window --------
         event, values = window.Read()
-        if 'Mouse' in event or 'Control' in event or 'Shift' in event:
-            continue
-        # --------- Do Button Operations --------
-        if values is None or event == 'Exit':
+        if event is None or event == 'Exit':
             break
 
+        # skip mouse, control key and shift key events entirely
+        if 'Mouse' in event or 'Control' in event or 'Shift' in event:
+            continue
+
+        # --------- Do Button Operations --------
         if event == 'Sort by Name':
             psutil.cpu_percent(interval=1)
             procs = psutil.process_iter()
@@ -96,7 +98,7 @@ def main():
             for process in sorted_by_cpu_procs:
                 display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
             window.FindElement('_processes_').Update(display_list)
-        else:
+        else:                   # was a typed character
             if display_list is not None:
                 new_output = []
                 for line in display_list:

@@ -19,7 +19,7 @@ to collect user input that is sent to the chatbot.  The reply is displayed in th
 # Create the 'Trainer GUI'
 # The Trainer GUI consists of a lot of progress bars stacked on top of each other
 sg.ChangeLookAndFeel('GreenTan')
-sg.DebugWin()
+# sg.DebugWin()
 MAX_PROG_BARS = 20              # number of training sessions
 bars = []
 texts = []
@@ -39,8 +39,8 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
     global texts
     global training_window
     # update the window and the bars
-    button, values = training_window.ReadNonBlocking()
-    if button is None and values is None:       # if user closed the window on us, exit
+    button, values = training_window.Read(timeout=0)
+    if button is None:       # if user closed the window on us, exit
         sys.exit(69)
     if bars[current_bar].UpdateBar(iteration_counter, max=total_items) is False:
         sys.exit(69)
@@ -60,7 +60,7 @@ chatbot.train("chatterbot.corpus.english")
 
 layout = [[sg.Output(size=(80, 20))],
           [sg.Multiline(size=(70, 5), enter_submits=True),
-           sg.ReadButton('SEND', bind_return_key=True), sg.ReadButton('EXIT')]]
+           sg.Button('SEND', bind_return_key=True), sg.Button('EXIT')]]
 
 window = sg.Window('Chat Window', auto_size_text=True, default_element_size=(30, 2)).Layout(layout)
 

@@ -66,14 +66,14 @@ class PlayerGUI():
                     [sg.T('MIDI File Player', size=(30, 1), font=("Helvetica", 25))],
                     [self.TextElem],
                     [self.SliderElem],
-                    [sg.ReadFormButton('PAUSE', button_color=sg.TRANSPARENT_BUTTON,
-                                       image_filename=image_pause, image_size=(50,50), image_subsample=2, border_width=0), sg.T(' '),
-                     sg.ReadFormButton('NEXT', button_color=sg.TRANSPARENT_BUTTON,
-                                       image_filename=image_next, image_size=(50,50), image_subsample=2, border_width=0), sg.T(' '),
-                     sg.ReadFormButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
-                                       image_filename=image_restart, image_size=(50,50), image_subsample=2, border_width=0), sg.T(' '),
-                     sg.SimpleButton('EXIT', button_color=sg.TRANSPARENT_BUTTON,
-                                     image_filename=image_exit, image_size=(50,50), image_subsample=2, border_width=0, )]
+                    [sg.Button('', button_color=sg.TRANSPARENT_BUTTON,
+                                       image_filename=image_pause, image_size=(50,50), image_subsample=2, border_width=0, key='PAUSE'), sg.T(' '),
+                     sg.Button('', button_color=sg.TRANSPARENT_BUTTON,
+                                       image_filename=image_next, image_size=(50,50), image_subsample=2, border_width=0, key='NEXT'), sg.T(' '),
+                     sg.Button('', button_color=sg.TRANSPARENT_BUTTON,
+                                       image_filename=image_restart, image_size=(50,50), image_subsample=2, border_width=0, key='Restart Song'), sg.T(' '),
+                     sg.Button('', button_color=sg.TRANSPARENT_BUTTON,
+                                     image_filename=image_exit, image_size=(50,50), image_subsample=2, border_width=0,key='EXIT')]
                   ]
 
         window = sg.Window('MIDI File Player', default_element_size=(30, 1), font=("Helvetica", 25)).Layout(layout).Finalize()
@@ -90,8 +90,8 @@ class PlayerGUI():
         if 'window' not in locals() or window is None:          # if the widnow has been destoyed don't mess with it
             return PLAYER_COMMAND_EXIT
         self.TextElem.Update(DisplayString)
-        event, (values) = window.ReadNonBlocking()
-        if values is None:
+        event, (values) = window.Read(timeout=0)
+        if event is None:
             return PLAYER_COMMAND_EXIT
         if event == 'PAUSE':
             return PLAYER_COMMAND_PAUSE

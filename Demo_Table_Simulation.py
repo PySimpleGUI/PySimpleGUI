@@ -12,7 +12,6 @@ def TableSimulation():
     Display data in a table format
     """
     sg.SetOptions(element_padding=(0,0))
-    sg.PopupNoWait('Give it a few seconds to load please...', auto_close=True)
 
     menu_def = [['File', ['Open', 'Save', 'Exit']],
                 ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
@@ -20,7 +19,7 @@ def TableSimulation():
 
     columm_layout = [[]]
 
-    MAX_ROWS = 60
+    MAX_ROWS = 20
     MAX_COL = 10
     for i in range(MAX_ROWS):
         inputs = [sg.T('{}'.format(i), size=(4,1), justification='right')] + [sg.In(size=(10, 1), pad=(1, 1), justification='right', key=(i,j), do_not_clear=True) for j in range(MAX_COL)]
@@ -34,7 +33,7 @@ def TableSimulation():
                sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)],
                [sg.Column(columm_layout, size=(800,600), scrollable=True)] ]
 
-    window = sg.Window('Table', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
+    window = sg.Window('Table', return_keyboard_events=True).Layout(layout)
 
     while True:
         event, values = window.Read()

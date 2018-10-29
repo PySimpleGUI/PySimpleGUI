@@ -52,10 +52,10 @@ def ShowMeTheButtons():
 
     sg.SetOptions(auto_size_buttons=True, margins=(0,0), button_color=sg.COLOR_SYSTEM_DEFAULT)
 
-    toolbar_buttons = [[sg.RButton('', image_data=get_image_bytes(close64),button_color=('white', 'black'), pad=(0,0), key='_close_'),
-                        sg.RButton('', image_data=get_image_bytes(timer64), button_color=('white', 'black'), pad=(0, 0), key='_timer_'),
-                        sg.RButton('', image_data=get_image_bytes(house64), button_color=('white', 'black'), pad=(0, 0), key='_house_'),
-                        sg.RButton('', image_data=get_image_bytes(cpu64), button_color=('white', 'black'), pad=(0,0), key='_cpu_'),]]
+    toolbar_buttons = [[sg.Button('', image_data=get_image_bytes(close64),button_color=('white', 'black'), pad=(0,0), key='_close_'),
+                        sg.Button('', image_data=get_image_bytes(timer64), button_color=('white', 'black'), pad=(0, 0), key='_timer_'),
+                        sg.Button('', image_data=get_image_bytes(house64), button_color=('white', 'black'), pad=(0, 0), key='_house_'),
+                        sg.Button('', image_data=get_image_bytes(cpu64), button_color=('white', 'black'), pad=(0,0), key='_cpu_'),]]
 
     # layout = toolbar_buttons
     layout =  [[sg.Frame('Launcher', toolbar_buttons,title_color='white', background_color='black')]]

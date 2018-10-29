@@ -11,9 +11,9 @@ else:
 sg.SetOptions(element_padding=(0,0))
 # sg.ChangeLookAndFeel('Dark')
 # --- Define our "Big-Button-Spinner" compound element. Has 2 buttons and an input field --- #
-NewSpinner =  [sg.ReadButton('-', size=(2,1), font='Any 12'),
+NewSpinner =  [sg.Button('-', size=(2,1), font='Any 12'),
                sg.In('0', size=(2,1), font='Any 14', justification='r', key='spin'),
-               sg.ReadButton('+', size=(2,1), font='Any 12')]
+               sg.Button('+', size=(2,1), font='Any 12')]
 # --- Define Window --- #
 layout = [
           [sg.Text('Spinner simulation')],

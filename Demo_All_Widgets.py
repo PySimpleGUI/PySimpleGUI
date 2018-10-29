@@ -33,7 +33,7 @@ layout = [
     [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
     [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
      sg.Frame('Labelled Group',[[
-     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
+     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25, tick_interval=25),
      sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
      sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
      sg.Column(column1, background_color='lightblue')]])],

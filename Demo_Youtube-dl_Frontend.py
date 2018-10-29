@@ -31,10 +31,10 @@ def DownloadSubtitlesGUI():
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     while True:
         event, values = window.Read()
-        if event in ('EXIT', None):
+        if event in ('Exit', None):
             break           # exit button clicked
         link = values['link']
-        if event is 'Get List':
+        if event == 'Get List':
             print('Getting list of subtitles....')
             window.Refresh()
             command = [f'C:/Python/PycharmProjects/GooeyGUI/youtube-dl --list-subs {link}',]

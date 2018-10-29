@@ -29,6 +29,9 @@ def Launcher():
 
     namesonly = [f for f in os.listdir(ROOT_PATH) if f.endswith('.py') ]
 
+    if len(namesonly) == 0:
+        namesonly = ['test 1', 'test 2', 'test 3']
+
     sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)
 
     layout =  [[sg.Combo(values=namesonly, size=(35,30), key='demofile'),
@@ -39,7 +42,7 @@ def Launcher():
                 sg.Button('EXIT', button_color=('white','firebrick3'))],
                 [sg.T('', text_color='white', size=(50,1), key='output')]]
 
-    window = sg.Window('Floating Toolbar', no_titlebar=True, keep_on_top=True).Layout(layout)
+    window = sg.Window('Floating Toolbar', no_titlebar=True, grab_anywhere=True, keep_on_top=True).Layout(layout)
 
 
     # ---===--- Loop taking in user input and executing appropriate program --- #

@@ -33,7 +33,7 @@ for key in key_list: window.FindElement(key).Update(disabled=True)    # don't do
 
 while True:
     event, values = window.Read()
-    if event in (None, 'Exit'):
+    if event in (None, 'exit'):
         break
     elif event == 'Disable':
         for key in key_list: window.FindElement(key).Update(disabled=True)

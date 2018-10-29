@@ -54,8 +54,8 @@ def FindDuplicatesFilesInFolder(path):
 if __name__ == '__main__':
 
     source_folder = None
-    rc, source_folder = sg.PopupGetFolder('Duplicate Finder - Count number of duplicate files', 'Enter path to folder you wish to find duplicates in')
-    if rc is True and source_folder is not None:
+    source_folder = sg.PopupGetFolder('Duplicate Finder - Count number of duplicate files', 'Enter path to folder you wish to find duplicates in')
+    if source_folder is not None:
         FindDuplicatesFilesInFolder(source_folder)
     else:
         sg.PopupCancel('Cancelling', '*** Cancelling ***')

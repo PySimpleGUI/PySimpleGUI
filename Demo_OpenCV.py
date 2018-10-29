@@ -32,7 +32,7 @@ def main():
     layout = [[sg.Text('OpenCV Demo', size=(15, 1),pad=((510,0),3), justification='center', font='Helvetica 20')],
               [sg.Image(filename='', key='image')],
               [sg.Slider(range=(0, num_frames), size=(115, 10), orientation='h', key='slider')],
-              [sg.ReadButton('Exit', size=(10, 2), pad=((600, 0), 3), font='Helvetica 14')]]
+              [sg.Button('Exit', size=(10, 2), pad=((600, 0), 3), font='Helvetica 14')]]
 
     # create the window and show it without the plot
     window = sg.Window('Demo Application - OpenCV Integration', no_titlebar=False, location=(0,0)).Layout(layout)
@@ -40,8 +40,8 @@ def main():
     # ---===--- LOOP through video file by frame --- #
     i = 0
     while vidFile.isOpened():
-        event, values = window.ReadNonBlocking()
-        if event is 'Exit' or values is None:
+        event, values = window.Read(timeout=0)
+        if event is 'Exit' or event is None:
             exit(69)
         ret, frame = vidFile.read()
         if not ret:  # if out of data stop looping

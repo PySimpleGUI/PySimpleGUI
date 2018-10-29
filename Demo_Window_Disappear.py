@@ -6,7 +6,7 @@ else:
     import PySimpleGUI27 as sg
 
 layout = [[ sg.Text('My Window') ],
-          [ sg.RButton('Disappear')]]
+          [ sg.Button('Disappear')]]
 
 window = sg.Window('My window').Layout(layout)
 

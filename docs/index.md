@@ -1,4 +1,5 @@
 
+
   
     
       
@@ -23,9 +24,9 @@
       
 ## Now supports both Python 2.7 & 3      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.11.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.12.0-red.svg?longCache=true&style=for-the-badge)      
       
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.11.0-blue.svg?longCache=true&style=for-the-badge)      
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.12.0-blue.svg?longCache=true&style=for-the-badge)      
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -934,13 +935,9 @@ Isn't this what a Python programmer looking for a GUI wants? Something easy to w
   
 ### Two Return Values     
   
-All Window Read and ReadNonBlocking calls return 2 values.  By convention a read statement is written:  
+All Window Read calls return 2 values.  By convention a read statement is written:  
 ```python  
 event, values = window.Read()      
-```  
-All of the demo programs and the Cookbook recipes have this line of code for windows that are normal reads (not non-blocking).  A similar line of code is used for non-blocking window reads:  
-```python  
-event, values = window.ReadNonBlocking()  
 ```  
   
 You don't HAVE to write your reads in this way. You can name your variables however you want.  But if you want to code them in a way that other programmers using PySimpleGUI are used to, then use these statements.  
@@ -969,6 +966,15 @@ Another convention to follow is the check for windows being closed with an X.  T
 To check for a closed window use this line of code:  
   
     if event is None:  
+  
+Putting it all together we end up with an "event loop" that looks something like this:
+```python
+while True:
+    event, values = window.Read()
+    if event is None:
+        break
+
+```
   
   
 ### The 'values' Variable - Return values as a list      
@@ -1181,8 +1187,12 @@ You will find it ***much easier*** to write code using PySimpleGUI if you use an
       
 ## Synchronous windows      
 The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI window/dialog box.      
-You've already seen a number of examples above that use blocking windows.  The call to look for that will show you non-blocking windows are calls to `ReadNonBlocking()`.  You can read more about Async windows at the end of this document.    
+You've already seen a number of examples above that use blocking windows.  A truly non-blocking Read call looks like this:
+```python
+event, values = window.Read(timeout=0)
+```
     
+You can learn more about these async / non-blocking windows toward the end of this document.    
     
       
 # Window Object - Beginning a window      
@@ -1287,12 +1297,12 @@ There are a few methods (functions) that you will see in this document that act 
     window.Layout(layout) - Turns your definition of the Window into Window      
     window.Finalize() - creates the tkinter objects for the Window. Normally you do not call this      
     window.Read() - Read the Windows values and get the button / key that caused the Read to return. Can have an optional timeout      
-    window.ReadNonBlocking() - Same as Read but will return right away      
+    window.ReadNonBlocking() - NO LONGER USED!  
     window.Refresh() - Use if updating elements and want to show the updates prior to the nex Read      
     window.Fill(values_dict) - Fill each Element with entry from the dictionary passed in      
     window.SaveToDisk(filename) - Save the Window's values to disk      
     window.LoadFromDisk(filename) - Load the Window's values from disk      
-    window.Close() - To close your window, if a button hasn't already closed iit    
+    window.Close() - To close your window, if a button hasn't already closed it    
     window.Disable() - Use to disable the window inpurt when opening another window on top of the primnary  Window      
     window.Enable() - Re-enable a Disabled window      
     window.FindElement(key) - Returns the element that has a matching key value  
@@ -2056,7 +2066,7 @@ The Types of buttons include:
 * Color Chooser      
       
       
- Close window - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close window" buttons.  They cause the input values to be read and then the window is ***closed***, returning the values to the caller.      
+Close window - Normal buttons like Submit, Cancel, Yes, No, do NOT close the window... they used to.  Now to close a window you need to use a CloseButton / CButton.
       
 Folder Browse - When clicked a folder browse dialog box is opened.  The results of the Folder Browse dialog box are written into one of the input fields of the window.      
       
@@ -2070,17 +2080,20 @@ Read window - This is a window button that will read a snapshot of all of the in
       
 Realtime - This is another async window button.  Normal button clicks occur after a button's click is released.  Realtime buttons report a click the entire time the button is held down.      
       
-Most programs will use a combination of shortcut button calls (Submit, Cancel, etc), plain buttons that close the window, and ReadButton buttons that keep the window open but returns control back to the caller.      
+Most programs will use a combination of shortcut button calls (Submit, Cancel, etc), normal Buttons which leave the windows open and CloseButtons that close the window when clicked.
       
-Sometimes there are multiple names for the same function.  This is simply to make the job of the programmer quicker and easier.      
+Sometimes there are multiple names for the same function.  This is simply to make the job of the programmer quicker and easier.  Or they are old names that are no longer used but kept around so that existing programs don't break.   
       
-The 3 primary windows of PySimpleGUI buttons and their names are:      
+The 4 primary windows of PySimpleGUI buttons and their names are:      
       
- 1. `Button` = `SimpleButton`      
- 2. `ReadButton` = `RButton` = `ReadFormButton` (old style... use ReadButton instead)      
+ 1. `Button`= `ReadButton` = `RButton` = `ReadFormButton` (old style... use Button instead)      
+ 2. `CloseButton` = `CButton`
  3. `RealtimeButton`      
+ 4. `DummyButton`
       
-You will find the long-form in the older programs.      
+You will find the long-form names in the older programs. ReadButton for example. 
+
+In Oct 2018, the definition of Button changed.  Previously Button would CLOSE the window when clicked.  It has been changed so the Button calls will leave the window open in exactly the same way as a ReadButton.  They are the same calls now.   To enables windows to be closed using buttons, a new button was added... `CloseButton` or `CButton`.
       
 The most basic Button element call to use is `Button`      
       
@@ -2152,9 +2165,10 @@ These Pre-made buttons are some of the most important elements of all because th
 **IMPORT NOTE ABOUT SHORTCUT BUTTONS**
 Prior to release 3.11.0, these buttons closed the window.  Starting with 3.11 they will not close the window.  They act like RButtons (return the button text and do not close the window)
 
-If you are having trouble with these buttons closing your window, please check your installed version of PySimpleGUI by typing `pip list` at a command promt.  Prior to 3.11 these buttons close your window.  
+If you are having trouble with these buttons closing your window, please check your installed version of PySimpleGUI by typing `pip list` at a command prompt.  Prior to 3.11 these buttons close your window.  
 
-Using older versions, if you want a Submit() button that does not close the window, then you would instead use RButton('Submit')
+Using older versions, if you want a Submit() button that does not close the window, then you would instead use RButton('Submit').   Using the new version, if you want a Submit button that closes the window like the sold Submit() call did, you would write that as `CloseButton('Submit')` or `CButton('Submit')`
+
 
     layout =  [[sg.OK(), sg.Cancel()]]      
       
@@ -2299,22 +2313,22 @@ window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(gui_ro
   
 #  
 # Some place later in your code...  
-# You need to perform a ReadNonBlocking on your window every now and then or  
-# else it won't refresh.  
+# You need to perform a Read or Refresh call on your window every now and then or  
+# else it will apprear as if the program has locked up.  
 #  
 # your program's main loop  
 while (True):  
     # This is the code that reads and updates your window  
-  event, values = window.Read(timeout=0)  
+    event, values = window.Read(timeout=0)  
     if event is not None:  
         print(event)  
     if event == 'Quit'  or values is None:  
-        break  
+        break       
   
 window.Close()  # Don't forget to close your window!
 ```
 
-This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `window.ReadNonBlocking` will  return a button name matching the name on the button that was depressed or the key if there was a key assigned to the button.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons until a button is again clicked.      
+This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `window.Read` will  return a button name matching the name on the button that was depressed or the key if there was a key assigned to the button.  It will continue to return values as long as the button remains depressed.  Once released, the Read will return timeout events until a button is again clicked.      
       
 **File Types**      
 The `FileBrowse` & `SaveAs` buttons have an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is      
@@ -2679,7 +2693,7 @@ Let me say up front that the Table Element has Beta status. The reason is that s
       
 ### Read return values from Table Element
 
-The values returned from a `Window.Read` or `Window.ReadNonBlocking` call for the Tree Element are a list of row numbers that are currently highlighted.
+The values returned from a `Window.Read` call for the Tree Element are a list of row numbers that are currently highlighted.
 
 ### Update Call
 
@@ -2947,7 +2961,7 @@ There are 2 ways to keep a window open after the user has clicked a button.  One
       
 The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The normal `Read` call with no parameters will block, a call with a `timeout` value of zero will not block.
 
-Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `ReadNonBlocking`.  If you do not want your input field to be cleared after a `ReadNonBlocking` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.  
+Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `Read`.  If you do not want your input field to be cleared after a `Read` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.  
 
 The reasoning behind this is that Persistent Windows are often "forms".  When "submitting" a form you want to have all of the fields left blank so the next entry of data will start with a fresh window.  Also, when implementing a "Chat Window" type of interface, after each read / send of the chat data, you want the input field cleared.  Think of it as a Texting application.  Would you want to have to clear your previous text if you want to send a second text?
 
@@ -2986,7 +3000,7 @@ Let's say you had a device that you want to "poll" every 100ms.   The "easy way 
 ```python
 # YOU SHOULD NOT DO THIS....
 while True:             # Event Loop  
-	event, values = window.ReadNonBlocking()  
+	event, values = window.ReadNonBlocking()   # DO NOT USE THIS CALL ANYMORE
 	read_my_hardware() # process my device here  
 	time.sleep(.1)     # sleep 1/10 second
 ```
@@ -3518,6 +3532,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.10.1 & 1.2.1 | Oct 20, 2018 
 | 3.10.3 & 1.2.3 | Oct 23, 2018     
 | 3.11.0 & 1.11.0 | Oct 28, 2018    
+| 3.12.0 & 1.12.0 | Oct 28, 2018
       
       
 ## Release Notes      
@@ -3739,6 +3754,13 @@ Emergency patch release... going out same day as previous release
 * New Window method BringToFront
 * Shortcut buttons no longer close windows!
 * Added CloseButton, CButton that closes the windows
+
+### 3.12.0 & 1.12.0
+* Changed Button to be the same as ReadButton which means it will no longer close the window
+* All shortcut buttons no longer close the window
+* Updating a table clears selected rows information in return values
+* Progress meter uses new CloseButton
+* Popups use new CloseButton
 
     
 ### Upcoming      

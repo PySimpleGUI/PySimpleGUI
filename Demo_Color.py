@@ -1649,8 +1649,8 @@ def show_all_colors_on_buttons():
     row_len = 20
     for i, c in enumerate(colors):
         hex = get_hex_from_name(c)
-        button1 = sg.Button(button_text=c, button_color=(get_complementary_hex(hex), hex), size=(8, 1))
-        button2 = sg.Button(button_text=c, button_color=(hex, get_complementary_hex(hex)), size=(8, 1))
+        button1 = sg.CButton(button_text=c, button_color=(get_complementary_hex(hex), hex), size=(8, 1))
+        button2 = sg.CButton(button_text=c, button_color=(hex, get_complementary_hex(hex)), size=(8, 1))
         row.append(button1)
         row.append(button2)
         if (i+1) % row_len == 0:
@@ -1717,8 +1717,8 @@ def main():
         complementary_color = get_name_from_hex(complementary_hex)
 
         layout = [[sg.Text('That color and it\'s compliment are shown on these buttons. This form auto-closes')],
-                  [sg.Button(button_text=color_name, button_color=(color_hex, complementary_hex))],
-                  [sg.Button(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30, 1))],
+                  [sg.CloseButton(button_text=color_name, button_color=(color_hex, complementary_hex))],
+                  [sg.CloseButton(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30, 1))],
                   ]
         sg.Window('Color demo', default_element_size=(100, 1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).Layout(layout).Read()
 

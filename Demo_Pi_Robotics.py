@@ -24,9 +24,10 @@ def RemoteControlExample():
 
     layout = [[sg.Text('Robotics Remote Control')],
                  [sg.T('', justification='center', size=(19,1), key='status')],
-                 [ sg.RealtimeButton('Forward', image_filename=image_forward, pad=((50,0),0))],
-                 [ sg.RealtimeButton('Left', image_filename=image_left), sg.RealtimeButton('Right', image_filename=image_right, pad=((50,0), 0))],
-                 [ sg.RealtimeButton('Reverse', image_filename=image_backward, pad=((50,0),0))],
+                 [ sg.RealtimeButton('', key='Forward', image_filename=image_forward, pad=((50,0),0))],
+                 [ sg.RealtimeButton('', key='Left', image_filename=image_left),
+                   sg.RealtimeButton('', key='Right', image_filename=image_right, pad=((50,0), 0))],
+                 [ sg.RealtimeButton('', key='Reverse', image_filename=image_backward, pad=((50,0),0))],
                  [sg.T('')],
                  [sg.Quit(button_color=('black', 'orange'))]]
 
@@ -40,16 +41,16 @@ def RemoteControlExample():
     # your program's main loop
     while (True):
         # This is the code that reads and updates your window
-        event, values = window.ReadNonBlocking()
+        event, values = window.Read(timeout=0, timeout_key='timeout')
         if event is not None:
             window.FindElement('status').Update(event)
-        else:
+        elif event != 'timeout':
             window.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
         if event == 'Quit' or values is None:
             break
 
-    window.CloseNonBlocking()
+    window.Close()
 
 
 def RemoteControlExample_NoGraphics():
@@ -67,25 +68,26 @@ def RemoteControlExample_NoGraphics():
 
     #
     # Some place later in your code...
-    # You need to perform a ReadNonBlocking on your form every now and then or
+    # You need to perform a Read on your form every now and then or
     # else it won't refresh.
+    # Notice how the timeout is 100ms. You don't have to use a timeout = 0 for all of your hardware
+    # applications.  Leave some CPU for other threads or for your GUI.  The longer you are in the GUI, the more
+    # responsive the GUI itself will be  Match your timeout with your hardware's capabilities
     #
     # your program's main loop
     while (True):
         # This is the code that reads and updates your window
-        event, values = window.ReadNonBlocking()
-        if event is not None:
+        event, values = window.Read(timeout=100, timeout_key='timeout')
+        # print(event, values)
+        if event != 'timeout':
             window.FindElement('status').Update(event)
         else:
             window.FindElement('status').Update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
-        if event == 'Quit' or values is None:
+        if event in (None, 'Quit'):
             break
 
-    window.CloseNonBlocking()
-
-
-
+    window.Close()
 
 # ------------------------------------- main -------------------------------------
 def main():

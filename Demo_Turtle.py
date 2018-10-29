@@ -19,8 +19,8 @@ import turtle
 
 layout = [[ sg.Text('My layout') ],
           [sg.Canvas(size=(800,800), key='_canvas_')],
-          [ sg.RButton('F'), sg.RButton('B'), sg.RButton('L'), sg.RButton('R')],
-          [sg.RButton('Spiral'), sg.RButton('Inside Out'), sg.RButton('Circles')]]
+          [ sg.Button('F'), sg.Button('B'), sg.Button('L'), sg.Button('R')],
+          [sg.Button('Spiral'), sg.Button('Inside Out'), sg.Button('Circles')]]
 
 window = sg.Window('My new window').Layout(layout).Finalize()
 

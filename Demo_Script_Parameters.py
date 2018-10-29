@@ -19,9 +19,9 @@ stores the result in the variable fname, just like the command line parsing did.
 '''
 
 if len(sys.argv) == 1:
-    event, (fname,) = sg.Window('My Script').LayoutAndRead([[sg.T('Document to open')],
+    event, (fname,) = sg.Window('My Script').Layout([[sg.T('Document to open')],
                                                             [sg.In(), sg.FileBrowse()],
-                                                            [sg.Open(), sg.Cancel()]])
+                                                            [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()
 else:
     fname = sys.argv[1]
 

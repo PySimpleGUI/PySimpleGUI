@@ -646,7 +646,7 @@ def main():
     global g_my_globals
 
     # define the form layout
-    layout = [[ sg.Canvas(size=SIZE, background_color='white',key='canvas') , sg.ReadButton('Exit', pad=(0, (210, 0)))]]
+    layout = [[ sg.Canvas(size=SIZE, background_color='white',key='canvas') , sg.Button('Exit', pad=(0, (210, 0)))]]
 
     # create the form and show it without the plot
     window = sg.Window('Ping Graph', background_color='white', grab_anywhere=True).Layout(layout).Finalize()
@@ -662,8 +662,8 @@ def main():
     plt.tight_layout()
 
     while True:
-        event, values = window.ReadNonBlocking()
-        if event is 'Exit' or values is None:
+        event, values = window.Read(timeout=0)
+        if event is 'Exit' or event is None:
             exit(0)
 
         run_a_ping_and_graph()

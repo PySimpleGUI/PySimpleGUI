@@ -17,7 +17,7 @@ GRAPH_WIDTH = 120       # each individual graph size in pixels
 GRAPH_HEIGHT = 40
 TRANSPARENCY = .8       # how transparent the window looks. 0 = invisible, 1 = normal window
 NUM_COLS = 4
-POLL_FREQUENCY = 400    # how often to update graphs in milliseconds
+POLL_FREQUENCY = 500    # how often to update graphs in milliseconds
 
 colors = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
 
@@ -59,7 +59,7 @@ def main():
     sg.SetOptions(element_padding=(0,0), margins=(1,1), border_width=0)
 
     # ----------------  Create Layout  ----------------
-    layout = [[ sg.RButton('', image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window'),
+    layout = [[ sg.Button('', image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window'),
                 sg.Text('     CPU Core Usage')] ]
 
     # add on the graphs
@@ -100,7 +100,7 @@ def main():
         for i in range(num_cores):
             graphs[i].graph_percentage_abs(stats[i])
             graphs[i].text_display('{} CPU {:2.0f}'.format(i, stats[i]))
-
+    window.Close()
 
 if __name__ == "__main__":
     # the clever Red X graphic

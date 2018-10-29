@@ -96,7 +96,7 @@ layout = [[sg.Text('Click on a color square to see both white and black text on 
 row = []
 # -- Create primary color viewer window --
 for i, color in enumerate(COLORS):
-    row.append(sg.RButton(color, button_color=('black', color), key=color))
+    row.append(sg.Button(color, button_color=('black', color), key=color))
     if (i+1) % 12 == 0:
         layout.append(row)
         row = []
@@ -110,4 +110,4 @@ while True:
         break
     # -- Create a secondary window that shows white and black text on chosen color
     layout2 =[[sg.DummyButton(event, button_color=('white', event)), sg.DummyButton(event, button_color=('black', event))]]
-    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).ReadNonBlocking()
+    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).Read(timeout=0)

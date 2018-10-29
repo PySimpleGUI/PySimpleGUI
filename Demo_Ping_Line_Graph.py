@@ -638,8 +638,8 @@ prev_x, prev_y  = canvas_left, canvas_bottom
 while True:
     time.sleep(.2)
 
-    event, values = window.ReadNonBlocking()
-    if event == 'Quit' or values is None:
+    event, values = window.Read(timeout=0)
+    if event == 'Quit' or event is None:
         break
 
     if g_response_time is None or prev_response_time == g_response_time:

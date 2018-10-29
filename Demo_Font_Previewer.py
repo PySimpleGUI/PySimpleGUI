@@ -12,7 +12,7 @@ fonts = list(font.families())
 fonts.sort()
 root.destroy()
 
-sg.ChangeLookAndFeel('Dark')
+sg.ChangeLookAndFeel('Black')
 
 layout = [[ sg.Text('My Text Element',
                     size=(20,1),
@@ -20,7 +20,7 @@ layout = [[ sg.Text('My Text Element',
                     click_submits=True,
                     relief=sg.RELIEF_GROOVE,
                     font = 'Courier` 25',
-                    text_color='red',
+                    text_color='#FF0000',
                     background_color='white',
                     justification='center',
                     pad=(5,3),
@@ -29,7 +29,7 @@ layout = [[ sg.Text('My Text Element',
                     ) ],
             [sg.Listbox(fonts, size=(30,20), change_submits=True, key='_list_')],
             [sg.Input(key='_in_')],
-          [ sg.RButton('Read', bind_return_key=True), sg.Exit()]]
+          [ sg.Button('Read', bind_return_key=True), sg.Exit()]]
 
 window = sg.Window('My new window',
                    # grab_anywhere=True,

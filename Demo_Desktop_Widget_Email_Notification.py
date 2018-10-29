@@ -30,9 +30,9 @@ def gui():
     sg.SetOptions(border_width=0, margins=(0, 0), element_padding=(4, 0))
 
     layout = [[sg.T('Email New Mail Notification' + 48 * ' '),
-               sg.RButton('', image_data=refresh, button_color=('#282923', '#282923'), key='_refresh_',
+               sg.Button('', image_data=refresh, button_color=('#282923', '#282923'), key='_refresh_',
                           tooltip='Refreshes Email'),
-               sg.RButton('', image_data=red_x, button_color=('#282923', '#282923'), key='_quit_',
+               sg.Button('', image_data=red_x, button_color=('#282923', '#282923'), key='_quit_',
                           tooltip='Closes window')],
               [sg.T('', key='_status_', size=(25, 1))], ]
 

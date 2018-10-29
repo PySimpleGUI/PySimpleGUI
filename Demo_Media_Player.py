@@ -27,17 +27,16 @@ def MediaPlayerGUI():
     # define layout of the rows
     layout= [[sg.Text('Media File Player',size=(17,1), font=("Helvetica", 25))],
              [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],
-             [sg.ReadButton('Restart Song', button_color=(background,background),
-                                image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0),
+             [sg.Button('', button_color=(background,background),
+                                image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0, key='Restart Song'),
                                 sg.Text(' ' * 2),
-              sg.ReadButton('Pause', button_color=(background,background),
-                                image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0),
+              sg.Button('', button_color=(background,background),
+                                image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0, key='Pause'),
                                 sg.Text(' ' * 2),
-              sg.ReadButton('Next', button_color=(background,background),
-                                image_filename=image_next, image_size=(50, 50), image_subsample=2, border_width=0),
+              sg.Button('', button_color=(background,background), image_filename=image_next, image_size=(50, 50), image_subsample=2, border_width=0, key='Next'),
                                 sg.Text(' ' * 2),
-              sg.Text(' ' * 2), sg.Button('Exit', button_color=(background,background),
-                                image_filename=image_exit, image_size=(50, 50), image_subsample=2, border_width=0)],
+              sg.Text(' ' * 2), sg.Button('', button_color=(background,background),
+                                image_filename=image_exit, image_size=(50, 50), image_subsample=2, border_width=0, key='Exit')],
              [sg.Text('_'*20)],
              [sg.Text(' '*30)],
             [
@@ -53,15 +52,14 @@ def MediaPlayerGUI():
 
     # Open a form, note that context manager can't be used generally speaking for async forms
     window = sg.Window('Media File Player', auto_size_text=True, default_element_size=(20, 1),
-                       font=("Helvetica", 25), no_titlebar=True).Layout(layout)
+                       font=("Helvetica", 25)).Layout(layout)
     # Our event loop
     while(True):
-        # Read the form (this call will not block)
-        event, values = window.ReadNonBlocking()
-        if event == 'Exit':
+        event, values = window.Read(timeout=100)        # Poll every 100 ms
+        if event == 'Exit' or event is None:
             break
         # If a button was pressed, display it on the GUI by updating the text element
-        if event:
+        if event != sg.TIMEOUT_KEY:
             window.FindElement('output').Update(event)
 
 MediaPlayerGUI()

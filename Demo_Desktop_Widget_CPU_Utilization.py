@@ -54,6 +54,7 @@ def main():
     window = sg.Window('CPU Utilization',
                        no_titlebar=True,
                        keep_on_top=True,
+                       alpha_channel=.8,
                        grab_anywhere=True).Layout(layout)
 
     # start cpu measurement thread
