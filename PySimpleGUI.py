@@ -2558,6 +2558,27 @@ class Tree(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
+    def add_treeview_data(self, node):
+        # print(f'Inserting {node.key} under parent {node.parent}')
+        if node.key != '':
+            self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                                   open=self.ShowExpanded)
+        for node in node.children:
+            self.add_treeview_data(node)
+
+
+    def Update(self, values=None):
+        if values is None:
+            return
+        children = self.TKTreeview.get_children()
+        for i in children:
+            self.TKTreeview.detach(i)
+            self.TKTreeview.delete(i)
+        children = self.TKTreeview.get_children()
+        self.TreeData = values
+        self.add_treeview_data(self.TreeData.root_node)
+        self.SelectedRows = []
+
     def __del__(self):
         super().__del__()
 
