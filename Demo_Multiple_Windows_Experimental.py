@@ -7,27 +7,27 @@ else:
 
 layout1 = [[ sg.Text('Window 1') ],
            [sg.Input(do_not_clear=True)],
-          [ sg.RButton('Read')]]
+          [ sg.Button('Read')]]
 
 window1 = sg.Window('My new window', location=(800,500)).Layout(layout1)
 
 
 layout2 = [[ sg.Text('Window 2') ],
-           [sg.Input(do_not_clear=False)],
-          [ sg.RButton('Read')]]
+           [sg.Input(do_not_clear=True)],
+          [ sg.Button('Read')]]
 
-window2 = sg.Window('My new window', location=(800, 625)).Layout(layout2)
+window2 = sg.Window('My new window', location=(800, 625), return_keyboard_events=True).Layout(layout2)
 
 
 layout3 = [[ sg.Text('Window 3') ],
            [sg.Input(do_not_clear=False)],
-          [ sg.RButton('Read')]]
+          [ sg.Button('Read')]]
 
 window3 = sg.Window('My new window', location=(800,750), return_keyboard_events=True).Layout(layout3)
 
 
 while True:     # Event Loop
-    event, values = window1.Read(timeout=100)
+    event, values = window1.Read(timeout=50)
     if event is None:
         break
     elif event != '__timeout__':

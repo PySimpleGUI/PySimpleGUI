@@ -13,22 +13,22 @@ def StatusOutputExample():
     # Create the rows
     layout = [[sg.Text('Non-blocking GUI with updates')],
                  [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='output')],
-                 [sg.ReadButton('LED On'), sg.ReadButton('LED Off'), sg.ReadButton('Quit')]]
+                 [sg.Button('LED On'), sg.Button('LED Off'), sg.Button('Quit')]]
     # Layout the rows of the Window and perform a read. Indicate the Window is non-blocking!
     window = sg.Window('Running Timer', auto_size_text=True).Layout(layout)
 
     #
     # Some place later in your code...
-    # You need to perform a ReadNonBlocking on your window every now and then or
+    # You need to perform a Read on your window every now and then or
     # else it won't refresh.
     #
     # your program's main loop
     i=0
     while (True):
         # This is the code that reads and updates your window
-        event, values = window.ReadNonBlocking()
+        event, values = window.Read(timeout=10)
         window.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
-        if event == 'Quit' or values is None:
+        if event == 'Quit' or event is None:
             break
         if event == 'LED On':
             print('Turning on the LED')
@@ -37,10 +37,9 @@ def StatusOutputExample():
 
         i += 1
         # Your code begins here
-        time.sleep(.01)
 
     # Broke out of main loop. Close the window.
-    window.CloseNonBlocking()
+    window.Close()
 
 
 def RemoteControlExample():
@@ -63,14 +62,13 @@ def RemoteControlExample():
     # your program's main loop
     while (True):
         # This is the code that reads and updates your window
-        button, values = window.ReadNonBlocking()
-        if button is not None:
-            print(button)
-        if button == 'Quit' or values is None:
+        event, values = window.Read(timeout=0, timeout_key='timeout')
+        if event is not 'timeout':
+            print(event)
+        if event == 'Quit' or event is None:
             break
-        # time.sleep(.01)
 
-    window.CloseNonBlocking()
+    window.Close()
 
 
 def main():

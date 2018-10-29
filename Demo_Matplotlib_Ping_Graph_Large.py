@@ -82,7 +82,7 @@ def main():
     # define the form layout
     layout = [[sg.Text('Animated Ping', size=(40, 1), justification='center', font='Helvetica 20')],
               [sg.Canvas(size=(640, 480), key='canvas')],
-              [sg.ReadButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+              [sg.Button('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
     window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
@@ -96,8 +96,8 @@ def main():
     plt.tight_layout()
 
     while True:
-        event, values = window.ReadNonBlocking()
-        if event is 'Exit' or values is None:
+        event, values = window.Read(timeout=0)
+        if event is 'Exit' or event is None:
             break
 
         run_a_ping_and_graph()

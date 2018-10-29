@@ -57,7 +57,7 @@ buttons = []
 for display_index in range(ROWS):
     row = []
     for j in range(COLUMNS):
-        row.append(sg.RButton('',border_width=0,button_color=sg.COLOR_SYSTEM_DEFAULT, key=(display_index, j)))
+        row.append(sg.Button('',border_width=0,button_color=sg.COLOR_SYSTEM_DEFAULT, key=(display_index, j)))
     buttons.append(row)
 
 col_buttons = [[]]
@@ -117,12 +117,6 @@ while True:
         for j in range(ROWS):
             for i in range(COLUMNS):
                 set_image_to_blank((i,j))
-        # img = Image.new('RGB', (1,1), (255,255,255))
-        # img.thumbnail((1,1), Image.ANTIALIAS)
-        # bio = io.BytesIO()
-        # img.save(bio, format='PNG')
-        # imgbytes = bio.getvalue()
-        # [window.FindElement((i,j)).Update(image_data=imgbytes) for j in range(ROWS) for i in range(COLUMNS)]
     elif event == 'About':
         sg.Popup('Demo PNG Viewer Program', 'Please give PySimpleGUI a try!')
     elif type(event) is tuple:

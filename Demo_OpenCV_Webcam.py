@@ -18,10 +18,10 @@ def main():
     # define the window layout
     layout = [[sg.Text('OpenCV Demo', size=(40, 1), justification='center', font='Helvetica 20')],
               [sg.Image(filename='', key='image')],
-              [sg.ReadButton('Record', size=(10, 1), font='Helvetica 14'),
-               sg.RButton('Stop', size=(10, 1), font='Any 14'),
-              sg.ReadButton('Exit', size=(10, 1), font='Helvetica 14'),
-               sg.RButton('About', size=(10,1), font='Any 14')]]
+              [sg.Button('Record', size=(10, 1), font='Helvetica 14'),
+               sg.Button('Stop', size=(10, 1), font='Any 14'),
+              sg.Button('Exit', size=(10, 1), font='Helvetica 14'),
+               sg.Button('About', size=(10,1), font='Any 14')]]
 
     # create the window and show it without the plot
     window = sg.Window('Demo Application - OpenCV Integration',
@@ -32,9 +32,8 @@ def main():
     cap = cv2.VideoCapture(0)
     recording = False
     while True:
-        event, values = window.ReadNonBlocking()
-
-        if event == 'Exit' or values is None:
+        event, values = window.Read(timeout=0, timeout_key='timeout')
+        if event == 'Exit' or event is None:
             sys.exit(0)
         elif event == 'Record':
             recording = True
@@ -56,3 +55,4 @@ def main():
             window.FindElement('image').Update(data=imgbytes)
 
 main()
+exit()

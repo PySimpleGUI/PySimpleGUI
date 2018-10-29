@@ -52,6 +52,8 @@ layout = [[ sg.Text('My layout') ]]
 
 window = sg.Window('My new window').Layout(layout).Finalize()
 
+# if you have operations on elements that must take place before the event loop, do them here
+
 while True:     # Event Loop
     event, values = window.Read()
     if event is None:

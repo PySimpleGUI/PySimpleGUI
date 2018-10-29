@@ -15,18 +15,18 @@ def ShowMeTheButtons():
 
     sg.SetOptions(auto_size_buttons=True, margins=(0,0), button_color=sg.COLOR_SYSTEM_DEFAULT)
 
-    toolbar_buttons = [[sg.RButton('', image_data=close64[22:],button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0,0), key='_close_'),
-                        sg.RButton('', image_data=timer64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_timer_'),
-                        sg.RButton('', image_data=house64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_house_'),
-                        sg.RButton('', image_data=cpu64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_cpu_'),
-                        sg.RButton('', image_data=camera64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_camera_'),
-                        sg.RButton('', image_data=checkmark64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_checkmark_'),
-                        sg.RButton('', image_data=cookbook64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_cookbook_'),
-                        sg.RButton('', image_data=download64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_download_'),
-                        sg.RButton('', image_data=github64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_github_'),
-                        sg.RButton('', image_data=psg64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_psg_'),
-                        sg.RButton('', image_data=run64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_run_'),
-                        sg.RButton('', image_data=storage64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_storage_'),
+    toolbar_buttons = [[sg.Button('', image_data=close64[22:],button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0,0), key='_close_'),
+                        sg.Button('', image_data=timer64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_timer_'),
+                        sg.Button('', image_data=house64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_house_'),
+                        sg.Button('', image_data=cpu64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_cpu_'),
+                        sg.Button('', image_data=camera64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_camera_'),
+                        sg.Button('', image_data=checkmark64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_checkmark_'),
+                        sg.Button('', image_data=cookbook64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_cookbook_'),
+                        sg.Button('', image_data=download64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_download_'),
+                        sg.Button('', image_data=github64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_github_'),
+                        sg.Button('', image_data=psg64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_psg_'),
+                        sg.Button('', image_data=run64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_run_'),
+                        sg.Button('', image_data=storage64[22:], button_color=('white', sg.COLOR_SYSTEM_DEFAULT), pad=(0, 0), key='_storage_'),
                         ]]
 
     # layout = toolbar_buttons

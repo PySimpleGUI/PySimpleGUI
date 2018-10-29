@@ -12,7 +12,7 @@ layout = [[sg.Text('This is my sample text',size=(20,1), key='_text_') ],
           [sg.Slider((6,50), default_value=12, size=(14,20), orientation='h', key='_slider_', change_submits=True),
            sg.Text('Font size')],
           [sg.Text('Font string = '), sg.Text('', size=(25,1), key='_fontstring_')],
-          [ sg.RButton('Exit')]]
+          [ sg.Button('Exit')]]
 
 window = sg.Window('Font string builder').Layout(layout)
 

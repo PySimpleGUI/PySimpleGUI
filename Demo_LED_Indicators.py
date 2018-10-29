@@ -33,7 +33,7 @@ layout = [[sg.Text('My LED Status Indicators', size=(20,1))],
           [sg.Text('RAM'), LEDIndicator('_ram_')],
           [sg.Text('Temperature'), LEDIndicator('_temp_')],
           [sg.Text('Server 1'), LEDIndicator('_server1_')],
-          [sg.RButton('Exit')]]
+          [sg.Button('Exit')]]
 
 window = sg.Window('My new window', default_element_size=(12, 1), auto_size_text=False).Layout(layout).Finalize()
 

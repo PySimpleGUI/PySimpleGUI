@@ -133,7 +133,7 @@ class pongbat2():
 def pong():
     # ------------- Define GUI layout -------------
     layout = [[sg.Canvas(size=(700, 400), background_color='black', key='canvas')],
-              [sg.T(''), sg.ReadButton('Quit')]]
+              [sg.T(''), sg.Button('Quit')]]
     # ------------- Create window -------------
     window = sg.Window('The Classic Game of Pong', return_keyboard_events=True).Layout(layout).Finalize()
     # window.Finalize()                  # TODO Replace with call to window.Finalize once code released
@@ -155,9 +155,9 @@ def pong():
         bat2.draw()
 
         # ------------- Read the form, get keypresses -------------
-        event, values = window.ReadNonBlocking()
+        event, values = window.Read(timeout=0)
         # ------------- If quit  -------------
-        if event is None and values is None or event == 'Quit':
+        if event is None or event == 'Quit':
             exit(69)
         # ------------- Keypresses -------------
         if event is not None:

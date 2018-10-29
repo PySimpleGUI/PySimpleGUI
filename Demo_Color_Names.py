@@ -686,7 +686,7 @@ layout = [[sg.Text('Hover mouse to see RGB value, click for white & black text',
 # -- Create primary color viewer window by building rows and appending to layout --
 row = []
 for i, color in enumerate(color_map):
-    row.append(sg.RButton(color, button_color=('black', color), key=color, tooltip=color_map[color]))
+    row.append(sg.Button(color, button_color=('black', color), key=color, tooltip=color_map[color]))
     if (i+1) % 15 == 0:         # every 15 buttons make a new row
         layout.append(row)
         row = []
@@ -700,4 +700,4 @@ while True:
         break
     # -- Create a secondary window that shows white and black text on chosen color
     layout2 =[[sg.DummyButton(event, button_color=('white', event), tooltip=color_map[event]), sg.DummyButton(event, button_color=('black', event), tooltip=color_map[event])] ]
-    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).ReadNonBlocking()
+    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).Read(timeout=0)

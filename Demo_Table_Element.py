@@ -19,19 +19,28 @@ if filename is not None:
         except:
             sg.PopupError('Error reading file')
             sys.exit(69)
+else:
+    sys.exit()
 
-sg.SetOptions(element_padding=(0, 0))
-
+# sg.SetOptions(element_padding=(0,0))
 headings = [data[0][x] for x in range(len(data[0]))]
 
-col_layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
-                        auto_size_columns=True, display_row_numbers=True, justification='right', num_rows=len(data), alternating_row_color='lightblue')]]
+layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
+                        auto_size_columns=True, display_row_numbers=True, justification='right', num_rows=20, alternating_row_color='lightblue', key='_table_')],
+          [sg.Button('Read'), sg.Button('Double')],
+          [sg.T('Read = read which rows are selected')],[sg.T('Double = double the amount of data in the table')]]
 
-canvas_size = (13 * 10 * len(headings), 600)  # estimate canvas size - 13 pixels per char * 10 per column * num columns
+window = sg.Window('Table', grab_anywhere=False, resizable=True).Layout(layout)
 
-layout = [[sg.Column(col_layout, size=canvas_size, scrollable=True)],]
-window = sg.Window('Table', grab_anywhere=False).Layout(layout)
-
-event, values = window.Read()
+while True:
+    event, values = window.Read()
+    if event is None:
+        break
+    if event == 'Double':
+        for i in range(len(data)):
+            data.append(data[i])
+        window.FindElement('_table_').Update(values = data)
+    sg.Popup(event, values)
+    # print(event, values)
 
 sys.exit(69)

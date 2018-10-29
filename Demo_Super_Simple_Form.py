@@ -11,10 +11,10 @@ else:
 
 layout = [
     [sg.Text('Please enter your Name, Address, Phone')],
-    [sg.Text('Name', size=(15, 1)), sg.InputText('1', key='name')],
+    [sg.Text('Name', size=(15, 1)), sg.InputText('1', key='name'), sg.FileBrowse()],
     [sg.Text('Address', size=(15, 1)), sg.InputText('2', key='address')],
     [sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='phone')],
-    [sg.Submit(), sg.Cancel()]
+    [sg.CloseButton('Submit'), sg.CloseButton('Cancel')]
         ]
 
 window = sg.Window('Simple Data Entry Window').Layout(layout)

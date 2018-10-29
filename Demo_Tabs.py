@@ -38,7 +38,7 @@ layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, background_color='darkslat
                          selected_title_color='green', tab_location='left'),
         sg.TabGroup([[sg.Tab('Tab 4', tab4_layout,background_color='darkseagreen', key='_mykey_'),
                       sg.Tab('Tab 5', tab5_layout)]], key='_group4_', tab_location='bottom', selected_title_color='purple')],
-                     [sg.RButton('Read')]]
+                     [sg.Button('Read')]]
 
 window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout)
 

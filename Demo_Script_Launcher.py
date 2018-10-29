@@ -48,7 +48,7 @@ def Launcher2():
     layout =  [
                 [sg.Listbox(values=namesonly, size=(30, 19), select_mode=sg.SELECT_MODE_EXTENDED, key='demolist'), sg.Output(size=(88, 20), font='Courier 10')],
                 [sg.Checkbox('Wait for program to complete', default=False, key='wait')],
-                [sg.ReadButton('Run'), sg.ReadButton('Shortcut 1'), sg.ReadButton('Fav Program'), sg.Button('EXIT')],
+                [sg.Button('Run'), sg.Button('Shortcut 1'), sg.Button('Fav Program'), sg.Button('EXIT')],
                 ]
 
     window.Layout(layout)

@@ -31,7 +31,7 @@ layout = [[ sg.Text('Test of reading input field') ],
                                              key='_in5'), sg.FileBrowse()],
           [sg.T('This input clears after submit'),sg.In(change_submits=True,
                                                         key='_in6_'), sg.FileBrowse()],
-          [ sg.RButton('Read')]]
+          [ sg.Button('Read')]]
 
 window = sg.Window('Demonstration of InputText with change_submits',
                    auto_size_text=False,

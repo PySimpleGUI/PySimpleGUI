@@ -21,7 +21,7 @@ bcolor=('black', '#282923')
 sg.SetOptions(border_width=0, margins=(0,0))
 
 layout = [[sg.T('Notification'+' '*14),
-           sg.Button('', image_data=red_x, button_color=('#282923', '#282923'))],
+           sg.CloseButton('', image_data=red_x, button_color=('#282923', '#282923'))],
           [sg.T('')],
           [sg.T('You have 6 new emails')],]
 

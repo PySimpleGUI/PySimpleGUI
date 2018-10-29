@@ -376,8 +376,76 @@ Window( title
         text_justification=None
         no_titlebar=False
         grab_anywhere=False
-        keep_on_top=False)
+        keep_on_top=False
+        resizable=False)
 """
+
+desc_window_methods = """
+Layout(rows)      
+Call to set the window layout.  Must be called prior to Read.  Most likely "chained" in line with the Window creation.    
+    
+Finalize()    
+Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.      
+
+Read()    
+Read the Window's input values and button clicks in a blocking-fashion    
+Returns event, values    
+
+ReadNonBlocking()    
+Read the Window's input values and button clicks but without blocking.  It will immediately return.    
+
+Refresh()    
+Cause changes to the window to be displayed on the screen.  Normally not needed unless the changes are immediately required or if it's going to be a while before another call to Read.    
+
+SetIcon(icon)
+Sets the window's icon that will be shown on the titlebar.    
+
+Fill(values_dict)    
+Populates the windows fields with the values shown in the dictionary.      
+
+FindElement(key)      
+Rerturns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
+    
+SaveToDisk(filename)    
+Saves the window's values to disk      
+
+LoadFromDisk(filename)    
+Fills in a window's fields based on previously saved file    
+    
+GetScreenDimensions()       
+Returns the size (w,h) of the screen in pixels    
+    
+Move(x, y)
+Move window to (x,y) position on the screen
+
+Minimize()
+Sends the window to the taskbar
+
+CloseNonBlocking()    
+Closes a non-blocking window    
+    
+Disable()    
+Stops a window from  responding until Enable is called    
+    
+Enable()    
+Re-enables a previously disabled window    
+    
+Hide()    
+Completely hides a window, including removing from the taskbar    
+
+UnHide()   
+Restores a window hidden using Hide    
+
+Disappear()    
+Makes a window disappear while leaving the icon on the taskbar    
+    
+Reappear()    
+Makes a window reappear that was previously made to disappear using Disappear()    
+    
+SetAlpha(alpha)
+Sets the window's transparency.  0 is completely transparent.  1 is fully visible, normal   
+"""
+
 
 desc_menu= """
    Menu(menu_definition
@@ -390,8 +458,8 @@ desc_menu= """
 
 desc_button_types = """
 There are multiple button types / names to choose from
-SimpleButton = Button
-ReadFormButton = ReadButton = RButton
+CloseButton = CButton = SimpleButton
+Button = ReadFormButton = ReadButton = RButton
 RealtimeButton
 DummyButton
 FolderBrowse
@@ -501,7 +569,7 @@ tab_multiline = [[sg.Column([[sg.Multiline(size=(15,1))],[sg.Text(desc_multiline
 tab_output= [[sg.Column([[sg.Text(desc_output, font=('Consolas 12'))]])]]
 tab_progressbar = [[sg.Column([[sg.Text(desc_progressbar, font=('Consolas 12'))]])]]
 tab_optionmenu = [[sg.Column([[sg.OptionMenu([1,2,3,4,5], size=(15,1))],[sg.Text(desc_inputoptionmenu, font=('Consolas 12'))]])]]
-tab_combo = [[sg.Column([[sg.Combo([1,2,3,4,5], size=(15,1))],[sg.Text(desc_inputoptionmenu, font=('Consolas 12'))]])]]
+tab_combo = [[sg.Column([[sg.Combo([1,2,3,4,5], size=(15,1))],[sg.Text(desc_inputcombo, font=('Consolas 12'))]])]]
 tab_frame = [[sg.Column([[sg.Frame('Frame',[[sg.T('     ')]], size=(15,1))],[sg.Text(desc_frame, font=('Consolas 12'))]])]]
 tab_column = [[sg.Text(desc_column, font=('Consolas 12'))]]
 tab_graph = [[sg.Text(desc_graph, font=('Consolas 12'))]]
@@ -511,11 +579,14 @@ tab_image = [[sg.Text(desc_image, font=('Consolas 12'))]]
 tab_table = [[sg.Text(desc_table, font=('Consolas 12'))]]
 tab_tree = [[sg.Text(desc_tree, font=('Consolas 12'))]]
 tab_menu = [[sg.Text(desc_menu, font=('Consolas 12'))]]
+tab_button = [[sg.Text(desc_button, font=('Consolas 12'))]]
 tab_button_types = [[sg.Text(desc_button_types, font=('Consolas 12'))]]
 tab_popup = [[sg.Text(desc_popup, font=('Consolas 12'))]]
 tab_popups = [[sg.Text(desc_popups, font=('Consolas 12'))]]
 tab_one_line_prog_meter = [[sg.Text(desc_one_line_progress_meter, font=('Consolas 12'))]]
-tab_window = [[sg.Text(desc_window, font=('Consolas 12'))]]
+
+tab_window = [[ sg.TabGroup([[sg.Tab('Parms',[[sg.Text(desc_window, font=('Consolas 12'))]]),
+                              sg.Tab('Methods', [[sg.Column([[sg.Text(desc_window_methods)]], size=(500,500), scrollable=True, )]])]])]]
 
 layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
                          sg.Tab('Text',tab_text),
@@ -539,6 +610,7 @@ layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
                          sg.Tab('Tab', tab_tab),
                          sg.Tab('TabGroup', tab_tabgroup),
                          sg.Tab('Menu', tab_menu),
+                         sg.Tab('Button', tab_button),
                          sg.Tab('Button Types', tab_button_types),
                          sg.Tab('Popup', tab_popup),
                          sg.Tab('Popups', tab_popups),
@@ -551,17 +623,20 @@ layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
 #            sg.Text(desc_text, size=(55, 25), font=('Consolas 13'), text_color='darkblue', key='_out_')]]
 
 window = sg.Window('PySimpleGUI SDK Quick Reference',
-                   font='Any 12',
-                   grab_anywhere=True).Layout(layout)
+                   font='Consolas 12',
+                   ).Layout(layout)
 
 while True:
     event, values = window.Read()
     if event is None or event == 'Exit':
         break
-    element = values['_in_'][0]
-    try:
-        desc = descriptions[element]
-    except:
-        desc = ''
-    window.FindElement('_out_').Update(desc)
+    if event == 'Methods':
+        sg.PopupScrolled(desc_window_methods, size=(50,20))
+    # element = values['_in_'][0]
+    # try:
+    #     desc = descriptions[element]
+    # except:
+    #     desc = ''
+    # window.FindElement('_out_').Update(desc)
+
     # print(button, values)

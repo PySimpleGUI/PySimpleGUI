@@ -37,7 +37,7 @@ def DemoOneLineProgressMeter():
                  sg.T('Delay'), sg.In(default_text='10', key='TimeOuter', size=(5,1), do_not_clear=True), sg.T('ms')],
                 [sg.T('Inner Loop Count', size=(15,1), justification='r'), sg.In(default_text='100', size=(5,1), key='CountInner', do_not_clear=True) ,
                  sg.T('Delay'), sg.In(default_text='10', key='TimeInner', size=(5,1), do_not_clear=True), sg.T('ms')],
-                [sg.RButton('Show', pad=((0,0), 3), bind_return_key=True), sg.T('me the meters!')]
+                [sg.Button('Show', pad=((0,0), 3), bind_return_key=True), sg.T('me the meters!')]
               ]
 
     window = sg.Window('One-Line Progress Meter Demo').Layout(layout)
@@ -68,22 +68,22 @@ def DemoOneLineProgressMeter():
 def CustomMeter():
     # layout the form
     layout = [[sg.Text('A custom progress meter')],
-              [sg.ProgressBar(10000, orientation='h', size=(20,20), key='progress')],
+              [sg.ProgressBar(1000, orientation='h', size=(20,20), key='progress')],
               [sg.Cancel()]]
 
     # create the form`
     window = sg.Window('Custom Progress Meter').Layout(layout)
     progress_bar = window.FindElement('progress')
     # loop that would normally do something useful
-    for i in range(10000):
+    for i in range(1000):
         # check to see if the cancel button was clicked and exit loop if clicked
-        event, values = window.ReadNonBlocking()
-        if event == 'Cancel' or values == None:
+        event, values = window.Read(timeout=0)
+        if event == 'Cancel' or event == None:
             break
         # update bar with loop value +1 so that bar eventually reaches the maximum
         progress_bar.UpdateBar(i+1)
     # done with loop... need to destroy the window as it's still open
-    window.CloseNonBlocking()
+    window.Close()
 
 CustomMeter()
 DemoOneLineProgressMeter()

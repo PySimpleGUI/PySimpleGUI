@@ -7,13 +7,13 @@ else:
 
 tab1_layout =  [[sg.T('Tab 1')],
                 [sg.T('Put your layout in here')],
-                [sg.T('Input something'),sg.In(key='_in0_')]]
+                [sg.T('Input something'),sg.In(key='_IN0_')]]
 
 tab2_layout = [[sg.T('Tab2')]]
 
 
-layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]])],
-                         [sg.RButton('Read')]]
+layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]], key='_TABGROUP_')],
+                         [sg.Button('Read')]]
 
 window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout)
 

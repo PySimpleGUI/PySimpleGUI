@@ -43,10 +43,8 @@ def main():
     i=0
     prev_x, prev_y  = 0, 0
     while True:
-        time.sleep(.2)
-
-        event, values = window.ReadNonBlocking()
-        if event == 'Quit' or values is None:
+        event, values = window.Read(timeout=200)
+        if event == 'Quit' or event is None:
             break
         if g_response_time is None or prev_response_time == g_response_time:
             continue

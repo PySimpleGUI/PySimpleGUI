@@ -33,7 +33,7 @@ def main():
     sg.ChangeLookAndFeel('Black')
     sg.SetOptions(element_padding=(0,0))
 
-    layout = [  [sg.Quit( button_color=('white','black'))],
+    layout = [  [sg.Button('Quit', button_color=('white','black'))],
                [sg.Graph(CANVAS_SIZE, (0,0), (SAMPLES,SAMPLE_MAX),background_color='black', key='graph')],]
 
     window = sg.Window('Canvas test', grab_anywhere=True, background_color='black', no_titlebar=False, use_default_focus=False).Layout(layout).Finalize()
@@ -45,9 +45,8 @@ def main():
     graph_value = 250
     while True:
         # time.sleep(.2)
-        event, values = window.ReadNonBlocking()
-        print(event, values)
-        if event == 'Quit' or values is None:
+        event, values = window.Read(timeout=0)
+        if event == 'Quit' or event is None:
             break
         graph_offset = random.randint(-10, 10)
         graph_value = graph_value + graph_offset

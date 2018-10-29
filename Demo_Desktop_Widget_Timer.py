@@ -26,8 +26,8 @@ sg.SetOptions(element_padding=(0, 0))
 
 layout = [[sg.Text('')],
          [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-         [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),
-          sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
+         [sg.Button('Pause', key='button', button_color=('white', '#001480')),
+          sg.Button('Reset', button_color=('white', '#007339'), key='Reset'),
           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
 window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)

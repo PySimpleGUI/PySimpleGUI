@@ -30,11 +30,11 @@ menu = [['File', ['Open Folder', 'Exit']], ['Help', ['About',]]]
 # define layout, show and read the window
 col = [[sg.Text(png_files[0], size=(80, 3), key='filename')],
           [sg.Image(filename=png_files[0], key='image')],
-          [sg.ReadButton('Next', size=(8,2)), sg.ReadButton('Prev', size=(8,2)),
+          [sg.Button('Next', size=(8,2)), sg.Button('Prev', size=(8,2)),
            sg.Text('File 1 of {}'.format(len(png_files)), size=(15,1), key='filenum')]]
 
 col_files = [[sg.Listbox(values=filenames_only, size=(60,30), key='listbox')],
-             [sg.ReadButton('Read')]]
+             [sg.Button('Read')]]
 layout = [[sg.Menu(menu)], [sg.Column(col_files), sg.Column(col)]]
 window = sg.Window('Image Browser', return_keyboard_events=True, location=(0,0), use_default_focus=False ).Layout(layout)
 

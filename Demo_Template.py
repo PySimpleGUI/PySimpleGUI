@@ -11,15 +11,15 @@ else:
     import PySimpleGUI27 as sg
 
 layout = [[ sg.Text('My layout') ],
-          [ sg.Button('Next Window')]]
+          [ sg.CloseButton('Next Window')]]
 
 window = sg.Window('My window').Layout(layout)
 event, values = window.Read()
 
 
-# -------------------------------------#
-# DESIGN PATTERN 2 - Persistent Window #
-# -------------------------------------#
+# --------------------------------------------------#
+# DESIGN PATTERN 2 - Persistent Window (stays open) #
+# --------------------------------------------------#
 #!/usr/bin/env python
 import sys
 if sys.version_info[0] >= 3:
@@ -27,13 +27,13 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 
-layout = [[ sg.Text('My layout') ],
-          [ sg.RButton('Read The Window')]]
+layout = [[ sg.Text('My Window') ],
+          [ sg.Button('Read The Window')]]
 
-window = sg.Window('My new window').Layout(layout)
+window = sg.Window('My Window Title').Layout(layout)
 
-while True:     # Event Loop
+while True:                         # Event Loop
     event, values = window.Read()
-    if event is None:
+    if event is None:               # if window closed with X
         break
     print(event, values)

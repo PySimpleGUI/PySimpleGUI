@@ -33,13 +33,16 @@ def TestMenus():
 
     # ------ GUI Defintion ------ #
     layout = [
-            [sg.Menu(menu_def, tearoff=True)],
+            [sg.Menu(menu_def, tearoff=False, pad=(20,1))],
               [sg.Output(size=(60,20))],
-            [sg.In('Test', key='input', do_not_clear=True)]
+            [sg.Text('Status Bar', relief=sg.RELIEF_SUNKEN, size=(55,1),  pad=(0,3),key='_status_')]
               ]
 
-    window = sg.Window("Windows-like program", default_element_size=(12, 1), auto_size_text=False,
-                       auto_size_buttons=False, default_button_element_size=(12, 1)).Layout(layout)
+    window = sg.Window("Windows-like program",
+                       default_element_size=(12, 1),
+                       auto_size_text=False,
+                       auto_size_buttons=False,
+                       default_button_element_size=(12, 1)).Layout(layout)
 
     # ------ Loop & Process button menu choices ------ #
     while True:
@@ -49,9 +52,9 @@ def TestMenus():
         print('Event = ', event)
         # ------ Process menu choices ------ #
         if event == 'About...':
-            # window.Hide()
+            window.Disappear()
             sg.Popup('About this program','Version 1.0', 'PySimpleGUI rocks...', grab_anywhere=True)
-            # window.UnHide()
+            window.Reappear()
         elif event == 'Open':
             filename = sg.PopupGetFile('file to open', no_window=True)
             print(filename)

@@ -8,7 +8,7 @@ else:
 # Demonstrates a number of PySimpleGUI features including:
 #   Default element size
 #   auto_size_buttons
-#   ReadButton
+#   Button
 #   Dictionary return values
 #   Update of elements in form (Text, Input)
 #   do_not_clear of Input elements
@@ -17,10 +17,10 @@ else:
 
 layout = [[sg.Text('Enter Your Passcode')],
           [sg.Input(size=(10, 1), do_not_clear=True, key='input')],
-          [sg.ReadButton('1'), sg.ReadButton('2'), sg.ReadButton('3')],
-          [sg.ReadButton('4'), sg.ReadButton('5'), sg.ReadButton('6')],
-          [sg.ReadButton('7'), sg.ReadButton('8'), sg.ReadButton('9')],
-          [sg.ReadButton('Submit'), sg.ReadButton('0'), sg.ReadButton('Clear')],
+          [sg.Button('1'), sg.Button('2'), sg.Button('3')],
+          [sg.Button('4'), sg.Button('5'), sg.Button('6')],
+          [sg.Button('7'), sg.Button('8'), sg.Button('9')],
+          [sg.Button('Submit'), sg.Button('0'), sg.Button('Clear')],
           [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],
           ]
 

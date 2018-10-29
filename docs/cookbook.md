@@ -17,6 +17,7 @@ with
   
 There is a short section in the Readme with instruction on installing PySimpleGUI  
   
+If you like this Cookbook, then you'll LOVE the 100+ sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  
       
 ## Simple Data Entry - Return Values As List      
 Same GUI screen except the return values are in a list instead of a dictionary and doesn't have initial values.      
@@ -96,7 +97,7 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
     if len(sys.argv) == 1:      
         event, (fname,) = sg.Window('My Script').Layout([[sg.Text('Document to open')],      
                                                                    [sg.In(), sg.FileBrowse()],      
-                                                                   [sg.Open(), sg.Cancel()]]).Read()  
+                                                                   [sg.CButton('Open'), sg.CButton('Cancel')]]).Read()  
     else:      
         fname = sys.argv[1]      
       
@@ -191,37 +192,60 @@ Example of nearly all of the widgets in a single window.  Uses a customized colo
 -------------      
       
       
+ ## Window that stays open reading inputs and button clicks
+     
+This is the most basic form of a "Persistent Window", a window that remains open after button clicks and data entry.
+
+```python
+import PySimpleGUI as sg      
+
+layout = [[sg.Text('Persistent window')],      
+          [sg.Input()],      
+          [sg.Button('Read'), sg.Exit()]]      
+
+window = sg.Window('Window that stays open').Layout(layout)      
+
+while True:      
+    event, values = window.Read()      
+    if event is None or event == 'Exit':      
+        break      
+    print(event, values)    
+
+window.Close()
+```      
+      
+      
       
       
 ## Non-Blocking Window With Periodic Update    
-An async Window that has a event read loop.  A Text Element is updated periodically with a running timer.  Note that `value` is checked for None which indicates the window was closed using X.    
+An async Window that has a event read loop.  A Text Element is updated periodically with a running timer.  Note that `value` is checked for None which indicates the window was closed using X.   
+Use caution when using windows with a timeout.  You should rarely need to use a timeout=0, non-blocking call, so try not to abuse this design pattern.
+ 
       
 ![non-blocking](https://user-images.githubusercontent.com/13696193/43955295-70f6ac48-9c6d-11e8-8ea2-e6729ba9330c.jpg)      
       
-      
-    import PySimpleGUI as sg      
-    import time      
-      
-    gui_rows = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],    
-                 [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='output')],      
-                 [sg.T(' '  * 5), sg.ReadButton('Start/Stop', focus=True), sg.Quit()]]      
-      
-    window = sg.Window('Running Timer').Layout(gui_rows)    
-      
-    timer_running = True      
-    i = 0      
-    # Event Loop      
-    while True:      
-        i += 1 * (timer_running is True)      
-        event, values = window.ReadNonBlocking()      
-      
-        if values is None or event == 'Quit':  # if user closed the window using X or clicked Quit button      
-          break      
-       elif event == 'Start/Stop':      
-            timer_running = not timer_running      
-      
-        window.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))      
-        time.sleep(.01)      
+```python      
+import PySimpleGUI as sg
+
+gui_rows = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],
+            [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='output')],
+            [sg.T(' ' * 5), sg.Button('Start/Stop', focus=True), sg.Quit()]]
+
+window = sg.Window('Running Timer').Layout(gui_rows)
+
+timer_running = True
+i = 0
+# Event Loop
+while True:
+    i += 1 * (timer_running is True)
+    event, values = window.Read(timeout=10) # Please try and use a timeout when possible
+    if event is None or event == 'Quit':  # if user closed the window using X or clicked Quit button
+        break
+    elif event == 'Start/Stop':
+        timer_running = not timer_running
+    window.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+```          
+           
       
 --------      
       
@@ -247,7 +271,7 @@ The architecture of some programs works better with button callbacks instead of 
       
     # Layout the design of the GUI      
     layout = [[sg.Text('Please click a button', auto_size_text=True)],      
-              [sg.ReadButton('1'), sg.ReadButton('2'), sg.Quit()]]      
+              [sg.Button('1'), sg.Button('2'), sg.Quit()]]      
       
     # Show the Window to the user    
     window = sg.Window('Button callback example').Layout(layout)      
@@ -261,7 +285,8 @@ The architecture of some programs works better with button callbacks instead of 
             button1()      
       elif event == '2':      
             button2()      
-      elif event =='Quit'  or event is None:      
+      elif event =='Quit'  or event is None:  
+            window.Close()    
             break      
       
     # All done!      
@@ -288,19 +313,19 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
       
     #      
     # Some place later in your code...      
-    # You need to perform a ReadNonBlocking on your window every now and then or    
-    # else it won't refresh.      
+    # You need to perform a Read or Refresh on your window every now and then or    
+    # else it will appear your program has hung      
     #      
     # your program's main loop      
     while (True):      
         # This is the code that reads and updates your window      
-        event, values = window.ReadNonBlocking()      
+        event, values = window.Read(timeout=10)      
         if event is not None:      
             print(event)      
         if event == 'Quit'  or values is None:      
             break      
       
-    window.CloseNonBlocking()   # Don't forget to close your window!      
+    window.Close()   # Don't forget to close your window!      
       
 ---------      
       
@@ -324,63 +349,83 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
       
 ![media player](https://user-images.githubusercontent.com/13696193/43958418-5dd133f2-9c79-11e8-9432-0a67007e85ac.jpg)      
       
-    import PySimpleGUI as sg      
-      
-    background = '#F0F0F0'      
-    # Set the backgrounds the same as the background on the buttons      
-    sg.SetOptions(background_color=background, element_background_color=background)      
-    # Images are located in a subfolder in the Demo Media Player.py folder      
-    image_pause = './ButtonGraphics/Pause.png'      
-    image_restart = './ButtonGraphics/Restart.png'      
-    image_next = './ButtonGraphics/Next.png'      
-    image_exit = './ButtonGraphics/Exit.png'      
-      
-    # define layout of the rows      
-    layout = [[sg.Text('Media File Player', size=(17, 1), font=("Helvetica", 25))],      
-              [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],      
-              [sg.ReadButton('Restart Song', button_color=(background, background),      
-                                 image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0),      
-               sg.Text(' '  * 2),      
-               sg.ReadButton('Pause', button_color=(background, background),      
-                                 image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0),      
-               sg.Text(' '  * 2),      
-               sg.ReadButton('Next', button_color=(background, background),      
-                                 image_filename=image_next, image_size=(50, 50), image_subsample=2, border_width=0),      
-               sg.Text(' '  * 2),      
-               sg.Text(' '  * 2), sg.Button('Exit', button_color=(background, background),      
-                                                 image_filename=image_exit, image_size=(50, 50), image_subsample=2,      
-                                                 border_width=0)],      
-              [sg.Text('_'  * 30)],      
-              [sg.Text(' '  * 30)],      
-              [      
-                  sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical',      
-                            font=("Helvetica", 15)),      
-                  sg.Text(' '  * 2),      
-                  sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical',      
-                            font=("Helvetica", 15)),      
-                  sg.Text(' '  * 8),      
-                  sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical',      
-                            font=("Helvetica", 15))],      
-              [sg.Text('Bass', font=("Helvetica", 15), size=(6, 1)),      
-               sg.Text('Treble', font=("Helvetica", 15), size=(10, 1)),      
-               sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))]      
-              ]      
-      
-    window = sg.Window('Media File Player', auto_size_text=True, default_element_size=(20, 1),      
-                       font=("Helvetica", 25)).Layout(layout)      
-    # Our event loop      
-    while (True):      
-      # Read the window (this call will not block)    
-      event, values = window.ReadNonBlocking()      
-      if event == 'Exit'  or values is None:      
-          break      
-      # If a button was pressed, display it on the GUI by updating the text element      
-      if event:      
-          window.FindElement('output').Update(event)      
+
+```python
+
+#!/usr/bin/env python
+import sys
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
+
+#
+# An Async Demonstration of a media player
+# Uses button images for a super snazzy look
+# See how it looks here:
+# https://user-images.githubusercontent.com/13696193/43159403-45c9726e-8f50-11e8-9da0-0d272e20c579.jpg
+#
+def MediaPlayerGUI():
+    background = '#F0F0F0'
+    # Set the backgrounds the same as the background on the buttons
+    sg.SetOptions(background_color=background, element_background_color=background)
+    # Images are located in a subfolder in the Demo Media Player.py folder
+    image_pause = './ButtonGraphics/Pause.png'
+    image_restart = './ButtonGraphics/Restart.png'
+    image_next = './ButtonGraphics/Next.png'
+    image_exit = './ButtonGraphics/Exit.png'
+
+    # A text element that will be changed to display messages in the GUI
+
+
+    # define layout of the rows
+    layout= [[sg.Text('Media File Player',size=(17,1), font=("Helvetica", 25))],
+             [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],
+             [sg.Button('', button_color=(background,background),
+                                image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0, key='Restart Song'),
+                                sg.Text(' ' * 2),
+              sg.Button('', button_color=(background,background),
+                                image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0, key='Pause'),
+                                sg.Text(' ' * 2),
+              sg.Button('', button_color=(background,background), image_filename=image_next, image_size=(50, 50), image_subsample=2, border_width=0, key='Next'),
+                                sg.Text(' ' * 2),
+              sg.Text(' ' * 2), sg.Button('', button_color=(background,background),
+                                image_filename=image_exit, image_size=(50, 50), image_subsample=2, border_width=0, key='Exit')],
+             [sg.Text('_'*20)],
+             [sg.Text(' '*30)],
+            [
+             sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
+             sg.Text(' ' * 2),
+             sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
+             sg.Text(' ' * 2),
+             sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15))],
+             [sg.Text('   Bass', font=("Helvetica", 15), size=(9, 1)),
+             sg.Text('Treble', font=("Helvetica", 15), size=(7, 1)),
+             sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))]
+             ]
+
+    # Open a form, note that context manager can't be used generally speaking for async forms
+    window = sg.Window('Media File Player', auto_size_text=True, default_element_size=(20, 1),
+                       font=("Helvetica", 25)).Layout(layout)
+    # Our event loop
+    while(True):
+        event, values = window.Read(timeout=100)        # Poll every 100 ms
+        if event == 'Exit' or event is None:
+            break
+        # If a button was pressed, display it on the GUI by updating the text element
+        if event != sg.TIMEOUT_KEY:
+            window.FindElement('output').Update(event)
+
+MediaPlayerGUI()
+
+
+```
+
+ 
       
 ----      
 ## Script Launcher - Persistent Window    
-This Window doesn't close after button clicks.  To achieve this the buttons are specified as `sg.ReadButton` instead of `sg.Button`.   The exception to this is the EXIT button.  Clicking it will close the window.  This program will run commands and display the output in the scrollable window.    
+This Window doesn't close after button clicks.  To achieve this the buttons are specified as `sg.Button` instead of `sg.Button`.   The exception to this is the EXIT button.  Clicking it will close the window.  This program will run commands and display the output in the scrollable window.    
       
 ![launcher 2](https://user-images.githubusercontent.com/13696193/43958519-b30af218-9c79-11e8-88da-fadc69da818c.jpg)      
       
@@ -403,8 +448,8 @@ This Window doesn't close after button clicks.  To achieve this the buttons are 
     layout = [      
         [sg.Text('Script output....', size=(40, 1))],      
         [sg.Output(size=(88, 20))],      
-        [sg.ReadButton('script1'), sg.ReadButton('script2'), sg.Button('EXIT')],      
-        [sg.Text('Manual command', size=(15, 1)), sg.InputText(focus=True), sg.ReadButton('Run', bind_return_key=True)]      
+        [sg.Button('script1'), sg.Button('script2'), sg.Button('EXIT')],      
+        [sg.Text('Manual command', size=(15, 1)), sg.InputText(focus=True), sg.Button('Run', bind_return_key=True)]      
             ]      
       
       
@@ -469,25 +514,27 @@ Perhaps you don't want all the statistics that the EasyProgressMeter provides an
 ![custom progress meter](https://user-images.githubusercontent.com/13696193/43982958-3393b23e-9cc6-11e8-8b49-e7f4890cbc4b.jpg)      
       
       
-    import PySimpleGUI as sg      
-      
-    # layout the Window    
-    layout = [[sg.Text('A custom progress meter')],      
-              [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progbar')],      
-              [sg.Cancel()]]      
-      
-    # create the Window    
-    window = sg.Window('Custom Progress Meter').Layout(layout)      
-    # loop that would normally do something useful      
-    for i in range(10000):      
-        # check to see if the cancel button was clicked and exit loop if clicked      
-      event, values = window.ReadNonBlocking()      
-        if event == 'Cancel'  or values == None:      
-            break      
-      # update bar with loop value +1 so that bar eventually reaches the maximum      
-      window.FindElement('progbar').UpdateBar(i + 1)      
-    # done with loop... need to destroy the window as it's still open      
-    window.CloseNonBlocking()      
+```python
+import PySimpleGUI as sg
+
+# layout the Window
+layout = [[sg.Text('A custom progress meter')],
+          [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='progbar')],
+          [sg.Cancel()]]
+
+# create the Window
+window = sg.Window('Custom Progress Meter').Layout(layout)
+# loop that would normally do something useful
+for i in range(1000):
+    # check to see if the cancel button was clicked and exit loop if clicked
+    event, values = window.Read(timeout=0)
+    if event == 'Cancel' or event is None:
+        break
+        # update bar with loop value +1 so that bar eventually reaches the maximum
+    window.FindElement('progbar').UpdateBar(i + 1)
+# done with loop... need to destroy the window as it's still open
+window.Close()
+``` 
       
       
    ----      
@@ -570,7 +617,7 @@ This simple program keep a window open, taking input values until the user termi
                [sg.Txt('_'  * 10)],      
                [sg.In(size=(8,1), key='denominator')],      
                [sg.Txt('', size=(8,1), key='output')  ],      
-               [sg.ReadButton('Calculate', bind_return_key=True)]]      
+               [sg.Button('Calculate', bind_return_key=True)]]      
       
     window = sg.Window('Math').Layout(layout)      
       
@@ -609,7 +656,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
       
     layout = [      
         [sg.Canvas(size=(100, 100), background_color='red', key= 'canvas')],      
-        [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue')]      
+        [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue')]      
     ]      
       
     window = sg.Window('Canvas test')      
@@ -639,7 +686,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
       
     layout = [      
                [sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0,0), graph_top_right=(400, 400), background_color='red', key='graph')],      
-               [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue'), sg.ReadButton('Move')]      
+               [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue'), sg.Button('Move')]      
                ]      
       
     window = sg.Window('Graph test')      
@@ -674,7 +721,7 @@ This Recipe implements a Raspberry Pi touchscreen based keypad entry.  As the di
 There are a number of features used in this Recipe including:      
 * Default Element Size      
 * auto_size_buttons      
-* ReadButton      
+* Button      
 * Dictionary Return values      
 * Update of Elements in window (Input, Text)    
 * do_not_clear of Input Elements      
@@ -689,17 +736,17 @@ There are a number of features used in this Recipe including:
     # Demonstrates a number of PySimpleGUI features including:      
     #   Default element size      
     #   auto_size_buttons      
-    #   ReadButton      
+    #   Button      
     #   Dictionary return values      
     #   Update of elements in window (Text, Input)    
     #   do_not_clear of Input elements      
       
     layout = [[sg.Text('Enter Your Passcode')],      
               [sg.Input(size=(10, 1), do_not_clear=True, justification='right', key='input')],      
-              [sg.ReadButton('1'), sg.ReadButton('2'), sg.ReadButton('3')],      
-              [sg.ReadButton('4'), sg.ReadButton('5'), sg.ReadButton('6')],      
-              [sg.ReadButton('7'), sg.ReadButton('8'), sg.ReadButton('9')],      
-              [sg.ReadButton('Submit'), sg.ReadButton('0'), sg.ReadButton('Clear')],      
+              [sg.Button('1'), sg.Button('2'), sg.Button('3')],      
+              [sg.Button('4'), sg.Button('5'), sg.Button('6')],      
+              [sg.Button('7'), sg.Button('8'), sg.Button('9')],      
+              [sg.Button('Submit'), sg.Button('0'), sg.Button('Clear')],      
               [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],      
               ]      
       
@@ -729,60 +776,61 @@ Use the Canvas Element to create an animated graph.  The code is a bit tricky to
 ![animated matplotlib](https://user-images.githubusercontent.com/13696193/44640937-91b9ea80-a992-11e8-9c1c-85ae74013679.jpg)      
       
       
-    from tkinter import *      
-    from random import randint      
-    import PySimpleGUI as g      
-    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg      
-    from matplotlib.figure import Figure      
-    import matplotlib.backends.tkagg as tkagg      
-    import tkinter as Tk      
-      
-      
-    fig = Figure()      
-      
-    ax = fig.add_subplot(111)      
-    ax.set_xlabel("X axis")      
-    ax.set_ylabel("Y axis")      
-    ax.grid()      
-      
-    layout = [[g.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],      
-              [g.Canvas(size=(640, 480), key='canvas')],      
-              [g.ReadButton('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]      
-      
-    # create the window and show it without the plot    
-      
-      
-    window = g.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)      
-    window.Finalize()     # needed to access the canvas element prior to reading the window    
-      
-    canvas_elem = window.FindElement('canvas')      
-      
-    graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)      
-    canvas = canvas_elem.TKCanvas      
-      
-    dpts = [randint(0, 10) for x in range(10000)]      
-    # Our event loop      
-    for i in range(len(dpts)):      
-        event, values = window.ReadNonBlocking()      
-        if event == 'Exit'  or values is None:      
-            exit(69)      
-      
-        ax.cla()      
-        ax.grid()      
-      
-        ax.plot(range(20), dpts[i:i + 20], color='purple')      
-        graph.draw()      
-        figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds      
-        figure_w, figure_h = int(figure_w), int(figure_h)      
-        photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)      
-      
-        canvas.create_image(640 / 2, 480 / 2, image=photo)      
-      
-        figure_canvas_agg = FigureCanvasAgg(fig)      
-        figure_canvas_agg.draw()      
-      
-        tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)      
-      
+```python
+from tkinter import *
+from random import randint
+import PySimpleGUI as sg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
+from matplotlib.figure import Figure
+import matplotlib.backends.tkagg as tkagg
+import tkinter as Tk
+
+fig = Figure()
+
+ax = fig.add_subplot(111)
+ax.set_xlabel("X axis")
+ax.set_ylabel("Y axis")
+ax.grid()
+
+layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
+          [sg.Canvas(size=(640, 480), key='canvas')],
+          [sg.Button('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
+
+# create the window and show it without the plot    
+
+
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)
+window.Finalize()  # needed to access the canvas element prior to reading the window
+
+canvas_elem = window.FindElement('canvas')
+
+graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
+canvas = canvas_elem.TKCanvas
+
+dpts = [randint(0, 10) for x in range(10000)]
+# Our event loop      
+for i in range(len(dpts)):
+    event, values = window.Read(timeout=20)
+    if event == 'Exit' or event is None:
+        exit(69)
+
+    ax.cla()
+    ax.grid()
+
+    ax.plot(range(20), dpts[i:i + 20], color='purple')
+    graph.draw()
+    figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
+    figure_w, figure_h = int(figure_w), int(figure_h)
+    photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
+
+    canvas.create_image(640 / 2, 480 / 2, image=photo)
+
+    figure_canvas_agg = FigureCanvasAgg(fig)
+    figure_canvas_agg.draw()
+
+    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)      
+
+```
       
       
 ## Tight Layout with Button States      
@@ -809,10 +857,10 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User 2'), size=(20,1)), sg.T('0', size=(8,1))],      
               [sg.T('Customer:', pad=((3,0),0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20,1)), sg.T('1', size=(8,1))],      
               [sg.T('Notes:', pad=((3,0),0)), sg.In(size=(44,1), background_color='white', text_color='black')],      
-              [sg.ReadButton('Start', button_color=('white', 'black'), key='Start'),      
-               sg.ReadButton('Stop', button_color=('white', 'black'), key='Stop'),      
-               sg.ReadButton('Reset', button_color=('white', 'firebrick3'), key='Reset'),      
-               sg.ReadButton('Submit', button_color=('white', 'springgreen4'), key='Submit')]      
+              [sg.Button('Start', button_color=('white', 'black'), key='Start'),      
+               sg.Button('Stop', button_color=('white', 'black'), key='Stop'),      
+               sg.Button('Reset', button_color=('white', 'firebrick3'), key='Reset'),      
+               sg.Button('Submit', button_color=('white', 'springgreen4'), key='Submit')]      
               ]      
       
     window = sg.Window("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,      
@@ -973,10 +1021,10 @@ You can easily change colors to match your background by changing a couple of pa
       
         sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)      
         layout =  [[sg.Combo(values=namesonly, size=(35,30), key='demofile'),      
-                    sg.ReadButton('Run', button_color=('white', '#00168B')),      
-                    sg.ReadButton('Program 1'),      
-                    sg.ReadButton('Program 2'),      
-                    sg.ReadButton('Program 3', button_color=('white', '#35008B')),      
+                    sg.Button('Run', button_color=('white', '#00168B')),      
+                    sg.Button('Program 1'),      
+                    sg.Button('Program 2'),      
+                    sg.Button('Program 3', button_color=('white', '#35008B')),      
                     sg.Button('EXIT', button_color=('white','firebrick3'))],      
                     [sg.T('', text_color='white', size=(50,1), key='output')]]      
       
@@ -1032,72 +1080,82 @@ Much of the code is handling the button states in a fancy way.  It could be much
       
 ![timer](https://user-images.githubusercontent.com/13696193/45336349-26a31300-b551-11e8-8b06-d1232ff8ca10.jpg)      
       
-    import PySimpleGUI as sg      
-    import time      
-      
-    """      
-     Timer Desktop Widget Creates a floating timer that is always on top of other windows You move it by grabbing anywhere on the window Good example of how to do a non-blocking, polling program using PySimpleGUI Can be used to poll hardware when running on a Pi     NOTE - you will get a warning message printed when you exit using exit button. It will look something like: invalid command name \"1616802625480StopMove\"      
-    """      
-      
-      
-    # ----------------  Create window  ----------------    
-    sg.ChangeLookAndFeel('Black')      
-    sg.SetOptions(element_padding=(0, 0))      
-      
-    layout = [[sg.Text('')],    
-                 [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],      
-                 [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),      
-                  sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),      
-                  sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]      
-      
-    window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)      
-      
-      
-    # ----------------  main loop  ----------------      
-    current_time = 0      
-    paused = False      
-    start_time = int(round(time.time() * 100))      
-    while (True):      
-        # --------- Read and update window --------      
-      if not paused:      
-            event, values = window.ReadNonBlocking()      
-            current_time = int(round(time.time() * 100)) - start_time      
-        else:      
-            event, values = window.Read()      
-        if event == 'button':      
-            button = window.FindElement(button).GetText()      
-        # --------- Do Button Operations --------      
-      if values is None or event == 'Exit':      
-            break      
-     if event is 'Reset':      
-            start_time = int(round(time.time() * 100))      
-            current_time = 0      
-      paused_time = start_time      
-        elif event == 'Pause':      
-            paused = True      
-      paused_time = int(round(time.time() * 100))      
-            element = window.FindElement('button')      
-            element.Update(text='Run')      
-        elif event == 'Run':      
-            paused = False      
-      start_time = start_time + int(round(time.time() * 100)) - paused_time      
-            element = window.FindElement('button')      
-            element.Update(text='Pause')      
-      
-        # --------- Display timer in window --------      
-      window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,      
-                                                                      (current_time // 100) % 60,      
-                                                                      current_time % 100))      
-        time.sleep(.01)      
-      
-    # --------- After loop --------      
-      
-    # Broke out of main loop. Close the window.      
-    window.CloseNonBlocking()      
+```python
+import sys
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
+import time
+
+"""
+ Timer Desktop Widget Creates a floating timer that is always on top of other windows You move it by grabbing anywhere on the window Good example of how to do a non-blocking, polling program using SimpleGUI Can be used to poll hardware when running on a Pi
+ 
+ While the timer ticks are being generated by PySimpleGUI's "timeout" mechanism, the actual value
+  of the timer that is displayed comes from the system timer, time.time().  This guarantees an
+  accurate time value is displayed regardless of the accuracy of the PySimpleGUI timer tick. If
+  this design were not used, then the time value displayed would slowly drift by the amount of time
+  it takes to execute the PySimpleGUI read and update calls (not good!)     
+ 
+ NOTE - you will get a warning message printed when you exit using exit button.
+ It will look something like: invalid command name \"1616802625480StopMove\"
+"""
+
+
+# ----------------  Create Form  ----------------
+sg.ChangeLookAndFeel('Black')
+sg.SetOptions(element_padding=(0, 0))
+
+layout = [[sg.Text('')],
+         [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+         [sg.Button('Pause', key='button', button_color=('white', '#001480')),
+          sg.Button('Reset', button_color=('white', '#007339'), key='Reset'),
+          sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
+
+window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
+
+# ----------------  main loop  ----------------
+current_time = 0
+paused = False
+start_time = int(round(time.time() * 100))
+while (True):
+    # --------- Read and update window --------
+    if not paused:
+        event, values = window.Read(timeout=10)
+        current_time = int(round(time.time() * 100)) - start_time
+    else:
+        event, values = window.Read()
+    if event == 'button':
+        event = window.FindElement(event).GetText()
+    # --------- Do Button Operations --------
+    if event is None or event == 'Exit':        # ALWAYS give a way out of program
+        break
+    if event is 'Reset':
+        start_time = int(round(time.time() * 100))
+        current_time = 0
+        paused_time = start_time
+    elif event == 'Pause':
+        paused = True
+        paused_time = int(round(time.time() * 100))
+        element = window.FindElement('button')
+        element.Update(text='Run')
+    elif event == 'Run':
+        paused = False
+        start_time = start_time + int(round(time.time() * 100)) - paused_time
+        element = window.FindElement('button')
+        element.Update(text='Pause')
+
+    # --------- Display timer in window --------
+    window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+                                                                  (current_time // 100) % 60,
+                                                                  current_time % 100))
+```
+
       
 ## Desktop Floating Widget - CPU Utilization      
       
-Like the Timer widget above, this script can be kept running.  You will need the package psutil installed in order to run this Recipe.      
+Like the Timer widget above, this script can be kept running.  You will need the package psutil installed in order to run this Recipe.    
+  
 The spinner changes the number of seconds between reads.  Note that you will get an error message printed when exiting because the window does not have have a titlebar.  It's a known problem.      
       
       
@@ -1105,39 +1163,42 @@ The spinner changes the number of seconds between reads.  Note that you will get
       
       
       
-    import PySimpleGUI as sg      
-    import psutil      
-      
-    # ----------------  Create Window  ----------------    
-    sg.ChangeLookAndFeel('Black')      
-    layout = [[sg.Text('')],    
-                 [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],      
-                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0)), sg.Spin([x+1 for x in range(10)], 1, key='spin')]]    
-    
-    window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)    
-      
-      
-    # ----------------  main loop  ----------------      
-    while (True):      
-        # --------- Read and update window --------      
-      event, values = window.ReadNonBlocking()      
-      
-        # --------- Do Button Operations --------      
-      if values is None or event == 'Exit':      
-            break      
-      try:      
-            interval = int(values['spin'])      
-      except:      
-            interval = 1      
-      
-      cpu_percent = psutil.cpu_percent(interval=interval)      
-      
-        # --------- Display timer in window --------      
-      
-      window.FindElement('text').Update(f'CPU {cpu_percent:02.0f}%')      
-      
-    # Broke out of main loop. Close the window.      
-    window.CloseNonBlocking()      
+```python
+import PySimpleGUI as sg
+import psutil
+
+# ----------------  Create Window  ----------------
+sg.ChangeLookAndFeel('Black')
+layout = [[sg.Text('')],
+          [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+          [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0)),
+           sg.Spin([x + 1 for x in range(10)], 1, key='spin')]]
+
+window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True,
+                   grab_anywhere=True).Layout(layout)
+
+# ----------------  main loop  ----------------
+while (True):
+    # --------- Read and update window --------
+    event, values = window.Read(timeout=0)
+
+    # --------- Do Button Operations --------
+    if event is None or event == 'Exit':
+        break
+    try:
+        interval = int(values['spin'])
+    except:
+        interval = 1
+
+    cpu_percent = psutil.cpu_percent(interval=interval)
+
+    # --------- Display timer in window --------
+
+    window.FindElement('text').Update(f'CPU {cpu_percent:02.0f}%')
+
+# Broke out of main loop. Close the window.
+window.Close()
+``` 
       
 ## Menus      
       
@@ -1145,7 +1206,7 @@ Menus are nothing more than buttons that live in a menu-bar.  When you click on 
       
 Menu's are defined separately from the GUI window.  To add one to your window, simply insert sg.Menu(menu_layout).  The menu definition is a list of menu choices and submenus.  They are a list of lists.  Copy the Recipe and play with it.  You'll eventually get when you're looking for.    
       
-If you double click the dashed line at the top of the list of choices, that menu will tear off and become a floating toolbar.  How cool!      
+If you double click the dashed line at the top of the list of choices, that menu will tear off and become a floating toolbar.  How cool!  To enable this feature, set the parameter `tearoff=True` in your call to `sg.Menu()`  
       
       
 ![tear off](https://user-images.githubusercontent.com/13696193/45307668-9aabcf80-b4ed-11e8-9b2b-8564d4bf82a8.jpg)      
@@ -1164,7 +1225,7 @@ If you double click the dashed line at the top of the list of choices, that menu
       
     # ------ GUI Defintion ------ #      
     layout = [      
-        [sg.Menu(menu_def)],      
+        [sg.Menu(menu_def, )],      
         [sg.Output(size=(60, 20))]      
              ]      
       
@@ -1247,7 +1308,7 @@ tab2_layout = [[sg.T('This is inside tab 2')],
                [sg.In(key='in')]]    
     
 layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, tooltip='tip'), sg.Tab('Tab 2', tab2_layout)]], tooltip='TIP2')],    
-          [sg.RButton('Read')]]    
+          [sg.Button('Read')]]    
     
 window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout)    
     

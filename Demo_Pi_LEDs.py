@@ -34,8 +34,8 @@ def FlashLED():
 
 layout = [[sg.T('Raspberry Pi LEDs')],
            [sg.T('', size=(14, 1), key='output')],
-           [sg.ReadButton('Switch LED')],
-           [sg.ReadButton('Flash LED')],
+           [sg.Button('Switch LED')],
+           [sg.Button('Flash LED')],
            [sg.Exit()]]
 
 window = sg.Window('Raspberry Pi GUI', grab_anywhere=False).Layout(layout)
@@ -49,8 +49,9 @@ while True:
         window.FindElement('output').Update(SwitchLED())
     elif event is 'Flash LED':
         window.FindElement('output').Update('LED is Flashing')
-        window.ReadNonBlocking()
+        window.Refresh()
         FlashLED()
         window.FindElement('output').Update('')
 
+window.Close()
 sg.Popup('Done... exiting')

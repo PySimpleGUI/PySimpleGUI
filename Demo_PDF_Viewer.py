@@ -44,8 +44,8 @@ from binascii import hexlify
 sg.ChangeLookAndFeel('GreenTan')
 
 if len(sys.argv) == 1:
-    rc, fname = sg.PopupGetFile('PDF Browser', 'PDF file to open', file_types=(("PDF Files", "*.pdf"),))
-    if rc is False:
+    fname = sg.PopupGetFile('PDF Browser', 'PDF file to open', file_types=(("PDF Files", "*.pdf"),))
+    if fname is None:
         sg.PopupCancel('Cancelling')
         exit(0)
 else:
@@ -99,17 +99,17 @@ goto = sg.InputText(str(cur_page + 1), size=(5, 1), do_not_clear=True)
 
 layout = [
     [
-        sg.ReadButton('Next'),
-        sg.ReadButton('Prev'),
+        sg.Button('Prev'),
+        sg.Button('Next'),
         sg.Text('Page:'),
         goto,
     ],
     [
         sg.Text("Zoom:"),
-        sg.ReadButton('Top-L'),
-        sg.ReadButton('Top-R'),
-        sg.ReadButton('Bot-L'),
-        sg.ReadButton('Bot-R'),
+        sg.Button('Top-L'),
+        sg.Button('Top-R'),
+        sg.Button('Bot-L'),
+        sg.Button('Bot-R'),
     ],
     [image_elem],
 ]
@@ -124,13 +124,11 @@ old_zoom = 0  # used for zoom on/off
 # the zoom buttons work in on/off mode.
 
 while True:
-    event, values = window.ReadNonBlocking()
+    event, values = window.Read(timeout=100)
     zoom = 0
     force_page = False
-    if event is None and values is None:
-        break
     if event is None:
-        continue
+        break
 
     if event in ("Escape:27",):  # this spares me a 'Quit' button!
         break
