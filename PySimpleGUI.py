@@ -4500,7 +4500,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 scrollbar.config(command=treeview.yview)
                 treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
-                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
