@@ -59,6 +59,8 @@ def TimerStop():
     
     I truly hope you get a lot of enjoyment out of using PySimpleGUI.  It came from good intentions.
 """
+# PySimpleGUI version - Python3
+__version__ = "3.12.0"
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
