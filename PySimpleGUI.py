@@ -3089,9 +3089,10 @@ class Window:
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
-        # print('Got closing callback')
+        print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
-        self.TKroot.destroy()  # kick the users out of the mainloop
+        if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.destroy()  # kick the users out of the mainloop
 
         return
 

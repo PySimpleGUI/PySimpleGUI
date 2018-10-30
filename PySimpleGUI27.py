@@ -448,6 +448,17 @@ class Element(object):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
+    def KeyboardHandler(self, event):
+        MyForm = self.ParentForm
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+
+
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -919,7 +930,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, do_not_clear=False, key=None, focus=False,
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False, key=None, focus=False,
                  pad=None, tooltip=None):
         '''
         Multiline Element
@@ -945,6 +956,7 @@ class Multiline(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
         self.Disabled = disabled
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip)
@@ -1227,6 +1239,7 @@ class Button(Element):
         self.BindReturnKey = bind_return_key
         self.Focus = focus
         self.TKCal = None
+        self.CalendarCloseWhenChosen = None
         self.InitialFolder = initial_folder
         self.Disabled = disabled
 
@@ -1251,6 +1264,9 @@ class Button(Element):
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
         global _my_windows
+
+        # print('Button callback')
+
         # print(f'Parent = {self.ParentForm}   Position = {self.Position}')
         # Buttons modify targets or return from the form
         # If modifying target, get the element object at the target and modify its StrVar
@@ -1353,7 +1369,7 @@ class Button(Element):
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element)
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
 
@@ -2166,7 +2182,7 @@ class TKCalendar(tkinter.ttk.Frame):
     datetime = calendar.datetime.datetime
     timedelta = calendar.datetime.timedelta
 
-    def __init__(self, master=None, target_element=None, **kw):
+    def __init__(self, master=None, target_element=None, close_when_chosen=True, **kw):
         """
         WIDGET-SPECIFIC OPTIONS
 
@@ -2184,6 +2200,8 @@ class TKCalendar(tkinter.ttk.Frame):
 
         self._date = self.datetime(year, month, 1)
         self._selection = None  # no date selected
+        self._master = master
+        self.close_when_chosen = close_when_chosen
         tkinter.ttk.Frame.__init__(self, master, **kw)
 
         # instantiate proper calendar class
@@ -2340,6 +2358,8 @@ class TKCalendar(tkinter.ttk.Frame):
                 self._TargetElement.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         except:
             pass
+        if self.close_when_chosen:
+            self._master.destroy()
 
     def _prev_month(self):
         """Updated calendar to show the previous month."""
@@ -2411,7 +2431,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), pad=None, key=None, tooltip=None):
+                 size=(None, None), change_submits=False, pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2449,6 +2469,7 @@ class Table(Element):
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
@@ -2474,6 +2495,16 @@ class Table(Element):
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
+        if self.ChangeSubmits:
+            MyForm = self.ParentForm
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
+
 
     def __del__(self):
         super().__del__()
@@ -2484,7 +2515,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, font=None,
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, font=None,
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
@@ -2522,6 +2553,7 @@ class Tree(Element):
         self.Col0Width = col0_width
         self.TKTreeview = None
         self.SelectedRows = []
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
@@ -2531,7 +2563,36 @@ class Tree(Element):
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [x for x in selections]
+        if self.ChangeSubmits:
+            MyForm = self.ParentForm
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
 
+    def add_treeview_data(self, node):
+        # print(f'Inserting {node.key} under parent {node.parent}')
+        if node.key != '':
+            self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                                   open=self.ShowExpanded)
+        for node in node.children:
+            self.add_treeview_data(node)
+
+
+    def Update(self, values=None):
+        if values is None:
+            return
+        children = self.TKTreeview.get_children()
+        for i in children:
+            self.TKTreeview.detach(i)
+            self.TKTreeview.delete(i)
+        children = self.TKTreeview.get_children()
+        self.TreeData = values
+        self.add_treeview_data(self.TreeData.root_node)
+        self.SelectedRows = []
 
     def __del__(self):
         super().__del__()
@@ -2851,6 +2912,8 @@ class Window(object):
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title}')
+            self.TKroot.protocol("WM_DESTROY_WINDOW", self.OnClosingCallback)
+            self.TKroot.protocol("WM_DELETE_WINDOW", self.OnClosingCallback)
             self.TKroot.mainloop()
             # print('Out main')
             self.CurrentlyRunningMainloop = False
@@ -3036,8 +3099,13 @@ class Window(object):
     Close = CloseNonBlockingForm
 
 
+    # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
-        # print('Got closing callback')
+        print('Got closing callback')
+        self.TKroot.quit()  # kick the users out of the mainloop
+        if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.destroy()  # kick the users out of the mainloop
+
         return
 
     def Disable(self):
@@ -3302,15 +3370,17 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
+def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                    key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
+    button =  Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+    button.CalendarCloseWhenChosen = close_when_date_chosen
+    return button
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
@@ -3916,6 +3986,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar,
                                            bd=border_depth, font=font, show=show, justify=justify)
+                if element.ChangeSubmits:
+                    element.TKEntry.bind('<Key>', element.KeyboardHandler)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(background=element.BackgroundColor)
@@ -4056,6 +4128,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.configure(background=element.BackgroundColor)
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                if element.ChangeSubmits:
+                    element.TKText.bind('<Key>', element.KeyboardHandler)
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
@@ -4441,15 +4515,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
-
                 treeview.configure(yscrollcommand=scrollbar.set)
+
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
-                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
+                frame = tk.Frame(tk_row_frame)
+
                 height = element.NumRows
                 if element.Justification == 'left':  # justification
                     anchor = tk.W
@@ -4467,7 +4543,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             displaycolumns.append(element.ColumnHeadings[i])
                 column_headings = element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
-                element.TKTreeview = tkinter.ttk.Treeview(tk_row_frame, columns=column_headings,
+                element.TKTreeview = tkinter.ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='tree headings', height=height,
                                                   selectmode=element.SelectMode, )
                 treeview = element.TKTreeview
@@ -4497,7 +4573,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
+
+                scrollbar = tk.Scrollbar(frame)
+                scrollbar.pack(side=tk.RIGHT, fill='y')
+                scrollbar.config(command=treeview.yview)
+                treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
@@ -4614,10 +4696,11 @@ def StartupTK(my_flex_form):
         my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
         pass
-        # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.CurrentlyRunningMainloop = True
+        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
         my_flex_form.TKroot.mainloop()
         my_flex_form.CurrentlyRunningMainloop = False
         my_flex_form.TimerCancelled = True
