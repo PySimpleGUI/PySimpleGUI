@@ -10,14 +10,14 @@ else:
 
 layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],
           [sg.Input(key='_IN_')],
-          [sg.Button('Show'), sg.Button('Exit')],
-          ]
+          [sg.Button('Show'), sg.Button('Exit')]]
 
-window = sg.Window('My new window').Layout(layout)
+window = sg.Window('Window Title').Layout(layout)
 
 while True:                 # Event Loop
     event, values = window.Read()
     if event is None or event == 'Exit':
         break
-    if event == 'Show':     # change the text "output" element to be the value of "input" element
+    if event == 'Show':
+        # change the "output" element to be the value of "input" element
         window.FindElement('_OUTPUT_').Update(values['_IN_'])
