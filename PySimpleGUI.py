@@ -2055,6 +2055,12 @@ class TkScrollableFrame(tk.Frame):
         self.TKFrame.config(borderwidth=0, highlightthickness=0)
         self.config(borderwidth=0, highlightthickness=0)
 
+        # scrollbar = tk.Scrollbar(frame)
+        # scrollbar.pack(side=tk.RIGHT, fill='y')
+        # scrollbar.config(command=treeview.yview)
+        # self.vscrollbar.config(command=self.TKFrame.yview)
+        # self.TKFrame.configure(yscrollcommand=self.vscrollbar.set)
+
         self.bind('<Configure>', self.set_scrollregion)
 
         self.bind_mouse_scroll(self.canvas, self.yscroll)
@@ -3089,9 +3095,11 @@ class Window:
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
-        # print('Got closing callback')
+        print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
-        self.TKroot.destroy()  # kick the users out of the mainloop
+        if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.destroy()  # kick the users out of the mainloop
+            self.TKrootDestroyed = True
 
         return
 
