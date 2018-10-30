@@ -2576,17 +2576,25 @@ class Tree(Element):
             self.add_treeview_data(node)
 
 
-    def Update(self, values=None):
-        if values is None:
-            return
-        children = self.TKTreeview.get_children()
-        for i in children:
-            self.TKTreeview.detach(i)
-            self.TKTreeview.delete(i)
-        children = self.TKTreeview.get_children()
-        self.TreeData = values
-        self.add_treeview_data(self.TreeData.root_node)
-        self.SelectedRows = []
+    def Update(self, values=None, key=None, value=None, text=None):
+        if values is not None:
+            children = self.TKTreeview.get_children()
+            for i in children:
+                self.TKTreeview.detach(i)
+                self.TKTreeview.delete(i)
+            children = self.TKTreeview.get_children()
+            self.TreeData = values
+            self.add_treeview_data(self.TreeData.root_node)
+            self.SelectedRows = []
+        if key is not None:
+            item = self.TKTreeview.item(key)
+            if value is not None:
+                self.TKTreeview.item(key, values=value)
+            if text is not None:
+                self.TKTreeview.item(key, text=text)
+            item = self.TKTreeview.item(key)
+        return self
+
 
     def __del__(self):
         super().__del__()
@@ -2618,11 +2626,6 @@ class TreeData(object):
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
 
-    # def _print_node(self, node):
-    #     # print(f'Node: {node.text}')
-    #     # print(f'Children = {[c.text for c in node.children]}')
-    #     for node in node.children:
-    #         self._print_node(node)
 
     def __repr__(self):
         return self._NodeStr(self.root_node, 1)
