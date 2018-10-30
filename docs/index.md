@@ -829,9 +829,9 @@ Read on for detailed instructions on the calls that show the window and return y
 All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.      
       
       
-## Pattern 1 - Read into list or dictionary (**The Most Common** Pattern)    
+## Pattern 1 - "One-shot Window" - Read into list or dictionary (**The Most Common** Pattern)    
       
-This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times)    
+This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and closes.
     
 It's unusual to assign the values returned from the read call directly into user variables.  Usually the variables are grouped together into a list or dictionary of multiple return values.    
     
@@ -845,12 +845,13 @@ window_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 window = sg.Window('SHA-1 & 256 Hash').Layout(window_rows)    
     
 event, values = window.Read()    
+window.Close()
     
 source_filename = values[0]    
 ```    
     
     
-## Pattern 2 - Persistent window (multiple reads using an event loop)      
+## Pattern 2 A - Persistent window (multiple reads using an event loop)      
       
 Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.      
     
@@ -861,7 +862,7 @@ import PySimpleGUI as sg
       
 layout = [[sg.Text('Persistent window')],      
           [sg.Input()],      
-          [sg.RButton('Read'), sg.Exit()]]      
+          [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open').Layout(layout)      
       
@@ -872,11 +873,44 @@ while True:
     print(event, values)    
 
 window.Close()
-
 ```    
+
+## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
+
+This is a slightly more complex, but maybe more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
+
+Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
+
+```python
+import sys  
+if sys.version_info[0] >= 3:  
+    import PySimpleGUI as sg  
+else:  
+    import PySimpleGUI27 as sg  
+  
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
+          [sg.Input(key='_IN_')],  
+          [sg.Button('Show'), sg.Button('Exit')]]  
+  
+window = sg.Window('Window Title').Layout(layout)  
+  
+while True:                 # Event Loop  
+  event, values = window.Read()  
+  print(event, values)
+  if event is None or event == 'Exit':  
+      break  
+  if event == 'Show':  
+      # change the "output" element to be the value of "input" element  
+      window.FindElement('_OUTPUT_').Update(values['_IN_'])
+
+window.Close()
+```
+
+
+
       
       
-### How GUI Programming in Python Should Look?  At least for beginners ?    
+## How GUI Programming in Python Should Look?  At least for beginners ?    
       
 While one goal was making it simple to create a GUI another just as important goal was to do it in a Pythonic manner. Whether it achieved this goal is debatable, but it was an attempt just the same.      
       
@@ -3777,7 +3811,7 @@ Emergency patch release... going out same day as previous release
 ### Upcoming      
 Make suggestions people!  Future release features      
       
-Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  WxPython is higher priority.      
+Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  At the moment, Qt and Kivy are being considered for the next GUI framework.  Work has already begun on them.  
       
       
       
@@ -3813,7 +3847,13 @@ You can also look up elements using their keys.  This is an excellent way to upd
     
 **Named / Optional Parameters**    
 This is a language feature that is featured **heavily**  in all of the API calls, both functions and classes.  Elements are configured, in-place, by setting one or more optional parameters.  For example, a Text element's color is chosen by setting the optional `text_color` parameter.    
-    
+
+**tkinter**
+tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, and Mac.  It was chosen as the first target GUI framework due to its ***ubiquity***.  Nearly all Python installations, with the exception of Ubuntu Linux, come pre-loaded with tkinter.   It is the "simplest" of the GUI frameworks to get up an running (among Qt, WxPython, Kivy, etc).
+
+From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.
+
+   
       
 ## Author      
 MikeTheWatchGuy      
