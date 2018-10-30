@@ -1252,6 +1252,9 @@ class Button(Element):
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
         global _my_windows
+
+        # print('Button callback')
+
         # print(f'Parent = {self.ParentForm}   Position = {self.Position}')
         # Buttons modify targets or return from the form
         # If modifying target, get the element object at the target and modify its StrVar
@@ -2897,6 +2900,8 @@ class Window:
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title}')
+            self.TKroot.protocol("WM_DESTROY_WINDOW", self.OnClosingCallback)
+            self.TKroot.protocol("WM_DELETE_WINDOW", self.OnClosingCallback)
             self.TKroot.mainloop()
             # print('Out main')
             self.CurrentlyRunningMainloop = False
@@ -3082,8 +3087,12 @@ class Window:
     Close = CloseNonBlockingForm
 
 
+    # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
         # print('Got closing callback')
+        self.TKroot.quit()  # kick the users out of the mainloop
+        self.TKroot.destroy()  # kick the users out of the mainloop
+
         return
 
     def Disable(self):
@@ -4674,10 +4683,11 @@ def StartupTK(my_flex_form):
         my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
         pass
-        # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback())
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.CurrentlyRunningMainloop = True
+        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
         my_flex_form.TKroot.mainloop()
         my_flex_form.CurrentlyRunningMainloop = False
         my_flex_form.TimerCancelled = True
