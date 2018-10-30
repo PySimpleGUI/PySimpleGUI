@@ -2,8 +2,11 @@
 import sys
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+    from tkinter import Tk
 else:
     import PySimpleGUI27 as sg
+    from Tkinter import Tk
+
 
 desc_text = """
 Text(   text
@@ -550,12 +553,13 @@ element_list = ('Window',
                 'TabGroup',
                 'Button Types')
 
-descriptions = {'Window': desc_window, 'Text': desc_text, 'InputText': desc_inputtext, 'CheckBox': desc_checkbox,
-                'RadioButton': desc_radio, 'Listbox': desc_listbox, 'Slider': desc_slider, 'Spinner':desc_spin, 'Multiline': desc_multiline,
+descriptions = {'Window': desc_window, 'Text': desc_text, 'InputText': desc_inputtext, 'Checkbox': desc_checkbox,
+                'Radio': desc_radio, 'Listbox': desc_listbox, 'Slider': desc_slider, 'Spinner':desc_spin, 'Multiline': desc_multiline,
                 'Output': desc_output, 'ProgressBar': desc_progressbar, 'OptionMenu': desc_inputoptionmenu,
-                'InputCombo': desc_inputcombo, 'Menu': desc_menu, 'Frame': desc_frame, 'Column': desc_column,
+                'Combo': desc_inputcombo, 'Menu': desc_menu, 'Frame': desc_frame, 'Column': desc_column,
                 'Graph': desc_graph, 'Image': desc_image, 'Table': desc_table, 'Tree': desc_tree,'Tab': desc_tab,
-                'TabGroup': desc_tabgroup, 'Button Types': desc_button_types}
+                'TabGroup': desc_tabgroup, 'Button':desc_button, 'Button Types': desc_button_types,
+                'Popup':desc_popup, 'Popups':desc_popups, 'One Line Prog Meter':desc_one_line_progress_meter}
 
 
 tab_text = [[sg.Column([[sg.T('This is sample text')],[ sg.Text(desc_text,  font=('Consolas 12'))]])]]
@@ -615,7 +619,8 @@ layout = [[sg.TabGroup([[sg.Tab('Window',tab_window),
                          sg.Tab('Popup', tab_popup),
                          sg.Tab('Popups', tab_popups),
                          sg.Tab('One Line Prog Meter', tab_one_line_prog_meter),
-                         ]], tab_location='lefttop', title_color='blue', selected_title_color='red')]]
+                         ]], tab_location='lefttop', title_color='blue', selected_title_color='red', key='_TABS_')],
+                        [sg.Button('Copy')]          ]
 
 # layout = [[sg.Text('The PySimpleGUI SDK Quick Reference Guide', font='Any 15', relief=sg.RELIEF_RAISED)],
 #           [sg.Listbox(values=element_list, size=(15, len(element_list) + 2), key='_in_', change_submits=True,
@@ -630,8 +635,17 @@ while True:
     event, values = window.Read()
     if event is None or event == 'Exit':
         break
-    if event == 'Methods':
+    elif event == 'Methods':
         sg.PopupScrolled(desc_window_methods, size=(50,20))
+    elif event == 'Copy':
+        tab = values['_TABS_']
+        r = Tk()
+        r.withdraw()
+        r.clipboard_clear()
+        r.clipboard_append(descriptions[tab])
+        r.update()  # now it stays on the clipboard after the window is closed
+        r.destroy()
+
     # element = values['_in_'][0]
     # try:
     #     desc = descriptions[element]
