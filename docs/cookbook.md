@@ -1,4 +1,5 @@
 
+
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
     
       
@@ -19,11 +20,103 @@ There is a short section in the Readme with instruction on installing PySimpleGU
   
 If you like this Cookbook, then you'll LOVE the 100+ sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  
       
-## Simple Data Entry - Return Values As List      
+# Copy these design patterns!      
+      
+All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.     The two types of windows are:
+1. One-shot window
+2. Persistent window
+
+The one-shot window is one that pops up, collects some data, and then disappears.  It is more or less a 'form'.
+
+The "Persistent" window is one that sticks around.  With these programs, you loop, reading and processing "events" such as button clicks. 
+      
+      
+## Pattern 1 - "One-shot Window" - Read int list (**The Most Common** Pattern)    
+      
+This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and closes.
+    
+ Because no "keys" were specified in the window layout, the return values will be a list of values.  If a key is present, then the values are a dictionary.  See the main readme document or further down in this document for more on these 2 ways of reading window values.
+   
+```python    
+import PySimpleGUI as sg      
+    
+layout = [[sg.Text('My one-shot window.')],      
+                 [sg.InputText(), sg.FileBrowse()],      
+                 [sg.Submit(), sg.Cancel()]]      
+      
+window = sg.Window('Window Title').Layout(layout)    
+    
+event, values = window.Read()    
+window.Close()
+    
+source_filename = values[0]    
+```    
+    
+    
+## Pattern 2 A - Persistent window (multiple reads using an event loop)      
+      
+Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.      
+    
+This code will present a window and will print values until the user clicks the exit button or closes window using an X.    
+      
+```python    
+import PySimpleGUI as sg      
+      
+layout = [[sg.Text('Persistent window')],      
+          [sg.Input()],      
+          [sg.Button('Read'), sg.Exit()]]      
+      
+window = sg.Window('Window that stays open').Layout(layout)      
+      
+while True:      
+    event, values = window.Read()      
+    if event is None or event == 'Exit':      
+        break      
+    print(event, values)    
+
+window.Close()
+```    
+
+## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
+
+This is a slightly more complex, but maybe more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
+
+Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
+
+```python
+import sys  
+if sys.version_info[0] >= 3:  
+    import PySimpleGUI as sg  
+else:  
+    import PySimpleGUI27 as sg  
+  
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
+          [sg.Input(key='_IN_')],  
+          [sg.Button('Show'), sg.Button('Exit')]]  
+  
+window = sg.Window('Window Title').Layout(layout)  
+  
+while True:                 # Event Loop  
+  event, values = window.Read()  
+  print(event, values)
+  if event is None or event == 'Exit':  
+      break  
+  if event == 'Show':  
+      # change the "output" element to be the value of "input" element  
+      window.FindElement('_OUTPUT_').Update(values['_IN_'])
+
+window.Close()
+```
+
+
+
+
+# Simple Data Entry - Return Values As List      
 Same GUI screen except the return values are in a list instead of a dictionary and doesn't have initial values.      
       
 ![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)      
       
+```python
     import PySimpleGUI as sg      
       
     # Very basic window.  Return values as a list      
@@ -38,66 +131,70 @@ Same GUI screen except the return values are in a list instead of a dictionary a
       
     window = sg.Window('Simple data entry window').Layout(layout)   
     event, values = window.Read()   
-      
+	window.Close()
     print(event, values[0], values[1], values[2])      
+```    
       
-## Simple data entry - Return Values As Dictionary      
+# Simple data entry - Return Values As Dictionary      
 A simple GUI with default values.  Results returned in a dictionary.    
       
 ![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)      
       
+```python
     import PySimpleGUI as sg      
       
     # Very basic window.  Return values as a dictionary      
     
     layout = [      
               [sg.Text('Please enter your Name, Address, Phone')],      
-              [sg.Text('Name', size=(15, 1)), sg.InputText('name', key='name')],      
-              [sg.Text('Address', size=(15, 1)), sg.InputText('address', key='address')],      
-              [sg.Text('Phone', size=(15, 1)), sg.InputText('phone', key='phone')],      
+              [sg.Text('Name', size=(15, 1)), sg.InputText('name', key='_NAME_')],      
+              [sg.Text('Address', size=(15, 1)), sg.InputText('address', key='_ADDRESS_')],      
+              [sg.Text('Phone', size=(15, 1)), sg.InputText('phone', key='_PHONE_')],      
               [sg.Submit(), sg.Cancel()]      
              ]      
     
     window = sg.Window('Simple data entry GUI').Layout(layout)  
       
     event, values = window.Read()  
-         
-    print(event, values['name'], values['address'], values['phone'])      
-      
+    
+    window.Close()
+    
+    print(event, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])      
+```      
 ---------------------      
       
-      
-      
------------      
+
+
 ## Simple File Browse      
-Browse for a filename that is populated into the input field.      
+Browse for a filename that is populated directly into the user's variable
       
 ![simple file browse](https://user-images.githubusercontent.com/13696193/43934539-d8bd9490-9c1d-11e8-927f-98b523776fcb.jpg)      
       
+```python   
     import PySimpleGUI as sg      
           
-    GUI_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],    
+    layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],    
                  [sg.InputText(), sg.FileBrowse()],      
                  [sg.Submit(), sg.Cancel()]]      
       
-    (event, (source_filename,)) = sg.Window('SHA-1 & 256 Hash').Layout(GUI_rows).Read()  
+    (event, (source_filename,)) = sg.Window('SHA-1 & 256 Hash').Layout(layout ).Read()  
       
     print(event, source_filename)      
-      
+```      
 --------------------------      
 ## Add GUI to Front-End of Script      
 Quickly add a GUI allowing the user to browse for a filename if a filename is not supplied on the command line using this 1-line GUI. It's the best of both worlds.      
       
 ![script front-end](https://user-images.githubusercontent.com/13696193/44756573-39e9c380-aaf9-11e8-97b4-6679f9f5bd46.jpg)      
       
-      
+```python      
     import PySimpleGUI as sg      
     import sys      
       
     if len(sys.argv) == 1:      
         event, (fname,) = sg.Window('My Script').Layout([[sg.Text('Document to open')],      
                                                                    [sg.In(), sg.FileBrowse()],      
-                                                                   [sg.CButton('Open'), sg.CButton('Cancel')]]).Read()  
+                                                                   [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()  
     else:      
         fname = sys.argv[1]      
       
@@ -105,7 +202,7 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
         sg.Popup("Cancel", "No filename supplied")      
         raise SystemExit("Cancelling: no filename supplied")      
     print(event, fname)      
-      
+```      
       
       
 --------------      
@@ -116,19 +213,20 @@ Browse to get 2 file names that can be then compared.
       
 ![compare 2 files](https://user-images.githubusercontent.com/13696193/43934659-60dc5fbe-9c1e-11e8-8d2b-07c0e3b61892.jpg)      
       
+```python
     import PySimpleGUI as sg      
       
-    gui_rows = [[sg.Text('Enter 2 files to comare')],    
+    layout = [[sg.Text('Enter 2 files to comare')],    
                  [sg.Text('File 1', size=(8, 1)), sg.InputText(), sg.FileBrowse()],      
                  [sg.Text('File 2', size=(8, 1)), sg.InputText(), sg.FileBrowse()],      
                  [sg.Submit(), sg.Cancel()]]      
       
-    window = sg.Window('File Compare').Layout(gui_rows)  
+    window = sg.Window('File Compare').Layout(layout)  
       
     event, values = window.Read()  
-      
+    window.Close()
     print(event, values)      
-      
+```      
 ---------------      
 ## Nearly All Widgets with Green Color Theme      
 Example of nearly all of the widgets in a single window.  Uses a customized color scheme.      
@@ -136,7 +234,7 @@ Example of nearly all of the widgets in a single window.  Uses a customized colo
 ![latest everything bagel](https://user-images.githubusercontent.com/13696193/45920376-22d89000-be71-11e8-8ac4-640f011f84d0.jpg)      
       
       
-      
+```python      
     #!/usr/bin/env Python3      
     import PySimpleGUI as sg      
       
@@ -188,33 +286,12 @@ Example of nearly all of the widgets in a single window.  Uses a customized colo
              'The results of the window.',      
              'The button clicked was "{}"'.format(event),      
              'The values are', values)      
+
+```
       
 -------------      
       
-      
- ## Window that stays open reading inputs and button clicks
-     
-This is the most basic form of a "Persistent Window", a window that remains open after button clicks and data entry.
-
-```python
-import PySimpleGUI as sg      
-
-layout = [[sg.Text('Persistent window')],      
-          [sg.Input()],      
-          [sg.Button('Read'), sg.Exit()]]      
-
-window = sg.Window('Window that stays open').Layout(layout)      
-
-while True:      
-    event, values = window.Read()      
-    if event is None or event == 'Exit':      
-        break      
-    print(event, values)    
-
-window.Close()
-```      
-      
-      
+          
       
       
 ## Non-Blocking Window With Periodic Update    
@@ -227,11 +304,11 @@ Use caution when using windows with a timeout.  You should rarely need to use a 
 ```python      
 import PySimpleGUI as sg
 
-gui_rows = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],
-            [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='output')],
+layout = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],
+            [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='_OUTPUT_')],
             [sg.T(' ' * 5), sg.Button('Start/Stop', focus=True), sg.Quit()]]
 
-window = sg.Window('Running Timer').Layout(gui_rows)
+window = sg.Window('Running Timer').Layout(layout)
 
 timer_running = True
 i = 0
@@ -243,7 +320,7 @@ while True:
         break
     elif event == 'Start/Stop':
         timer_running = not timer_running
-    window.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+    window.FindElement('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 ```          
            
       
@@ -253,7 +330,8 @@ while True:
 The architecture of some programs works better with button callbacks instead of handling in-line.  While button callbacks are part of the PySimpleGUI implementation, they are not directly exposed to the caller.  The way to get the same result as callbacks is to simulate them with a recipe like this one.      
       
 ![button callback 2](https://user-images.githubusercontent.com/13696193/43955588-e139ddc6-9c6e-11e8-8c78-c1c226b8d9b1.jpg)      
-      
+
+```python      
     import PySimpleGUI as sg      
       
     # This design pattern simulates button callbacks      
@@ -291,17 +369,19 @@ The architecture of some programs works better with button callbacks instead of 
       
     # All done!      
     sg.PopupOK('Done')      
+```
       
------      
+   
 ## Realtime Buttons (Good For Raspberry Pi)      
 This recipe implements a remote control interface for a robot.  There are 4 directions, forward, reverse, left, right.  When a button is clicked, PySimpleGUI immediately returns button events for as long as the buttons is held down.  When released, the button events stop.  This is an async/non-blocking window.      
       
 ![robot control](https://user-images.githubusercontent.com/13696193/44006710-d227f23e-9e56-11e8-89a3-2be5b2726199.jpg)      
-      
+
+```python      
     import PySimpleGUI as sg      
       
       
-    gui_rows = [[sg.Text('Robotics Remote Control')],    
+    layout = [[sg.Text('Robotics Remote Control')],    
                  [sg.T(' '  * 10), sg.RealtimeButton('Forward')],      
                  [sg.RealtimeButton('Left'), sg.T(' '  * 15), sg.RealtimeButton('Right')],      
                  [sg.T(' '  * 10), sg.RealtimeButton('Reverse')],      
@@ -309,7 +389,7 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
                  [sg.Quit(button_color=('black', 'orange'))]      
                  ]      
       
-    window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(gui_rows)    
+    window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(layout )    
       
     #      
     # Some place later in your code...      
@@ -326,8 +406,8 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
             break      
       
     window.Close()   # Don't forget to close your window!      
-      
----------      
+```      
+   
       
 ## OneLineProgressMeter      
       
@@ -335,15 +415,14 @@ This recipe shows just how easy it is to add a progress meter to your code.
       
 ![onelineprogressmeter](https://user-images.githubusercontent.com/13696193/45589254-bd285900-b8f0-11e8-9122-b43f06bf074d.jpg)      
       
-      
+```python      
     import PySimpleGUI as sg      
       
     for i in range(1000):      
         sg.OneLineProgressMeter('One Line Meter Example', i+1, 1000, 'key')      
+```      
       
-      
-  
------      
+
 ## Button Graphics (Media Player)      
 Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4 images in order to function correctly.  The background is set to the same color as the button background so that they blend together.      
       
@@ -417,18 +496,14 @@ def MediaPlayerGUI():
             window.FindElement('output').Update(event)
 
 MediaPlayerGUI()
-
-
 ```
 
- 
-      
-----      
 ## Script Launcher - Persistent Window    
 This Window doesn't close after button clicks.  To achieve this the buttons are specified as `sg.Button` instead of `sg.Button`.   The exception to this is the EXIT button.  Clicking it will close the window.  This program will run commands and display the output in the scrollable window.    
       
 ![launcher 2](https://user-images.githubusercontent.com/13696193/43958519-b30af218-9c79-11e8-88da-fadc69da818c.jpg)      
-      
+
+```python      
     import PySimpleGUI as sg      
     import subprocess      
       
@@ -467,13 +542,13 @@ This Window doesn't close after button clicks.  To achieve this the buttons are 
           ExecuteCommandSubprocess('python', '--version')      
       elif event == 'Run':      
           ExecuteCommandSubprocess(value[0])      
-      
-----      
+```    
+     
 ## Machine Learning GUI      
 A standard non-blocking GUI with lots of inputs.      
       
 ![machine learning green](https://user-images.githubusercontent.com/13696193/43979000-408b77ba-9cb7-11e8-9ffd-24c156767532.jpg)      
-      
+```python     
     import PySimpleGUI as sg      
       
     # Green & tan color scheme      
@@ -506,6 +581,7 @@ A standard non-blocking GUI with lots of inputs.
     window = sg.Window('Machine Learning Front End', font=("Helvetica", 12)).Layout(layout)      
       
     event, values = window.Read()      
+```
       
 -------      
 ## Custom Progress Meter / Progress Bar      
@@ -548,7 +624,7 @@ For those of you into super-compact code, a complete customized GUI can be speci
       
       
 Instead of      
-      
+```python      
     import PySimpleGUI as sg      
       
     layout = [[sg.Text('Filename')],      
@@ -556,15 +632,16 @@ Instead of
               [sg.OK(), sg.Cancel()]]      
       
     event, (number,) = sg.Window('Get filename example').Layout(layout).Read()  
-      
+```      
 you can write this line of code for the exact same result (OK, two lines with the import):      
-      
+```python      
     import PySimpleGUI as sg      
       
     event, (filename,) = sg.Window('Get filename example').Layout(      
         [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()  
-      
---------------------      
+```      
+
+   
 ## Multiple Columns      
   
 A Column is required when you have a tall element to the left of smaller elements.      
@@ -576,7 +653,7 @@ To make it easier to see the Column in the window, the Column background has bee
 ![cookbook columns](https://user-images.githubusercontent.com/13696193/45309948-f6c52280-b4f2-11e8-8691-a45fa0e06c50.jpg)      
       
       
-      
+```python      
     import PySimpleGUI as sg      
       
     # Demo of how columns work      
@@ -600,7 +677,7 @@ To make it easier to see the Column in the window, the Column background has bee
     event, values = sg.Window('Compact 1-line Window with column').Layout(layout).Read()  
       
     sg.Popup(event, values, line_width=200)      
-      
+```      
       
 ## Persistent Window With Text Element Updates    
       
@@ -609,7 +686,7 @@ This simple program keep a window open, taking input values until the user termi
 ![math game](https://user-images.githubusercontent.com/13696193/44537842-c9444080-a6cd-11e8-94bc-6cdf1b765dd8.jpg)      
       
       
-      
+ ```python     
     import PySimpleGUI as sg      
       
     layout = [ [sg.Txt('Enter values to calculate')],      
@@ -635,29 +712,30 @@ This simple program keep a window open, taking input values until the user termi
             window.FindElement('output').Update(calc)      
         else:      
             break      
-      
+```      
       
       
 ## tkinter Canvas Widget      
       
 The Canvas Element is one of the few tkinter objects that are directly accessible.  The tkinter Canvas widget itself can be retrieved from a Canvas Element like this:      
-      
+```python      
     can = sg.Canvas(size=(100,100))      
     tkcanvas = can.TKCanvas      
     tkcanvas.create_oval(50, 50, 100, 100)      
+```
       
 While it's fun to scribble on a Canvas Widget, try Graph Element makes it a downright pleasant experience.  You do not have to worry about the tkinter coordinate system and can instead work in your own coordinate system.      
       
       
 ![canvas](https://user-images.githubusercontent.com/13696193/44632429-5266ac00-a948-11e8-9ee0-664103c40178.jpg)      
       
-      
+  ```python    
     import PySimpleGUI as sg      
       
     layout = [      
         [sg.Canvas(size=(100, 100), background_color='red', key= 'canvas')],      
         [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue')]      
-    ]      
+        ]      
       
     window = sg.Window('Canvas test')      
     window.Layout(layout)      
@@ -674,6 +752,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
             canvas.TKCanvas.itemconfig(cir, fill="Blue")      
         elif event == 'Red':      
             canvas.TKCanvas.itemconfig(cir, fill="Red")      
+```            
       
 ## Graph Element - drawing circle, rectangle, etc, objects      
       
@@ -681,7 +760,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
       
 ![graph recipe](https://user-images.githubusercontent.com/13696193/45920640-751bb000-be75-11e8-9530-45b71cbae07d.jpg)      
       
-      
+```python      
     import PySimpleGUI as sg      
       
     layout = [      
@@ -713,7 +792,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
             graph.MoveFigure(circle, 10,10)      
             graph.MoveFigure(oval, 10,10)      
             graph.MoveFigure(rectangle, 10,10)      
-      
+```      
       
 ## Keypad Touchscreen Entry - Input Element Update      
       
@@ -730,7 +809,7 @@ There are a number of features used in this Recipe including:
 ![keypad 2](https://user-images.githubusercontent.com/13696193/44640891-57504d80-a992-11e8-93f4-4e97e586505e.jpg)      
       
       
-      
+  ```python    
     import PySimpleGUI as sg      
       
     # Demonstrates a number of PySimpleGUI features including:      
@@ -768,6 +847,7 @@ There are a number of features used in this Recipe including:
            window.FindElement('out').Update(keys_entered)  # output the final string      
       
         window.FindElement('input').Update(keys_entered)  # change the window to reflect current key string    
+```
       
 ## Animated Matplotlib Graph      
       
@@ -843,7 +923,7 @@ In other GUI frameworks this program would be most likely "event driven" with ca
       
 ![timemanagement](https://user-images.githubusercontent.com/13696193/44996818-0f27c100-af78-11e8-8836-9ef6164efe3b.jpg)      
       
-      
+```python      
     import PySimpleGUI as sg      
     """      
     Demonstrates using a "tight" layout with a Dark theme.      
@@ -901,6 +981,7 @@ In other GUI frameworks this program would be most likely "event driven" with ca
             window.FindElement('Submit').Update(disabled=True)      
             window.FindElement('Reset').Update(disabled=False)      
             recording = False      
+```      
       
 ## Password Protection For Scripts      
       
@@ -912,6 +993,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
       
 ![password hash](https://user-images.githubusercontent.com/13696193/45129441-ab58f000-b151-11e8-8a46-c2789bb7824e.jpg)      
       
+```python
     import PySimpleGUI as sg      
     import hashlib      
       
@@ -971,7 +1053,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
         print('Login SUCCESSFUL')      
     else:      
         print('Login FAILED!!')      
-      
+```      
       
 ## Desktop Floating Toolbar      
       
@@ -998,7 +1080,7 @@ You can easily change colors to match your background by changing a couple of pa
       
 ![toolbar black](https://user-images.githubusercontent.com/13696193/45324307-bfb73700-b51b-11e8-8709-6c3c23f737c4.jpg)      
       
-      
+```python      
     import PySimpleGUI as sg      
     import subprocess      
     import os      
@@ -1068,7 +1150,7 @@ You can easily change colors to match your background by changing a couple of pa
       
     if __name__ == '__main__':      
         Launcher()      
-      
+```      
       
       
       
@@ -1212,7 +1294,7 @@ If you double click the dashed line at the top of the list of choices, that menu
 ![tear off](https://user-images.githubusercontent.com/13696193/45307668-9aabcf80-b4ed-11e8-9b2b-8564d4bf82a8.jpg)      
       
       
-      
+```python      
     import PySimpleGUI as sg      
       
     sg.ChangeLookAndFeel('LightGreen')      
@@ -1244,6 +1326,7 @@ If you double click the dashed line at the top of the list of choices, that menu
         elif event == 'Open':      
             filename = sg.PopupGetFile('file to open', no_window=True)      
             print(filename)      
+```
       
 ## Graphing with Graph Element      
       
@@ -1255,7 +1338,7 @@ In this example we're defining our graph to be from -100, -100 to +100,+100.  Th
 ![graph markers](https://user-images.githubusercontent.com/13696193/46113087-01eaa480-c1bb-11e8-9784-0dbb4ce728b0.jpg)  
       
       
-```  
+```python  
 import math    
 import PySimpleGUI as sg    
     
@@ -1284,9 +1367,7 @@ for x in range(-100,100):
     graph.DrawCircle((x,y), 1, line_color='red', fill_color='red')    
     
 event, values = window.Read()  
-```  
-  
-  
+```
   
     
       
@@ -1299,7 +1380,7 @@ Tabs bring not only an extra level of sophistication to your window layout, they
   
   
   
-```  
+```python
 import PySimpleGUI as sg    
     
 tab1_layout =  [[sg.T('This is inside tab 1')]]    
@@ -1317,8 +1398,7 @@ while True:
     print(event,values)    
     if event is None:           # always,  always give a way out!    
         break  
-```  
-  
+```
   
   
   
