@@ -5,9 +5,11 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
-          [sg.Input(do_not_clear=True, key='_IN_')],
-          [sg.Button('Show'), sg.Button('Exit')]]
+layout =    [
+            [sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
+            [sg.Input(do_not_clear=True, key='_IN_')],
+            [sg.Button('Show'), sg.Button('Exit')]
+            ]
 
 window = sg.Window('Window Title').Layout(layout)
 
