@@ -187,6 +187,7 @@ class MyWindows():
     def __init__(self):
         self.NumOpenWindows = 0
         self.user_defined_icon = None
+        self.hidden_master_root = None
 
     def Decrement(self):
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
@@ -3083,6 +3084,7 @@ class Window:
         self.RootNeedsDestroying = True
         return None
 
+
     def Close(self):
         if self.TKrootDestroyed:
             return
@@ -4640,7 +4642,16 @@ def StartupTK(my_flex_form):
 
     # print('Starting TK open Windows = {}'.format(ow))
     if not ow and not my_flex_form.ForceTopLevel:
-        root = tk.Tk()
+        # if first window being created, make a throwaway, hidden master root.  This stops one user
+        # window from becoming the child of another user window. All windows are children of this
+        # hidden window
+        _my_windows.Increment()
+        _my_windows.hidden_master_root = tk.Tk()
+        _my_windows.hidden_master_root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        _my_windows.hidden_master_root.wm_overrideredirect(True)
+
+        # root = tk.Tk()            # users windows are no longer using tk.Tk. They are all Toplevel windows
+        root = tk.Toplevel()
     else:
         root = tk.Toplevel()
 
