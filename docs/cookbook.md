@@ -31,9 +31,9 @@ The one-shot window is one that pops up, collects some data, and then disappears
 The "Persistent" window is one that sticks around.  With these programs, you loop, reading and processing "events" such as button clicks. 
       
       
-## Pattern 1 - "One-shot Window" - Read int list (**The Most Common** Pattern)    
+## Pattern 1 - "One-shot Window" - Read int list (The Most Common Pattern)    
       
-This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and closes.
+This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and then closes.
     
  Because no "keys" were specified in the window layout, the return values will be a list of values.  If a key is present, then the values are a dictionary.  See the main readme document or further down in this document for more on these 2 ways of reading window values.
    
@@ -58,12 +58,14 @@ source_filename = values[0]
 Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.      
     
 This code will present a window and will print values until the user clicks the exit button or closes window using an X.    
+
+Note the `do_not_clear` parameter that is described in the next design pattern.
       
 ```python    
 import PySimpleGUI as sg      
       
 layout = [[sg.Text('Persistent window')],      
-          [sg.Input()],      
+          [sg.Input(do_not_clear=True)],      
           [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open').Layout(layout)      
@@ -83,6 +85,8 @@ This is a slightly more complex, but maybe more realistic version that reads inp
 
 Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
+A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False, the default setting (you can remove the parameter completely).
+
 ```python
 import sys  
 if sys.version_info[0] >= 3:  
@@ -91,7 +95,7 @@ else:
     import PySimpleGUI27 as sg  
   
 layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
-          [sg.Input(key='_IN_')],  
+          [sg.Input(do_not_clear=True, key='_IN_')],  
           [sg.Button('Show'), sg.Button('Exit')]]  
   
 window = sg.Window('Window Title').Layout(layout)  
