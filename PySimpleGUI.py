@@ -3083,7 +3083,7 @@ class Window:
         self.RootNeedsDestroying = True
         return None
 
-    def CloseNonBlocking(self):
+    def Close(self):
         if self.TKrootDestroyed:
             return
         try:
@@ -3092,13 +3092,12 @@ class Window:
         except:
             pass
 
-    CloseNonBlockingForm = CloseNonBlocking
-    Close = CloseNonBlockingForm
-
+    CloseNonBlockingForm = Close
+    CloseNonBlocking = Close
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
-        print('Got closing callback')
+        # print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.destroy()  # kick the users out of the mainloop
@@ -5810,7 +5809,7 @@ PopupNoWait = PopupNonBlocking
 
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup  ---------------------------
 def PopupQuick(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
-               auto_close=True, auto_close_duration=1, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
+               auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Show Popup box that doesn't block and closes itself
@@ -5840,7 +5839,7 @@ def PopupQuick(*args, button_type=POPUP_BUTTONS_OK, button_color=None, backgroun
 
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def PopupQuickMessage(*args, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None, text_color=None,
-               auto_close=True, auto_close_duration=1, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
+               auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
                font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Show Popup box that doesn't block and closes itself
@@ -5866,8 +5865,6 @@ def PopupQuickMessage(*args, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
           font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
-
-
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
