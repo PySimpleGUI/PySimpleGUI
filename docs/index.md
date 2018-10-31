@@ -861,7 +861,7 @@ This code will present a window and will print values until the user clicks the 
 import PySimpleGUI as sg      
       
 layout = [[sg.Text('Persistent window')],      
-          [sg.Input()],      
+          [sg.Input(do_not_clear=True)],      
           [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open').Layout(layout)      
@@ -881,6 +881,8 @@ This is a slightly more complex, but maybe more realistic version that reads inp
 
 Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
+A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False, the default setting (you can remove the parameter completely).
+
 ```python
 import sys  
 if sys.version_info[0] >= 3:  
@@ -889,7 +891,7 @@ else:
     import PySimpleGUI27 as sg  
   
 layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
-          [sg.Input(key='_IN_')],  
+          [sg.Input(do_not_clear=True, key='_IN_')],  
           [sg.Button('Show'), sg.Button('Exit')]]  
   
 window = sg.Window('Window Title').Layout(layout)  
@@ -906,15 +908,13 @@ while True:                 # Event Loop
 window.Close()
 ```
 
-
-
-      
+     
       
 ## How GUI Programming in Python Should Look?  At least for beginners ?    
       
-While one goal was making it simple to create a GUI another just as important goal was to do it in a Pythonic manner. Whether it achieved this goal is debatable, but it was an attempt just the same.      
+While one goal was making it simple to create a GUI another just as important goal was to do it in a Pythonic manner. Whether it achieved these goals is debatable, but it was an attempt just the same.      
       
-The key to custom windows in PySimpleGUI is to view windows as ROWS of  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.    
+The key to custom windows in PySimpleGUI is to view windows as ROWS of GUI  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.    
       
  Let's dissect this little program     
  ```python    
@@ -1103,7 +1103,7 @@ If your window has an event loop where it is read over and over, remember to giv
       
 All GUIs have one thing in common, an "event loop".  Usually the GUI framework runs the event loop for you, but sometimes you want greater control and will run your own event loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.      
     
-With PySimpleGUI if your window will remain open following button clicks, then your code will have an event loop. If your program shows a single window, collects the data and then has no other GUI interaction, then you don't need an event loop.    
+With PySimpleGUI if your window will remain open following button clicks, then your code will have an event loop. If your program shows a single "one-shot"  window, collects the data and then has no other GUI interaction, then you don't need an event loop.    
       
 There's nothing mysterious about event loops... they are loops where you take care of.... wait for it..... *events*.  Events are things like button clicks, key strokes, mouse scroll-wheel up/down.        
       
@@ -1128,7 +1128,8 @@ while True:
     event, values = window.Read()      
     if event is None or event == 'Exit':      
         break      
-    print(event, values)    
+    print(event, values)   
+window.Close()
 ```    
        
 In the Event Loop we are reading the window and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)      
