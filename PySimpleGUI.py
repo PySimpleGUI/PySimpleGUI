@@ -524,7 +524,7 @@ Input = InputText
 class InputCombo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False):
+                 readonly=False, font=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -543,9 +543,9 @@ class InputCombo(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -576,6 +576,8 @@ class InputCombo(Element):
                 self.Readonly = readonly
             if self.Readonly:
                 self.TKCombo['state'] = 'readonly'
+        if font is not None:
+            self.TKText.configure(font=font)
 
     def __del__(self):
         try:
@@ -920,7 +922,7 @@ class Spin(Element):
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False, key=None, focus=False,
-                 pad=None, tooltip=None):
+                 font=None, pad=None, tooltip=None):
         '''
         Multiline Element
         :param default_text:
@@ -936,6 +938,7 @@ class Multiline(Element):
         :param focus:
         :param pad:
         :param tooltip:
+        :param font:
         '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
@@ -946,12 +949,13 @@ class Multiline(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits
+        print(font or DEFAULT_FONT)
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
-    def Update(self, value=None, disabled=None, append=False):
+    def Update(self, value=None, disabled=None, append=False, font=None):
         if value is not None:
             try:
                 if not append:
@@ -966,6 +970,8 @@ class Multiline(Element):
             self.TKText.configure(state='disabled')
         elif disabled == False:
             self.TKText.configure(state='normal')
+        if font is not None:
+            self.TKText.configure(font=font)
 
     def Get(self):
         return self.TKText.get(1.0, tk.END)
@@ -5060,7 +5066,7 @@ class DebugWin():
         #     print(1, 2, 3, sep='-')
         # if end is None:
         #     print("")
-        self.form.ReadNonBlocking()
+        self.form.Read(timeout=0)
 
     def Close(self):
         self.form.CloseNonBlockingForm()
@@ -5739,7 +5745,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
                                   pad=((20, 0), 3)))
 
     if non_blocking:
-        button, values = window.ReadNonBlocking()
+        button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
 
