@@ -5838,6 +5838,38 @@ def PopupQuick(*args, button_type=POPUP_BUTTONS_OK, button_color=None, backgroun
           font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
 
+# --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
+def PopupQuickMessage(*args, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None, text_color=None,
+               auto_close=True, auto_close_duration=1, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
+               font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+    """
+    Show Popup box that doesn't block and closes itself
+    :param args:
+    :param button_type:
+    :param button_color:
+    :param background_color:
+    :param text_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param non_blocking:
+    :param icon:
+    :param line_width:
+    :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
+    :param location:
+    :return:
+    """
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+          button_type=button_type,
+          auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
+          line_width=line_width,
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+
+
+
 # --------------------------- PopupNoTitlebar ---------------------------
 def PopupNoTitlebar(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                     auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
