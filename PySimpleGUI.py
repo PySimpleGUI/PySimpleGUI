@@ -394,7 +394,6 @@ class Element():
             button_element.ButtonCallBack()
 
     def ListboxSelectHandler(self, event):
-        MyForm = self.ParentForm
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -406,7 +405,6 @@ class Element():
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def ComboboxSelectHandler(self, event):
-        MyForm = self.ParentForm
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -417,8 +415,16 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
+    def RadioHandler(self):
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+
     def CheckboxHandler(self):
-        MyForm = self.ParentForm
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -428,7 +434,6 @@ class Element():
             self.ParentForm.TKroot.quit()
 
     def TabGroupSelectHandler(self, event):
-        MyForm = self.ParentForm
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -438,7 +443,6 @@ class Element():
             self.ParentForm.TKroot.quit()
 
     def KeyboardHandler(self, event):
-        MyForm = self.ParentForm
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -736,7 +740,7 @@ class Listbox(Element):
 # ---------------------------------------------------------------------- #
 class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
-                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
+                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None, change_submits=False):
         '''
         Radio Button Element
         :param text:
@@ -751,6 +755,7 @@ class Radio(Element):
         :param key:
         :param pad:
         :param tooltip:
+        :param change_submits:
         '''
         self.InitialState = default
         self.Text = text
@@ -758,7 +763,8 @@ class Radio(Element):
         self.GroupID = group_id
         self.Value = None
         self.Disabled = disabled
-        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.TextColor = text_color or DEFAULT_TEXT_COLOR
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -4204,8 +4210,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKIntVar = RadVar  # store the RadVar in Radio object
                 if default_value:  # if this radio is the one selected, set RadVar to match
                     element.TKIntVar.set(value)
-                element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-                                                 variable=element.TKIntVar, value=value, bd=border_depth, font=font)
+                if element.ChangeSubmits:
+                    element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                                                     variable=element.TKIntVar, value=value, bd=border_depth, font=font,
+                                                     command=element.RadioHandler)
+                else:
+                    element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                                                     variable=element.TKIntVar, value=value, bd=border_depth, font=font)
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
                     element.TKRadio.configure(selectcolor=element.BackgroundColor)
