@@ -3467,7 +3467,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
     button_pressed_text = top_level_form.LastButtonClicked
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
-            if element.Key == WRITE_ONLY_KEY:
+            if element.Key is not None and  WRITE_ONLY_KEY in element.Key:
                 continue
             value = None
             if element.Type == ELEM_TYPE_COLUMN:
