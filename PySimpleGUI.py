@@ -178,9 +178,11 @@ ThisRow = 555666777  # magic number
 # DEFAULT_WINDOW_ICON = ''
 MESSAGE_BOX_LINE_WIDTH = 60
 
+# "Special" Key Values.. reserved
 # Key representing a Read timeout
-TIMEOUT_KEY = '__timeout__'
-
+TIMEOUT_KEY = '__TIMEOUT__'
+# Key indicating should not create any return values for element
+WRITE_ONLY_KEY = '__WRITE ONLY__'
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows():
@@ -3465,6 +3467,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
     button_pressed_text = top_level_form.LastButtonClicked
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
+            if element.Key == WRITE_ONLY_KEY:
+                continue
             value = None
             if element.Type == ELEM_TYPE_COLUMN:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
