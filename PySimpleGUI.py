@@ -949,7 +949,6 @@ class Multiline(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits
-        print(font or DEFAULT_FONT)
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -2944,13 +2943,11 @@ class Window:
         else:
             return self.ReturnValues
 
-    def ReadNonBlocking(self, Message=''):
+    def ReadNonBlocking(self):
         if self.TKrootDestroyed:
             return None, None
         if not self.Shown:
             self.Show(non_blocking=True)
-        if Message:
-            print(Message)
         try:
             rc = self.TKroot.update()
         except:
@@ -3105,11 +3102,11 @@ class Window:
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
-        # print('Got closing callback')
+        print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.destroy()  # kick the users out of the mainloop
-            self.TKrootDestroyed = True
+        self.TKrootDestroyed = True
 
         return
 
@@ -3154,6 +3151,10 @@ class Window:
             self.TKroot.lift()
         except:
             pass
+
+    def CurrentLocation(self):
+        return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+
 
     def __enter__(self):
         return self
@@ -5044,54 +5045,49 @@ _easy_print_data = None  # global variable... I'm cheating
 
 
 class DebugWin():
-    def __init__(self, size=(None, None)):
+    def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
         # Show a form that's a running counter
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.form = Window('Debug Window', auto_size_text=True, font=('Courier New', 12))
+        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location, font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
         self.output_element = Output(size=win_size)
-        self.form_rows = [[Text('EasyPrint Output')],
-                          [self.output_element],
-                          [DummyButton('Quit')]]
-        self.form.AddRows(self.form_rows)
-        self.form.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
+        if no_button:
+            self.layout =   [[self.output_element]]
+        else:
+            self.layout =   [
+                            [self.output_element],
+                            [DummyButton('Quit')]
+                            ]
+        self.window.AddRows(self.layout)
+        self.window.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
         return
 
     def Print(self, *args, end=None, sep=None):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
+
+        event, values = self.window.Read(timeout=0)
+        if event == 'Quit' or event is None:
+            self.Close()
         print(*args, sep=sepchar, end=endchar)
-        # for a in args:
-        #     msg = str(a)
-        #     print(msg, end="", sep=sepchar)
-        #     print(1, 2, 3, sep='-')
-        # if end is None:
-        #     print("")
-        self.form.Read(timeout=0)
 
     def Close(self):
-        self.form.CloseNonBlockingForm()
-        self.form.__del__()
-
-
-def Print(*args, size=(None, None), end=None, sep=None):
-    EasyPrint(*args, size=size, end=end, sep=sep)
+        self.window.Close()
+        self.window.__del__()
 
 
 def PrintClose():
     EasyPrintClose()
 
 
-def eprint(*args, size=(None, None), end=None, sep=None):
-    EasyPrint(*args, size=size, end=end, sep=sep)
-
-
-def EasyPrint(*args, size=(None, None), end=None, sep=None):
+def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False,  keep_on_top=False):
     global _easy_print_data
 
     if _easy_print_data is None:
-        _easy_print_data = DebugWin(size=size)
+        _easy_print_data = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
     _easy_print_data.Print(*args, end=end, sep=sep)
 
+Print = EasyPrint
+eprint = EasyPrint
 
 def EasyPrintold(*args, size=(None, None), end=None, sep=None):
     if 'easy_print_data' not in EasyPrint.__dict__:  # use a function property to save DebugWin object (static variable)
@@ -6101,7 +6097,7 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
 
 def PopupGetFolder(message, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=False, location=(None, None)):
+                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
     """
     Display popup with text entry field and browse button. Browse for folder
     :param message:
@@ -6119,8 +6115,14 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
     :param location:
     :return: Contents of text field. None if closed using X or cancelled
     """
+
+    global _my_windows
+
     if no_window:
-        root = tk.Tk()
+        if _my_windows.NumOpenWindows:
+            root = tk.Toplevel()
+        else:
+            root = tk.Tk()
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
         except:
@@ -6130,7 +6132,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
         return folder_name
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), FolderBrowse()],
+              [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
@@ -6152,7 +6154,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
 def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                 location=(None, None)):
+                 location=(None, None),  initial_folder=None):
     """
         Display popup with text entry field and browse button. Browse for file
     :param message:
@@ -6173,8 +6175,14 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
     :param location:
     :return:  string representing the path chosen, None if cancelled or window closed with X
     """
+
+    global _my_windows
+
     if no_window:
-        root = tk.Tk()
+        if _my_windows.NumOpenWindows:
+            root = tk.Toplevel()
+        else:
+            root = tk.Tk()
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
         except:
@@ -6188,7 +6196,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
         root.destroy()
         return filename
 
-    browse_button = SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
+    browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder) if save_as else FileBrowse(file_types=file_types, initial_folder=initial_folder)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
