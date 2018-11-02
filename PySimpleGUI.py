@@ -515,6 +515,13 @@ class InputText(Element):
     def Get(self):
         return self.TKStringVar.get()
 
+
+    def SetFocus(self):
+        try:
+            self.TKEntry.focus_set()
+        except:
+            pass
+
     def __del__(self):
         super().__del__()
 
@@ -982,6 +989,13 @@ class Multiline(Element):
 
     def Get(self):
         return self.TKText.get(1.0, tk.END)
+
+
+    def SetFocus(self):
+        try:
+            self.TKText.focus_set()
+        except:
+            pass
 
     def __del__(self):
         super().__del__()
@@ -3175,10 +3189,7 @@ class Window:
         for row in self.Rows:
             for element in row:
                 element.__del__()
-        # try:
-        #     del(self.TKroot)
-        # except:
-        #     pass
+
 
 
 FlexForm = Window
@@ -5073,22 +5084,31 @@ class DebugWin():
                             [DummyButton('Quit')]
                             ]
         self.window.AddRows(self.layout)
-        self.window.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
+        self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
         return
 
     def Print(self, *args, end=None, sep=None):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
+        if self.window is None:         # if window was destroyed already, just print
+            print(*args, sep=sepchar, end=endchar)
+            return
+
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
         print(*args, sep=sepchar, end=endchar)
+        # Add extra check to see if the window was closed... if closed by X sometimes am not told
+        try:
+            state = self.window.TKroot.state()
+        except:
+            self.Close()
 
     def Close(self):
         self.window.Close()
         self.window.__del__()
-
+        self.window = None
 
 def PrintClose():
     EasyPrintClose()
@@ -5104,20 +5124,12 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
 Print = EasyPrint
 eprint = EasyPrint
 
-def EasyPrintold(*args, size=(None, None), end=None, sep=None):
-    if 'easy_print_data' not in EasyPrint.__dict__:  # use a function property to save DebugWin object (static variable)
-        EasyPrint.easy_print_data = DebugWin(size=size)
-    if EasyPrint.easy_print_data is None:
-        EasyPrint.easy_print_data = DebugWin(size=size)
-    EasyPrint.easy_print_data.Print(*args, end=end, sep=sep)
-
 
 def EasyPrintClose():
-    if 'easy_print_data' in EasyPrint.__dict__:
-        if EasyPrint.easy_print_data is not None:
-            EasyPrint.easy_print_data._Close()
-        EasyPrint.easy_print_data = None
-        # del EasyPrint.easy_print_data
+    global _easy_print_data
+    if _easy_print_data is not None:
+        _easy_print_data.Close()
+        _easy_print_data = None
 
 
 # ========================  Scrolled Text Box   =====#
