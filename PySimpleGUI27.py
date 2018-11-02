@@ -190,15 +190,18 @@ ThisRow = 555666777  # magic number
 # DEFAULT_WINDOW_ICON = ''
 MESSAGE_BOX_LINE_WIDTH = 60
 
+# "Special" Key Values.. reserved
 # Key representing a Read timeout
-TIMEOUT_KEY = '__timeout__'
-
+TIMEOUT_KEY = '__TIMEOUT__'
+# Key indicating should not create any return values for element
+WRITE_ONLY_KEY = '__WRITE ONLY__'
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows(object):
     def __init__(self):
         self.NumOpenWindows = 0
         self.user_defined_icon = None
+        self.hidden_master_root = None
 
     def Decrement(self):
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
@@ -405,7 +408,6 @@ class Element(object):
             button_element.ButtonCallBack()
 
     def ListboxSelectHandler(self, event):
-        MyForm = self.ParentForm
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -417,7 +419,6 @@ class Element(object):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def ComboboxSelectHandler(self, event):
-        MyForm = self.ParentForm
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -428,8 +429,16 @@ class Element(object):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
+    def RadioHandler(self):
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+
     def CheckboxHandler(self):
-        MyForm = self.ParentForm
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -439,7 +448,6 @@ class Element(object):
             self.ParentForm.TKroot.quit()
 
     def TabGroupSelectHandler(self, event):
-        MyForm = self.ParentForm
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -449,7 +457,6 @@ class Element(object):
             self.ParentForm.TKroot.quit()
 
     def KeyboardHandler(self, event):
-        MyForm = self.ParentForm
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -520,6 +527,13 @@ class InputText(Element):
     def Get(self):
         return self.TKStringVar.get()
 
+
+    def SetFocus(self):
+        try:
+            self.TKEntry.focus_set()
+        except:
+            pass
+
     def __del__(self):
         super().__del__()
 
@@ -535,7 +549,7 @@ Input = InputText
 class InputCombo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False):
+                 readonly=False, font=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -554,9 +568,9 @@ class InputCombo(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -587,6 +601,8 @@ class InputCombo(Element):
                 self.Readonly = readonly
             if self.Readonly:
                 self.TKCombo['state'] = 'readonly'
+        if font is not None:
+            self.TKText.configure(font=font)
 
     def __del__(self):
         try:
@@ -745,7 +761,7 @@ class Listbox(Element):
 # ---------------------------------------------------------------------- #
 class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
-                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None):
+                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None, change_submits=False):
         '''
         Radio Button Element
         :param text:
@@ -760,6 +776,7 @@ class Radio(Element):
         :param key:
         :param pad:
         :param tooltip:
+        :param change_submits:
         '''
         self.InitialState = default
         self.Text = text
@@ -767,7 +784,8 @@ class Radio(Element):
         self.GroupID = group_id
         self.Value = None
         self.Disabled = disabled
-        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.TextColor = text_color or DEFAULT_TEXT_COLOR
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -931,7 +949,7 @@ class Spin(Element):
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False, key=None, focus=False,
-                 pad=None, tooltip=None):
+                 font=None, pad=None, tooltip=None):
         '''
         Multiline Element
         :param default_text:
@@ -947,6 +965,7 @@ class Multiline(Element):
         :param focus:
         :param pad:
         :param tooltip:
+        :param font:
         '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
@@ -959,10 +978,10 @@ class Multiline(Element):
         self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
-    def Update(self, value=None, disabled=None, append=False):
+    def Update(self, value=None, disabled=None, append=False, font=None):
         if value is not None:
             try:
                 if not append:
@@ -977,9 +996,18 @@ class Multiline(Element):
             self.TKText.configure(state='disabled')
         elif disabled == False:
             self.TKText.configure(state='normal')
+        if font is not None:
+            self.TKText.configure(font=font)
 
     def Get(self):
         return self.TKText.get(1.0, tk.END)
+
+
+    def SetFocus(self):
+        try:
+            self.TKText.focus_set()
+        except:
+            pass
 
     def __del__(self):
         super().__del__()
@@ -1240,6 +1268,7 @@ class Button(Element):
         self.Focus = focus
         self.TKCal = None
         self.CalendarCloseWhenChosen = None
+        self.DefaultDate_M_D_Y = (None, None, None)
         self.InitialFolder = initial_folder
         self.Disabled = disabled
 
@@ -1369,7 +1398,7 @@ class Button(Element):
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen )
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
 
@@ -2067,6 +2096,12 @@ class TkScrollableFrame(tk.Frame):
         self.TKFrame.config(borderwidth=0, highlightthickness=0)
         self.config(borderwidth=0, highlightthickness=0)
 
+        # scrollbar = tk.Scrollbar(frame)
+        # scrollbar.pack(side=tk.RIGHT, fill='y')
+        # scrollbar.config(command=treeview.yview)
+        # self.vscrollbar.config(command=self.TKFrame.yview)
+        # self.TKFrame.configure(yscrollcommand=self.vscrollbar.set)
+
         self.bind('<Configure>', self.set_scrollregion)
 
         self.bind_mouse_scroll(self.canvas, self.yscroll)
@@ -2182,7 +2217,7 @@ class TKCalendar(tkinter.ttk.Frame):
     datetime = calendar.datetime.datetime
     timedelta = calendar.datetime.timedelta
 
-    def __init__(self, master=None, target_element=None, close_when_chosen=True, **kw):
+    def __init__(self, master=None, target_element=None, close_when_chosen=True, default_date=(None, None, None), **kw):
         """
         WIDGET-SPECIFIC OPTIONS
 
@@ -2190,15 +2225,16 @@ class TKCalendar(tkinter.ttk.Frame):
             selectforeground
         """
         self._TargetElement = target_element
+        default_mon, default_day, default_year = default_date
         # remove custom options from kw before initializating ttk.Frame
         fwday = kw.pop('firstweekday', calendar.MONDAY)
-        year = kw.pop('year', self.datetime.now().year)
-        month = kw.pop('month', self.datetime.now().month)
+        year = kw.pop('year', default_year or self.datetime.now().year)
+        month = kw.pop('month', default_mon or self.datetime.now().month)
         locale = kw.pop('locale', None)
         sel_bg = kw.pop('selectbackground', '#ecffc4')
         sel_fg = kw.pop('selectforeground', '#05640e')
 
-        self._date = self.datetime(year, month, 1)
+        self._date = self.datetime(year, month, default_day or 1)
         self._selection = None  # no date selected
         self._master = master
         self.close_when_chosen = close_when_chosen
@@ -2582,17 +2618,25 @@ class Tree(Element):
             self.add_treeview_data(node)
 
 
-    def Update(self, values=None):
-        if values is None:
-            return
-        children = self.TKTreeview.get_children()
-        for i in children:
-            self.TKTreeview.detach(i)
-            self.TKTreeview.delete(i)
-        children = self.TKTreeview.get_children()
-        self.TreeData = values
-        self.add_treeview_data(self.TreeData.root_node)
-        self.SelectedRows = []
+    def Update(self, values=None, key=None, value=None, text=None):
+        if values is not None:
+            children = self.TKTreeview.get_children()
+            for i in children:
+                self.TKTreeview.detach(i)
+                self.TKTreeview.delete(i)
+            children = self.TKTreeview.get_children()
+            self.TreeData = values
+            self.add_treeview_data(self.TreeData.root_node)
+            self.SelectedRows = []
+        if key is not None:
+            item = self.TKTreeview.item(key)
+            if value is not None:
+                self.TKTreeview.item(key, values=value)
+            if text is not None:
+                self.TKTreeview.item(key, text=text)
+            item = self.TKTreeview.item(key)
+        return self
+
 
     def __del__(self):
         super().__del__()
@@ -2624,11 +2668,6 @@ class TreeData(object):
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
 
-    # def _print_node(self, node):
-    #     # print(f'Node: {node.text}')
-    #     # print(f'Children = {[c.text for c in node.children]}')
-    #     for node in node.children:
-    #         self._print_node(node)
 
     def __repr__(self):
         return self._NodeStr(self.root_node, 1)
@@ -2940,13 +2979,11 @@ class Window(object):
         else:
             return self.ReturnValues
 
-    def ReadNonBlocking(self, Message=''):
+    def ReadNonBlocking(self):
         if self.TKrootDestroyed:
             return None, None
         if not self.Shown:
             self.Show(non_blocking=True)
-        if Message:
-            print(Message)
         try:
             rc = self.TKroot.update()
         except:
@@ -3086,7 +3123,8 @@ class Window(object):
         self.RootNeedsDestroying = True
         return None
 
-    def CloseNonBlocking(self):
+
+    def Close(self):
         if self.TKrootDestroyed:
             return
         try:
@@ -3095,16 +3133,16 @@ class Window(object):
         except:
             pass
 
-    CloseNonBlockingForm = CloseNonBlocking
-    Close = CloseNonBlockingForm
-
+    CloseNonBlockingForm = Close
+    CloseNonBlocking = Close
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
-        print('Got closing callback')
+        # print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.destroy()  # kick the users out of the mainloop
+        self.TKrootDestroyed = True
 
         return
 
@@ -3150,6 +3188,10 @@ class Window(object):
         except:
             pass
 
+    def CurrentLocation(self):
+        return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+
+
     def __enter__(self):
         return self
 
@@ -3161,10 +3203,7 @@ class Window(object):
         for row in self.Rows:
             for element in row:
                 element.__del__()
-        # try:
-        #     del(self.TKroot)
-        # except:
-        #     pass
+
 
 
 FlexForm = Window
@@ -3370,7 +3409,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, image_filename=None, image_data=None, image_size=(None, None),
+def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, default_date_m_d_y=(None,None,None), image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                    key=None):
@@ -3380,6 +3419,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
     button.CalendarCloseWhenChosen = close_when_date_chosen
+    button.DefaultDate_M_D_Y = default_date_m_d_y
     return button
 
 
@@ -3453,6 +3493,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
     button_pressed_text = top_level_form.LastButtonClicked
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
+            if element.Key is not None and  WRITE_ONLY_KEY in str(element.Key):
+                continue
             value = None
             if element.Type == ELEM_TYPE_COLUMN:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
@@ -4199,8 +4241,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKIntVar = RadVar  # store the RadVar in Radio object
                 if default_value:  # if this radio is the one selected, set RadVar to match
                     element.TKIntVar.set(value)
-                element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-                                                 variable=element.TKIntVar, value=value, bd=border_depth, font=font)
+                if element.ChangeSubmits:
+                    element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                                                     variable=element.TKIntVar, value=value, bd=border_depth, font=font,
+                                                     command=element.RadioHandler)
+                else:
+                    element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                                                     variable=element.TKIntVar, value=value, bd=border_depth, font=font)
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
                     element.TKRadio.configure(selectcolor=element.BackgroundColor)
@@ -4643,7 +4690,16 @@ def StartupTK(my_flex_form):
 
     # print('Starting TK open Windows = {}'.format(ow))
     if not ow and not my_flex_form.ForceTopLevel:
-        root = tk.Tk()
+        # if first window being created, make a throwaway, hidden master root.  This stops one user
+        # window from becoming the child of another user window. All windows are children of this
+        # hidden window
+        _my_windows.Increment()
+        _my_windows.hidden_master_root = tk.Tk()
+        _my_windows.hidden_master_root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        _my_windows.hidden_master_root.wm_overrideredirect(True)
+
+        # root = tk.Tk()            # users windows are no longer using tk.Tk. They are all Toplevel windows
+        root = tk.Toplevel()
     else:
         root = tk.Toplevel()
 
@@ -5061,16 +5117,20 @@ _easy_print_data = None  # global variable... I'm cheating
 
 
 class DebugWin(object):
-    def __init__(self, size=(None, None)):
+    def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
         # Show a form that's a running counter
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.form = Window('Debug Window', auto_size_text=True, font=('Courier New', 12))
+        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location, font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
         self.output_element = Output(size=win_size)
-        self.form_rows = [[Text('EasyPrint Output')],
-                          [self.output_element],
-                          [DummyButton('Quit')]]
-        self.form.AddRows(self.form_rows)
-        self.form.Show(non_blocking=True)  # Show a ;non-blocking form, returns immediately
+        if no_button:
+            self.layout =   [[self.output_element]]
+        else:
+            self.layout =   [
+                            [self.output_element],
+                            [DummyButton('Quit')]
+                            ]
+        self.window.AddRows(self.layout)
+        self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
         return
 
     def Print(self, *args, **_3to2kwargs):
@@ -5080,45 +5140,43 @@ class DebugWin(object):
         else: end = None
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
+
+        if self.window is None:         # if window was destroyed already, just print
+            print(*args, sep=sepchar, end=endchar)
+            return
+
+        event, values = self.window.Read(timeout=0)
+        if event == 'Quit' or event is None:
+            self.Close()
         print(*args, sep=sepchar, end=endchar)
-        # for a in args:
-        #     msg = str(a)
-        #     print(msg, end="", sep=sepchar)
-        #     print(1, 2, 3, sep='-')
-        # if end is None:
-        #     print("")
-        self.form.ReadNonBlocking()
+        # Add extra check to see if the window was closed... if closed by X sometimes am not told
+        try:
+            state = self.window.TKroot.state()
+        except:
+            self.Close()
 
     def Close(self):
-        self.form.CloseNonBlockingForm()
-        self.form.__del__()
-
-
-def Print(*args, **_3to2kwargs):
-    if 'sep' in _3to2kwargs: sep = _3to2kwargs['sep']; del _3to2kwargs['sep']
-    else: sep = None
-    if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
-    else: end = None
-    if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
-    else: size = (None, None)
-    EasyPrint(*args, size=size, end=end, sep=sep)
-
+        self.window.Close()
+        self.window.__del__()
+        self.window = None
 
 def PrintClose():
     EasyPrintClose()
 
 
-def eprint(*args, **_3to2kwargs):
-    if 'sep' in _3to2kwargs: sep = _3to2kwargs['sep']; del _3to2kwargs['sep']
-    else: sep = None
-    if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
-    else: end = None
-    if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
-    else: size = (None, None)
-    EasyPrint(*args, size=size, end=end, sep=sep)
-
-
 def EasyPrint(*args, **_3to2kwargs):
+    if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
+    else: keep_on_top = False
+    if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
+    else: grab_anywhere = False
+    if 'no_button' in _3to2kwargs: no_button = _3to2kwargs['no_button']; del _3to2kwargs['no_button']
+    else: no_button = False
+    if 'no_titlebar' in _3to2kwargs: no_titlebar = _3to2kwargs['no_titlebar']; del _3to2kwargs['no_titlebar']
+    else: no_titlebar = False
+    if 'font' in _3to2kwargs: font = _3to2kwargs['font']; del _3to2kwargs['font']
+    else: font = None
+    if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
+    else: location = (None, None)
     if 'sep' in _3to2kwargs: sep = _3to2kwargs['sep']; del _3to2kwargs['sep']
     else: sep = None
     if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
@@ -5128,30 +5186,18 @@ def EasyPrint(*args, **_3to2kwargs):
     global _easy_print_data
 
     if _easy_print_data is None:
-        _easy_print_data = DebugWin(size=size)
+        _easy_print_data = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
     _easy_print_data.Print(*args, end=end, sep=sep)
 
-
-def EasyPrintold(*args, **_3to2kwargs):
-    if 'sep' in _3to2kwargs: sep = _3to2kwargs['sep']; del _3to2kwargs['sep']
-    else: sep = None
-    if 'end' in _3to2kwargs: end = _3to2kwargs['end']; del _3to2kwargs['end']
-    else: end = None
-    if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
-    else: size = (None, None)
-    if 'easy_print_data' not in EasyPrint.__dict__:  # use a function property to save DebugWin object (static variable)
-        EasyPrint.easy_print_data = DebugWin(size=size)
-    if EasyPrint.easy_print_data is None:
-        EasyPrint.easy_print_data = DebugWin(size=size)
-    EasyPrint.easy_print_data.Print(*args, end=end, sep=sep)
+Print = EasyPrint
+eprint = EasyPrint
 
 
 def EasyPrintClose():
-    if 'easy_print_data' in EasyPrint.__dict__:
-        if EasyPrint.easy_print_data is not None:
-            EasyPrint.easy_print_data._Close()
-        EasyPrint.easy_print_data = None
-        # del EasyPrint.easy_print_data
+    global _easy_print_data
+    if _easy_print_data is not None:
+        _easy_print_data.Close()
+        _easy_print_data = None
 
 
 # ========================  Scrolled Text Box   =====#
@@ -5825,7 +5871,7 @@ def Popup(*args, **_3to2kwargs):
                                   pad=((20, 0), 3)))
 
     if non_blocking:
-        button, values = window.ReadNonBlocking()
+        button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
 
@@ -5972,7 +6018,7 @@ def PopupQuick(*args, **_3to2kwargs):
     if 'non_blocking' in _3to2kwargs: non_blocking = _3to2kwargs['non_blocking']; del _3to2kwargs['non_blocking']
     else: non_blocking = True
     if 'auto_close_duration' in _3to2kwargs: auto_close_duration = _3to2kwargs['auto_close_duration']; del _3to2kwargs['auto_close_duration']
-    else: auto_close_duration = 1
+    else: auto_close_duration = 2
     if 'auto_close' in _3to2kwargs: auto_close = _3to2kwargs['auto_close']; del _3to2kwargs['auto_close']
     else: auto_close = True
     if 'text_color' in _3to2kwargs: text_color = _3to2kwargs['text_color']; del _3to2kwargs['text_color']
@@ -5983,6 +6029,62 @@ def PopupQuick(*args, **_3to2kwargs):
     else: button_color = None
     if 'button_type' in _3to2kwargs: button_type = _3to2kwargs['button_type']; del _3to2kwargs['button_type']
     else: button_type = POPUP_BUTTONS_OK
+    """
+    Show Popup box that doesn't block and closes itself
+    :param args:
+    :param button_type:
+    :param button_color:
+    :param background_color:
+    :param text_color:
+    :param auto_close:
+    :param auto_close_duration:
+    :param non_blocking:
+    :param icon:
+    :param line_width:
+    :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
+    :param location:
+    :return:
+    """
+    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+          button_type=button_type,
+          auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
+          line_width=line_width,
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+
+
+# --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
+def PopupQuickMessage(*args, **_3to2kwargs):
+    if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
+    else: location = (None, None)
+    if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
+    else: keep_on_top = False
+    if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
+    else: grab_anywhere = False
+    if 'no_titlebar' in _3to2kwargs: no_titlebar = _3to2kwargs['no_titlebar']; del _3to2kwargs['no_titlebar']
+    else: no_titlebar = True
+    if 'font' in _3to2kwargs: font = _3to2kwargs['font']; del _3to2kwargs['font']
+    else: font = None
+    if 'line_width' in _3to2kwargs: line_width = _3to2kwargs['line_width']; del _3to2kwargs['line_width']
+    else: line_width = None
+    if 'icon' in _3to2kwargs: icon = _3to2kwargs['icon']; del _3to2kwargs['icon']
+    else: icon = DEFAULT_WINDOW_ICON
+    if 'non_blocking' in _3to2kwargs: non_blocking = _3to2kwargs['non_blocking']; del _3to2kwargs['non_blocking']
+    else: non_blocking = True
+    if 'auto_close_duration' in _3to2kwargs: auto_close_duration = _3to2kwargs['auto_close_duration']; del _3to2kwargs['auto_close_duration']
+    else: auto_close_duration = 2
+    if 'auto_close' in _3to2kwargs: auto_close = _3to2kwargs['auto_close']; del _3to2kwargs['auto_close']
+    else: auto_close = True
+    if 'text_color' in _3to2kwargs: text_color = _3to2kwargs['text_color']; del _3to2kwargs['text_color']
+    else: text_color = None
+    if 'background_color' in _3to2kwargs: background_color = _3to2kwargs['background_color']; del _3to2kwargs['background_color']
+    else: background_color = None
+    if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
+    else: button_color = None
+    if 'button_type' in _3to2kwargs: button_type = _3to2kwargs['button_type']; del _3to2kwargs['button_type']
+    else: button_type = POPUP_BUTTONS_NO_BUTTONS
     """
     Show Popup box that doesn't block and closes itself
     :param args:
@@ -6395,7 +6497,7 @@ def PopupYesNo(*args, **_3to2kwargs):
 
 def PopupGetFolder(message, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=False, location=(None, None)):
+                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
     """
     Display popup with text entry field and browse button. Browse for folder
     :param message:
@@ -6413,8 +6515,14 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
     :param location:
     :return: Contents of text field. None if closed using X or cancelled
     """
+
+    global _my_windows
+
     if no_window:
-        root = tk.Tk()
+        if _my_windows.NumOpenWindows:
+            root = tk.Toplevel()
+        else:
+            root = tk.Tk()
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
         except:
@@ -6424,7 +6532,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
         return folder_name
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), FolderBrowse()],
+              [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
@@ -6446,7 +6554,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
 def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                 location=(None, None)):
+                 location=(None, None),  initial_folder=None):
     """
         Display popup with text entry field and browse button. Browse for file
     :param message:
@@ -6467,8 +6575,14 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
     :param location:
     :return:  string representing the path chosen, None if cancelled or window closed with X
     """
+
+    global _my_windows
+
     if no_window:
-        root = tk.Tk()
+        if _my_windows.NumOpenWindows:
+            root = tk.Toplevel()
+        else:
+            root = tk.Tk()
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
         except:
@@ -6482,7 +6596,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
         root.destroy()
         return filename
 
-    browse_button = SaveAs(file_types=file_types) if save_as else FileBrowse(file_types=file_types)
+    browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder) if save_as else FileBrowse(file_types=file_types, initial_folder=initial_folder)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
