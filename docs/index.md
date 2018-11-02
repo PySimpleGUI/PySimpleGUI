@@ -24,9 +24,9 @@
       
 ## Now supports both Python 2.7 & 3      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.13.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.14.0-red.svg?longCache=true&style=for-the-badge)      
       
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.13.0-blue.svg?longCache=true&style=for-the-badge)      
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.14.0-blue.svg?longCache=true&style=for-the-badge)      
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -3569,6 +3569,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.11.0 & 1.11.0 | Oct 28, 2018    
 | 3.12.0 & 1.12.0 | Oct 28, 2018
 | 3.13.0 & 1.13.0 | Oct 29, 2018
+| 3.14.0 & 1.14.0 | Nov 2, 2018
+
       
 ## Release Notes      
 2.3 - Sliders, Listbox's and Image elements (oh my!)      
@@ -3797,7 +3799,7 @@ Emergency patch release... going out same day as previous release
 * Progress meter uses new CloseButton
 * Popups use new CloseButton
 
-## 3.13.0 & 1.13.0
+### 3.13.0 & 1.13.0
 * Improved multiple window handling of Popups when the X is used to close
 * Change submits added for:
   * Multiline
@@ -3808,7 +3810,40 @@ Emergency patch release... going out same day as previous release
  * Update for Tree Element
  * Scroll bars for Trees
  
-    
+
+### 3.14.0 & 1.14.0
+
+ - More windowing changes... 
+	using a hidden root windowing (Tk())
+	all children are Toplevel() windows
+Read only setting for:
+	Input Text
+	Multiline
+Font setting for InputCombo, Multiline
+change_submits settinf for Radio Element
+SetFocus for multiline, input elements
+Default mon, day, year for calendar chooser button
+Tree element update, added ability to change a single key
+Message parm removed from ReadNonBlocking
+Fix for closing windows using X
+CurrentLocation method for Windows
+Debug Window options
+	location
+	font
+	no_button
+	no_titlebar
+	grab_anywhere
+	keep_on_top
+New Print / EasyPrint options
+	location
+	font
+	no_button
+	no_titlebar
+	grab_anywhere
+	keep_on_top
+New popup, PopupQuickMessage
+PopupGetFolder, PopupGetFile new initial_folder parm
+
 ### Upcoming      
 Make suggestions people!  Future release features      
       
@@ -3885,6 +3920,8 @@ GNU Lesser General Public License (LGPL 3) +
 * Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
 * [spectre6000](https://github.com/spectre6000) - Readme updates
 * [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
+* [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
+
       
 ## How Do I      
 Finally, I must thank the fine folks at How Do I.      
