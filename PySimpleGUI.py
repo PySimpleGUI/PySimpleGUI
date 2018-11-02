@@ -1518,7 +1518,7 @@ class Image(Element):
                          tooltip=tooltip)
         return
 
-    def Update(self, filename=None, data=None):
+    def Update(self, filename=None, data=None, size=(None,None)):
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
@@ -1531,9 +1531,8 @@ class Image(Element):
             # image = data
         else:
             return
-        width, height = image.width(), image.height()
+        width, height = size[0] or image.width(), size[1] or image.height()
         self.tktext_label.configure(image=image, width=width, height=height)
-        # self.tktext_label.configure(image=image)
         self.tktext_label.image = image
 
     def __del__(self):
