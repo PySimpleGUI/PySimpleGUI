@@ -1256,6 +1256,7 @@ class Button(Element):
         self.Focus = focus
         self.TKCal = None
         self.CalendarCloseWhenChosen = None
+        self.DefaultDate_M_D_Y = (None, None, None)
         self.InitialFolder = initial_folder
         self.Disabled = disabled
 
@@ -1385,7 +1386,7 @@ class Button(Element):
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen )
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
 
@@ -2204,7 +2205,7 @@ class TKCalendar(ttk.Frame):
     datetime = calendar.datetime.datetime
     timedelta = calendar.datetime.timedelta
 
-    def __init__(self, master=None, target_element=None, close_when_chosen=True, **kw):
+    def __init__(self, master=None, target_element=None, close_when_chosen=True, default_date=(None, None, None), **kw):
         """
         WIDGET-SPECIFIC OPTIONS
 
@@ -2212,15 +2213,16 @@ class TKCalendar(ttk.Frame):
             selectforeground
         """
         self._TargetElement = target_element
+        default_mon, default_day, default_year = default_date
         # remove custom options from kw before initializating ttk.Frame
         fwday = kw.pop('firstweekday', calendar.MONDAY)
-        year = kw.pop('year', self.datetime.now().year)
-        month = kw.pop('month', self.datetime.now().month)
+        year = kw.pop('year', default_year or self.datetime.now().year)
+        month = kw.pop('month', default_mon or self.datetime.now().month)
         locale = kw.pop('locale', None)
         sel_bg = kw.pop('selectbackground', '#ecffc4')
         sel_fg = kw.pop('selectforeground', '#05640e')
 
-        self._date = self.datetime(year, month, 1)
+        self._date = self.datetime(year, month, default_day or 1)
         self._selection = None  # no date selected
         self._master = master
         self.close_when_chosen = close_when_chosen
@@ -3395,7 +3397,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, image_filename=None, image_data=None, image_size=(None, None),
+def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, default_date_m_d_y=(None,None,None), image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                    key=None):
@@ -3405,6 +3407,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
     button.CalendarCloseWhenChosen = close_when_date_chosen
+    button.DefaultDate_M_D_Y = default_date_m_d_y
     return button
 
 
