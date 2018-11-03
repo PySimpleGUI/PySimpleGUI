@@ -1224,10 +1224,7 @@ class Output(Element):
 # ---------------------------------------------------------------------- #
 class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
-                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, image_filename=None,
-                 image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None),
-                 auto_size_button=None, button_color=None, font=None, bind_return_key=False,
-                 focus=False, pad=None, key=None):
+                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element
         :param button_text:
@@ -1271,6 +1268,7 @@ class Button(Element):
         self.DefaultDate_M_D_Y = (None, None, None)
         self.InitialFolder = initial_folder
         self.Disabled = disabled
+        self.ChangeSubmits = change_submits
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip)
         return
@@ -1530,7 +1528,7 @@ class Image(Element):
                          tooltip=tooltip)
         return
 
-    def Update(self, filename=None, data=None):
+    def Update(self, filename=None, data=None, size=(None,None)):
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
@@ -1543,9 +1541,8 @@ class Image(Element):
             # image = data
         else:
             return
-        width, height = image.width(), image.height()
+        width, height = size[0] or image.width(), size[1] or image.height()
         self.tktext_label.configure(image=image, width=width, height=height)
-        # self.tktext_label.configure(image=image)
         self.tktext_label.image = image
 
     def __del__(self):
@@ -3223,46 +3220,45 @@ FlexForm = Window
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
-                 auto_size_button=None, button_color=None, disabled=False, font=None, pad=None, key=None):
+                 auto_size_button=None, button_color=None, disabled=False, change_submits=False, font=None, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
-                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+                  disabled=disabled, button_color=button_color,change_submits=change_submits, font=font, pad=pad, key=key)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None, disabled=False,
+               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, font=None, disabled=False,
                pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
-                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
-                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, change_submits=change_submits, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
-                initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+                initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                 font=None, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
-                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  initial_folder=initial_folder,change_submits=change_submits, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+               disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, font=None,
                pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
-                  auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits, font=font, pad=pad, key=key)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-           disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+           disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, font=None,
            pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
-                  auto_size_button=auto_size_button, button_color=button_color, font=font, pad=pad, key=key)
+                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits, font=font, pad=pad, key=key)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
@@ -4697,7 +4693,7 @@ def StartupTK(my_flex_form):
         _my_windows.hidden_master_root = tk.Tk()
         _my_windows.hidden_master_root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
         _my_windows.hidden_master_root.wm_overrideredirect(True)
-
+        _my_windows.hidden_master_root.withdraw()
         # root = tk.Tk()            # users windows are no longer using tk.Tk. They are all Toplevel windows
         root = tk.Toplevel()
     else:
@@ -6663,8 +6659,9 @@ def main():
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
-    button, values = Window('Demo window..').Layout(layout).Read()
-
+    window = Window('Demo window..').Layout(layout)
+    event, values = window.Read()
+    window.Close()
 
 if __name__ == '__main__':
     main()
