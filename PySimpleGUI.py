@@ -2702,7 +2702,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False):
         '''
         Window
         :param title:
@@ -2774,6 +2774,7 @@ class Window:
         self.Timeout = None
         self.TimeoutKey = '_timeout_'
         self.TimerCancelled = False
+        self.DisableClose = disable_close
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3123,6 +3124,8 @@ class Window:
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
+        if self.DisableClose:
+            return
         # print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
@@ -4679,9 +4682,9 @@ def StartupTK(my_flex_form):
         # hidden window
         _my_windows.Increment()
         _my_windows.hidden_master_root = tk.Tk()
-        _my_windows.hidden_master_root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-        _my_windows.hidden_master_root.wm_overrideredirect(True)
-
+        _my_windows.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really good
+        _my_windows.hidden_master_root.wm_overrideredirect(True) # damn, what did this do again?
+        _my_windows.hidden_master_root.withdraw()               # no, REALLY hide it
         # root = tk.Tk()            # users windows are no longer using tk.Tk. They are all Toplevel windows
         root = tk.Toplevel()
     else:
@@ -6289,8 +6292,9 @@ def main():
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
-    button, values = Window('Demo window..').Layout(layout).Read()
-
+    window = Window('Demo window..').Layout(layout)
+    event, values = window.Read()
+    window.Close()
 
 if __name__ == '__main__':
     main()
