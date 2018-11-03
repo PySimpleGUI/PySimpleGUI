@@ -4681,7 +4681,7 @@ def StartupTK(my_flex_form):
         _my_windows.hidden_master_root = tk.Tk()
         _my_windows.hidden_master_root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
         _my_windows.hidden_master_root.wm_overrideredirect(True)
-
+        _my_windows.hidden_master_root.withdraw()
         # root = tk.Tk()            # users windows are no longer using tk.Tk. They are all Toplevel windows
         root = tk.Toplevel()
     else:
@@ -6289,8 +6289,9 @@ def main():
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
-    button, values = Window('Demo window..').Layout(layout).Read()
-
+    window = Window('Demo window..').Layout(layout)
+    event, values = window.Read()
+    window.Close()
 
 if __name__ == '__main__':
     main()
