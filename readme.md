@@ -24,9 +24,9 @@
       
 ## Now supports both Python 2.7 & 3      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.14.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.14.1-red.svg?longCache=true&style=for-the-badge)      
       
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.14.0-blue.svg?longCache=true&style=for-the-badge)      
+  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.14.1-blue.svg?longCache=true&style=for-the-badge)      
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
