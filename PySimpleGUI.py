@@ -2452,7 +2452,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, pad=None, key=None, tooltip=None):
+                 size=(None, None), change_submits=False, bind_return_key=False, pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2491,6 +2491,7 @@ class Table(Element):
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
         self.ChangeSubmits = change_submits
+        self.BindReturnKey = bind_return_key
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
@@ -2517,6 +2518,20 @@ class Table(Element):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
+            MyForm = self.ParentForm
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
+
+
+    def treeview_double_click(self, event):
+        selections = self.TKTreeview.selection()
+        self.SelectedRows = [int(x) - 1 for x in selections]
+        if self.BindReturnKey:
             MyForm = self.ParentForm
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = self.Key
@@ -2775,6 +2790,7 @@ class Window:
         self.TimeoutKey = '_timeout_'
         self.TimerCancelled = False
         self.DisableClose = disable_close
+        self._Hidden = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3130,6 +3146,8 @@ class Window:
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.destroy()  # kick the users out of the mainloop
+        else:
+            self.RootNeedsDestroying = True
         self.TKrootDestroyed = True
 
         return
@@ -3141,10 +3159,13 @@ class Window:
         self.TKroot.grab_release()
 
     def Hide(self):
+        self._Hidden = True
         self.TKroot.withdraw()
 
     def UnHide(self):
-        self.TKroot.deiconify()
+        if self._Hidden:
+            self.TKroot.deiconify()
+            self._Hidden = False
 
     def Disappear(self):
         self.TKroot.attributes('-alpha', 0)
@@ -3178,6 +3199,21 @@ class Window:
 
     def CurrentLocation(self):
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+
+
+    @property
+    def Size(self):
+        win_width = self.TKroot.winfo_width()
+        win_height = self.TKroot.winfo_height()
+        return win_width, win_height
+
+    @Size.setter
+    def Size(self, size):
+        try:
+            self.TKroot.geometry("%sx%s" % (size[0], size[1]))
+            self.TKroot.update_idletasks()
+        except:
+            pass
 
 
     def __enter__(self):
@@ -4545,7 +4581,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
-
+                if element.BindReturnKey:
+                    treeview.bind('<Return>', element.treeview_double_click)
+                    treeview.bind('<Double-Button-1>', element.treeview_double_click)
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
@@ -4738,7 +4776,8 @@ def StartupTK(my_flex_form):
     if my_flex_form.Timeout != None:
         my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
-        pass
+        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.CurrentlyRunningMainloop = True
@@ -4861,6 +4900,13 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     if bar.ParentForm.RootNeedsDestroying:
         try:
             bar.ParentForm.TKroot.destroy()
+            # there is a bug with progress meters not decrementing the number of windows
+            # correctly when the X is used to close the window
+            # uncommenting this line fixes that problem, but causes a double-decrement when
+            # the cancel button is used... damned if you do, damned if you don't, so I'm choosing
+            # don't, as in don't decrement too many times. It's OK now to have a mismatch in
+            # number of windows because of the "hidden" master window. This ensures all windows
+            # will be toplevel.  Sorry about the bug, but the user never sees any problems as a result
             # _my_windows.Decrement()
         except:
             pass
