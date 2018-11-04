@@ -2452,7 +2452,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, pad=None, key=None, tooltip=None):
+                 size=(None, None), change_submits=False, bind_return_key=False, pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2491,6 +2491,7 @@ class Table(Element):
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
         self.ChangeSubmits = change_submits
+        self.BindReturnKey = bind_return_key
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
@@ -2517,6 +2518,20 @@ class Table(Element):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
+            MyForm = self.ParentForm
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
+
+
+    def treeview_double_click(self, event):
+        selections = self.TKTreeview.selection()
+        self.SelectedRows = [int(x) - 1 for x in selections]
+        if self.BindReturnKey:
             MyForm = self.ParentForm
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = self.Key
@@ -4566,7 +4581,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
-
+                if element.BindReturnKey:
+                    treeview.bind('<Return>', element.treeview_double_click)
+                    treeview.bind('<Double-Button-1>', element.treeview_double_click)
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
