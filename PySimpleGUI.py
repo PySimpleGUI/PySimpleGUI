@@ -1573,7 +1573,7 @@ class Canvas(Element):
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
-    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, key=None,
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, key=None,
                  tooltip=None):
         '''
         Graph Element
@@ -1590,19 +1590,38 @@ class Graph(Element):
         self.TopRight = graph_top_right
         self._TKCanvas = None
         self._TKCanvas2 = None
-
+        self.ChangeSubmits = change_submits
+        self.DragSubmits = drag_submits
+        self.ClickPosition = (None, None)
+        self.MouseButtonDown = False
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
+        if None in (x_in,y_in):
+            return None, None
         scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
         scale_y = (0 - self.CanvasSize[1]) / (self.TopRight[1] - self.BottomLeft[1])
         new_x = 0 + scale_x * (x_in - self.BottomLeft[0])
         new_y = self.CanvasSize[1] + scale_y * (y_in - self.BottomLeft[1])
         return new_x, new_y
 
+
+    def _convert_canvas_xy_to_xy(self, x_in, y_in):
+        if None in (x_in,y_in):
+            return None, None
+        scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
+        scale_y = (0 - self.CanvasSize[1]) / (self.TopRight[1] - self.BottomLeft[1])
+
+        new_x = x_in/scale_x+self.BottomLeft[0]
+        new_y = (y_in - self.CanvasSize[1]) / scale_y +  self.BottomLeft[1]
+        return int(new_x), int(new_y)
+
+
     def DrawLine(self, point_from, point_to, color='black', width=1):
+        if point_from == (None, None):
+            return
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
         converted_point_to = self._convert_xy_to_canvas_xy(point_to[0], point_to[1])
         if self._TKCanvas2 is None:
@@ -1612,6 +1631,8 @@ class Graph(Element):
         return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
 
     def DrawPoint(self, point, size=2, color='black'):
+        if point == (None, None):
+            return
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1622,6 +1643,8 @@ class Graph(Element):
                                            outline=color)
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
+        if center_location == (None, None):
+            return
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1664,6 +1687,8 @@ class Graph(Element):
                                                 converted_bottom_right[1], fill=fill_color, outline=line_color)
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
+        if location == (None, None):
+            return
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1713,6 +1738,50 @@ class Graph(Element):
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas2
+
+    # Realtime button release callback
+    def ButtonReleaseCallBack(self, event):
+        self.ClickPosition = (None, None)
+        self.LastButtonClickedWasRealtime = not self.DragSubmits
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+        if self.DragSubmits:
+            self.ParentForm.LastButtonClicked = None
+        self.MouseButtonDown = False
+
+
+    # Realtime button callback
+    def ButtonPressCallBack(self, event):
+        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
+        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
+        self.MouseButtonDown = True
+
+
+    # Realtime button callback
+    def MotionCallBack(self, event):
+        if not self.MouseButtonDown:
+            return
+        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
+        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
+
+
+
 
     def __del__(self):
         super().__del__()
@@ -3633,6 +3702,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_TREE:
                     value = element.SelectedRows
+                elif element.Type == ELEM_TYPE_GRAPH:
+                    value = element.ClickPosition
             else:
                 value = None
 
@@ -4354,6 +4425,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+
                 # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 width, height = element_size
@@ -4371,6 +4443,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.ChangeSubmits:
+                    element._TKCanvas2.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
+                    element._TKCanvas2.bind('<ButtonPress-1>', element.ButtonPressCallBack)
+                if element.DragSubmits:
+                    element._TKCanvas2.bind('<Motion>', element.MotionCallBack)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 menu_def = element.MenuDefinition
