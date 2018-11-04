@@ -2775,6 +2775,7 @@ class Window:
         self.TimeoutKey = '_timeout_'
         self.TimerCancelled = False
         self.DisableClose = disable_close
+        self._Hidden = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3130,6 +3131,8 @@ class Window:
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.destroy()  # kick the users out of the mainloop
+        else:
+            self.RootNeedsDestroying = True
         self.TKrootDestroyed = True
 
         return
@@ -3141,10 +3144,13 @@ class Window:
         self.TKroot.grab_release()
 
     def Hide(self):
+        self._Hidden = True
         self.TKroot.withdraw()
 
     def UnHide(self):
-        self.TKroot.deiconify()
+        if self._Hidden:
+            self.TKroot.deiconify()
+            self._Hidden = False
 
     def Disappear(self):
         self.TKroot.attributes('-alpha', 0)
@@ -3178,6 +3184,21 @@ class Window:
 
     def CurrentLocation(self):
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+
+
+    @property
+    def Size(self):
+        win_width = self.TKroot.winfo_width()
+        win_height = self.TKroot.winfo_height()
+        return win_width, win_height
+
+    @Size.setter
+    def Size(self, size):
+        try:
+            self.TKroot.geometry("%sx%s" % (size[0], size[1]))
+            self.TKroot.update_idletasks()
+        except:
+            pass
 
 
     def __enter__(self):
@@ -4738,7 +4759,8 @@ def StartupTK(my_flex_form):
     if my_flex_form.Timeout != None:
         my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
-        pass
+        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.CurrentlyRunningMainloop = True
@@ -4861,6 +4883,13 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     if bar.ParentForm.RootNeedsDestroying:
         try:
             bar.ParentForm.TKroot.destroy()
+            # there is a bug with progress meters not decrementing the number of windows
+            # correctly when the X is used to close the window
+            # uncommenting this line fixes that problem, but causes a double-decrement when
+            # the cancel button is used... damned if you do, damned if you don't, so I'm choosing
+            # don't, as in don't decrement too many times. It's OK now to have a mismatch in
+            # number of windows because of the "hidden" master window. This ensures all windows
+            # will be toplevel.  Sorry about the bug, but the user never sees any problems as a result
             # _my_windows.Decrement()
         except:
             pass
