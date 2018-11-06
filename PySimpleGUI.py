@@ -1409,13 +1409,6 @@ class Button(Element):
             self.TKButton['state'] = 'disabled'
         elif disabled == False:
             self.TKButton['state'] = 'normal'
-        # if image_data is not None:
-        #     if type(image_data) is bytes:
-        #         image = tk.PhotoImage(data=image_data)
-        #     else:
-        #         image = image_data
-        #     width, height = image.width, image.height
-        #     self.TKButton.config(image=image, width=width, height=height)
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
             width, height = image.width(), image.height()
@@ -2561,6 +2554,7 @@ class Table(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits
         self.BindReturnKey = bind_return_key
+        self.StartingRowNumber = 0                  # When displaying row numbers, where to start
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
@@ -4647,7 +4641,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
-                        value = [i] + value
+                        value = [i+element.StartingRowNumber] + value
                     id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i % 2)
                 if element.AlternatingRowColor is not None:
                     treeview.tag_configure(1, background=element.AlternatingRowColor)
