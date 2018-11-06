@@ -2563,7 +2563,7 @@ class Table(Element):
         self.ChangeSubmits = change_submits
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
-
+        self.RowHeaderText = 'Row'
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
         return
@@ -2577,8 +2577,8 @@ class Table(Element):
             children = self.TKTreeview.get_children()
             # self.TKTreeview.delete(*self.TKTreeview.get_children())
             for i, value in enumerate(values):
-                if self.DisplayRowNumbers:
-                    value = [i] + value
+                if self.DisplayRowNumbrs:
+                    value = [i+self.StartingRowNumber] + value
                 id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
             if self.AlternatingRowColor is not None:
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
@@ -4626,15 +4626,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             displaycolumns.append(element.ColumnHeadings[i])
                 column_headings = element.ColumnHeadings
                 if element.DisplayRowNumbers:  # if display row number, tack on the numbers to front of columns
-                    displaycolumns = ['Row', ] + displaycolumns
-                    column_headings = ['Row', ] + element.ColumnHeadings
+                    displaycolumns = [element.RowHeaderText, ] + displaycolumns
+                    column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
                 element.TKTreeview = ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height,
                                                   selectmode=element.SelectMode)
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
-                    treeview.heading('Row', text='Row')  # make a dummy heading
-                    treeview.column('Row', width=50, anchor=anchor)
+                    treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
+                    treeview.column(element.RowHeaderText, width=50, anchor=anchor)
                 for i, heading in enumerate(element.ColumnHeadings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
