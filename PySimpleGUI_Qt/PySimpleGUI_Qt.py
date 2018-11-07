@@ -9,8 +9,10 @@ from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBo
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog
 from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog
 # from PySide2.QtWidgets import
-from PySide2.QtCore import Qt
+from PySide2.QtCore import Qt,QProcess
 import PySide2.QtGui as QtGui
+import PySide2.QtWidgets as QtWidgets
+
 
 
 
@@ -904,7 +906,7 @@ class Multiline(Element):
 # ---------------------------------------------------------------------- #
 #                           ScrolledOutput                               #
 # ---------------------------------------------------------------------- #
-class ScrolledOutput(Element):
+class MultilineOutput(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False,
                  key=None, focus=False,
@@ -944,7 +946,7 @@ class ScrolledOutput(Element):
         if value is not None:
             self.DefaultText = value
             self.QT_TextBrowser.insertPlainText(value)
-
+            self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
         if self.Autoscroll:
             pass
         if disabled == True:
@@ -1054,9 +1056,23 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
+
         super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key)
 
+    def reroute_stdout(self):
+        self.my_stdout = sys.stdout
+        self.my_stderr = sys.stderr
+        sys.stdout = self
+        sys.stderr = self
+
+
+    def write(self, m):
+        self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+        self.QT_TextBrowser.insertPlainText( str(m))
+
+        # if self.my_stdout:
+        #     self.my_stdout.write(str(m))
 
     def __del__(self):
         super().__del__()
@@ -1177,22 +1193,34 @@ class Button(Element):
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = QFileDialog.getExistingDirectory()
             if folder_name != '':
-                target_element.Update(folder_name)
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = folder_name
+                else:
+                    target_element.Update(folder_name)
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             file_name = QFileDialog.getOpenFileName()
             if file_name != '':
-                target_element.Update(file_name[0])
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_name
+                else:
+                    target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
             color = 'TODO'
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             file_name = QFileDialog.getOpenFileNames()
             if file_name != '':
                 file_name = ';'.join(file_name[0])
-                target_element.Update(file_name)
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_name
+                else:
+                    target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             file_name = QFileDialog.getSaveFileName()
             if file_name != '':
-                target_element.Update(file_name[0])
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_name
+                else:
+                    target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1229,6 +1257,7 @@ class Button(Element):
             self.ParentForm.LastButtonClicked = target_element.Key
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.QTApplication.exit()
                 pass # TODO # kick the users out of the mainloop
 
         return
@@ -2702,6 +2731,7 @@ class Window:
             return None
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
+        self.__del__()
         return None
 
     def Close(self):
@@ -3183,7 +3213,10 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         except:
                             value = None
                     else:
-                        value=0
+                        try:
+                            value = element.FileOrFolderName
+                        except:
+                            value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     value = element.QT_ComboBox.currentText()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -3634,7 +3667,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 default_text = element.DefaultText
                 width, height = element_size
                 element.QT_TextBrowser = QTextBrowser()
-                element.QT_TextBrowser.setDisabled(True)
+                element.QT_TextBrowser.setDisabled(False)
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -3652,6 +3685,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_TextBrowser.setFixedHeight(element_size[1])
 
                 element.QT_TextBrowser.insertPlainText(default_text)
+                element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
                 qt_row_layout.addWidget(element.QT_TextBrowser)
              # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
@@ -3727,7 +3761,27 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_Spinner)
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
-                width, height = element_size
+                element.QT_TextBrowser = QTextBrowser()
+                element.QT_TextBrowser.setDisabled(False)
+                style = ''
+                if font is not None:
+                    style += 'font-family: %s;'%font[0]
+                    style += 'font-size: %spt;'%font[1]
+                if element.TextColor is not None:
+                    style += 'color: %s;' % element.TextColor
+                if element.BackgroundColor is not None:
+                    style += 'background-color: %s;' % element.BackgroundColor
+                element.QT_TextBrowser.setStyleSheet(style)
+
+                if element.AutoSizeText is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
+                    if element_size[0] is not None:
+                        element.QT_TextBrowser.setFixedWidth(element_size[0])
+                    if element_size[1] is not None:
+                        element.QT_TextBrowser.setFixedHeight(element_size[1])
+
+                element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+                element.reroute_stdout()
+                qt_row_layout.addWidget(element.QT_TextBrowser)
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 pass
