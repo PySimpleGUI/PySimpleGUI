@@ -969,7 +969,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None):
         if value is not None:
             try:
                 if not append:
@@ -984,6 +984,10 @@ class Multiline(Element):
             self.TKText.configure(state='disabled')
         elif disabled == False:
             self.TKText.configure(state='normal')
+        if background_color is not None:
+            self.TKText.configure(background=background_color)
+        if text_color is not None:
+            self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
 
