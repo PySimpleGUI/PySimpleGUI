@@ -2577,7 +2577,7 @@ class Table(Element):
             children = self.TKTreeview.get_children()
             # self.TKTreeview.delete(*self.TKTreeview.get_children())
             for i, value in enumerate(values):
-                if self.DisplayRowNumbrs:
+                if self.DisplayRowNumbers:
                     value = [i+self.StartingRowNumber] + value
                 id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
             if self.AlternatingRowColor is not None:
