@@ -1,9 +1,9 @@
-import PySimpleGUI_Qt as sg
+import PySimpleGUIQt as sg
 # sg.Popup('test 1')
 # sg.Popup('test 2')
 sg.ChangeLookAndFeel('GreenTan')
 layout = [
-        [sg.Text('Hello From PySimpleGUI_Qt!', text_color='red', tooltip='This is my tooltip', justification='c', font=('Courier', 22), key='_TEXT_')],
+        [sg.Text('Hello From PySimpleGUIQt!', text_color='red', tooltip='This is my tooltip', justification='c', font=('Courier', 22), key='_TEXT_')],
         [sg.Text('Input something here'),sg.Stretch(), sg.Input('This is an InputText Element', key='_INPUT_', font=('Any', 14))],
         [sg.Text('This is the new Dial Element'), sg.Dial(background_color='red'), sg.Stretch()],
         [sg.Combo(['Combo 1', 'Combo 2', 'Combo 3'], key='+COMBO+', size=(150,30), text_color='green')],
@@ -13,7 +13,7 @@ layout = [
         [sg.Checkbox('Checkbox 3'), sg.Checkbox('Checkbox 4')],
         [sg.Radio('Radio1', group_id=1),sg.Radio('Radio2', group_id=1)],
         [sg.Spin((5,8), size=(100,30))],
-        [sg.Multiline('This is a Multiline Element', key='+MULTI+')],
+        [sg.Multiline('This is a Multiline Element', size=(300,300), key='+MULTI+')],
         [sg.Button('My Button', size=(120,30)), sg.Exit(), sg.Button('Change', key='_CHANGE_')],
           ]
 

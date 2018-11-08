@@ -6,11 +6,12 @@ import textwrap
 import pickle
 import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial
-from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog
+from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
 from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog
 # from PySide2.QtWidgets import
-from PySide2.QtCore import Qt,QProcess
+from PySide2.QtCore import Qt,QProcess, QEvent
 import PySide2.QtGui as QtGui
+import PySide2.QtCore as QtCore
 import PySide2.QtWidgets as QtWidgets
 
 
@@ -63,10 +64,12 @@ def TimerStop():
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
-DEFAULT_ELEMENT_SIZE = (250, 30)  # In PIXELS
-DEFAULT_BUTTON_ELEMENT_SIZE = (80, 30 )  # In PIXELS
+DEFAULT_ELEMENT_SIZE = (250, 22)  # In PIXELS
+DEFAULT_BUTTON_ELEMENT_SIZE = (80, 22 )  # In PIXELS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
-DEFAULT_ELEMENT_PADDING = (5, 3)  # Padding between elements (row, col) in pixels
+DEFAULT_ELEMENT_PADDING = (4, 2)  # Padding between elements (row, col) in pixels
+# DEFAULT_ELEMENT_PADDING = (0, 0)  # Padding between elements (row, col) in pixels
+
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
@@ -132,7 +135,7 @@ DEFAULT_SLIDER_BORDER_WIDTH = 1
 DEFAULT_SLIDER_RELIEF = 'flat'
 DEFAULT_FRAME_RELIEF = 'groove'
 
-DEFAULT_LISTBOX_SELECT_MODE = 'single'
+DEFAULT_LISTBOX_SELECT_MODE = 'extended'
 SELECT_MODE_MULTIPLE = 'multiple'
 LISTBOX_SELECT_MODE_MULTIPLE = 'multiple'
 SELECT_MODE_BROWSE = 'browse'
@@ -141,6 +144,8 @@ SELECT_MODE_EXTENDED = 'extended'
 LISTBOX_SELECT_MODE_EXTENDED = 'extended'
 SELECT_MODE_SINGLE = 'single'
 LISTBOX_SELECT_MODE_SINGLE = 'single'
+SELECT_MODE_CONTIGUOUS = 'contiguous'
+LISTBOX_SELECT_MODE_CONTIGUOUS = 'contiguous'
 
 TABLE_SELECT_MODE_NONE = 'NONE'
 TABLE_SELECT_MODE_BROWSE = 'BROWSE'
@@ -436,7 +441,7 @@ class InputText(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
-        self.Justification = justification
+        self.Justification = justification or 'left'
         self.Disabled = disabled
         self.ChangeSubmits = change_submits
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
@@ -475,7 +480,7 @@ Input = InputText
 class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, font=None):
+                 readonly=False, visible_items=10, font=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -492,6 +497,7 @@ class Combo(Element):
         self.Readonly = readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.VisibleItems = visible_items
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -645,6 +651,8 @@ class Listbox(Element):
             self.SelectMode = SELECT_MODE_MULTIPLE
         elif select_mode == LISTBOX_SELECT_MODE_SINGLE:
             self.SelectMode = SELECT_MODE_SINGLE
+        elif select_mode == LISTBOX_SELECT_MODE_CONTIGUOUS:
+            self.SelectMode = SELECT_MODE_CONTIGUOUS
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -843,7 +851,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
-class Multiline(Element):
+class Multiline(Element, QWidget):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False,
                  key=None, focus=False,
@@ -879,10 +887,29 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
+
+    class MultiQWidget(QWidget):
+        def __init__(self, qt_textedit, element):
+            self.QT_TextEdit = qt_textedit
+            self.Element = element
+            super().__init__()
+
+        def eventFilter(self, widget, event):
+            if self.Element.EnterSubmits and event.type() == QEvent.KeyPress and widget is self.QT_TextEdit:
+                key = event.key()
+                if key in (Qt.Key_Return, Qt.Key_Enter):
+                    self.Element.ReturnKeyHandler(0)
+                    # self.Element.ParentForm.LastButtonClicked = self.Element.Key
+                    # self.Element.ParentForm.FormRemainedOpen = True
+                    # if self.Element.ParentForm.CurrentlyRunningMainloop:
+                    #     self.Element.ParentForm.QTApplication.exit()
+            return QWidget.eventFilter(self, widget, event)
+
+
     def Update(self, value=None, disabled=None, append=False, font=None):
         if value is not None:
             self.DefaultText = value
-            self.QT_TextEdit.setPlaceholderText(value)
+            self.QT_TextEdit.setText(value)
 
         if self.Autoscroll:
             pass
@@ -898,6 +925,7 @@ class Multiline(Element):
 
     def SetFocus(self):
         pass
+
 
     def __del__(self):
         super().__del__()
@@ -1134,6 +1162,7 @@ class Button(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits
         self.QT_QPushButton = None
+        # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor)
         return
@@ -1636,7 +1665,6 @@ class Frame(Element):
 
 # ---------------------------------------------------------------------- #
 #                           Separator                                    #
-#  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class VerticalSeparator(Element):
     def __init__(self, pad=None):
@@ -1654,6 +1682,28 @@ class VerticalSeparator(Element):
 
 VSeperator = VerticalSeparator
 VSep = VerticalSeparator
+
+
+# ---------------------------------------------------------------------- #
+#                           Separator                                    #
+# ---------------------------------------------------------------------- #
+class HorizontalSeparator(Element):
+    def __init__(self, pad=None):
+        '''
+        VerticalSeperator - A separator that spans only 1 row in a vertical fashion
+        :param pad:
+        '''
+        self.Orientation = 'horizontal'  # for now only vertical works
+
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
+
+    def __del__(self):
+        super().__del__()
+
+
+HSeperator = HorizontalSeparator
+HSep = HorizontalSeparator
+
 
 
 # ---------------------------------------------------------------------- #
@@ -1864,16 +1914,7 @@ class Slider(Element):
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
 
-    def Qt_init(self):
-        self.QT_Slider = QSlider()
-        if self.Orientation.startswith('h'):
-            self.QT_Slider.setOrientation(Qt.Horizontal)
-        else:
-            self.QT_Slider.setOrientation(Qt.Vertical)
-        self.QT_Slider.setMinimum(self.Range[0])
-        self.QT_Slider.setMaximum(self.Range[1])
-        self.QT_Slider.setTickPosition(QSlider.TicksBothSides)
-        self.QT_Slider.setTickInterval(self.Range[1] / 10)
+
 
     def Update(self, value=None, range=(None, None), disabled=None):
         if value is not None:
@@ -2341,7 +2382,7 @@ class ErrorElement(Element):
 class Window:
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None,
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
@@ -2420,6 +2461,9 @@ class Window:
         self.DisableClose = disable_close
         self._Hidden = False
         self.QTApplication = None
+        self.Size=size
+        self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
+        self.FocusElement = None
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2738,10 +2782,9 @@ class Window:
         if self.TKrootDestroyed:
             return
         try:
-            self.TKroot.destroy()
-            _my_windows.Decrement()
+            self.QTWindow.close()
         except:
-            pass
+            print('error closing window')
 
     CloseNonBlockingForm = Close
     CloseNonBlocking = Close
@@ -2808,19 +2851,19 @@ class Window:
     def CurrentLocation(self):
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
-    @property
-    def Size(self):
-        win_width = self.TKroot.winfo_width()
-        win_height = self.TKroot.winfo_height()
-        return win_width, win_height
-
-    @Size.setter
-    def Size(self, size):
-        try:
-            self.TKroot.geometry("%sx%s" % (size[0], size[1]))
-            self.TKroot.update_idletasks()
-        except:
-            pass
+    # @property
+    # def Size(self):
+    #     win_width = self.TKroot.winfo_width()
+    #     win_height = self.TKroot.winfo_height()
+    #     return win_width, win_height
+    #
+    # @Size.setter
+    # def Size(self, size):
+    #     try:
+    #         self.TKroot.geometry("%sx%s" % (size[0], size[1]))
+    #         self.TKroot.update_idletasks()
+    #     except:
+    #         pass
 
     def __enter__(self):
         return self
@@ -3196,7 +3239,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
                     value = element.QT_QLineEdit.text()
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                        pass
+                        element.QT_QLineEdit.setText('')
+
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.QT_Checkbox.isChecked()
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
@@ -3234,6 +3278,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.QT_Slider.value()
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     value = element.QT_TextEdit.toPlainText()
+                    if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
+                        element.QT_TextEdit.setText('')
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     value = 0
                 elif element.Type == ELEM_TYPE_TABLE:
@@ -3494,6 +3540,16 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element_size = toplevel_win.DefaultButtonElementSize
             else:
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
+            full_element_pad = [0,0,0,0]       # left, top, bottom, right
+            if type(element.Pad[0]) != tuple:
+                full_element_pad[0] = full_element_pad[3] = element.Pad[0]
+            else:
+                full_element_pad[0], full_element_pad[3] = element.Pad[0]
+            if type(element.Pad[1]) != tuple:
+                full_element_pad[1] = full_element_pad[2] = element.Pad[1]
+            else:
+                full_element_pad[1], full_element_pad[2] = element.Pad[1]
+            element_pad = full_element_pad
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 column_widget = QWidget()
@@ -3505,9 +3561,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 column_widget.setStyleSheet(style)
-                print(style)
+                # print(style)
                 column_layout = QFormLayout()
                 column_vbox = QVBoxLayout()
+
                 PackFormIntoFrame(element, column_layout, toplevel_win)
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
@@ -3537,6 +3594,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Tooltip:
                     element.QT_Label.setToolTip(element.Tooltip)
+                element.QT_Label.setMargin(full_element_pad[0])
+                element.QT_Label.setIndent(full_element_pad[1])
+                # qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Label)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -3552,7 +3612,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_QPushButton.setStyleSheet(style)
-                if element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
+                if element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element_size[0] is not None:
                     if element_size[0] is not None:
                         element.QT_QPushButton.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
@@ -3562,12 +3622,20 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QPushButton.setDisabled(True)
 
                 qt_row_layout.addWidget(element.QT_QPushButton)
+                element.QT_QPushButton.setContentsMargins(*full_element_pad)
+
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
                 # element.QT_QPushButton.clicked.connect(window.QTApplication.exit)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
                 element.QT_QLineEdit = QLineEdit()
+
+                if element.Justification[0] == 'c':
+                    element.QT_QLineEdit.setAlignment(Qt.AlignCenter)
+                elif element.Justification[0] == 'r':
+                    element.QT_QLineEdit.setAlignment(Qt.AlignRight)
+
                 element.QT_QLineEdit.setPlaceholderText(default_text)
                 style = ''
                 if font is not None:
@@ -3577,6 +3645,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
+
                 element.QT_QLineEdit.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
@@ -3584,7 +3653,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_QLineEdit.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_QLineEdit.setFixedHeight(element_size[1])
+                # element.QT_QLineEdit.setContentsMargins(*full_element_pad)
+                if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
+                    focus_set = True
+                    toplevel_win.FocusElement = element.QT_QLineEdit
 
+                qt_row_layout.setContentsMargins(*full_element_pad)
 
                 qt_row_layout.addWidget(element.QT_QLineEdit)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
@@ -3611,8 +3685,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_ComboBox.setFixedHeight(element_size[1])
 
-
                 element.QT_ComboBox.addItems(element.Values)
+                element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
+                element.QT_ComboBox.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_ComboBox)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -3636,7 +3711,18 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_ListWidget.setFixedHeight(element_size[1])
 
+                if element.SelectMode == SELECT_MODE_MULTIPLE:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.MultiSelection)
+                elif element.SelectMode == SELECT_MODE_EXTENDED:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+                elif element.SelectMode == SELECT_MODE_CONTIGUOUS:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.ContiguousSelection)
+                elif element.SelectMode == SELECT_MODE_SINGLE:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.SingleSelection)
+
                 element.QT_ListWidget.addItems(element.Values)
+                qt_row_layout.setContentsMargins(*full_element_pad)
+
                 qt_row_layout.addWidget(element.QT_ListWidget)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
@@ -3660,6 +3746,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_TextEdit.setFixedHeight(element_size[1])
 
                 element.QT_TextEdit.setPlaceholderText(default_text)
+                qt_row_layout.setContentsMargins(*full_element_pad)
+
+                element.MultiQWidget = Multiline.MultiQWidget(element.QT_TextEdit, element)
+                element.QT_TextEdit.installEventFilter(element.MultiQWidget)
+
+                if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
+                    focus_set = True
+                    toplevel_win.FocusElement = element.QT_TextEdit
+
                 qt_row_layout.addWidget(element.QT_TextEdit)
 
             # ------------------------- OUTPUT MULTI LINE element  ------------------------- #
@@ -3686,12 +3781,16 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextBrowser.insertPlainText(default_text)
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+                qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_TextBrowser)
-             # -------------------------  INPUT CHECKBOX element  ------------------------- #
+            # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 element.QT_Checkbox = QCheckBox(element.Text)
+                element.QT_Checkbox.setChecked(element.InitialState)
+                if element.Disabled:
+                    element.QT_Checkbox.setDisabled(True)
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -3707,13 +3806,13 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Checkbox.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Checkbox.setFixedHeight(element_size[1])
-
+                qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Checkbox)
               # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
                 width = element_size[0]
-                # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
+            # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
@@ -3734,7 +3833,17 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Radio_Button.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Radio_Button.setFixedHeight(element_size[1])
+                qt_row_layout.setContentsMargins(*full_element_pad)
 
+                if element.GroupID in toplevel_win.RadioDict:
+                    QT_RadioButtonGroup = toplevel_win.RadioDict[element.GroupID]
+                else:
+                    QT_RadioButtonGroup = QButtonGroup(toplevel_win.QTApplication)
+                    toplevel_win.RadioDict[element.GroupID] = QT_RadioButtonGroup
+
+                QT_RadioButtonGroup.addButton(element.QT_Radio_Button)
+
+                qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Radio_Button)
 
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
@@ -3758,8 +3867,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_Spinner.setFixedHeight(element_size[1])
 
+                qt_row_layout.setContentsMargins(*full_element_pad)
+
                 qt_row_layout.addWidget(element.QT_Spinner)
-                # -------------------------  OUTPUT element  ------------------------- #
+            # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 element.QT_TextBrowser = QTextBrowser()
                 element.QT_TextBrowser.setDisabled(False)
@@ -3781,14 +3892,16 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
                 element.reroute_stdout()
+                qt_row_layout.setContentsMargins(*full_element_pad)
+
                 qt_row_layout.addWidget(element.QT_TextBrowser)
-                # -------------------------  IMAGE element  ------------------------- #
+            # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 pass
-                # -------------------------  Canvas element  ------------------------- #
+            # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
-                # -------------------------  Graph element  ------------------------- #
+            # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 width, height = element_size
             # -------------------------  MENUBAR element  ------------------------- #
@@ -3813,25 +3926,35 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 PackFormIntoFrame(element, column_layout, toplevel_win)
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
+                qt_row_layout.setContentsMargins(*full_element_pad)
+
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 pass
-             # -------------------------  TabGroup element  ------------------------- #
+            # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 pass
-                # -------------------------  SLIDER Box element  ------------------------- #
+            # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
-
-                element.Qt_init()
+                element.QT_Slider = QSlider()
+                if element.Orientation.startswith('h'):
+                    element.QT_Slider.setOrientation(Qt.Horizontal)
+                else:
+                    element.QT_Slider.setOrientation(Qt.Vertical)
+                element.QT_Slider.setMinimum(element.Range[0])
+                element.QT_Slider.setMaximum(element.Range[1])
+                element.QT_Slider.setTickPosition(QSlider.TicksBothSides)
+                element.QT_Slider.setTickInterval(element.Range[1] / 10)
                 if element_size[0] is not None:
                     element.QT_Slider.setFixedWidth(element_size[0])
                 if element_size[1] is not None:
                     element.QT_Slider.setFixedHeight(element_size[1])
-
+                element.QT_Slider.setValue(element.DefaultValue)
+                qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Slider)
 
-                # -------------------------  DIAL element  ------------------------- #
+            # -------------------------  DIAL element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_DIAL:
                 element.Qt_init()
                 style = ''
@@ -3843,8 +3966,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_Dial.setStyleSheet(style)
+                qt_row_layout.setContentsMargins(*full_element_pad)
+
                 qt_row_layout.addWidget(element.QT_Dial)
-                # -------------------------  Stretch element  ------------------------- #
+            # -------------------------  Stretch element  ------------------------- #
             elif element_type == ELEM_TYPE_STRETCH:
                 qt_row_layout.addStretch(1)
             # -------------------------  TABLE element  ------------------------- #
@@ -3852,12 +3977,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 pass
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
+                element.QT_QGraphicsLineItem = QtWidgets.QGraphicsLineItem
                 pass
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 pass
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
+        containing_frame.setSpacing(toplevel_win.ElementPadding[1])
+        qt_row_layout.setSpacing(toplevel_win.ElementPadding[0])
         containing_frame.addRow('', qt_row_layout)
 
         # done with row, pack the row of widgets
@@ -3911,12 +4039,40 @@ def StartupTK(window):
     window.QTApplication = _my_windows.QTApplication
 
     window.QTWindow = QWidget()
+
+    flags = 0
+    if window.NoTitleBar:
+        flags |= Qt.FramelessWindowHint
+        flags |= QtCore.Qt.Tool
+    if window.KeepOnTop:
+        flags |= Qt.WindowStaysOnTopHint
+    if flags is not None:
+        window.QTWindow.setWindowFlags(flags)
+    if window.AlphaChannel:
+        window.QTWindow.setWindowOpacity(window.AlphaChannel)
+    if window.Size != (None, None):
+        window.QTWindow.resize(window.Size[0], window.Size[1])
+    if window.WindowIcon is not None:
+        window.QTWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
+
+    # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
+    # shadow = QtWidgets.QGraphicsDropShadowEffect()
+    # shadow.setBlurRadius(9.0)
+    # shadow.setBlurRadius(50)
+    # window.QTWindow.setGraphicsEffect(shadow)
+
+    # if window.KeepOnTop:
+    #     window.QTWindow.setWindowFlags(Qt.WindowStaysOnTopHint)
+
+
     style = ''
     if window.BackgroundColor is not None:
         style += 'background-color: %s;' % window.BackgroundColor
     window.QTWindow.setStyleSheet(style)
 
     window.QTWindow.setWindowTitle(window.Title)
+
+
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root = 000000
     _my_windows.Increment()
@@ -3929,11 +4085,17 @@ def StartupTK(window):
 
     if window.KeepOnTop:
         pass
+
+
+
     window.QFormLayout = QFormLayout()
     window.QT_Box_Layout = QVBoxLayout()
     ConvertFlexToTK(window)
     window.QT_Box_Layout.addLayout(window.QFormLayout)
 
+
+    # shadow = QtWidgets.QGraphicsDropShadowEffect( window.QFormLayout)
+    # window.QTWindow.setGraphicsEffect(shadow)
 
 
 
@@ -3952,8 +4114,16 @@ def StartupTK(window):
         window.CurrentlyRunningMainloop = True
         pass #### RUN MAIN LOOP HERE #####
         window.QTWindow.setLayout(window.QT_Box_Layout)
-        window.QTWindow.show()
+
+        if window.FocusElement is not None:
+            window.FocusElement.setFocus()
+
+        window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+
+
         window.QTApplication.exec_()
+
+
         window.CurrentlyRunningMainloop = False
         window.TimerCancelled = True
         # window.LastButtonClicked = 'Test'
@@ -5495,12 +5665,11 @@ def main():
     layout = [[Text('You are running the PySimpleGUI.py file itself')],
               [Text('You should be importing it rather than running it')],
               [Text('Here is your sample input window....')],
-              [Text('Source File', size=(150, 20), justification='right'), InputText('Source', focus=True),Stretch(),
-               FileBrowse(target=(ThisRow,-2))],
-              [Text('Destination Folder', size=(150, 20), justification='right'), InputText('Dest'), FolderBrowse()],
+              [Text('Source File', size=(150, 25), justification='right'), InputText('Source', focus=True), FileBrowse()],
+              [Text('Destination Folder', size=(150, 25), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
-    window = Window('Demo window..',auto_size_buttons=False, default_button_element_size=(80,30)).Layout(layout)
+    window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,20)).Layout(layout)
     event, values = window.Read()
     window.Close()
 

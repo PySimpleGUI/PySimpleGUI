@@ -1,4 +1,4 @@
-import PySimpleGUI_Qt as sg
+import PySimpleGUIQt as sg
 
 layout = [
             [sg.Text('This is the new Dial Element!')],
