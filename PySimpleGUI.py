@@ -2120,21 +2120,25 @@ class Slider(Element):
 #                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
 class TkScrollableFrame(tk.Frame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, vertical_only, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
 
         # create a canvas object and a vertical scrollbar for scrolling it
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
         self.vscrollbar.pack(side='right', fill="y", expand="false")
 
-        self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-        self.hscrollbar.pack(side='bottom', fill="x", expand="false")
+        if not vertical_only:
+            self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
+            self.hscrollbar.pack(side='bottom', fill="x", expand="false")
+            self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
+        else:
+            self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set)
 
-        self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
         self.canvas.pack(side="left", fill="both", expand=True)
 
         self.vscrollbar.config(command=self.canvas.yview)
-        self.hscrollbar.config(command=self.canvas.xview)
+        if not vertical_only:
+            self.hscrollbar.config(command=self.canvas.xview)
 
         # reset the view
         self.canvas.xview_moveto(0)
@@ -2156,7 +2160,8 @@ class TkScrollableFrame(tk.Frame):
         self.bind('<Configure>', self.set_scrollregion)
 
         self.bind_mouse_scroll(self.canvas, self.yscroll)
-        self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
+        if not vertical_only:
+            self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
         self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
 
     def resize_frame(self, e):
@@ -2190,7 +2195,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, key=None):
         '''
         Column Element
         :param layout:
@@ -2209,6 +2214,7 @@ class Column(Element):
         self.Rows = []
         self.TKFrame = None
         self.Scrollable = scrollable
+        self.VerticalScrollOnly = vertical_scroll_only
         # self.ImageFilename = image_filename
         # self.ImageData = image_data
         # self.ImageSize = image_size
@@ -3960,7 +3966,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 if element.Scrollable:
-                    col_frame = TkScrollableFrame(tk_row_frame)  # do not use yet!  not working
+                    col_frame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
                     col_frame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
