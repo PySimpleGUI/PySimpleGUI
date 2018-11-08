@@ -63,10 +63,12 @@ def TimerStop():
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
-DEFAULT_ELEMENT_SIZE = (250, 30)  # In PIXELS
-DEFAULT_BUTTON_ELEMENT_SIZE = (80, 30 )  # In PIXELS
+DEFAULT_ELEMENT_SIZE = (250, 22)  # In PIXELS
+DEFAULT_BUTTON_ELEMENT_SIZE = (80, 22 )  # In PIXELS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (5, 3)  # Padding between elements (row, col) in pixels
+# DEFAULT_ELEMENT_PADDING = (0, 0)  # Padding between elements (row, col) in pixels
+
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
@@ -843,7 +845,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
-class Multiline(Element):
+class Multiline(Element, QWidget):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False,
                  key=None, focus=False,
@@ -898,6 +900,20 @@ class Multiline(Element):
 
     def SetFocus(self):
         pass
+
+    def eventFilter(self, widget, event):
+        if (event.type() == Qt.QEvent.KeyPress and
+                widget is self.QT_TextEdit):
+            key = event.key()
+            if key == Qt.Qt.Key_Escape:
+                print('escape')
+            else:
+                if key == Qt.Qt.Key_Return:
+                    self.QT_TextEdit.setText('return')
+                elif key == Qt.Qt.Key_Enter:
+                    self.QT_TextEdit.setText('enter')
+                return True
+        return QtGui.QWidget.eventFilter(self, widget, event)
 
     def __del__(self):
         super().__del__()
@@ -1134,6 +1150,7 @@ class Button(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits
         self.QT_QPushButton = None
+        # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor)
         return
@@ -2341,7 +2358,7 @@ class ErrorElement(Element):
 class Window:
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None,
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
@@ -2420,6 +2437,8 @@ class Window:
         self.DisableClose = disable_close
         self._Hidden = False
         self.QTApplication = None
+        self.Size=size
+        self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2808,19 +2827,19 @@ class Window:
     def CurrentLocation(self):
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
-    @property
-    def Size(self):
-        win_width = self.TKroot.winfo_width()
-        win_height = self.TKroot.winfo_height()
-        return win_width, win_height
-
-    @Size.setter
-    def Size(self, size):
-        try:
-            self.TKroot.geometry("%sx%s" % (size[0], size[1]))
-            self.TKroot.update_idletasks()
-        except:
-            pass
+    # @property
+    # def Size(self):
+    #     win_width = self.TKroot.winfo_width()
+    #     win_height = self.TKroot.winfo_height()
+    #     return win_width, win_height
+    #
+    # @Size.setter
+    # def Size(self, size):
+    #     try:
+    #         self.TKroot.geometry("%sx%s" % (size[0], size[1]))
+    #         self.TKroot.update_idletasks()
+    #     except:
+    #         pass
 
     def __enter__(self):
         return self
@@ -3505,7 +3524,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 column_widget.setStyleSheet(style)
-                print(style)
+                # print(style)
                 column_layout = QFormLayout()
                 column_vbox = QVBoxLayout()
                 PackFormIntoFrame(element, column_layout, toplevel_win)
@@ -3537,6 +3556,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Tooltip:
                     element.QT_Label.setToolTip(element.Tooltip)
+
+                # element.QT_Label.setMargin(element.Pad[0])
                 qt_row_layout.addWidget(element.QT_Label)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -3552,7 +3573,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_QPushButton.setStyleSheet(style)
-                if element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
+                if element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element_size[0] is not None:
                     if element_size[0] is not None:
                         element.QT_QPushButton.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
@@ -3560,8 +3581,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Disabled:
                     element.QT_QPushButton.setDisabled(True)
-
                 qt_row_layout.addWidget(element.QT_QPushButton)
+                # if element.Pad[0] is not None:
+                #     element.QT_QPushButton.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
                 # element.QT_QPushButton.clicked.connect(window.QTApplication.exit)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
@@ -3584,8 +3606,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_QLineEdit.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_QLineEdit.setFixedHeight(element_size[1])
-
-
+                # element.QT_QLineEdit.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+                # qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
                 qt_row_layout.addWidget(element.QT_QLineEdit)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
@@ -3613,6 +3635,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
 
                 element.QT_ComboBox.addItems(element.Values)
+                element.QT_ComboBox.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
                 qt_row_layout.addWidget(element.QT_ComboBox)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -3637,6 +3660,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_ListWidget.setFixedHeight(element_size[1])
 
                 element.QT_ListWidget.addItems(element.Values)
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+
                 qt_row_layout.addWidget(element.QT_ListWidget)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
@@ -3660,6 +3685,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_TextEdit.setFixedHeight(element_size[1])
 
                 element.QT_TextEdit.setPlaceholderText(default_text)
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+
+                # element.QT_TextEdit.installEventFilter(element)
+
                 qt_row_layout.addWidget(element.QT_TextEdit)
 
             # ------------------------- OUTPUT MULTI LINE element  ------------------------- #
@@ -3686,6 +3715,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextBrowser.insertPlainText(default_text)
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+
                 qt_row_layout.addWidget(element.QT_TextBrowser)
              # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
@@ -3707,6 +3738,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Checkbox.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Checkbox.setFixedHeight(element_size[1])
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
 
                 qt_row_layout.addWidget(element.QT_Checkbox)
               # -------------------------  PROGRESS BAR element  ------------------------- #
@@ -3734,6 +3766,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Radio_Button.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Radio_Button.setFixedHeight(element_size[1])
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
 
                 qt_row_layout.addWidget(element.QT_Radio_Button)
 
@@ -3757,6 +3790,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Spinner.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Spinner.setFixedHeight(element_size[1])
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
 
                 qt_row_layout.addWidget(element.QT_Spinner)
                 # -------------------------  OUTPUT element  ------------------------- #
@@ -3781,6 +3815,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
                 element.reroute_stdout()
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+
                 qt_row_layout.addWidget(element.QT_TextBrowser)
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -3813,6 +3849,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 PackFormIntoFrame(element, column_layout, toplevel_win)
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
@@ -3828,6 +3866,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_Slider.setFixedWidth(element_size[0])
                 if element_size[1] is not None:
                     element.QT_Slider.setFixedHeight(element_size[1])
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
 
                 qt_row_layout.addWidget(element.QT_Slider)
 
@@ -3843,6 +3882,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_Dial.setStyleSheet(style)
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+
                 qt_row_layout.addWidget(element.QT_Dial)
                 # -------------------------  Stretch element  ------------------------- #
             elif element_type == ELEM_TYPE_STRETCH:
@@ -3858,6 +3899,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 pass
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
+        containing_frame.setSpacing(toplevel_win.ElementPadding[1])
+        qt_row_layout.setSpacing(toplevel_win.ElementPadding[0])
         containing_frame.addRow('', qt_row_layout)
 
         # done with row, pack the row of widgets
@@ -3911,12 +3954,34 @@ def StartupTK(window):
     window.QTApplication = _my_windows.QTApplication
 
     window.QTWindow = QWidget()
+    if window.NoTitleBar:
+        window.QTWindow.setWindowFlags(Qt.FramelessWindowHint)
+    if window.AlphaChannel:
+        window.QTWindow.setWindowOpacity(window.AlphaChannel)
+
+
+    if window.Size != (None, None):
+        window.QTWindow.resize(window.Size[0], window.Size[1])
+
+
+    # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
+    # shadow = QtWidgets.QGraphicsDropShadowEffect()
+    # shadow.setBlurRadius(9.0)
+    # shadow.setBlurRadius(50)
+    # window.QTWindow.setGraphicsEffect(shadow)
+
+    if window.KeepOnTop:
+        window.QTWindow.setWindowFlags(Qt.WindowStaysOnTopHint)
+
+
     style = ''
     if window.BackgroundColor is not None:
         style += 'background-color: %s;' % window.BackgroundColor
     window.QTWindow.setStyleSheet(style)
 
     window.QTWindow.setWindowTitle(window.Title)
+
+
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root = 000000
     _my_windows.Increment()
@@ -3929,11 +3994,17 @@ def StartupTK(window):
 
     if window.KeepOnTop:
         pass
+
+
+
     window.QFormLayout = QFormLayout()
     window.QT_Box_Layout = QVBoxLayout()
     ConvertFlexToTK(window)
     window.QT_Box_Layout.addLayout(window.QFormLayout)
 
+
+    # shadow = QtWidgets.QGraphicsDropShadowEffect( window.QFormLayout)
+    # window.QTWindow.setGraphicsEffect(shadow)
 
 
 
@@ -3952,8 +4023,14 @@ def StartupTK(window):
         window.CurrentlyRunningMainloop = True
         pass #### RUN MAIN LOOP HERE #####
         window.QTWindow.setLayout(window.QT_Box_Layout)
-        window.QTWindow.show()
+
+
+        window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+
+
         window.QTApplication.exec_()
+
+
         window.CurrentlyRunningMainloop = False
         window.TimerCancelled = True
         # window.LastButtonClicked = 'Test'
@@ -5495,12 +5572,11 @@ def main():
     layout = [[Text('You are running the PySimpleGUI.py file itself')],
               [Text('You should be importing it rather than running it')],
               [Text('Here is your sample input window....')],
-              [Text('Source File', size=(150, 20), justification='right'), InputText('Source', focus=True),Stretch(),
-               FileBrowse(target=(ThisRow,-2))],
+              [Text('Source File', size=(150, 20), justification='right'), InputText('Source', focus=True), FileBrowse(target=(ThisRow,-2))],
               [Text('Destination Folder', size=(150, 20), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
-    window = Window('Demo window..',auto_size_buttons=False, default_button_element_size=(80,30)).Layout(layout)
+    window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,20)).Layout(layout)
     event, values = window.Read()
     window.Close()
 
