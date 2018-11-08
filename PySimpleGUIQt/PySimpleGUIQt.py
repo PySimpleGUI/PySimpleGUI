@@ -2570,7 +2570,7 @@ class Window:
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
-            event, values = self.ReadNonBlocking()
+            event, values = self._ReadNonBlocking()
             if event is None:
                 event = timeout_key
             if values is None:
@@ -2636,11 +2636,13 @@ class Window:
         else:
             return self.ReturnValues
 
-    def ReadNonBlocking(self):
+    def _ReadNonBlocking(self):
         if self.TKrootDestroyed:
             return None, None
         if not self.Shown:
             self.Show(non_blocking=True)
+        else:
+            self.QTApplication.processEvents()              # refresh the window
         if 0:       # TODO add window closed with X logic
             self.TKrootDestroyed = True
             _my_windows.Decrement()
@@ -3267,7 +3269,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = 0
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                     try:
-                        value= [element.QT_ListWidget.currentItem().text(),]
+                        value= [item.text() for item in element.QT_ListWidget.selectedItems()]
                     except:
                         value = []
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
@@ -3552,7 +3554,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             element_pad = full_element_pad
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
-                column_widget = QWidget()
+                # column_widget = QWidget()
+                column_widget = QGroupBox()
+                # column_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
 
                 style = ''
                 if font is not None:
@@ -3560,14 +3564,21 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'font-size: %spt;'%font[1]
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
+                style += 'border: 0px solid gray; '
                 column_widget.setStyleSheet(style)
+
                 # print(style)
                 column_layout = QFormLayout()
                 column_vbox = QVBoxLayout()
 
                 PackFormIntoFrame(element, column_layout, toplevel_win)
+
+
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
+
+                column_widget.setStyleSheet(style)
+
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
@@ -3623,7 +3634,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 qt_row_layout.addWidget(element.QT_QPushButton)
                 element.QT_QPushButton.setContentsMargins(*full_element_pad)
-
+                if element.Tooltip:
+                    element.QT_QPushButton.setToolTip(element.Tooltip)
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
                 # element.QT_QPushButton.clicked.connect(window.QTApplication.exit)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
@@ -4118,10 +4130,13 @@ def StartupTK(window):
         if window.FocusElement is not None:
             window.FocusElement.setFocus()
 
-        window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+        if not window.NonBlocking:
+            window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+            window.QTApplication.exec_()
+        else:
+            window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+            window.QTApplication.processEvents()
 
-
-        window.QTApplication.exec_()
 
 
         window.CurrentlyRunningMainloop = False
