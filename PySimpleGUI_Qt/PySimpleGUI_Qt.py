@@ -6,10 +6,10 @@ import textwrap
 import pickle
 import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial
-from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog
+from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
 from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog
 # from PySide2.QtWidgets import
-from PySide2.QtCore import Qt,QProcess
+from PySide2.QtCore import Qt,QProcess, QEvent
 import PySide2.QtGui as QtGui
 import PySide2.QtWidgets as QtWidgets
 
@@ -134,7 +134,7 @@ DEFAULT_SLIDER_BORDER_WIDTH = 1
 DEFAULT_SLIDER_RELIEF = 'flat'
 DEFAULT_FRAME_RELIEF = 'groove'
 
-DEFAULT_LISTBOX_SELECT_MODE = 'single'
+DEFAULT_LISTBOX_SELECT_MODE = 'extended'
 SELECT_MODE_MULTIPLE = 'multiple'
 LISTBOX_SELECT_MODE_MULTIPLE = 'multiple'
 SELECT_MODE_BROWSE = 'browse'
@@ -143,6 +143,8 @@ SELECT_MODE_EXTENDED = 'extended'
 LISTBOX_SELECT_MODE_EXTENDED = 'extended'
 SELECT_MODE_SINGLE = 'single'
 LISTBOX_SELECT_MODE_SINGLE = 'single'
+SELECT_MODE_CONTIGUOUS = 'contiguous'
+LISTBOX_SELECT_MODE_CONTIGUOUS = 'contiguous'
 
 TABLE_SELECT_MODE_NONE = 'NONE'
 TABLE_SELECT_MODE_BROWSE = 'BROWSE'
@@ -477,7 +479,7 @@ Input = InputText
 class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, font=None):
+                 readonly=False, visible_items=10, font=None):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -494,6 +496,7 @@ class Combo(Element):
         self.Readonly = readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.VisibleItems = visible_items
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -647,6 +650,8 @@ class Listbox(Element):
             self.SelectMode = SELECT_MODE_MULTIPLE
         elif select_mode == LISTBOX_SELECT_MODE_SINGLE:
             self.SelectMode = SELECT_MODE_SINGLE
+        elif select_mode == LISTBOX_SELECT_MODE_CONTIGUOUS:
+            self.SelectMode = SELECT_MODE_CONTIGUOUS
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -881,10 +886,29 @@ class Multiline(Element, QWidget):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
+
+    class MultiQWidget(QWidget):
+        def __init__(self, qt_textedit, element):
+            self.QT_TextEdit = qt_textedit
+            self.Element = element
+            super().__init__()
+
+        def eventFilter(self, widget, event):
+            if self.Element.EnterSubmits and event.type() == QEvent.KeyPress and widget is self.QT_TextEdit:
+                key = event.key()
+                if key in (Qt.Key_Return, Qt.Key_Enter):
+                    self.Element.ReturnKeyHandler(0)
+                    # self.Element.ParentForm.LastButtonClicked = self.Element.Key
+                    # self.Element.ParentForm.FormRemainedOpen = True
+                    # if self.Element.ParentForm.CurrentlyRunningMainloop:
+                    #     self.Element.ParentForm.QTApplication.exit()
+            return QWidget.eventFilter(self, widget, event)
+
+
     def Update(self, value=None, disabled=None, append=False, font=None):
         if value is not None:
             self.DefaultText = value
-            self.QT_TextEdit.setPlaceholderText(value)
+            self.QT_TextEdit.setText(value)
 
         if self.Autoscroll:
             pass
@@ -901,19 +925,6 @@ class Multiline(Element, QWidget):
     def SetFocus(self):
         pass
 
-    def eventFilter(self, widget, event):
-        if (event.type() == Qt.QEvent.KeyPress and
-                widget is self.QT_TextEdit):
-            key = event.key()
-            if key == Qt.Qt.Key_Escape:
-                print('escape')
-            else:
-                if key == Qt.Qt.Key_Return:
-                    self.QT_TextEdit.setText('return')
-                elif key == Qt.Qt.Key_Enter:
-                    self.QT_TextEdit.setText('enter')
-                return True
-        return QtGui.QWidget.eventFilter(self, widget, event)
 
     def __del__(self):
         super().__del__()
@@ -1881,16 +1892,7 @@ class Slider(Element):
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip)
         return
 
-    def Qt_init(self):
-        self.QT_Slider = QSlider()
-        if self.Orientation.startswith('h'):
-            self.QT_Slider.setOrientation(Qt.Horizontal)
-        else:
-            self.QT_Slider.setOrientation(Qt.Vertical)
-        self.QT_Slider.setMinimum(self.Range[0])
-        self.QT_Slider.setMaximum(self.Range[1])
-        self.QT_Slider.setTickPosition(QSlider.TicksBothSides)
-        self.QT_Slider.setTickInterval(self.Range[1] / 10)
+
 
     def Update(self, value=None, range=(None, None), disabled=None):
         if value is not None:
@@ -2439,6 +2441,7 @@ class Window:
         self.QTApplication = None
         self.Size=size
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
+        self.FocusElement = None
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3215,7 +3218,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
                     value = element.QT_QLineEdit.text()
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                        pass
+                        element.QT_QLineEdit.setText('')
+
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.QT_Checkbox.isChecked()
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
@@ -3253,6 +3257,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.QT_Slider.value()
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     value = element.QT_TextEdit.toPlainText()
+                    if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
+                        element.QT_TextEdit.setText('')
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     value = 0
                 elif element.Type == ELEM_TYPE_TABLE:
@@ -3527,6 +3533,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 # print(style)
                 column_layout = QFormLayout()
                 column_vbox = QVBoxLayout()
+
                 PackFormIntoFrame(element, column_layout, toplevel_win)
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
@@ -3557,7 +3564,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.Tooltip:
                     element.QT_Label.setToolTip(element.Tooltip)
 
-                # element.QT_Label.setMargin(element.Pad[0])
+                qt_row_layout.setContentsMargins(element.Pad[0], element.Pad[0], element.Pad[1], element.Pad[1])
                 qt_row_layout.addWidget(element.QT_Label)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -3581,6 +3588,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Disabled:
                     element.QT_QPushButton.setDisabled(True)
+                qt_row_layout.setContentsMargins(element.Pad[0], element.Pad[0], element.Pad[1], element.Pad[1])
+
                 qt_row_layout.addWidget(element.QT_QPushButton)
                 # if element.Pad[0] is not None:
                 #     element.QT_QPushButton.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
@@ -3607,7 +3616,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_QLineEdit.setFixedHeight(element_size[1])
                 # element.QT_QLineEdit.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
-                # qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+                if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
+                    focus_set = True
+                    toplevel_win.FocusElement = element.QT_QLineEdit
+
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
+
                 qt_row_layout.addWidget(element.QT_QLineEdit)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
@@ -3633,8 +3647,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_ComboBox.setFixedHeight(element_size[1])
 
-
                 element.QT_ComboBox.addItems(element.Values)
+                element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
                 element.QT_ComboBox.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
                 qt_row_layout.addWidget(element.QT_ComboBox)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
@@ -3658,6 +3672,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_ListWidget.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_ListWidget.setFixedHeight(element_size[1])
+
+                if element.SelectMode == SELECT_MODE_MULTIPLE:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.MultiSelection)
+                elif element.SelectMode == SELECT_MODE_EXTENDED:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+                elif element.SelectMode == SELECT_MODE_CONTIGUOUS:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.ContiguousSelection)
+                elif element.SelectMode == SELECT_MODE_SINGLE:
+                    element.QT_ListWidget.setSelectionMode(QAbstractItemView.SingleSelection)
 
                 element.QT_ListWidget.addItems(element.Values)
                 qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
@@ -3687,7 +3710,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TextEdit.setPlaceholderText(default_text)
                 qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
 
-                # element.QT_TextEdit.installEventFilter(element)
+                element.MultiQWidget = Multiline.MultiQWidget(element.QT_TextEdit, element)
+                element.QT_TextEdit.installEventFilter(element.MultiQWidget)
+
+                if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
+                    focus_set = True
+                    toplevel_win.FocusElement = element.QT_TextEdit
 
                 qt_row_layout.addWidget(element.QT_TextEdit)
 
@@ -3716,13 +3744,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TextBrowser.insertPlainText(default_text)
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
                 qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
-
                 qt_row_layout.addWidget(element.QT_TextBrowser)
              # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 element.QT_Checkbox = QCheckBox(element.Text)
+                element.QT_Checkbox.setChecked(element.InitialState)
+                if element.Disabled:
+                    element.QT_Checkbox.setDisabled(True)
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -3739,7 +3769,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_Checkbox.setFixedHeight(element_size[1])
                 qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
-
                 qt_row_layout.addWidget(element.QT_Checkbox)
               # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
@@ -3768,6 +3797,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Radio_Button.setFixedHeight(element_size[1])
                 qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
 
+                if element.GroupID in toplevel_win.RadioDict:
+                    QT_RadioButtonGroup = toplevel_win.RadioDict[element.GroupID]
+                else:
+                    QT_RadioButtonGroup = QButtonGroup(toplevel_win.QTApplication)
+                    toplevel_win.RadioDict[element.GroupID] = QT_RadioButtonGroup
+
+                QT_RadioButtonGroup.addButton(element.QT_Radio_Button)
+
+                qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
                 qt_row_layout.addWidget(element.QT_Radio_Button)
 
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
@@ -3790,6 +3828,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Spinner.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Spinner.setFixedHeight(element_size[1])
+
                 qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
 
                 qt_row_layout.addWidget(element.QT_Spinner)
@@ -3860,14 +3899,21 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 pass
                 # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
-
-                element.Qt_init()
+                element.QT_Slider = QSlider()
+                if element.Orientation.startswith('h'):
+                    element.QT_Slider.setOrientation(Qt.Horizontal)
+                else:
+                    element.QT_Slider.setOrientation(Qt.Vertical)
+                element.QT_Slider.setMinimum(element.Range[0])
+                element.QT_Slider.setMaximum(element.Range[1])
+                element.QT_Slider.setTickPosition(QSlider.TicksBothSides)
+                element.QT_Slider.setTickInterval(element.Range[1] / 10)
                 if element_size[0] is not None:
                     element.QT_Slider.setFixedWidth(element_size[0])
                 if element_size[1] is not None:
                     element.QT_Slider.setFixedHeight(element_size[1])
+                element.QT_Slider.setValue(element.DefaultValue)
                 qt_row_layout.setContentsMargins(element.Pad[0],element.Pad[0],element.Pad[1], element.Pad[1])
-
                 qt_row_layout.addWidget(element.QT_Slider)
 
                 # -------------------------  DIAL element  ------------------------- #
@@ -3958,11 +4004,10 @@ def StartupTK(window):
         window.QTWindow.setWindowFlags(Qt.FramelessWindowHint)
     if window.AlphaChannel:
         window.QTWindow.setWindowOpacity(window.AlphaChannel)
-
-
     if window.Size != (None, None):
         window.QTWindow.resize(window.Size[0], window.Size[1])
-
+    if window.WindowIcon is not None:
+        window.QTWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
 
     # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
     # shadow = QtWidgets.QGraphicsDropShadowEffect()
@@ -3970,8 +4015,8 @@ def StartupTK(window):
     # shadow.setBlurRadius(50)
     # window.QTWindow.setGraphicsEffect(shadow)
 
-    if window.KeepOnTop:
-        window.QTWindow.setWindowFlags(Qt.WindowStaysOnTopHint)
+    # if window.KeepOnTop:
+    #     window.QTWindow.setWindowFlags(Qt.WindowStaysOnTopHint)
 
 
     style = ''
@@ -4024,6 +4069,8 @@ def StartupTK(window):
         pass #### RUN MAIN LOOP HERE #####
         window.QTWindow.setLayout(window.QT_Box_Layout)
 
+        if window.FocusElement is not None:
+            window.FocusElement.setFocus()
 
         window.QTWindow.show()              ####### The thing that causes the window to be visible ######
 
