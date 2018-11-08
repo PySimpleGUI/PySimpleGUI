@@ -2642,8 +2642,7 @@ class Window:
         if not self.Shown:
             self.Show(non_blocking=True)
         else:
-            # self.QTWindow.show()              ####### The thing that causes the window to be visible ######
-            print(self.QTApplication.processEvents())
+            self.QTApplication.processEvents()              # refresh the window
         if 0:       # TODO add window closed with X logic
             self.TKrootDestroyed = True
             _my_windows.Decrement()
@@ -3635,7 +3634,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 qt_row_layout.addWidget(element.QT_QPushButton)
                 element.QT_QPushButton.setContentsMargins(*full_element_pad)
-
+                if element.Tooltip:
+                    element.QT_QPushButton.setToolTip(element.Tooltip)
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
                 # element.QT_QPushButton.clicked.connect(window.QTApplication.exit)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
