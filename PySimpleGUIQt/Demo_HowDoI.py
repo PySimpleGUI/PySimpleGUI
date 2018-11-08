@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-import PySimpleGUI_Qt as sg
+import PySimpleGUIQt as sg
 import subprocess
 
 

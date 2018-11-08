@@ -441,7 +441,7 @@ class InputText(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
-        self.Justification = justification
+        self.Justification = justification or 'left'
         self.Disabled = disabled
         self.ChangeSubmits = change_submits
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
@@ -2782,10 +2782,9 @@ class Window:
         if self.TKrootDestroyed:
             return
         try:
-            self.TKroot.destroy()
-            _my_windows.Decrement()
+            self.QTWindow.close()
         except:
-            pass
+            print('error closing window')
 
     CloseNonBlockingForm = Close
     CloseNonBlocking = Close
@@ -3595,8 +3594,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Tooltip:
                     element.QT_Label.setToolTip(element.Tooltip)
-
-                qt_row_layout.setContentsMargins(*full_element_pad)
+                element.QT_Label.setMargin(full_element_pad[0])
+                element.QT_Label.setIndent(full_element_pad[1])
+                # qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Label)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -3620,17 +3620,22 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Disabled:
                     element.QT_QPushButton.setDisabled(True)
-                qt_row_layout.setContentsMargins(*full_element_pad)
 
                 qt_row_layout.addWidget(element.QT_QPushButton)
-                # if element.Pad[0] is not None:
-                #     element.QT_QPushButton.setContentsMargins(*full_element_pad)
+                element.QT_QPushButton.setContentsMargins(*full_element_pad)
+
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
                 # element.QT_QPushButton.clicked.connect(window.QTApplication.exit)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
                 element.QT_QLineEdit = QLineEdit()
+
+                if element.Justification[0] == 'c':
+                    element.QT_QLineEdit.setAlignment(Qt.AlignCenter)
+                elif element.Justification[0] == 'r':
+                    element.QT_QLineEdit.setAlignment(Qt.AlignRight)
+
                 element.QT_QLineEdit.setPlaceholderText(default_text)
                 style = ''
                 if font is not None:
@@ -3640,6 +3645,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
+
                 element.QT_QLineEdit.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
@@ -5659,8 +5665,8 @@ def main():
     layout = [[Text('You are running the PySimpleGUI.py file itself')],
               [Text('You should be importing it rather than running it')],
               [Text('Here is your sample input window....')],
-              [Text('Source File', size=(150, 20), justification='right'), InputText('Source', focus=True), FileBrowse(target=(ThisRow,-2))],
-              [Text('Destination Folder', size=(150, 20), justification='right'), InputText('Dest'), FolderBrowse()],
+              [Text('Source File', size=(150, 25), justification='right'), InputText('Source', focus=True), FileBrowse()],
+              [Text('Destination Folder', size=(150, 25), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
     window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,20)).Layout(layout)
