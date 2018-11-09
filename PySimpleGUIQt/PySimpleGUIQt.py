@@ -1276,9 +1276,10 @@ class Button(Element):
                 self.ParentForm.QTApplication.exit()
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
-            if self.ParentForm.NonBlocking:
-                pass # TODO destroy window
-                _my_windows.Decrement()
+            # if self.ParentForm.NonBlocking:
+            if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
+                self.ParentForm.QTApplication.exit()
+            _my_windows.Decrement()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             should_submit_window = False
 
@@ -2853,19 +2854,34 @@ class Window:
     def CurrentLocation(self):
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
-    # @property
-    # def Size(self):
-    #     win_width = self.TKroot.winfo_width()
-    #     win_height = self.TKroot.winfo_height()
-    #     return win_width, win_height
-    #
-    # @Size.setter
-    # def Size(self, size):
-    #     try:
-    #         self.TKroot.geometry("%sx%s" % (size[0], size[1]))
-    #         self.TKroot.update_idletasks()
-    #     except:
-    #         pass
+    class QTMainWindow(QWidget):
+        def __init__(self,enable_key_events, window):
+            self.KeyEventsEnabled = enable_key_events
+            self.Window = window
+            super().__init__()
+
+        def eventFilter(self, widget, event):
+            # print(event.type())
+            if event.type() == QEvent.MouseButtonPress and self.Window.GrabAnywhere:
+                self.mouse_offset = event.pos()
+            if event.type() == QEvent.MouseMove and self.Window.GrabAnywhere:
+                x = event.globalX()
+                y = event.globalY()
+                x_w = self.mouse_offset.x()
+                y_w = self.mouse_offset.y()
+                self.move(x - x_w, y - y_w)
+
+            if event.type() == QEvent.KeyRelease and self.KeyEventsEnabled:
+                # print("got key event")
+                key = event.key()
+                try:
+                    self.Window.LastButtonClicked = chr(key).lower()
+                except:
+                    self.Window.LastButtonClicked = "special %s" % key
+                self.Window.FormRemainedOpen = True
+                if self.Window.CurrentlyRunningMainloop:
+                    self.Window.QTApplication.exit()
+            return QWidget.eventFilter(self, widget, event)
 
     def __enter__(self):
         return self
@@ -4014,6 +4030,7 @@ def ConvertFlexToTK(window):
     screen_width = 000000 # get window info to move to middle of screen
     screen_height = 000000
     if window.Location != (None, None):
+        window.QTWindow.move(window.Location[0], window.Location[1])
         x, y = window.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
         x, y = DEFAULT_WINDOW_LOCATION
@@ -4027,7 +4044,7 @@ def ConvertFlexToTK(window):
         if x + win_width > screen_width:
             x = screen_width - win_width
 
-    pass
+
 
     return
 
@@ -4050,7 +4067,11 @@ def StartupTK(window):
 
     window.QTApplication = _my_windows.QTApplication
 
-    window.QTWindow = QWidget()
+    # window.QTWindow = QWidget()
+    window.QTWindow = window.QTMainWindow(window.ReturnKeyboardEvents, window)
+    window.QTWindow.installEventFilter(window.QTWindow)
+
+    window.QTApplication.setActiveWindow(window.QTWindow)
 
     flags = 0
     if window.NoTitleBar:
