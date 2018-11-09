@@ -449,6 +449,15 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip)
 
+
+
+
+    def QtCallbackTextChanged(self, value):
+        if not self.ChangeSubmits:
+            return
+        element_callback_quit_mainloop(self)
+
+
     def Update(self, value=None, disabled=None):
         if disabled is True:
             self.QT_QLineEdit.setDisabled(True)
@@ -503,6 +512,11 @@ class Combo(Element):
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
+
+
+    def QtCurrentItemChanged(self, state):
+        if self.ChangeSubmits:
+            element_callback_quit_mainloop(self)
 
 
     def Qt_init(self):
@@ -663,6 +677,11 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
+    def QtCurrentRowChanged(self, state):
+        if self.ChangeSubmits:
+            element_callback_quit_mainloop(self)
+
+
     def Update(self, values=None, disabled=None):
         if disabled == True:
             pass
@@ -766,8 +785,10 @@ class Checkbox(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip)
 
-    def QtCallbackStateChange(self, state):
-        print('state', state)
+    def QtCallbackStateChanged(self, state):
+        if self.ChangeSubmits:
+            element_callback_quit_mainloop(self)
+
 
     def Get(self):
         return self.TKIntVar.get()
@@ -826,6 +847,12 @@ class Spin(Element):
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
                          key=key, pad=pad, tooltip=tooltip)
         return
+
+
+    def QtCallbackValueChanged(self, value):
+        if not self.ChangeSubmits:
+            return
+        element_callback_quit_mainloop(self)
 
     def Update(self, value=None, values=None, disabled=None):
         if values != None:
@@ -1921,6 +1948,10 @@ class Slider(Element):
         return
 
 
+    def QtCallbackValueChanged(self, value):
+        if not self.ChangeSubmits:
+            return
+        element_callback_quit_mainloop(self)
 
     def Update(self, value=None, range=(None, None), disabled=None):
         if value is not None:
@@ -2001,18 +2032,9 @@ class Dial(Element):
             pass
 
     def QtCallbackValueChanged(self, value):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
         if not self.ChangeSubmits:
             return
-
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.QTApplication.exit()    # kick the users out of the mainloop
+        element_callback_quit_mainloop(self)
 
     def __del__(self):
         super().__del__()
@@ -2203,6 +2225,23 @@ class Table(Element):
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
         return
+
+
+    def QtCallbackCellActivated(self, value):
+        print('CELL ACTIVATED ', value)
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        if not self.ChangeSubmits:
+            return
+
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.QTApplication.exit()    # kick the users out of the mainloop
+
 
     def Update(self, values=None):
         if values is not None:
@@ -2938,6 +2977,21 @@ class Window:
 FlexForm = Window
 
 
+
+# =========================================================================== #
+# Stops the mainloop and sets the event information                           #
+# =========================================================================== #
+
+def element_callback_quit_mainloop(element):
+    if element.Key is not None:
+        element.ParentForm.LastButtonClicked = element.Key
+    else:
+        element.ParentForm.LastButtonClicked = ''
+    element.ParentForm.FormRemainedOpen = True
+    if element.ParentForm.CurrentlyRunningMainloop:
+        element.ParentForm.QTApplication.exit()  # kick the users out of the mainloop
+
+
 # ################################################################################
 # ################################################################################
 #  END OF ELEMENT DEFINITIONS
@@ -3328,9 +3382,9 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = []
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
-                    value = element.QT_Spinner.value()
+                    value = str(element.QT_Spinner.value())
                 elif element.Type == ELEM_TYPE_INPUT_DIAL:
-                    value = element.QT_Dial.value()
+                    value = str(element.QT_Dial.value())
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                     value = element.QT_Slider.value()
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
@@ -3728,6 +3782,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     focus_set = True
                     toplevel_win.FocusElement = element.QT_QLineEdit
 
+                if element.ChangeSubmits:
+                    element.QT_QLineEdit.textChanged.connect(element.QtCallbackTextChanged)
+
                 qt_row_layout.setContentsMargins(*full_element_pad)
 
                 qt_row_layout.addWidget(element.QT_QLineEdit)
@@ -3754,6 +3811,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_ComboBox.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_ComboBox.setFixedHeight(element_size[1])
+
+                if element.ChangeSubmits:
+                    element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
 
                 element.QT_ComboBox.addItems(element.Values)
                 element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
@@ -3790,6 +3850,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 elif element.SelectMode == SELECT_MODE_SINGLE:
                     element.QT_ListWidget.setSelectionMode(QAbstractItemView.SingleSelection)
 
+                if element.ChangeSubmits:
+                    element.QT_ListWidget.currentRowChanged.connect(element.QtCurrentRowChanged)
+
                 element.QT_ListWidget.addItems(element.Values)
                 qt_row_layout.setContentsMargins(*full_element_pad)
 
@@ -3817,6 +3880,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextEdit.setPlaceholderText(default_text)
                 qt_row_layout.setContentsMargins(*full_element_pad)
+
 
                 element.MultiQWidget = Multiline.MultiQWidget(element.QT_TextEdit, element)
                 element.QT_TextEdit.installEventFilter(element.MultiQWidget)
@@ -3876,7 +3940,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Checkbox.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Checkbox.setFixedHeight(element_size[1])
-                element.QT_Checkbox.stateChanged.connect(element.QtCallbackStateChange)
+                if element.ChangeSubmits:
+                    element.QT_Checkbox.stateChanged.connect(element.QtCallbackStateChanged)
                 qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Checkbox)
               # -------------------------  PROGRESS BAR element  ------------------------- #
@@ -3937,6 +4002,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Spinner.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Spinner.setFixedHeight(element_size[1])
+
+                if element.ChangeSubmits:
+                    element.QT_Spinner.valueChanged.connect(element.QtCallbackValueChanged)
 
                 qt_row_layout.setContentsMargins(*full_element_pad)
 
@@ -4023,6 +4091,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_Slider.setFixedHeight(element_size[1])
                 element.QT_Slider.setValue(element.DefaultValue)
 
+                if element.ChangeSubmits:
+                    element.QT_Slider.valueChanged.connect(element.QtCallbackValueChanged)
+
                 qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Slider)
 
@@ -4061,6 +4132,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_TableWidget.setStyleSheet(style)
+
+                if element.ChangeSubmits:
+                    element.QT_TableWidget.itemClicked.connect(element.QtCallbackCellActivated)
 
                 element.QT_TableWidget.setRowCount(len(element.Values))
                 element.QT_TableWidget.setColumnCount(len(element.Values[0]))
@@ -5134,10 +5208,10 @@ def ListOfLookAndFeelValues():
 
 def ChangeLookAndFeel(index):
     # global LOOK_AND_FEEL_TABLE
-
-    if sys.platform == 'darwin':
-        print('*** Changing look and feel is not supported on Mac platform ***')
-        return
+    #
+    # if sys.platform == 'darwin':
+    #     print('*** Changing look and feel is not supported on Mac platform ***')
+    #     return
 
     # look and feel table
 
@@ -5776,7 +5850,7 @@ def main():
               [Text('Here is your sample input window....')],
               [Text('Source File', size=(150, 25), justification='right'), InputText('Source', focus=True), FileBrowse()],
               [Text('Destination Folder', size=(150, 25), justification='right'), InputText('Dest'), FolderBrowse()],
-              [Ok(), Cancel()]]
+              [Ok(bind_return_key=True), Cancel()]]
 
     window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,20)).Layout(layout)
     event, values = window.Read()
