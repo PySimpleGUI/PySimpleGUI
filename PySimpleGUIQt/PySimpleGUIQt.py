@@ -5,7 +5,8 @@ import datetime
 import textwrap
 import pickle
 import calendar
-from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial
+from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
+    QHBoxLayout, QListWidget, QDial, QTableWidget
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
 from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget
 # from PySide2.QtWidgets import
@@ -764,6 +765,9 @@ class Checkbox(Element):
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip)
+
+    def QtCallbackStateChange(self, state):
+        print('state', state)
 
     def Get(self):
         return self.TKIntVar.get()
@@ -1985,10 +1989,7 @@ class Dial(Element):
         return
 
 
-    def Qt_init(self):
-        self.QT_Dial = QDial()
-        self.QT_Dial.setMinimum(self.Range[0])
-        self.QT_Dial.setMaximum(self.Range[1])
+
 
     def Update(self, value=None, range=(None, None), disabled=None):
         if value is not None:
@@ -1999,16 +2000,19 @@ class Dial(Element):
         elif disabled == False:
             pass
 
-    def SliderChangedHandler(self, event):
+    def QtCallbackValueChanged(self, value):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
+        if not self.ChangeSubmits:
+            return
+
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
-            pass # TODO  # kick the users out of the mainloop
+            self.ParentForm.QTApplication.exit()    # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -2227,6 +2231,39 @@ class Table(Element):
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:
                 pass # TODO Quit mainloop
+
+
+    class QTTableWidget(QTableWidget):
+        def __init__(self, window):
+            self.Window = window
+            super().__init__()
+
+        def eventFilter(self, widget, event):
+            # print(event.type())
+            if event.type() == QEvent.MouseButtonPress and self.Window.GrabAnywhere:
+                self.mouse_offset = event.pos()
+            if event.type() == QEvent.MouseMove and self.Window.GrabAnywhere:
+                x = event.globalX()
+                y = event.globalY()
+                x_w = self.mouse_offset.x()
+                y_w = self.mouse_offset.y()
+                self.move(x - x_w, y - y_w)
+
+            if event.type() == QEvent.KeyRelease and self.KeyEventsEnabled:
+                # print("got key event")
+                key = event.key()
+                try:
+                    self.Window.LastButtonClicked = chr(key).lower()
+                except:
+                    self.Window.LastButtonClicked = "special %s" % key
+                self.Window.FormRemainedOpen = True
+                if self.Window.CurrentlyRunningMainloop:
+                    self.Window.QTApplication.exit()
+            return QWidget.eventFilter(self, widget, event)
+
+
+
+
 
     def __del__(self):
         super().__del__()
@@ -3307,7 +3344,6 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     indexes = element.QT_TableWidget.selectionModel().selectedRows()
                     for index in sorted(indexes):
                         value.append(index.row())
-
                 elif element.Type == ELEM_TYPE_TREE:
                     value = 0
             else:
@@ -3840,6 +3876,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_Checkbox.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Checkbox.setFixedHeight(element_size[1])
+                element.QT_Checkbox.stateChanged.connect(element.QtCallbackStateChange)
                 qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Checkbox)
               # -------------------------  PROGRESS BAR element  ------------------------- #
@@ -3985,12 +4022,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element_size[1] is not None:
                     element.QT_Slider.setFixedHeight(element_size[1])
                 element.QT_Slider.setValue(element.DefaultValue)
+
                 qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Slider)
 
             # -------------------------  DIAL element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_DIAL:
-                element.Qt_init()
+                element.QT_Dial = QDial()
+                element.QT_Dial.setMinimum(element.Range[0])
+                element.QT_Dial.setMaximum(element.Range[1])
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -4000,16 +4040,18 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_Dial.setStyleSheet(style)
-                qt_row_layout.setContentsMargins(*full_element_pad)
+                if element.ChangeSubmits:
+                    element.QT_Dial.valueChanged.connect(element.QtCallbackValueChanged)
 
+                qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Dial)
             # -------------------------  Stretch element  ------------------------- #
             elif element_type == ELEM_TYPE_STRETCH:
                 qt_row_layout.addStretch(1)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
-
-                element.QT_TableWidget = QTableWidget()
+                element.QT_TableWidget = Table.QTTableWidget(toplevel_win)
+                # element.QT_TableWidget = QTableWidget()
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -4026,6 +4068,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     # element.QT_TableWidget.insertRow(rownum)
                     for colnum, columns in enumerate(rows):
                         element.QT_TableWidget.setItem(rownum, colnum, QTableWidgetItem(element.Values[rownum][colnum]))
+
+                element.QT_TableWidget.installEventFilter(element.QT_TableWidget)
+
 
                 element.QT_TableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
