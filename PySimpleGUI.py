@@ -3853,7 +3853,10 @@ def _FindElementWithFocusInSubForm(form):
                 if element.TKEntry is not None:
                     if element.TKEntry is element.TKEntry.focus_get():
                         return element
-
+            if element.Type == ELEM_TYPE_INPUT_MULTILINE:
+                if element.TKText is not None:
+                    if element.TKText is element.TKText.focus_get():
+                        return element
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
