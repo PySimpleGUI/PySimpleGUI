@@ -1,17 +1,7 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUIQt as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUIQt as sg
 
 sg.ChangeLookAndFeel('Topanga')
-# sg.SetOptions(element_padding=(0,0))
-# ------ Menu Definition ------ #
-menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
-            ['&Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
-            ['&Help', '&About...'], ]
-
 # ------ Column Definition ------ #
 column1 = [[sg.Text('Column 1', background_color='lightblue',text_color='black', justification='center', size=(100,22))],
            [sg.Spin((1,10), size=(100,22))],
@@ -19,27 +9,26 @@ column1 = [[sg.Text('Column 1', background_color='lightblue',text_color='black',
            [sg.Spin((1,10), size=(100,22))],]
 
 layout = [
-    [sg.Menu(menu_def, tearoff=True)],
     [sg.Text('(Almost) All widgets in one Window!', justification='c', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
     [sg.Text('Here is some text.... and a place to enter text')],
     [sg.InputText('This is my text', size=(400,22))],
     [sg.Frame(layout=[
         [sg.Checkbox('Checkbox', size=(185,22)),  sg.Checkbox('My second checkbox!', default=True)],
         [sg.Radio('My first Radio!', "RADIO1", default=True, size=(180,22), ),sg.Radio('My second Radio!', "RADIO1")],
-        [sg.Radio('Third Radio!', "RADIO2", default=True, size=(180,22), ),sg.Radio('Fourth Radio!', "RADIO2")]
-
-    ], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags', ), sg.Stretch()],
+        [sg.Radio('Third Radio!', "RADIO2", default=True, size=(180,22), ),
+         sg.Radio('Fourth Radio!', "RADIO2")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN,
+        tooltip='Use these to set flags', ), sg.Stretch()],
     [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(220, 80)),
      sg.Multiline(default_text='A second multi-line', size=(220, 80))],
     [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(150, 22)), sg.Stretch(),
      sg.Slider(range=(1, 100), orientation='h', size=(300, 22), default_value=85)],
     [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
-    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(200,100), select_mode=sg.LISTBOX_SELECT_MODE_SINGLE), sg.Stretch(),
+    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(200,100), select_mode=sg.LISTBOX_SELECT_MODE_EXTENDED), sg.Stretch(),
      sg.Frame('Labelled Group',[[
      sg.Slider(range=(1, 100), orientation='v', default_value=25, tick_interval=25),
      sg.Slider(range=(1, 100), orientation='v', default_value=75),
      sg.Slider(range=(1, 100), orientation='v', default_value=10),
-     sg.Column(column1, background_color='red')]]), sg.Stretch()],
+     sg.Column(column1, background_color='lightblue')]], background_color='black'), sg.Stretch()],
     [sg.Text('_' * 50, justification='c')],
     [sg.Text('Choose A Folder')],
     [sg.Text('Your Folder'),
@@ -57,7 +46,7 @@ window = sg.Window('Everything bagel',
                    default_button_element_size=(120,30)
                    ).Layout(layout)
 event, values = window.Read()
-
+print(event, values)
 window.Close()
 
 sg.Popup('Title',
