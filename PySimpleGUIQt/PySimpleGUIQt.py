@@ -7,8 +7,9 @@ import pickle
 import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog
+from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget
 # from PySide2.QtWidgets import
+from PySide2.QtWidgets import QTableWidgetItem
 from PySide2.QtCore import Qt,QProcess, QEvent
 import PySide2.QtGui as QtGui
 import PySide2.QtCore as QtCore
@@ -2822,10 +2823,10 @@ class Window:
             self._Hidden = False
 
     def Disappear(self):
-        self.TKroot.attributes('-alpha', 0)
+        self.AlphaChannel = 0
 
     def Reappear(self):
-        self.TKroot.attributes('-alpha', 255)
+        self.AlphaChannel = 255
 
     def SetAlpha(self, alpha):
         '''
@@ -2843,7 +2844,8 @@ class Window:
     @AlphaChannel.setter
     def AlphaChannel(self, alpha):
         self._AlphaChannel = alpha
-        self.TKroot.attributes('-alpha', alpha)
+        if self._AlphaChannel:
+            self.QTWindow.setWindowOpacity(self._AlphaChannel)
 
     def BringToFront(self):
         try:
@@ -3301,7 +3303,11 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     value = 0
                 elif element.Type == ELEM_TYPE_TABLE:
-                    value = 0
+                    value = []
+                    indexes = element.QT_TableWidget.selectionModel().selectedRows()
+                    for index in sorted(indexes):
+                        value.append(index.row())
+
                 elif element.Type == ELEM_TYPE_TREE:
                     value = 0
             else:
@@ -3681,7 +3687,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_QLineEdit.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_QLineEdit.setFixedHeight(element_size[1])
-                # element.QT_QLineEdit.setContentsMargins(*full_element_pad)
+
                 if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
                     focus_set = True
                     toplevel_win.FocusElement = element.QT_QLineEdit
@@ -4002,7 +4008,29 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addStretch(1)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
-                pass
+
+                element.QT_TableWidget = QTableWidget()
+                style = ''
+                if font is not None:
+                    style += 'font-family: %s;'%font[0]
+                    style += 'font-size: %spt;'%font[1]
+                if element.TextColor is not None:
+                    style += 'color: %s;' % element.TextColor
+                if element.BackgroundColor is not None:
+                    style += 'background-color: %s;' % element.BackgroundColor
+                element.QT_TableWidget.setStyleSheet(style)
+
+                element.QT_TableWidget.setRowCount(len(element.Values))
+                element.QT_TableWidget.setColumnCount(len(element.Values[0]))
+                for rownum, rows in enumerate(element.Values):
+                    # element.QT_TableWidget.insertRow(rownum)
+                    for colnum, columns in enumerate(rows):
+                        element.QT_TableWidget.setItem(rownum, colnum, QTableWidgetItem(element.Values[rownum][colnum]))
+
+                element.QT_TableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+
+                qt_row_layout.addWidget(element.QT_TableWidget)
+
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 element.QT_QGraphicsLineItem = QtWidgets.QGraphicsLineItem
