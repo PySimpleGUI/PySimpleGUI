@@ -2823,10 +2823,10 @@ class Window:
             self._Hidden = False
 
     def Disappear(self):
-        self.TKroot.attributes('-alpha', 0)
+        self.AlphaChannel = 0
 
     def Reappear(self):
-        self.TKroot.attributes('-alpha', 255)
+        self.AlphaChannel = 255
 
     def SetAlpha(self, alpha):
         '''
@@ -2844,7 +2844,8 @@ class Window:
     @AlphaChannel.setter
     def AlphaChannel(self, alpha):
         self._AlphaChannel = alpha
-        self.TKroot.attributes('-alpha', alpha)
+        if self._AlphaChannel:
+            self.QTWindow.setWindowOpacity(self._AlphaChannel)
 
     def BringToFront(self):
         try:
@@ -3302,7 +3303,11 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     value = 0
                 elif element.Type == ELEM_TYPE_TABLE:
-                    value = 0
+                    value = []
+                    indexes = element.QT_TableWidget.selectionModel().selectedRows()
+                    for index in sorted(indexes):
+                        value.append(index.row())
+
                 elif element.Type == ELEM_TYPE_TREE:
                     value = 0
             else:
@@ -3682,7 +3687,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_QLineEdit.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_QLineEdit.setFixedHeight(element_size[1])
-                # element.QT_QLineEdit.setContentsMargins(*full_element_pad)
+
                 if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
                     focus_set = True
                     toplevel_win.FocusElement = element.QT_QLineEdit
