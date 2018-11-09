@@ -2786,7 +2786,7 @@ class ErrorElement(Element):
 class Window:
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None,
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
@@ -2864,6 +2864,7 @@ class Window:
         self.TimerCancelled = False
         self.DisableClose = disable_close
         self._Hidden = False
+        self._Size = size
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -4763,6 +4764,8 @@ def ConvertFlexToTK(MyFlexForm):
         pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
     # ....................................... DONE creating and laying out window ..........................#
+    if MyFlexForm._Size != (None, None):
+        master.geometry("%sx%s" % (MyFlexForm._Size[0], MyFlexForm._Size[1]))
     screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
