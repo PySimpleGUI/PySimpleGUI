@@ -2470,7 +2470,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, background_image=None):
         '''
         Window
         :param title:
@@ -2548,6 +2548,7 @@ class Window:
         self.Size=size
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.FocusElement = None
+        self.BackgroundImage = background_image
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -4148,9 +4149,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.ChangeSubmits:
                     element.QT_TableWidget.itemClicked.connect(element.QtCallbackCellActivated)
+                    element.QT_TableWidget.itemSelectionChanged.connect(element.QtCallbackCellActivated)
                     # QObject::connect(ui->table->verticalHeader(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(                        termSelect(int)));
 
-                    # element.QT_TableWidget.verticalHeader.connect(element.QtCallbackVerticalHeader)
+                    element.QT_TableWidget.verticalHeader().connect(element.QtCallbackVerticalHeader)
                 element.QT_TableWidget.setRowCount(len(element.Values))
                 element.QT_TableWidget.setColumnCount(len(element.Values[0]))
                 for rownum, rows in enumerate(element.Values):
@@ -4227,17 +4229,13 @@ def StartupTK(window):
 
     ow = _my_windows.NumOpenWindows
 
-    # print('Starting TK open Windows = {}'.format(ow))
-    if not ow and not window.ForceTopLevel:
-        # 000000
-        root =000000
-    else:
-        root =000000
-
     if _my_windows.QTApplication is None:
         _my_windows.QTApplication = QApplication(sys.argv)
 
     window.QTApplication = _my_windows.QTApplication
+
+    _my_windows.Increment()
+
 
     # window.QTWindow = QWidget()
     window.QTWindow = window.QTMainWindow(window.ReturnKeyboardEvents, window)
@@ -4271,27 +4269,29 @@ def StartupTK(window):
 
 
     style = ''
-    if window.BackgroundColor is not None:
+    if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         style += 'background-color: %s;' % window.BackgroundColor
     window.QTWindow.setStyleSheet(style)
 
+    if window.BackgroundImage is not None:
+        qlabel = QLabel(window.QTWindow)
+        qlabel.setText('')
+        w = QtGui.QPixmap(window.BackgroundImage).width()
+        h = QtGui.QPixmap(window.BackgroundImage).height()
+        qlabel.setGeometry(QtCore.QRect(0,0, w, h))
+        # qlabel.setGeometry(window.QTWindow.geometry())
+        qlabel.setPixmap(QtGui.QPixmap(window.BackgroundImage))
+        # style += 'background-image: url(%s);' % window.BackgroundImage
+
+
     window.QTWindow.setWindowTitle(window.Title)
 
-
-    if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-        root = 000000
-    _my_windows.Increment()
 
     if (window.GrabAnywhere is not False and not (
             window.NonBlocking and window.GrabAnywhere is not True)):
         pass
     if not window.Resizable:
         pass
-
-    if window.KeepOnTop:
-        pass
-
-
 
     window.QFormLayout = QFormLayout()
     window.QT_Box_Layout = QVBoxLayout()
@@ -4312,32 +4312,28 @@ def StartupTK(window):
     elif window.ReturnKeyboardEvents:
         pass
 
-    if window.AutoClose:
-        pass
-    else:  # it's a blocking form
-        # print('..... CALLING MainLoop')
-        window.CurrentlyRunningMainloop = True
-        pass #### RUN MAIN LOOP HERE #####
-        window.QTWindow.setLayout(window.QT_Box_Layout)
+    # print('..... CALLING MainLoop')
+    window.CurrentlyRunningMainloop = True
+    window.QTWindow.setLayout(window.QT_Box_Layout)
 
-        if window.FocusElement is not None:
-            window.FocusElement.setFocus()
+    if window.FocusElement is not None:
+        window.FocusElement.setFocus()
 
-        if not window.NonBlocking:
-            timer = start_timer(window, window.Timeout) if window.Timeout else None
-            window.QTWindow.show()              ####### The thing that causes the window to be visible ######
-            window.QTApplication.exec_()
-            if timer:
-                stop_timer(timer)
-        else:
-            window.QTWindow.show()              ####### The thing that causes the window to be visible ######
-            window.QTApplication.processEvents()
+    if not window.NonBlocking:
+        timer = start_timer(window, window.Timeout) if window.Timeout else None
+        window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+        #### ------------------------------ RUN MAIN LOOP HERE ------------------------------ #####
+        window.QTApplication.exec_()
+        if timer:
+            stop_timer(timer)
+    else:                                   # Non-blocking window
+        window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+        window.QTApplication.processEvents()
 
 
 
         window.CurrentlyRunningMainloop = False
         window.TimerCancelled = True
-        # window.LastButtonClicked = 'Test'
         # print('..... BACK from MainLoop')
         if not window.FormRemainedOpen:
             _my_windows.Decrement()
