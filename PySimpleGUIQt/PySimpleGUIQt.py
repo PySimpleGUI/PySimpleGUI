@@ -1964,12 +1964,12 @@ class Slider(Element):
 
     def Update(self, value=None, range=(None, None), disabled=None):
         if value is not None:
-            pass
+            self.QT_Slider.setValue(int(value))
             self.DefaultValue = value
         if disabled == True:
-            pass
+            self.QT_Slider.setDisabled(True)
         elif disabled == False:
-            pass
+            self.QT_Slider.setDisabled(False)
 
     def SliderChangedHandler(self, event):
         # first, get the results table built
@@ -2236,8 +2236,8 @@ class Table(Element):
         return
 
 
-    def QtCallbackCellActivated(self, value):
-        print('CELL ACTIVATED ', value)
+    def QtCallbackCellActivated(self, value=None):
+        # print('CELL ACTIVATED ', value)
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if not self.ChangeSubmits:
@@ -2253,6 +2253,13 @@ class Table(Element):
         if values is not None:
             self.Values = values
             self.SelectedRows = []
+            self.QT_TableWidget.clear()
+            self.QT_TableWidget.setRowCount(len(self.Values))
+            self.QT_TableWidget.setColumnCount(len(self.Values[0]))
+            for rownum, rows in enumerate(self.Values):
+                # self.QT_TableWidget.insertRow(rownum)
+                for colnum, columns in enumerate(rows):
+                    self.QT_TableWidget.setItem(rownum, colnum, QTableWidgetItem(self.Values[rownum][colnum]))
 
     def treeview_selected(self, event):
         if self.ChangeSubmits:
@@ -4148,11 +4155,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TableWidget.setStyleSheet(style)
 
                 if element.ChangeSubmits:
-                    element.QT_TableWidget.itemClicked.connect(element.QtCallbackCellActivated)
+                    # element.QT_TableWidget.itemClicked.connect(element.QtCallbackCellActivated)
+                    # element.QT_TableWidget.itemActivated.connect(element.QtCallbackCellActivated)
+                    # element.QT_TableWidget.itemEntered.connect(element.QtCallbackCellActivated)
                     element.QT_TableWidget.itemSelectionChanged.connect(element.QtCallbackCellActivated)
-                    # QObject::connect(ui->table->verticalHeader(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(                        termSelect(int)));
-
-                    element.QT_TableWidget.verticalHeader().connect(element.QtCallbackVerticalHeader)
                 element.QT_TableWidget.setRowCount(len(element.Values))
                 element.QT_TableWidget.setColumnCount(len(element.Values[0]))
                 for rownum, rows in enumerate(element.Values):
