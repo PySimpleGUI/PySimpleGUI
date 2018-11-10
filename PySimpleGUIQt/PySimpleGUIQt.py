@@ -450,13 +450,14 @@ class InputText(Element):
                          font=font, tooltip=tooltip)
 
 
-
-
     def QtCallbackTextChanged(self, value):
         if not self.ChangeSubmits:
             return
         element_callback_quit_mainloop(self)
 
+    def QtCallbackReturnPressed(self):
+        self.ReturnKeyHandler(None)
+        return
 
     def Update(self, value=None, disabled=None):
         if disabled is True:
@@ -1070,8 +1071,8 @@ class Text(Element):
 
     def Update(self, value=None, background_color=None, text_color=None, font=None):
         if value is not None:
-            self.DisplayText = value
-            self.QT_Label.setText(value)
+            self.DisplayText = str(value)
+            self.QT_Label.setText(str(value))
         style = ''
         temp_font = font if font is not None else self.Font
         if temp_font is None:
@@ -1328,7 +1329,6 @@ class Button(Element):
         if text is not None:
             self.QT_QPushButton.setText(text)
             self.ButtonText = text
-        style = ''
 
         if self.ParentForm.Font and (self.Font == DEFAULT_FONT or not self.Font):
             font = self.ParentForm.Font
@@ -1337,20 +1337,29 @@ class Button(Element):
         else:
             font = DEFAULT_FONT
 
-        if font is not None:
-            style += 'font-family: %s;' % font[0]
-            style += 'font-size: %spt;' % font[1]
+        style = ''
+        # if font is not None:
+        #     style += 'font-family: %s;' % font[0]
+        #     style += 'font-size: %spt;' % font[1]
 
-        if button_color != (None, None):
-            style += 'color: %s;' % button_color[0]
-            style += 'background-color: %s;' % button_color[1]
+        if self.Disabled != disabled and disabled is not None:
+            if not disabled:            # if enabling buttons, set the color
+                if button_color != (None, None):
+                    self.ButtonColor = button_color
+                style += 'color: %s;' % self.ButtonColor[0]
+                style += 'background-color: %s;' % self.ButtonColor[1]
+            self.Disabled = disabled
+            if disabled:
+                self.QT_QPushButton.setDisabled(True)
+            else:
+                self.QT_QPushButton.setDisabled(False)
+        elif button_color != (None, None):
+                self.ButtonColor = button_color
+                style += 'color: %s;' % self.ButtonColor[0]
+                style += 'background-color: %s;' % self.ButtonColor[1]
         if style != '':
             self.QT_QPushButton.setStyleSheet(style)
-        if disabled:
-            self.QT_QPushButton.setDisabled(True)
-        elif disabled is False:
-            self.QT_QPushButton.setDisabled(False)
-        style = ''
+
 
 
 
@@ -2233,14 +2242,11 @@ class Table(Element):
         # modify the Results table in the parent FlexForm object
         if not self.ChangeSubmits:
             return
+        element_callback_quit_mainloop(self)
 
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.QTApplication.exit()    # kick the users out of the mainloop
+
+    def QtCallbackVerticalHeader(self, value):
+        print('Vertical Header value ', value)
 
 
     def Update(self, values=None):
@@ -2635,16 +2641,17 @@ class Window:
         except:
             pass
 
-    def _TimeoutAlarmCallback(self):
+    def timer_timeout(self):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         # print('TIMEOUT CALLBACK')
         if self.TimerCancelled:
-            # print('** timer was cancelled **')
             return
         self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
-        pass #TODO  # kick the users out of the mainloop
+        if self.CurrentlyRunningMainloop:
+            self.QTApplication.exit()  # kick the users out of the mainloop
+            #TODO  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
@@ -2690,7 +2697,9 @@ class Window:
             # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
-                self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
+                timer = start_timer(self, timeout)
+            else:
+                timer = None
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title}')
             ################################# CALL GUI MAINLOOP ############################
@@ -2699,6 +2708,8 @@ class Window:
             # self.LastButtonClicked = 'TEST'
             self.CurrentlyRunningMainloop = False
             self.TimerCancelled = True
+            if timer:
+                stop_timer(timer)
             if self.RootNeedsDestroying:
                 self.TKroot.destroy()
                 _my_windows.Decrement()
@@ -2990,6 +3001,7 @@ def element_callback_quit_mainloop(element):
     element.ParentForm.FormRemainedOpen = True
     if element.ParentForm.CurrentlyRunningMainloop:
         element.ParentForm.QTApplication.exit()  # kick the users out of the mainloop
+
 
 
 # ################################################################################
@@ -3785,6 +3797,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.ChangeSubmits:
                     element.QT_QLineEdit.textChanged.connect(element.QtCallbackTextChanged)
 
+                element.QT_QLineEdit.returnPressed.connect(element.QtCallbackReturnPressed)
+
                 qt_row_layout.setContentsMargins(*full_element_pad)
 
                 qt_row_layout.addWidget(element.QT_QLineEdit)
@@ -3880,7 +3894,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextEdit.setPlaceholderText(default_text)
                 qt_row_layout.setContentsMargins(*full_element_pad)
-
 
                 element.MultiQWidget = Multiline.MultiQWidget(element.QT_TextEdit, element)
                 element.QT_TextEdit.installEventFilter(element.MultiQWidget)
@@ -4135,7 +4148,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.ChangeSubmits:
                     element.QT_TableWidget.itemClicked.connect(element.QtCallbackCellActivated)
+                    # QObject::connect(ui->table->verticalHeader(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(                        termSelect(int)));
 
+                    # element.QT_TableWidget.verticalHeader.connect(element.QtCallbackVerticalHeader)
                 element.QT_TableWidget.setRowCount(len(element.Values))
                 element.QT_TableWidget.setColumnCount(len(element.Values[0]))
                 for rownum, rows in enumerate(element.Values):
@@ -4195,6 +4210,16 @@ def ConvertFlexToTK(window):
 
     return
 
+# ----====----====----====----====----==== Start timer ====----====----====----====----====----#
+
+def start_timer(window, amount):
+    timer = QtCore.QTimer()
+    timer.timeout.connect(window.timer_timeout)
+    timer.start(amount)
+    return timer
+
+def stop_timer(timer):
+    timer.stop()
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(window):
@@ -4299,8 +4324,11 @@ def StartupTK(window):
             window.FocusElement.setFocus()
 
         if not window.NonBlocking:
+            timer = start_timer(window, window.Timeout) if window.Timeout else None
             window.QTWindow.show()              ####### The thing that causes the window to be visible ######
             window.QTApplication.exec_()
+            if timer:
+                stop_timer(timer)
         else:
             window.QTWindow.show()              ####### The thing that causes the window to be visible ######
             window.QTApplication.processEvents()
