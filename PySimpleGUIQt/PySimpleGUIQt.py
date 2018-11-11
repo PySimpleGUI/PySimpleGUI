@@ -9,7 +9,7 @@ import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
     QHBoxLayout, QListWidget, QDial, QTableWidget
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget
+from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar
 # from PySide2.QtWidgets import
 from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup
 from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage
@@ -3720,12 +3720,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style += 'border: 0px solid gray; '
                 column_widget.setStyleSheet(style)
 
-                # print(style)
                 column_layout = QFormLayout()
                 column_vbox = QVBoxLayout()
 
                 PackFormIntoFrame(element, column_layout, toplevel_win)
-
 
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
@@ -4141,10 +4139,42 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
-                pass
+
+                tab_widget = QWidget()
+                # tab_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
+
+                style = ''
+                if font is not None:
+                    style += 'font-family: %s;'%font[0]
+                    style += 'font-size: %spt;'%font[1]
+                if element.BackgroundColor is not None:
+                    style += 'background-color: %s;' % element.BackgroundColor
+                style += 'border: 0px solid gray; '
+                tab_widget.setStyleSheet(style)
+
+                column_layout = QFormLayout()
+                column_vbox = QVBoxLayout()
+
+                PackFormIntoFrame(element, column_layout, toplevel_win)
+
+                column_vbox.addLayout(column_layout)
+                tab_widget.setLayout(column_vbox)
+
+                tab_widget.setStyleSheet(style)
+                window.QT_QTanWidget.addTab(tab_widget, element.Title)
+                # qt_row_layout.addWidget(tab_widget)
+
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
-                pass
+
+                element.QT_QTanWidget = QTabWidget()
+
+                PackFormIntoFrame(element, element.ParentForm.QFormLayout, toplevel_win)
+
+                qt_row_layout.addWidget(element.QT_QTanWidget)
+
+                if element.ChangeSubmits:
+                    pass
             # -------------------------  SLIDER Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element.QT_Slider = QSlider()
