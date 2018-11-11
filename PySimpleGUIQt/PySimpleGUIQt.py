@@ -9,10 +9,10 @@ import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
     QHBoxLayout, QListWidget, QDial, QTableWidget
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar
+from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem
 # from PySide2.QtWidgets import
 from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup
-from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage
+from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
 from PySide2.QtCore import Qt,QProcess, QEvent
 import PySide2.QtGui as QtGui
 import PySide2.QtCore as QtCore
@@ -2352,7 +2352,7 @@ class Table(Element):
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
-                 change_submits=False, font=None,
+                 change_submits=False, font=None, size=(200,600),
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
@@ -2391,9 +2391,10 @@ class Tree(Element):
         self.TKTreeview = None
         self.SelectedRows = []
         self.ChangeSubmits = change_submits
+        self.Size = size
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip)
+                         key=key, tooltip=tooltip, size=size)
         return
 
     def treeview_selected(self, event):
@@ -2430,26 +2431,27 @@ class Tree(Element):
 
 class TreeData(object):
     class Node(object):
-        def __init__(self, parent, key, text, values):
+        def __init__(self, parent, key, text, values, icon):
             self.parent = parent
             self.children = []
             self.key = key
             self.text = text
             self.values = values
+            self.icon = icon
 
         def _Add(self, node):
             self.children.append(node)
 
     def __init__(self):
         self.tree_dict = {}
-        self.root_node = self.Node("", "", 'root', [])
+        self.root_node = self.Node("", "", 'root', [], None)
         self.tree_dict[""] = self.root_node
 
     def _AddNode(self, key, node):
         self.tree_dict[key] = node
 
-    def Insert(self, parent, key, text, values):
-        node = self.Node(parent, key, text, values)
+    def Insert(self, parent, key, text, values, icon=None):
+        node = self.Node(parent, key, text, values, icon)
         self.tree_dict[key] = node
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
@@ -4255,8 +4257,49 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
-                element.QT_QGraphicsLineItem = QtWidgets.QGraphicsLineItem
-                pass
+                element.QT_QTreeWidget = QTreeWidget()
+                if element_size != (None, None):
+                    element.QT_QTreeWidget.setFixedWidth(element_size[0])
+                    element.QT_QTreeWidget.setFixedHeight(element_size[1])
+                height = element.NumRows
+
+                if element.ColumnsToDisplay is None:  # Which cols to display
+                    displaycolumns = element.ColumnHeadings
+                else:
+                    displaycolumns = []
+                    for i, should_display in enumerate(element.ColumnsToDisplay):
+                        if should_display:
+                            displaycolumns.append(element.ColumnHeadings[i])
+                column_headings = element.ColumnHeadings
+                # ------------- GET THE TREEVIEW WIDGET -------------
+                for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
+                    # QTree.heading(heading, text=heading)
+                    if element.AutoSizeColumns:
+                        width = min(element.MaxColumnWidth, len(heading) + 1)
+                    else:
+                        try:
+                            width = element.ColumnWidths[i]
+                        except:
+                            width = element.DefaultColumnWidth
+                    # treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
+
+                def add_treeview_data(node, widget):
+                    # print(f'Inserting {node.key} under parent {node.parent}')
+                    child = QTreeWidgetItem(widget)
+                    if node.key != '':
+                        child.setText(0, str(node.text))
+                        # child.setData(0,0,node.values)
+                        if node.icon is not None:
+                            qicon = QIcon(node.icon)
+                            child.setIcon(0, qicon)
+                    for node in node.children:
+                        add_treeview_data(node, child)
+
+                element.TreeData.root_node
+                add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
+                qt_row_layout.addWidget(element.QT_QTreeWidget)
+
+
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 pass
