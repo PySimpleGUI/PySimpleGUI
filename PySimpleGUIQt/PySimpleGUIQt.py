@@ -4,6 +4,7 @@ import types
 import datetime
 import textwrap
 import pickle
+import base64
 import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
     QHBoxLayout, QListWidget, QDial, QTableWidget
@@ -11,7 +12,7 @@ from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushB
 from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget
 # from PySide2.QtWidgets import
 from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup
-from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont
+from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage
 from PySide2.QtCore import Qt,QProcess, QEvent
 import PySide2.QtGui as QtGui
 import PySide2.QtCore as QtCore
@@ -1300,6 +1301,7 @@ class Button(Element):
             self.ParentForm._Close()
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.QTApplication.exit()            # Exit the mainloop
+            self.ParentForm.QTWindow.close()
             if self.ParentForm.NonBlocking:
                 # TODO DESTROY WIN
                 _my_windows.Decrement()
@@ -1315,7 +1317,7 @@ class Button(Element):
                 self.ParentForm.QTApplication.exit()
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
-            # if self.ParentForm.NonBlocking:
+            self.ParentForm.QTWindow.close()
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.QTApplication.exit()
             _my_windows.Decrement()
@@ -1447,7 +1449,15 @@ class Image(Element):
         if filename is not None:
             pass
         elif data is not None:
-            pass
+            ba = QtCore.QByteArray.fromBase64(data)
+            image = QImage()
+            image.loadFromData(ba)
+            pixmap = QPixmap()
+            pixmap.fromImage(image)
+            w = image.width()
+            h = image.height()
+            self.QT_QLabel.setGeometry(QtCore.QRect(0, 0, w, h))
+            self.QT_QLabel.setPixmap(pixmap)
         else:
             return
 
@@ -4068,7 +4078,28 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
-                pass
+                if element.Filename:
+                    qlabel = QLabel()
+                    qlabel.setText('')
+                    w = QtGui.QPixmap(element.Filename).width()
+                    h = QtGui.QPixmap(element.Filename).height()
+                    qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
+                    qlabel.setPixmap(QtGui.QPixmap(element.Filename))
+                elif element.Data:
+                    qlabel = QLabel()
+                    qlabel.setText('')
+                    ba = QtCore.QByteArray.fromBase64(element.Data)
+                    image = QImage()
+                    image.loadFromData(ba)
+                    pixmap = QPixmap()
+                    pixmap.fromImage(image)
+                    w = image.width()
+                    h = image.height()
+                    qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
+                    qlabel.setPixmap(pixmap)
+
+                element.QT_QLabel = qlabel
+                qt_row_layout.addWidget(element.QT_QLabel)
             # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
@@ -5840,13 +5871,14 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
-              [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
+              [CButton('Ok', size=(60, 20), bind_return_key=True), CButton('Cancel', size=(60, 20))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
     (button, input_values) = window.Layout(layout).Read()
+    # window.Close()
     if button != 'Ok':
         return None
     else:
