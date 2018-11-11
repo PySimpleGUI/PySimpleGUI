@@ -21,12 +21,17 @@
       
 # PySimpleGUI      
       
-      
-## Now supports both Python 2.7 & 3      
-      
+   
+# NEW for NOV 2018 -  Run Qt using PySimpleGUI!      
+            
+## Supports both Python 2.7 & 3 when using tkinter
+
+
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.14.1-red.svg?longCache=true&style=for-the-badge)      
       
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.14.1-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.14.1-blue.svg?longCache=true&style=for-the-badge)      
+  
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.4.0-gold.svg?longCache=true&style=for-the-badge)    
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -50,6 +55,10 @@ The native GUI framework for perfectionists with deadlines
 #### Note regarding Python versions      
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.      
       
+#### Qt Version
+
+Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  There is a separate Readme file for the Qt version that you'll find there.  Give it a shot if you're looking for something a bit more "modern".
+
       
 ------------------------------------------------------------------------      
       
