@@ -4,13 +4,15 @@ import types
 import datetime
 import textwrap
 import pickle
+import base64
 import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
     QHBoxLayout, QListWidget, QDial, QTableWidget
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
 from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget
 # from PySide2.QtWidgets import
-from PySide2.QtWidgets import QTableWidgetItem
+from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup
+from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage
 from PySide2.QtCore import Qt,QProcess, QEvent
 import PySide2.QtGui as QtGui
 import PySide2.QtCore as QtCore
@@ -287,7 +289,12 @@ class Element():
         self.Type = type
         self.AutoSizeText = auto_size_text
         self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
-        self.Font = font
+        if font is not None and len(font) == 2:
+            self.Font = font
+        elif font is not None:
+            self.Font = font.split(' ')
+        else:
+            self.Font = font
 
         self.TKStringVar = None
         self.TKIntVar = None
@@ -1294,6 +1301,7 @@ class Button(Element):
             self.ParentForm._Close()
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.QTApplication.exit()            # Exit the mainloop
+            self.ParentForm.QTWindow.close()
             if self.ParentForm.NonBlocking:
                 # TODO DESTROY WIN
                 _my_windows.Decrement()
@@ -1309,7 +1317,7 @@ class Button(Element):
                 self.ParentForm.QTApplication.exit()
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
-            # if self.ParentForm.NonBlocking:
+            self.ParentForm.QTWindow.close()
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.QTApplication.exit()
             _my_windows.Decrement()
@@ -1441,7 +1449,15 @@ class Image(Element):
         if filename is not None:
             pass
         elif data is not None:
-            pass
+            ba = QtCore.QByteArray.fromBase64(data)
+            image = QImage()
+            image.loadFromData(ba)
+            pixmap = QPixmap()
+            pixmap.fromImage(image)
+            w = image.width()
+            h = image.height()
+            self.QT_QLabel.setGeometry(QtCore.QRect(0, 0, w, h))
+            self.QT_QLabel.setPixmap(pixmap)
         else:
             return
 
@@ -1501,12 +1517,14 @@ class Graph(Element):
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
-        self._TKCanvas = None
-        self._TKCanvas2 = None
+        self.x  = self.y = 0
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip)
         return
+
+
+
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
         scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
@@ -1518,13 +1536,14 @@ class Graph(Element):
     def DrawLine(self, point_from, point_to, color='black', width=1):
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
         converted_point_to = self._convert_xy_to_canvas_xy(point_to[0], point_to[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
-        return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+
+        qcolor = QColor(color)
+        pen = QPen(qcolor, width)
+        line = self.QT_QGraphicsScene.addLine(self.x+converted_point_from[0],self.y+ converted_point_from[1], self.x+converted_point_to[0],self.y+ converted_point_to[1], pen=pen)
+        # self.QT_QGraphicsItemGroup.addToGroup(line)
 
     def DrawPoint(self, point, size=2, color='black'):
+        self.QT_Q
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1536,13 +1555,13 @@ class Graph(Element):
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
-        return self._TKCanvas2.create_oval(converted_point[0] - radius, converted_point[1] - radius,
-                                           converted_point[0] + radius, converted_point[1] + radius, fill=fill_color,
-                                           outline=line_color)
+        qcolor = QColor(fill_color)
+        pen = QPen(qcolor)
+        qcolor = QColor(line_color)
+        brush = QBrush(qcolor)
+        line = self.QT_QGraphicsScene.addEllipse(self.x+converted_point[0], self.y+converted_point[1],
+                                           radius, radius, pen=pen, brush=brush)
+
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -1577,13 +1596,16 @@ class Graph(Element):
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
-        text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
-                                              angle=angle)
-        return text_id
+
+        qcolor = QColor(color)
+        qpath = QPainterPath()
+        _font = font or ('courier', 12)
+        qfont = QFont(_font[0], _font[1])
+        # qfont.setWeight(.5)
+
+        qpath.addText(self.x+converted_point[0], self.y+converted_point[1], qfont, str(text))
+        self.QT_QGraphicsScene.addPath(qpath, qcolor)
+
 
     def Erase(self):
         if self._TKCanvas2 is None:
@@ -1600,14 +1622,17 @@ class Graph(Element):
         self._TKCanvas2.configure(background=background_color)
 
     def Move(self, x_direction, y_direction):
+        x_direction = -x_direction
+        y_direction = -y_direction
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
-        self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
+        rect =  self.QT_QGraphicsScene.sceneRect()
+        rect.translate(shift_amount[0], shift_amount[1])
+        self.x += shift_amount[0]
+        self.y += shift_amount[1]
+        self.QT_QGraphicsScene.setSceneRect(rect)
+
 
     def MoveFigure(self, figure, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
@@ -2761,12 +2786,7 @@ class Window:
             # return None, None
         return self
     def Refresh(self):
-        if self.TKrootDestroyed:
-            return self
-        try:
-            rc = self.TKroot.update()
-        except:
-            pass
+        self.QTApplication.processEvents()              # refresh the window
         return self
 
     def Fill(self, values_dict):
@@ -2930,7 +2950,8 @@ class Window:
         :return:
         '''
         self._AlphaChannel = alpha
-        self.TKroot.attributes('-alpha', alpha)
+        if self._AlphaChannel:
+            self.QTWindow.setWindowOpacity(self._AlphaChannel)
 
     @property
     def AlphaChannel(self):
@@ -4057,13 +4078,42 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
-                pass
+                if element.Filename:
+                    qlabel = QLabel()
+                    qlabel.setText('')
+                    w = QtGui.QPixmap(element.Filename).width()
+                    h = QtGui.QPixmap(element.Filename).height()
+                    qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
+                    qlabel.setPixmap(QtGui.QPixmap(element.Filename))
+                elif element.Data:
+                    qlabel = QLabel()
+                    qlabel.setText('')
+                    ba = QtCore.QByteArray.fromBase64(element.Data)
+                    image = QImage()
+                    image.loadFromData(ba)
+                    pixmap = QPixmap()
+                    pixmap.fromImage(image)
+                    w = image.width()
+                    h = image.height()
+                    qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
+                    qlabel.setPixmap(pixmap)
+
+                element.QT_QLabel = qlabel
+                qt_row_layout.addWidget(element.QT_QLabel)
             # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
             # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 width, height = element_size
+                element.QT_QGraphicsView = QGraphicsView()
+                # element.QT_QGraphicsView.setGeometry(0,0,element.CanvasSize[0],element.CanvasSize[1])
+                element.QT_QGraphicsScene = QGraphicsScene()
+                element.QT_QGraphicsScene.setSceneRect(0,0,element.CanvasSize[0],element.CanvasSize[1])
+                element.QT_QGraphicsView.setScene(element.QT_QGraphicsScene)
+                element.QT_QGraphicsItemGroup = QGraphicsItemGroup()
+                qt_row_layout.addWidget(element.QT_QGraphicsView)
+
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 menu_def = element.MenuDefinition
@@ -5821,13 +5871,14 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
-              [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
+              [CButton('Ok', size=(60, 20), bind_return_key=True), CButton('Cancel', size=(60, 20))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
     (button, input_values) = window.Layout(layout).Read()
+    # window.Close()
     if button != 'Ok':
         return None
     else:

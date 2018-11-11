@@ -129,14 +129,13 @@ These Elements are "complete" (a relative term... more are more complete than ot
    * change_submits events
    * Updates
 * Image as a background (new feature)
+* Graph - Draw line, draw circle, draw text
   
-
-
 
 ## Missing Features
 
 Notable MISSING features at the moment include:
-* Graphs Element
+* Graphs Element - erasing, draw arc, etc
 * Image Element
 * Tree Element - the more complex Elements have not yet been ported.  Stay tuned, new ones being added daily!
 * Tab & tab group Elements
