@@ -5835,7 +5835,7 @@ def ObjToString(obj, extra='    '):
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
 def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
-          auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None,
+          auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None,
           font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Popup - Display a popup box with as many parms as you wish to include
@@ -5892,7 +5892,15 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     else:
         PopupButton = CloseButton
     # show either an OK or Yes/No depending on paramater
-    if button_type is POPUP_BUTTONS_YES_NO:
+    if custom_text != (None, None):
+        if type(custom_text) is not tuple:
+            window.AddRow(PopupButton(custom_text,size=(len(custom_text),1), button_color=button_color, focus=True, bind_return_key=True))
+        elif custom_text[1] is None:
+            window.AddRow(PopupButton(custom_text[0],size=(len(custom_text[0]),1), button_color=button_color, focus=True, bind_return_key=True))
+        else:
+            window.AddRow(PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True, size=(len(custom_text[0]), 1)),
+                          PopupButton(custom_text[1], button_color=button_color, size=(len(custom_text[0]), 1)))
+    elif button_type is POPUP_BUTTONS_YES_NO:
         window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
                                   size=(5, 1)), PopupButton('No', button_color=button_color, size=(5, 1)))
     elif button_type is POPUP_BUTTONS_CANCELLED:
