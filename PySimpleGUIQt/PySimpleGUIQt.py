@@ -9,17 +9,14 @@ import calendar
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
     QHBoxLayout, QListWidget, QDial, QTableWidget
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem
+from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
 # from PySide2.QtWidgets import
-from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup
+from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction
 from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
 from PySide2.QtCore import Qt,QProcess, QEvent
 import PySide2.QtGui as QtGui
 import PySide2.QtCore as QtCore
 import PySide2.QtWidgets as QtWidgets
-
-
-
 
 """
     The QT version if PySimpleGUI.
@@ -127,7 +124,7 @@ RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')  # a nice green progress bar
-DEFAULT_PROGRESS_BAR_SIZE = (25, 20)  # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_SIZE = (250, 20)  # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
 PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
@@ -1301,7 +1298,7 @@ class Button(Element):
             self.ParentForm._Close()
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.QTApplication.exit()            # Exit the mainloop
-            self.ParentForm.QTWindow.close()
+            self.ParentForm.QT_QMainWindow.close()
             if self.ParentForm.NonBlocking:
                 # TODO DESTROY WIN
                 _my_windows.Decrement()
@@ -1317,7 +1314,7 @@ class Button(Element):
                 self.ParentForm.QTApplication.exit()
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close()
-            self.ParentForm.QTWindow.close()
+            self.ParentForm.QT_QMainWindow.close()
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.QTApplication.exit()
             _my_windows.Decrement()
@@ -1383,7 +1380,7 @@ class Button(Element):
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
-    def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
+    def __init__(self, max_value, orientation=None, size=(None, None),start_value=0,  auto_size_text=None, bar_color=(None, None),
                  style=None, border_width=None, relief=None, key=None, pad=None):
         '''
         ProgressBar Element
@@ -1408,11 +1405,14 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
+        self.StartValue = start_value
         super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad)
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
-        pass
+        self.QT_QProgressBar.setValue(current_count)
+        self.ParentForm.QTApplication.processEvents()  # refresh the window
+
         return True
 
     def __del__(self):
@@ -1447,19 +1447,19 @@ class Image(Element):
 
     def Update(self, filename=None, data=None, size=(None, None)):
         if filename is not None:
-            pass
+            qlabel = self.QT_QLabel
+            qlabel.setText('')
+            w = QtGui.QPixmap(filename).width()
+            h = QtGui.QPixmap(filename).height()
+            qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
+            qlabel.setPixmap(QtGui.QPixmap(filename))
         elif data is not None:
+            qlabel = self.QT_QLabel
+            qlabel.setText('')
             ba = QtCore.QByteArray.fromBase64(data)
-            image = QImage()
-            image.loadFromData(ba)
-            pixmap = QPixmap()
-            pixmap.fromImage(image)
-            w = image.width()
-            h = image.height()
-            self.QT_QLabel.setGeometry(QtCore.QRect(0, 0, w, h))
-            self.QT_QLabel.setPixmap(pixmap)
-        else:
-            return
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qlabel.setPixmap(pixmap)
 
 
     def __del__(self):
@@ -2194,15 +2194,18 @@ class Menu(Element):
         self.TKMenu = None
         self.Tearoff = tearoff
 
+
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
 
-    def MenuItemChosenCallback(self, item_chosen):
+    def QT_MenuItemChosenCallback(self, item_chosen):
         # print('IN MENU ITEM CALLBACK', item_chosen)
-        self.ParentForm.LastButtonClicked = item_chosen
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            pass # TODO  # kick the users out of the mainloop
+        self.Key = item_chosen.replace('&','')                   # fool the quit function into thinking this was a key
+        element_callback_quit_mainloop(self)
+        # self.ParentForm.LastButtonClicked = item_chosen
+        # self.ParentForm.FormRemainedOpen = True
+        # if self.ParentForm.CurrentlyRunningMainloop:
+        #     pass # TODO  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -2410,17 +2413,31 @@ class Tree(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
-    def add_treeview_data(self, node):
-        # print(f'Inserting {node.key} under parent {node.parent}')
-        if node.key != '':
-            pass # Insert in tree
-        for node in node.children:
-            self.add_treeview_data(node)
 
     def Update(self, values=None, key=None, value=None, text=None):
         if values is not None:
             self.TreeData = values
             self.SelectedRows = []
+
+            # self.QT_QTreeWidget = QTreeWidget()
+            TreeWidgetItems = QTreeWidgetItemIterator(self.QT_QTreeWidget)
+
+            for item in TreeWidgetItems.Enabled:
+                self.QT_QTreeWidget.removeItemWidget(item, 0)
+            def add_treeview_data(node, widget):
+                # print(f'Inserting {node.key} under parent {node.parent}')
+                child = QTreeWidgetItem(widget)
+                if node.key != '':
+                    child.setText(0, str(node.text))
+                    # child.setData(0,0,node.values)
+                    if node.icon is not None:
+                        qicon = QIcon(node.icon)
+                        child.setIcon(0, qicon)
+                for node in node.children:
+                    add_treeview_data(node, child)
+
+            add_treeview_data(self.TreeData.root_node, self.QT_QTreeWidget)
+
         if key is not None:
             pass
         return self
@@ -2903,7 +2920,7 @@ class Window:
         if self.TKrootDestroyed:
             return
         try:
-            self.QTWindow.close()
+            self.QT_QMainWindow.close()
         except:
             print('error closing window')
 
@@ -2953,7 +2970,7 @@ class Window:
         '''
         self._AlphaChannel = alpha
         if self._AlphaChannel:
-            self.QTWindow.setWindowOpacity(self._AlphaChannel)
+            self.QT_QMainWindow.setWindowOpacity(self._AlphaChannel)
 
     @property
     def AlphaChannel(self):
@@ -2963,7 +2980,7 @@ class Window:
     def AlphaChannel(self, alpha):
         self._AlphaChannel = alpha
         if self._AlphaChannel:
-            self.QTWindow.setWindowOpacity(self._AlphaChannel)
+            self.QT_QMainWindow.setWindowOpacity(self._AlphaChannel)
 
     def BringToFront(self):
         try:
@@ -2975,6 +2992,36 @@ class Window:
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
     class QTMainWindow(QWidget):
+        def __init__(self,enable_key_events, window):
+            self.KeyEventsEnabled = enable_key_events
+            self.Window = window
+            super().__init__(window.QT_QMainWindow)
+
+        def eventFilter(self, widget, event):
+            # print(event.type())
+            if event.type() == QEvent.MouseButtonPress and self.Window.GrabAnywhere:
+                self.mouse_offset = event.pos()
+            if event.type() == QEvent.MouseMove and self.Window.GrabAnywhere:
+                x = event.globalX()
+                y = event.globalY()
+                x_w = self.mouse_offset.x()
+                y_w = self.mouse_offset.y()
+                self.move(x - x_w, y - y_w)
+
+            if event.type() == QEvent.KeyRelease and self.KeyEventsEnabled:
+                # print("got key event")
+                key = event.key()
+                try:
+                    self.Window.LastButtonClicked = chr(key).lower()
+                except:
+                    self.Window.LastButtonClicked = "special %s" % key
+                self.Window.FormRemainedOpen = True
+                if self.Window.CurrentlyRunningMainloop:
+                    self.Window.QTApplication.exit()
+            return QWidget.eventFilter(self, widget, event)
+
+
+    class QT_QMainWindowClass(QMainWindow):
         def __init__(self,enable_key_events, window):
             self.KeyEventsEnabled = enable_key_events
             self.Window = window
@@ -3002,6 +3049,7 @@ class Window:
                 if self.Window.CurrentlyRunningMainloop:
                     self.Window.QTApplication.exit()
             return QWidget.eventFilter(self, widget, event)
+
 
     def __enter__(self):
         return self
@@ -3581,73 +3629,31 @@ def _FindElementWithFocusInSubForm(form):
                         return element
 
 
-if sys.version_info[0] >= 3:
-    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        if type(sub_menu_info) is str:
-            if not is_sub_menu and not skip:
-                # print(f'Adding command {sub_menu_info}')
-                pos = sub_menu_info.find('&')
-                if pos != -1:
-                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
-                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
-                if sub_menu_info == '---':
-                    top_menu.add('separator')
-                else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
-        else:
-            i = 0
-            while i < (len(sub_menu_info)):
-                item = sub_menu_info[i]
-                if i != len(sub_menu_info) - 1:
-                    if type(sub_menu_info[i + 1]) == list:
-                        new_menu = 000000 # TODO Get a menu
-                        pos = sub_menu_info[i].find('&')
-                        if pos != -1:
-                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
-                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
-                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
-                        i += 1  # skip the next one
-                    else:
-                        AddMenuItem(top_menu, item, element)
+def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+    if type(sub_menu_info) is str:
+        if not is_sub_menu and not skip:
+            # print(f'Adding command {sub_menu_info}')
+            action = QAction(top_menu)
+            action.setText(sub_menu_info)
+            top_menu.addAction(action)
+            action.triggered.connect(lambda: Menu.QT_MenuItemChosenCallback(element, sub_menu_info))
+    else:
+        i = 0
+        while i < (len(sub_menu_info)):
+            item = sub_menu_info[i]
+            if i != len(sub_menu_info) - 1:
+                if type(sub_menu_info[i + 1]) == list:
+                    new_menu = QMenu(top_menu)
+                    new_menu.setTitle(sub_menu_info[i])
+                    top_menu.addAction(new_menu.menuAction())
+                    # print(f'Adding submenu {sub_menu_info[i]}')
+                    AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                    i += 1  # skip the next one
                 else:
                     AddMenuItem(top_menu, item, element)
-                i += 1
-else:
-    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        if isinstance(sub_menu_info, types.StringType):
-            if not is_sub_menu and not skip:
-                # print(f'Adding command {sub_menu_info}')
-                pos = sub_menu_info.find('&')
-                if pos != -1:
-                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
-                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
-                if sub_menu_info == '---':
-                    top_menu.add('separator')
-                else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
-        else:
-            i = 0
-            while i < (len(sub_menu_info)):
-                item = sub_menu_info[i]
-                if i != len(sub_menu_info) - 1:
-                    if not isinstance(sub_menu_info[i + 1], types.StringType):
-                        new_menu = 000000
-                        pos = sub_menu_info[i].find('&')
-                        if pos != -1:
-                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
-                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
-                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
-                        i += 1  # skip the next one
-                    else:
-                        AddMenuItem(top_menu, item, element)
-                else:
-                    AddMenuItem(top_menu, item, element)
-                i += 1
-
+            else:
+                AddMenuItem(top_menu, item, element)
+            i += 1
 
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
@@ -3760,7 +3766,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_Label.setToolTip(element.Tooltip)
                 element.QT_Label.setMargin(full_element_pad[0])
                 element.QT_Label.setIndent(full_element_pad[1])
-                # qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Label)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -3773,24 +3778,32 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'font-size: %spt;'%font[1]
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
+                if element.BorderWidth == 0:
+                    style += 'border: none;'
                 element.QT_QPushButton.setStyleSheet(style)
-                if element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element_size[0] is not None:
+                if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element_size[0] is not None) and element.ImageData is None:
                     if element_size[0] is not None:
                         element.QT_QPushButton.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_QPushButton.setFixedHeight(element_size[1])
 
+                if element.ImageData:
+                    ba = QtCore.QByteArray.fromBase64(element.ImageData)
+                    pixmap = QtGui.QPixmap()
+                    pixmap.loadFromData(ba)
+                    element.QT_QPushButton.setIcon(pixmap)
+                    element.QT_QPushButton.setIconSize(pixmap.rect().size())
+
                 if element.Disabled:
                     element.QT_QPushButton.setDisabled(True)
 
-                qt_row_layout.addWidget(element.QT_QPushButton)
                 element.QT_QPushButton.setContentsMargins(*full_element_pad)
                 if element.Tooltip:
                     element.QT_QPushButton.setToolTip(element.Tooltip)
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
-                # element.QT_QPushButton.clicked.connect(window.QTApplication.exit)
+                qt_row_layout.addWidget(element.QT_QPushButton)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
@@ -3988,8 +4001,18 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_Checkbox)
               # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
-                # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
-                width = element_size[0]
+                element.QT_QProgressBar = QProgressBar()
+
+                if element.Size[0] is not None:
+                    if element_size[0] is not None:
+                        element.QT_QProgressBar.setFixedWidth(element_size[0])
+                    if element_size[1] is not None:
+                        element.QT_QProgressBar.setFixedHeight(element_size[1])
+
+                element.QT_QProgressBar.setMaximum(element.MaxValue)
+                element.QT_QProgressBar.setValue(element.StartValue)
+
+                qt_row_layout.addWidget(element.QT_QProgressBar)
             # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 width = 0 if auto_size_text else element_size[0]
@@ -4088,14 +4111,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 elif element.Data:
                     qlabel = QLabel()
                     qlabel.setText('')
+
                     ba = QtCore.QByteArray.fromBase64(element.Data)
-                    image = QImage()
-                    image.loadFromData(ba)
-                    pixmap = QPixmap()
-                    pixmap.fromImage(image)
-                    w = image.width()
-                    h = image.height()
-                    qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
+                    pixmap = QtGui.QPixmap()
+                    pixmap.loadFromData(ba)
                     qlabel.setPixmap(pixmap)
 
                 element.QT_QLabel = qlabel
@@ -4117,6 +4136,17 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 menu_def = element.MenuDefinition
+                element.QT_QMenuBar = QMenuBar(toplevel_win.QT_QMainWindow)
+
+                for menu_entry in menu_def:
+                    print(f'Adding a Menubar ENTRY {menu_entry}')
+                    baritem = QMenu(element.QT_QMenuBar)
+                    baritem.setTitle(menu_entry[0])
+                    element.QT_QMenuBar.addAction(baritem.menuAction())
+                    AddMenuItem(baritem, menu_entry[1], element)
+
+                toplevel_win.QT_QMainWindow.setMenuBar(element.QT_QMenuBar)
+
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
                 column_widget = QGroupBox()
@@ -4295,7 +4325,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     for node in node.children:
                         add_treeview_data(node, child)
 
-                element.TreeData.root_node
                 add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
                 qt_row_layout.addWidget(element.QT_QTreeWidget)
 
@@ -4367,10 +4396,14 @@ def StartupTK(window):
 
 
     # window.QTWindow = QWidget()
-    window.QTWindow = window.QTMainWindow(window.ReturnKeyboardEvents, window)
-    window.QTWindow.installEventFilter(window.QTWindow)
 
-    window.QTApplication.setActiveWindow(window.QTWindow)
+    window.QT_QMainWindow = window.QT_QMainWindowClass(window.ReturnKeyboardEvents, window)
+    window.QTWindow = window.QTMainWindow(window.ReturnKeyboardEvents, window)
+    window.QT_QMainWindow.setCentralWidget(window.QTWindow)
+
+    window.QT_QMainWindow.installEventFilter(window.QT_QMainWindow)
+
+    window.QTApplication.setActiveWindow(window.QT_QMainWindow)
 
     flags = 0
     if window.NoTitleBar:
@@ -4379,13 +4412,13 @@ def StartupTK(window):
     if window.KeepOnTop:
         flags |= Qt.WindowStaysOnTopHint
     if flags is not None:
-        window.QTWindow.setWindowFlags(flags)
+        window.QT_QMainWindow.setWindowFlags(flags)
     if window.AlphaChannel:
-        window.QTWindow.setWindowOpacity(window.AlphaChannel)
+        window.QT_QMainWindow.setWindowOpacity(window.AlphaChannel)
     if window.Size != (None, None):
-        window.QTWindow.resize(window.Size[0], window.Size[1])
+        window.QT_QMainWindow.resize(window.Size[0], window.Size[1])
     if window.WindowIcon is not None:
-        window.QTWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
+        window.QT_QMainWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
 
     # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
     # shadow = QtWidgets.QGraphicsDropShadowEffect()
@@ -4400,10 +4433,10 @@ def StartupTK(window):
     style = ''
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         style += 'background-color: %s;' % window.BackgroundColor
-    window.QTWindow.setStyleSheet(style)
+    window.QT_QMainWindow.setStyleSheet(style)
 
     if window.BackgroundImage is not None:
-        qlabel = QLabel(window.QTWindow)
+        qlabel = QLabel(window.QT_QMainWindow)
         qlabel.setText('')
         w = QtGui.QPixmap(window.BackgroundImage).width()
         h = QtGui.QPixmap(window.BackgroundImage).height()
@@ -4413,7 +4446,7 @@ def StartupTK(window):
         # style += 'background-image: url(%s);' % window.BackgroundImage
 
 
-    window.QTWindow.setWindowTitle(window.Title)
+    window.QT_QMainWindow.setWindowTitle(window.Title)
 
 
     if (window.GrabAnywhere is not False and not (
@@ -4450,13 +4483,13 @@ def StartupTK(window):
 
     if not window.NonBlocking:
         timer = start_timer(window, window.Timeout) if window.Timeout else None
-        window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+        window.QT_QMainWindow.show()              ####### The thing that causes the window to be visible ######
         #### ------------------------------ RUN MAIN LOOP HERE ------------------------------ #####
         window.QTApplication.exec_()
         if timer:
             stop_timer(timer)
     else:                                   # Non-blocking window
-        window.QTWindow.show()              ####### The thing that causes the window to be visible ######
+        window.QT_QMainWindow.show()              ####### The thing that causes the window to be visible ######
         window.QTApplication.processEvents()
 
 
@@ -4467,7 +4500,7 @@ def StartupTK(window):
         if not window.FormRemainedOpen:
             _my_windows.Decrement()
         if window.RootNeedsDestroying:
-            window.QTWindow.close()         # destroy the window
+            window.QT_QMainWindow.close()         # destroy the window
             window.RootNeedsDestroying = False
     return
 
@@ -4535,7 +4568,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, N
         bar2.TextToDisplay = single_line_message
         bar2.MaxValue = max_value
         bar2.CurrentValue = 0
-        bar_text = Text(single_line_message, size=(width, height + 3), auto_size_text=True)
+        bar_text = Text(single_line_message, size=(width*10, height*25 + 70), auto_size_text=True)
         form.AddRow(bar_text)
         form.AddRow((bar2))
         form.AddRow((CloseButton('Cancel', button_color=button_color)))
@@ -4544,7 +4577,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, N
         bar2.TextToDisplay = single_line_message
         bar2.MaxValue = max_value
         bar2.CurrentValue = 0
-        bar_text = Text(single_line_message, size=(width, height + 3), auto_size_text=True)
+        bar_text = Text(single_line_message, size=(width*10, height*25 + 3), auto_size_text=True)
         form.AddRow(bar2, bar_text)
         form.AddRow((CloseButton('Cancel', button_color=button_color)))
 
@@ -4576,7 +4609,9 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
             _my_windows.Decrement()
     if bar.ParentForm.RootNeedsDestroying:
         try:
-            bar.ParentForm.TKroot.destroy()
+            bar.ParentForm.QT_QMainWindow.close()
+
+            # bar.ParentForm.TKroot.destroy()
             # there is a bug with progress meters not decrementing the number of windows
             # correctly when the X is used to close the window
             # uncommenting this line fixes that problem, but causes a double-decrement when
