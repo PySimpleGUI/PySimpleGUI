@@ -23,7 +23,7 @@
 # PySimpleGUIQt      
       
       
-## The Pre-Alpha Release   
+## The Alpha Release   
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
             
@@ -32,7 +32,7 @@
   -----      
 ## Getting Started with PySimpleGUIQt
 
-Welcome to the Pre-Alpha Release of PySimpleGUI for Qt!
+Welcome to the Alpha Release of PySimpleGUI for Qt!
 
 You can use the exact same code that you are running on the older, tkinter, version of PySimpleGUI.  
 
@@ -98,6 +98,13 @@ Then use the exact same code as any other PySimpleGUI program that runs on tkint
 
 ## Status
 
+### FEATURE COMPLETE! 
+
+All of the major features are DONE.  They may not have all of their options working, but they can be added to your windows.  It's been an amazing week to get here.
+
+I hope you enjoy this ALPHA release!  Please post a screenshot on the GitHub site.  There is an Issue where users have been posting their applications.  It's a place for you to show-off and a place for others to learn from your designs.  Your window does not have to be complex.... all GUIs, no matter how simple, are something we can learn from.
+
+
 ### Functioning features
 Features are being added daily to this Qt port of PySimpleGUI.  
 These Elements are "complete" (a relative term... more are more complete than others):
@@ -130,19 +137,18 @@ These Elements are "complete" (a relative term... more are more complete than ot
    * Updates
 * Image as a background (new feature)
 * Graph - Draw line, draw circle, draw text
+* Image Element
+* Tree Element
+* Tabs
+* Menus
+
   
 
 ## Missing Features
 
 Notable MISSING features at the moment include:
-* Graphs Element - erasing, draw arc, etc
-* Image Element
-* Tree Element - the more complex Elements have not yet been ported.  Stay tuned, new ones being added daily!
-* Tab & tab group Elements
-* Menus
+* Graphs Element Methods - erasing, draw arc, etc
 * Change submits - for radio buttons
-
-
  
 
 ## Design      
