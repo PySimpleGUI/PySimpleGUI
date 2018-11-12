@@ -263,6 +263,7 @@ POPUP_BUTTONS_ERROR = 3
 POPUP_BUTTONS_OK_CANCEL = 4
 POPUP_BUTTONS_OK = 0
 POPUP_BUTTONS_NO_BUTTONS = 5
+POPUP_BUTTONS_CUSTOM = 6
 
 
 # ------------------------------------------------------------------------- #
@@ -5834,7 +5835,7 @@ def ObjToString(obj, extra='    '):
 
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
+def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, custom_text=(None, None),
           auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None,
           font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -5844,6 +5845,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     :param background_color:
     :param text_color:
     :param button_type:
+    :param custom_text:
     :param auto_close:
     :param auto_close_duration:
     :param non_blocking:
@@ -5906,6 +5908,9 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
                       PopupButton('Cancel', size=(6, 1), button_color=button_color))
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
+    elif button_type is POPUP_BUTTONS_CUSTOM:
+	    window.AddRow(PopupButton(custom_text[0], size=(6, 1), button_color=button_color, focus=True, bind_return_key=True),
+		              PopupButton(custom_text[1], size=(6, 1), button_color=button_color))
     else:
         window.AddRow(PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True,
                                   pad=((20, 0), 3)))
@@ -6257,7 +6262,33 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
                  grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
-
+# --------------------------- PopupCustom ---------------------------
+def PopupCustom(*args, button_color=None, background_color=None, text_color=None, auto_close=False, custom_text=(None, None),
+               auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
+               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+    """
+    Display Popup with Yes and No buttons
+    :param args:
+    :param button_color:
+    :param background_color:
+    :param text_color:
+    :param auto_close:
+	:param custom_text:
+    :param auto_close_duration:
+    :param non_blocking:
+    :param icon:
+    :param line_width:
+    :param font:
+    :param no_titlebar:
+    :param grab_anywhere:
+    :param keep_on_top:
+    :param location:
+    :return: Yes, No or None
+    """
+    return Popup(*args, button_type=POPUP_BUTTONS_CUSTOM, background_color=background_color, text_color=text_color, custom_text=custom_text,
+                 non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
+                 auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)	
 ##############################################################################
 #   The PopupGet_____ functions - Will return user input                     #
 ##############################################################################
