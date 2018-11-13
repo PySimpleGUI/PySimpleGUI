@@ -6,17 +6,31 @@ import textwrap
 import pickle
 import base64
 import calendar
-from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-    QHBoxLayout, QListWidget, QDial, QTableWidget
-from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-# from PySide2.QtWidgets import
-from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction
-from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-from PySide2.QtCore import Qt,QProcess, QEvent
-import PySide2.QtGui as QtGui
-import PySide2.QtCore as QtCore
-import PySide2.QtWidgets as QtWidgets
+try:
+    from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
+        QHBoxLayout, QListWidget, QDial, QTableWidget
+    from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+    from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+    from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction
+    from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
+    from PyQt5.QtCore import Qt,QProcess, QEvent
+    import PyQt5.QtGui as QtGui
+    import PyQt5.QtCore as QtCore
+    import PyQt5.QtWidgets as QtWidgets
+    using_pyqt5 = True
+except:
+    from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
+        QHBoxLayout, QListWidget, QDial, QTableWidget
+    from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+    from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+    from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction
+    from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
+    from PySide2.QtCore import Qt,QProcess, QEvent
+    import PySide2.QtGui as QtGui
+    import PySide2.QtCore as QtCore
+    import PySide2.QtWidgets as QtWidgets
+    using_pyqt5 = False
+
 
 """
     The QT version if PySimpleGUI.
@@ -4418,6 +4432,7 @@ def stop_timer(timer):
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(window):
     global _my_windows
+    global using_pyqt5
 
     ow = _my_windows.NumOpenWindows
 
@@ -4445,7 +4460,7 @@ def StartupTK(window):
         flags |= QtCore.Qt.Tool
     if window.KeepOnTop:
         flags |= Qt.WindowStaysOnTopHint
-    if flags is not None:
+    if not using_pyqt5 and flags is not None:
         window.QT_QMainWindow.setWindowFlags(flags)
     if window.AlphaChannel:
         window.QT_QMainWindow.setWindowOpacity(window.AlphaChannel)
