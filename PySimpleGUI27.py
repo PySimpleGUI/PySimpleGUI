@@ -981,7 +981,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None):
         if value is not None:
             try:
                 if not append:
@@ -996,6 +996,10 @@ class Multiline(Element):
             self.TKText.configure(state='disabled')
         elif disabled == False:
             self.TKText.configure(state='normal')
+        if background_color is not None:
+            self.TKText.configure(background=background_color)
+        if text_color is not None:
+            self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
 
@@ -1421,13 +1425,6 @@ class Button(Element):
             self.TKButton['state'] = 'disabled'
         elif disabled == False:
             self.TKButton['state'] = 'normal'
-        # if image_data is not None:
-        #     if type(image_data) is bytes:
-        #         image = tk.PhotoImage(data=image_data)
-        #     else:
-        #         image = image_data
-        #     width, height = image.width, image.height
-        #     self.TKButton.config(image=image, width=width, height=height)
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
             width, height = image.width(), image.height()
@@ -1585,7 +1582,7 @@ class Canvas(Element):
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
-    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, key=None,
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, key=None,
                  tooltip=None):
         '''
         Graph Element
@@ -1602,19 +1599,38 @@ class Graph(Element):
         self.TopRight = graph_top_right
         self._TKCanvas = None
         self._TKCanvas2 = None
-
+        self.ChangeSubmits = change_submits
+        self.DragSubmits = drag_submits
+        self.ClickPosition = (None, None)
+        self.MouseButtonDown = False
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
+        if None in (x_in,y_in):
+            return None, None
         scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
         scale_y = (0 - self.CanvasSize[1]) / (self.TopRight[1] - self.BottomLeft[1])
         new_x = 0 + scale_x * (x_in - self.BottomLeft[0])
         new_y = self.CanvasSize[1] + scale_y * (y_in - self.BottomLeft[1])
         return new_x, new_y
 
+
+    def _convert_canvas_xy_to_xy(self, x_in, y_in):
+        if None in (x_in,y_in):
+            return None, None
+        scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
+        scale_y = (0 - self.CanvasSize[1]) / (self.TopRight[1] - self.BottomLeft[1])
+
+        new_x = x_in/scale_x+self.BottomLeft[0]
+        new_y = (y_in - self.CanvasSize[1]) / scale_y +  self.BottomLeft[1]
+        return int(new_x), int(new_y)
+
+
     def DrawLine(self, point_from, point_to, color='black', width=1):
+        if point_from == (None, None):
+            return
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
         converted_point_to = self._convert_xy_to_canvas_xy(point_to[0], point_to[1])
         if self._TKCanvas2 is None:
@@ -1624,6 +1640,8 @@ class Graph(Element):
         return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
 
     def DrawPoint(self, point, size=2, color='black'):
+        if point == (None, None):
+            return
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1634,6 +1652,8 @@ class Graph(Element):
                                            outline=color)
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
+        if center_location == (None, None):
+            return
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1676,6 +1696,8 @@ class Graph(Element):
                                                 converted_bottom_right[1], fill=fill_color, outline=line_color)
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
+        if location == (None, None):
+            return
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1725,6 +1747,50 @@ class Graph(Element):
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas2
+
+    # Realtime button release callback
+    def ButtonReleaseCallBack(self, event):
+        self.ClickPosition = (None, None)
+        self.LastButtonClickedWasRealtime = not self.DragSubmits
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+        if self.DragSubmits:
+            self.ParentForm.LastButtonClicked = None
+        self.MouseButtonDown = False
+
+
+    # Realtime button callback
+    def ButtonPressCallBack(self, event):
+        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
+        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
+        self.MouseButtonDown = True
+
+
+    # Realtime button callback
+    def MotionCallBack(self, event):
+        if not self.MouseButtonDown:
+            return
+        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
+        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
+
+
+
 
     def __del__(self):
         super().__del__()
@@ -2066,21 +2132,25 @@ class Slider(Element):
 #                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
 class TkScrollableFrame(tk.Frame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, vertical_only, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
 
         # create a canvas object and a vertical scrollbar for scrolling it
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
         self.vscrollbar.pack(side='right', fill="y", expand="false")
 
-        self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-        self.hscrollbar.pack(side='bottom', fill="x", expand="false")
+        if not vertical_only:
+            self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
+            self.hscrollbar.pack(side='bottom', fill="x", expand="false")
+            self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
+        else:
+            self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set)
 
-        self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
         self.canvas.pack(side="left", fill="both", expand=True)
 
         self.vscrollbar.config(command=self.canvas.yview)
-        self.hscrollbar.config(command=self.canvas.xview)
+        if not vertical_only:
+            self.hscrollbar.config(command=self.canvas.xview)
 
         # reset the view
         self.canvas.xview_moveto(0)
@@ -2102,7 +2172,8 @@ class TkScrollableFrame(tk.Frame):
         self.bind('<Configure>', self.set_scrollregion)
 
         self.bind_mouse_scroll(self.canvas, self.yscroll)
-        self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
+        if not vertical_only:
+            self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
         self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
 
     def resize_frame(self, e):
@@ -2136,7 +2207,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, key=None):
         '''
         Column Element
         :param layout:
@@ -2155,6 +2226,7 @@ class Column(Element):
         self.Rows = []
         self.TKFrame = None
         self.Scrollable = scrollable
+        self.VerticalScrollOnly = vertical_scroll_only
         # self.ImageFilename = image_filename
         # self.ImageData = image_data
         # self.ImageSize = image_size
@@ -2464,7 +2536,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, pad=None, key=None, tooltip=None):
+                 size=(None, None), change_submits=False, bind_return_key=False, pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2503,7 +2575,9 @@ class Table(Element):
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
         self.ChangeSubmits = change_submits
-
+        self.BindReturnKey = bind_return_key
+        self.StartingRowNumber = 0                  # When displaying row numbers, where to start
+        self.RowHeaderText = 'Row'
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip)
         return
@@ -2518,7 +2592,7 @@ class Table(Element):
             # self.TKTreeview.delete(*self.TKTreeview.get_children())
             for i, value in enumerate(values):
                 if self.DisplayRowNumbers:
-                    value = [i] + value
+                    value = [i+self.StartingRowNumber] + value
                 id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
             if self.AlternatingRowColor is not None:
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
@@ -2529,6 +2603,20 @@ class Table(Element):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
+            MyForm = self.ParentForm
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            if self.ParentForm.CurrentlyRunningMainloop:
+                self.ParentForm.TKroot.quit()
+
+
+    def treeview_double_click(self, event):
+        selections = self.TKTreeview.selection()
+        self.SelectedRows = [int(x) - 1 for x in selections]
+        if self.BindReturnKey:
             MyForm = self.ParentForm
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = self.Key
@@ -2710,11 +2798,11 @@ class ErrorElement(Element):
 class Window(object):
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), button_color=None, font=None,
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False):
         '''
         Window
         :param title:
@@ -2786,6 +2874,9 @@ class Window(object):
         self.Timeout = None
         self.TimeoutKey = '_timeout_'
         self.TimerCancelled = False
+        self.DisableClose = disable_close
+        self._Hidden = False
+        self._Size = size
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3135,10 +3226,14 @@ class Window(object):
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
+        if self.DisableClose:
+            return
         # print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.destroy()  # kick the users out of the mainloop
+        else:
+            self.RootNeedsDestroying = True
         self.TKrootDestroyed = True
 
         return
@@ -3150,10 +3245,13 @@ class Window(object):
         self.TKroot.grab_release()
 
     def Hide(self):
+        self._Hidden = True
         self.TKroot.withdraw()
 
     def UnHide(self):
-        self.TKroot.deiconify()
+        if self._Hidden:
+            self.TKroot.deiconify()
+            self._Hidden = False
 
     def Disappear(self):
         self.TKroot.attributes('-alpha', 0)
@@ -3187,6 +3285,21 @@ class Window(object):
 
     def CurrentLocation(self):
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+
+
+    @property
+    def Size(self):
+        win_width = self.TKroot.winfo_width()
+        win_height = self.TKroot.winfo_height()
+        return win_width, win_height
+
+    @Size.setter
+    def Size(self, size):
+        try:
+            self.TKroot.geometry("%sx%s" % (size[0], size[1]))
+            self.TKroot.update_idletasks()
+        except:
+            pass
 
 
     def __enter__(self):
@@ -3606,6 +3719,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_TREE:
                     value = element.SelectedRows
+                elif element.Type == ELEM_TYPE_GRAPH:
+                    value = element.ClickPosition
             else:
                 value = None
 
@@ -3742,7 +3857,10 @@ def _FindElementWithFocusInSubForm(form):
                 if element.TKEntry is not None:
                     if element.TKEntry is element.TKEntry.focus_get():
                         return element
-
+            if element.Type == ELEM_TYPE_INPUT_MULTILINE:
+                if element.TKText is not None:
+                    if element.TKText is element.TKText.focus_get():
+                        return element
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
@@ -3864,7 +3982,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 if element.Scrollable:
-                    col_frame = TkScrollableFrame(tk_row_frame)  # do not use yet!  not working
+                    col_frame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
                     col_frame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
@@ -4327,6 +4445,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+
                 # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 width, height = element_size
@@ -4344,6 +4463,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.ChangeSubmits:
+                    element._TKCanvas2.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
+                    element._TKCanvas2.bind('<ButtonPress-1>', element.ButtonPressCallBack)
+                if element.DragSubmits:
+                    element._TKCanvas2.bind('<Motion>', element.MotionCallBack)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 menu_def = element.MenuDefinition
@@ -4520,15 +4644,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             displaycolumns.append(element.ColumnHeadings[i])
                 column_headings = element.ColumnHeadings
                 if element.DisplayRowNumbers:  # if display row number, tack on the numbers to front of columns
-                    displaycolumns = ['Row', ] + displaycolumns
-                    column_headings = ['Row', ] + element.ColumnHeadings
+                    displaycolumns = [element.RowHeaderText, ] + displaycolumns
+                    column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
                 element.TKTreeview = tkinter.ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height,
                                                   selectmode=element.SelectMode)
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
-                    treeview.heading('Row', text='Row')  # make a dummy heading
-                    treeview.column('Row', width=50, anchor=anchor)
+                    treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
+                    treeview.column(element.RowHeaderText, width=50, anchor=anchor)
                 for i, heading in enumerate(element.ColumnHeadings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
@@ -4543,7 +4667,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
-                        value = [i] + value
+                        value = [i+element.StartingRowNumber] + value
                     id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i % 2)
                 if element.AlternatingRowColor is not None:
                     treeview.tag_configure(1, background=element.AlternatingRowColor)
@@ -4554,7 +4678,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
-
+                if element.BindReturnKey:
+                    treeview.bind('<Return>', element.treeview_double_click)
+                    treeview.bind('<Double-Button-1>', element.treeview_double_click)
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
@@ -4653,6 +4779,8 @@ def ConvertFlexToTK(MyFlexForm):
         pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
     # ....................................... DONE creating and laying out window ..........................#
+    if MyFlexForm._Size != (None, None):
+        master.geometry("%sx%s" % (MyFlexForm._Size[0], MyFlexForm._Size[1]))
     screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
     if MyFlexForm.Location != (None, None):
@@ -4691,9 +4819,9 @@ def StartupTK(my_flex_form):
         # hidden window
         _my_windows.Increment()
         _my_windows.hidden_master_root = tk.Tk()
-        _my_windows.hidden_master_root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-        _my_windows.hidden_master_root.wm_overrideredirect(True)
-        _my_windows.hidden_master_root.withdraw()
+        _my_windows.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really good
+        _my_windows.hidden_master_root.wm_overrideredirect(True) # damn, what did this do again?
+        _my_windows.hidden_master_root.withdraw()               # no, REALLY hide it
         # root = tk.Tk()            # users windows are no longer using tk.Tk. They are all Toplevel windows
         root = tk.Toplevel()
     else:
@@ -4747,7 +4875,8 @@ def StartupTK(my_flex_form):
     if my_flex_form.Timeout != None:
         my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
-        pass
+        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.CurrentlyRunningMainloop = True
@@ -4881,6 +5010,13 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     if bar.ParentForm.RootNeedsDestroying:
         try:
             bar.ParentForm.TKroot.destroy()
+            # there is a bug with progress meters not decrementing the number of windows
+            # correctly when the X is used to close the window
+            # uncommenting this line fixes that problem, but causes a double-decrement when
+            # the cancel button is used... damned if you do, damned if you don't, so I'm choosing
+            # don't, as in don't decrement too many times. It's OK now to have a mismatch in
+            # number of windows because of the "hidden" master window. This ensures all windows
+            # will be toplevel.  Sorry about the bug, but the user never sees any problems as a result
             # _my_windows.Decrement()
         except:
             pass
@@ -5781,6 +5917,8 @@ def Popup(*args, **_3to2kwargs):
     else: icon = DEFAULT_WINDOW_ICON
     if 'non_blocking' in _3to2kwargs: non_blocking = _3to2kwargs['non_blocking']; del _3to2kwargs['non_blocking']
     else: non_blocking = False
+    if 'custom_text' in _3to2kwargs: custom_text = _3to2kwargs['custom_text']; del _3to2kwargs['custom_text']
+    else: custom_text = (None, None)
     if 'auto_close_duration' in _3to2kwargs: auto_close_duration = _3to2kwargs['auto_close_duration']; del _3to2kwargs['auto_close_duration']
     else: auto_close_duration = None
     if 'auto_close' in _3to2kwargs: auto_close = _3to2kwargs['auto_close']; del _3to2kwargs['auto_close']
@@ -5848,7 +5986,15 @@ def Popup(*args, **_3to2kwargs):
     else:
         PopupButton = CloseButton
     # show either an OK or Yes/No depending on paramater
-    if button_type is POPUP_BUTTONS_YES_NO:
+    if custom_text != (None, None):
+        if type(custom_text) is not tuple:
+            window.AddRow(PopupButton(custom_text,size=(len(custom_text),1), button_color=button_color, focus=True, bind_return_key=True))
+        elif custom_text[1] is None:
+            window.AddRow(PopupButton(custom_text[0],size=(len(custom_text[0]),1), button_color=button_color, focus=True, bind_return_key=True))
+        else:
+            window.AddRow(PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True, size=(len(custom_text[0]), 1)),
+                          PopupButton(custom_text[1], button_color=button_color, size=(len(custom_text[0]), 1)))
+    elif button_type is POPUP_BUTTONS_YES_NO:
         window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
                                   size=(5, 1)), PopupButton('No', button_color=button_color, size=(5, 1)))
     elif button_type is POPUP_BUTTONS_CANCELLED:

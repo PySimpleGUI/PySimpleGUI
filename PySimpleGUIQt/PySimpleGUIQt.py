@@ -191,7 +191,7 @@ class MyWindows():
         self.user_defined_icon = None
         self.hidden_master_root = None
         self.QTApplication = None
-
+        self.active_popups = {}
     def Decrement(self):
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
         # print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
@@ -281,8 +281,12 @@ POPUP_BUTTONS_NO_BUTTONS = 5
 # ------------------------------------------------------------------------- #
 class Element():
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
-                 key=None, pad=None, tooltip=None, size_px=(None,None)):
-        self.Size = size
+                 key=None, pad=None, tooltip=None):
+
+        if size[1] is not None and size[1] < 10:        # change from character based size to pixels (roughly)
+            self.Size = size[0]*10, size[1]*25
+        else:
+            self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
         self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
@@ -308,7 +312,6 @@ class Element():
         self.Key = key  # dictionary key for return values
         self.Tooltip = tooltip
         self.TooltipObject = None
-        self.SizePx = size_px
 
     def FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
@@ -1038,7 +1041,7 @@ class MultilineOutput(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), size_px=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None,
+    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, relief=None, font=None,
                  text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
         '''
         Text Element
@@ -1066,8 +1069,9 @@ class Text(Element):
             bg = background_color
         self.QT_Label = None
 
+
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
         return
 
 
@@ -1327,7 +1331,6 @@ class Button(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.QTApplication.exit()
                 pass # TODO # kick the users out of the mainloop
-
         return
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
@@ -2688,22 +2691,31 @@ class Window:
                     self.CloseNonBlockingForm()
                 else:
                     window._Close()
-                    pass # TODO kick out of mainloop
+                    if self.CurrentlyRunningMainloop:
+                        self.QTApplication.exit()  # kick the users out of the mainloop
                     self.RootNeedsDestroying = True
+                    self.QT_QMainWindow.close()
+
         except:
             pass
 
     def timer_timeout(self):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        # print('TIMEOUT CALLBACK')
         if self.TimerCancelled:
             return
         self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
         if self.CurrentlyRunningMainloop:
             self.QTApplication.exit()  # kick the users out of the mainloop
-            #TODO  # kick the users out of the mainloop
+
+    def autoclose_timer_callback(self):
+        print('*** TIMEOUT CALLBACK ***')
+        self.autoclose_timer.stop()
+        self.QT_QMainWindow.close()
+        if self.CurrentlyRunningMainloop:
+            print("quitting window")
+            self.QTApplication.exit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
@@ -2749,7 +2761,7 @@ class Window:
             # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
-                timer = start_timer(self, timeout)
+                timer = start_window_read_timer(self, timeout)
             else:
                 timer = None
             self.CurrentlyRunningMainloop = True
@@ -3050,6 +3062,19 @@ class Window:
                     self.Window.QTApplication.exit()
             return QWidget.eventFilter(self, widget, event)
 
+        def closeEvent(self, event):
+            # print('GOT A CLOSE EVENT!', event)
+            if not self.Window.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
+                self.Window.RootNeedsDestroying = True
+            self.Window.QT_QMainWindow.close()
+            self.Window.TKrootDestroyed = True
+
+        # if self.CurrentlyRunningMainloop:
+        #     print("quitting window")
+        #     self.QTApplication.exit()  # kick the users out of the mainloop
+
+
+
 
     def __enter__(self):
         return self
@@ -3059,6 +3084,7 @@ class Window:
         return False
 
     def __del__(self):
+        # print(f'+++++ Window {self.Title} being deleted +++++')
         for row in self.Rows:
             for element in row:
                 element.__del__()
@@ -3696,7 +3722,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # Set foreground color
             text_color = element.TextColor
             # Determine Element size
-            element_size = element.Size if element.Size != (None, None) else element.SizePx
+            element_size = element.Size
             if (element_size == (None, None) and element_type != ELEM_TYPE_BUTTON):  # user did not specify a size
                 element_size = toplevel_win.DefaultElementSize
             elif (element_size == (None, None) and element_type == ELEM_TYPE_BUTTON):
@@ -3783,7 +3809,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BorderWidth == 0:
                     style += 'border: none;'
                 element.QT_QPushButton.setStyleSheet(style)
-                if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element_size[0] is not None) and element.ImageData is None:
+                if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
                     if element_size[0] is not None:
                         element.QT_QPushButton.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
@@ -4139,7 +4165,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QMenuBar = QMenuBar(toplevel_win.QT_QMainWindow)
 
                 for menu_entry in menu_def:
-                    print(f'Adding a Menubar ENTRY {menu_entry}')
+                    # print(f'Adding a Menubar ENTRY {menu_entry}')
                     baritem = QMenu(element.QT_QMenuBar)
                     baritem.setTitle(menu_entry[0])
                     element.QT_QMenuBar.addAction(baritem.menuAction())
@@ -4352,7 +4378,7 @@ def ConvertFlexToTK(window):
     screen_width = 000000 # get window info to move to middle of screen
     screen_height = 000000
     if window.Location != (None, None):
-        window.QTWindow.move(window.Location[0], window.Location[1])
+        window.QT_QMainWindow.move(window.Location[0], window.Location[1])
         x, y = window.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
         x, y = DEFAULT_WINDOW_LOCATION
@@ -4372,9 +4398,17 @@ def ConvertFlexToTK(window):
 
 # ----====----====----====----====----==== Start timer ====----====----====----====----====----#
 
-def start_timer(window, amount):
+def start_window_read_timer(window, amount):
     timer = QtCore.QTimer()
     timer.timeout.connect(window.timer_timeout)
+    timer.start(amount)
+    return timer
+
+
+def start_window_autoclose_timer(window, amount):
+    timer = QtCore.QTimer()
+    window.autoclose_timer = timer
+    timer.timeout.connect(window.autoclose_timer_callback)
     timer.start(amount)
     return timer
 
@@ -4448,7 +4482,6 @@ def StartupTK(window):
 
     window.QT_QMainWindow.setWindowTitle(window.Title)
 
-
     if (window.GrabAnywhere is not False and not (
             window.NonBlocking and window.GrabAnywhere is not True)):
         pass
@@ -4481,8 +4514,13 @@ def StartupTK(window):
     if window.FocusElement is not None:
         window.FocusElement.setFocus()
 
+    timer = None
+    if window.AutoClose:
+        timer = start_window_autoclose_timer(window, window.AutoCloseDuration*1000)
+
     if not window.NonBlocking:
-        timer = start_timer(window, window.Timeout) if window.Timeout else None
+        if window.Timeout:
+            timer = start_window_read_timer(window, window.Timeout)
         window.QT_QMainWindow.show()              ####### The thing that causes the window to be visible ######
         #### ------------------------------ RUN MAIN LOOP HERE ------------------------------ #####
         window.QTApplication.exec_()
@@ -4831,6 +4869,7 @@ _easy_print_data = None  # global variable... I'm cheating
 
 
 class DebugWin():
+    global _my_windows
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=False):
         # Show a form that's a running counter
@@ -4847,6 +4886,7 @@ class DebugWin():
             ]
         self.window.AddRows(self.layout)
         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
+        _my_windows.active_popups[self.window] = 'debug window'
         return
 
     def Print(self, *args, end=None, sep=None):
@@ -4856,7 +4896,7 @@ class DebugWin():
         if self.window is None:  # if window was destroyed already, just print
             print(*args, sep=sepchar, end=endchar)
             return
-
+        _my_windows.active_popups[self.window] = 'debug window'
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
@@ -5478,6 +5518,8 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     :param location:
     :return:
     """
+    global _my_windows
+
     if not args:
         args_to_print = ['']
     else:
@@ -5509,6 +5551,8 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
             Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
         total_lines += height
 
+    if total_lines < 3:
+        [window.AddRow(Text('')) for i in range(2)]
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
@@ -5529,11 +5573,11 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
-        window.AddRow(PopupButton('OK', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True,
-                                  pad=((20, 0), 3)))
+        window.AddRow(PopupButton('OK', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True))
 
     if non_blocking:
         button, values = window.Read(timeout=0)
+        _my_windows.active_popups[window] = title
     else:
         button, values = window.Read()
 

@@ -190,6 +190,7 @@ class MyWindows():
         self.NumOpenWindows = 0
         self.user_defined_icon = None
         self.hidden_master_root = None
+        self.window_being_closed = None
 
     def Decrement(self):
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
@@ -3049,6 +3050,7 @@ class Window:
                 # print('** tkafter cancel failed **')
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
+                print('*** DESTROYING LATE ***')
                 self.TKroot.destroy()
                 _my_windows.Decrement()
             # if form was closed with X
@@ -3065,6 +3067,11 @@ class Window:
 
     def ReadNonBlocking(self):
         if self.TKrootDestroyed:
+            try:
+                self.TKroot.quit()
+                self.TKroot.destroy()
+            except:
+                print('DESTROY FAILED')
             return None, None
         if not self.Shown:
             self.Show(non_blocking=True)
@@ -3073,8 +3080,12 @@ class Window:
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
-            # print("read failed")
+            print("read failed")
             # return None, None
+        if self.RootNeedsDestroying:
+            print('*** DESTROYING LATE ***')
+            self.TKroot.destroy()
+            _my_windows.Decrement()
         return BuildResults(self, False, self)
 
     def Finalize(self):
@@ -3222,12 +3233,15 @@ class Window:
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
+        global _my_windows
         if self.DisableClose:
             return
+        _my_windows.window_being_closed = self
         # print('Got closing callback')
-        self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.quit()  # kick the users out of the mainloop
             self.TKroot.destroy()  # kick the users out of the mainloop
+            self.RootNeedsDestroying = True
         else:
             self.RootNeedsDestroying = True
         self.TKrootDestroyed = True
