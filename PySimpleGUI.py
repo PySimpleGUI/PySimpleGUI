@@ -190,7 +190,6 @@ class MyWindows():
         self.NumOpenWindows = 0
         self.user_defined_icon = None
         self.hidden_master_root = None
-        self.window_being_closed = None
 
     def Decrement(self):
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
@@ -1203,6 +1202,16 @@ class Output(Element):
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKOut
+
+
+    def Update(self, value=None):
+        if value is not None:
+            # try:
+            self._TKOut.output.delete('1.0', tk.END)
+            self._TKOut.output.insert(tk.END, value)
+            # except:
+            #     pass
+
 
     def __del__(self):
         try:
@@ -3236,7 +3245,6 @@ class Window:
         global _my_windows
         if self.DisableClose:
             return
-        _my_windows.window_being_closed = self
         # print('Got closing callback')
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.quit()  # kick the users out of the mainloop
