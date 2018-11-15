@@ -3294,7 +3294,7 @@ Key Sym is a string such as 'Control_L'.  The Key Code is a numeric representati
         if event == "OK"  or event is None:  
             print(event, "exiting")  
             break  
-       text_elem.Update(event)
+        text_elem.Update(event)
 
       
       
