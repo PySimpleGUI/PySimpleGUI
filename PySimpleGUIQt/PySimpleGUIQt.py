@@ -3847,9 +3847,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
                     style += 'font-size: %spt;'%font[1]
-                if element.TextColor is not None:
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_Label.setStyleSheet(style)
 
@@ -3867,7 +3867,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
                     style += 'font-size: %spt;'%font[1]
-                if element.TextColor is not None:
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
@@ -4974,10 +4974,10 @@ class DebugWin():
             self.Close()
         print(*args, sep=sepchar, end=endchar)
         # Add extra check to see if the window was closed... if closed by X sometimes am not told
-        try:
-            state = self.window.TKroot.state()
-        except:
-            self.Close()
+        # try:
+        #     state = self.window.TKroot.state()
+        # except:
+        #     self.Close()
 
     def Close(self):
         self.window.Close()
@@ -6172,6 +6172,7 @@ def main():
 
     window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,20)).Layout(layout)
     event, values = window.Read()
+    print(event, values)
     window.Close()
 
 
