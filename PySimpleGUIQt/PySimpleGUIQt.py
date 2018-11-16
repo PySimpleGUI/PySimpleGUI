@@ -6,7 +6,20 @@ import textwrap
 import pickle
 import base64
 import calendar
+
 try:
+    from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
+        QHBoxLayout, QListWidget, QDial, QTableWidget
+    from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+    from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+    from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
+    from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
+    from PySide2.QtCore import Qt,QProcess, QEvent
+    import PySide2.QtGui as QtGui
+    import PySide2.QtCore as QtCore
+    import PySide2.QtWidgets as QtWidgets
+    using_pyqt5 = False
+except:
     from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
         QHBoxLayout, QListWidget, QDial, QTableWidget
     from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
@@ -18,18 +31,6 @@ try:
     import PyQt5.QtCore as QtCore
     import PyQt5.QtWidgets as QtWidgets
     using_pyqt5 = True
-except:
-    from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-        QHBoxLayout, QListWidget, QDial, QTableWidget
-    from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-    from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-    from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction
-    from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-    from PySide2.QtCore import Qt,QProcess, QEvent
-    import PySide2.QtGui as QtGui
-    import PySide2.QtCore as QtCore
-    import PySide2.QtWidgets as QtWidgets
-    using_pyqt5 = False
 
 
 """
@@ -91,7 +92,7 @@ DEFAULT_FONT = ("Helvetica", 10)
 DEFAULT_TEXT_JUSTIFICATION = 'left'
 DEFAULT_BORDER_WIDTH = 1
 DEFAULT_AUTOCLOSE_TIME = 3  # time in seconds to show an autoclose form
-DEFAULT_DEBUG_WINDOW_SIZE = (80, 20)
+DEFAULT_DEBUG_WINDOW_SIZE = (800, 400)
 DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
@@ -297,10 +298,7 @@ class Element():
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
                  key=None, pad=None, tooltip=None):
 
-        if size[1] is not None and size[1] < 10:        # change from character based size to pixels (roughly)
-            self.Size = size[0]*10, size[1]*25
-        else:
-            self.Size = size
+        self.Size = convert_tkinter_size_to_Qt(size)
         self.Type = type
         self.AutoSizeText = auto_size_text
         self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
@@ -936,8 +934,12 @@ class Multiline(Element, QWidget):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits
+        tsize = size                # convert tkinter size to pixels
+        if size[0] is not None and size[0] < 100:
+            tsize = convert_tkinter_size_to_Qt(size)
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
+
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
@@ -1139,8 +1141,9 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
+        tsize = convert_tkinter_size_to_Qt(size) if size[0] is not None and size[0] < 100 else size
 
-        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
+        super().__init__(ELEM_TYPE_OUTPUT, size=tsize, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key)
 
     def reroute_stdout(self):
@@ -1423,10 +1426,16 @@ class ProgressBar(Element):
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         self.StartValue = start_value
-        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad)
+        tsize = size
+        if size[0] is not None and size[0] < 100:
+            tsize = size[0]*10, size[1]*3
+
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=tsize, auto_size_text=auto_size_text, key=key, pad=pad)
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
+        if max is not None:
+            self.QT_QProgressBar.setMaximum(max)
         self.QT_QProgressBar.setValue(current_count)
         self.ParentForm.QTApplication.processEvents()  # refresh the window
 
@@ -1440,7 +1449,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
+    def __init__(self, filename=None, data=None, data_base64=None, background_color=None, size=(None, None), pad=None, key=None,
                  tooltip=None):
         '''
         Image Element
@@ -1454,15 +1463,16 @@ class Image(Element):
         '''
         self.Filename = filename
         self.Data = data
+        self.DataBase64 = data_base64
         self.tktext_label = None
         self.BackgroundColor = background_color
-        if data is None and filename is None:
+        if data is None and filename is None and data_base64 is None:
             print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip)
         return
 
-    def Update(self, filename=None, data=None, size=(None, None)):
+    def Update(self, filename=None, data=None, data_base64=None, size=(None, None)):
         if filename is not None:
             qlabel = self.QT_QLabel
             qlabel.setText('')
@@ -1473,11 +1483,17 @@ class Image(Element):
         elif data is not None:
             qlabel = self.QT_QLabel
             qlabel.setText('')
-            ba = QtCore.QByteArray.fromBase64(data)
+            ba = QtCore.QByteArray.fromRawData(data)
             pixmap = QtGui.QPixmap()
             pixmap.loadFromData(ba)
             qlabel.setPixmap(pixmap)
-
+        elif data_base64 is not None:
+            qlabel = self.QT_QLabel
+            qlabel.setText('')
+            ba = QtCore.QByteArray.fromBase64(data_base64)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qlabel.setPixmap(pixmap)
 
     def __del__(self):
         super().__del__()
@@ -1991,7 +2007,8 @@ class Slider(Element):
         temp_size = size
         if temp_size == (None, None):
             temp_size = (150, 30) if self.Orientation.startswith('h') else (30, 150)
-
+        elif size[0] is not None and size[0] < 100:
+            temp_size = size[0]*10, size[1]*3
 
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
@@ -2529,6 +2546,17 @@ class ErrorElement(Element):
 
 
 # ------------------------------------------------------------------------- #
+#                       Tray CLASS                                      #
+# ------------------------------------------------------------------------- #
+class Tray:
+    def __init__(self, title):
+        self.Title = title
+
+    def Read(self):
+        pass
+
+
+# ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
 # ------------------------------------------------------------------------- #
 class Window:
@@ -2568,8 +2596,8 @@ class Window:
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
         self.Rows = []  # a list of ELEMENTS for this row
-        self.DefaultElementSize = default_element_size
-        self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
+        self.DefaultElementSize = convert_tkinter_size_to_Qt(default_element_size)
+        self.DefaultButtonElementSize = convert_tkinter_size_to_Qt(default_button_element_size) if default_button_element_size != (
             None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
@@ -2869,19 +2897,17 @@ class Window:
             print('*** Error loading form to disk ***')
 
     def GetScreenDimensions(self):
-        if self.TKrootDestroyed:
-            return None, None
+        # TODO
         screen_width = screen_height = 0
         return screen_width, screen_height
 
     def Move(self, x, y):
-        try:
-            self.TKroot.geometry("+%s+%s" % (x, y))
-        except:
-            pass
+        # TODO
+        return
 
     def Minimize(self):
-        self.TKroot.iconify()
+        # TODO
+        return
 
     def StartMove(self, event):
         try:
@@ -2968,18 +2994,21 @@ class Window:
         return
 
     def Disable(self):
-        self.TKroot.grab_set_global()
+        # TODO
+        return
 
     def Enable(self):
-        self.TKroot.grab_release()
+        # TODO
+        return
 
     def Hide(self):
         self._Hidden = True
-        self.TKroot.withdraw()
+        # TODO
+        return
 
     def UnHide(self):
         if self._Hidden:
-            self.TKroot.deiconify()
+            # TODO
             self._Hidden = False
 
     def Disappear(self):
@@ -3121,6 +3150,20 @@ def element_callback_quit_mainloop(element):
     if element.ParentForm.CurrentlyRunningMainloop:
         element.ParentForm.QTApplication.exit()  # kick the users out of the mainloop
 
+
+# =========================================================================== #
+# Stops the mainloop and sets the event information                           #
+# =========================================================================== #
+def convert_tkinter_size_to_Qt(size):
+    """
+    Converts size in characters to size in pixels
+    :param size:  size in characters, rows
+    :return: size in pixels, pixels
+    """
+    qtsize = size
+    if size[1] is not None and size[1] < 10:        # change from character based size to pixels (roughly)
+        qtsize = size[0]*10, size[1]*25
+    return qtsize
 
 
 # ################################################################################
@@ -3782,9 +3825,17 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 element.QT_Label = QLabel(element.DisplayText, toplevel_win.QTWindow)
-                if element.Justification[0] == 'c':
+
+                if element.Justification is not None:
+                    justification = element.Justification
+                elif toplevel_win.TextJustification is not None:
+                    justification = toplevel_win.TextJustification
+                else:
+                    justification = DEFAULT_TEXT_JUSTIFICATION
+
+                if justification[0] == 'c':
                     element.QT_Label.setAlignment(Qt.AlignCenter)
-                elif element.Justification[0] == 'r':
+                elif justification[0] == 'r':
                     element.QT_Label.setAlignment(Qt.AlignRight)
                 if not auto_size_text:
                     if element_size[0] is not None:
@@ -3804,8 +3855,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Tooltip:
                     element.QT_Label.setToolTip(element.Tooltip)
-                element.QT_Label.setMargin(full_element_pad[0])
-                element.QT_Label.setIndent(full_element_pad[1])
+                # element.QT_Label.setMargin(full_element_pad[0])
+                # element.QT_Label.setIndent(full_element_pad[1])
                 qt_row_layout.addWidget(element.QT_Label)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -4141,18 +4192,24 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
-                if element.Filename:
+                if element.Filename is not None:
                     qlabel = QLabel()
                     qlabel.setText('')
                     w = QtGui.QPixmap(element.Filename).width()
                     h = QtGui.QPixmap(element.Filename).height()
                     qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
                     qlabel.setPixmap(QtGui.QPixmap(element.Filename))
-                elif element.Data:
+                elif element.Data is not None:
                     qlabel = QLabel()
                     qlabel.setText('')
-
-                    ba = QtCore.QByteArray.fromBase64(element.Data)
+                    ba = QtCore.QByteArray.fromRawData(element.Data)
+                    pixmap = QtGui.QPixmap()
+                    pixmap.loadFromData(ba)
+                    qlabel.setPixmap(pixmap)
+                elif element.DataBase64:
+                    qlabel = QLabel()
+                    qlabel.setText('')
+                    ba = QtCore.QByteArray.fromBase64(element.DataBase64)
                     pixmap = QtGui.QPixmap()
                     pixmap.loadFromData(ba)
                     qlabel.setPixmap(pixmap)
@@ -4374,8 +4431,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 pass
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
-        containing_frame.setSpacing(toplevel_win.ElementPadding[1])
         qt_row_layout.setSpacing(toplevel_win.ElementPadding[0])
+        containing_frame.setSpacing(toplevel_win.ElementPadding[1])
         containing_frame.addRow('', qt_row_layout)
 
         # done with row, pack the row of widgets
@@ -5070,10 +5127,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
         DEFAULT_BUTTON_COLOR = button_color
 
     if element_size != (None, None):
-        DEFAULT_ELEMENT_SIZE = element_size
+        DEFAULT_ELEMENT_SIZE = convert_tkinter_size_to_Qt(element_size)
 
     if button_element_size != (None, None):
-        DEFAULT_BUTTON_ELEMENT_SIZE = button_element_size
+        DEFAULT_BUTTON_ELEMENT_SIZE = convert_tkinter_size_to_Qt(button_element_size)
 
     if margins != (None, None):
         DEFAULT_MARGINS = margins
@@ -5512,8 +5569,8 @@ def ObjToString(obj, extra='    '):
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
 def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
-          auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None,
-          font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+          auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None,
+          font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), use_system_tray=False):
     """
     Popup - Display a popup box with as many parms as you wish to include
     :param args:
@@ -5535,6 +5592,9 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     """
     global _my_windows
 
+    # if use_system_tray:
+    #     QSystemTrayIcon.
+
     if not args:
         args_to_print = ['']
     else:
@@ -5548,6 +5608,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
     max_line_total, total_lines = 0, 0
+    layout = []
     for message in args_to_print:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
         # if not isinstance(message, str): message = str(message)
@@ -5562,34 +5623,43 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         max_line_total = max(max_line_total, width_used)
         # height = _GetNumLinesNeeded(message, width_used)
         height = message_wrapped_lines
-        window.AddRow(
-            Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color))
+        layout.append([Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color)])
         total_lines += height
 
     if total_lines < 3:
-        [window.AddRow(Text('')) for i in range(2)]
+        layout.append([Text('')])
+        layout.append([Text('')])
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
         PopupButton = CloseButton
     # show either an OK or Yes/No depending on paramater
-    if button_type is POPUP_BUTTONS_YES_NO:
-        window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
-                                  size=(60, 20)), PopupButton('No', button_color=button_color, size=(60, 20)))
+    # show either an OK or Yes/No depending on paramater
+    if custom_text != (None, None):
+        if type(custom_text) is not tuple:
+            window.AddRow(PopupButton(custom_text, button_color=button_color, focus=True, bind_return_key=True))
+        elif custom_text[1] is None:
+            window.AddRow(PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True))
+        else:
+            window.AddRow(PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True),
+                          PopupButton(custom_text[1], button_color=button_color),Stretch())
+    elif button_type is POPUP_BUTTONS_YES_NO:
+        layout.append([PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
+                                  size=(60, 20)), PopupButton('No', button_color=button_color, size=(60, 20))])
     elif button_type is POPUP_BUTTONS_CANCELLED:
-        window.AddRow(
-            PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 0), 3)))
+        layout.append([PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 0), 3)), Stretch()])
     elif button_type is POPUP_BUTTONS_ERROR:
-        window.AddRow(PopupButton('Error', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True,
-                                  pad=((20, 0), 3)))
+        layout.append([PopupButton('Error', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True,
+                                  pad=((20, 0), 3)), Stretch()])
     elif button_type is POPUP_BUTTONS_OK_CANCEL:
-        window.AddRow(PopupButton('OK', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True),
-                      PopupButton('Cancel', size=(60, 20), button_color=button_color))
+        layout.append([PopupButton('OK', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True),
+                      PopupButton('Cancel', size=(60, 20), button_color=button_color), Stretch()])
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
-        window.AddRow(PopupButton('OK', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True))
+        layout.append([PopupButton('OK', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True), Stretch()])
 
+    window.Layout(layout)
     if non_blocking:
         button, values = window.Read(timeout=0)
         _my_windows.active_popups[window] = title
@@ -5704,7 +5774,7 @@ def PopupQuick(*args, button_type=POPUP_BUTTONS_OK, button_color=None, backgroun
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def PopupQuickMessage(*args, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
                       text_color=None,
-                      auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON,
+                      auto_close=True, auto_close_duration=4, non_blocking=True, icon=DEFAULT_WINDOW_ICON,
                       line_width=None,
                       font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -5769,7 +5839,7 @@ PopupAnnoying = PopupNoTitlebar
 
 # --------------------------- PopupAutoClose ---------------------------
 def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
-                   auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
+                   auto_close=True, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                    location=(None, None)):
     """
