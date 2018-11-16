@@ -36,34 +36,47 @@ Welcome to the Alpha Release of PySimpleGUI for Qt!
 
 You can use the exact same code that you are running on the older, tkinter, version of PySimpleGUI.  
 
-PySimpleGUIQt uses **PySide2** for access to Qt.
+PySimpleGUIQt uses **PySide2** OR **PyQt5** for access to Qt.
 
-### Differences between PySimpleGUI and PySimpleGUIQt
+## Porting your PySimpleGUI code to PySimpleGUIQt
+
+
+To "port" your code from the tkinter implementation. Follow these steps:
+
+1. Change `import PySimpleGUI` to `PySimpleGUIQt`
+
+That's it!  OK, maybe I should have said step instead of steps.
+
+
+## Differences between PySimpleGUI and PySimpleGUIQt
 
 #### Sizes
-IMPORTANT NOTE if you are porting from tkinter to Qt - You will need to make one important change to your code.... **You must change your size parameters to be in PIXELS instead of CHARACTERS**. 
+
+While you can use "Character-based" sizes like you did in tkinter, it's best to use pixel based sizes as that is what Qt uses.  PySimpleGUIQt does some very rough / basic conversions from the character sizes to pixel sizes.  It's enough that your elements will at least be visible.  But the conversion is likely to not be ideal.
 
 #### Fonts
 
-Fonts should be in the format (font family, size).  The original PySimpleGUI also allowed a font string 'Family Size' but that option is not available (yet) in the Qt version.  I'll add it though so the code ports straight over.
-
+Fonts should be in the format (font family, size).  You can use the older string based too, but it will not work with setting like bold and italics.  PySimpleGUIQt converts from the string 'Courier 20' to the tuple ('Courier', 20) for you.
 
 
 ### Installing PySimpleGUIQt for  Python 3      
       
     pip install --upgrade PySimpleGUIQt
       
-On some systems you need to run pip3.      
+On Linux systems you need to run pip3.      
       
     pip3 install --upgrade PySimpleGUIQt     
       
 
-### Installing PySide2 for Python 3
+### Installing PySide2 or PyQt5 for Python 3
+
+It is recommended that you use PySide2, however, if that cannot be found, then PyQt5 will be attempted.  To install either of these:
 
 ```pip install PySide2```
      
+or
 
-    
+```pip install PyQt5``` 
     
       
 ## Testing your installation      
@@ -85,7 +98,7 @@ Here is the window you should see:
       
 ## Prerequisites      
 Python 3      
-PySide2   
+PySide2 or PyQt5
       
       
       
