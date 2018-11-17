@@ -513,7 +513,11 @@ class InputText(Element):
             self.DefaultText = value
 
     def Get(self):
-        return self.TKStringVar.get()
+        try:
+            text = self.TKStringVar.get()
+        except:
+            text = ''
+        return text
 
 
     def SetFocus(self):
@@ -3665,7 +3669,10 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
 
             if not initialize_only:
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
-                    value = element.TKStringVar.get()
+                    try:
+                        value = element.TKStringVar.get()
+                    except:
+                        value = ''
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
