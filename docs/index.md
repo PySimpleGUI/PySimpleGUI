@@ -31,7 +31,7 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.14.1-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.4.0-gold.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-01.11.0-gold.svg?longCache=true&style=for-the-badge)    
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -1241,8 +1241,7 @@ You can learn more about these async / non-blocking windows toward the end of th
       
 # Window Object - Beginning a window      
 The first step is to create the window object using the desired window customization.      
-      
-    with Window('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as window:      
+  
       
 This is the definition of the Window object:      
       
@@ -3930,6 +3929,8 @@ GNU Lesser General Public License (LGPL 3) +
 * [spectre6000](https://github.com/spectre6000) - Readme updates
 * [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
 * [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
+* [frakman1](https://github.com/frakman1) - Sample code error
+* [deajan](https://github.com/deajan) - Custom button text for Popups
 
       
 ## How Do I      
