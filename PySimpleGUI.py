@@ -3086,9 +3086,12 @@ class Window:
             print("read failed")
             # return None, None
         if self.RootNeedsDestroying:
-            print('*** DESTROYING LATE ***')
+            print('*** DESTROYING LATE ***', self.ReturnValues)
             self.TKroot.destroy()
             _my_windows.Decrement()
+            self.Values = None
+            self.LastButtonClicked = None
+            return None, None
         return BuildResults(self, False, self)
 
     def Finalize(self):
@@ -3237,16 +3240,18 @@ class Window:
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
         global _my_windows
+        print('Got closing callback', self.DisableClose)
         if self.DisableClose:
             return
-        # print('Got closing callback')
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.quit()  # kick the users out of the mainloop
             self.TKroot.destroy()  # kick the users out of the mainloop
             self.RootNeedsDestroying = True
+            self.TKrootDestroyed = True
         else:
+            self.TKroot.destroy()  # kick the users out of the mainloop
             self.RootNeedsDestroying = True
-        self.TKrootDestroyed = True
+        self.RootNeedsDestroying = True
 
         return
 
@@ -5853,7 +5858,7 @@ def ObjToString(obj, extra='    '):
 
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, title='', button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
+def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
           auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None,
           font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -5883,7 +5888,7 @@ def Popup(*args, title='', button_color=None, background_color=None, text_color=
         local_line_width = line_width
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
-    title =  title if title!='' else args_to_print[0]
+    title =  title if title is not None else args_to_print[0]
     window = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
