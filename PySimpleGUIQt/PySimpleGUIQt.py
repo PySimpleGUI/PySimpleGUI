@@ -6,7 +6,6 @@ import textwrap
 import pickle
 import base64
 import calendar
-
 try:
     from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
         QHBoxLayout, QListWidget, QDial, QTableWidget
@@ -58,7 +57,7 @@ def TimerStop():
 
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
-    print(g_time_delta)
+    print(int(g_time_delta*1000))
 
 
 """
@@ -1575,25 +1574,51 @@ class Graph(Element):
         line = self.QT_QGraphicsScene.addLine(self.x+converted_point_from[0],self.y+ converted_point_from[1], self.x+converted_point_to[0],self.y+ converted_point_to[1], pen=pen)
         # self.QT_QGraphicsItemGroup.addToGroup(line)
 
-    def DrawPoint(self, point, size=2, color='black'):
-        self.QT_Q
-        converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
-        return self._TKCanvas2.create_oval(converted_point[0] - size, converted_point[1] - size,
-                                           converted_point[0] + size, converted_point[1] + size, fill=color,
-                                           outline=color)
+
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
-        qcolor = QColor(fill_color)
-        pen = QPen(qcolor)
         qcolor = QColor(line_color)
+        pen = QPen(qcolor)
+        qcolor = QColor(fill_color)
         brush = QBrush(qcolor)
         line = self.QT_QGraphicsScene.addEllipse(self.x+converted_point[0], self.y+converted_point[1],
                                            radius, radius, pen=pen, brush=brush)
+
+
+    def DrawText(self, text, location, color='black', font=None, angle=0):
+        converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
+
+        qcolor = QColor(color)
+        qpath = QPainterPath()
+        _font = font or ('courier', 12)
+        qfont = QFont(_font[0], _font[1])
+        # qfont.setWeight(.5)
+
+        qpath.addText(self.x+converted_point[0], self.y+converted_point[1], qfont, str(text))
+        self.QT_QGraphicsScene.addPath(qpath, qcolor)
+
+
+    def Move(self, x_direction, y_direction):
+        x_direction = -x_direction
+        y_direction = -y_direction
+        zero_converted = self._convert_xy_to_canvas_xy(0, 0)
+        shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
+        shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
+        rect =  self.QT_QGraphicsScene.sceneRect()
+        rect.translate(shift_amount[0], shift_amount[1])
+        self.x += shift_amount[0]
+        self.y += shift_amount[1]
+        self.QT_QGraphicsScene.setSceneRect(rect)
+        # items = self.QT_QGraphicsScene.items()
+        # print(len(items))
+        # for item in items:
+        #     if not item.isActive():
+        #         print('*', end='')
+        #         item.removeFromIndex()
+
+        # print(rect)
+
 
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
@@ -1605,6 +1630,18 @@ class Graph(Element):
             return None
         return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                            converted_bottom_right[1], fill=fill_color, outline=line_color)
+
+    def DrawPoint(self, point, size=2, color='black'):
+        self.QT_Q
+        converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
+        return self._TKCanvas2.create_oval(converted_point[0] - size, converted_point[1] - size,
+                                           converted_point[0] + size, converted_point[1] + size, fill=color,
+                                           outline=color)
+
 
     def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -1627,18 +1664,6 @@ class Graph(Element):
         return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                                 converted_bottom_right[1], fill=fill_color, outline=line_color)
 
-    def DrawText(self, text, location, color='black', font=None, angle=0):
-        converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
-
-        qcolor = QColor(color)
-        qpath = QPainterPath()
-        _font = font or ('courier', 12)
-        qfont = QFont(_font[0], _font[1])
-        # qfont.setWeight(.5)
-
-        qpath.addText(self.x+converted_point[0], self.y+converted_point[1], qfont, str(text))
-        self.QT_QGraphicsScene.addPath(qpath, qcolor)
-
 
     def Erase(self):
         if self._TKCanvas2 is None:
@@ -1653,18 +1678,6 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self._TKCanvas2.configure(background=background_color)
-
-    def Move(self, x_direction, y_direction):
-        x_direction = -x_direction
-        y_direction = -y_direction
-        zero_converted = self._convert_xy_to_canvas_xy(0, 0)
-        shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
-        shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
-        rect =  self.QT_QGraphicsScene.sceneRect()
-        rect.translate(shift_amount[0], shift_amount[1])
-        self.x += shift_amount[0]
-        self.y += shift_amount[1]
-        self.QT_QGraphicsScene.setSceneRect(rect)
 
 
     def MoveFigure(self, figure, x_direction, y_direction):
@@ -2752,7 +2765,7 @@ class Window:
             self.QTApplication.exit()  # kick the users out of the mainloop
 
     def autoclose_timer_callback(self):
-        print('*** TIMEOUT CALLBACK ***')
+        # print('*** TIMEOUT CALLBACK ***')
         self.autoclose_timer.stop()
         self.QT_QMainWindow.close()
         if self.CurrentlyRunningMainloop:
@@ -2817,7 +2830,8 @@ class Window:
             if timer:
                 stop_timer(timer)
             if self.RootNeedsDestroying:
-                self.TKroot.destroy()
+                self.LastButtonClicked = None
+                self.QTApplication.exit()
                 _my_windows.Decrement()
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
@@ -2851,13 +2865,17 @@ class Window:
             return self
         if not self.Shown:
             self.Show(non_blocking=True)
-        try:
-            rc = self.TKroot.update()
-        except:
-            self.TKrootDestroyed = True
-            _my_windows.Decrement()
-            # return None, None
+        else:
+            try:
+                self.QTApplication.processEvents()              # refresh the window
+            except:
+                print('* ERROR FINALIZING *')
+                self.TKrootDestroyed = True
+                _my_windows.Decrement()
         return self
+
+
+
     def Refresh(self):
         self.QTApplication.processEvents()              # refresh the window
         return self
@@ -2983,7 +3001,7 @@ class Window:
     def OnClosingCallback(self):
         if self.DisableClose:
             return
-        # print('Got closing callback')
+        print('Got closing callback')
         self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.destroy()  # kick the users out of the mainloop
@@ -3106,9 +3124,12 @@ class Window:
             return QWidget.eventFilter(self, widget, event)
 
         def closeEvent(self, event):
-            # print('GOT A CLOSE EVENT!', event)
+            print('GOT A CLOSE EVENT!', event)
             if not self.Window.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
                 self.Window.RootNeedsDestroying = True
+            else:
+                self.Window.RootNeedsDestroying = True
+                self.Window.QTApplication.exit()  # kick the users out of the mainloop
             self.Window.QT_QMainWindow.close()
             self.Window.TKrootDestroyed = True
 
@@ -3959,12 +3980,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_ComboBox.setFixedHeight(element_size[1])
 
-                if element.ChangeSubmits:
-                    element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
 
                 element.QT_ComboBox.addItems(element.Values)
                 element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
                 element.QT_ComboBox.setContentsMargins(*full_element_pad)
+                if element.ChangeSubmits:
+                    element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
                 qt_row_layout.addWidget(element.QT_ComboBox)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -4065,8 +4086,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
-                width = 0 if auto_size_text else element_size[0]
-                default_value = element.InitialState
                 element.QT_Checkbox = QCheckBox(element.Text)
                 element.QT_Checkbox.setChecked(element.InitialState)
                 if element.Disabled:
@@ -4106,10 +4125,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_QProgressBar)
             # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
-                width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 ID = element.GroupID
-                element.QT_Radio_Button = QRadioButton(element.Text)
+                qradio = QRadioButton(element.Text)
+                element.QT_Radio_Button = qradio
+                if default_value:
+                    qradio.setChecked(True)
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -4330,6 +4351,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  DIAL element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_DIAL:
                 element.QT_Dial = QDial()
+                element.QT_Dial.setValue(element.DefaultValue)
                 element.QT_Dial.setMinimum(element.Range[0])
                 element.QT_Dial.setMaximum(element.Range[1])
                 style = ''
@@ -4364,9 +4386,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TableWidget.setStyleSheet(style)
 
                 if element.ChangeSubmits:
-                    # element.QT_TableWidget.itemClicked.connect(element.QtCallbackCellActivated)
-                    # element.QT_TableWidget.itemActivated.connect(element.QtCallbackCellActivated)
-                    # element.QT_TableWidget.itemEntered.connect(element.QtCallbackCellActivated)
                     element.QT_TableWidget.itemSelectionChanged.connect(element.QtCallbackCellActivated)
                 element.QT_TableWidget.setRowCount(len(element.Values))
                 element.QT_TableWidget.setColumnCount(len(element.Values[0]))
@@ -4376,7 +4395,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_TableWidget.setItem(rownum, colnum, QTableWidgetItem(element.Values[rownum][colnum]))
 
                 element.QT_TableWidget.installEventFilter(element.QT_TableWidget)
-
 
                 element.QT_TableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
@@ -4423,6 +4441,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         add_treeview_data(node, child)
 
                 add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
+
+                if element.ShowExpanded:
+                    element.QT_QTreeWidget.expandAll()
+                    element.QT_QTreeWidget.show()
                 qt_row_layout.addWidget(element.QT_QTreeWidget)
 
 
@@ -4542,7 +4564,7 @@ def StartupTK(window):
     window.QT_QMainWindow.setStyleSheet(style)
 
     if window.BackgroundImage is not None:
-        qlabel = QLabel(window.QT_QMainWindow)
+        qlabel = QLabel(window.QTWindow)
         qlabel.setText('')
         w = QtGui.QPixmap(window.BackgroundImage).width()
         h = QtGui.QPixmap(window.BackgroundImage).height()
@@ -4973,6 +4995,7 @@ class DebugWin():
         if event == 'Quit' or event is None:
             self.Close()
         print(*args, sep=sepchar, end=endchar)
+        # TODO
         # Add extra check to see if the window was closed... if closed by X sometimes am not told
         # try:
         #     state = self.window.TKroot.state()
