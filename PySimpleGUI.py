@@ -3041,12 +3041,19 @@ class Window:
                 # else:
                 #     print("** REALTIME PROBLEM FOUND **", results)
 
+            if self.RootNeedsDestroying:
+                # print('*** DESTROYING really late***')
+                self.TKroot.destroy()
+                # _my_windows.Decrement()
+                self.LastButtonClicked = None
+                return None, None
+
             # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.CurrentlyRunningMainloop = True
-            # print(f'In main {self.Title}')
+            # print(f'In main {self.Title} {self.TKroot}')
             self.TKroot.protocol("WM_DESTROY_WINDOW", self.OnClosingCallback)
             self.TKroot.protocol("WM_DELETE_WINDOW", self.OnClosingCallback)
             self.TKroot.mainloop()
@@ -3061,9 +3068,11 @@ class Window:
                 # print('** tkafter cancel failed **')
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
-                print('*** DESTROYING LATE ***')
+                # print('*** DESTROYING LATE ***')
                 self.TKroot.destroy()
                 _my_windows.Decrement()
+                self.LastButtonClicked = None
+                return None, None
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
                 _my_windows.Decrement()
@@ -3248,7 +3257,7 @@ class Window:
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
         global _my_windows
-        print('Got closing callback', self.DisableClose)
+        # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
             return
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
