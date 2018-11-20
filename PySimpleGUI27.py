@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
@@ -12,7 +11,6 @@ from builtins import object
 from future import standard_library
 standard_library.install_aliases()
 import sys
-
 if sys.version_info[0] >= 3:
     import tkinter as tk
     from tkinter import filedialog
@@ -525,7 +523,11 @@ class InputText(Element):
             self.DefaultText = value
 
     def Get(self):
-        return self.TKStringVar.get()
+        try:
+            text = self.TKStringVar.get()
+        except:
+            text = ''
+        return text
 
 
     def SetFocus(self):
@@ -1214,6 +1216,16 @@ class Output(Element):
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKOut
+
+
+    def Update(self, value=None):
+        if value is not None:
+            # try:
+            self._TKOut.output.delete('1.0', tk.END)
+            self._TKOut.output.insert(tk.END, value)
+            # except:
+            #     pass
+
 
     def __del__(self):
         try:
@@ -3033,12 +3045,19 @@ class Window(object):
                 # else:
                 #     print("** REALTIME PROBLEM FOUND **", results)
 
+            if self.RootNeedsDestroying:
+                # print('*** DESTROYING really late***')
+                self.TKroot.destroy()
+                # _my_windows.Decrement()
+                self.LastButtonClicked = None
+                return None, None
+
             # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.CurrentlyRunningMainloop = True
-            # print(f'In main {self.Title}')
+            # print(f'In main {self.Title} {self.TKroot}')
             self.TKroot.protocol("WM_DESTROY_WINDOW", self.OnClosingCallback)
             self.TKroot.protocol("WM_DELETE_WINDOW", self.OnClosingCallback)
             self.TKroot.mainloop()
@@ -3053,8 +3072,11 @@ class Window(object):
                 # print('** tkafter cancel failed **')
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
+                # print('*** DESTROYING LATE ***')
                 self.TKroot.destroy()
                 _my_windows.Decrement()
+                self.LastButtonClicked = None
+                return None, None
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
                 _my_windows.Decrement()
@@ -3069,6 +3091,11 @@ class Window(object):
 
     def ReadNonBlocking(self):
         if self.TKrootDestroyed:
+            try:
+                self.TKroot.quit()
+                self.TKroot.destroy()
+            except:
+                print('DESTROY FAILED')
             return None, None
         if not self.Shown:
             self.Show(non_blocking=True)
@@ -3077,8 +3104,15 @@ class Window(object):
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
-            # print("read failed")
+            print("read failed")
             # return None, None
+        if self.RootNeedsDestroying:
+            print('*** DESTROYING LATE ***', self.ReturnValues)
+            self.TKroot.destroy()
+            _my_windows.Decrement()
+            self.Values = None
+            self.LastButtonClicked = None
+            return None, None
         return BuildResults(self, False, self)
 
     def Finalize(self):
@@ -3226,15 +3260,19 @@ class Window(object):
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
+        global _my_windows
+        # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
             return
-        # print('Got closing callback')
-        self.TKroot.quit()  # kick the users out of the mainloop
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
+            self.TKroot.quit()  # kick the users out of the mainloop
             self.TKroot.destroy()  # kick the users out of the mainloop
-        else:
             self.RootNeedsDestroying = True
-        self.TKrootDestroyed = True
+            self.TKrootDestroyed = True
+        else:
+            self.TKroot.destroy()  # kick the users out of the mainloop
+            self.RootNeedsDestroying = True
+        self.RootNeedsDestroying = True
 
         return
 
@@ -3655,7 +3693,10 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
 
             if not initialize_only:
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
-                    value = element.TKStringVar.get()
+                    try:
+                        value = element.TKStringVar.get()
+                    except:
+                        value = ''
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
@@ -4033,6 +4074,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                #                         justify=justify, bd=border_depth, font=font)
                 tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                                         justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
@@ -4278,7 +4321,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 default_text = element.DefaultText
                 width, height = element_size
                 element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
-                                                              bd=border_depth, font=font)
+                                                              bd=border_depth, font=font, relief=tk.FLAT)
                 element.TKText.insert(1.0, default_text)  # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
@@ -5931,6 +5974,8 @@ def Popup(*args, **_3to2kwargs):
     else: background_color = None
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Popup - Display a popup box with as many parms as you wish to include
     :param args:
@@ -5958,8 +6003,8 @@ def Popup(*args, **_3to2kwargs):
         local_line_width = line_width
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
-    title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    window = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color,
+    _title =  title if title is not None else args_to_print[0]
+    window = Window(_title, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
     max_line_total, total_lines = 0, 0
@@ -6057,6 +6102,8 @@ def PopupNoButtons(*args, **_3to2kwargs):
     else: background_color = None
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Show a Popup but without any buttons
     :param args:
@@ -6075,7 +6122,7 @@ def PopupNoButtons(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=POPUP_BUTTONS_NO_BUTTONS,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -6112,6 +6159,8 @@ def PopupNonBlocking(*args, **_3to2kwargs):
     else: button_color = None
     if 'button_type' in _3to2kwargs: button_type = _3to2kwargs['button_type']; del _3to2kwargs['button_type']
     else: button_type = POPUP_BUTTONS_OK
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Show Popup box and immediately return (does not block)
     :param args:
@@ -6131,7 +6180,7 @@ def PopupNonBlocking(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -6171,6 +6220,8 @@ def PopupQuick(*args, **_3to2kwargs):
     else: button_color = None
     if 'button_type' in _3to2kwargs: button_type = _3to2kwargs['button_type']; del _3to2kwargs['button_type']
     else: button_type = POPUP_BUTTONS_OK
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Show Popup box that doesn't block and closes itself
     :param args:
@@ -6190,7 +6241,7 @@ def PopupQuick(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -6227,6 +6278,8 @@ def PopupQuickMessage(*args, **_3to2kwargs):
     else: button_color = None
     if 'button_type' in _3to2kwargs: button_type = _3to2kwargs['button_type']; del _3to2kwargs['button_type']
     else: button_type = POPUP_BUTTONS_NO_BUTTONS
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Show Popup box that doesn't block and closes itself
     :param args:
@@ -6246,7 +6299,7 @@ def PopupQuickMessage(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -6281,6 +6334,8 @@ def PopupNoTitlebar(*args, **_3to2kwargs):
     else: button_color = None
     if 'button_type' in _3to2kwargs: button_type = _3to2kwargs['button_type']; del _3to2kwargs['button_type']
     else: button_type = POPUP_BUTTONS_OK
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
     :param args:
@@ -6299,7 +6354,7 @@ def PopupNoTitlebar(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -6341,6 +6396,8 @@ def PopupAutoClose(*args, **_3to2kwargs):
     else: button_color = None
     if 'button_type' in _3to2kwargs: button_type = _3to2kwargs['button_type']; del _3to2kwargs['button_type']
     else: button_type = POPUP_BUTTONS_OK
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Popup that closes itself after some time period
     :param args:
@@ -6360,7 +6417,7 @@ def PopupAutoClose(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -6398,6 +6455,8 @@ def PopupError(*args, **_3to2kwargs):
     else: background_color = None
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = DEFAULT_ERROR_BUTTON_COLOR
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Popup with colored button and 'Error' as button text
     :param args:
@@ -6416,7 +6475,7 @@ def PopupError(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
           non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
           keep_on_top=keep_on_top, location=location)
@@ -6450,6 +6509,8 @@ def PopupCancel(*args, **_3to2kwargs):
     else: background_color = None
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Display Popup with "cancelled" button text
     :param args:
@@ -6468,7 +6529,7 @@ def PopupCancel(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color, text_color=text_color,
           non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
           keep_on_top=keep_on_top, location=location)
@@ -6502,6 +6563,8 @@ def PopupOK(*args, **_3to2kwargs):
     else: background_color = None
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Display Popup with OK button only
     :param args:
@@ -6520,7 +6583,7 @@ def PopupOK(*args, **_3to2kwargs):
     :param location:
     :return:
     """
-    Popup(*args, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
           non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
           keep_on_top=keep_on_top, location=location)
@@ -6554,6 +6617,8 @@ def PopupOKCancel(*args, **_3to2kwargs):
     else: background_color = None
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Display popup with OK and Cancel buttons
     :param args:
@@ -6572,7 +6637,7 @@ def PopupOKCancel(*args, **_3to2kwargs):
     :param location:
     :return: OK, Cancel or None
     """
-    return Popup(*args, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color,
+    return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
                  grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -6606,6 +6671,8 @@ def PopupYesNo(*args, **_3to2kwargs):
     else: background_color = None
     if 'button_color' in _3to2kwargs: button_color = _3to2kwargs['button_color']; del _3to2kwargs['button_color']
     else: button_color = None
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     """
     Display Popup with Yes and No buttons
     :param args:
@@ -6624,7 +6691,7 @@ def PopupYesNo(*args, **_3to2kwargs):
     :param location:
     :return: Yes, No or None
     """
-    return Popup(*args, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color, text_color=text_color,
+    return Popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
                  grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
@@ -6637,7 +6704,7 @@ def PopupYesNo(*args, **_3to2kwargs):
 # --------------------------- PopupGetFolder ---------------------------
 
 
-def PopupGetFolder(message, default_path='', no_window=False, size=(None, None), button_color=None,
+def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                    grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
     """
@@ -6677,7 +6744,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
+    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
@@ -6693,7 +6760,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
 
 # --------------------------- PopupGetFile ---------------------------
 
-def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
+def PopupGetFile(message, title=None, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                  location=(None, None),  initial_folder=None):
@@ -6744,7 +6811,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
               [InputText(default_text=default_path, size=size), browse_button],
               [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
@@ -6758,7 +6825,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
 # --------------------------- PopupGetText ---------------------------
 
-def PopupGetText(message, default_text='', password_char='', size=(None, None), button_color=None,
+def PopupGetText(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                  background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                  grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6783,7 +6850,7 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
               [InputText(default_text=default_text, size=size, password_char=password_char)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 

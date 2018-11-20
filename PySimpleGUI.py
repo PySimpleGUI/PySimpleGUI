@@ -4062,6 +4062,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                #                         justify=justify, bd=border_depth, font=font)
                 tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                                         justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
@@ -4307,7 +4309,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 default_text = element.DefaultText
                 width, height = element_size
                 element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
-                                                              bd=border_depth, font=font)
+                                                              bd=border_depth, font=font, relief=tk.FLAT)
                 element.TKText.insert(1.0, default_text)  # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
@@ -5897,8 +5899,8 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         local_line_width = line_width
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
-    title =  title if title is not None else args_to_print[0]
-    window = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color,
+    _title =  title if title is not None else args_to_print[0]
+    window = Window(_title, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
     max_line_total, total_lines = 0, 0
@@ -5969,7 +5971,7 @@ def MsgBox(*args):
 
 
 # --------------------------- PopupNoButtons ---------------------------
-def PopupNoButtons(*args, title='', button_color=None, background_color=None, text_color=None, auto_close=False,
+def PopupNoButtons(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                    auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                    no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -5998,7 +6000,7 @@ def PopupNoButtons(*args, title='', button_color=None, background_color=None, te
 
 
 # --------------------------- PopupNonBlocking ---------------------------
-def PopupNonBlocking(*args, title='', button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
+def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                      auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON,
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                      location=(None, None)):
@@ -6032,7 +6034,7 @@ PopupNoWait = PopupNonBlocking
 
 
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup  ---------------------------
-def PopupQuick(*args,title='', button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
+def PopupQuick(*args,title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6062,7 +6064,7 @@ def PopupQuick(*args,title='', button_type=POPUP_BUTTONS_OK, button_color=None, 
 
 
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
-def PopupQuickMessage(*args, title='', button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None, text_color=None,
+def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None, text_color=None,
                auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
                font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6092,7 +6094,7 @@ def PopupQuickMessage(*args, title='', button_type=POPUP_BUTTONS_NO_BUTTONS, but
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
-def PopupNoTitlebar(*args, title='', button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
+def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                     auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
                     line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None)):
     """
@@ -6126,7 +6128,7 @@ PopupAnnoying = PopupNoTitlebar
 
 
 # --------------------------- PopupAutoClose ---------------------------
-def PopupAutoClose(*args, title='', button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
+def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                    auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                    location=(None, None)):
@@ -6160,7 +6162,7 @@ PopupTimed = PopupAutoClose
 
 
 # --------------------------- PopupError ---------------------------
-def PopupError(*args, title='', button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False,
+def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6188,7 +6190,7 @@ def PopupError(*args, title='', button_color=DEFAULT_ERROR_BUTTON_COLOR, backgro
 
 
 # --------------------------- PopupCancel ---------------------------
-def PopupCancel(*args,title='', button_color=None, background_color=None, text_color=None, auto_close=False,
+def PopupCancel(*args,title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6216,7 +6218,7 @@ def PopupCancel(*args,title='', button_color=None, background_color=None, text_c
 
 
 # --------------------------- PopupOK ---------------------------
-def PopupOK(*args, title='', button_color=None, background_color=None, text_color=None, auto_close=False,
+def PopupOK(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
             auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
             no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6244,7 +6246,7 @@ def PopupOK(*args, title='', button_color=None, background_color=None, text_colo
 
 
 # --------------------------- PopupOKCancel ---------------------------
-def PopupOKCancel(*args, title='',  button_color=None, background_color=None, text_color=None, auto_close=False,
+def PopupOKCancel(*args, title=None,  button_color=None, background_color=None, text_color=None, auto_close=False,
                   auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                   no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6272,7 +6274,7 @@ def PopupOKCancel(*args, title='',  button_color=None, background_color=None, te
 
 
 # --------------------------- PopupYesNo ---------------------------
-def PopupYesNo(*args, title='', button_color=None, background_color=None, text_color=None, auto_close=False,
+def PopupYesNo(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6306,7 +6308,7 @@ def PopupYesNo(*args, title='', button_color=None, background_color=None, text_c
 # --------------------------- PopupGetFolder ---------------------------
 
 
-def PopupGetFolder(message, title='', default_path='', no_window=False, size=(None, None), button_color=None,
+def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                    grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
     """
@@ -6362,7 +6364,7 @@ def PopupGetFolder(message, title='', default_path='', no_window=False, size=(No
 
 # --------------------------- PopupGetFile ---------------------------
 
-def PopupGetFile(message, title='', default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
+def PopupGetFile(message, title=None, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                  location=(None, None),  initial_folder=None):
@@ -6427,7 +6429,7 @@ def PopupGetFile(message, title='', default_path='', default_extension='', save_
 
 # --------------------------- PopupGetText ---------------------------
 
-def PopupGetText(message, title='', default_text='', password_char='', size=(None, None), button_color=None,
+def PopupGetText(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                  background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                  grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
