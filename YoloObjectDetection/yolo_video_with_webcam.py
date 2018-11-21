@@ -9,8 +9,8 @@ import cv2
 import os
 import PySimpleGUI as sg
 
-i_vid = r'videos/car_chase_01.mp4'
-o_vid = r'output/car_chase_01_out.mp4'
+i_vid = r'videos\car_chase_01.mp4'
+o_vid = r'output\car_chase_01_out.mp4'
 y_path = r'yolo-coco'
 sg.ChangeLookAndFeel('LightGreen')
 layout = 	[
@@ -40,7 +40,8 @@ win.Close()
 
 
 # imgbytes = cv2.imencode('.png', image)[1].tobytes()  # ditto
-
+gui_confidence = args["confidence"]
+gui_threshold = args["threshold"]
 # load the COCO class labels our YOLO model was trained on
 labelsPath = os.path.sep.join([args["yolo"], "coco.names"])
 LABELS = open(labelsPath).read().strip().split("\n")
@@ -86,11 +87,12 @@ win_started = False
 if use_webcam:
 	cap = cv2.VideoCapture(0)
 while True:
+	sg.TimerStart()
 	# read the next frame from the file or webcam
 	if use_webcam:
 		grabbed, frame = cap.read()
 	else:
-		(grabbed, frame) = vs.read()
+		grabbed, frame = vs.read()
 
 	# if the frame was not grabbed, then we have reached the end
 	# of the stream
@@ -129,7 +131,7 @@ while True:
 
 			# filter out weak predictions by ensuring the detected
 			# probability is greater than the minimum probability
-			if confidence > args["confidence"]:
+			if confidence > gui_confidence:
 				# scale the bounding box coordinates back relative to
 				# the size of the image, keeping in mind that YOLO
 				# actually returns the center (x, y)-coordinates of
@@ -151,8 +153,7 @@ while True:
 
 	# apply non-maxima suppression to suppress weak, overlapping
 	# bounding boxes
-	idxs = cv2.dnn.NMSBoxes(boxes, confidences, args["confidence"],
-		args["threshold"])
+	idxs = cv2.dnn.NMSBoxes(boxes, confidences, gui_confidence, gui_threshold)
 
 	# ensure at least one detection exists
 	if len(idxs) > 0:
@@ -193,6 +194,10 @@ while True:
 		layout = [
 			[sg.Text('Yolo Output')],
 			[sg.Image(data=imgbytes, key='_IMAGE_')],
+			[sg.Text('Confidence'),
+			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.5, size=(15, 15), key='confidence')],
+			[sg.Text('Threshold'),
+			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.3, size=(15, 15), key='threshold')],
 			[sg.Exit()]
 		]
 		win = sg.Window('YOLO Output',
@@ -206,11 +211,14 @@ while True:
 	event, values = win.Read(timeout=0)
 	if event is None or event == 'Exit':
 		break
+	gui_confidence = values['confidence']
+	gui_threshold = values['threshold']
+	sg.TimerStop()
 
 
 win.Close()
 
 # release the file pointers
 print("[INFO] cleaning up...")
-writer.release()
+writer.release() if writer is not None else None
 vs.release()
