@@ -195,8 +195,8 @@ while True:
 			[sg.Text('Yolo Output')],
 			[sg.Image(data=imgbytes, key='_IMAGE_')],
 			[sg.Text('Confidence'),
-			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.5, size=(15, 15), key='confidence')],
-			[sg.Text('Threshold'),
+			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.5, size=(15, 15), key='confidence'),
+			sg.Text('Threshold'),
 			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.3, size=(15, 15), key='threshold')],
 			[sg.Exit()]
 		]
