@@ -87,7 +87,6 @@ win_started = False
 if use_webcam:
 	cap = cv2.VideoCapture(0)
 while True:
-	sg.TimerStart()
 	# read the next frame from the file or webcam
 	if use_webcam:
 		grabbed, frame = cap.read()
@@ -192,11 +191,11 @@ while True:
 	if not win_started:
 		win_started = True
 		layout = [
-			[sg.Text('Yolo Output')],
+			[sg.Text('Yolo Playback in PySimpleGUI Window', size=(30,1))],
 			[sg.Image(data=imgbytes, key='_IMAGE_')],
 			[sg.Text('Confidence'),
-			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.5, size=(15, 15), key='confidence')],
-			[sg.Text('Threshold'),
+			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.5, size=(15, 15), key='confidence'),
+			sg.Text('Threshold'),
 			 sg.Slider(range=(0, 1), orientation='h', resolution=.1, default_value=.3, size=(15, 15), key='threshold')],
 			[sg.Exit()]
 		]
@@ -213,7 +212,6 @@ while True:
 		break
 	gui_confidence = values['confidence']
 	gui_threshold = values['threshold']
-	sg.TimerStop()
 
 
 win.Close()
