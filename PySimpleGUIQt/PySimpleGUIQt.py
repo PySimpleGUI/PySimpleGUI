@@ -3987,10 +3987,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_ComboBox.setFixedHeight(element_size[1])
 
-
                 element.QT_ComboBox.addItems(element.Values)
-                element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
-                element.QT_ComboBox.setContentsMargins(*full_element_pad)
+                element.QT_ComboBox.setVisible(element.VisibleItems)
+                element.QT_ComboBox.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+                # element.QT_ComboBox.setContentsMargins(*full_element_pad)
                 if element.ChangeSubmits:
                     element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
                 qt_row_layout.addWidget(element.QT_ComboBox)
@@ -5742,8 +5742,9 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                      location=(None, None)):
     """
-    Show Popup box and immediately return (does not block)
+        Show Popup box and immediately return (does not block)
     :param args:
+    :param title:
     :param button_type:
     :param button_color:
     :param background_color:
@@ -5775,8 +5776,9 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
                auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
-    Show Popup box that doesn't block and closes itself
+        Show Popup box that doesn't block and closes itself
     :param args:
+    :param title:
     :param button_type:
     :param button_color:
     :param background_color:
@@ -5807,8 +5809,9 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
                       line_width=None,
                       font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
-    Show Popup box that doesn't block and closes itself
+        Show Popup box that doesn't block and closes itself
     :param args:
+    :param title:
     :param button_type:
     :param button_color:
     :param background_color:
@@ -5837,8 +5840,9 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
                     auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
                     line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None)):
     """
-    Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+        Display a Popup without a titlebar.   Enables grab anywhere so you can move it
     :param args:
+    :param title:
     :param button_type:
     :param button_color:
     :param background_color:
@@ -5872,8 +5876,9 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                    location=(None, None)):
     """
-    Popup that closes itself after some time period
+        Popup that closes itself after some time period
     :param args:
+    :param title:
     :param button_type:
     :param button_color:
     :param background_color:
@@ -5905,8 +5910,9 @@ def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, backg
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
-    Popup with colored button and 'Error' as button text
+        Popup with colored button and 'Error' as button text
     :param args:
+    :param title:
     :param button_color:
     :param background_color:
     :param text_color:
@@ -5933,8 +5939,9 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
                 auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
-    Display Popup with "cancelled" button text
+        Display Popup with "cancelled" button text
     :param args:
+    :param title:
     :param button_color:
     :param background_color:
     :param text_color:
