@@ -468,6 +468,23 @@ class InputText(Element):
                          font=font, tooltip=tooltip)
 
 
+    class InputTextWidget(QWidget):
+        def __init__(self, qt_qlineedit, element):
+            self.QT_QLineEdit = qt_qlineedit
+            self.Element = element
+            super().__init__()
+
+        def eventFilter(self, widget, event):
+            # print(f'Got input text event {event}')
+            if event.type() == QEvent.FocusIn and widget is self.QT_QLineEdit:
+                self.Element.ParentForm.FocusElement = self.Element
+            return QWidget.eventFilter(self, widget, event)
+
+
+    def QtCallbackFocusInEvent(self,value):
+        print('Got focus!')
+
+
     def QtCallbackTextChanged(self, value):
         if not self.ChangeSubmits:
             return
@@ -483,7 +500,7 @@ class InputText(Element):
         elif disabled is False:
             self.QT_QLineEdit.setDisabled(False)
         if value is not None:
-            self.QT_QLineEdit.setText(value)
+            self.QT_QLineEdit.setText(str(value))
             self.DefaultText = value
 
     def Get(self):
@@ -491,10 +508,7 @@ class InputText(Element):
         # return self.TKStringVar.get()
 
     def SetFocus(self):
-        try:
-            self.TKEntry.focus_set()
-        except:
-            pass
+        self.QT_QLineEdit.setFocus()
 
     def __del__(self):
         super().__del__()
@@ -1090,6 +1104,10 @@ class Text(Element):
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
         return
 
+    def QtCallbackTextClicked(self):
+        if not self.ClickSubmits:
+            return
+        element_callback_quit_mainloop(self)
 
 
 
@@ -2904,6 +2922,7 @@ class Window:
         return element
 
     def FindElementWithFocus(self):
+        return self.FocusElement
         element = _FindElementWithFocusInSubForm(self)
         return element
 
@@ -3750,8 +3769,8 @@ def _FindElementWithFocusInSubForm(form):
                 if matching_elem is not None:
                     return matching_elem
             if element.Type == ELEM_TYPE_INPUT_TEXT:
-                if element.TKEntry is not None:
-                    if element.TKEntry is element.TKEntry.focus_get():
+                if element.QT_QLineEdit is not None:
+                    if element.QT_QLineEdit is element.TKEntry.focus_get():
                         return element
 
 
@@ -3867,15 +3886,13 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
-                element.QT_Label = QLabel(element.DisplayText, toplevel_win.QTWindow)
-
+                element.QT_Label = qlabel = QLabel(element.DisplayText, toplevel_win.QTWindow)
                 if element.Justification is not None:
                     justification = element.Justification
                 elif toplevel_win.TextJustification is not None:
                     justification = toplevel_win.TextJustification
                 else:
                     justification = DEFAULT_TEXT_JUSTIFICATION
-
                 if justification[0] == 'c':
                     element.QT_Label.setAlignment(Qt.AlignCenter)
                 elif justification[0] == 'r':
@@ -3895,6 +3912,17 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
                 element.QT_Label.setStyleSheet(style)
+
+                if element.ClickSubmits:
+                    qlabel.linkActivated.connect(element.QtCallbackTextClicked)
+
+                if element.Relief is not None:
+                    if element.Relief in (RELIEF_RIDGE, RELIEF_RAISED):
+                        qlabel.setFrameStyle(QFrame.Panel | QFrame.Raised)
+                    elif element.Relief in (RELIEF_SUNKEN, RELIEF_GROOVE):
+                        qlabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+                    elif element.Relief == RELIEF_FLAT:
+                        qlabel.setFrameStyle(QFrame.Panel | QFrame.NoFrame)
 
                 if element.Tooltip:
                     element.QT_Label.setToolTip(element.Tooltip)
@@ -3941,14 +3969,14 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
-                element.QT_QLineEdit = QLineEdit()
+                element.QT_QLineEdit = qlineedit = QLineEdit()
 
                 if element.Justification[0] == 'c':
                     element.QT_QLineEdit.setAlignment(Qt.AlignCenter)
                 elif element.Justification[0] == 'r':
                     element.QT_QLineEdit.setAlignment(Qt.AlignRight)
 
-                element.QT_QLineEdit.setPlaceholderText(default_text)
+                element.QT_QLineEdit.setText(default_text)
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -3960,7 +3988,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_QLineEdit.setStyleSheet(style)
 
-                if element.AutoSizeText is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
+                if element.AutoSizeText is False or toplevel_win.AutoSizeText is False or element.Size[0] is not None:
                     if element_size[0] is not None:
                         element.QT_QLineEdit.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
@@ -3975,6 +4003,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_QLineEdit.returnPressed.connect(element.QtCallbackReturnPressed)
 
+                element.InputTextWidget = Input.InputTextWidget(element.QT_QLineEdit, element)
+                element.QT_QLineEdit.installEventFilter(element.InputTextWidget)
+
+                # element.QT_QLineEdit.focusInEvent.connect(element.QtCallbackFocusInEvent)
                 qt_row_layout.setContentsMargins(*full_element_pad)
 
                 qt_row_layout.addWidget(element.QT_QLineEdit)

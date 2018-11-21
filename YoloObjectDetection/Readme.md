@@ -22,6 +22,12 @@ yolo_video_with_webcam.py - webcam or file source. Option to write to hard drive
 And you'll need the training data.  It's 242 MB and too large for GitHub:
 https://www.dropbox.com/s/0pq7le6fwtbarkc/yolov3.weights?dl=1
 
+## Learn More
+
+This code has an article associated with it that will step you through the code (minus GUI part).
+
+https://www.pyimagesearch.com/2018/11/12/yolo-object-detection-with-opencv/
+
 
 ## Acknowledgements
 This software is provided by Dr. Adrian Rosebrock of the pyimagesearch organization.
