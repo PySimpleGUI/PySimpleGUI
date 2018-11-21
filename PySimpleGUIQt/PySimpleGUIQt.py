@@ -2661,6 +2661,7 @@ class Window:
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.FocusElement = None
         self.BackgroundImage = background_image
+        self.XFound = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2806,7 +2807,6 @@ class Window:
                 except:
                     self.TKrootDestroyed = True
                     _my_windows.Decrement()
-                    print('ROOT Destroyed')
                 results = BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
                     return results
@@ -2846,6 +2846,8 @@ class Window:
                 self.LastButtonClicked = None
             return results
         else:
+            if not self.XFound and self.Timeout != 0:       # Special Qt case because returning for no reason so fake timeout
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
             return self.ReturnValues
 
     def _ReadNonBlocking(self):
@@ -3127,7 +3129,8 @@ class Window:
             return QWidget.eventFilter(self, widget, event)
 
         def closeEvent(self, event):
-            # print('GOT A CLOSE EVENT!', event)
+            # print('GOT A CLOSE EVENT!', event, self.Window.Title)
+            self.Window.XFound = True
             if not self.Window.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
                 self.Window.RootNeedsDestroying = True
             else:
@@ -4635,6 +4638,7 @@ def StartupTK(window):
         if not window.FormRemainedOpen:
             _my_windows.Decrement()
         if window.RootNeedsDestroying:
+            print('** Destroying window **')
             window.QT_QMainWindow.close()         # destroy the window
             window.RootNeedsDestroying = False
     return
@@ -5652,8 +5656,8 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         total_lines += height
 
     if total_lines < 3:
-        layout.append([Text('')])
-        layout.append([Text('')])
+        layout.append([Text('',text_color=text_color, background_color=background_color)])
+        layout.append([Text('',text_color=text_color, background_color=background_color)])
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
@@ -5756,7 +5760,7 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :param location:
     :return:
     """
-    Popup(*args, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
