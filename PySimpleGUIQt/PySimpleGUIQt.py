@@ -1280,14 +1280,15 @@ class Button(Element):
                 pass
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = QFileDialog.getExistingDirectory()
+            folder_name = QFileDialog.getExistingDirectory(dir=self.InitialFolder)
             if folder_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = folder_name
                 else:
                     target_element.Update(folder_name)
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            file_name = QFileDialog.getOpenFileName()
+            qt_types = convert_tkinter_filetypes_to_qt(self.FileTypes)
+            file_name = QFileDialog.getOpenFileName(dir=self.InitialFolder, filter=qt_types)
             if file_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
@@ -1296,7 +1297,8 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
             color = 'TODO'
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            file_name = QFileDialog.getOpenFileNames()
+            qt_types = convert_tkinter_filetypes_to_qt(self.FileTypes)
+            file_name = QFileDialog.getOpenFileNames(dir=self.InitialFolder, filter=qt_types)
             if file_name != '':
                 file_name = ';'.join(file_name[0])
                 if target_element.Type == ELEM_TYPE_BUTTON:
@@ -1304,7 +1306,8 @@ class Button(Element):
                 else:
                     target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            file_name = QFileDialog.getSaveFileName()
+            qt_types = convert_tkinter_filetypes_to_qt(dir=self.InitialFolder, filter=self.FileTypes)
+            file_name = QFileDialog.getSaveFileName(filter=qt_types)
             if file_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
@@ -3194,6 +3197,18 @@ def convert_tkinter_size_to_Qt(size):
     return qtsize
 
 
+
+# =========================================================================== #
+# Stops the mainloop and sets the event information                           #
+# =========================================================================== #
+def convert_tkinter_filetypes_to_qt(filetypes):
+    qt_filetypes = ''
+    for item in filetypes:
+        filetype = item[0] + ' (' + item[1] + ');;'
+        qt_filetypes += filetype
+    return qt_filetypes
+
+
 # ################################################################################
 # ################################################################################
 #  END OF ELEMENT DEFINITIONS
@@ -3988,8 +4003,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_ComboBox.setFixedHeight(element_size[1])
 
                 element.QT_ComboBox.addItems(element.Values)
+                element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
                 element.QT_ComboBox.setVisible(element.VisibleItems)
-                element.QT_ComboBox.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+                # element.QT_ComboBox.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
                 # element.QT_ComboBox.setContentsMargins(*full_element_pad)
                 if element.ChangeSubmits:
                     element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
@@ -6078,10 +6094,13 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     global _my_windows
 
     if no_window:
-        if _my_windows.NumOpenWindows:
-            pass
-        folder_name = 'todo'
+        if _my_windows.QTApplication is None:
+            _my_windows.QTApplication = QApplication(sys.argv)
+
+        folder_name = QFileDialog.getExistingDirectory(dir=initial_folder)
         return folder_name
+
+
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
@@ -6132,12 +6151,15 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     global _my_windows
 
     if no_window:
-        if _my_windows.NumOpenWindows:
-            pass
+        if _my_windows.QTApplication is None:
+            _my_windows.QTApplication = QApplication(sys.argv)
+
         if save_as:
-            filename = 'TODO'
+            qt_types = convert_tkinter_filetypes_to_qt(file_types)
+            filename = QFileDialog.getSaveFileName(dir=initial_folder, filter=qt_types)
         else:
-            filename = 'TODO'
+            qt_types = convert_tkinter_filetypes_to_qt(file_types)
+            filename = QFileDialog.getOpenFileName(dir=initial_folder, filter=qt_types)
         return filename
 
     browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder) if save_as else FileBrowse(
