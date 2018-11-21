@@ -41,8 +41,8 @@ def gui():
                           image_data=red_x,
                           key='_quit_',button_color=(sg.LOOK_AND_FEEL_TABLE['Topanga']['TEXT'],sg.LOOK_AND_FEEL_TABLE['Topanga']['BACKGROUND']),
                           tooltip='Closes window')],
-            [sg.T('', key='_status_', size=(100, 25))],
-            [sg.T('', key='_numissues_', size=(200, 20))],
+            [sg.T('', key='_status_', size=(12, 1))],
+            [sg.T('', key='_numissues_', size=(20, 1))],
               ]
 
     window = sg.Window('Issue watcher',
