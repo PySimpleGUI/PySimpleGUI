@@ -444,7 +444,7 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
+    def __init__(self, default_text='', size=(None, None), disabled=False, password_char=None,
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
                  change_submits=False,
                  do_not_clear=False, key=None, focus=False, pad=None):
@@ -3153,6 +3153,7 @@ class Window:
 
         def closeEvent(self, event):
             # print('GOT A CLOSE EVENT!', event, self.Window.Title)
+            self.Window.LastButtonClicked = None
             self.Window.XFound = True
             if not self.Window.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
                 self.Window.RootNeedsDestroying = True
@@ -4007,6 +4008,11 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_QLineEdit.returnPressed.connect(element.QtCallbackReturnPressed)
 
+
+                if element.PasswordCharacter is not None:
+                    qlineedit.setEchoMode(QLineEdit.Password)
+
+
                 element.InputTextWidget = Input.InputTextWidget(element.QT_QLineEdit, element)
                 element.QT_QLineEdit.installEventFilter(element.InputTextWidget)
 
@@ -4118,7 +4124,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     focus_set = True
                     toplevel_win.FocusElement = element.QT_TextEdit
 
-                element.QT_TextEdit.setPlaceholderText(default_text)
+                element.QT_TextEdit.setText(str(default_text))
                 qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_TextEdit)
 
