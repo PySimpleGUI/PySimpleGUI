@@ -505,6 +505,7 @@ class InputText(Element):
 
     def Get(self):
         return self.QT_QLineEdit.text()
+        return self.QT_QLineEdit.text()
         # return self.TKStringVar.get()
 
     def SetFocus(self):
@@ -969,33 +970,33 @@ class Multiline(Element, QWidget):
                 key = event.key()
                 if key in (Qt.Key_Return, Qt.Key_Enter):
                     self.Element.ReturnKeyHandler(0)
-                    # self.Element.ParentForm.LastButtonClicked = self.Element.Key
-                    # self.Element.ParentForm.FormRemainedOpen = True
-                    # if self.Element.ParentForm.CurrentlyRunningMainloop:
-                    #     self.Element.ParentForm.QTApplication.exit()
             if event.type() == QEvent.FocusIn and widget is self.QT_TextEdit:
                 self.Element.ParentForm.FocusElement = self.Element
-                print('Multiline got focus')
-
             return QWidget.eventFilter(self, widget, event)
 
 
+    def QtCallbackTextChanged(self):
+        if not self.ChangeSubmits:
+            return
+        element_callback_quit_mainloop(self)
+
+
     def Update(self, value=None, disabled=None, append=False, font=None):
-        if value is not None:
+        if value is not None and not append:
             self.DefaultText = value
             self.QT_TextEdit.setText(str(value))
-
+        elif value is not None and append:
+            self.DefaultText = value
+            self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
         if self.Autoscroll:
             pass
         if disabled == True:
-            pass
+            self.QT_TextEdit.setDisabled(True)
         elif disabled == False:
-            pass
-        if font is not None:
-            pass
+            self.QT_TextEdit.setDisabled(False)
 
     def Get(self):
-        self.QT_TextEdit.Text()
+        self.QT_TextEdit.toPlainText()
 
     def SetFocus(self):
         self.QT_TextEdit.setFocus()
@@ -1044,25 +1045,23 @@ class MultilineOutput(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
+
     def Update(self, value=None, disabled=None, append=False, font=None):
-        if value is not None:
-            self.DefaultText = value
-            self.QT_TextBrowser.insertPlainText(value)
+        if value is not None and not append:
+            self.QT_TextBrowser.setText(str(value))
+        elif value is not None and append:
+            self.QT_TextBrowser.insertPlainText(str(value))
             self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+            # self.QT_TextBrowser.setText(self.QT_TextBrowser.toPlainText() + str(value))
         if self.Autoscroll:
             pass
         if disabled == True:
-            pass
+            self.QT_TextBrowser.setDisabled(True)
         elif disabled == False:
-            pass
-        if font is not None:
-            pass
+            self.QT_TextBrowser.setDisabled(False)
 
     def Get(self):
-        pass
-
-    def SetFocus(self):
-        pass
+        self.QT_TextBrowser.toPlainText()
 
     def __del__(self):
         super().__del__()
@@ -1108,12 +1107,10 @@ class Text(Element):
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
         return
 
-    def QtCallbackTextClicked(self):
+    def QtCallbackTextClicked(self, event):
         if not self.ClickSubmits:
             return
         element_callback_quit_mainloop(self)
-
-
 
     def Update(self, value=None, background_color=None, text_color=None, font=None):
         if value is not None:
@@ -2871,7 +2868,7 @@ class Window:
                 self.LastButtonClicked = None
             return results
         else:
-            if not self.XFound and self.Timeout != 0 and self.Timeout is not None:       # Special Qt case because returning for no reason so fake timeout
+            if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[0] is None:       # Special Qt case because returning for no reason so fake timeout
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
             return self.ReturnValues
 
@@ -3918,7 +3915,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_Label.setStyleSheet(style)
 
                 if element.ClickSubmits:
-                    qlabel.linkActivated.connect(element.QtCallbackTextClicked)
+                    element.QT_Label.mousePressEvent = element.QtCallbackTextClicked
 
                 if element.Relief is not None:
                     if element.Relief in (RELIEF_RIDGE, RELIEF_RAISED):
@@ -4001,6 +3998,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
                     focus_set = True
                     toplevel_win.FocusElement = element.QT_QLineEdit
+
+                if element.Disabled:
+                    element.QT_QLineEdit.setDisabled(True)
 
                 if element.ChangeSubmits:
                     element.QT_QLineEdit.textChanged.connect(element.QtCallbackTextChanged)
@@ -4105,16 +4105,21 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_TextEdit.setFixedHeight(element_size[1])
 
-                element.QT_TextEdit.setPlaceholderText(default_text)
-                qt_row_layout.setContentsMargins(*full_element_pad)
+                if element.Disabled:
+                    element.QT_TextEdit.setDisabled(True)
 
                 element.MultiQWidget = Multiline.MultiQWidget(element.QT_TextEdit, element)
                 element.QT_TextEdit.installEventFilter(element.MultiQWidget)
+
+                if element.ChangeSubmits:
+                    element.QT_TextEdit.textChanged.connect(element.QtCallbackTextChanged)
 
                 if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
                     focus_set = True
                     toplevel_win.FocusElement = element.QT_TextEdit
 
+                element.QT_TextEdit.setPlaceholderText(default_text)
+                qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_TextEdit)
 
             # ------------------------- OUTPUT MULTI LINE element  ------------------------- #
@@ -4508,6 +4513,23 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
+                element.QT_Label = qlabel = QLabel('', toplevel_win.QTWindow)
+                if not auto_size_text:
+                    if element_size[0] is not None:
+                        element.QT_Label.setFixedWidth(element_size[0])
+                    if element_size[1] is not None:
+                        element.QT_Label.setFixedHeight(element_size[1])
+                style = ''
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    style += 'color: %s;' % element.TextColor
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    style += 'background-color: %s;' % element.BackgroundColor
+                element.QT_Label.setStyleSheet(style)
+
+                qlabel.setFrameStyle(QFrame.VLine if element.Orientation[0] =='v' else QFrame.HLine)
+
+                qt_row_layout.addWidget(element.QT_Label)
+
                 pass
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
@@ -6269,7 +6291,12 @@ def main():
               [Text('Destination Folder', size=(150, 25), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(bind_return_key=True), Cancel()]]
 
-    window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,21)).Layout(layout)
+    window = Window('Demo window..',
+                    auto_size_buttons=False,
+                    default_element_size=(280,22),
+                    auto_size_text=False,
+                    default_button_element_size=(80,21)
+                    ).Layout(layout)
     event, values = window.Read()
     print(event, values)
     window.Close()

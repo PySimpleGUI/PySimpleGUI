@@ -77,7 +77,11 @@ It is recommended that you use PySide2, however, if that cannot be found, then P
       
  ## Testing your installation        
  Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.        
-``` python3 >>> import PySimpleGUIQt >>> PySimpleGUIQt.main() ```        
+
+     python3
+     >>> import PySimpleGUIQt 
+     >>> PySimpleGUIQt.main()
+
  You will see a sample window in the center of your screen.  If it's not installed correctly you are likely to get an error message during one of those commands        
         
 Here is the window you should see:        
@@ -95,6 +99,7 @@ PySide2 or PyQt5
  To use in your code, simply import....        
  `import PySimpleGUIQt as sg`        
  Then use the exact same code as any other PySimpleGUI program that runs on tkinter.    
+  
   
 ## Status  
   
@@ -159,11 +164,38 @@ Dial element default value
 Show expanded option for trees  
 Titles for popups  
   
+### 0.13.0 -  22-Nov-2018
+
+Focus for Input Text and Multiline Input
+
+ - Get focus 
+ - Set focus
+Window.FindElementWithFocus works
+Multiline input
+
+ - Change submits 
+ - Update - disabled, append
+
+Multiline output - Update value, append, disabled, get value
+Text clicked submits
+File types for open files
+Initial folder, file types, for browse buttons
+File types standardized on tkinter data format
+Find Element With Focus now works for input and multiline input
+Yet more multiwindow handling
+Relief for Text element
+Input text disable
+Correct sizing of Comboboxes using visible items parm
+Correct default values for input and multiline input
+Change submits for multiline
+Horizontal and Vertical separators
+PopupGetFile and PopupGetFolder - no_window option works
+  
    
   
 ## Design        
- ## Author
-Mike B.        
+ ## Author 
+ Mike B.        
         
 ## Demo Code Contributors        
    
