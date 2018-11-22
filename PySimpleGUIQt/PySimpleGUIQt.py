@@ -973,13 +973,17 @@ class Multiline(Element, QWidget):
                     # self.Element.ParentForm.FormRemainedOpen = True
                     # if self.Element.ParentForm.CurrentlyRunningMainloop:
                     #     self.Element.ParentForm.QTApplication.exit()
+            if event.type() == QEvent.FocusIn and widget is self.QT_TextEdit:
+                self.Element.ParentForm.FocusElement = self.Element
+                print('Multiline got focus')
+
             return QWidget.eventFilter(self, widget, event)
 
 
     def Update(self, value=None, disabled=None, append=False, font=None):
         if value is not None:
             self.DefaultText = value
-            self.QT_TextEdit.setText(value)
+            self.QT_TextEdit.setText(str(value))
 
         if self.Autoscroll:
             pass
@@ -991,10 +995,10 @@ class Multiline(Element, QWidget):
             pass
 
     def Get(self):
-        pass
+        self.QT_TextEdit.Text()
 
     def SetFocus(self):
-        pass
+        self.QT_TextEdit.setFocus()
 
 
     def __del__(self):
@@ -1375,7 +1379,7 @@ class Button(Element):
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
         if text is not None:
-            self.QT_QPushButton.setText(text)
+            self.QT_QPushButton.setText(str(text))
             self.ButtonText = text
 
         if self.ParentForm.Font and (self.Font == DEFAULT_FONT or not self.Font):
@@ -2867,7 +2871,7 @@ class Window:
                 self.LastButtonClicked = None
             return results
         else:
-            if not self.XFound and self.Timeout != 0:       # Special Qt case because returning for no reason so fake timeout
+            if not self.XFound and self.Timeout != 0 and self.Timeout is not None:       # Special Qt case because returning for no reason so fake timeout
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
             return self.ReturnValues
 
@@ -3976,7 +3980,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 elif element.Justification[0] == 'r':
                     element.QT_QLineEdit.setAlignment(Qt.AlignRight)
 
-                element.QT_QLineEdit.setText(default_text)
+                element.QT_QLineEdit.setText(str(default_text))
                 style = ''
                 if font is not None:
                     style += 'font-family: %s;'%font[0]
@@ -6265,7 +6269,7 @@ def main():
               [Text('Destination Folder', size=(150, 25), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(bind_return_key=True), Cancel()]]
 
-    window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,20)).Layout(layout)
+    window = Window('Demo window..',auto_size_buttons=False, default_element_size=(280,22), default_button_element_size=(80,21)).Layout(layout)
     event, values = window.Read()
     print(event, values)
     window.Close()
