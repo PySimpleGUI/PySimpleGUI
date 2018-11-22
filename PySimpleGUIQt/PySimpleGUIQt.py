@@ -294,14 +294,14 @@ POPUP_BUTTONS_NO_BUTTONS = 5
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
+    def __init__(self, elem_type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
                  key=None, pad=None, tooltip=None):
 
         self.Size = convert_tkinter_size_to_Qt(size)
-        self.Type = type
+        self.Type = elem_type
         self.AutoSizeText = auto_size_text
         self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
-        if font is not None and len(font) == 2:
+        if font is not None and type(font) is not str:
             self.Font = font
         elif font is not None:
             self.Font = font.split(' ')
@@ -444,7 +444,7 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text='', size=(None, None), disabled=False, password_char=None,
+    def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
                  change_submits=False,
                  do_not_clear=False, key=None, focus=False, pad=None):
@@ -988,12 +988,13 @@ class Multiline(Element, QWidget):
         elif value is not None and append:
             self.DefaultText = value
             self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
-        if self.Autoscroll:
-            pass
         if disabled == True:
             self.QT_TextEdit.setDisabled(True)
         elif disabled == False:
             self.QT_TextEdit.setDisabled(False)
+        if font is not None:
+            style = create_style_from_font(font)
+            self.QT_TextEdit.setStyleSheet(style)
 
     def Get(self):
         self.QT_TextEdit.toPlainText()
@@ -1052,13 +1053,13 @@ class MultilineOutput(Element):
         elif value is not None and append:
             self.QT_TextBrowser.insertPlainText(str(value))
             self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
-            # self.QT_TextBrowser.setText(self.QT_TextBrowser.toPlainText() + str(value))
-        if self.Autoscroll:
-            pass
         if disabled == True:
             self.QT_TextBrowser.setDisabled(True)
         elif disabled == False:
             self.QT_TextBrowser.setDisabled(False)
+        if font is not None:
+            style = create_style_from_font(font)
+            self.QT_TextBrowser.setStyleSheet(style)
 
     def Get(self):
         self.QT_TextBrowser.toPlainText()
@@ -1121,8 +1122,9 @@ class Text(Element):
         if temp_font is None:
             temp_font = DEFAULT_FONT
         if temp_font is not None:
-            style += 'font-family: %s;' % temp_font[0]
-            style += 'font-size: %spt;' % temp_font[1]
+            style += create_style_from_font(temp_font)
+            # style += 'font-family: %s;' % temp_font[0]
+            # style += 'font-size: %spt;' % temp_font[1]
         temp_text_color = text_color or self.TextColor
         style += 'color: %s;' % temp_text_color
         if background_color is not None:
@@ -1390,7 +1392,7 @@ class Button(Element):
         # if font is not None:
         #     style += 'font-family: %s;' % font[0]
         #     style += 'font-size: %spt;' % font[1]
-
+        style = create_style_from_font(font)
         if self.Disabled != disabled and disabled is not None:
             if not disabled:            # if enabling buttons, set the color
                 if button_color != (None, None):
@@ -2922,6 +2924,8 @@ class Window:
             return ErrorElement(key=key)
         return element
 
+    Element = FindElement
+
     def FindElementWithFocus(self):
         return self.FocusElement
         element = _FindElementWithFocusInSubForm(self)
@@ -3228,6 +3232,37 @@ def convert_tkinter_filetypes_to_qt(filetypes):
         filetype = item[0] + ' (' + item[1] + ');;'
         qt_filetypes += filetype
     return qt_filetypes
+
+# =========================================================================== #
+# Converts a "Font" string or tuple into Qt Style Sheet Entries               #
+# =========================================================================== #
+def create_style_from_font(font):
+    """
+    Convert from font string/tyuple into a Qt style sheet string
+    :param font: "Arial 10 Bold" or ('Arial', 10, 'Bold)
+    :return: style string that can be combined with other style strings
+    """
+
+    if font is None:
+        return ''
+
+    if type(font) is str:
+        _font = font.split(' ')
+    else:
+        _font = font
+
+    style = ''
+    style += 'font-family: %s;' % _font[0]
+    style += 'font-size: %spt;' % _font[1]
+    font_items = ''
+    for item in _font[2:]:
+        if item == 'underline':
+            style += 'text-decoration: underline;'
+        else:
+            font_items += item + ' '
+    if font_items != '':
+        style += 'font: %s;' % font_items
+    return style
 
 
 # ################################################################################
@@ -3866,10 +3901,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 column_widget = QGroupBox()
                 # column_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
 
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'border: 0px solid gray; '
@@ -3905,10 +3937,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_Label.setFixedHeight(element_size[1])
                 # element.QT_Label.setWordWrap(True)
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
+
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -3936,10 +3966,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 btext = element.ButtonText
                 btype = element.BType
                 element.QT_QPushButton = QPushButton(btext)
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -3979,10 +4006,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QLineEdit.setAlignment(Qt.AlignRight)
 
                 element.QT_QLineEdit.setText(str(default_text))
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4008,10 +4032,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_QLineEdit.returnPressed.connect(element.QtCallbackReturnPressed)
 
-
-                if element.PasswordCharacter is not None:
+                if element.PasswordCharacter != '':
                     qlineedit.setEchoMode(QLineEdit.Password)
-
 
                 element.InputTextWidget = Input.InputTextWidget(element.QT_QLineEdit, element)
                 element.QT_QLineEdit.installEventFilter(element.InputTextWidget)
@@ -4028,10 +4050,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     width = element_size[0]
                 else:
                     width = max_line_len
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4060,9 +4079,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
                 element.QT_ListWidget = QListWidget()
                 style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
+
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4095,10 +4113,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 default_text = element.DefaultText
                 width, height = element_size
                 element.QT_TextEdit = QTextEdit()
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4134,10 +4149,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 width, height = element_size
                 element.QT_TextBrowser = QTextBrowser()
                 element.QT_TextBrowser.setDisabled(False)
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4160,10 +4172,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_Checkbox.setChecked(element.InitialState)
                 if element.Disabled:
                     element.QT_Checkbox.setDisabled(True)
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
+
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4201,10 +4211,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_Radio_Button = qradio
                 if default_value:
                     qradio.setChecked(True)
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4234,10 +4241,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.QT_Spinner = QSpinBox()
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4260,10 +4264,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             elif element_type == ELEM_TYPE_OUTPUT:
                 element.QT_TextBrowser = QTextBrowser()
                 element.QT_TextBrowser.setDisabled(False)
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4337,10 +4338,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
                 column_widget = QGroupBox()
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4361,11 +4359,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 tab_widget = QWidget()
                 # tab_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
-
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'border: 0px solid gray; '
@@ -4423,10 +4417,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_Dial.setValue(element.DefaultValue)
                 element.QT_Dial.setMinimum(element.Range[0])
                 element.QT_Dial.setMaximum(element.Range[1])
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -4444,10 +4435,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             elif element_type == ELEM_TYPE_TABLE:
                 element.QT_TableWidget = Table.QTTableWidget(toplevel_win)
                 # element.QT_TableWidget = QTableWidget()
-                style = ''
-                if font is not None:
-                    style += 'font-family: %s;'%font[0]
-                    style += 'font-size: %spt;'%font[1]
+                style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -6164,8 +6152,6 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
         folder_name = QFileDialog.getExistingDirectory(dir=initial_folder)
         return folder_name
 
-
-
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
               [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
@@ -6224,13 +6210,14 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
         else:
             qt_types = convert_tkinter_filetypes_to_qt(file_types)
             filename = QFileDialog.getOpenFileName(dir=initial_folder, filter=qt_types)
-        return filename
+        return filename[0]
+
 
     browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder) if save_as else FileBrowse(
         file_types=file_types, initial_folder=initial_folder)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), browse_button],
+              [InputText(default_text=default_path, size=(30,1)), browse_button],
               [CButton('Ok', size=(60, 20), bind_return_key=True), CButton('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
