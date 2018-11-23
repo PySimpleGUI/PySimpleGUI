@@ -4073,6 +4073,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.Tooltip:
                     element.QT_QPushButton.setToolTip(element.Tooltip)
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
+
+                # qt_row_layout.setContentsMargins(5,5,5,5)
+
                 qt_row_layout.addWidget(element.QT_QPushButton)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
@@ -4768,8 +4771,6 @@ def StartupTK(window):
         window.QT_QMainWindow.setWindowFlags(flags)
     if window.AlphaChannel:
         window.QT_QMainWindow.setWindowOpacity(window.AlphaChannel)
-    if window.Size != (None, None):
-        window.QT_QMainWindow.resize(window.Size[0], window.Size[1])
     if window.WindowIcon is not None:
         window.QT_QMainWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
 
@@ -4832,6 +4833,12 @@ def StartupTK(window):
 
     if window.FocusElement is not None:
         window.FocusElement.setFocus()
+
+    # Resize the window to the size it should be at... dunno why I need to do this but I do...
+    window.QT_QMainWindow.resize(window.QT_QMainWindow.sizeHint())
+
+    if window.Size != (None, None):
+        window.QT_QMainWindow.resize(window.Size[0], window.Size[1])
 
     timer = None
     if window.AutoClose:
@@ -5875,9 +5882,8 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         layout.append([Text(message_wrapped, auto_size_text=True, text_color=text_color, background_color=background_color)])
         total_lines += height
 
-    if total_lines < 3:
-        layout.append([Text('',text_color=text_color, background_color=background_color)])
-        layout.append([Text('',text_color=text_color, background_color=background_color)])
+    # if total_lines < 3:
+    #     layout.append([Text('',text_color=text_color, background_color=background_color)])
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
@@ -5893,13 +5899,11 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
             layout.append([PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True),
                           PopupButton(custom_text[1], button_color=button_color),Stretch()])
     elif button_type is POPUP_BUTTONS_YES_NO:
-        layout.append([PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
-                                  size=(60, 20)), PopupButton('No', button_color=button_color, size=(60, 20))])
+        layout.append([PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, size=(60, 20)), PopupButton('No', button_color=button_color, size=(60, 20))])
     elif button_type is POPUP_BUTTONS_CANCELLED:
-        layout.append([PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 0), 3)), Stretch()])
+        layout.append([PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True), Stretch()])
     elif button_type is POPUP_BUTTONS_ERROR:
-        layout.append([PopupButton('Error', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True,
-                                  pad=((20, 0), 3)), Stretch()])
+        layout.append([PopupButton('Error', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True), Stretch()])
     elif button_type is POPUP_BUTTONS_OK_CANCEL:
         layout.append([PopupButton('OK', size=(60, 20), button_color=button_color, focus=True, bind_return_key=True),
                       PopupButton('Cancel', size=(60, 20), button_color=button_color), Stretch()])
@@ -6440,7 +6444,7 @@ def main():
                     auto_size_buttons=False,
                     default_element_size=(280,22),
                     auto_size_text=False,
-                    default_button_element_size=(80,21)
+                    default_button_element_size=(80,22)
                     ).Layout(layout)
     event, values = window.Read()
     print(event, values)
