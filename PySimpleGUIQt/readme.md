@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-01.14.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release     Version 0.12.0
+ ## The Alpha Release     Version 0.13.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -191,6 +191,37 @@ Change submits for multiline
 Horizontal and Vertical separators
 PopupGetFile and PopupGetFolder - no_window option works
   
+### 0.14.0 - 24-Nov-2018
+
+Slider tick positions set using relief parm
+ButtonMenu Element
+Multiline.Update font parm
+Text.Update color and font now work
+Button.Update font support
+Window.Element = Window.FindElement
+Better font support for all elements - underline, bold
+Element padding - complete rework
+Text element padding
+Button padding
+Input Text padding
+Input Text password char
+Listbox padding
+Combobox padding
+Multiline padding
+Checkbox padding
+Radio padding
+Progress Bar padding
+Output padding
+Image padding
+Graph padding
+Slider - set tick marks using relief parm
+Dial - set tick information using resolution and tick interval
+Table padding
+Tree padding
+Separator padding
+Force window sizing should mean windows are better sized
+Popup - better layout
+
    
   
 ## Design        

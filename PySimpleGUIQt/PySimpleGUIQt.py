@@ -1126,22 +1126,18 @@ class Text(Element):
         element_callback_quit_mainloop(self)
 
     def Update(self, value=None, background_color=None, text_color=None, font=None):
+        style = str(self.QT_Label.styleSheet())
+        if font is not None:
+            style = create_style_from_font(font)
+        if text_color is not None:
+            style += 'color: %s;' % text_color
+        if background_color is not None:
+            style += 'background-color: %s;' % background_color
+        print(style)
+        self.QT_Label.setStyleSheet(style)
         if value is not None:
             self.DisplayText = str(value)
             self.QT_Label.setText(str(value))
-        style = ''
-        temp_font = font if font is not None else self.Font
-        if temp_font is None:
-            temp_font = DEFAULT_FONT
-        if temp_font is not None:
-            style += create_style_from_font(temp_font)
-            # style += 'font-family: %s;' % temp_font[0]
-            # style += 'font-size: %spt;' % temp_font[1]
-        temp_text_color = text_color or self.TextColor
-        style += 'color: %s;' % temp_text_color
-        if background_color is not None:
-            style += 'background-color: %s;' % background_color
-        self.QT_Label.setStyleSheet(style)
 
 
     def __del__(self):
@@ -2167,7 +2163,7 @@ class Dial(Element):
                  border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
-        Slider Element
+        Dial Element
         :param range:
         :param default_value:
         :param resolution:
@@ -2230,15 +2226,7 @@ class Dial(Element):
 class Stretch(Element):
     def __init__(self, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
-        Slider Element
-        :param range:
-        :param default_value:
-        :param resolution:
-        :param orientation:
-        :param border_width:
-        :param relief:
-        :param change_submits:
-        :param disabled:
+        Stretch Element
         :param size:
         :param font:
         :param background_color:
@@ -3944,6 +3932,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             element.ParentForm = toplevel_win  # save the button's parent form object
             if toplevel_win.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = toplevel_win.Font
+                element.Font = font
             elif element.Font is not None:
                 font = element.Font
             else:
@@ -3960,9 +3949,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             text_color = element.TextColor
             # Determine Element size
             element_size = element.Size
-            if (element_size == (None, None) and element_type != ELEM_TYPE_BUTTON):  # user did not specify a size
+            if (element_size == (None, None) and element_type not in (ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):  # user did not specify a size
                 element_size = toplevel_win.DefaultElementSize
-            elif (element_size == (None, None) and element_type == ELEM_TYPE_BUTTON):
+            elif (element_size == (None, None) and element_type in (ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):
                 element_size = toplevel_win.DefaultButtonElementSize
             else:
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
@@ -4073,8 +4062,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.Tooltip:
                     element.QT_QPushButton.setToolTip(element.Tooltip)
                 element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
-
-                # qt_row_layout.setContentsMargins(5,5,5,5)
 
                 qt_row_layout.addWidget(element.QT_QPushButton)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
@@ -4283,6 +4270,11 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QProgressBar.setMaximum(element.MaxValue)
                 element.QT_QProgressBar.setValue(element.StartValue)
 
+                style = ''
+                style += 'margin: {}px {}px {}px {}px'.format(*full_element_pad)
+                element.QT_QProgressBar.setStyleSheet(style)
+
+
                 qt_row_layout.addWidget(element.QT_QProgressBar)
             # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
@@ -4386,6 +4378,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     qlabel.setPixmap(pixmap)
 
                 element.QT_QLabel = qlabel
+                style = ''
+                style += 'margin: {}px {}px {}px {}px'.format(*full_element_pad)
+                element.QT_QLabel.setStyleSheet(style)
+
                 qt_row_layout.addWidget(element.QT_QLabel)
             # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
@@ -4398,11 +4394,13 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QGraphicsScene = QGraphicsScene()
                 element.QT_QGraphicsScene.setSceneRect(0,0,element.CanvasSize[0],element.CanvasSize[1])
                 element.QT_QGraphicsView.setScene(element.QT_QGraphicsScene)
+                style = ''
+                style += 'margin: {}px {}px {}px {}px'.format(*full_element_pad)
+                element.QT_QGraphicsView.setStyleSheet(style)
 
                 qgraphicsview.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
                 qgraphicsview.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-                qt_row_layout.setContentsMargins(*full_element_pad)
-
+                # qt_row_layout.setContentsMargins(*full_element_pad)
 
                 qt_row_layout.addWidget(element.QT_QGraphicsView)
 
@@ -4516,7 +4514,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.ChangeSubmits:
                     pass
-            # -------------------------  SLIDER Box element  ------------------------- #
+            # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element.QT_Slider = QSlider()
                 if element.Orientation.startswith('h'):
@@ -4564,21 +4562,33 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_Slider)
             # -------------------------  DIAL element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_DIAL:
-                element.QT_Dial = QDial()
-                element.QT_Dial.setValue(element.DefaultValue)
-                element.QT_Dial.setMinimum(element.Range[0])
-                element.QT_Dial.setMaximum(element.Range[1])
+                element.QT_Dial = qdial = QDial()
+
                 style = create_style_from_font(font)
-                if element.TextColor is not None:
-                    style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px'.format(*full_element_pad)
                 element.QT_Dial.setStyleSheet(style)
+
+
+                element.QT_Dial.setMinimum(element.Range[0])
+                element.QT_Dial.setMaximum(element.Range[1])
+
+                qdial.setNotchesVisible(True)
+                if element.TickInterval is not None:
+                    qdial.setNotchTarget(element.TickInterval)
+                if element.Resolution is not None:
+                    element.QT_Dial.setSingleStep(element.Resolution)
+                if element_size[0] is not None:
+                    element.QT_Dial.setFixedWidth(element_size[0])
+                if element_size[1] is not None:
+                    element.QT_Dial.setFixedHeight(element_size[1])
+                element.QT_Dial.setValue(element.DefaultValue)
+
                 if element.ChangeSubmits:
                     element.QT_Dial.valueChanged.connect(element.QtCallbackValueChanged)
 
-                qt_row_layout.setContentsMargins(*full_element_pad)
+                # qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Dial)
             # -------------------------  Stretch element  ------------------------- #
             elif element_type == ELEM_TYPE_STRETCH:
@@ -4651,6 +4661,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         add_treeview_data(node, child)
 
                 add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
+
+                style = ''
+                style += 'margin: {}px {}px {}px {}px'.format(*full_element_pad)
+                element.QT_QTreeWidget.setStyleSheet(style)
 
                 if element.ShowExpanded:
                     element.QT_QTreeWidget.expandAll()
