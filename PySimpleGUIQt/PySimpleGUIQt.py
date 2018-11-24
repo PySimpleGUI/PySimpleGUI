@@ -2655,12 +2655,52 @@ class ErrorElement(Element):
 #                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
 class Tray:
-    def __init__(self, title):
+    def __init__(self, title, filename=None, menu=None, data=None, data_base64=None):
         self.Title = title
+        self.Menu = menu
+        self.TrayIcon = None
+        self.App = QApplication()
+        self.QWidget = QWidget()
+        self.Shown = False
+
+        qicon = None
+        if filename is not None:
+            qicon = QIcon(filename)
+        elif data is not None:
+            ba = QtCore.QByteArray.fromRawData(data)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qicon = QIcon(pixmap)
+        elif data_base64 is not None:
+            ba = QtCore.QByteArray.fromBase64(data_base64)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qicon = QIcon(pixmap)
+        if qicon is None:
+            PopupError('ERROR - Tray must have one form of Icon specified')
+            return
+        self.TrayIcon = QSystemTrayIcon(qicon)
+
+        qmenu = QMenu()
+        qmenu.setTitle(self.Menu[0])
+        AddTrayMenuItem(qmenu, self.Menu[1], self)
+
+        self.TrayIcon.setContextMenu(qmenu)
+
+
+    def QT_MenuItemChosenCallback(self, item_chosen):
+        self.MenuItemChosen = item_chosen.replace('&','')
+        self.App.exit()  # kick the users out of the mainloop
+
 
     def Read(self):
-        pass
-
+        if not self.Shown:
+            self.Shown = True
+            self.TrayIcon.show()
+            self.App.exec_()
+        else:
+            self.App.exec_()
+        return self.MenuItemChosen
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
@@ -3878,6 +3918,33 @@ def _FindElementWithFocusInSubForm(form):
                 if element.QT_QLineEdit is not None:
                     if element.QT_QLineEdit is element.TKEntry.focus_get():
                         return element
+
+
+def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+    if type(sub_menu_info) is str:
+        if not is_sub_menu and not skip:
+            # print(f'Adding command {sub_menu_info}')
+            action = QAction(top_menu)
+            action.setText(sub_menu_info)
+            top_menu.addAction(action)
+            action.triggered.connect(lambda: Tray.QT_MenuItemChosenCallback(element, sub_menu_info))
+    else:
+        i = 0
+        while i < (len(sub_menu_info)):
+            item = sub_menu_info[i]
+            if i != len(sub_menu_info) - 1:
+                if type(sub_menu_info[i + 1]) == list:
+                    new_menu = QMenu(top_menu)
+                    new_menu.setTitle(sub_menu_info[i])
+                    top_menu.addAction(new_menu.menuAction())
+                    # print(f'Adding submenu {sub_menu_info[i]}')
+                    AddTrayMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                    i += 1  # skip the next one
+                else:
+                    AddTrayMenuItem(top_menu, item, element)
+            else:
+                AddTrayMenuItem(top_menu, item, element)
+            i += 1
 
 
 def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
