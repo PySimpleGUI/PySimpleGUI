@@ -3,6 +3,7 @@ from   random import randint
 
 def main():
     sg.ChangeLookAndFeel('GreenTan')
+    # sg.SetOptions(element_padding=(0,0))
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['&Open', '&Save', '&Properties', 'E&xit']],
                 ['&Edit', ['&Paste', ['Special', 'Normal', ], 'Undo'], ],
@@ -25,72 +26,86 @@ def main():
 
 
     frame1 =    [
-            [sg.Input('Input Text', size=(250,25)), sg.Stretch()],
-            [sg.Multiline(size=(250,75),default_text='Multiline Input'),
-            sg.MultilineOutput(size=(250,75),default_text='Multiline Output')],
+        [sg.Input('Input Text', size=(250,35)), sg.Stretch()],
+        [sg.Multiline(size=(250,75),default_text='Multiline Input'),
+        sg.MultilineOutput(size=(250,75),default_text='Multiline Output')],
                 ]
 
     frame2 =    [
-            [sg.Listbox(['Listbox 1','Listbox 2','Listbox 3'], size=(200,85))],
-            [sg.Combo(['Combo item 1',], size=(200,35))],
-            [sg.Spin([1,2,3], size=(40,30))],
+        [sg.Listbox(['Listbox 1','Listbox 2','Listbox 3'], size=(200,85))],
+        [sg.Combo(['Combo item 1','Combo item 2','Combo item 3'], size=(200,35))],
+        [sg.Spin([1,2,3], size=(40,30))],
                 ]
 
     frame3 =    [
-            [sg.Checkbox('Checkbox1', True),sg.Checkbox('Checkbox1')],
-            [sg.Radio('Radio Button1', 1), sg.Radio('Radio Button2', 1, default=True)],
+        [sg.Checkbox('Checkbox1', True),sg.Checkbox('Checkbox1')],
+        [sg.Radio('Radio Button1', 1), sg.Radio('Radio Button2', 1, default=True), sg.Stretch()],
                 ]
 
     frame4 =    [
-            [sg.Slider(range=(0,100), orientation='v', size=(3, 30), default_value=40), sg.Dial(range=(0,100),size=(200,200), default_value=40), sg.Stretch()],
+        [sg.Slider(range=(0,100), orientation='v', size=(3, 30), default_value=40), sg.Dial(range=(0,100),tick_interval=50, size=(150,150), default_value=40), sg.Stretch()],
                 ]
     matrix = [[str(x*y) for x in range(4)] for y in range(3)]
 
     frame5 =    [
-            [sg.Table(values=matrix, max_col_width=25,
-                            auto_size_columns=True, display_row_numbers=True, change_submits=False, bind_return_key=True, justification='right', num_rows=8, alternating_row_color='lightblue', key='_table_', text_color='black'),
-            sg.Tree(data=treedata, headings=['col1', 'col2', 'col3'],change_submits=True, auto_size_columns=True, num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, size=(300,150))],
+        [sg.Table(values=matrix, max_col_width=25,
+                        auto_size_columns=True, display_row_numbers=True, change_submits=False, bind_return_key=True, justification='right', num_rows=8, alternating_row_color='lightblue', key='_table_', text_color='black'),
+        sg.Tree(data=treedata, headings=['col1', 'col2', 'col3'],change_submits=True, auto_size_columns=True, num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, size=(200,150)), sg.Stretch()],
                 ]
 
-    graph_elem = sg.Graph((800,150), (0,0), (800,300), key='+GRAPH+')
+    graph_elem = sg.Graph((880,150), (0,0), (600,300), key='+GRAPH+')
 
     frame6 =    [
-            [graph_elem],
+            [graph_elem, sg.Stretch()],
                 ]
 
     tab1 = sg.Tab('Graph Number 1',frame6)
     tab2 = sg.Tab('Graph Number 2',[[]])
 
     layout = [
-                [sg.Menu(menu_def)],
-                [sg.Image(data_base64=logo),sg.Frame('Input Text Group', frame1, title_color='red'),  sg.Stretch()],
-                [sg.Frame('Multiple Choice Group', frame2, title_color='green'),
-                sg.Frame('Binary Choice Group', frame3, title_color='purple'), sg.Frame('Variable Choice Group', frame4, title_color='blue'),sg.Stretch()],
-                [sg.Frame('Structured Data Group', frame5, title_color='red'), ],
-                # [sg.Frame('Graphing Group', frame6)],
-                [sg.TabGroup([[tab1,tab2]])],
-                [sg.ProgressBar(max_value=800, start_value=400, size=(600,25), key='+PROGRESS+'), sg.Stretch(), sg.Button('Button'), sg.Button('Exit')],
+        [sg.Menu(menu_def)],
+        [sg.Image(data_base64=logo),sg.Frame('Input Text Group', frame1, title_color='red'),  sg.Stretch()],
+        [sg.Frame('Multiple Choice Group', frame2, title_color='green'),
+        sg.Frame('Binary Choice Group', frame3, title_color='purple'),
+         sg.Frame('Variable Choice Group', frame4, title_color='blue'),sg.Stretch()],
+        [sg.Frame('Structured Data Group', frame5, title_color='red'), ],
+        # [sg.Frame('Graphing Group', frame6)],
+        [sg.TabGroup([[tab1,tab2]])],
+        [sg.ProgressBar(max_value=600, start_value=400, size=(600,25), key='+PROGRESS+'), sg.Stretch(),
+         sg.ButtonMenu('&Menu', ['Menu', ['&Pause Graph', 'Menu item']], key='_MENU_'),
+         sg.Button('Button'), sg.Button('Exit')],
              ]
 
 
     window = sg.Window('Window Title',
-                       font=('Helvetica', 13)).Layout(layout).Finalize()
+                       font=('Helvetica', 13),
+                       default_button_element_size=(100,30),
+                       auto_size_buttons=False,
+                       default_element_size=(200,22)
+                       ).Layout(layout).Finalize()
     graph_elem.DrawCircle((200,200), 50, 'blue')
     i=0
+    graph_paused = False
     while True:             # Event Loop
         # sg.TimerStart()
         event, values = window.Read(timeout=0)
-        # print(event, values)
-        if i < 800:
-            graph_elem.DrawLine((i,0),(i,randint(0,300)), width=1, color='#{:06x}'.format(randint(0,0xffffff)))
-        else:
-            graph_elem.Move(-1,0)
-            graph_elem.DrawLine((i,0),(i,randint(0,300)), width=1, color='#{:06x}'.format(randint(0,0xffffff)))
-
-        window.FindElement('+PROGRESS+').UpdateBar(i%800)
-        if event is None or event == 'Exit':
+        if event is None or event == 'Exit' :
             break
-        i += 1
+        if event == 'Button':
+            print(event, values)
+        if values['_MENU_'] == 'Pause Graph':
+            graph_paused = not graph_paused
+        if not graph_paused:
+            i += 1
+
+            if i < 600:
+                graph_elem.DrawLine((i,0),(i,randint(0,300)), width=1, color='#{:06x}'.format(randint(0,0xffffff)))
+            else:
+                graph_elem.Move(-1,0)
+                graph_elem.DrawLine((i,0),(i,randint(0,300)), width=1, color='#{:06x}'.format(randint(0,0xffffff)))
+
+        window.FindElement('+PROGRESS+').UpdateBar(i%600)
+
         # sg.TimerStop()
     window.Close()
 

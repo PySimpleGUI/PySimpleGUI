@@ -40,9 +40,9 @@ def main():
             recording = True
         elif event == 'Stop':
             recording = False
-            # img = np.full((480, 640),255)
-            # imgbytes=cv2.imencode('.png', img)[1].tobytes() #this is faster, shorter and needs less includes
-            # window.FindElement('image').Update(data=imgbytes)
+            img = np.full((480, 640),255)
+            imgbytes=cv2.imencode('.png', img)[1].tobytes() #this is faster, shorter and needs less includes
+            window.FindElement('image').Update(data=imgbytes)
         elif event == 'About':
             sg.PopupNoWait('Made with PySimpleGUI',
                            'www.PySimpleGUI.org',
