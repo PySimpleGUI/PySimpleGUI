@@ -2656,6 +2656,14 @@ class ErrorElement(Element):
 # ------------------------------------------------------------------------- #
 class SystemTray:
     def __init__(self, title, filename=None, menu=None, data=None, data_base64=None):
+        '''
+        SystemTray - create an icon in the system tray
+        :param title:
+        :param filename:
+        :param menu:
+        :param data:
+        :param data_base64:
+        '''
         self.Title = title
         self.Menu = menu
         self.TrayIcon = None
@@ -2700,6 +2708,11 @@ class SystemTray:
 
 
     def Read(self, timeout=None):
+        '''
+        Reads the context menu
+        :param timeout: Optional.  Any value other than None indicates a non-blocking read
+        :return:
+        '''
         if not self.Shown:
             self.Shown = True
             self.TrayIcon.show()
@@ -2714,9 +2727,46 @@ class SystemTray:
         self.MenuItemChosen = None
         return item
 
+    def Hide(self):
+        self.TrayIcon.hide()
+
+    def UnHide(self):
+        self.TrayIcon.show()
+
+    def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, time=10000):
+        '''
+        Shows a balloon above icon in system tray
+        :param title:  Title shown in balloon
+        :param message: Message to be displayed
+        :param filename: Optional icon filename
+        :param data: Optional in-ram icon
+        :param data_base64: Optional base64 icon
+        :param time: How long to display message in milliseconds
+        :return:
+        '''
+        qicon = None
+        if filename is not None:
+            qicon = QIcon(filename)
+        elif data is not None:
+            ba = QtCore.QByteArray.fromRawData(data)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qicon = QIcon(pixmap)
+        elif data_base64 is not None:
+            ba = QtCore.QByteArray.fromBase64(data_base64)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qicon = QIcon(pixmap)
+
+        if qicon is not None:
+            self.TrayIcon.showMessage(title, message, qicon, time)
+        else:
+            self.TrayIcon.showMessage(title, message)
+
+        return self
 
     def Close(self):
-        self.App.__del__()
+        self.App.quit()
 
 
 # ------------------------------------------------------------------------- #
