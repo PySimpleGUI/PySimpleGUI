@@ -3278,12 +3278,13 @@ class Window:
 
     def Hide(self):
         self._Hidden = True
+        self.QT_QMainWindow.hide()
         # TODO
         return
 
     def UnHide(self):
         if self._Hidden:
-            # TODO
+            self.QT_QMainWindow.show()
             self._Hidden = False
 
     def Disappear(self):
