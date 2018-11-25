@@ -2656,7 +2656,7 @@ class ErrorElement(Element):
 #                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
 class SystemTray:
-    def __init__(self, title, filename=None, menu=None, data=None, data_base64=None):
+    def __init__(self, title, filename=None, menu=None, data=None, data_base64=None, tooltip=None):
         '''
         SystemTray - create an icon in the system tray
         :param title:
@@ -2670,6 +2670,7 @@ class SystemTray:
         self.TrayIcon = None
         self.Shown = False
         self.MenuItemChosen = None
+        self.Tooltip = tooltip
 
         global _my_windows
 
@@ -2700,12 +2701,22 @@ class SystemTray:
         qmenu.setTitle(self.Menu[0])
         AddTrayMenuItem(qmenu, self.Menu[1], self)
 
+        if self.Tooltip is not None:
+            self.TrayIcon.setToolTip(str(self.Tooltip))
+
+        self.TrayIcon.messageClicked.connect(self.messageClicked)
+
         self.TrayIcon.setContextMenu(qmenu)
 
 
     def QT_MenuItemChosenCallback(self, item_chosen):
         self.MenuItemChosen = item_chosen.replace('&','')
         self.App.exit()                         # kick the users out of the mainloop
+
+    # callback function when message is clicked
+    def messageClicked(self):
+        self.MenuItemChosen = '_MESSAGE_CLICKED_'
+        self.App.exit()
 
 
     def Read(self, timeout=None):
@@ -2728,11 +2739,14 @@ class SystemTray:
         self.MenuItemChosen = None
         return item
 
+
     def Hide(self):
         self.TrayIcon.hide()
 
+
     def UnHide(self):
         self.TrayIcon.show()
+
 
     def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, time=10000):
         '''
