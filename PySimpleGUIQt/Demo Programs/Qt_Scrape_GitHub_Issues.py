@@ -51,7 +51,6 @@ def gui():
                        keep_on_top=True,
                        alpha_channel=.8,        # dim the lights a little
                        location=(2360,310),     # locate in upper right corner of screen
-                       element_padding=(0,0)
                        ).Layout(layout).Finalize()
 
     window.Refresh()
