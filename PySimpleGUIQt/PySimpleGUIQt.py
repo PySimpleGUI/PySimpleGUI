@@ -2656,7 +2656,7 @@ class ErrorElement(Element):
 #                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
 class SystemTray:
-    def __init__(self, title, filename=None, menu=None, data=None, data_base64=None):
+    def __init__(self, title, filename=None, menu=None, data=None, data_base64=None, tooltip=None):
         '''
         SystemTray - create an icon in the system tray
         :param title:
@@ -2670,6 +2670,7 @@ class SystemTray:
         self.TrayIcon = None
         self.Shown = False
         self.MenuItemChosen = None
+        self.Tooltip = tooltip
 
         global _my_windows
 
@@ -2699,6 +2700,9 @@ class SystemTray:
         qmenu = QMenu()
         qmenu.setTitle(self.Menu[0])
         AddTrayMenuItem(qmenu, self.Menu[1], self)
+
+        if self.Tooltip is not None:
+            self.TrayIcon.setToolTip(str(self.Tooltip))
 
         self.TrayIcon.setContextMenu(qmenu)
 
