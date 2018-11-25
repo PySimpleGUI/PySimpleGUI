@@ -7,7 +7,7 @@ import pickle
 import base64
 import calendar
 
-FORCE_PYQT5 = True
+FORCE_PYQT5 = False
 
 if not FORCE_PYQT5:
     try:
