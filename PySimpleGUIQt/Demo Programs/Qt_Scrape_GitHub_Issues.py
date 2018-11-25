@@ -33,16 +33,16 @@ def get_num_issues():
 def gui():
     sg.ChangeLookAndFeel('Topanga')
 
-    sg.SetOptions(border_width=0, margins=(0, 0), element_padding=(0, 0))
+    sg.SetOptions(border_width=0)
 
     layout = [
-            [sg.T('GitHub Issues Watcher' + 48 * ' '),
+            [sg.T('GitHub Issues Watcher' + 5 * ' ', click_submits=True, key='GitHub'),
             sg.Button('', size=(25,25),
                           image_data=red_x,
                           key='_quit_',button_color=(sg.LOOK_AND_FEEL_TABLE['Topanga']['TEXT'],sg.LOOK_AND_FEEL_TABLE['Topanga']['BACKGROUND']),
                           tooltip='Closes window')],
             [sg.T('', key='_status_', size=(12, 1))],
-            [sg.T('', key='_numissues_', size=(20, 1))],
+            [sg.T('', key='_numissues_', size=(18, 1))],
               ]
 
     window = sg.Window('Issue watcher',
@@ -50,7 +50,8 @@ def gui():
                        grab_anywhere=True,
                        keep_on_top=True,
                        alpha_channel=.8,        # dim the lights a little
-                       location=(2121,310),     # locate in upper right corner of screen
+                       location=(2360,310),     # locate in upper right corner of screen
+                       element_padding=(0,0)
                        ).Layout(layout).Finalize()
 
     window.Refresh()
@@ -58,10 +59,17 @@ def gui():
     issues_elem = window.FindElement('_numissues_')
 
     initial_issue_count, initial_first_issue = get_num_issues()
-    # The Event Loop runs every 1000ms
-    i = 0
+    # The Event Loop runs every 5000ms
+    poll_frequncy = 5000
+    seconds = 0
     while True:
-        if i % 60 == 0:     # Every 60 seconds read GitHub
+        # read with a 5 second timeout
+        event, values = window.Read(timeout=poll_frequncy)
+        # print(event, values)
+        if event in ('_quit_', None):
+            break
+
+        if seconds % 60 == 0 or event.startswith('GitHub'):     # Every 60 seconds read GitHub
             status_elem.Update('Reading...')
             window.Refresh()
             issues, first_issue = get_num_issues()
@@ -69,20 +77,16 @@ def gui():
             window.Refresh()
             # if something changed, then make a popup
             if issues != initial_issue_count or first_issue != initial_first_issue:
-                sg.PopupNoWait('Issues changed on GitHub', background_color='red')
+                sg.PopupNoWait('Issues changed on GitHub ', 'First issue # is {}'.format(first_issue), background_color='red', keep_on_top=True)
                 initial_issue_count = issues
                 initial_first_issue = first_issue
             status_elem.Update('')
         else:
-            status_elem.Update('.' if i%2 else '')  # blink a '.' every 2 seconds so know still running
-        # read with a 1 second timeout
-        event, values = window.Read(timeout=1000)
-        if event in ('_quit_', None):
-            break
-        i += 1
+            status_elem.Update('.' if seconds%2 else '')  # blink a '.' every 2 seconds so know still running
+
+        seconds += poll_frequncy/1000
 
 red_x = b"R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
 
-refresh = b'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACb0lEQVR4XpVTXUiTbxT/vePdFuF0BTFW9ufVvMlu+iACka6CQY1gQVdtEmTMpSKzzJT/RTdCRHhT4F0Us8LGVqlo1lZaFslWQWBkN+tDkpSpbfNz797T8zy6DbUbf/Dbec7vfOycMwa0DBJjM7Ko72mBtz+KplCS6Ronf3NNxNZBt2qv4dJzL0uKwGRqU/6zHDqyd1dBk32/xMnfXOMxkVPXXYlVSLjykk4fKIb/4zgUSxEO7zRBKd4Bjm/jU9ys8f2fJoCFhRiWl6pw6+Qw0BymhlfT5Lg/xmycHA++ktL+nsRqrUOrdpBpH6hhKC7yhObti0CgKUTu0KTgcd8X4j4aB2bYvj7UPqkQrO/1cU25ESV3eJJO8LzLIQ11/CYXn5Grf4KqGF19E3Ts9iixe2QPm0dtt5PtP6NcHxF5ZVfDhIbeqMQ6E0hcI4ec327jah513T4YDM5TR/dh8vc0hkfHUxI2gwuPKyDLb2wV5cIdePuZZGwWmQxSSyqICFBVyKgJJkFaQW4Hna4THQ4X/gUiD2+QXEwjNZsASJvTgWgMqoY95WWw7raAJdjheeTEeniCTqgZu2IxswnSmGI3gEZjMiQpAMocTC2nJcm4hU9gRjp9E+6Ajb07wKFpHqRVOzKqedFUhOX4HyRnEwSjMQCB8/4IqnxU2DYiaGnsIe7n2UlK61MWe0dbW18Ijdfk/wuy7IXeEEvEvmM+kcRM4XYYSkohW62ChtIS/NKbWGwO8z9+Anp9TNSsQU2wEtVdEZy5o7Gfi7Z5ewj/vxbkPs51kYhVP4zAw3I3IN+ohSVFcfZeEs67Gid/c03E1uEv5QpTFzvZK5EAAAAASUVORK5CYII='
 
 gui()

@@ -314,7 +314,8 @@ class Element():
             self.Size = size
         self.Type = elem_type
         self.AutoSizeText = auto_size_text
-        self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
+        # self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
+        self.Pad = pad
         if font is not None and type(font) is not str:
             self.Font = font
         elif font is not None:
@@ -4118,15 +4119,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             else:
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
             full_element_pad = [0,0,0,0]       # Top, Right, Bottom, Left
-            if type(element.Pad[0]) != tuple:   # left and right
-                full_element_pad[1] = full_element_pad[3] = element.Pad[0]
+            elementpad = element.Pad if element.Pad is not None else toplevel_win.ElementPadding
+            if type(elementpad[0]) != tuple:   # left and right
+                full_element_pad[1] = full_element_pad[3] = elementpad[0]
             else:
-                full_element_pad[3], full_element_pad[1] = element.Pad[0]
-            if type(element.Pad[1]) != tuple:   # top and bottom
-                full_element_pad[0] = full_element_pad[2] = element.Pad[1]
+                full_element_pad[3], full_element_pad[1] = elementpad[0]
+            if type(elementpad[1]) != tuple:   # top and bottom
+                full_element_pad[0] = full_element_pad[2] = elementpad[1]
             else:
-                full_element_pad[0], full_element_pad[2] = element.Pad[1]
-            element_pad = full_element_pad
+                full_element_pad[0], full_element_pad[2] = elementpad[1]
 
             border_depth = toplevel_win.BorderDepth if toplevel_win.BorderDepth is not None else DEFAULT_BORDER_WIDTH
             try:
