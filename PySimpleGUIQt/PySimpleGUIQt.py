@@ -2659,9 +2659,15 @@ class SystemTray:
         self.Title = title
         self.Menu = menu
         self.TrayIcon = None
-        self.App = QApplication()
-        self.QWidget = QWidget()
         self.Shown = False
+        self.MenuItemChosen = None
+
+        global _my_windows
+
+        if _my_windows.QTApplication is None:
+            _my_windows.QTApplication = QApplication()
+        self.App = _my_windows.QTApplication
+        self.QWidget = QWidget()
 
         qicon = None
         if filename is not None:
@@ -2702,12 +2708,15 @@ class SystemTray:
         else:
             if timeout is None:
                 self.App.exec_()
-
-        return self.MenuItemChosen
+            else:
+                self.App.processEvents()
+        item = self.MenuItemChosen
+        self.MenuItemChosen = None
+        return item
 
 
     def Close(self):
-        self.App.exit()
+        self.App.__del__()
 
 
 # ------------------------------------------------------------------------- #
