@@ -11,14 +11,26 @@ layout =  [
 
 window = sg.Window('My window').Layout(layout)
 
+import PySimpleGUIQt as sg
 
+menu_def = ['File', ['Hide::key', '&Open::key', '&Save',['1', '2', ['a','b']], '&Properties', 'E&xit']]
 
-menu_def = ['File', ['Hide', '&Open', '&Save',['1', '2', ['a','b']], '&Properties', 'E&xit']]
-
-tray = sg.SystemTray('My Tray', menu=menu_def, data_base64=logo)
-
+tray = sg.SystemTray('My Tray', menu=menu_def, data_base64=logo, tooltip='My PySimpleGUIQt tray icon')
 while True:
-    event, values = window.Read(timeout=200)
+    menu_item = tray.Read(timeout=0)
+    if menu_item == sg.EVENT_SYSTEM_TRAY_ICON_ACTIVATED:
+        # tray.ShowMessage('Activation', 'You activated the icon', data_base64=logo)
+        pass
+    elif menu_item == sg.EVENT_SYSTEM_TRAY_MESSAGE_CLICKED:
+        tray.ShowMessage('Message Click', 'You clicked the message', data_base64=logo)
+    elif menu_item == sg.EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED:
+        tray.ShowMessage('Double click', 'Double clicked')
+    elif menu_item == 'Exit':
+        break
+    elif menu_item != sg.TIMEOUT_KEY:
+        print('Tray menu item = {}'.format(menu_item))
+
+    event, values = window.Read()
     if event == 'Message':
         print('showing message')
         tray.ShowMessage('Title', 'message goes here', data_base64=logo)
@@ -28,14 +40,7 @@ while True:
         tray.Hide()
     elif event == 'UnHide':
         tray.UnHide()
-
-    menu_item = tray.Read(timeout=0)
-    if menu_item is not None: print(menu_item)
-
-    if menu_item == 'Exit':
-        break
-    if menu_item == 'Hide':
-        tray.Hide()
-
-    if menu_item == 'Open':
-        tray.ShowMessage('Title', 'message goes here',filename= r'C:\Python\PycharmProjects\GooeyGUI\Qt\logo500.png')
+    #
+    # if menu_item == 'Open':
+    #     tray.ShowMessage('Title', 'message goes here',filename= r'C:\Python\PycharmProjects\GooeyGUI\Qt\logo500.png')
+print("EXITING PROGRAM")
