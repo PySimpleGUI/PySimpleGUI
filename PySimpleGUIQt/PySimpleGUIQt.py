@@ -200,10 +200,13 @@ ThisRow = 555666777  # magic number
 MESSAGE_BOX_LINE_WIDTH = 60
 
 # "Special" Key Values.. reserved
+# Events that are pre-defined
 # Key representing a Read timeout
 TIMEOUT_KEY = '__TIMEOUT__'
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
+EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED = '__DOUBLE_CLICKED__'
+EVENT_SYSTEM_TRAY_MESSAGE_CLICKED = '__MESSAGE_CLICKED__'
 
 # Meny key indicator character / string
 MENU_KEY_SEPARATOR = '::'
@@ -2705,7 +2708,7 @@ class SystemTray:
             self.TrayIcon.setToolTip(str(self.Tooltip))
 
         self.TrayIcon.messageClicked.connect(self.messageClicked)
-
+        self.TrayIcon.activated.connect(self.doubleClicked)
         self.TrayIcon.setContextMenu(qmenu)
 
 
@@ -2715,9 +2718,14 @@ class SystemTray:
 
     # callback function when message is clicked
     def messageClicked(self):
-        self.MenuItemChosen = '_MESSAGE_CLICKED_'
+        self.MenuItemChosen = EVENT_SYSTEM_TRAY_MESSAGE_CLICKED
         self.App.exit()
 
+
+    def doubleClicked(self, reason):
+        if reason in (QSystemTrayIcon.Trigger, QSystemTrayIcon.DoubleClick):
+            self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED
+            self.App.exit()
 
     def Read(self, timeout=None):
         '''
