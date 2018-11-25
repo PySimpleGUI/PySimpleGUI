@@ -133,7 +133,7 @@ These Elements are "complete" (a relative term... more are more complete than ot
 * Fonts  
 * Colors for text and background  
 * Timeouts for Read calls  
-* Change Submits parametes for most Elements  
+* Change Submits parameters for most Elements  
 * Table  
   * Basic display  
   * Read selected rows  
@@ -145,6 +145,7 @@ These Elements are "complete" (a relative term... more are more complete than ot
 * Tree Element  
 * Tabs  
 * Menus  
+* Menu Button Element
   
     
   
@@ -153,12 +154,114 @@ These Elements are "complete" (a relative term... more are more complete than ot
 Notable MISSING features at the moment include:  
 * Graphs Element Methods - erasing, draw arc, etc  
   
-## Release Notes:  
+# New PySimpleGUI Features
+
+There are a number of new features that are only available in PySimpleGUIQt.  These include:
+* ButtonMenu Element
+* Dial Element
+* Stretcher Element
+* SystemTray feature
+
+## SystemTray
+
+In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then  you perform Reads in order to get events. In this case the only events you'll receive are menu selections and timeouts.
+
+Here is the definition of the SystemTray object.
+
+```python
+SystemTray:(title, filename=None, menu=None, data=None, data_base64=None):  
+        '''  
+ SystemTray - create an icon in the system tray  
+ :param title: Not currently used.  A placeholder / name reminder
+ :param filename: PNG/ICO/? file that will be used for icon
+ :param menu: 
+ :param data: In-RAM image to be used for icon
+ :param data_base64: Base64 data to be used for icon
+         '''
+```
+
+You'll notice that there are 3 different ways to specify the icon image.  The base-64 parameter allows you to define a variable in your .py code that is the encoded image so that you do not need any additional files.  Very handy feature.
+
+### System Tray Design Pattern
+
+Here is a design pattern you can use to get a jump-start.
+
+This program will create a system tray icon and perform a blocking Read.  If the item "Open" is chosen from the system tray, then a window is shown on the screen.
+
+```python
+import PySimpleGUIQt as sg  
+  
+menu_def = ['File', ['&Open', '&Save',['1', '2', ['a','b']], '&Properties', 'E&xit']]  
+  
+tray = sg.SystemTray('My Tray', menu=menu_def, filename=r'default_icon.ico')  
+  
+while True:  
+    menu_item = tray.Read()  
+    if menu_item is not None: print(menu_item)  
+  
+    if menu_item == 'Exit':  
+        break  
+ if menu_item == 'Open':  
+        window = sg.Window('My win').Layout([[sg.Text('My layout')]])  
+        event, values = window.Read()  
+        print(event, values)
+```
+## SystemTray Methods
+
+### Read - Read the context menu
+
+```python
+def Read(timeout=None):  
+    '''  
+ Reads the context menu  
+ :param timeout: Optional.  Any value other than None indicates a non-blocking read
+ :return:   String representing meny item chosen. None if nothing read.  
+    '''
+```
+
+### Hide
+
+Hides the icon
+
+```python
+def Hide():  
+```
+
+
+### UnHide
+
+Shows a previously hidden icon
+
+```python
+def UnHide():  
+```
+
+### ShowMessage
+
+Shows a balloon above the icon in the system tray area
+
+```python
+def ShowMessage(title, message, filename=None, data=None, data_base64=None, time=10000):  
+    '''  
+ Shows a balloon above icon in system tray  
+ :param title:  Title shown in balloon  
+ :param message: Message to be displayed  
+ :param filename: Optional icon filename  
+ :param data: Optional in-ram icon  
+ :param data_base64: Optional base64 icon  
+ :param time: How long to display message in milliseconds  
+ :return:   self (for call chaining)
+    '''
+```
+
+
+
+# Release Notes:  
   
 ### 0.12.0   -   20-Nov-2018
-Correctly restore stdout when OutputElement is deleted  
+Correctly restore stdout when Output Element is deleted  
 Added Finalize ability  
-**Better multiwindow handling... maybe it's finally fixed!**  
+**Better multi-window handling... maybe it's finally fixed!**  
 Radio button default value  
 Dial element default value  
 Show expanded option for trees  
@@ -223,14 +326,24 @@ Force window sizing should mean windows are better sized
 Popup - better layout
 
    
-  
-## Design        
+### 0.15.0 24-Nov-2018  
+
+New SystemTray feature!
+margin paramter for Text Element.  Takes 4 ints
+Corrected button colors when disabled. For now am restoring them to original colors
+Border Depth for all elements that support it (inputs, slider, table, tree, etc)
+Fix for Element padding done incorrectly!! Sorry about this one
+
+
+
+
+# Design        
  ## Author 
  Mike B.        
         
-## Demo Code Contributors        
+# Demo Code Contributors        
    
- ## License        
+# License        
  GNU Lesser General Public License (LGPL 3) +        
         
-## Acknowledgments
+# Acknowledgments
