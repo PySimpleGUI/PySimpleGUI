@@ -6,31 +6,49 @@ import textwrap
 import pickle
 import base64
 import calendar
-try:
-    from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-        QHBoxLayout, QListWidget, QDial, QTableWidget
-    from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-    from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-    from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
-    from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-    from PySide2.QtCore import Qt,QProcess, QEvent
-    import PySide2.QtGui as QtGui
-    import PySide2.QtCore as QtCore
-    import PySide2.QtWidgets as QtWidgets
-    using_pyqt5 = False
-except:
+
+FORCE_PYQT5 = False
+
+if not FORCE_PYQT5:
+    try:
+        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
+            QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+        from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+        from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
+        from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
+        from PySide2.QtCore import Qt,QProcess, QEvent
+        import PySide2.QtGui as QtGui
+        import PySide2.QtCore as QtCore
+        import PySide2.QtWidgets as QtWidgets
+        using_pyqt5 = False
+    except:
+        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
+            QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+        from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+        from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
+        from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
+        from PyQt5.QtCore import Qt,QProcess, QEvent
+        import PyQt5.QtGui as QtGui
+        import PyQt5.QtCore as QtCore
+        import PyQt5.QtWidgets as QtWidgets
+        using_pyqt5 = True
+else:
     from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
         QHBoxLayout, QListWidget, QDial, QTableWidget
-    from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-    from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-    from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction
+    from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, \
+        QDialog, QAbstractItemView
+    from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, \
+        QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+    from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, \
+        QAction, QSystemTrayIcon
     from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-    from PyQt5.QtCore import Qt,QProcess, QEvent
+    from PyQt5.QtCore import Qt, QProcess, QEvent
     import PyQt5.QtGui as QtGui
     import PyQt5.QtCore as QtCore
     import PyQt5.QtWidgets as QtWidgets
     using_pyqt5 = True
-
 
 """
     The QT version if PySimpleGUI.
@@ -200,10 +218,14 @@ ThisRow = 555666777  # magic number
 MESSAGE_BOX_LINE_WIDTH = 60
 
 # "Special" Key Values.. reserved
+# Events that are pre-defined
 # Key representing a Read timeout
 TIMEOUT_KEY = '__TIMEOUT__'
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
+EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED = '__DOUBLE_CLICKED__'
+EVENT_SYSTEM_TRAY_ICON_ACTIVATED = '__ACTIVATED__'
+EVENT_SYSTEM_TRAY_MESSAGE_CLICKED = '__MESSAGE_CLICKED__'
 
 # Meny key indicator character / string
 MENU_KEY_SEPARATOR = '::'
@@ -2669,13 +2691,13 @@ class SystemTray:
         self.Menu = menu
         self.TrayIcon = None
         self.Shown = False
-        self.MenuItemChosen = None
+        self.MenuItemChosen = TIMEOUT_KEY
         self.Tooltip = tooltip
 
         global _my_windows
 
         if _my_windows.QTApplication is None:
-            _my_windows.QTApplication = QApplication()
+            _my_windows.QTApplication = QApplication(sys.argv)
         self.App = _my_windows.QTApplication
         self.QWidget = QWidget()
 
@@ -2705,7 +2727,7 @@ class SystemTray:
             self.TrayIcon.setToolTip(str(self.Tooltip))
 
         self.TrayIcon.messageClicked.connect(self.messageClicked)
-
+        self.TrayIcon.activated.connect(self.doubleClicked)
         self.TrayIcon.setContextMenu(qmenu)
 
 
@@ -2715,9 +2737,18 @@ class SystemTray:
 
     # callback function when message is clicked
     def messageClicked(self):
-        self.MenuItemChosen = '_MESSAGE_CLICKED_'
+        self.MenuItemChosen = EVENT_SYSTEM_TRAY_MESSAGE_CLICKED
         self.App.exit()
 
+
+    def doubleClicked(self, reason):
+        # print(reason)
+        if reason == QSystemTrayIcon.DoubleClick:
+            self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED
+            self.App.exit()
+        if reason == QSystemTrayIcon.Trigger:
+            self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_ACTIVATED
+            self.App.exit()
 
     def Read(self, timeout=None):
         '''
@@ -2730,13 +2761,15 @@ class SystemTray:
             self.TrayIcon.show()
             if timeout is None:
                 self.App.exec_()
+            else:
+                self.App.processEvents()
         else:
             if timeout is None:
                 self.App.exec_()
             else:
                 self.App.processEvents()
         item = self.MenuItemChosen
-        self.MenuItemChosen = None
+        self.MenuItemChosen = TIMEOUT_KEY
         return item
 
 
@@ -3059,6 +3092,9 @@ class Window:
             return results
         else:
             if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[0] is None:       # Special Qt case because returning for no reason so fake timeout
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
+            elif not self.XFound:                   # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
+                # print("*** Faking timeout ***")
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
             return self.ReturnValues
 

@@ -154,7 +154,7 @@ These Elements are "complete" (a relative term... more are more complete than ot
 Notable MISSING features at the moment include:  
 * Graphs Element Methods - erasing, draw arc, etc  
   
-# New PySimpleGUI Features
+# New PySimpleGUI Features only in Qt
 
 There are a number of new features that are only available in PySimpleGUIQt.  These include:
 * ButtonMenu Element
@@ -208,7 +208,7 @@ while True:
 ```
 ## SystemTray Methods
 
-### Read - Read the context menu
+### Read - Read the context menu or check for events
 
 ```python
 def Read(timeout=None):  
@@ -218,6 +218,15 @@ def Read(timeout=None):
  :return:   String representing meny item chosen. None if nothing read.  
     '''
 ```
+
+#### Read special return values
+
+In addition to Menu Items, the Read call can return several special values.    They include:
+
+EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED - Tray icon was double clicked
+EVENT_SYSTEM_TRAY_ICON_ACTIVATED - Tray icon was single clicked
+EVENT_SYSTEM_TRAY_MESSAGE_CLICKED - a message balloon was clicked
+TIMEOUT_KEY is returned if no events are available if the timeout value is set in the Read call
 
 ### Hide
 
@@ -254,6 +263,17 @@ def ShowMessage(title, message, filename=None, data=None, data_base64=None, time
     '''
 ```
 
+## Menus with Keys
+
+PySimpleGUIQt offers the ability to add a key to your menu items.  To do so, you add :: and the key value to the end of your menu definition. 
+
+`menu_def = ['File', ['Hide::key', '&Open::key', '&Save',['1', '2', ['a','b']], '&Properties', 'E&xit']]`
+
+The menu definition adds a key "key" to the menu entries Hide and Open.
+
+If you want to change the separator characters from :: top something else,change the variable `MENU_KEY_SEPARATOR`
+
+When a menu item has a key and it is chosen, then entire string is returned.  If Hide were selected, then Hide::key would be returned from the Read.  Note that the shortcut character & is NOT returned from Reads.
 
 
 # Release Notes:  
@@ -334,6 +354,20 @@ Corrected button colors when disabled. For now am restoring them to original col
 Border Depth for all elements that support it (inputs, slider, table, tree, etc)
 Fix for Element padding done incorrectly!! Sorry about this one
 
+
+### 0.16.0  24-Nov-2018  
+
+Easier forcing to use PyQt5 for testing
+Predefined events for Tray Icons
+* Double Clicked
+* Icon Activated
+* Message Clicked
+* Timeout key for polling
+
+Tray icon tooltip
+Menu keys with programmable separator
+Better element padding hierarchy
+Menubar now returns values as does the ButtonMenu
 
 
 
