@@ -2704,12 +2704,19 @@ class SystemTray:
         if self.Tooltip is not None:
             self.TrayIcon.setToolTip(str(self.Tooltip))
 
+        self.TrayIcon.messageClicked.connect(self.messageClicked)
+
         self.TrayIcon.setContextMenu(qmenu)
 
 
     def QT_MenuItemChosenCallback(self, item_chosen):
         self.MenuItemChosen = item_chosen.replace('&','')
         self.App.exit()                         # kick the users out of the mainloop
+
+    # callback function when message is clicked
+    def messageClicked(self):
+        self.MenuItemChosen = '_MESSAGE_CLICKED_'
+        self.App.exit()
 
 
     def Read(self, timeout=None):
@@ -2732,11 +2739,14 @@ class SystemTray:
         self.MenuItemChosen = None
         return item
 
+
     def Hide(self):
         self.TrayIcon.hide()
 
+
     def UnHide(self):
         self.TrayIcon.show()
+
 
     def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, time=10000):
         '''
