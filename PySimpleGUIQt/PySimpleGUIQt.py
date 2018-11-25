@@ -205,6 +205,8 @@ TIMEOUT_KEY = '__TIMEOUT__'
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 
+# Meny key indicator character / string
+MENU_KEY_SEPARATOR = '::'
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows():
@@ -2331,16 +2333,14 @@ class Menu(Element):
         self.TKMenu = None
         self.Tearoff = tearoff
         self.IsButtonMenu = False
+        self.MenuItemChosen = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
 
     def QT_MenuItemChosenCallback(self, item_chosen):
         # print('IN MENU ITEM CALLBACK', item_chosen)
-        if not self.IsButtonMenu:
-            self.Key = item_chosen.replace('&','')                   # fool the quit function into thinking this was a key
-        else:
-            self.MenuItemChosen = item_chosen.replace('&','')
+        self.MenuItemChosen = item_chosen.replace('&','')
         element_callback_quit_mainloop(self)
         # self.ParentForm.LastButtonClicked = item_chosen
         # self.ParentForm.FormRemainedOpen = True
@@ -3849,6 +3849,12 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
+                elif element.Type == ELEM_TYPE_MENUBAR:
+                    if element.MenuItemChosen is not None:
+                        top_level_form.LastButtonClicked = element.MenuItemChosen
+                    button_pressed_text = top_level_form.LastButtonClicked
+                    value = element.MenuItemChosen
+                    element.MenuItemChosen = None
             else:
                 value = None
 
@@ -3992,7 +3998,11 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
             action = QAction(top_menu)
-            action.setText(sub_menu_info)
+            try:
+                item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+            except:
+                item_without_key = sub_menu_info
+            action.setText(item_without_key)
             top_menu.addAction(action)
             action.triggered.connect(lambda: SystemTray.QT_MenuItemChosenCallback(element, sub_menu_info))
     else:
@@ -4002,7 +4012,12 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
             if i != len(sub_menu_info) - 1:
                 if type(sub_menu_info[i + 1]) == list:
                     new_menu = QMenu(top_menu)
-                    new_menu.setTitle(sub_menu_info[i])
+                    item = sub_menu_info[i]
+                    try:
+                        item_without_key = item[:item.index(MENU_KEY_SEPARATOR)]
+                    except:
+                        item_without_key = item
+                    new_menu.setTitle(item_without_key)
                     top_menu.addAction(new_menu.menuAction())
                     # print(f'Adding submenu {sub_menu_info[i]}')
                     AddTrayMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
@@ -4019,7 +4034,13 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
             action = QAction(top_menu)
-            action.setText(sub_menu_info)
+            # Key handling.... strip off key before setting text
+            try:
+                item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+            except:
+                item_without_key = sub_menu_info
+            action.setText(item_without_key)
+
             top_menu.addAction(action)
             action.triggered.connect(lambda: Menu.QT_MenuItemChosenCallback(element, sub_menu_info))
     else:
@@ -4029,7 +4050,14 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
             if i != len(sub_menu_info) - 1:
                 if type(sub_menu_info[i + 1]) == list:
                     new_menu = QMenu(top_menu)
-                    new_menu.setTitle(sub_menu_info[i])
+                    # Key handling.... strip off key before setting text
+                    item = sub_menu_info[i]
+                    try:
+                        item_without_key = item[:item.index(MENU_KEY_SEPARATOR)]
+                    except:
+                        item_without_key = item
+                    new_menu.setTitle(item_without_key)
+
                     top_menu.addAction(new_menu.menuAction())
                     # print(f'Adding submenu {sub_menu_info[i]}')
                     AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
