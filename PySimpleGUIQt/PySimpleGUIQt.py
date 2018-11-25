@@ -2654,7 +2654,7 @@ class ErrorElement(Element):
 # ------------------------------------------------------------------------- #
 #                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
-class Tray:
+class SystemTray:
     def __init__(self, title, filename=None, menu=None, data=None, data_base64=None):
         self.Title = title
         self.Menu = menu
@@ -2690,17 +2690,25 @@ class Tray:
 
     def QT_MenuItemChosenCallback(self, item_chosen):
         self.MenuItemChosen = item_chosen.replace('&','')
-        self.App.exit()  # kick the users out of the mainloop
+        self.App.exit()                         # kick the users out of the mainloop
 
 
-    def Read(self):
+    def Read(self, timeout=None):
         if not self.Shown:
             self.Shown = True
             self.TrayIcon.show()
-            self.App.exec_()
+            if timeout is None:
+                self.App.exec_()
         else:
-            self.App.exec_()
+            if timeout is None:
+                self.App.exec_()
+
         return self.MenuItemChosen
+
+
+    def Close(self):
+        self.App.exit()
+
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
@@ -3927,7 +3935,7 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
             action = QAction(top_menu)
             action.setText(sub_menu_info)
             top_menu.addAction(action)
-            action.triggered.connect(lambda: Tray.QT_MenuItemChosenCallback(element, sub_menu_info))
+            action.triggered.connect(lambda: SystemTray.QT_MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
