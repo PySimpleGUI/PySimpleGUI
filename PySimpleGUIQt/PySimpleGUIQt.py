@@ -2730,6 +2730,7 @@ class SystemTray:
         self.TrayIcon.activated.connect(self.doubleClicked)
         self.TrayIcon.setContextMenu(qmenu)
 
+        self.TrayIcon.show()
 
     def QT_MenuItemChosenCallback(self, item_chosen):
         self.MenuItemChosen = item_chosen.replace('&','')
@@ -3093,7 +3094,7 @@ class Window:
         else:
             if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[0] is None:       # Special Qt case because returning for no reason so fake timeout
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
-            elif not self.XFound:                   # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
+            elif not self.XFound and self.ReturnValues[0] is None:                   # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
                 # print("*** Faking timeout ***")
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
             return self.ReturnValues
@@ -3277,12 +3278,13 @@ class Window:
 
     def Hide(self):
         self._Hidden = True
+        self.QT_QMainWindow.hide()
         # TODO
         return
 
     def UnHide(self):
         if self._Hidden:
-            # TODO
+            self.QT_QMainWindow.show()
             self._Hidden = False
 
     def Disappear(self):
@@ -4507,6 +4509,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style += 'border: {}px solid gray; '.format(border_depth)
                 element.QT_QProgressBar.setStyleSheet(style)
 
+                element.QT_QProgressBar.setTextVisible(False)
 
                 qt_row_layout.addWidget(element.QT_QProgressBar)
             # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
