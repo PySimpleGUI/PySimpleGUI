@@ -38,7 +38,7 @@ def TimerStop():
 
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
-    print(g_time_delta)
+    print(int(g_time_delta*1000))
 
 
 """
@@ -2209,12 +2209,13 @@ class TkScrollableFrame(tk.Frame):
 class Column(Element):
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, key=None):
         '''
-        Column Element
+        Container for elements that are stacked into rows
         :param layout:
         :param background_color:
         :param size:
         :param pad:
         :param scrollable:
+        :param vertical_scroll_only:
         :param key:
         '''
         self.UseDictionary = False
@@ -2227,10 +2228,6 @@ class Column(Element):
         self.TKFrame = None
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
-        # self.ImageFilename = image_filename
-        # self.ImageData = image_data
-        # self.ImageSize = image_size
-        # self.ImageSubsample = image_subsample
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
@@ -2791,6 +2788,7 @@ class ErrorElement(Element):
     def __del__(self):
         super().__del__()
 
+Stretch = ErrorElement
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
@@ -2804,13 +2802,14 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False):
         '''
-        Window
+        Main window object where Elements will be laid out in rows
         :param title:
         :param default_element_size:
         :param default_button_element_size:
         :param auto_size_text:
         :param auto_size_buttons:
         :param location:
+        :param size:
         :param button_color:
         :param font:
         :param progress_bar_color:
@@ -2820,6 +2819,7 @@ class Window:
         :param auto_close_duration:
         :param icon:
         :param force_toplevel:
+        :param alpha_channel:
         :param return_keyboard_events:
         :param use_default_focus:
         :param text_justification:
@@ -2827,6 +2827,7 @@ class Window:
         :param grab_anywhere:
         :param keep_on_top:
         :param resizable:
+        :param disable_close:
         '''
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
@@ -3139,6 +3140,9 @@ class Window:
                        'window.FindElement("{}")'.format(key))
             return ErrorElement(key=key)
         return element
+
+    Element =  FindElement          # Shortcut function
+
 
     def FindElementWithFocus(self):
         element = _FindElementWithFocusInSubForm(self)
@@ -5342,10 +5346,12 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
     if yes_no:
         form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
         button, values = form.Read()
+        form.Close()
         return button
     else:
         form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Button('OK', size=(5, 1), button_color=button_color))
     button, values = form.Read()
+    form.Close()
     return button
 
 
