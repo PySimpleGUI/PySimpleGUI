@@ -74,6 +74,7 @@ DEFAULT_DEBUG_WINDOW_SIZE = (80, 20)
 DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
+DEFAULT_TOOLTIP_OFFSET = (20,-20)
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -304,8 +305,8 @@ class ToolTip:
     def showtip(self):
         if self.tipwindow:
             return
-        x = self.widget.winfo_rootx() + 20
-        y = self.widget.winfo_rooty() + self.widget.winfo_height() - 20
+        x = self.widget.winfo_rootx() + DEFAULT_TOOLTIP_OFFSET[0]
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() + DEFAULT_TOOLTIP_OFFSET[1]
         self.tipwindow = tk.Toplevel(self.widget)
         self.tipwindow.wm_overrideredirect(True)
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
@@ -6486,7 +6487,7 @@ def main():
               [Text('You should be importing it rather than running it', size=(50, 2))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
-               FolderBrowse()],
+               FolderBrowse(tooltip='Browse for a folder')],
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
