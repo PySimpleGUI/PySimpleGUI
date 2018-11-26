@@ -4058,13 +4058,17 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
             action = QAction(top_menu)
-            try:
-                item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
-            except:
-                item_without_key = sub_menu_info
-            action.setText(item_without_key)
+
+            if sub_menu_info == '---':
+                action.setSeparator(True)
+            else:
+                try:
+                    item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+                except:
+                    item_without_key = sub_menu_info
+                action.setText(item_without_key)
+                action.triggered.connect(lambda: SystemTray.QT_MenuItemChosenCallback(element, sub_menu_info))
             top_menu.addAction(action)
-            action.triggered.connect(lambda: SystemTray.QT_MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -4094,15 +4098,19 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
             action = QAction(top_menu)
-            # Key handling.... strip off key before setting text
-            try:
-                item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
-            except:
-                item_without_key = sub_menu_info
-            action.setText(item_without_key)
 
+            if sub_menu_info == '---':
+                action.setSeparator(True)
+            else:
+
+                # Key handling.... strip off key before setting text
+                try:
+                    item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+                except:
+                    item_without_key = sub_menu_info
+                action.setText(item_without_key)
+                action.triggered.connect(lambda: Menu.QT_MenuItemChosenCallback(element, sub_menu_info))
             top_menu.addAction(action)
-            action.triggered.connect(lambda: Menu.QT_MenuItemChosenCallback(element, sub_menu_info))
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -4340,6 +4348,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.PasswordCharacter != '':
                     qlineedit.setEchoMode(QLineEdit.Password)
+                if element.Tooltip:
+                    element.QT_QLineEdit.setToolTip(element.Tooltip)
 
                 element.InputTextWidget = Input.InputTextWidget(element.QT_QLineEdit, element)
                 element.QT_QLineEdit.installEventFilter(element.InputTextWidget)
@@ -4373,6 +4383,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_ComboBox.setVisible(element.VisibleItems)
                 if element.ChangeSubmits:
                     element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
+                if element.Tooltip:
+                    element.QT_ComboBox.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_ComboBox)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -4410,7 +4422,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_ListWidget.currentRowChanged.connect(element.QtCurrentRowChanged)
 
                 element.QT_ListWidget.addItems(element.Values)
-
+                if element.Tooltip:
+                    element.QT_ListWidget.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_ListWidget)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
@@ -4446,6 +4459,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     toplevel_win.FocusElement = element.QT_TextEdit
 
                 element.QT_TextEdit.setText(str(default_text))
+                if element.Tooltip:
+                    element.QT_TextEdit.setToolTip(element.Tooltip)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_TextEdit)
 
@@ -4472,6 +4487,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextBrowser.insertPlainText(default_text)
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+                if element.Tooltip:
+                    element.QT_TextBrowser.setToolTip(element.Tooltip)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
@@ -4497,6 +4514,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.ChangeSubmits:
                     element.QT_Checkbox.stateChanged.connect(element.QtCallbackStateChanged)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
+                if element.Tooltip:
+                    element.QT_Checkbox.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_Checkbox)
               # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
@@ -4517,7 +4536,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QProgressBar.setStyleSheet(style)
 
                 element.QT_QProgressBar.setTextVisible(False)
-
+                if element.Tooltip:
+                    element.QT_QProgressBar.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_QProgressBar)
             # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
@@ -4550,6 +4570,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 QT_RadioButtonGroup.addButton(element.QT_Radio_Button)
 
                 # qt_row_layout.setContentsMargins(*full_element_pad)
+                if element.Tooltip:
+                    element.QT_Radio_Button.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_Radio_Button)
 
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
@@ -4574,7 +4596,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.ChangeSubmits:
                     element.QT_Spinner.valueChanged.connect(element.QtCallbackValueChanged)
-
+                if element.Tooltip:
+                    element.QT_Spinner.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_Spinner)
             # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
@@ -4597,6 +4620,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
                 element.reroute_stdout()
+                if element.Tooltip:
+                    element.QT_TextBrowser.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -4626,7 +4651,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style = ''
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 element.QT_QLabel.setStyleSheet(style)
-
+                if element.Tooltip:
+                    element.QT_QLabel.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_QLabel)
             # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
@@ -4646,7 +4672,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qgraphicsview.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
                 qgraphicsview.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
-
+                if element.Tooltip:
+                    element.QT_QGraphicsView.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_QGraphicsView)
 
             # -------------------------  MENUBAR element  ------------------------- #
@@ -4704,7 +4731,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 AddMenuItem(qmenu, menu_def[1], element)
 
                 element.QT_QPushButton.setMenu(qmenu)
-
+                if element.Tooltip:
+                    element.QT_QPushButton.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_QPushButton)
 
             # -------------------------  Frame element  ------------------------- #
@@ -4724,7 +4752,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 PackFormIntoFrame(element, column_layout, toplevel_win)
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
-
+                if element.Tooltip:
+                    column_widget.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
@@ -4745,7 +4774,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 column_vbox.addLayout(column_layout)
                 tab_widget.setLayout(column_vbox)
-
+                if element.Tooltip:
+                    tab_widget.setToolTip(element.Tooltip)
                 window.QT_QTanWidget.addTab(tab_widget, element.Title)
                 # qt_row_layout.addWidget(tab_widget)
 
@@ -4805,7 +4835,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.ChangeSubmits:
                     element.QT_Slider.valueChanged.connect(element.QtCallbackValueChanged)
-
+                if element.Tooltip:
+                    element.QT_Slider.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_Slider)
             # -------------------------  DIAL element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_DIAL:
@@ -4835,7 +4866,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.ChangeSubmits:
                     element.QT_Dial.valueChanged.connect(element.QtCallbackValueChanged)
-
+                if element.Tooltip:
+                    element.QT_Dial.setToolTip(element.Tooltip)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 qt_row_layout.addWidget(element.QT_Dial)
             # -------------------------  Stretch element  ------------------------- #
@@ -4866,7 +4898,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TableWidget.installEventFilter(element.QT_TableWidget)
 
                 element.QT_TableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-
+                if element.Tooltip:
+                    element.QT_TableWidget.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_TableWidget)
 
             # -------------------------  Tree element  ------------------------- #
@@ -4919,6 +4952,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.ShowExpanded:
                     element.QT_QTreeWidget.expandAll()
                     element.QT_QTreeWidget.show()
+
+                if element.Tooltip:
+                    element.QT_QTreeWidget.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_QTreeWidget)
 
 
