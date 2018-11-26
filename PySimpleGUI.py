@@ -5317,12 +5317,12 @@ def EasyPrintClose():
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None)):
+                  size=(None, None), location=(None, None)):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
     form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                  auto_close_duration=auto_close_duration)
+                  auto_close_duration=auto_close_duration, location=location)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
