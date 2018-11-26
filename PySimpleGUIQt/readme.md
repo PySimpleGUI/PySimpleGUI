@@ -369,6 +369,9 @@ Menu keys with programmable separator
 Better element padding hierarchy
 Menubar now returns values as does the ButtonMenu
 
+### 0.17.0  24-Nov-2018  
+
+Window.Hide and UnHide methods
 
 
 # Design        

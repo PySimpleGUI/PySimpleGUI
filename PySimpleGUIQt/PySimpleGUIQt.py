@@ -217,6 +217,12 @@ ThisRow = 555666777  # magic number
 # DEFAULT_WINDOW_ICON = ''
 MESSAGE_BOX_LINE_WIDTH = 60
 
+# Icons for displaying system tray messages
+SYSTEM_TRAY_MESSAGE_ICON_INFORMATION = QSystemTrayIcon.Information
+SYSTEM_TRAY_MESSAGE_ICON_WARNING = QSystemTrayIcon.Warning
+SYSTEM_TRAY_MESSAGE_ICON_CRITICAL = QSystemTrayIcon.Critical
+SYSTEM_TRAY_MESSAGE_ICON_NOICON = QSystemTrayIcon.NoIcon
+
 # "Special" Key Values.. reserved
 # Events that are pre-defined
 # Key representing a Read timeout
@@ -2782,7 +2788,7 @@ class SystemTray:
         self.TrayIcon.show()
 
 
-    def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, time=10000):
+    def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):
         '''
         Shows a balloon above icon in system tray
         :param title:  Title shown in balloon
@@ -2809,6 +2815,8 @@ class SystemTray:
 
         if qicon is not None:
             self.TrayIcon.showMessage(title, message, qicon, time)
+        elif messageicon is not None:
+            self.TrayIcon.showMessage(title, message, messageicon, time)
         else:
             self.TrayIcon.showMessage(title, message)
 
@@ -3279,7 +3287,6 @@ class Window:
     def Hide(self):
         self._Hidden = True
         self.QT_QMainWindow.hide()
-        # TODO
         return
 
     def UnHide(self):
