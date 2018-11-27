@@ -113,6 +113,7 @@ DEFAULT_DEBUG_WINDOW_SIZE = (800, 400)
 DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
+DEFAULT_TOOLTIP_OFFSET = (20,-20)
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -2684,21 +2685,19 @@ class ErrorElement(Element):
 #                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
 class SystemTray:
-    def __init__(self, title, filename=None, menu=None, data=None, data_base64=None, tooltip=None):
+    def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None):
         '''
         SystemTray - create an icon in the system tray
-        :param title:
-        :param filename:
-        :param menu:
-        :param data:
-        :param data_base64:
+        :param menu: Menu definition
+        :param filename: filename for icon
+        :param data: in-ram image for icon
+        :param data_base64: basee-64 data for icon
+        :param tooltip: tooltip string
         '''
-        self.Title = title
         self.Menu = menu
         self.TrayIcon = None
         self.Shown = False
         self.MenuItemChosen = TIMEOUT_KEY
-        self.Tooltip = tooltip
 
         global _my_windows
 
@@ -2725,16 +2724,17 @@ class SystemTray:
             return
         self.TrayIcon = QSystemTrayIcon(qicon)
 
-        qmenu = QMenu()
-        qmenu.setTitle(self.Menu[0])
-        AddTrayMenuItem(qmenu, self.Menu[1], self)
+        if self.Menu is not None:
+            qmenu = QMenu()
+            qmenu.setTitle(self.Menu[0])
+            AddTrayMenuItem(qmenu, self.Menu[1], self)
+            self.TrayIcon.setContextMenu(qmenu)
 
-        if self.Tooltip is not None:
-            self.TrayIcon.setToolTip(str(self.Tooltip))
+        if tooltip is not None:
+            self.TrayIcon.setToolTip(str(tooltip))
 
         self.TrayIcon.messageClicked.connect(self.messageClicked)
         self.TrayIcon.activated.connect(self.doubleClicked)
-        self.TrayIcon.setContextMenu(qmenu)
 
         self.TrayIcon.show()
 
@@ -2766,19 +2766,22 @@ class SystemTray:
         if not self.Shown:
             self.Shown = True
             self.TrayIcon.show()
-            if timeout is None:
-                self.App.exec_()
-            else:
-                self.App.processEvents()
+        if timeout is None:
+            self.App.exec_()
+        elif timeout == 0:
+            self.App.processEvents()
         else:
-            if timeout is None:
-                self.App.exec_()
-            else:
-                self.App.processEvents()
+            self.timer = start_systray_read_timer(self, timeout)
+            self.App.exec_()
+            if self.timer:
+                stop_timer(self.timer)
+
         item = self.MenuItemChosen
         self.MenuItemChosen = TIMEOUT_KEY
         return item
 
+    def timer_timeout(self):
+        self.App.exit()  # kick the users out of the mainloop
 
     def Hide(self):
         self.TrayIcon.hide()
@@ -2823,7 +2826,52 @@ class SystemTray:
         return self
 
     def Close(self):
-        self.App.quit()
+        '''
+
+        :return:
+        '''
+        self.TrayIcon.Hide()
+        # Don't close app because windows could be depending on it
+        # self.App.quit()
+
+
+    def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
+        '''
+        Updates the menu, tooltip or icon
+        :param menu: menu defintion
+        :param tooltip: string representing tooltip
+        :param filename:  icon filename
+        :param data:  icon raw image
+        :param data_base64: icon base 64 image
+        :return:
+        '''
+        # Menu
+        if menu is not None:
+            self.Menu = menu
+            qmenu = QMenu()
+            qmenu.setTitle(self.Menu[0])
+            AddTrayMenuItem(qmenu, self.Menu[1], self)
+            self.TrayIcon.setContextMenu(qmenu)
+        # Tooltip
+        if tooltip is not None:
+            self.TrayIcon.setToolTip(str(tooltip))
+        # Icon
+        qicon = None
+        if filename is not None:
+            qicon = QIcon(filename)
+        elif data is not None:
+            ba = QtCore.QByteArray.fromRawData(data)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qicon = QIcon(pixmap)
+        elif data_base64 is not None:
+            ba = QtCore.QByteArray.fromBase64(data_base64)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qicon = QIcon(pixmap)
+        if qicon is not None:
+            self.TrayIcon.setIcon(qicon)
+
 
 
 # ------------------------------------------------------------------------- #
@@ -5026,6 +5074,13 @@ def start_window_read_timer(window, amount):
     return timer
 
 
+def start_systray_read_timer(tray, amount):
+    timer = QtCore.QTimer()
+    timer.timeout.connect(tray.timer_timeout)
+    timer.start(amount)
+    return timer
+
+
 def start_window_autoclose_timer(window, amount):
     timer = QtCore.QTimer()
     window.autoclose_timer = timer
@@ -5164,7 +5219,7 @@ def StartupTK(window):
         if not window.FormRemainedOpen:
             _my_windows.Decrement()
         if window.RootNeedsDestroying:
-            print('** Destroying window **')
+            # print('** Destroying window **')
             window.QT_QMainWindow.close()         # destroy the window
             window.RootNeedsDestroying = False
     return
@@ -5569,17 +5624,17 @@ def EasyPrintClose():
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None)):
+                  size=(None, None), location=(None, None)):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
     form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                  auto_close_duration=auto_close_duration)
+                  auto_close_duration=auto_close_duration, location=location)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
-        # if not isinstance(message, str): message = str(message)
+        # if not isinstance(message, str): message = str(message) - new
         message = str(message)
         longest_line_len = max([len(l) for l in message.split('\n')])
         width_used = min(longest_line_len, width)
@@ -5592,16 +5647,19 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
     height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
     if height:
         height_computed = height
-    form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
+    computed_size = (max_line_width*10, height_computed*16)
+    form.AddRow(MultilineOutput(complete_output, size=computed_size))
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
     if yes_no:
         form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
         button, values = form.Read()
+        form.Close()
         return button
     else:
         form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Button('OK', size=(5, 1), button_color=button_color))
     button, values = form.Read()
+    form.Close()
     return button
 
 
