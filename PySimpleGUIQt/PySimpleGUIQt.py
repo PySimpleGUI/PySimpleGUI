@@ -236,6 +236,7 @@ EVENT_SYSTEM_TRAY_MESSAGE_CLICKED = '__MESSAGE_CLICKED__'
 
 # Meny key indicator character / string
 MENU_KEY_SEPARATOR = '::'
+MENU_DISABLED_CHARACTER = '!'
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows():
@@ -4119,7 +4120,6 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
             action = QAction(top_menu)
-
             if sub_menu_info == '---':
                 action.setSeparator(True)
             else:
@@ -4127,7 +4127,11 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
                     item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
                 except:
                     item_without_key = sub_menu_info
-                action.setText(item_without_key)
+                if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                    action.setText(item_without_key[len(MENU_DISABLED_CHARACTER):])
+                    action.setDisabled(True)
+                else:
+                    action.setText(item_without_key)
                 action.triggered.connect(lambda: SystemTray.QT_MenuItemChosenCallback(element, sub_menu_info))
             top_menu.addAction(action)
     else:
@@ -4142,7 +4146,11 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
                         item_without_key = item[:item.index(MENU_KEY_SEPARATOR)]
                     except:
                         item_without_key = item
-                    new_menu.setTitle(item_without_key)
+                    if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                        new_menu.setTitle(item_without_key[len(MENU_DISABLED_CHARACTER):])
+                        new_menu.setDisabled(True)
+                    else:
+                        new_menu.setTitle(item_without_key)
                     top_menu.addAction(new_menu.menuAction())
                     # print(f'Adding submenu {sub_menu_info[i]}')
                     AddTrayMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
@@ -4169,7 +4177,11 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                     item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
                 except:
                     item_without_key = sub_menu_info
-                action.setText(item_without_key)
+                if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                    action.setText(item_without_key[len(MENU_DISABLED_CHARACTER):])
+                    action.setDisabled(True)
+                else:
+                    action.setText(item_without_key)
                 action.triggered.connect(lambda: Menu.QT_MenuItemChosenCallback(element, sub_menu_info))
             top_menu.addAction(action)
     else:
@@ -4185,8 +4197,11 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                         item_without_key = item[:item.index(MENU_KEY_SEPARATOR)]
                     except:
                         item_without_key = item
-                    new_menu.setTitle(item_without_key)
-
+                    if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                        new_menu.setTitle(item_without_key[len(MENU_DISABLED_CHARACTER):])
+                        new_menu.setDisabled(True)
+                    else:
+                        new_menu.setTitle(item_without_key)
                     top_menu.addAction(new_menu.menuAction())
                     # print(f'Adding submenu {sub_menu_info[i]}')
                     AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
