@@ -3228,8 +3228,13 @@ class Window:
             print('*** Error loading form to disk ***')
 
     def GetScreenDimensions(self):
-        # TODO
-        screen_width = screen_height = 0
+        try:
+            screen = _my_windows.QTApplication.primaryScreen()
+        except:
+            return None, None
+        size = screen.size()
+        screen_width = size.width()
+        screen_height = size.height()
         return screen_width, screen_height
 
     def Move(self, x, y):
