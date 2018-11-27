@@ -100,7 +100,9 @@ def system_tray():
         if menu_item == 'Exit':
             break
         if menu_item == 'Run GUI':
+            tray.Update(data_base64=red_x)
             gui()
+            tray.Update(data_base64=logo)
         if seconds % 12 == 0:     # Every 60 seconds read GitHub
             issues, first_issue = get_num_issues()
             menu_def = ['root',
@@ -114,7 +116,6 @@ def system_tray():
         if menu_item  in('Refresh', sg.EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED):
             issues, first_issue = get_num_issues()
             tray.ShowMessage('Issue', '{} Issues\n{} First Issue'.format(issues, first_issue), messageicon=sg.SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, )
-            tray.Update(data_base64=red_x)
 
         seconds += poll_frequncy/1000
 
