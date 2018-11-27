@@ -1579,7 +1579,7 @@ class ProgressBar(Element):
 # ---------------------------------------------------------------------- #
 class Image(Element):
     def __init__(self, filename=None, data=None, data_base64=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None):
+                 tooltip=None, click_submits=False):
         '''
         Image Element
         :param filename:
@@ -1595,11 +1595,19 @@ class Image(Element):
         self.DataBase64 = data_base64
         self.tktext_label = None
         self.BackgroundColor = background_color
+        self.ClickSubmits = click_submits
         if data is None and filename is None and data_base64 is None:
             print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip)
         return
+
+
+    def QtCallbackImageClicked(self, event):
+        if not self.ClickSubmits:
+            return
+        element_callback_quit_mainloop(self)
+
 
     def Update(self, filename=None, data=None, data_base64=None, size=(None, None)):
         if filename is not None:
@@ -4678,22 +4686,20 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
+                qlabel = QLabel()
                 if element.Filename is not None:
-                    qlabel = QLabel()
                     qlabel.setText('')
                     w = QtGui.QPixmap(element.Filename).width()
                     h = QtGui.QPixmap(element.Filename).height()
                     qlabel.setGeometry(QtCore.QRect(0, 0, w, h))
                     qlabel.setPixmap(QtGui.QPixmap(element.Filename))
                 elif element.Data is not None:
-                    qlabel = QLabel()
                     qlabel.setText('')
                     ba = QtCore.QByteArray.fromRawData(element.Data)
                     pixmap = QtGui.QPixmap()
                     pixmap.loadFromData(ba)
                     qlabel.setPixmap(pixmap)
                 elif element.DataBase64:
-                    qlabel = QLabel()
                     qlabel.setText('')
                     ba = QtCore.QByteArray.fromBase64(element.DataBase64)
                     pixmap = QtGui.QPixmap()
@@ -4706,6 +4712,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QLabel.setStyleSheet(style)
                 if element.Tooltip:
                     element.QT_QLabel.setToolTip(element.Tooltip)
+
+                if element.ClickSubmits:
+                    element.QT_QLabel.mousePressEvent = element.QtCallbackImageClicked
+
                 qt_row_layout.addWidget(element.QT_QLabel)
             # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
