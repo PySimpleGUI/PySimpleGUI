@@ -25,13 +25,15 @@
 # NEW for NOV 2018 -  Run Qt using PySimpleGUI!      
             
 ## Supports both Python 2.7 & 3 when using tkinter
+## Supports both PySide2 and PyQt5
+## PySimpleGUI source code can run either on Qt or tkinter with no changes
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.14.1-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.16.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.14.1-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.16.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-01.11.0-gold.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-01.17.0-orange.svg?longCache=true&style=for-the-badge)    
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -57,7 +59,7 @@ As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 v
       
 #### Qt Version
 
-Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  There is a separate Readme file for the Qt version that you'll find there.  Give it a shot if you're looking for something a bit more "modern".
+Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  There is a separate Readme file for the Qt version that you'll find there.  Give it a shot if you're looking for something a bit more "modern".  However be aware that it is in Alpha condition with a number of features partially complete.
 
       
 ------------------------------------------------------------------------      
@@ -68,6 +70,7 @@ Looking for a GUI package?
 * Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?      
 * Into Machine Learning and are sick of the command line?      
 * Would like to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?      
+* Want technical support?  Looking for an actively maintained package?
       
 Look no further, **you've found your GUI package**.      
       
@@ -95,8 +98,9 @@ Or how about a ***custom GUI*** in 1 line of code?
       
       
       
-PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkinter, but you interact with them in a more friendly way.  It does the layout and boilerplate code for you and presents you with a simple, efficient interface.      
+PySimpleGUI wraps tkinter or Qt so that you get all the same widgets as you would tkinter/Qt, but you interact with them in a more friendly way.  It does the layout and boilerplate code for you and presents you with a simple, efficient interface.      
       
+           
 ![everything dark theme](https://user-images.githubusercontent.com/13696193/44959854-b1d23800-aec3-11e8-90b6-5af915a86d15.jpg)      
       
 Perhaps you're looking for a way to interact with your **Raspberry Pi** in a more friendly way.  The same for shown as on Pi (roughly the same)      
@@ -104,7 +108,7 @@ Perhaps you're looking for a way to interact with your **Raspberry Pi** in a mor
 ![raspberry pi everything demo](https://user-images.githubusercontent.com/13696193/44279694-5b58ce80-a220-11e8-9ab6-d6021f5a944f.jpg)      
       
       
-      
+      f
 In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this line into any of your `for` loops and get a nice meter:      
       
     OneLineProgressMeter('My meter title', current_value, max value, 'key')      
@@ -303,9 +307,15 @@ If for some reason you are unable to install using `pip`, don't worry, you can s
 ```      
 ImportError: No module named tkinter      
 ```      
-then yosudou need to install `tkinter`.  Be sure and get the Python 3 version.      
-`      
+then you need to install `tkinter`. 
+For python 2.7
+
+```sudo apt-get install python-tk  ```   
+
+For python 3
 ```sudo apt-get install python3-tk  ```      
+
+More information about installing tkinter can be found here: https://www.techinfected.net/2015/09/how-to-install-and-use-tkinter-in-ubuntu-debian-linux-mint.html
       
       
 ### Installing for Python 2.7      
@@ -3578,7 +3588,8 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.12.0 & 1.12.0 | Oct 28, 2018
 | 3.13.0 & 1.13.0 | Oct 29, 2018
 | 3.14.0 & 1.14.0 | Nov 2, 2018
-
+| 3.15.0 & 1.15.0 | Nov 20, 2018
+| 3.16.0 & 1.16.0 | Nov 26, 2018
       
 ## Release Notes      
 2.3 - Sliders, Listbox's and Image elements (oh my!)      
@@ -3828,7 +3839,7 @@ Read only setting for:
 	Input Text
 	Multiline
 Font setting for InputCombo, Multiline
-change_submits settinf for Radio Element
+change_submits setting for Radio Element
 SetFocus for multiline, input elements
 Default mon, day, year for calendar chooser button
 Tree element update, added ability to change a single key
@@ -3851,6 +3862,32 @@ New Print / EasyPrint options
 	keep_on_top
 New popup, PopupQuickMessage
 PopupGetFolder, PopupGetFile new initial_folder parm
+
+
+### 3.15.0 & 1.15.0
+
+Error checking for InputText.Get method
+Text color, background color added to multiline element.Update
+Update method for Output Element - gives ability to clear the output
+Graph Element - Read returns values if new flages set
+* Change submits, drag submits
+* Returns x,y coordinates
+
+Column element new parm vertical_scroll_only
+Table element new parm - bind return key - returns if return or double click
+New Window parms - size, disable_close
+"Better" multiwindow capabilities
+Window.Size property
+Popups - new title parm, custom_text
+* title sets the window title
+* custom_text - single string or tuple string sets text on button(s)
+
+### 3.16.0 & 1.16.0
+Bug fix in PopupScrolled
+New Element shortcut function for FindElement
+Dummy Stretch Element made for backwards compatibility with Qt
+Timer function prints in milliseconds now, was seconds
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
