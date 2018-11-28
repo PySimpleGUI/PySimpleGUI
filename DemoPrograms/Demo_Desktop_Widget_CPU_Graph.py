@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-import sys
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
