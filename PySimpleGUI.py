@@ -183,6 +183,9 @@ TIMEOUT_KEY = '__TIMEOUT__'
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 
+MENU_DISABLED_CHARACTER = '!'
+
+
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows():
     def __init__(self):
@@ -254,6 +257,7 @@ ELEM_TYPE_TABLE = 'table'
 ELEM_TYPE_TREE = 'tree'
 ELEM_TYPE_ERROR = 'error'
 ELEM_TYPE_SEPARATOR = 'separator'
+ELEM_TYPE_STATUSBAR = 'statusbar'
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -310,6 +314,8 @@ class ToolTip:
         self.tipwindow = tk.Toplevel(self.widget)
         self.tipwindow.wm_overrideredirect(True)
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
+        self.tipwindow.wm_attributes("-topmost", 1)
+
         label = ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT,
                           background="#ffffe0", relief=tk.SOLID, borderwidth=1)
         label.pack()
@@ -1061,6 +1067,56 @@ class Text(Element):
 # -------------------------  Text Element lazy functions  ------------------------- #
 Txt = Text
 T = Text
+
+
+
+# ---------------------------------------------------------------------- #
+#                                       StatusBar                        #
+# ---------------------------------------------------------------------- #
+class StatusBar(Element):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, relief=RELIEF_SUNKEN, font=None,
+                 text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
+        '''
+        Text Element
+        :param text:
+        :param size:
+        :param auto_size_text:
+        :param click_submits:
+        :param relief:
+        :param font:
+        :param text_color:
+        :param background_color:
+        :param justification:
+        :param pad:
+        :param key:
+        :param tooltip:
+        '''
+        self.DisplayText = text
+        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.Justification = justification
+        self.Relief = relief
+        self.ClickSubmits = click_submits
+        if background_color is None:
+            bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
+        else:
+            bg = background_color
+        super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg, font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+        return
+
+    def Update(self, value=None, background_color=None, text_color=None, font=None):
+        if value is not None:
+            self.DisplayText = value
+            stringvar = self.TKStringVar
+            stringvar.set(value)
+        if background_color is not None:
+            self.TKText.configure(background=background_color)
+        if text_color is not None:
+            self.TKText.configure(fg=text_color)
+        if font is not None:
+            self.TKText.configure(font=font)
+
+    def __del__(self):
+        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -3908,7 +3964,12 @@ if sys.version_info[0] >= 3:
                 if sub_menu_info == '---':
                     top_menu.add('separator')
                 else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
+                    if sub_menu_info[0] == MENU_DISABLED_CHARACTER:
+                        top_menu.add_command(label=sub_menu_info[len(MENU_DISABLED_CHARACTER):], underline=pos,
+                                             command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                        top_menu.entryconfig(sub_menu_info[len(MENU_DISABLED_CHARACTER):], state='disabled')
+                    else:
+                        top_menu.add_command(label=sub_menu_info, underline=pos,
                                          command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
         else:
             i = 0
@@ -3921,7 +3982,10 @@ if sys.version_info[0] >= 3:
                         if pos != -1:
                             if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
                                 sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                        if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
+                            top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu, underline=pos, state='disabled')
+                        else:
+                            top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
                         AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
                         i += 1  # skip the next one
                     else:
@@ -3941,7 +4005,12 @@ else:
                 if sub_menu_info == '---':
                     top_menu.add('separator')
                 else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
+                    if sub_menu_info[0] == MENU_DISABLED_CHARACTER:
+                        top_menu.add_command(label=sub_menu_info[len(MENU_DISABLED_CHARACTER):], underline=pos,
+                                             command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                        top_menu.entryconfig(sub_menu_info[len(MENU_DISABLED_CHARACTER):], state='disabled')
+                    else:
+                        top_menu.add_command(label=sub_menu_info, underline=pos,
                                          command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
         else:
             i = 0
@@ -3954,7 +4023,10 @@ else:
                         if pos != -1:
                             if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
                                 sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                        if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
+                            top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu, underline=pos, state='disabled')
+                        else:
+                            top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
                         AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
                         i += 1  # skip the next one
                     else:
@@ -4517,7 +4589,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if pos != -1:
                         if pos == 0 or menu_entry[0][pos - 1] != "\\":
                             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
-                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
+                    if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
+                        menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem, underline=pos)
+                        menubar.entryconfig(menu_entry[0][len(MENU_DISABLED_CHARACTER):], state='disabled')
+                    else:
+                        menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
+
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
@@ -4793,6 +4870,57 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_SEPARATOR:
                 separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
+            # -------------------------  StatusBar element  ------------------------- #
+            elif element_type == ELEM_TYPE_STATUSBAR:
+                # auto_size_text = element.AutoSizeText
+                display_text = element.DisplayText  # text to display
+                if auto_size_text is False:
+                    width, height = element_size
+                else:
+                    lines = display_text.split('\n')
+                    max_line_len = max([len(l) for l in lines])
+                    num_lines = len(lines)
+                    if max_line_len > element_size[0]:  # if text exceeds element size, the will have to wrap
+                        width = element_size[0]
+                    else:
+                        width = max_line_len
+                    height = num_lines
+                # ---===--- LABEL widget create and place --- #
+                stringvar = tk.StringVar()
+                element.TKStringVar = stringvar
+                stringvar.set(display_text)
+                if auto_size_text:
+                    width = 0
+                if element.Justification is not None:
+                    justification = element.Justification
+                elif toplevel_form.TextJustification is not None:
+                    justification = toplevel_form.TextJustification
+                else:
+                    justification = DEFAULT_TEXT_JUSTIFICATION
+                justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
+                anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                #                         justify=justify, bd=border_depth, font=font)
+                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                                        justify=justify, bd=border_depth, font=font)
+                # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
+                wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
+                if not auto_size_text and height == 1:
+                    wraplen = 0
+                # print("wraplen, width, height", wraplen, width, height)
+                tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
+                if element.Relief is not None:
+                    tktext_label.configure(relief=element.Relief)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    tktext_label.configure(background=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    tktext_label.configure(fg=element.TextColor)
+                tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1],fill=tk.BOTH, expand=True)
+                element.TKText = tktext_label
+                if element.ClickSubmits:
+                    tktext_label.bind('<Button-1>', element.TextClickedHandler)
+                if element.Tooltip is not None:
+                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
