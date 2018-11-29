@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-01.14.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.19.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -469,6 +469,22 @@ Update
 * Tooltip
 * Icon
 PopupScrolled - new location parameter, fixed bug that wasn't closing window when completed
+
+### 0.19.0 28-Nov-2018
+
+Ability to disable menu items by adding ! to the front
+Disable menu works for menus, button menus, system tray menus
+Combo - Update Method - Value, values, disabled, font
+Listbox - Update Method - Values, disabled
+Listbox - SetValue Method - sets the selected items
+Radio Button - Update Method - value, disabled
+Checkbox - Update Method - value, disabled
+Spinner - Update Method - value, values, disabled
+Spinner - change_submits works
+Image - New feature!  click_submits option (acts like a button in a way)
+Window - Get screen dimensions
+Slider - disable
+Dial - disable
 
 # Design        
  ## Author 
