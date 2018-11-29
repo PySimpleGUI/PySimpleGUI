@@ -3450,7 +3450,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, font=None, disabled=False,
+               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, enable_events=False, font=None, disabled=False,
                pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, change_submits=change_submits, enable_events=enable_events, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
