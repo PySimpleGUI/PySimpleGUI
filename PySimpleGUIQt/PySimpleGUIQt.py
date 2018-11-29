@@ -1108,8 +1108,7 @@ class MultilineOutput(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, relief=None, font=None,
-                 text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None):
+    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=True, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None):
         '''
         Text Element
         :param text:
@@ -1129,7 +1128,7 @@ class Text(Element):
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification or 'left'
         self.Relief = relief
-        self.ClickSubmits = click_submits
+        self.ClickSubmits = click_submits or enable_events
         self.Margins = margins
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
