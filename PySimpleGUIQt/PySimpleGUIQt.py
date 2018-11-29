@@ -491,7 +491,7 @@ class Element():
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False,
+                 change_submits=False, enable_events=False,
                  do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
@@ -508,7 +508,7 @@ class InputText(Element):
         self.do_not_clear = do_not_clear
         self.Justification = justification or 'left'
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip)
 
@@ -570,7 +570,7 @@ Input = InputText
 # ---------------------------------------------------------------------- #
 class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
                  readonly=False, visible_items=10, font=None):
         '''
         Input Combo Box Element (also called Dropdown box)
@@ -581,7 +581,7 @@ class Combo(Element):
         '''
         self.Values = values
         self.DefaultValue = default_value
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.TKCombo = None
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
@@ -603,39 +603,31 @@ class Combo(Element):
         self.QT_ComboBox = QComboBox()
         self.QT_ComboBox.addItems(self.Values)
 
+
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None):
         if values is not None:
-            try:
-                self.TKCombo['values'] = values
-                self.TKCombo.current(0)
-            except:
-                pass
             self.Values = values
+            for i in range(self.QT_ComboBox.count()):
+                self.QT_ComboBox.removeItem(0)
+            self.QT_ComboBox.addItems(values)
         if value is not None:
             for index, v in enumerate(self.Values):
                 if v == value:
-                    try:
-                        self.TKCombo.current(index)
-                    except:
-                        pass
-                    self.DefaultValue = value
+                    self.QT_ComboBox.setCurrentIndex(index)
                     break
         if set_to_index is not None:
-            try:
-                self.TKCombo.current(set_to_index)
-                self.DefaultValue = self.Values[set_to_index]
-            except:
-                pass
+            self.QT_ComboBox.setCurrentIndex(set_to_index)
         if disabled == True:
-            self.TKCombo['state'] = 'disable'
+            self.QT_ComboBox.setDisabled(True)
         elif disabled == False:
-            self.TKCombo['state'] = 'enable'
-            if readonly is not None:
-                self.Readonly = readonly
-            if self.Readonly:
-                self.TKCombo['state'] = 'readonly'
+            self.QT_ComboBox.setDisabled(False)
+        if readonly is not None:
+            self.Readonly = readonly
         if font is not None:
-            self.TKText.configure(font=font)
+            style = create_style_from_font(font)
+            self.QT_ComboBox.setStyleSheet(style)
+        return
+
 
     def __del__(self):
         try:
@@ -713,7 +705,7 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False,
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False, bind_return_key=False,
                  size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
                  text_color=None, key=None, pad=None, tooltip=None):
         '''
@@ -736,7 +728,7 @@ class Listbox(Element):
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
         self.Disabled = disabled
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
@@ -763,18 +755,24 @@ class Listbox(Element):
 
 
     def Update(self, values=None, disabled=None):
-        if disabled == True:
-            pass
-        elif disabled == False:
-            pass
         if values is not None:
-            pass
             self.Values = values
+            for i in range(self.QT_ListWidget.count()):
+                self.QT_ListWidget.takeItem(0)
+            self.QT_ListWidget.addItems(values)
+        if disabled == True:
+            self.QT_ListWidget.setDisabled(True)
+        elif disabled == False:
+            self.QT_ListWidget.setDisabled(False)
+        return
 
     def SetValue(self, values):
-        for index, item in enumerate(self.Values):
-           pass
-        self.DefaultValues = values
+        # for index, item in enumerate(self.Values):
+        for index, value in enumerate(self.Values):
+            item = self.QT_ListWidget.item(index)
+            if value in values:
+                self.QT_ListWidget.setItemSelected(item, True)
+
 
     def GetListValues(self):
         return self.Values
@@ -789,7 +787,7 @@ class Listbox(Element):
 class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
-                 change_submits=False):
+                 change_submits=False,  enable_events=False):
         '''
         Radio Button Element
         :param text:
@@ -813,20 +811,21 @@ class Radio(Element):
         self.Value = None
         self.Disabled = disabled
         self.TextColor = text_color or DEFAULT_TEXT_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip)
 
     def Update(self, value=None, disabled=None):
-        location = EncodeRadioRowCol(self.Position[0], self.Position[1])
         if value is not None:
             self.InitialState = value
-        if disabled == True:
-            pass
-        elif disabled == False:
-            pass
+        if disabled:
+            self.QT_Radio_Button.setDisabled(True)
+        else:
+            self.QT_Radio_Button.setDisabled(False)
+        if value:
+            self.QT_Radio_Button.setChecked(True)
 
     def __del__(self):
         super().__del__()
@@ -837,7 +836,7 @@ class Radio(Element):
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None):
         '''
         Checkbox Element
         :param text:
@@ -859,7 +858,7 @@ class Checkbox(Element):
         self.TKCheckbutton = None
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -874,12 +873,11 @@ class Checkbox(Element):
         return self.TKIntVar.get()
 
     def Update(self, value=None, disabled=None):
-        if value is not None:
-            pass
+        self.QT_Checkbox.setChecked(value or False)
         if disabled == True:
-            pass
+            self.QT_Checkbox.setDisabled(True)
         elif disabled == False:
-            pass
+            self.QT_Checkbox.setDisabled(False)
 
     def __del__(self):
         super().__del__()
@@ -898,7 +896,7 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None),
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,  enable_events=False, size=(None, None),
                  auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
                  tooltip=None):
         '''
@@ -918,8 +916,7 @@ class Spin(Element):
         '''
         self.Values = values
         self.DefaultValue = initial_value
-        self.ChangeSubmits = change_submits
-        self.TKSpinBox = None
+        self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -936,25 +933,16 @@ class Spin(Element):
 
     def Update(self, value=None, values=None, disabled=None):
         if values != None:
-            pass
+            self.Values = values
+            self.QT_Spinner.setRange(self.Values[0], self.Values[1])
         if value is not None:
-            pass
-        self.DefaultValue = value
+            self.QT_Spinner.setValue(value)
+            self.DefaultValue = value
         if disabled == True:
-            pass
+            self.QT_Spinner.setDisabled(True)
         elif disabled == False:
-            pass
+            self.QT_Spinner.setDisabled(False)
 
-    def SpinChangedHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-           pass  # kick the users out of the mainloop
 
     def __del__(self):
         super().__del__()
@@ -965,7 +953,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element, QWidget):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False,
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
                  key=None, focus=False,
                  font=None, pad=None, tooltip=None):
         '''
@@ -993,7 +981,7 @@ class Multiline(Element, QWidget):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         tsize = size                # convert tkinter size to pixels
         if size[0] is not None and size[0] < 100:
             tsize = convert_tkinter_size_to_Qt(size)
@@ -1057,7 +1045,7 @@ class Multiline(Element, QWidget):
 # ---------------------------------------------------------------------- #
 class MultilineOutput(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False,
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
                  key=None, focus=False,
                  font=None, pad=None, tooltip=None):
         '''
@@ -1085,7 +1073,7 @@ class MultilineOutput(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -1234,7 +1222,7 @@ class Output(Element):
 # ---------------------------------------------------------------------- #
 class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
-                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
+                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False,
                  focus=False, pad=None, key=None):
@@ -1283,7 +1271,7 @@ class Button(Element):
         self.DefaultDate_M_D_Y = (None, None, None)
         self.InitialFolder = initial_folder
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.QT_QPushButton = None
         # self.temp_size = size if size != (NONE, NONE) else
 
@@ -1580,7 +1568,7 @@ class ProgressBar(Element):
 # ---------------------------------------------------------------------- #
 class Image(Element):
     def __init__(self, filename=None, data=None, data_base64=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None, click_submits=False):
+                 tooltip=None, click_submits=False,  enable_events=False):
         '''
         Image Element
         :param filename:
@@ -1596,7 +1584,7 @@ class Image(Element):
         self.DataBase64 = data_base64
         self.tktext_label = None
         self.BackgroundColor = background_color
-        self.ClickSubmits = click_submits
+        self.ClickSubmits = click_submits or enable_events
         if data is None and filename is None and data_base64 is None:
             print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
@@ -2044,7 +2032,7 @@ class Tab(Element):
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
-                 font=None, change_submits=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
+                 font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
         '''
         TabGroup Element
         :param layout:
@@ -2073,7 +2061,7 @@ class TabGroup(Element):
         self.BorderWidth = border_width
         self.Theme = theme
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
 
         self.Layout(layout)
@@ -2126,7 +2114,7 @@ class TabGroup(Element):
 # ---------------------------------------------------------------------- #
 class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
+                 border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
@@ -2153,7 +2141,7 @@ class Slider(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         self.TickInterval = tick_interval
         temp_size = size
@@ -2201,7 +2189,7 @@ class Slider(Element):
 # ---------------------------------------------------------------------- #
 class Dial(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
+                 border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Dial Element
@@ -2228,7 +2216,7 @@ class Dial(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         self.TickInterval = tick_interval
         temp_size = size
@@ -2386,6 +2374,25 @@ class Menu(Element):
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     pass # TODO  # kick the users out of the mainloop
 
+    def Update(self, menu_definition):
+        menu_def = menu_definition
+        self.MenuDefinition = menu_def
+        self.QT_QMenuBar = QMenuBar(self.ParentForm.QT_QMainWindow)
+
+        for menu_entry in menu_def:
+            # print(f'Adding a Menubar ENTRY {menu_entry}')
+            baritem = QMenu(self.QT_QMenuBar)
+            if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
+                baritem.setDisabled(True)
+                baritem.setTitle(menu_entry[0][1:])
+            else:
+                baritem.setTitle(menu_entry[0])
+            self.QT_QMenuBar.addAction(baritem.menuAction())
+            AddMenuItem(baritem, menu_entry[1], self)
+
+        self.ParentForm.QT_QMainWindow.setMenuBar(self.QT_QMenuBar)
+
+
     def __del__(self):
         super().__del__()
 
@@ -2397,7 +2404,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, bind_return_key=False, pad=None, key=None, tooltip=None):
+                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2435,7 +2442,7 @@ class Table(Element):
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
@@ -2534,7 +2541,7 @@ class Table(Element):
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
-                 change_submits=False, font=None, size=(200,600),
+                 change_submits=False, enable_events=False, font=None, size=(200,600),
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
@@ -2572,7 +2579,7 @@ class Tree(Element):
         self.Col0Width = col0_width
         self.TKTreeview = None
         self.SelectedRows = []
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.Size = size
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
@@ -2998,9 +3005,10 @@ class Window:
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
-        self.AddRows(rows)
-        self.Show(non_blocking=non_blocking)
-        return self.ReturnValues
+        raise DeprecationWarning('LayoutAndRead is no longer supported... change your call to window.Layout(layout).Read()')
+        # self.AddRows(rows)
+        # self.Show(non_blocking=non_blocking)
+        # return self.ReturnValues
 
     def LayoutAndShow(self, rows):
         raise DeprecationWarning('LayoutAndShow is no longer supported... change your call to LayoutAndRead')
@@ -3574,32 +3582,32 @@ def create_style_from_font(font):
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
-                 auto_size_button=None, button_color=None, disabled=False, change_submits=False, font=None, pad=None,
+                 auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False, font=None, pad=None,
                  key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
-                  disabled=disabled, button_color=button_color, change_submits=change_submits, font=font, pad=pad,
+                  disabled=disabled, button_color=button_color, change_submits=change_submits, enable_events=enable_events, font=font, pad=pad,
                   key=key)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False,
+               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, enable_events=False,
                font=None, disabled=False,
                pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
-                  change_submits=change_submits, disabled=disabled, button_color=button_color, font=font, pad=pad,
+                  change_submits=change_submits, enable_events=enable_events, disabled=disabled, button_color=button_color, font=font, pad=pad,
                   key=key)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
-                change_submits=False,
+                change_submits=False, enable_events=False,
                 font=None, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
-                  initial_folder=initial_folder, change_submits=change_submits, tooltip=tooltip, size=size,
+                  initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
@@ -3607,22 +3615,22 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
                disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
-               change_submits=False, font=None,
+               change_submits=False, enable_events=False, font=None,
                pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
-                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
+                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits, enable_events=enable_events,
                   font=font, pad=pad, key=key)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
            disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
-           change_submits=False, font=None,
+           change_submits=False, enable_events=False, font=None,
            pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
-                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
+                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits, enable_events=enable_events,
                   font=font, pad=pad, key=key)
 
 
@@ -4342,8 +4350,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.Margins is not None:
                     m = element.Margins
                     qlabel.setContentsMargins(m[0], m[2], m[1], m[3])  # L T B R
-
-
                 if element.Tooltip:
                     element.QT_Label.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_Label)
@@ -4454,6 +4460,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_ComboBox.setFixedHeight(element_size[1])
 
+                if element.Disabled:
+                    element.QT_ComboBox.setDisabled(True)
+
                 element.QT_ComboBox.addItems(element.Values)
                 element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
                 element.QT_ComboBox.setVisible(element.VisibleItems)
@@ -4493,6 +4502,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_ListWidget.setSelectionMode(QAbstractItemView.ContiguousSelection)
                 elif element.SelectMode == SELECT_MODE_SINGLE:
                     element.QT_ListWidget.setSelectionMode(QAbstractItemView.SingleSelection)
+
+                if element.Disabled:
+                    element.QT_ListWidget.setDisabled(True)
 
                 if element.ChangeSubmits:
                     element.QT_ListWidget.currentRowChanged.connect(element.QtCurrentRowChanged)
@@ -4621,6 +4633,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 ID = element.GroupID
                 qradio = QRadioButton(element.Text)
                 element.QT_Radio_Button = qradio
+                if element.Disabled:
+                    element.QT_Radio_Button.setDisabled(True)
                 if default_value:
                     qradio.setChecked(True)
                 style = create_style_from_font(font)
@@ -4670,6 +4684,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_Spinner.setFixedHeight(element_size[1])
 
+                if element.Disabled:
+                    element.QT_Spinner.setDisabled(True)
                 if element.ChangeSubmits:
                     element.QT_Spinner.valueChanged.connect(element.QtCallbackValueChanged)
                 if element.Tooltip:
@@ -4762,7 +4778,11 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY {menu_entry}')
                     baritem = QMenu(element.QT_QMenuBar)
-                    baritem.setTitle(menu_entry[0])
+                    if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
+                        baritem.setDisabled(True)
+                        baritem.setTitle(menu_entry[0][1:])
+                    else:
+                        baritem.setTitle(menu_entry[0])
                     element.QT_QMenuBar.addAction(baritem.menuAction())
                     AddMenuItem(baritem, menu_entry[1], element)
 
@@ -4875,7 +4895,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_Slider.setOrientation(Qt.Horizontal)
                 else:
                     element.QT_Slider.setOrientation(Qt.Vertical)
-
+                if element.Disabled:
+                    element.QT_Slider.setDisabled(True)
                 style = create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
@@ -4927,6 +4948,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style += 'border: {}px solid gray; '.format(border_depth)
                 element.QT_Dial.setStyleSheet(style)
 
+                if element.Disabled:
+                    element.QT_Dial.setDisabled(True)
 
                 element.QT_Dial.setMinimum(element.Range[0])
                 element.QT_Dial.setMaximum(element.Range[1])
@@ -4978,6 +5001,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
                 if element.Tooltip:
                     element.QT_TableWidget.setToolTip(element.Tooltip)
+
                 qt_row_layout.addWidget(element.QT_TableWidget)
 
             # -------------------------  Tree element  ------------------------- #
@@ -5030,7 +5054,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.ShowExpanded:
                     element.QT_QTreeWidget.expandAll()
                     element.QT_QTreeWidget.show()
-
                 if element.Tooltip:
                     element.QT_QTreeWidget.setToolTip(element.Tooltip)
                 qt_row_layout.addWidget(element.QT_QTreeWidget)
