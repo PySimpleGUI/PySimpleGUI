@@ -506,7 +506,7 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip)
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, select=None):
         if disabled is True:
             self.TKEntry['state'] = 'disabled'
         elif disabled is False:
@@ -517,6 +517,9 @@ class InputText(Element):
             except:
                 pass
             self.DefaultText = value
+        if select:
+            self.TKEntry.select_range(0, 'end')
+
 
     def Get(self):
         try:
@@ -2966,6 +2969,7 @@ class Window:
         self.DisableClose = disable_close
         self._Hidden = False
         self._Size = size
+        self.XFound = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3124,7 +3128,7 @@ class Window:
                 #     print("** REALTIME PROBLEM FOUND **", results)
 
             if self.RootNeedsDestroying:
-                # print('*** DESTROYING really late***')
+                print('*** DESTROYING really late***')
                 self.TKroot.destroy()
                 # _my_windows.Decrement()
                 self.LastButtonClicked = None
@@ -3165,6 +3169,12 @@ class Window:
                 self.LastButtonClicked = None
             return results
         else:
+            if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[
+                0] is None:  # Special Qt case because returning for no reason so fake timeout
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
+            elif not self.XFound and self.ReturnValues[0] is None:  # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
+                # print("*** Faking timeout ***")
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             return self.ReturnValues
 
     def ReadNonBlocking(self):
@@ -3345,6 +3355,7 @@ class Window:
         # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
             return
+        self.XFound = True
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.quit()  # kick the users out of the mainloop
             self.TKroot.destroy()  # kick the users out of the mainloop
