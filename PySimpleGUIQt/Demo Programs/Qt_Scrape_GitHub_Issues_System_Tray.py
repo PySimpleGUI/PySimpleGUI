@@ -8,6 +8,13 @@ import requests
 # Import BeautifulSoup (to parse what we download)
 from bs4 import BeautifulSoup
 
+# CCNSTANTS - CHANGE THESE TO MATCH YOUR SYSTEM
+CHROME = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+DISCORD = r"C:\Users\mike\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk"
+VIEW_ISSUES_URL = r'https://github.com/MikeTheWatchGuy/PySimpleGUI/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc'
+PULL_REQUEST_URL = r'https://github.com/MikeTheWatchGuy/PySimpleGUI/compare/master...Dev-latest'
+
+
 # search github for total open issues and Issue Number of first issue
 def get_num_issues():
     url = "https://github.com/MikeTheWatchGuy/PySimpleGUI/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc"
@@ -121,11 +128,11 @@ def system_tray():
             issues, first_issue = get_num_issues()
             tray.ShowMessage('Issue', '{} Issues\n{} First Issue'.format(issues, first_issue), messageicon=sg.SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, )
         elif menu_item == sg.EVENT_SYSTEM_TRAY_MESSAGE_CLICKED or menu_item.startswith('View Issues'):
-            sp = subprocess.Popen([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", r'https://github.com/MikeTheWatchGuy/PySimpleGUI/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            sp = subprocess.Popen([CHROME, VIEW_ISSUES_URL], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         elif  menu_item.startswith('Pull'):
-            sp = subprocess.Popen([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", r'https://github.com/MikeTheWatchGuy/PySimpleGUI/compare/master...Dev-latest'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            sp = subprocess.Popen([CHROME, PULL_REQUEST_URL], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         elif  menu_item.startswith('Discord'):
-            sp = subprocess.Popen([r"C:\Users\mike\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk", r''], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            sp = subprocess.Popen([DISCORD, r''], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         seconds += poll_frequncy/1000
 
