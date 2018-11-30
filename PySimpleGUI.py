@@ -718,7 +718,7 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
-    def Update(self, values=None, disabled=None):
+    def Update(self, values=None, disabled=None, set_to_index=None):
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -729,6 +729,14 @@ class Listbox(Element):
                 self.TKListbox.insert(tk.END, item)
             self.TKListbox.selection_set(0, 0)
             self.Values = values
+        if set_to_index is not None:
+            self.TKListbox.selection_clear(0)
+            try:
+                self.TKListbox.selection_set(set_to_index, set_to_index)
+            except:
+                pass
+
+
 
     def SetValue(self, values):
         for index, item in enumerate(self.Values):
@@ -2574,12 +2582,14 @@ class Menu(Element):
         self.MenuDefinition = menu_definition
         self.TKMenu = None
         self.Tearoff = tearoff
+        self.MenuItemChosen = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
 
     def MenuItemChosenCallback(self, item_chosen):
         # print('IN MENU ITEM CALLBACK', item_chosen)
+        self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = item_chosen
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
@@ -3841,6 +3851,12 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_GRAPH:
                     value = element.ClickPosition
+                elif element.Type == ELEM_TYPE_MENUBAR:
+                    if element.MenuItemChosen is not None:
+                        top_level_form.LastButtonClicked = element.MenuItemChosen
+                    button_pressed_text = top_level_form.LastButtonClicked
+                    value = element.MenuItemChosen
+                    element.MenuItemChosen = None
             else:
                 value = None
 
