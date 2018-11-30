@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import PySimpleGUIQt as sg
-
+import subprocess
 import re
 # Import requests (to download the page)
 import requests
@@ -92,6 +92,7 @@ def system_tray():
 
     # tray.Hide()
     initial_issue_count, initial_first_issue = get_num_issues()
+    issues = first_issue = 0
     # The Event Loop runs every 5000ms
     poll_frequncy = 5000
     seconds = 0
@@ -103,10 +104,13 @@ def system_tray():
             tray.Update(data_base64=red_x)
             gui()
             tray.Update(data_base64=logo)
+        elif menu_item == sg.EVENT_SYSTEM_TRAY_ICON_ACTIVATED:
+            tray.ShowMessage('Issue', '{} Issues\n{} First Issue'.format(issues, first_issue), messageicon=sg.SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, )
+
         if seconds % 12 == 0:     # Every 60 seconds read GitHub
             issues, first_issue = get_num_issues()
             menu_def = ['root',
-                        ['{} Issues'.format(issues), '{} First Issue'.format(first_issue), '---', '&Run GUI', '&Refresh',  'E&xit']]
+                        ['{} Issues'.format(issues), '{} First Issue'.format(first_issue), '---','&View Issues Online', '&Pull Request','&Discord', '---','&Run GUI', '&Refresh',  'E&xit']]
             tray.Update(menu_def, tooltip='{} First Issue'.format(first_issue))
             # if something changed, then make a popup
             if issues != initial_issue_count or first_issue != initial_first_issue:
@@ -116,6 +120,12 @@ def system_tray():
         if menu_item  in('Refresh', sg.EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED):
             issues, first_issue = get_num_issues()
             tray.ShowMessage('Issue', '{} Issues\n{} First Issue'.format(issues, first_issue), messageicon=sg.SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, )
+        elif menu_item == sg.EVENT_SYSTEM_TRAY_MESSAGE_CLICKED or menu_item.startswith('View Issues'):
+            sp = subprocess.Popen([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", r'https://github.com/MikeTheWatchGuy/PySimpleGUI/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        elif  menu_item.startswith('Pull'):
+            sp = subprocess.Popen([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", r'https://github.com/MikeTheWatchGuy/PySimpleGUI/compare/master...Dev-latest'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        elif  menu_item.startswith('Discord'):
+            sp = subprocess.Popen([r"C:\Users\mike\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk", r''], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         seconds += poll_frequncy/1000
 
