@@ -1108,7 +1108,7 @@ class MultilineOutput(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=True, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None):
+    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None):
         '''
         Text Element
         :param text:
@@ -1503,10 +1503,19 @@ class ButtonMenu(Element):
 
 
     def QT_MenuItemChosenCallback(self, item_chosen):
-        # print('IN BUTTON MENU ITEM CALLBACK', item_chosen)
+        print('IN BUTTON MENU ITEM CALLBACK', item_chosen)
         self.Key = item_chosen.replace('&','')                   # fool the quit function into thinking this was a key
         element_callback_quit_mainloop(self)
 
+
+    def Update(self, menu_definition):
+        menu_def = menu_definition
+
+        qmenu = QMenu(self.QT_QPushButton)
+        qmenu.setTitle(menu_def[0])
+        AddMenuItem(qmenu, menu_def[1], self)
+
+        self.QT_QPushButton.setMenu(qmenu)
 
     def __del__(self):
         super().__del__()
