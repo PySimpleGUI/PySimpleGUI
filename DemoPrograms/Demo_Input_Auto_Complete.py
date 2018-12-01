@@ -54,7 +54,7 @@ window = sg.Window('Window Title', return_keyboard_events=True).Layout(layout)
 sel_item = -1
 skip_event = False
 while True:             # Event Loop
-    event, values = window.Read(timeout=0)
+    event, values = window.Read(timeout=500)
     if event is None or event == 'Exit':
         break
     if event != sg.TIMEOUT_KEY:
@@ -80,7 +80,7 @@ while True:             # Event Loop
             sel_item = sel_item - (sel_item>0)
             list_elem.Update(set_to_index=sel_item)
             skip_event = True
-        if event == '\r' or event == 'Show':
+        if event == '\r':
             chosen = vals2['_FLOATING_LISTBOX_']
             window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'], select=True)
             fwindow.Close()
