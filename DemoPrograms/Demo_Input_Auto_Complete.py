@@ -1,6 +1,6 @@
 import sys
 import re
-QT = False
+QT = True
 if QT:
     import PySimpleGUIQt as sg
 else:
@@ -49,6 +49,7 @@ while True:             # Event Loop
     if event is None or event == 'Exit':
         break
     if event != sg.TIMEOUT_KEY:
+        # print(f'ev1 {event}')
         in_val = values['_INPUT_']
         prediction_list = predict_text(str(in_val), choices)
         if prediction_list:
@@ -67,9 +68,9 @@ while True:             # Event Loop
             sel_item = sel_item - (sel_item>0)
             list_elem.Update(set_to_index=sel_item)
             skip_event = True
-        if event == '\r':
+        if event == '\r' or event.startswith('special 16777220'):
             chosen = vals2['_FLOATING_LISTBOX_']
-            window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'], select=True)
+            window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'][0], select=True)
             fwindow.Close()
             sel_item = -1
         if event.startswith('Escape') or event.startswith('special 16777216'):
@@ -80,6 +81,7 @@ while True:             # Event Loop
         if ev2 == '_FLOATING_LISTBOX_' and skip_event and QT:
             skip_event = False
         elif ev2 != sg.TIMEOUT_KEY and ev2 is not None:
+            # print(f'ev2 {ev2}')
             fwindow.Close()
             window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'][0], select=True)
             sel_item = -1

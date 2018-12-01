@@ -548,7 +548,7 @@ class InputText(Element):
             self.QT_QLineEdit.setText(str(value))
             self.DefaultText = value
         if select:
-            self.QT_QLineEdit.setSelection()
+            self.QT_QLineEdit.setSelection(0,QtGui.QTextCursor.End )
 
     def Get(self):
         return self.QT_QLineEdit.text()
