@@ -10,6 +10,7 @@
       
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      
+[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
@@ -33,7 +34,7 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.16.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-01.17.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.19.0-orange.svg?longCache=true&style=for-the-badge)    
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -3937,7 +3938,7 @@ From the start of the PSG project, tkinter was not meant to be the only underlyi
    
       
 ## Author      
-MikeTheWatchGuy      
+MikeB
       
 ## Demo Code Contributors      
       

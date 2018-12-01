@@ -539,7 +539,7 @@ class InputText(Element):
         self.ReturnKeyHandler(None)
         return
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, select=None):
         if disabled is True:
             self.QT_QLineEdit.setDisabled(True)
         elif disabled is False:
@@ -547,6 +547,8 @@ class InputText(Element):
         if value is not None:
             self.QT_QLineEdit.setText(str(value))
             self.DefaultText = value
+        if select:
+            self.QT_QLineEdit.setSelection(0,QtGui.QTextCursor.End )
 
     def Get(self):
         return self.QT_QLineEdit.text()
@@ -571,7 +573,7 @@ Input = InputText
 class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, visible_items=10, font=None):
+                 readonly=False, visible_items=10, font=None, auto_complete=True):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -589,6 +591,7 @@ class Combo(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.VisibleItems = visible_items
+        self.AutoComplete = auto_complete
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -626,7 +629,6 @@ class Combo(Element):
         if font is not None:
             style = create_style_from_font(font)
             self.QT_ComboBox.setStyleSheet(style)
-        return
 
 
     def __del__(self):
@@ -754,7 +756,7 @@ class Listbox(Element):
             element_callback_quit_mainloop(self)
 
 
-    def Update(self, values=None, disabled=None):
+    def Update(self, values=None, disabled=None, set_to_index=None):
         if values is not None:
             self.Values = values
             for i in range(self.QT_ListWidget.count()):
@@ -764,6 +766,9 @@ class Listbox(Element):
             self.QT_ListWidget.setDisabled(True)
         elif disabled == False:
             self.QT_ListWidget.setDisabled(False)
+        if set_to_index is not None:
+            self.QT_ListWidget.setCurrentRow(set_to_index)
+
         return
 
     def SetValue(self, values):
@@ -4478,6 +4483,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
                 if element.Tooltip:
                     element.QT_ComboBox.setToolTip(element.Tooltip)
+                if not element.Readonly:
+                    element.QT_ComboBox.setEditable(True)
+                if not element.AutoComplete:
+                    element.QT_ComboBox.setAutoCompletion(True)
                 qt_row_layout.addWidget(element.QT_ComboBox)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
