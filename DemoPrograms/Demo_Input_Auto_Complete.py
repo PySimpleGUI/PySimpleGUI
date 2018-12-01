@@ -52,7 +52,7 @@ window = sg.Window('Window Title', return_keyboard_events=True).Layout(layout)
 
 sel_item = -1
 while True:             # Event Loop
-    event, values = window.Read()
+    event, values = window.Read(timeout=0)
     if event is None or event == 'Exit':
         break
     if event != sg.TIMEOUT_KEY:
@@ -84,7 +84,7 @@ while True:             # Event Loop
             window.Element('_INPUT_').Update('')
 
     try:
-        ev2, vals2 = fwindow.Read(timeout=0)
+        ev2, vals2 = fwindow.Read(timeout=100)
         if ev2 != sg.TIMEOUT_KEY:
             fwindow.Close()
             # sg.Popup('Chose from window', vals2['_FLOATING_LISTBOX_'])
