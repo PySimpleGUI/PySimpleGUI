@@ -69,10 +69,10 @@ while True:             # Event Loop
 
         if event == '_COMBO_':
             sg.Popup('Chose', values['_COMBO_'])
-        if event == 'Down:40':
+        if event.startswith('Down'):
             sel_item = sel_item + (sel_item<len(prediction_list))
             list_elem.Update(set_to_index=sel_item)
-        elif event == 'Up:38':
+        elif event.startswith('Up'):
             sel_item = sel_item - (sel_item>0)
             list_elem.Update(set_to_index=sel_item)
         if event == '\r' or event == 'Show':
@@ -80,14 +80,13 @@ while True:             # Event Loop
             window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'], select=True)
             fwindow.Close()
             sel_item = -1
-        if event == 'Escape:27':
+        if event.startswith('Escape'):
             window.Element('_INPUT_').Update('')
 
     try:
-        ev2, vals2 = fwindow.Read(timeout=100)
+        ev2, vals2 = fwindow.Read(timeout=10)
         if ev2 != sg.TIMEOUT_KEY:
             fwindow.Close()
-            # sg.Popup('Chose from window', vals2['_FLOATING_LISTBOX_'])
             window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'], select=True)
             sel_item = -1
 
