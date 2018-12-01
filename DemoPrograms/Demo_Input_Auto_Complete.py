@@ -1,16 +1,17 @@
 import sys
 import re
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
 
+QT = False
+if QT:
+    import PySimpleGUIQt as sg
+else:
+    import PySimpleGUI as sg
 
 
 
 def autocomplete_popup_show(text_list ):
     autocomplete_popup_layout = [[sg.Listbox(values=text_list,
-                                             size=(15,len(text_list)),
+                                             size=(100,20*len(text_list)) if QT else (15, len(text_list)),
                                              change_submits=True,
                                              bind_return_key=True,
                                              auto_size_text=True,
@@ -51,6 +52,7 @@ window = sg.Window('Window Title', return_keyboard_events=True).Layout(layout)
 
 
 sel_item = -1
+skip_event = False
 while True:             # Event Loop
     event, values = window.Read(timeout=0)
     if event is None or event == 'Exit':
@@ -69,26 +71,32 @@ while True:             # Event Loop
 
         if event == '_COMBO_':
             sg.Popup('Chose', values['_COMBO_'])
-        if event.startswith('Down'):
+        if event.startswith('Down') or event.startswith('special 16777237'):
             sel_item = sel_item + (sel_item<len(prediction_list))
+            print(f'Sel item {sel_item}')
             list_elem.Update(set_to_index=sel_item)
-        elif event.startswith('Up'):
+            skip_event = True
+        elif event.startswith('Up') or event.startswith('special 16777235'):
             sel_item = sel_item - (sel_item>0)
             list_elem.Update(set_to_index=sel_item)
+            skip_event = True
         if event == '\r' or event == 'Show':
             chosen = vals2['_FLOATING_LISTBOX_']
             window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'], select=True)
             fwindow.Close()
             sel_item = -1
-        if event.startswith('Escape'):
+        if event.startswith('Escape') or event.startswith('special 16777216'):
             window.Element('_INPUT_').Update('')
 
     try:
         ev2, vals2 = fwindow.Read(timeout=10)
-        if ev2 != sg.TIMEOUT_KEY:
+        if ev2 == '_FLOATING_LISTBOX_' and skip_event and QT:
+            skip_event = False
+        elif ev2 != sg.TIMEOUT_KEY and ev2 is not None:
+            print(f'Event2 = {ev2}')
             fwindow.Close()
-            window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'], select=True)
+            window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'][0], select=True)
             sel_item = -1
-
+            fwindow = None
     except: pass
 window.Close()
