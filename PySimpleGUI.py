@@ -3117,7 +3117,7 @@ class Window:
                 except:
                     self.TKrootDestroyed = True
                     _my_windows.Decrement()
-                    print('ROOT Destroyed')
+                    # print('ROOT Destroyed')
                 results = BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
                    return results
@@ -3128,7 +3128,7 @@ class Window:
                 #     print("** REALTIME PROBLEM FOUND **", results)
 
             if self.RootNeedsDestroying:
-                print('*** DESTROYING really late***')
+                # print('*** DESTROYING really late***')
                 self.TKroot.destroy()
                 # _my_windows.Decrement()
                 self.LastButtonClicked = None
@@ -3183,7 +3183,8 @@ class Window:
                 self.TKroot.quit()
                 self.TKroot.destroy()
             except:
-                print('DESTROY FAILED')
+                pass
+                # print('DESTROY FAILED')
             return None, None
         if not self.Shown:
             self.Show(non_blocking=True)
@@ -3192,10 +3193,10 @@ class Window:
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
-            print("read failed")
+            # print("read failed")
             # return None, None
         if self.RootNeedsDestroying:
-            print('*** DESTROYING LATE ***', self.ReturnValues)
+            # print('*** DESTROYING LATE ***', self.ReturnValues)
             self.TKroot.destroy()
             _my_windows.Decrement()
             self.Values = None
@@ -3856,8 +3857,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.ClickPosition
                 elif element.Type == ELEM_TYPE_MENUBAR:
                     if element.MenuItemChosen is not None:
-                        top_level_form.LastButtonClicked = element.MenuItemChosen
-                    button_pressed_text = top_level_form.LastButtonClicked
+                        button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
             else:
