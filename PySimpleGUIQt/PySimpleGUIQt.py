@@ -539,7 +539,7 @@ class InputText(Element):
         self.ReturnKeyHandler(None)
         return
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, select=None):
         if disabled is True:
             self.QT_QLineEdit.setDisabled(True)
         elif disabled is False:
@@ -547,6 +547,8 @@ class InputText(Element):
         if value is not None:
             self.QT_QLineEdit.setText(str(value))
             self.DefaultText = value
+        if select:
+            self.QT_QLineEdit.setSelection()
 
     def Get(self):
         return self.QT_QLineEdit.text()
@@ -754,7 +756,7 @@ class Listbox(Element):
             element_callback_quit_mainloop(self)
 
 
-    def Update(self, values=None, disabled=None):
+    def Update(self, values=None, disabled=None, set_to_index=None):
         if values is not None:
             self.Values = values
             for i in range(self.QT_ListWidget.count()):
@@ -764,6 +766,9 @@ class Listbox(Element):
             self.QT_ListWidget.setDisabled(True)
         elif disabled == False:
             self.QT_ListWidget.setDisabled(False)
+        if set_to_index is not None:
+            self.QT_ListWidget.setCurrentRow(set_to_index)
+
         return
 
     def SetValue(self, values):
