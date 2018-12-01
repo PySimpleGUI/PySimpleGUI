@@ -573,7 +573,7 @@ Input = InputText
 class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, visible_items=10, font=None):
+                 readonly=False, visible_items=10, font=None, auto_complete=True):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -591,6 +591,7 @@ class Combo(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.VisibleItems = visible_items
+        self.AutoComplete = auto_complete
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -628,7 +629,6 @@ class Combo(Element):
         if font is not None:
             style = create_style_from_font(font)
             self.QT_ComboBox.setStyleSheet(style)
-        return
 
 
     def __del__(self):
@@ -4483,6 +4483,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
                 if element.Tooltip:
                     element.QT_ComboBox.setToolTip(element.Tooltip)
+                if not element.Readonly:
+                    element.QT_ComboBox.setEditable(True)
+                if not element.AutoComplete:
+                    element.QT_ComboBox.setAutoCompletion(True)
                 qt_row_layout.addWidget(element.QT_ComboBox)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
