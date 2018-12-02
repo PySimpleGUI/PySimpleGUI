@@ -1382,8 +1382,8 @@ class Button(Element):
                 else:
                     target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            qt_types = convert_tkinter_filetypes_to_qt(dir=self.InitialFolder, filter=self.FileTypes)
-            file_name = QFileDialog.getSaveFileName(filter=qt_types)
+            qt_types = convert_tkinter_filetypes_to_qt(self.FileTypes)
+            file_name = QFileDialog.getSaveFileName(dir=self.InitialFolder, filter=qt_types)
             if file_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
@@ -4876,7 +4876,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
-                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+                style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+                style += 'border: {}px solid gray; '.format(border_depth)
+
                 column_widget.setStyleSheet(style)
 
                 column_widget.setTitle(element.Title)
@@ -4896,8 +4898,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style = create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
-                style += 'border: 0px solid gray; '
-                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+                # style += 'border: {}px solid gray; '.format(border_depth)
+                style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 tab_widget.setStyleSheet(style)
 
                 column_layout = QFormLayout()
