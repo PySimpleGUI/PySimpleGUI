@@ -2671,7 +2671,7 @@ class Table(Element):
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
-        self.BindReturnKey = bind_return_key
+        self.BindReturnKey = bind_return_key 
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
