@@ -466,6 +466,20 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
+
+    def Update(self, widget, background_color=None, text_color=None, font=None):
+        style = str(widget.styleSheet())
+        if font is not None:
+            style = create_style_from_font(font)
+        if text_color is not None:
+            style += 'color: %s;' % text_color
+        if background_color is not None:
+            style += 'background-color: %s;' % background_color
+        # print(style)
+        widget.setStyleSheet(style)
+
+
+
     def __del__(self):
         try:
             self.TKStringVar.__del__()
@@ -539,7 +553,7 @@ class InputText(Element):
         self.ReturnKeyHandler(None)
         return
 
-    def Update(self, value=None, disabled=None, select=None):
+    def Update(self, value=None, disabled=None, select=None, background_color=None, text_color=None, font=None):
         if disabled is True:
             self.QT_QLineEdit.setDisabled(True)
         elif disabled is False:
@@ -549,6 +563,9 @@ class InputText(Element):
             self.DefaultText = value
         if select:
             self.QT_QLineEdit.setSelection(0,QtGui.QTextCursor.End )
+        super().Update(self.QT_QLineEdit, background_color=background_color, text_color=text_color, font=font)
+
+
 
     def Get(self):
         return self.QT_QLineEdit.text()
@@ -2850,7 +2867,7 @@ class SystemTray:
         elif messageicon is not None:
             self.TrayIcon.showMessage(title, message, messageicon, time)
         else:
-            self.TrayIcon.showMessage(title, message)
+            self.TrayIcon.showMessage(title, message, time)
 
         return self
 
@@ -2915,13 +2932,15 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, background_image=None):
         '''
-        Window
+
         :param title:
         :param default_element_size:
         :param default_button_element_size:
         :param auto_size_text:
         :param auto_size_buttons:
         :param location:
+        :param size:
+        :param element_padding:
         :param button_color:
         :param font:
         :param progress_bar_color:
@@ -2931,6 +2950,7 @@ class Window:
         :param auto_close_duration:
         :param icon:
         :param force_toplevel:
+        :param alpha_channel:
         :param return_keyboard_events:
         :param use_default_focus:
         :param text_justification:
@@ -2938,6 +2958,8 @@ class Window:
         :param grab_anywhere:
         :param keep_on_top:
         :param resizable:
+        :param disable_close:
+        :param background_image:
         '''
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
