@@ -30,9 +30,9 @@
 ## PySimpleGUI source code can run either on Qt or tkinter with no changes
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.16.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.17.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.16.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.17.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.19.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -60,7 +60,7 @@ As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 v
       
 #### Qt Version
 
-Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  There is a separate Readme file for the Qt version that you'll find there.  Give it a shot if you're looking for something a bit more "modern".  However be aware that it is in Alpha condition with a number of features partially complete.
+Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  There is a separate Readme file for the Qt version that you'll find there.  Give it a shot if you're looking for something a bit more "modern".  PySimpleGUIQt is currently in Alpha.  All of the widgets are operational and your source code is completely portable from one platform to another by simply changing the import statement.
 
       
 ------------------------------------------------------------------------      
@@ -187,7 +187,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Complete control of colors, look and feel      
         Selection of pre-defined palettes      
         Button images      
-        Verticle Separator
+        Horizontal and Verticle Separators
         Return values as dictionary      
         Set focus      
         Bind return key to buttons      
@@ -554,8 +554,16 @@ Note that you should not call Popup yourself with different button_types.  Rely 
     
 #### Scrolled Output      
 There is a scrolled version of Popups should you have a lot of information to display.      
-      
-    sg.PopupScrolled(my_text)      
+
+```python
+PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,  
+                  size=(None, None), location=(None, None))
+```      
+Typical usage:
+
+    sg.PopupScrolled(my_text)  
+
+    
       
 ![scrolledtextbox 2](https://user-images.githubusercontent.com/13696193/43667324-712aa0d4-9745-11e8-83a9-a0d0570d0865.jpg)      
       
@@ -995,6 +1003,8 @@ event, values = window.Read()
 ```  
   
 You don't HAVE to write your reads in this way. You can name your variables however you want.  But if you want to code them in a way that other programmers using PySimpleGUI are used to, then use these statements.  
+
+## Events
   
 The first parameter `event` describes **why** the read completed.  What was the 'event' that caused us to return from reading the window.  Events are one of these:  
   
@@ -1011,10 +1021,16 @@ For Windows that have specifically enabled these.  Please see the appropriate se
 * An Element Changed (slider, spinner, etc)  
 * A list item was clicked  
 * Return key was pressed in input element  
-  
-  
+* Timeout waiting for event
+* Text was clicked
+* Combobox item chosen
+* Table row selected
+* etc
+
 ***Most*** of the time the event will be a button click or the window was closed.  
   
+### Window closed event
+    
 Another convention to follow is the check for windows being closed with an X.  This is an important event to catch.  If you don't check for this and you attempt to use the window, your program will crash.  Please check for closed window and exit your program gracefully.  
   
 To check for a closed window use this line of code:  
@@ -1027,9 +1043,59 @@ while True:
     event, values = window.Read()
     if event is None:
         break
-
 ```
+### Button Click Events
+
+By default buttons will always return a click event, or in the case of realtime buttons, a button down event.  You don't have to do anything to enable button clicks.  To disable the events, disable the button using its Update method.
+   
+The button value from a Read call will be one of 2 values:      
+1. The Button's text      
+2. The Button's key      
   
+If a button has a key set for it when it's created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the button value is None.      
+      
+None is returned when the user clicks the X to close a window.      
+      
+If your window has an event loop where it is read over and over, remember to give your user an "out".  You should always check for a None value and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:      
+      
+    while True:      
+        event, values = window.Read()      
+        if event is None or event == 'Quit':      
+            break      
+      
+
+### Element Events
+
+Some elements are capable of generating events when something happens to them.  For example, when a slider is moved, or list item clicked on or table row clicked on.  These events are not enabled by default.  To enable events for an Element, set the parameter `enable_events=True`.  This is the same as the older `click_submits` parameter.  You will find the `click_submits` parameter still in the function definition.  You can continue to use it. They are the same setting.  An 'or' of the two values is used.  In the future, click_submits will be removed so please migrate your code to using `enable_events`.
+
+InputText - any change
+Combo - item chosen
+Option menu - item chosen
+Listbox - selection changed
+Radio - selection changed
+Checkbox - selection changed
+Spinner - new item selected
+Multiline - any change
+Text - clicked
+Status Bar - clicked
+Graph - clicked
+TabGroup - tab clicked
+Slider - slider moved
+Table - row selected
+Tree - node selected
+
+### Other Events
+
+#### Menubar menu item chosen
+You will receive the menu text and the key that was part of the definition
+
+#### Windows - keyboard, mouse scroll wheel
+
+Windows are capable of returning keyboard events.  These are returned as either a single character or a string if it's a special key.  Experiment is all I can say. The mouse scroll wheel events are also strings.  Put a print in your code to see what's returned.
+
+#### Timeouts
+
+If you set a timeout parameter in your read, then the system TIMEOUT_KEY will be returned.  If you specified your own timeout key in the Read call then that value will be what's returned instead.
   
 ### The 'values' Variable - Return values as a list      
       
@@ -1102,23 +1168,8 @@ The reason for this naming convention is that when you are scanning the code, th
   
   
   
-### Button Event Return Values      
-      
-The button value from a Read call will be one of 3 values:      
-1. The Button's text      
-2. The Button's key      
-  
-If a button has a key set for it when it's created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the button value is None.      
-      
-None is returned when the user clicks the X to close a window.      
-      
-If your window has an event loop where it is read over and over, remember to give your user an "out".  You should always check for a None value and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:      
-      
-    while True:      
-        event, values = window.Read()      
-        if event is None or event == 'Quit':      
-            break      
-      
+
+
 ## The Event Loop / Callback Functions      
       
 All GUIs have one thing in common, an "event loop".  Usually the GUI framework runs the event loop for you, but sometimes you want greater control and will run your own event loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.      
@@ -1252,35 +1303,38 @@ You can learn more about these async / non-blocking windows toward the end of th
       
 # Window Object - Beginning a window      
 The first step is to create the window object using the desired window customization.      
-  
-      
+        
 This is the definition of the Window object:      
       
-    def Window(title,      
-        default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),      
-        default_button_element_size = (None, None),      
-        auto_size_text=None,      
-        auto_size_buttons=None,      
-        location=(None, None),      
-        font=None,      
-        button_color=None,Font=None,      
-        progress_bar_color=(None,None),      
-        background_color=None      
-        border_depth=None,      
-        auto_close=False,      
-        auto_close_duration=DEFAULT_AUTOCLOSE_TIME,      
-        icon=DEFAULT_WINDOW_ICON,      
-        force_toplevel=False,
-        alpha_channel=1, 
-        return_keyboard_events=False,      
-        use_default_focus=True,      
-        text_justification=None,      
-        no_titlebar=False,      
-        grab_anywhere=False      
-        keep_on_top=False):      
-      
-      
-    
+   
+```python
+Window( title, 
+		default_element_size=DEFAULT_ELEMENT_SIZE,
+		default_button_element_size=(None,None),
+		auto_size_text=None,
+		auto_size_buttons=None,
+		location=(None,None),
+		size=(None,None),
+		button_color=None,
+		font=None,
+		progress_bar_color=(None,None),
+		background_color=None,
+		border_depth=None,
+		auto_close=False,
+		auto_close_duration=DEFAULT_AUTOCLOSE_TIME,
+		icon=DEFAULT_WINDOW_ICON,
+		force_toplevel=False,
+		alpha_channel=1,
+		return_keyboard_events=False,
+		use_default_focus=True,
+		text_justification=None,
+		no_titlebar=False,
+		grab_anywhere=False,
+		keep_on_top=False,
+		resizable=False,
+		disable_close=False):     
+```      
+          
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `window` values.      
       
        default_element_size - Size of elements in window in characters (width, height)      
@@ -1357,13 +1411,18 @@ There are a few methods (functions) that you will see in this document that act 
     window.SaveToDisk(filename) - Save the Window's values to disk      
     window.LoadFromDisk(filename) - Load the Window's values from disk      
     window.Close() - To close your window, if a button hasn't already closed it    
-    window.Disable() - Use to disable the window inpurt when opening another window on top of the primnary  Window      
+    window.Disable() - Use to disable the window inputwhen opening another window on top of the primnary  Window      
     window.Enable() - Re-enable a Disabled window      
     window.FindElement(key) - Returns the element that has a matching key value  
     window.Move(x,y) - Moves window to location x,y on screen'
     window.SetAlpha(alpha) - Changes window transparency
     window.BringToFront() - Brings the window to the top of other windows on the screen
-        
+    window.Disappear(), Reappear() - Uses alpha channel to make window disappear
+    window.Hide(), UnHide() - Hides a window
+    window.CurrentLocation() - Returns current window location
+    window.Size = w,h - Forces a window to be a particular size. Note this is a property not a method
+    window.Size - Tuple (w,h)The size of the current window. Note this is a property
+	window.Minimize() - Minimizes window to taskbar        
       
 ## Window Methods     
     
@@ -1404,6 +1463,7 @@ Sets the window's icon that will be shown on the titlebar.    Can either be a fi
 #### Fill(values_dict)    
 Populates the windows fields with the values shown in the dictionary.      
     
+#### Element(key)         (shorthand version)
 #### FindElement(key)    
     
 Rerturns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
@@ -1499,6 +1559,7 @@ Sets the window's transparency.  0 is completely transparent.  1 is fully visibl
      Table      
      Tree    
      Tab, TabGroup    
+     StatusBar
        
 
       
@@ -1511,7 +1572,7 @@ Some parameters that you  will see on almost all Elements are:
  - font - specifies the font family, size, etc    
  - colors - Color name or #RRGGBB string    
  - pad - Amount of padding to put around element    
-    
+ - enable_events - Turns on the element specific events    
       
 #### Tooltip    
 Tooltips are text boxes that popup next to an element if you hold your mouse over the top of it.  If you want to be extra kind to your window's user, then you can create tooltips for them by setting the parameter `tooltip` to some text string.  You will need to supply your own line breaks / text wrapping.  If you don't want to manually add them, then take a look at the standard library package `textwrap`.      
@@ -1552,6 +1613,7 @@ To specify an underlined, Helvetica font with a size of 15 the values:
 'Helvetica 15 underline italics'    
     
 #### Key    
+
 If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.    
 Keys are a way for you to "tag" an Element with a value that will be used to identify that element.  After you put a key in an element's definition, the values returned from Read will use that key to tell you the value.  For example, if you have an input field:    
 Input(key='mykey')    
@@ -1577,20 +1639,21 @@ The code is a crude representation of the GUI, laid out in text.
       
       
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.      
-      
-    Text(text      
-         size=(None, None)      
-         auto_size_text=None      
-         click_submits=None      
-         relief=None      
-         font=None      
-         text_color=None      
-         background_color=None      
-         justification=None      
-         pad=None      
-         key=None      
-         tooltip=None)      
-      
+```python
+    Text(   text,
+			size=(None, None),
+			auto_size_text=None,
+			click_submits=False,
+			enable_events=False,
+			relief=None,
+			font=None,
+			text_color=None,
+			background_color=None,
+			justification=None,
+			pad=None,
+			key=None,
+			tooltip=None)
+```			      
 .      
       
     Text - The text that's displayed      
@@ -1608,19 +1671,15 @@ The most basic element is the Text element.  It simply displays text.  Many of t
       
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.      
       
-**Fonts** in PySimpleGUI are always in this format:      
+**Fonts**
       
-    (font_name, point_size)      
-      
-The default font setting is      
-      
-    ("Helvetica", 10)      
+	Already discussed in the common parameters section.  Either string or a tuple.  
       
 **Color** in PySimpleGUI are in one of two formats - color name or RGB value.    
       
  Individual colors are specified using either the color names as defined in tkinter or an RGB string of this format:      
       
-    "#RRGGBB"      
+    "#RRGGBB"        or          "darkblue"
       
 **auto_size_text**      
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.      
@@ -1649,6 +1708,26 @@ font - font to use to display
       
 This Element doubles as both an input and output Element.      
       
+```python
+Multiline(	default_text='',
+			enter_submits=False,
+			disabled=False,
+			autoscroll=False,
+			size=(None, None),
+			auto_size_text=None,
+			background_color=None,
+			text_color=None,
+			change_submits=False,
+			enable_events=False,
+			do_not_clear=False,
+			key=None,
+			focus=False,
+			font=None,
+			pad=None,
+			tooltip=None
+'''
+```
+
     Multiline(default_text='',    
               enter_submits = False,    
               disabled=False,    
@@ -1671,7 +1750,14 @@ This Element doubles as both an input and output Element.
       
 ### Multiline Methods    
 ```python    
-Update(value=None, disabled=None, append=False):    
+Update(	value=None,
+		disabled=None,
+		append=False,
+		font=None,
+		text_color=None,
+		background_color=None)
+
+Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None)value=None, disabled=None, append=False):    
 ```    
 value - string to set the text field to    
 disabled - set to True to disable the element    
@@ -1688,9 +1774,19 @@ Note that you will NOT see what you print until you call either window.Read or w
       
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)      
 
-`Output(size=(None, None))     `
+```python
+Output(	size=(None, None),
+		background_color=None,
+		text_color=None,
+		pad=None,
+		font=None,
+		tooltip=None,
+		key=None)
+```
 
 size - Size of Output Element (width, height) in characters
+You should be quite familiar with these parameters by now.  If not, read able another element or read about common parameters.
+
   
       
 ##  Input Elements      
@@ -3591,6 +3687,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.14.0 & 1.14.0 | Nov 2, 2018
 | 3.15.0 & 1.15.0 | Nov 20, 2018
 | 3.16.0 & 1.16.0 | Nov 26, 2018
+| 3.17.0 & 1.17.0 | Dec 1, 2018
       
 ## Release Notes      
 2.3 - Sliders, Listbox's and Image elements (oh my!)      
@@ -3885,15 +3982,30 @@ Popups - new title parm, custom_text
 
 ### 3.16.0 & 1.16.0
 Bug fix in PopupScrolled
-New Element shortcut function for FindElement
+New `Element` shortcut function for `FindElement`
 Dummy Stretch Element made for backwards compatibility with Qt
 Timer function prints in milliseconds now, was seconds
+
+### 3.17.0 &1.17.0 1-Dec-2018
+Tooltip offset now programmable.  Set variable DEFAULT_TOOLTIP_OFFSET.  Defaults to (20,-20)
+Tooltips are always on top now
+Disable menu items
+Menu items can have keys
+StatusBar Element (preparing for a real status bar in Qt)
+enable_events parameter added to ALL Elements capable of generating events
+select parameter to InputText.Update will select the input text
+Listbox.Update - set_to_index parameter will select a single items
+Menus can be updated!
+Menus have an entry in the return values
+LayoutAndRead depricated
+Multi-window support continues (X detection)
+PopupScrolled now has a location parameter
 
 
 ### Upcoming      
 Make suggestions people!  Future release features      
       
-Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  At the moment, Qt and Kivy are being considered for the next GUI framework.  Work has already begun on them.  
+Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  At the moment, Wx and Kivy are being considered for the next GUI framework.  Work has already begun on Wx.  Kivy is likely to be next instead of Wx however.
       
       
       
