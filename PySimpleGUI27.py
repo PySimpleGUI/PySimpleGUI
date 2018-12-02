@@ -86,6 +86,7 @@ DEFAULT_DEBUG_WINDOW_SIZE = (80, 20)
 DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
+DEFAULT_TOOLTIP_OFFSET = (20,-20)
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -194,6 +195,10 @@ TIMEOUT_KEY = '__TIMEOUT__'
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 
+MENU_DISABLED_CHARACTER = '!'
+MENU_KEY_SEPARATOR = '::'
+
+
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows(object):
     def __init__(self):
@@ -265,6 +270,7 @@ ELEM_TYPE_TABLE = 'table'
 ELEM_TYPE_TREE = 'tree'
 ELEM_TYPE_ERROR = 'error'
 ELEM_TYPE_SEPARATOR = 'separator'
+ELEM_TYPE_STATUSBAR = 'statusbar'
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -316,11 +322,13 @@ class ToolTip(object):
     def showtip(self):
         if self.tipwindow:
             return
-        x = self.widget.winfo_rootx() + 20
-        y = self.widget.winfo_rooty() + self.widget.winfo_height() - 20
+        x = self.widget.winfo_rootx() + DEFAULT_TOOLTIP_OFFSET[0]
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() + DEFAULT_TOOLTIP_OFFSET[1]
         self.tipwindow = tk.Toplevel(self.widget)
         self.tipwindow.wm_overrideredirect(True)
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
+        self.tipwindow.wm_attributes("-topmost", 1)
+
         label = tkinter.ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT,
                           background="#ffffe0", relief=tk.SOLID, borderwidth=1)
         label.pack()
@@ -489,7 +497,7 @@ class Element(object):
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False,
+                 change_submits=False, enable_events=False,
                  do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
@@ -506,11 +514,11 @@ class InputText(Element):
         self.do_not_clear = do_not_clear
         self.Justification = justification
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip)
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, select=None):
         if disabled is True:
             self.TKEntry['state'] = 'disabled'
         elif disabled is False:
@@ -521,6 +529,9 @@ class InputText(Element):
             except:
                 pass
             self.DefaultText = value
+        if select:
+            self.TKEntry.select_range(0, 'end')
+
 
     def Get(self):
         try:
@@ -550,7 +561,7 @@ Input = InputText
 # ---------------------------------------------------------------------- #
 class InputCombo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
                  readonly=False, font=None):
         '''
         Input Combo Box Element (also called Dropdown box)
@@ -561,7 +572,7 @@ class InputCombo(Element):
         '''
         self.Values = values
         self.DefaultValue = default_value
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.TKCombo = None
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
@@ -682,9 +693,7 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False,
-                 size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
-                 text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False,enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Listbox Element
         :param values:
@@ -705,7 +714,7 @@ class Listbox(Element):
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
         self.Disabled = disabled
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
@@ -724,7 +733,7 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
 
-    def Update(self, values=None, disabled=None):
+    def Update(self, values=None, disabled=None, set_to_index=None):
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -735,6 +744,14 @@ class Listbox(Element):
                 self.TKListbox.insert(tk.END, item)
             self.TKListbox.selection_set(0, 0)
             self.Values = values
+        if set_to_index is not None:
+            self.TKListbox.selection_clear(0)
+            try:
+                self.TKListbox.selection_set(set_to_index, set_to_index)
+            except:
+                pass
+
+
 
     def SetValue(self, values):
         for index, item in enumerate(self.Values):
@@ -763,7 +780,7 @@ class Listbox(Element):
 # ---------------------------------------------------------------------- #
 class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
-                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None, change_submits=False):
+                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None, change_submits=False, enable_events=False):
         '''
         Radio Button Element
         :param text:
@@ -787,7 +804,7 @@ class Radio(Element):
         self.Value = None
         self.Disabled = disabled
         self.TextColor = text_color or DEFAULT_TEXT_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -819,7 +836,7 @@ class Radio(Element):
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+                 text_color=None, change_submits=False,enable_events=False, disabled=False, key=None, pad=None, tooltip=None):
         '''
         Checkbox Element
         :param text:
@@ -841,7 +858,7 @@ class Checkbox(Element):
         self.TKCheckbutton = None
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -879,7 +896,7 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None),
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None),
                  auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
                  tooltip=None):
         '''
@@ -899,7 +916,7 @@ class Spin(Element):
         '''
         self.Values = values
         self.DefaultValue = initial_value
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.TKSpinBox = None
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -950,8 +967,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False, key=None, focus=False,
-                 font=None, pad=None, tooltip=None):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None):
         '''
         Multiline Element
         :param default_text:
@@ -962,13 +978,16 @@ class Multiline(Element):
         :param auto_size_text:
         :param background_color:
         :param text_color:
+        :param change_submits:
+        :param enable_events:
         :param do_not_clear:
         :param key:
         :param focus:
+        :param font:
         :param pad:
         :param tooltip:
-        :param font:
         '''
+
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -977,7 +996,7 @@ class Multiline(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -1023,8 +1042,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None,
-                 text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
         '''
         Text Element
         :param text:
@@ -1044,7 +1062,7 @@ class Text(Element):
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
-        self.ClickSubmits = click_submits
+        self.ClickSubmits = click_submits or enable_events
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
@@ -1072,6 +1090,56 @@ class Text(Element):
 # -------------------------  Text Element lazy functions  ------------------------- #
 Txt = Text
 T = Text
+
+
+
+# ---------------------------------------------------------------------- #
+#                                       StatusBar                        #
+# ---------------------------------------------------------------------- #
+class StatusBar(Element):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False, relief=RELIEF_SUNKEN, font=None,
+                 text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
+        '''
+        Text Element
+        :param text:
+        :param size:
+        :param auto_size_text:
+        :param click_submits:
+        :param relief:
+        :param font:
+        :param text_color:
+        :param background_color:
+        :param justification:
+        :param pad:
+        :param key:
+        :param tooltip:
+        '''
+        self.DisplayText = text
+        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.Justification = justification
+        self.Relief = relief
+        self.ClickSubmits = click_submits or enable_events
+        if background_color is None:
+            bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
+        else:
+            bg = background_color
+        super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg, font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+        return
+
+    def Update(self, value=None, background_color=None, text_color=None, font=None):
+        if value is not None:
+            self.DisplayText = value
+            stringvar = self.TKStringVar
+            stringvar.set(value)
+        if background_color is not None:
+            self.TKText.configure(background=background_color)
+        if text_color is not None:
+            self.TKText.configure(fg=text_color)
+        if font is not None:
+            self.TKText.configure(font=font)
+
+    def __del__(self):
+        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1220,11 +1288,8 @@ class Output(Element):
 
     def Update(self, value=None):
         if value is not None:
-            # try:
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
-            # except:
-            #     pass
 
 
     def __del__(self):
@@ -1240,7 +1305,7 @@ class Output(Element):
 # ---------------------------------------------------------------------- #
 class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
-                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
         '''
         Button Element
         :param button_text:
@@ -1284,7 +1349,7 @@ class Button(Element):
         self.DefaultDate_M_D_Y = (None, None, None)
         self.InitialFolder = initial_folder
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip)
         return
@@ -1594,7 +1659,7 @@ class Canvas(Element):
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
-    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, key=None,
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, enable_events=False, key=None,
                  tooltip=None):
         '''
         Graph Element
@@ -1611,7 +1676,7 @@ class Graph(Element):
         self.TopRight = graph_top_right
         self._TKCanvas = None
         self._TKCanvas2 = None
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
@@ -1991,7 +2056,7 @@ class Tab(Element):
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
-                 font=None, change_submits=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
+                 font=None, change_submits=False, enable_events=False,pad=None, border_width=None, theme=None, key=None, tooltip=None):
         '''
         TabGroup Element
         :param layout:
@@ -2020,7 +2085,7 @@ class TabGroup(Element):
         self.BorderWidth = border_width
         self.Theme = theme
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
 
         self.Layout(layout)
@@ -2073,7 +2138,7 @@ class TabGroup(Element):
 # ---------------------------------------------------------------------- #
 class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
+                 border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
@@ -2100,7 +2165,7 @@ class Slider(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         self.TickInterval = tick_interval
         temp_size = size
@@ -2523,16 +2588,41 @@ class Menu(Element):
         self.MenuDefinition = menu_definition
         self.TKMenu = None
         self.Tearoff = tearoff
+        self.MenuItemChosen = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
 
     def MenuItemChosenCallback(self, item_chosen):
         # print('IN MENU ITEM CALLBACK', item_chosen)
+        self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = item_chosen
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
+
+    def Update(self, menu_definition):
+        self.MenuDefinition = menu_definition
+        self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
+        menubar = self.TKMenu
+        for menu_entry in menu_definition:
+            # print(f'Adding a Menubar ENTRY {menu_entry}')
+            baritem = tk.Menu(menubar, tearoff=self.Tearoff)
+            pos = menu_entry[0].find('&')
+            # print(pos)
+            if pos != -1:
+                if pos == 0 or menu_entry[0][pos - 1] != "\\":
+                    menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
+            if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
+                menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem, underline=pos)
+                menubar.entryconfig(menu_entry[0][len(MENU_DISABLED_CHARACTER):], state='disabled')
+            else:
+                menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
+
+            if len(menu_entry) > 1:
+                AddMenuItem(baritem, menu_entry[1], self)
+        self.ParentForm.TKroot.configure(menu=self.TKMenu)
 
     def __del__(self):
         super().__del__()
@@ -2543,9 +2633,9 @@ class Menu(Element):
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, bind_return_key=False, pad=None, key=None, tooltip=None):
+                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None):
         '''
         Table Element
         :param values:
@@ -2557,11 +2647,17 @@ class Table(Element):
         :param max_col_width:
         :param select_mode:
         :param display_row_numbers:
+        :param num_rows:
+        :param row_height:
         :param font:
         :param justification:
         :param text_color:
         :param background_color:
+        :param alternating_row_color:
         :param size:
+        :param change_submits:
+        :param enable_events:
+        :param bind_return_key:
         :param pad:
         :param key:
         :param tooltip:
@@ -2580,10 +2676,11 @@ class Table(Element):
         self.SelectMode = select_mode
         self.DisplayRowNumbers = display_row_numbers
         self.NumRows = num_rows if num_rows is not None else size[1]
+        self.RowHeight = row_height
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
@@ -2645,7 +2742,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, font=None,
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None,
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
@@ -2683,7 +2780,7 @@ class Tree(Element):
         self.Col0Width = col0_width
         self.TKTreeview = None
         self.SelectedRows = []
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
@@ -2890,6 +2987,7 @@ class Window(object):
         self.DisableClose = disable_close
         self._Hidden = False
         self._Size = size
+        self.XFound = False
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -2915,12 +3013,13 @@ class Window(object):
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
-        self.AddRows(rows)
-        self.Show(non_blocking=non_blocking)
-        return self.ReturnValues
+        raise DeprecationWarning('LayoutAndRead is no longer supported... change your call window.Layout(layout).Read()')
+        # self.AddRows(rows)
+        # self.Show(non_blocking=non_blocking)
+        # return self.ReturnValues
 
     def LayoutAndShow(self, rows):
-        raise DeprecationWarning('LayoutAndShow is no longer supported... change your call to LayoutAndRead')
+        raise DeprecationWarning('LayoutAndShow is no longer supported... ')
 
     # ------------------------- ShowForm   THIS IS IT! ------------------------- #
     def Show(self, non_blocking=False):
@@ -3036,7 +3135,7 @@ class Window(object):
                 except:
                     self.TKrootDestroyed = True
                     _my_windows.Decrement()
-                    print('ROOT Destroyed')
+                    # print('ROOT Destroyed')
                 results = BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
                    return results
@@ -3088,6 +3187,12 @@ class Window(object):
                 self.LastButtonClicked = None
             return results
         else:
+            if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[
+                0] is None:  # Special Qt case because returning for no reason so fake timeout
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
+            elif not self.XFound and self.ReturnValues[0] is None:  # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
+                # print("*** Faking timeout ***")
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             return self.ReturnValues
 
     def ReadNonBlocking(self):
@@ -3096,7 +3201,8 @@ class Window(object):
                 self.TKroot.quit()
                 self.TKroot.destroy()
             except:
-                print('DESTROY FAILED')
+                pass
+                # print('DESTROY FAILED')
             return None, None
         if not self.Shown:
             self.Show(non_blocking=True)
@@ -3105,10 +3211,10 @@ class Window(object):
         except:
             self.TKrootDestroyed = True
             _my_windows.Decrement()
-            print("read failed")
+            # print("read failed")
             # return None, None
         if self.RootNeedsDestroying:
-            print('*** DESTROYING LATE ***', self.ReturnValues)
+            # print('*** DESTROYING LATE ***', self.ReturnValues)
             self.TKroot.destroy()
             _my_windows.Decrement()
             self.Values = None
@@ -3268,6 +3374,7 @@ class Window(object):
         # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
             return
+        self.XFound = True
         if self.CurrentlyRunningMainloop:       # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.quit()  # kick the users out of the mainloop
             self.TKroot.destroy()  # kick the users out of the mainloop
@@ -3375,45 +3482,45 @@ FlexForm = Window
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
-                 auto_size_button=None, button_color=None, disabled=False, change_submits=False, font=None, pad=None, key=None):
+                 auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,font=None, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
-                  disabled=disabled, button_color=button_color,change_submits=change_submits, font=font, pad=pad, key=key)
+                  disabled=disabled, button_color=button_color,change_submits=change_submits, enable_events=enable_events, font=font, pad=pad, key=key)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, font=None, disabled=False,
+               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, enable_events=False, font=None, disabled=False,
                pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
-                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, change_submits=change_submits, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button, change_submits=change_submits, enable_events=enable_events, disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
-                initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False,
+                initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False,enable_events=False,
                 font=None, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
-                  initial_folder=initial_folder,change_submits=change_submits, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  initial_folder=initial_folder,change_submits=change_submits, enable_events=enable_events, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, font=None,
+               disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, enable_events=False, font=None,
                pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
-                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits, font=font, pad=pad, key=key)
+                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits, enable_events=enable_events, font=font, pad=pad, key=key)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-           disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, font=None,
+           disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, enable_events=False, font=None,
            pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
-                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits, font=font, pad=pad, key=key)
+                  auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,  enable_events=enable_events,font=font, pad=pad, key=key)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
@@ -3766,6 +3873,11 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_GRAPH:
                     value = element.ClickPosition
+                elif element.Type == ELEM_TYPE_MENUBAR:
+                    if element.MenuItemChosen is not None:
+                        button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
+                    value = element.MenuItemChosen
+                    element.MenuItemChosen = None
             else:
                 value = None
 
@@ -3919,7 +4031,17 @@ if sys.version_info[0] >= 3:
                 if sub_menu_info == '---':
                     top_menu.add('separator')
                 else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
+                    try:
+                        item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+                    except:
+                        item_without_key = sub_menu_info
+
+                    if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                        top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
+                                             command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                        top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
+                    else:
+                        top_menu.add_command(label=item_without_key, underline=pos,
                                          command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
         else:
             i = 0
@@ -3932,7 +4054,10 @@ if sys.version_info[0] >= 3:
                         if pos != -1:
                             if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
                                 sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                        if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
+                            top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu, underline=pos, state='disabled')
+                        else:
+                            top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
                         AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
                         i += 1  # skip the next one
                     else:
@@ -3952,7 +4077,17 @@ else:
                 if sub_menu_info == '---':
                     top_menu.add('separator')
                 else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
+                    try:
+                        item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+                    except:
+                        item_without_key = sub_menu_info
+
+                    if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                        top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
+                                             command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                        top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
+                    else:
+                        top_menu.add_command(label=item_without_key, underline=pos,
                                          command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
         else:
             i = 0
@@ -3965,7 +4100,10 @@ else:
                         if pos != -1:
                             if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
                                 sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                        if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
+                            top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu, underline=pos, state='disabled')
+                        else:
+                            top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
                         AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
                         i += 1  # skip the next one
                     else:
@@ -4528,7 +4666,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if pos != -1:
                         if pos == 0 or menu_entry[0][pos - 1] != "\\":
                             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
-                    menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
+                    if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
+                        menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem, underline=pos)
+                        menubar.entryconfig(menu_entry[0][len(MENU_DISABLED_CHARACTER):], state='disabled')
+                    else:
+                        menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
+
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
@@ -4723,6 +4866,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
+                if element.RowHeight is not None:
+                    tkinter.ttk.Style().configure("Treeview", rowheight=element.RowHeight)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.BindReturnKey:
@@ -4804,6 +4949,57 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_SEPARATOR:
                 separator = tkinter.ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
+            # -------------------------  StatusBar element  ------------------------- #
+            elif element_type == ELEM_TYPE_STATUSBAR:
+                # auto_size_text = element.AutoSizeText
+                display_text = element.DisplayText  # text to display
+                if auto_size_text is False:
+                    width, height = element_size
+                else:
+                    lines = display_text.split('\n')
+                    max_line_len = max([len(l) for l in lines])
+                    num_lines = len(lines)
+                    if max_line_len > element_size[0]:  # if text exceeds element size, the will have to wrap
+                        width = element_size[0]
+                    else:
+                        width = max_line_len
+                    height = num_lines
+                # ---===--- LABEL widget create and place --- #
+                stringvar = tk.StringVar()
+                element.TKStringVar = stringvar
+                stringvar.set(display_text)
+                if auto_size_text:
+                    width = 0
+                if element.Justification is not None:
+                    justification = element.Justification
+                elif toplevel_form.TextJustification is not None:
+                    justification = toplevel_form.TextJustification
+                else:
+                    justification = DEFAULT_TEXT_JUSTIFICATION
+                justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
+                anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                #                         justify=justify, bd=border_depth, font=font)
+                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                                        justify=justify, bd=border_depth, font=font)
+                # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
+                wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
+                if not auto_size_text and height == 1:
+                    wraplen = 0
+                # print("wraplen, width, height", wraplen, width, height)
+                tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
+                if element.Relief is not None:
+                    tktext_label.configure(relief=element.Relief)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    tktext_label.configure(background=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
+                    tktext_label.configure(fg=element.TextColor)
+                tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1],fill=tk.BOTH, expand=True)
+                element.TKText = tktext_label
+                if element.ClickSubmits:
+                    tktext_label.bind('<Button-1>', element.TextClickedHandler)
+                if element.Tooltip is not None:
+                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
@@ -5382,6 +5578,8 @@ def EasyPrintClose():
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, **_3to2kwargs):
+    if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
+    else: location = (None, None)
     if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
     else: size = (None, None)
     if 'auto_close_duration' in _3to2kwargs: auto_close_duration = _3to2kwargs['auto_close_duration']; del _3to2kwargs['auto_close_duration']
@@ -5396,7 +5594,7 @@ def PopupScrolled(*args, **_3to2kwargs):
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
     form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                  auto_close_duration=auto_close_duration)
+                  auto_close_duration=auto_close_duration, location=location)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
@@ -6874,7 +7072,7 @@ def main():
               [Text('You should be importing it rather than running it', size=(50, 2))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
-               FolderBrowse()],
+               FolderBrowse(tooltip='Browse for a folder')],
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 

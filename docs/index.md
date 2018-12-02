@@ -26,8 +26,9 @@
 # NEW for NOV 2018 -  Run Qt using PySimpleGUI!      
             
 ## Supports both Python 2.7 & 3 when using tkinter
-## Supports both PySide2 and PyQt5
-## PySimpleGUI source code can run either on Qt or tkinter with no changes
+## Supports both PySide2 and PyQt5 (limited support)
+## PySimpleGUI source code can run either on Qt or tkinter by changing only the import
+
 
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.17.0-red.svg?longCache=true&style=for-the-badge)      
@@ -280,8 +281,10 @@ Maybe there's no "there there".  ***Or*** maybe a simple GUI API will enable Pyt
       
       
   -----      
-## Getting Started with PySimpleGUI      
+# Getting Started with PySimpleGUI      
       
+## Installing PySimpleGUI
+
 ### Installing  Python 3      
       
     pip install --upgrade PySimpleGUI      
@@ -379,7 +382,13 @@ PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It
       
 If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this ReadMe      
       
-      
+
+## Qt Version
+
+Please see the Qt specific documentation.  The readme that contains all you need to know about Qt specific matters is here:
+https://pysimplegui.readthedocs.io/readmeqt/
+
+
 ## Using  - Python 3      
       
 To use in your code, simply import....      
@@ -404,7 +413,7 @@ Those using Python 2.7 will import a different module name
 While all of the code examples you will see in this Readme and the  Cookbook assume Python 3 and thus have an `import PySimpleGUI` at the top, you can run ***all*** of this code on Python 2.7 by changing the import statement to `import PySimpleGUI27`      
       
 ---      
-## APIs      
+# APIs      
       
 PySimpleGUI can be broken down into 2 types of API's:      
  * High Level single call functions    (The `Popup` calls)      
@@ -461,7 +470,7 @@ Dictionaries are used by more advanced PySimpleGUI users.  You'll know that dict
       
 ---      
       
-## High Level API Calls  - Popup's      
+# High Level API Calls  - Popup's      
       
 "High level calls" are those that start with "Popup".    They are the most basic form of communications with the user.   They are named after the type of window they create, a pop-up window.  These windows are meant to be short lived while, either delivering information or collecting it, and then quickly disappearing.      
       
@@ -698,7 +707,7 @@ This is a typpical call
     
     
     
-## Progress Meters!      
+# Progress Meters!      
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?      
       
       
@@ -727,7 +736,7 @@ With a little trickery you can provide a way to break out of your loop using the
       
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.      
       
-## Debug Output      
+# Debug Output      
 Another call in the 'Easy' families of APIs is `EasyPrint`.  It will output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick a 'print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement      
       
     print = sg.EasyPrint      
@@ -1006,7 +1015,7 @@ You don't HAVE to write your reads in this way. You can name your variables howe
 
 ## Events
   
-The first parameter `event` describes **why** the read completed.  What was the 'event' that caused us to return from reading the window.  Events are one of these:  
+The first parameter `event` describes **why** the read completed.  Events are one of these:  
   
 For all Windows:  
   
@@ -1047,16 +1056,18 @@ while True:
 ### Button Click Events
 
 By default buttons will always return a click event, or in the case of realtime buttons, a button down event.  You don't have to do anything to enable button clicks.  To disable the events, disable the button using its Update method.
+
+You can enable an additional "Button Modified" event by setting `enable_events=True` in the Button call.  These events are triggered when something 'writes' to a button, ***usually*** it's because the button is listed as a "target" in another button.
    
 The button value from a Read call will be one of 2 values:      
-1. The Button's text      
-2. The Button's key      
+1. The Button's text      - Default
+2. The Button's key      - If a key is specified
   
-If a button has a key set for it when it's created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the button value is None.      
+If a button has a key set when it was created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the event value is None.      
       
-None is returned when the user clicks the X to close a window.      
+### **None is returned when the user clicks the X to close a window.**      
       
-If your window has an event loop where it is read over and over, remember to give your user an "out".  You should always check for a None value and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:      
+If your window has an event loop where it is read over and over, remember to give your user an "out".  You should ***always check for a None value*** and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:      
       
     while True:      
         event, values = window.Read()      
@@ -1097,7 +1108,7 @@ Windows are capable of returning keyboard events.  These are returned as either 
 
 If you set a timeout parameter in your read, then the system TIMEOUT_KEY will be returned.  If you specified your own timeout key in the Read call then that value will be what's returned instead.
   
-### The 'values' Variable - Return values as a list      
+### The `values` Variable - Return values as a list      
       
 The second parameter from a Read call is either a list or a dictionary of the input fields on the Window.  
   
@@ -1120,9 +1131,9 @@ However, this method isn't good when you have a lot of input fields.  If you ins
   
 The more common / advanced method is to request your values be returned as a dictionary.  
   
-### Return values as a dictionary      
+### `values` Variable - Return values as a dictionary      
       
-For those of you that have not encountered a Python dictionary, don't freak out!  Just copy and paste this code and modify it. Follow this design pattern and you'll be fine.  And you might learn something along the way.  
+For those of you that have not encountered a Python dictionary, don't freak out!  Just copy and paste the sample code and modify it. Follow this design pattern and you'll be fine.  And you might learn something along the way.  
   
 For windows longer than 3 or 4 fields you will want to use a dictionary to help you organize your return values. In almost all (if not all) of the demo programs you'll find the return values being passed as a dictionary.  It is not a difficult concept to grasp, the syntax is easy to understand, and it makes for very readable code.      
       
@@ -1437,12 +1448,13 @@ window = sg.Window('My window title').Layout(layout)
 ```    
 #### Finalize()    
     
-Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    
+Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
     
-#### Read(timeout=None, timeout_key='__timeout_ _ ')    
+#### Read(timeout=None, timeout_key='__TIMEOUT_ _ ')    
     
 Read the Window's input values and button clicks in a blocking-fashion    
-Returns event, values.  Adding a timeout can be achieved by setting timeout=number of milliseconds before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event. 
+
+Returns event, values.  Adding a timeout can be achieved by setting timeout=number of milliseconds before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event.   If you do not specify a timeout key, then the value `TIMEOUT_KEY` will be returned.
 
 If you set the timeout = 0, then the Read will immediately return rather than waiting for input or for a timeout. This is the same as the old ReadNonBlocking call.
     
@@ -1450,7 +1462,7 @@ If you set the timeout = 0, then the Read will immediately return rather than wa
     
 While this call will technically still work, it is being removed.  If you want to get the same result, call Read with timeout = 0.
     
-Read the Window's input values and button clicks but without blocking.  It will immediately return.    **Consider using Read with timeout instead!**
+Read the Window's input values and button clicks but without blocking.  It will immediately return.    **Consider using Read with non-zero timeout instead!**
 
 Will consume 100% of your CPU if you do not have other blocking calls in your event loop.
     
@@ -1484,6 +1496,9 @@ Fills in a window's fields based on previously saved file
     
 Returns the size (w,h) of the screen in pixels    
     
+#### CurrentLocation()
+Returns current screen position (x,y) 
+
 #### Move(x, y)
 Move window to (x,y) position on the screen
 
@@ -2820,26 +2835,62 @@ MoveFigure - moves an individual figure
       
 ## Table Element      
       
-Let me say up front that the Table Element has Beta status. The reason is that some of the parameters are not quite right and will change. Be warned one or two parameters may change.  The `size` parameter in particular is gong to change. Currently the number of rows to allocate for the table is set by the height parameter of size.  The problem is that the width is not used.  The plan is to instead have a parameter named `number_of_rows` or something like it.      
-      
-    def Table(values - Your table's array      
-              headings - list of strings representing your headings, if you have any      
-              visible_column_map - list of bools. If True, column in that position is shown.  Defaults to all columns      
-              col_widths - list of column widths      
-              def_col_width - default column width. defaults to 10      
-              auto_size_columns - bool. If True column widths are determined by table contents      
-              max_col_width - maximum width of a column. defaults to 25      
-              select_mode - table rows can be selected, but doesn't currently do anything      
-              display_row_numbers - bool. If True shows numbers next to rows      
-              scrollable - if True table will be scrolled      
-              font - font for table entries      
-              justification - left, right, center      
-              text_color - color of text      
-              background_color - cell background color      
-              size - (None, number of rows).      
-              pad - element padding for packing      
-              key - key used to lookup element      
-              tooltip - tooltip text      
+Out of all of the Elements, it's the Table and the Tree that are the most "problematic" in the tkinter inter and Qt implementations.  They're hard is my only defense.
+
+### Known visualization problem....
+
+If you click on the header, it can go into spasms for some tables. I don't understand what's causing it and it's been there evidently since the first release of Tables.
+   
+```python
+Table(  values,
+		headings=None,
+		visible_column_map=None,
+		col_widths=None,
+		def_col_width=10,
+		auto_size_columns=True,
+		max_col_width=20,
+		select_mode=None,
+		display_row_numbers=False,
+		num_rows=None,
+		row_height=None,
+		font=None,
+		justification='right',
+		text_color=None,
+		background_color=None,
+		alternating_row_color=None,
+		size=(None,None),
+		change_submits=False,
+		enable_events=False,
+		bind_return_key=False,
+		pad=None,
+		key=None,
+		tooltip=None):
+
+```
+
+values - Your table's array      
+headings - list of strings representing your headings, if you have any      
+visible_column_map - list of bools. If True, column in that position is shown.  Defaults to all columns      
+col_widths - list of column widths      
+def_col_width - default column width. defaults to 10      
+auto_size_columns - bool. If True column widths are determined by table contents      
+max_col_width - maximum width of a column. defaults to 25      
+select_mode - table rows can be selected, but doesn't currently do anything      
+display_row_numbers - bool. If True shows numbers next to rows
+num_rows = the number of rows to display at a time (same as size[0])      
+row_height = number of pixels high a row should be. Normally left as default value  
+font - font for table entries      
+justification - left, right, center      
+text_color - color of text      
+alternating row color - if set will change background color for alternating rows
+background_color - cell background color      
+size - (None, number of rows) - don't use, use num_rows instead
+enable_events - will return a 'row selected' event when row is selected
+change_submits - the old way of indicating enable_events
+bind_return_key - returns event if a double click or a return key is pressed while row is highlighted
+pad - element padding for packing      
+key - key used to lookup element      
+tooltip - tooltip text      
       
 ### Read return values from Table Element
 
@@ -3428,7 +3479,8 @@ Use realtime keyboard capture by calling
 
 # Menus      
       
-Beginning in version 3.01 you can add a menubar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as button clicks, so be aware of your overall naming conventions.  If you have an Exit button and also an Exit menu option, then you won't be able to tell the difference when your window.Read returns.  Hopefully will not be a problem.      
+Beginning in version 3.01 you can add a menubar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as values.  The value returned will be the entire menu entry, including the key if you specified one.
+
       
 This definition:      
       
@@ -3442,7 +3494,8 @@ They menu_def layout produced this window:
       
 ![menu](https://user-images.githubusercontent.com/13696193/45306723-56b7cb00-b4eb-11e8-8cbd-faef0c90f8b4.jpg)      
       
-      
+     
+## Menu Shortcut keys      
 You have used ALT-key in other Windows programs to navigate menus.  For example Alt-F+X exits the program.  The Alt-F pulls down the File menu.  The X selects the entry marked Exit.      
       
 The good news is that PySimpleGUI allows you to create the same kind of menus!  Your program can play with the big-boys.  And, it's trivial to do.      
@@ -3461,12 +3514,32 @@ menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit'  ]],
 ```      
   And this is the spiffy menu it produced:      
   ![menus with shortcuts](https://user-images.githubusercontent.com/13696193/46251674-f5b74f00-c427-11e8-95c6-547adc59041b.jpg)      
+
+
+##  Disabled Menu Entries
+
+If you want one of your menu items to be disabled, then place a '!' in front of the menu entry.  To disable the Paste menu entry in the previous examples, the entry would be:
+`['!&Edit', ['Paste', ['Special', 'Normal',], 'Undo'],]`
+
+If your want to change the disabled menu item flag / character from '!' to something else, change the variable `MENU_DISABLED_CHARACTER`
+
+## Keys for Menus
+
+Beginning in version 3.17 you can add a `key` to your menu entries.  The `key` value will be removed prior to be inserted into the menu.  When you receive Menu events, the entire menu entry, including the `key` is returned.  A key is indicated by adding `::` after a menu entry, followed by the key.
+
+To add the `key` `_MY_KEY_` to the Special menu entry, the code would be:
+
+`['&Edit', ['Paste', ['Special::_MY_KEY_', 'Normal',], 'Undo'],]`
       
-      
-    
+ If you want to change the characters that indicate a key follows from '::' to something else, change the variable `MENU_KEY_SEPARATOR`   
+
     
 # Sample Applications      
       
+There are too many to list!!
+
+There are over 130 sample programs to give you a jump start.
+
 Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:      
       
   | Source File| Description |      
@@ -3986,12 +4059,11 @@ New `Element` shortcut function for `FindElement`
 Dummy Stretch Element made for backwards compatibility with Qt
 Timer function prints in milliseconds now, was seconds
 
-### 3.17.0 &1.17.0 1-Dec-2018
+### 3.17.0 &1.17.0 2-Dec-2018
 Tooltip offset now programmable.  Set variable DEFAULT_TOOLTIP_OFFSET.  Defaults to (20,-20)
 Tooltips are always on top now
 Disable menu items
 Menu items can have keys
-StatusBar Element (preparing for a real status bar in Qt)
 enable_events parameter added to ALL Elements capable of generating events
 select parameter to InputText.Update will select the input text
 Listbox.Update - set_to_index parameter will select a single items
@@ -4000,7 +4072,10 @@ Menus have an entry in the return values
 LayoutAndRead depricated
 Multi-window support continues (X detection)
 PopupScrolled now has a location parameter
-
+row_height parameter to Table Element
+Stretch Element (DUMMY) so that can be source code compatible with Qt
+ButtonMenu Element (DUMMY) so can be source code compatible with Qt.  Will implement eventually
+StatusBar Element (preparing for a real status bar in Qt) based on Text Element
 
 ### Upcoming      
 Make suggestions people!  Future release features      
