@@ -4060,22 +4060,24 @@ Dummy Stretch Element made for backwards compatibility with Qt
 Timer function prints in milliseconds now, was seconds
 
 ### 3.17.0 &1.17.0 2-Dec-2018
-Tooltip offset now programmable.  Set variable DEFAULT_TOOLTIP_OFFSET.  Defaults to (20,-20)
-Tooltips are always on top now
-Disable menu items
-Menu items can have keys
-enable_events parameter added to ALL Elements capable of generating events
-select parameter to InputText.Update will select the input text
-Listbox.Update - set_to_index parameter will select a single items
-Menus can be updated!
-Menus have an entry in the return values
-LayoutAndRead depricated
-Multi-window support continues (X detection)
-PopupScrolled now has a location parameter
-row_height parameter to Table Element
-Stretch Element (DUMMY) so that can be source code compatible with Qt
-ButtonMenu Element (DUMMY) so can be source code compatible with Qt.  Will implement eventually
-StatusBar Element (preparing for a real status bar in Qt) based on Text Element
+
+* Tooltip offset now programmable.  Set variable DEFAULT_TOOLTIP_OFFSET.  Defaults to (20,-20)
+* Tooltips are always on top now
+* Disable menu items
+* Menu items can have keys
+* StatusBar Element (preparing for a real status bar in Qt)
+* enable_events parameter added to ALL Elements capable of generating events
+* InputText.Update select parameter will select the input text
+* Listbox.Update - set_to_index parameter will select a single items
+* Menus can be updated!
+* Menus have an entry in the return values
+* LayoutAndRead depricated
+* Multi-window support continues (X detection)
+* PopupScrolled now has a location parameter
+* row_height parameter to Table Element
+* Stretch Element (DUMMY) so that can be source code compatible with Qt
+* ButtonMenu Element (DUMMY) so can be source code compat with Qt.  Will implement eventually
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
