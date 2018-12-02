@@ -4002,65 +4002,63 @@ Emergency patch release... going out same day as previous release
  
 
 ### 3.14.0 & 1.14.0
-
- - More windowing changes... 
-	using a hidden root windowing (Tk())
-	all children are Toplevel() windows
-Read only setting for:
-	Input Text
-	Multiline
-Font setting for InputCombo, Multiline
-change_submits setting for Radio Element
-SetFocus for multiline, input elements
-Default mon, day, year for calendar chooser button
-Tree element update, added ability to change a single key
-Message parm removed from ReadNonBlocking
-Fix for closing windows using X
-CurrentLocation method for Windows
-Debug Window options
-	location
-	font
-	no_button
-	no_titlebar
-	grab_anywhere
-	keep_on_top
-New Print / EasyPrint options
-	location
-	font
-	no_button
-	no_titlebar
-	grab_anywhere
-	keep_on_top
-New popup, PopupQuickMessage
-PopupGetFolder, PopupGetFile new initial_folder parm
+* More windowing changes... 
+	* using a hidden root windowing (Tk())
+	* all children are Toplevel() windows
+* Read only setting for:
+	* Input Text
+	* Multiline
+* Font setting for InputCombo, Multiline
+* change_submits setting for Radio Element
+* SetFocus for multiline, input elements
+* Default mon, day, year for calendar chooser button
+* Tree element update, added ability to change a single key
+* Message parm removed from ReadNonBlocking
+* Fix for closing windows using X
+* CurrentLocation method for Windows
+* Debug Window options
+	* location
+	* font
+	* no_button
+	* no_titlebar
+	* grab_anywhere
+	* keep_on_top
+* New Print / EasyPrint options
+	* location
+	* font
+	* no_button
+	* no_titlebar
+	* grab_anywhere
+	* keep_on_top
+* New popup, PopupQuickMessage
+* PopupGetFolder, PopupGetFile new initial_folder parm
 
 
 ### 3.15.0 & 1.15.0
 
-Error checking for InputText.Get method
-Text color, background color added to multiline element.Update
-Update method for Output Element - gives ability to clear the output
-Graph Element - Read returns values if new flages set
-* Change submits, drag submits
-* Returns x,y coordinates
-
-Column element new parm vertical_scroll_only
-Table element new parm - bind return key - returns if return or double click
-New Window parms - size, disable_close
-"Better" multiwindow capabilities
-Window.Size property
-Popups - new title parm, custom_text
-* title sets the window title
-* custom_text - single string or tuple string sets text on button(s)
+* Error checking for InputText.Get method
+* Text color, background color added to multiline element.Update
+* Update method for Output Element - gives ability to clear the output
+* Graph Element - Read returns values if new flages set
+	* Change submits, drag submits
+	*	Returns x,y coordinates
+* Column element new parm vertical_scroll_only
+* Table element new parm - bind return key - returns if return or double click
+* New Window parms - size, disable_close
+* "Better" multiwindow capabilities
+* Window.Size property
+* Popups - new title parm, custom_text
+	* title sets the window title
+	* custom_text - single string or tuple string sets text on button(s)
 
 ### 3.16.0 & 1.16.0
-Bug fix in PopupScrolled
-New `Element` shortcut function for `FindElement`
-Dummy Stretch Element made for backwards compatibility with Qt
-Timer function prints in milliseconds now, was seconds
+* Bug fix in PopupScrolled
+* New `Element` shortcut function for `FindElement`
+* Dummy Stretch Element made for backwards compatibility with Qt
+* Timer function prints in milliseconds now, was seconds
 
 ### 3.17.0 &1.17.0 2-Dec-2018
-
+3.17.0 2-Dec-2017
 * Tooltip offset now programmable.  Set variable DEFAULT_TOOLTIP_OFFSET.  Defaults to (20,-20)
 * Tooltips are always on top now
 * Disable menu items
@@ -4077,7 +4075,6 @@ Timer function prints in milliseconds now, was seconds
 * row_height parameter to Table Element
 * Stretch Element (DUMMY) so that can be source code compatible with Qt
 * ButtonMenu Element (DUMMY) so can be source code compat with Qt.  Will implement eventually
-
 
 ### Upcoming      
 Make suggestions people!  Future release features      
