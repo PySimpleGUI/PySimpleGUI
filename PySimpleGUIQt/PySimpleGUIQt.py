@@ -470,7 +470,7 @@ class Element():
     def Update(self, widget, background_color=None, text_color=None, font=None):
         style = str(widget.styleSheet())
         if font is not None:
-            style = create_style_from_font(font)
+            style += create_style_from_font(font)
         if text_color is not None:
             style += 'color: %s;' % text_color
         if background_color is not None:
@@ -609,7 +609,7 @@ class Combo(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.VisibleItems = visible_items
         self.AutoComplete = auto_complete
-
+        self.QT_ComboBox = None
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
 
@@ -624,7 +624,7 @@ class Combo(Element):
         self.QT_ComboBox.addItems(self.Values)
 
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None):
         if values is not None:
             self.Values = values
             for i in range(self.QT_ComboBox.count()):
@@ -643,9 +643,8 @@ class Combo(Element):
             self.QT_ComboBox.setDisabled(False)
         if readonly is not None:
             self.Readonly = readonly
-        if font is not None:
-            style = create_style_from_font(font)
-            self.QT_ComboBox.setStyleSheet(style)
+        super().Update(self.QT_ComboBox, background_color=background_color, text_color=text_color, font=font)
+
 
 
     def __del__(self):
@@ -764,6 +763,7 @@ class Listbox(Element):
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.QT_ListWidget = None
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
@@ -773,7 +773,7 @@ class Listbox(Element):
             element_callback_quit_mainloop(self)
 
 
-    def Update(self, values=None, disabled=None, set_to_index=None):
+    def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None):
         if values is not None:
             self.Values = values
             for i in range(self.QT_ListWidget.count()):
@@ -785,6 +785,7 @@ class Listbox(Element):
             self.QT_ListWidget.setDisabled(False)
         if set_to_index is not None:
             self.QT_ListWidget.setCurrentRow(set_to_index)
+        super().Update(self.QT_ListWidget, background_color=background_color, text_color=text_color, font=font)
 
         return
 
@@ -834,12 +835,13 @@ class Radio(Element):
         self.Disabled = disabled
         self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
+        self.QT_Radio_Button = None
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip)
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, background_color=None, text_color=None, font=None):
         if value is not None:
             self.InitialState = value
         if disabled:
@@ -848,6 +850,9 @@ class Radio(Element):
             self.QT_Radio_Button.setDisabled(False)
         if value:
             self.QT_Radio_Button.setChecked(True)
+        super().Update(self.QT_Radio_Button, background_color=background_color, text_color=text_color, font=font)
+
+
 
     def __del__(self):
         super().__del__()
@@ -881,6 +886,7 @@ class Checkbox(Element):
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
+        self.QT_Checkbox = None
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -894,12 +900,13 @@ class Checkbox(Element):
     def Get(self):
         return self.TKIntVar.get()
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, background_color=None, text_color=None, font=None):
         self.QT_Checkbox.setChecked(value or False)
         if disabled == True:
             self.QT_Checkbox.setDisabled(True)
         elif disabled == False:
             self.QT_Checkbox.setDisabled(False)
+        super().Update(self.QT_Checkbox, background_color=background_color, text_color=text_color, font=font)
 
     def __del__(self):
         super().__del__()
@@ -942,6 +949,7 @@ class Spin(Element):
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.QT_Spinner = None
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
                          key=key, pad=pad, tooltip=tooltip)
@@ -953,7 +961,7 @@ class Spin(Element):
             return
         element_callback_quit_mainloop(self)
 
-    def Update(self, value=None, values=None, disabled=None):
+    def Update(self, value=None, values=None, disabled=None, background_color=None, text_color=None, font=None):
         if values != None:
             self.Values = values
             self.QT_Spinner.setRange(self.Values[0], self.Values[1])
@@ -964,6 +972,7 @@ class Spin(Element):
             self.QT_Spinner.setDisabled(True)
         elif disabled == False:
             self.QT_Spinner.setDisabled(False)
+        super().Update(self.QT_Spinner, background_color=background_color, text_color=text_color, font=font)
 
 
     def __del__(self):
@@ -1007,7 +1016,7 @@ class Multiline(Element, QWidget):
         tsize = size                # convert tkinter size to pixels
         if size[0] is not None and size[0] < 100:
             tsize = convert_tkinter_size_to_Qt(size)
-
+        self.QT_TextEdit = None
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
@@ -1036,7 +1045,7 @@ class Multiline(Element, QWidget):
         element_callback_quit_mainloop(self)
 
 
-    def Update(self, value=None, disabled=None, append=False, font=None):
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None):
         if value is not None and not append:
             self.DefaultText = value
             self.QT_TextEdit.setText(str(value))
@@ -1047,9 +1056,8 @@ class Multiline(Element, QWidget):
             self.QT_TextEdit.setDisabled(True)
         elif disabled == False:
             self.QT_TextEdit.setDisabled(False)
-        if font is not None:
-            style = create_style_from_font(font)
-            self.QT_TextEdit.setStyleSheet(style)
+        super().Update(self.QT_TextEdit, background_color=background_color, text_color=text_color, font=font)
+
 
     def Get(self):
         self.QT_TextEdit.toPlainText()
@@ -1066,10 +1074,7 @@ class Multiline(Element, QWidget):
 #                           ScrolledOutput                               #
 # ---------------------------------------------------------------------- #
 class MultilineOutput(Element):
-    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
-                 key=None, focus=False,
-                 font=None, pad=None, tooltip=None):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None):
         '''
         Multiline Element
         :param default_text:
@@ -1096,13 +1101,14 @@ class MultilineOutput(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
+        self.QT_TextBrowser = None
 
         super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
         return
 
 
-    def Update(self, value=None, disabled=None, append=False, font=None):
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None):
         if value is not None and not append:
             self.QT_TextBrowser.setText(str(value))
         elif value is not None and append:
@@ -1112,9 +1118,8 @@ class MultilineOutput(Element):
             self.QT_TextBrowser.setDisabled(True)
         elif disabled == False:
             self.QT_TextBrowser.setDisabled(False)
-        if font is not None:
-            style = create_style_from_font(font)
-            self.QT_TextBrowser.setStyleSheet(style)
+        super().Update(self.QT_TextBrowser, background_color=background_color, text_color=text_color, font=font)
+
 
     def Get(self):
         self.QT_TextBrowser.toPlainText()
@@ -1158,7 +1163,6 @@ class Text(Element):
             bg = background_color
         self.QT_Label = None
 
-
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
         return
@@ -1169,18 +1173,10 @@ class Text(Element):
         element_callback_quit_mainloop(self)
 
     def Update(self, value=None, background_color=None, text_color=None, font=None):
-        style = str(self.QT_Label.styleSheet())
-        if font is not None:
-            style = create_style_from_font(font)
-        if text_color is not None:
-            style += 'color: %s;' % text_color
-        if background_color is not None:
-            style += 'background-color: %s;' % background_color
-        # print(style)
-        self.QT_Label.setStyleSheet(style)
         if value is not None:
             self.DisplayText = str(value)
             self.QT_Label.setText(str(value))
+        super().Update(self.QT_Label, background_color=background_color, text_color=text_color, font=font)
 
 
     def __del__(self):
@@ -1212,6 +1208,7 @@ class Output(Element):
         self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.QT_TextBrowser = None
 
         tsize = convert_tkinter_size_to_Qt(size) if size[0] is not None and size[0] < 100 else size
 
@@ -1231,6 +1228,13 @@ class Output(Element):
 
         # if self.my_stdout:
         #     self.my_stdout.write(str(m))
+
+
+    def Output(self,value=None, background_color=None, text_color=None, font=None):
+        if value is not None:
+            self.QT_TextBrowser.setText(value)
+        super().Update(self.QT_TextBrowser, background_color=background_color, text_color=text_color, font=font)
+
 
     def __del__(self):
         sys.stdout = self.my_stdout
@@ -1427,11 +1431,10 @@ class Button(Element):
                 pass # TODO # kick the users out of the mainloop
         return
 
-    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
+    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, font=None):
         if text is not None:
             self.QT_QPushButton.setText(str(text))
             self.ButtonText = text
-
         if self.ParentForm.Font and (self.Font == DEFAULT_FONT or not self.Font):
             font = self.ParentForm.Font
         elif self.Font is not None:
@@ -1439,30 +1442,21 @@ class Button(Element):
         else:
             font = DEFAULT_FONT
 
+        fg = bg = None
         if button_color != (None, None):
             self.ButtonColor = button_color
-        style = str(self.QT_QPushButton.styleSheet())
-        style += create_style_from_font(font)
+            fg, bg = button_color
         if self.Disabled != disabled and disabled is not None:
             if not disabled:            # if enabling buttons, set the color
-                style += 'color: %s;' % self.ButtonColor[0]
-                style += 'background-color: %s;' % self.ButtonColor[1]
+                fg, bg = self.ButtonColor
             self.Disabled = disabled
             if disabled:
                 self.QT_QPushButton.setDisabled(True)
             else:
                 self.QT_QPushButton.setDisabled(False)
-
-        if button_color != (None, None):
-            style += 'color: %s;' % self.ButtonColor[0]
-            style += 'background-color: %s;' % self.ButtonColor[1]
-
-        if style != '':
-            # print(style)
-            self.QT_QPushButton.setStyleSheet(style)
-
-
-
+        # fg, bg = self.ButtonColor
+        print(f'Button update fg, bg {fg}, {bg}')
+        super().Update(self.QT_QPushButton, background_color=bg, text_color=fg, font=font)
 
 
     def GetText(self):
@@ -3280,6 +3274,8 @@ class Window:
             print('*** Error loading form to disk ***')
 
     def GetScreenDimensions(self):
+        if _my_windows.QTApplication is None:
+            _my_windows.QTApplication = QApplication(sys.argv)
         try:
             screen = _my_windows.QTApplication.primaryScreen()
         except:
