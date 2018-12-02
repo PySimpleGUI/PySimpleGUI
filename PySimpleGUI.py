@@ -955,8 +955,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False,
-                 font=None, pad=None, tooltip=None):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None):
         '''
         Multiline Element
         :param default_text:
@@ -967,13 +966,16 @@ class Multiline(Element):
         :param auto_size_text:
         :param background_color:
         :param text_color:
+        :param change_submits:
+        :param enable_events:
         :param do_not_clear:
         :param key:
         :param focus:
+        :param font:
         :param pad:
         :param tooltip:
-        :param font:
         '''
+
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -1274,11 +1276,8 @@ class Output(Element):
 
     def Update(self, value=None):
         if value is not None:
-            # try:
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
-            # except:
-            #     pass
 
 
     def __del__(self):
@@ -2630,7 +2629,7 @@ class Menu(Element):
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None):
         '''
@@ -2667,6 +2666,7 @@ class Table(Element):
         self.SelectMode = select_mode
         self.DisplayRowNumbers = display_row_numbers
         self.NumRows = num_rows if num_rows is not None else size[1]
+        self.RowHeight = row_height
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
@@ -4856,6 +4856,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
+                if element.RowHeight is not None:
+                    ttk.Style().configure("Treeview", rowheight=element.RowHeight)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.BindReturnKey:
