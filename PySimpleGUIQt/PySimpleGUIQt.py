@@ -2738,6 +2738,8 @@ class SystemTray:
         self.TrayIcon = None
         self.Shown = False
         self.MenuItemChosen = TIMEOUT_KEY
+        self.LastMessage = None
+        self.LastTitle = None
 
         global _my_windows
 
@@ -2796,6 +2798,7 @@ class SystemTray:
         if reason == QSystemTrayIcon.Trigger:
             self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_ACTIVATED
             self.App.exit()
+
 
     def Read(self, timeout=None):
         '''
@@ -2863,6 +2866,8 @@ class SystemTray:
         else:
             self.TrayIcon.showMessage(title, message, time)
 
+        self.LastMessage = message
+        self.LastTitle = title
         return self
 
     def Close(self):
