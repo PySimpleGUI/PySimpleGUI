@@ -1,10 +1,12 @@
 # USAGE
 # python yolo.py --image images/baggage_claim.jpg --yolo yolo-coco
 """
-usage: yolo_video.py [-h] -i INPUT -o OUTPUT -y YOLO [-c CONFIDENCE]
+A Yolo image processor with a GUI front-end
+The original code was command line driven.  Now these parameters are collected via a GUI
+
+old usage: yolo_video.py [-h] -i INPUT -o OUTPUT -y YOLO [-c CONFIDENCE]
                      [-t THRESHOLD]
 """
-
 
 # import the necessary packages
 import numpy as np
@@ -12,17 +14,15 @@ import argparse
 import time
 import cv2
 import os
-import PySimpleGUI as sg
-from PIL import Image
-import io
+import PySimpleGUIQt as sg
 
 layout = 	[
 		[sg.Text('YOLO')],
-		[sg.Text('Path to image'), sg.In(r'A:\Dropbox\Camera Uploads\2018-11-16 17.35.15.jpg',size=(40,1), key='image'), sg.FileBrowse()],
-		[sg.Text('Yolo base path'), sg.In(r'C:\Python\PycharmProjects\yolo-object-detection\yolo-coco',size=(40,1), key='yolo'), sg.FolderBrowse()],
-		[sg.Text('Confidence'), sg.Slider(range=(0,1),orientation='h', resolution=.1, default_value=.5, size=(15,15), key='confidence')],
-		[sg.Text('Threshold'), sg.Slider(range=(0,1), orientation='h', resolution=.1, default_value=.3, size=(15,15), key='threshold')],
-		[sg.OK(), sg.Cancel()]
+		[sg.Text('Path to image'), sg.In(r'C:/Python/PycharmProjects/YoloObjectDetection/images/baggage_claim.jpg',size=(40,1), key='image'), sg.FileBrowse()],
+		[sg.Text('Yolo base path'), sg.In(r'yolo-coco',size=(40,1), key='yolo'), sg.FolderBrowse()],
+		[sg.Text('Confidence'), sg.Slider(range=(0,10),orientation='h', resolution=1, default_value=5, size=(15,15), key='confidence')],
+		[sg.Text('Threshold'), sg.Slider(range=(0,10), orientation='h', resolution=1, default_value=3, size=(15,15), key='threshold')],
+		[sg.OK(), sg.Cancel(), sg.Stretch()]
 			]
 
 win = sg.Window('YOLO',
@@ -45,8 +45,8 @@ win.Close()
 # args = vars(ap.parse_args())
 
 # load the COCO class labels our YOLO model was trained on
-args['threshold'] = float(args['threshold'])
-args['confidence'] = float(args['confidence'])
+args['threshold'] = float(args['threshold']/10)
+args['confidence'] = float(args['confidence']/10)
 
 labelsPath = os.path.sep.join([args["yolo"], "coco.names"])
 LABELS = open(labelsPath).read().strip().split("\n")
@@ -66,6 +66,7 @@ net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
 # load our input image and grab its spatial dimensions
 image = cv2.imread(args["image"])
+
 (H, W) = image.shape[:2]
 
 # determine only the *output* layer names that we need from YOLO
@@ -143,18 +144,8 @@ if len(idxs) > 0:
 			0.5, color, 2)
 
 # show the output image
+imgbytes = cv2.imencode('.png', image)[1].tobytes()  # ditto
 
-
-# let img be the PIL image
-img = Image.fromarray(image)  # create PIL image from frame
-size = img.size
-size = (size[0]//4, size[1]//4)
-img = img.resize(size)
-bio = io.BytesIO()  # a binary memory resident stream
-img.save(bio, format='PNG')  # save image as png to it
-imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
-
-# imgbytes = cv2.imencode('.png', image)[1].tobytes()  # ditto
 
 layout = 	[
 		[sg.Text('Yolo Output')],
