@@ -339,7 +339,7 @@ class ToolTip:
 # ------------------------------------------------------------------------- #
 class Element():
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
-                 key=None, pad=None, tooltip=None):
+                 key=None, pad=None, tooltip=None, visible=True):
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -361,6 +361,7 @@ class Element():
         self.Key = key  # dictionary key for return values
         self.Tooltip = tooltip
         self.TooltipObject = None
+        self.Visible = visible
 
     def FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
@@ -547,7 +548,7 @@ Input = InputText
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
-class InputCombo(Element):
+class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
                  readonly=False, font=None):
@@ -614,7 +615,7 @@ class InputCombo(Element):
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
-Combo = InputCombo
+InputCombo = Combo
 DropDown = InputCombo
 Drop = InputCombo
 
@@ -1866,7 +1867,7 @@ class Graph(Element):
 # ---------------------------------------------------------------------- #
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, visible=True,
                  tooltip=None):
         '''
         Frame Element
@@ -1901,7 +1902,7 @@ class Frame(Element):
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
-                         font=font, pad=pad, key=key, tooltip=tooltip)
+                         font=font, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
     def AddRow(self, *args):
@@ -1928,6 +1929,14 @@ class Frame(Element):
         row = self.Rows[row_num]
         element = row[col_num]
         return element
+
+
+    def Update(self, visible=None):
+        if visible is False:
+            self.TKFrame.pack_forget()
+        elif visible is True:
+            self.TKFrame.pack()
+
 
     def __del__(self):
         for row in self.Rows:
@@ -2158,7 +2167,7 @@ class Slider(Element):
         self.TickInterval = tick_interval
         temp_size = size
         if temp_size == (None, None):
-            temp_size = (20, 20) if orientation.startswith('h') else (8, 20)
+            temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip)
@@ -2177,6 +2186,7 @@ class Slider(Element):
             self.TKScale['state'] = 'disabled'
         elif disabled == False:
             self.TKScale['state'] = 'normal'
+
 
     def SliderChangedHandler(self, event):
         # first, get the results table built
@@ -2272,7 +2282,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, visible=True, key=None):
         '''
         Container for elements that are stacked into rows
         :param layout:
@@ -2291,13 +2301,14 @@ class Column(Element):
         self.ParentWindow = None
         self.Rows = []
         self.TKFrame = None
+        self.TKColFrame = None
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key, visible=visible)
         return
 
     def AddRow(self, *args):
@@ -2324,6 +2335,13 @@ class Column(Element):
         row = self.Rows[row_num]
         element = row[col_num]
         return element
+
+    def Update(self, visible=None):
+        if visible is False:
+            self.TKColFrame.pack_forget()
+        elif visible is True:
+            self.TKColFrame.pack()
+
 
     def __del__(self):
         for row in self.Rows:
@@ -2663,7 +2681,7 @@ class Table(Element):
         self.AlternatingRowColor = alternating_row_color
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
-        self.BindReturnKey = bind_return_key 
+        self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
@@ -4164,8 +4182,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     col_frame = tk.Frame(tk_row_frame)
                     PackFormIntoFrame(element, col_frame, toplevel_form)
-
-                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                if element.Visible:
+                    col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                element.TKColFrame = col_frame
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
                                         highlightcolor=element.BackgroundColor)
@@ -4660,8 +4679,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
                 labeled_frame = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
+                element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
                 labeled_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if not element.Visible:
+                    labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     labeled_frame.configure(background=element.BackgroundColor,
                                             highlightbackground=element.BackgroundColor,
@@ -6670,7 +6692,7 @@ def main():
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
                FolderBrowse(tooltip='Browse for a folder')],
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-              [Ok(), Cancel()]]
+              [Ok(bind_return_key=True), Cancel()]]
 
     window = Window('Demo window..').Layout(layout)
     event, values = window.Read()
