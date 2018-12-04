@@ -17,7 +17,7 @@ if not FORCE_PYQT5:
         from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
         from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-        from PySide2.QtCore import Qt,QProcess, QEvent
+        from PySide2.QtCore import Qt,QProcess, QEvent, QSize
         import PySide2.QtGui as QtGui
         import PySide2.QtCore as QtCore
         import PySide2.QtWidgets as QtWidgets
@@ -29,7 +29,7 @@ if not FORCE_PYQT5:
         from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
         from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-        from PyQt5.QtCore import Qt,QProcess, QEvent
+        from PyQt5.QtCore import Qt,QProcess, QEvent, QSize
         import PyQt5.QtGui as QtGui
         import PyQt5.QtCore as QtCore
         import PyQt5.QtWidgets as QtWidgets
@@ -624,7 +624,7 @@ class Combo(Element):
         self.QT_ComboBox.addItems(self.Values)
 
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
             self.Values = values
             for i in range(self.QT_ComboBox.count()):
@@ -643,6 +643,11 @@ class Combo(Element):
             self.QT_ComboBox.setDisabled(False)
         if readonly is not None:
             self.Readonly = readonly
+        if visible is False:
+            self.QT_ComboBox.setVisible(False)
+        elif visible is True:
+            self.QT_ComboBox.setVisible(True)
+
         super().Update(self.QT_ComboBox, background_color=background_color, text_color=text_color, font=font)
 
 
@@ -1455,7 +1460,7 @@ class Button(Element):
             else:
                 self.QT_QPushButton.setDisabled(False)
         # fg, bg = self.ButtonColor
-        print(f'Button update fg, bg {fg}, {bg}')
+        # print(f'Button update fg, bg {fg}, {bg}')
         super().Update(self.QT_QPushButton, background_color=bg, text_color=fg, font=font)
 
 
@@ -2185,7 +2190,7 @@ class Slider(Element):
             return
         element_callback_quit_mainloop(self)
 
-    def Update(self, value=None, range=(None, None), disabled=None):
+    def Update(self, value=None, range=(None, None), disabled=None, visible=None):
         if value is not None:
             self.QT_Slider.setValue(int(value))
             self.DefaultValue = value
@@ -2193,6 +2198,11 @@ class Slider(Element):
             self.QT_Slider.setDisabled(True)
         elif disabled == False:
             self.QT_Slider.setDisabled(False)
+
+        if visible is False:
+            self.QT_Slider.setVisible(False)
+        elif visible is True:
+            self.QT_Slider.setVisible(True)
 
     def SliderChangedHandler(self, event):
         # first, get the results table built
@@ -2302,7 +2312,7 @@ class Stretch(Element):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,visible=True, key=None):
         '''
         Column Element
         :param layout:
@@ -2326,10 +2336,12 @@ class Column(Element):
         # self.ImageSize = image_size
         # self.ImageSubsample = image_subsample
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.QT_QGroupBox = None
+        self.Visible = visible
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key)
         return
 
     def AddRow(self, *args):
@@ -2356,6 +2368,14 @@ class Column(Element):
         row = self.Rows[row_num]
         element = row[col_num]
         return element
+
+
+    def Update(self, visible=None):
+        if visible is False:
+            self.QT_QGroupBox.setVisible(False)
+        elif visible is True:
+            self.QT_QGroupBox.setVisible(True)
+
 
     def __del__(self):
         for row in self.Rows:
@@ -3009,7 +3029,7 @@ class Window:
         self.DisableClose = disable_close
         self._Hidden = False
         self.QTApplication = None
-        self.Size=size
+        self._Size=size
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.FocusElement = None
         self.BackgroundImage = background_image
@@ -3511,6 +3531,14 @@ class Window:
         #     print("quitting window")
         #     self.QTApplication.exit()  # kick the users out of the mainloop
 
+    @property
+    def Size(self):
+        size =  self.QT_QMainWindow.sizeHint()
+        return size.width(), size.height()
+
+    @Size.setter
+    def Size(self, size):
+        self.QT_QMainWindow.resize(QSize(size[0], size[1]))
 
 
 
@@ -4327,6 +4355,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             if element_type == ELEM_TYPE_COLUMN:
                 # column_widget = QWidget()
                 column_widget = QGroupBox()
+                element.QT_QGroupBox = column_widget
                 # column_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
 
                 style = create_style_from_font(font)
@@ -4344,6 +4373,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 column_widget.setLayout(column_vbox)
 
                 column_widget.setStyleSheet(style)
+                if not element.Visible:
+                    column_widget.setVisible(False)
 
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  TEXT element  ------------------------- #
@@ -5287,8 +5318,8 @@ def StartupTK(window):
     # Resize the window to the size it should be at... dunno why I need to do this but I do...
     window.QT_QMainWindow.resize(window.QT_QMainWindow.sizeHint())
 
-    if window.Size != (None, None):
-        window.QT_QMainWindow.resize(window.Size[0], window.Size[1])
+    if window._Size != (None, None):
+        window.QT_QMainWindow.resize(window._Size[0], window._Size[1])
 
     timer = None
     if window.AutoClose:
