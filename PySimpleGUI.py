@@ -1514,6 +1514,14 @@ class Button(Element):
     def GetText(self):
         return self.ButtonText
 
+
+    def SetFocus(self):
+        try:
+            self.TKButton.focus_set()
+        except:
+            pass
+
+
     def __del__(self):
         try:
             self.TKButton.__del__()
