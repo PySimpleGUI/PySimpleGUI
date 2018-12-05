@@ -1472,6 +1472,10 @@ class Button(Element):
     def GetText(self):
         return self.ButtonText
 
+    def SetFocus(self):
+        self.QT_QPushButton.setFocus()
+
+
     def __del__(self):
         super().__del__()
 
@@ -4484,6 +4488,24 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_QPushButton.setFixedHeight(element_size[1])
 
+
+                #
+                # elif element.Data is not None:
+                #     qlabel.setText('')
+                #     ba = QtCore.QByteArray.fromRawData(element.Data)
+                #     pixmap = QtGui.QPixmap()
+                #     pixmap.loadFromData(ba)
+                #     qlabel.setPixmap(pixmap)
+                # elif element.DataBase64:
+                #     qlabel.setText('')
+                #     ba = QtCore.QByteArray.fromBase64(element.DataBase64)
+                #     pixmap = QtGui.QPixmap()
+                #     pixmap.loadFromData(ba)
+                #     qlabel.setPixmap(pixmap)
+
+                if element.ImageFilename is not None:
+                    element.QT_QPushButton.setIcon(QtGui.QPixmap(element.ImageFilename))
+                    element.QT_QPushButton.setIconSize(QtGui.QPixmap(element.ImageFilename).rect().size())
                 if element.ImageData:
                     ba = QtCore.QByteArray.fromBase64(element.ImageData)
                     pixmap = QtGui.QPixmap()
