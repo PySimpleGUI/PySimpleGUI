@@ -15,7 +15,7 @@ if not FORCE_PYQT5:
             QHBoxLayout, QListWidget, QDial, QTableWidget
         from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-        from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
+        from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
         from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
         from PySide2.QtCore import Qt,QProcess, QEvent, QSize
         import PySide2.QtGui as QtGui
@@ -27,7 +27,7 @@ if not FORCE_PYQT5:
             QHBoxLayout, QListWidget, QDial, QTableWidget
         from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-        from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon
+        from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
         from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
         from PyQt5.QtCore import Qt,QProcess, QEvent, QSize
         import PyQt5.QtGui as QtGui
@@ -40,7 +40,7 @@ else:
     from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, \
         QDialog, QAbstractItemView
     from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, \
-        QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+        QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar, QColorDialog
     from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, \
         QAction, QSystemTrayIcon
     from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
@@ -1301,6 +1301,7 @@ class Button(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.QT_QPushButton = None
+        self.ColorChosen = None
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
@@ -1374,7 +1375,13 @@ class Button(Element):
                 else:
                     target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
-            color = 'TODO'
+            qcolor = QColorDialog.getColor()
+            rgb_color = qcolor.getRgb()
+            color= '#' + ''.join('%02x'% i for i in rgb_color[:3])
+            if target_element.Type == ELEM_TYPE_BUTTON:
+                target_element.ColorChosen = color
+            else:
+                target_element.Update(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             qt_types = convert_tkinter_filetypes_to_qt(self.FileTypes)
             file_name = QFileDialog.getOpenFileNames(dir=self.InitialFolder, filter=qt_types)
@@ -5385,6 +5392,7 @@ def StartupTK(window):
         window.FocusElement.setFocus()
 
     # Resize the window to the size it should be at... dunno why I need to do this but I do...
+    # add 5 pixels onto it because stuff was getting cut off
     qsize = window.QT_QMainWindow.sizeHint()
     size = [qsize.width(), qsize.height()]
     size[0] += 5
