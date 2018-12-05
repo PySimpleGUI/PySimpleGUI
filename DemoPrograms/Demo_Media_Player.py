@@ -24,18 +24,17 @@ def MediaPlayerGUI():
 
     # A text element that will be changed to display messages in the GUI
 
-    ImageButton = lambda key:sg.Button('', button_color=(background,background), image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0, key=key)
+    ImageButton = lambda image_filename, key:sg.Button('', button_color=(background,background), image_filename=image_filename, image_size=(50, 50), image_subsample=2, border_width=0, key=key)
 
     # define layout of the rows
-    layout= [[sg.Text('Media File Player',size=(17,1), font=("Helvetica", 25))],
+    layout= [[sg.Text('Media File Player', font=("Helvetica", 25))],
              [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],
-             [ImageButton(key='Restart Song'), sg.Text(' ' * 2),
-              ImageButton(key='Pause'),
+             [ImageButton(image_restart, key='Restart Song'), sg.Text(' ' * 2),
+              ImageButton(image_pause, key='Pause'),
                                 sg.Text(' ' * 2),
-              ImageButton(key='Next'),
+              ImageButton(image_next, key='Next'),
                                 sg.Text(' ' * 2),
-              sg.Text(' ' * 2),ImageButton(key='Exit')],
-             [sg.Text('_'*20)],
+              sg.Text(' ' * 2),ImageButton(image_exit, key='Exit')],
              ]
 
     # Open a form, note that context manager can't be used generally speaking for async forms
