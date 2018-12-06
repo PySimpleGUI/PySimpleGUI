@@ -4599,8 +4599,14 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_ComboBox.setDisabled(True)
 
                 element.QT_ComboBox.addItems(element.Values)
+
                 element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
-                # element.QT_ComboBox.setVisible(element.VisibleItems)   # does not look like the right use of this function!
+                if element.DefaultValue is not None:
+                    for index, v in enumerate(element.Values):
+                        if v == element.DefaultValue:
+                            element.QT_ComboBox.setCurrentIndex(index)
+                            break
+
                 if element.ChangeSubmits:
                     element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
                 if element.Tooltip:
