@@ -487,7 +487,7 @@ class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False,
-                 do_not_clear=False, key=None, focus=False, pad=None):
+                 do_not_clear=False, key=None, focus=False, visible=True, pad=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -505,7 +505,7 @@ class InputText(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
-                         font=font, tooltip=tooltip)
+                         font=font, tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, select=None):
         if disabled is True:
@@ -1031,7 +1031,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, visible=True, tooltip=None):
         '''
         Text Element
         :param text:
@@ -1057,7 +1057,7 @@ class Text(Element):
         else:
             bg = background_color
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None):
@@ -4242,6 +4242,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True)
+                if element.Visible is False:
+                    tktext_label.pack_forget()
                 element.TKText = tktext_label
                 if element.ClickSubmits:
                     tktext_label.bind('<Button-1>', element.TextClickedHandler)
@@ -4344,6 +4346,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
                 element.TKEntry.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='x')
+                if element.Visible is False:
+                    element.TKEntry.pack_forget()
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKEntry.focus_set()
@@ -6579,7 +6583,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.LayoutAndRead(layout)
+    (button, input_values) = window.Layout(layout).Read()
 
     if button != 'Ok':
         return None
