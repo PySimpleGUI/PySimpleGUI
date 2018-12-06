@@ -1,6 +1,6 @@
 import sys
 if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
+    import PySimpleGUIQt as sg
 else:
     import PySimpleGUI27 as sg
 
@@ -57,7 +57,7 @@ def main():
             [sg.Button('Start', bind_return_key=True, key='_START_'), sg.Button('Exit')]
         ]
 
-    window.LayoutAndRead(layout, non_blocking=True)
+    window.Layout(layout).Read(timeout=0)
     appStarted = False
 
     # Setup logging and start app
