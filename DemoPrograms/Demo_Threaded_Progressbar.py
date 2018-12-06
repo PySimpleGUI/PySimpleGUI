@@ -9,7 +9,7 @@ Written in 2018 by Orsiris de Jong, www.netpower.fr, works with Python 3+
 from threading import Thread
 from concurrent.futures import Future
 from time import time, sleep
-import PySimpleGUI as Sg
+import PySimpleGUI as sg
 
 # Helper functions for threading class functions with return values using future from https://stackoverflow.com/a/19846691/2635443
 def call_with_future(fn, future, args, kwargs):
@@ -64,18 +64,22 @@ def progressbar(myClass):
     function_two_done = False
 
     # layout of the progress bar window
-    layout = [[Sg.Text('Launching threads')],
-              [Sg.ProgressBar(100, orientation='h', size=(20, 20), key='progressbar')],
-              [Sg.Cancel()]]
+    layout = [[sg.Text('Launching threads')],
+              [sg.ProgressBar(100, orientation='h', size=(20, 20), key='progressbar')],
+              [sg.Cancel()]]
 
     # create the progress bar
-    window = Sg.Window('Init', text_justification='center').Layout(layout)
+    window = sg.Window('Init', text_justification='center').Layout(layout)
 
     startTime = time()
 
     while True:
-        event, values = window.Read(timeout=1)
+        event, values = window.Read(timeout=300)
         if event == 'Cancel' or event is None:
+            if function_one != None:
+                function_one.cancel()
+            if function_two != None:
+                function_two.cancel()
             window.Close()
             exit()
 
@@ -101,11 +105,10 @@ def progressbar(myClass):
             progress += 30
 
         window.FindElement('progressbar').UpdateBar(progress)
-        sleep(.3) # Arbitrary time between loops so UI stays snappy
 
         currentTime = time()
         if (currentTime - startTime) > maxwait:
-            action = Sg.Popup('Seems that it takes too long, shall we continue the program',custom_text=('No', 'Yes'))
+            action = sg.Popup('Seems that it takes too long, shall we continue the program',custom_text=('No', 'Yes'))
             if action == 'No':
                 function_one.cancel()
                 function_two.cancel()
@@ -120,6 +123,7 @@ def progressbar(myClass):
                 """
 
         if progress >= 100:
+            sg.Popup('Execution finished')
             break
     window.Close()
 
@@ -129,4 +133,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main()    
