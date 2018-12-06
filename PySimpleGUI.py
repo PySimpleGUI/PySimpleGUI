@@ -338,8 +338,7 @@ class ToolTip:
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
-                 key=None, pad=None, tooltip=None, visible=True):
+    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -486,8 +485,7 @@ class Element():
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False, enable_events=False,
-                 do_not_clear=False, key=None, focus=False, visible=True, pad=None):
+                 change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, pad=None, visible=True):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -507,7 +505,7 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible)
 
-    def Update(self, value=None, disabled=None, select=None):
+    def Update(self, value=None, disabled=None, select=None, visible=None):
         if disabled is True:
             self.TKEntry['state'] = 'disabled'
         elif disabled is False:
@@ -520,7 +518,10 @@ class InputText(Element):
             self.DefaultText = value
         if select:
             self.TKEntry.select_range(0, 'end')
-
+        if visible is False:
+            self.TKEntry.pack_forget()
+        elif visible is True:
+            self.TKEntry.pack()
 
     def Get(self):
         try:
@@ -550,8 +551,7 @@ Input = InputText
 # ---------------------------------------------------------------------- #
 class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, font=None):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None, readonly=False, font=None, visible=True):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -570,9 +570,9 @@ class Combo(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None):
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -604,8 +604,11 @@ class Combo(Element):
             if self.Readonly:
                 self.TKCombo['state'] = 'readonly'
         if font is not None:
-            self.TKText.configure(font=font)
-
+            self.TKCombo.configure(font=font)
+        if visible is False:
+            self.TKCombo.pack_forget()
+        elif visible is True:
+            self.TKCombo.pack()
     def __del__(self):
         try:
             self.TKCombo.__del__()
@@ -625,7 +628,7 @@ Drop = InputCombo
 # ---------------------------------------------------------------------- #
 class OptionMenu(Element):
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
         InputOptionMenu
         :param values:
@@ -647,9 +650,9 @@ class OptionMenu(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
-    def Update(self, value=None, values=None, disabled=None):
+    def Update(self, value=None, values=None, disabled=None, visible=None):
         if values is not None:
             self.Values = values
         if self.Values is not None:
@@ -665,7 +668,10 @@ class OptionMenu(Element):
             self.TKOptionMenu['state'] = 'disabled'
         elif disabled == False:
             self.TKOptionMenu['state'] = 'normal'
-
+        if visible is False:
+            self.TKOptionMenu.pack_forget()
+        elif visible is True:
+            self.TKOptionMenu.pack()
     def __del__(self):
         try:
             self.TKOptionMenu.__del__()
@@ -682,7 +688,7 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False,enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False,enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
         Listbox Element
         :param values:
@@ -720,9 +726,9 @@ class Listbox(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
-                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
-    def Update(self, values=None, disabled=None, set_to_index=None):
+    def Update(self, values=None, disabled=None, set_to_index=None, visible=None):
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -739,7 +745,10 @@ class Listbox(Element):
                 self.TKListbox.selection_set(set_to_index, set_to_index)
             except:
                 pass
-
+        if visible is False:
+            self.TKListbox.pack_forget()
+        elif visible is True:
+            self.TKListbox.pack()
 
 
     def SetValue(self, values):
@@ -769,7 +778,7 @@ class Listbox(Element):
 # ---------------------------------------------------------------------- #
 class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
-                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None, change_submits=False, enable_events=False):
+                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None, change_submits=False, enable_events=False, visible=True):
         '''
         Radio Button Element
         :param text:
@@ -797,9 +806,9 @@ class Radio(Element):
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible)
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, visible=None):
         location = EncodeRadioRowCol(self.Position[0], self.Position[1])
         if value is not None:
             try:
@@ -811,6 +820,10 @@ class Radio(Element):
             self.TKRadio['state'] = 'disabled'
         elif disabled == False:
             self.TKRadio['state'] = 'normal'
+        if visible is False:
+            self.TKRadio.pack_forget()
+        elif visible is True:
+            self.TKRadio.pack()
 
     def __del__(self):
         try:
@@ -824,8 +837,7 @@ class Radio(Element):
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
-    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, change_submits=False,enable_events=False, disabled=False, key=None, pad=None, tooltip=None):
+    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False,enable_events=False, disabled=False, key=None, pad=None, tooltip=None, visible=True):
         '''
         Checkbox Element
         :param text:
@@ -851,12 +863,12 @@ class Checkbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible)
 
     def Get(self):
         return self.TKIntVar.get()
 
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, visible=None):
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -867,6 +879,10 @@ class Checkbox(Element):
             self.TKCheckbutton.configure(state='disabled')
         elif disabled == False:
             self.TKCheckbutton.configure(state='normal')
+        if visible is False:
+            self.TKCheckbutton.pack_forget()
+        elif visible is True:
+            self.TKCheckbutton.pack()
 
     def __del__(self):
         super().__del__()
@@ -885,9 +901,8 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None),
-                 auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
-                 tooltip=None):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
+                 tooltip=None, visible=True):
         '''
         Spinner Element
         :param values:
@@ -912,10 +927,10 @@ class Spin(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
-                         key=key, pad=pad, tooltip=tooltip)
+                         key=key, pad=pad, tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, value=None, values=None, disabled=None):
+    def Update(self, value=None, values=None, disabled=None, visible=None):
         if values != None:
             old_value = self.TKStringVar.get()
             self.Values = values
@@ -931,6 +946,11 @@ class Spin(Element):
             self.TKSpinBox.configure(state='disabled')
         elif disabled == False:
             self.TKSpinBox.configure(state='normal')
+        if visible is False:
+            self.TKSpinBox.pack_forget()
+        elif visible is True:
+            self.TKSpinBox.pack()
+
 
     def SpinChangedHandler(self, event):
         # first, get the results table built
@@ -956,7 +976,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True):
         '''
         Multiline Element
         :param default_text:
@@ -988,10 +1008,10 @@ class Multiline(Element):
         self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, visible=None):
         if value is not None:
             try:
                 if not append:
@@ -1012,6 +1032,10 @@ class Multiline(Element):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
+        if visible is False:
+            self.TKText.pack_forget()
+        elif visible is True:
+            self.TKText.pack()
 
     def Get(self):
         return self.TKText.get(1.0, tk.END)
@@ -1031,7 +1055,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, visible=True, tooltip=None):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,  tooltip=None, visible=True):
         '''
         Text Element
         :param text:
@@ -1060,7 +1084,7 @@ class Text(Element):
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, value=None, background_color=None, text_color=None, font=None):
+    def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1071,6 +1095,10 @@ class Text(Element):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
+        if visible is False:
+            self.TKText.pack_forget()
+        elif visible is True:
+            self.TKText.pack()
 
     def __del__(self):
         super().__del__()
@@ -1086,8 +1114,7 @@ T = Text
 #                                       StatusBar                        #
 # ---------------------------------------------------------------------- #
 class StatusBar(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False, relief=RELIEF_SUNKEN, font=None,
-                 text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False, relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None, visible=True):
         '''
         Text Element
         :param text:
@@ -1112,10 +1139,10 @@ class StatusBar(Element):
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
             bg = background_color
-        super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg, font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg, font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, value=None, background_color=None, text_color=None, font=None):
+    def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1139,7 +1166,7 @@ class StatusBar(Element):
 class TKProgressBar():
     def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
-                 orientation='horizontal', BarColor=(None, None), key=None):
+                 orientation='horizontal', BarColor=(None, None), key=None, visible=True):
         self.Length = length
         self.Width = width
         self.Max = max
@@ -1249,7 +1276,7 @@ class TKOutput(tk.Frame):
 # ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None):
+                 key=None, visible=True):
         '''
         Output Element
         :param size:
@@ -1275,11 +1302,14 @@ class Output(Element):
         return self._TKOut
 
 
-    def Update(self, value=None):
+    def Update(self, value=None, visible=None):
         if value is not None:
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
-
+        if visible is False:
+            self._TKOut.pack_forget()
+        elif visible is True:
+            self._TKOut.pack()
 
     def __del__(self):
         try:
@@ -1294,7 +1324,7 @@ class Output(Element):
 # ---------------------------------------------------------------------- #
 class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
-                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True):
         '''
         Button Element
         :param button_text:
@@ -1340,7 +1370,7 @@ class Button(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
 
-        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
     # Realtime button release callback
@@ -1478,7 +1508,7 @@ class Button(Element):
 
         return
 
-    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
+    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, visible=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1502,6 +1532,10 @@ class Button(Element):
             width, height = photo.width(), photo.height()
             self.TKButton.config(image=photo, width=width, height=height)
             self.TKButton.image = photo
+        if visible is False:
+            self.TKButton.pack_forget()
+        elif visible is True:
+            self.TKButton.pack()
 
     def GetText(self):
         return self.ButtonText
@@ -1527,7 +1561,7 @@ class Button(Element):
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
-                 style=None, border_width=None, relief=None, key=None, pad=None):
+                 style=None, border_width=None, relief=None, key=None, pad=None, visible=True):
         '''
         ProgressBar Element
         :param max_value:
@@ -1551,7 +1585,7 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad)
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad, visible=visible)
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
@@ -1564,6 +1598,13 @@ class ProgressBar(Element):
             _my_windows.Decrement()
             return False
         return True
+
+    def Update(self, visible=None):
+        if visible is False:
+            self.TKProgressBar.TKProgressBarForReal.pack_forget()
+        elif visible is True:
+            self.TKProgressBar.TKProgressBarForReal.pack()
+
 
     def __del__(self):
         try:
@@ -1578,7 +1619,7 @@ class ProgressBar(Element):
 # ---------------------------------------------------------------------- #
 class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None):
+                 tooltip=None, visible=True):
         '''
         Image Element
         :param filename:
@@ -1596,10 +1637,10 @@ class Image(Element):
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, filename=None, data=None, size=(None,None)):
+    def Update(self, filename=None, data=None, size=(None,None), visible=None):
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
@@ -1615,6 +1656,10 @@ class Image(Element):
         width, height = size[0] or image.width(), size[1] or image.height()
         self.tktext_label.configure(image=image, width=width, height=height)
         self.tktext_label.image = image
+        if visible is False:
+            self.tktext_label.pack_forget()
+        elif visible is True:
+            self.tktext_label.pack()
 
     def __del__(self):
         super().__del__()
@@ -1624,7 +1669,7 @@ class Image(Element):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
-    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
+    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None, visible=True):
         '''
         Canvas Element
         :param canvas:
@@ -1638,7 +1683,7 @@ class Canvas(Element):
         self._TKCanvas = canvas
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible)
         return
 
     @property
@@ -1657,7 +1702,7 @@ class Canvas(Element):
 # ---------------------------------------------------------------------- #
 class Graph(Element):
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, enable_events=False, key=None,
-                 tooltip=None):
+                 tooltip=None, visible=True):
         '''
         Graph Element
         :param canvas_size:
@@ -1678,7 +1723,7 @@ class Graph(Element):
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
@@ -1788,12 +1833,16 @@ class Graph(Element):
             return None
         self._TKCanvas2.delete('all')
 
-    def Update(self, background_color):
+    def Update(self, background_color, visible=None):
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
         self._TKCanvas2.configure(background=background_color)
+        if visible is False:
+            self._TKCanvas2.pack_forget()
+        elif visible is True:
+            self._TKCanvas2.pack()
 
     def Move(self, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
@@ -1875,8 +1924,8 @@ class Graph(Element):
 # ---------------------------------------------------------------------- #
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, visible=True,
-                 tooltip=None):
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 tooltip=None, visible=True):
         '''
         Frame Element
         :param title:
@@ -1980,7 +2029,7 @@ VSep = VerticalSeparator
 # ---------------------------------------------------------------------- #
 class Tab(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, tooltip=None):
+                 border_width=None, key=None, tooltip=None, visible=True):
         '''
         Tab Element
         :param title:
@@ -2012,7 +2061,7 @@ class Tab(Element):
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip)
+                         key=key, tooltip=tooltip, visible=visible)
         return
 
     def AddRow(self, *args):
@@ -2035,12 +2084,16 @@ class Tab(Element):
             self.AddRow(*row)
         return self
 
-    def Update(self, disabled=None):  # TODO Disable / enable of tabs is not complete
+    def Update(self, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
         if disabled is None:
             return
         self.Disabled = disabled
         state = 'disabled' if disabled is True else 'normal'
         self.ParentNotebook.tab(self.TabID, state=state)
+        if visible is False:
+            self.ParentNotebook.pack_forget()
+        elif visible is True:
+            self.ParentNotebook.pack()
         return self
 
     def _GetElementAtLocation(self, location):
@@ -2061,7 +2114,7 @@ class Tab(Element):
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
-                 font=None, change_submits=False, enable_events=False,pad=None, border_width=None, theme=None, key=None, tooltip=None):
+                 font=None, change_submits=False, enable_events=False,pad=None, border_width=None, theme=None, key=None, tooltip=None, visible=True):
         '''
         TabGroup Element
         :param layout:
@@ -2096,7 +2149,7 @@ class TabGroup(Element):
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
-                         pad=pad, key=key, tooltip=tooltip)
+                         pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
     def AddRow(self, *args):
@@ -2143,8 +2196,7 @@ class TabGroup(Element):
 # ---------------------------------------------------------------------- #
 class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None):
+                 border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
         Slider Element
         :param range:
@@ -2178,10 +2230,10 @@ class Slider(Element):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
-                         text_color=text_color, key=key, pad=pad, tooltip=tooltip)
+                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, value=None, range=(None, None), disabled=None):
+    def Update(self, value=None, range=(None, None), disabled=None, visible=None):
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -2194,7 +2246,10 @@ class Slider(Element):
             self.TKScale['state'] = 'disabled'
         elif disabled == False:
             self.TKScale['state'] = 'normal'
-
+        if visible is False:
+            self.TKScale.pack_forget()
+        elif visible is True:
+            self.TKScale.pack()
 
     def SliderChangedHandler(self, event):
         # first, get the results table built
@@ -2290,7 +2345,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, visible=True, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, key=None, visible=True):
         '''
         Container for elements that are stacked into rows
         :param layout:
@@ -2588,7 +2643,7 @@ class TKCalendar(ttk.Frame):
 #                           Menu                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None):
+    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None, visible=True):
         '''
         Menu Element
         :param menu_definition:
@@ -2604,7 +2659,7 @@ class Menu(Element):
         self.Tearoff = tearoff
         self.MenuItemChosen = None
 
-        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key, visible=visible)
         return
 
     def MenuItemChosenCallback(self, item_chosen):
@@ -2616,7 +2671,7 @@ class Menu(Element):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
 
-    def Update(self, menu_definition):
+    def Update(self, menu_definition, visible=None):
         self.MenuDefinition = menu_definition
         self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
         menubar = self.TKMenu
@@ -2637,7 +2692,7 @@ class Menu(Element):
             if len(menu_entry) > 1:
                 AddMenuItem(baritem, menu_entry[1], self)
         self.ParentForm.TKroot.configure(menu=self.TKMenu)
-
+        #TODO add visible code for menus
     def __del__(self):
         super().__del__()
 
@@ -2647,9 +2702,8 @@ class Menu(Element):
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None,
-                 font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None):
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
+                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, visible=True):
         '''
         Table Element
         :param values:
@@ -2693,10 +2747,10 @@ class Table(Element):
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
-                         size=size, pad=pad, key=key, tooltip=tooltip)
+                         size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, values=None):
+    def Update(self, values=None, visible=None):
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -2712,6 +2766,11 @@ class Table(Element):
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
             self.Values = values
             self.SelectedRows = []
+        if visible is False:
+            self.TKTreeview.pack_forget()
+        elif visible is True:
+            self.TKTreeview.pack()
+
 
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
@@ -2750,9 +2809,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None,
-                 justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
-                 tooltip=None):
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None, visible=True):
         '''
         Tree Element
         :param headings:
@@ -2791,7 +2848,7 @@ class Tree(Element):
         self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip)
+                         key=key, tooltip=tooltip, visible=visible)
         return
 
 
@@ -2817,7 +2874,7 @@ class Tree(Element):
             self.add_treeview_data(node)
 
 
-    def Update(self, values=None, key=None, value=None, text=None):
+    def Update(self, values=None, key=None, value=None, text=None, visible=None):
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -2834,8 +2891,11 @@ class Tree(Element):
             if text is not None:
                 self.TKTreeview.item(key, text=text)
             item = self.TKTreeview.item(key)
+        if visible is False:
+            self.TKTreeview.pack_forget()
+        elif visible is True:
+            self.TKTreeview.pack()
         return self
-
 
     def __del__(self):
         super().__del__()
@@ -3458,6 +3518,10 @@ class Window:
         except:
             pass
 
+
+    def VisibilityChanged(self):
+        # A dummy function.  Needed in Qt but not tkinter
+        return
 
     def __enter__(self):
         return self
@@ -4190,8 +4254,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     col_frame = tk.Frame(tk_row_frame)
                     PackFormIntoFrame(element, col_frame, toplevel_form)
-                if element.Visible:
-                    col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                if element.Visible is False:
+                    col_frame.pack_forget()
+
                 element.TKColFrame = col_frame
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
@@ -4312,6 +4378,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    tkbutton.pack_forget()
                 if element.BindReturnKey:
                     element.TKButton.bind('<Return>', element.ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
@@ -4399,6 +4467,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element.TKCombo.pack_forget()
                 if element.DefaultValue:
                     for i, v in enumerate(element.Values):
                         if v == element.DefaultValue:
@@ -4432,6 +4502,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
                 element.TKOptionMenu.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element.TKOptionMenu.pack_forget()
                 if element.Disabled == True:
                     element.TKOptionMenu['state'] = 'disabled'
                 if element.Tooltip is not None:
@@ -4463,6 +4535,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKListbox.pack(side=tk.LEFT)
                 vsb.pack(side=tk.LEFT, fill='y')
                 listbox_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    listbox_frame.pack_forget()
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element.ListboxSelectHandler)
                     element.TKListbox.bind('<Double-Button-1>', element.ListboxSelectHandler)
@@ -4482,6 +4556,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.configure(background=element.BackgroundColor)
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                if element.Visible is False:
+                    element.TKText.pack_forget()
                 if element.ChangeSubmits:
                     element.TKText.bind('<Key>', element.KeyboardHandler)
                 if element.EnterSubmits:
@@ -4517,6 +4593,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
                 element.TKCheckbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element.TKCheckbutton.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -4538,6 +4616,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                       border_width=element.BorderWidth, relief=element.Relief,
                                                       style=element.BarStyle, key=element.Key)
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 width = 0 if auto_size_text else element_size[0]
@@ -4568,6 +4648,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled:
                     element.TKRadio['state'] = 'disabled'
                 element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
@@ -4582,6 +4664,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(background=element.BackgroundColor)
                 element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element.TKSpinBox.pack_forget()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(fg=text_color)
                 if element.ChangeSubmits:
@@ -4598,6 +4682,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           background_color=element.BackgroundColor, text_color=text_color, font=font,
                                           pad=element.Pad)
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
+                if element.Visible is False:
+                    element._TKOut.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  IMAGE element  ------------------------- #
@@ -4627,6 +4713,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
                     element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                    if element.Visible is False:
+                        element.tktext_label.pack_forget()
                     if element.Tooltip is not None:
                         element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
                                                         timeout=DEFAULT_TOOLTIP_TIME)
@@ -4640,6 +4728,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element._TKCanvas.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -4658,6 +4748,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas2.configure(background=element.BackgroundColor, highlightthickness=0)
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    element._TKCanvas.pack_forget()
+                    element._TKCanvas2.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -4816,6 +4909,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                if element.Visible is False:
+                    tkscale.pack_forget()
                 element.TKScale = tkscale
                 if element.Disabled == True:
                     element.TKScale['state'] = 'disabled'
@@ -4895,6 +4990,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview.configure(yscrollcommand=scrollbar.set)
 
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                if element.Visible is False:
+                    element.TKTreeview.pack_forget()
                 frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
@@ -4956,6 +5053,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 scrollbar.config(command=treeview.yview)
                 treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                if element.Visible is False:
+                    element.TKTreeview.pack_forget()
                 frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.Tooltip is not None:  # tooltip
@@ -5011,6 +5110,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1],fill=tk.BOTH, expand=True)
+                if element.Visible is False:
+                    tktext_label.pack_forget()
                 element.TKText = tktext_label
                 if element.ClickSubmits:
                     tktext_label.bind('<Button-1>', element.TextClickedHandler)
@@ -5611,8 +5712,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None),
-               tooltip_time=None):
+               window_location=(None, None), error_button_color=(None,None), tooltip_time=None):
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_BUTTON_ELEMENT_SIZE
     global DEFAULT_MARGINS  # Margins for each LEFT/RIGHT margin is first term
@@ -5644,6 +5744,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_ELEMENT_TEXT_COLOR
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
+    global DEFAULT_ERROR_BUTTON_COLOR
     global _my_windows
 
     if icon:
@@ -5746,6 +5847,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if tooltip_time is not None:
         DEFAULT_TOOLTIP_TIME = tooltip_time
+
+    if error_button_color != (None,None):
+        DEFAULT_ERROR_BUTTON_COLOR = error_button_color
 
     return True
 
@@ -6392,7 +6496,7 @@ PopupTimed = PopupAutoClose
 
 
 # --------------------------- PopupError ---------------------------
-def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False,
+def PopupError(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6413,8 +6517,9 @@ def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, backg
     :param location:
     :return:
     """
+    tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
     Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
-          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
+          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
           keep_on_top=keep_on_top, location=location)
 
