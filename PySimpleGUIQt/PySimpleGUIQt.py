@@ -2115,13 +2115,13 @@ class TabGroup(Element):
         self.TabCount = 0
         self.BorderWidth = border_width
         self.Theme = theme
-        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.BackgroundColor = background_color if background_color is not None else COLOR_SYSTEM_DEFAULT
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
         self.QT_QTabWidget = None
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
+        super().__init__(ELEM_TYPE_TAB_GROUP, background_color=self.BackgroundColor, text_color=title_color, font=font,
                          pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
@@ -5024,9 +5024,18 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 # tab_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
                 style = create_style_from_font(font)
                 if element.BackgroundColor is not None:
-                    style += 'background-color: %s;' % element.BackgroundColor
+                    # style += 'background-color: %s;' % element.BackgroundColor
+                    # style += 'QTabWidget > QWidget > QWidget {background: %s;}'% element.BackgroundColor
+                    style += 'QTabWidget::pane {background: %s;}'% element.BackgroundColor
+                    # style += 'background-color: %s;' % element.BackgroundColor
+                    tab_widget.setAutoFillBackground(True)
+                    palette = tab_widget.palette()
+                    palette.setColor(tab_widget.backgroundRole(), element.BackgroundColor)
+                    tab_widget.setPalette(palette)
+
                 # style += 'border: {}px solid gray; '.format(border_depth)
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+                # print(f'Tab widget style {style}')
                 tab_widget.setStyleSheet(style)
 
                 column_layout = QFormLayout()
@@ -5044,7 +5053,16 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
 
-                element.QT_QTabWidget = QTabWidget()
+                element.QT_QTabWidget = qtab =QTabWidget()
+
+                style = qtab.styleSheet()
+                if element.SelectedTitleColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    style += 'QTabBar::tab:selected {background: %s;}'%element.SelectedTitleColor
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    style += 'QTabBar::tab {background: %s;}'% element.BackgroundColor
+                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    style += 'QTabBar::tab {color: %s;}'%element.TextColor
+                qtab.setStyleSheet(style)
 
                 PackFormIntoFrame(element, element.ParentForm.QFormLayout, toplevel_win)
 
@@ -7034,6 +7052,7 @@ def main():
                     ).Layout(layout)
     event, values = window.Read()
     print(event, values)
+    window.Close()
     window.Close()
 
 
