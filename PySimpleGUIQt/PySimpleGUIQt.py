@@ -770,8 +770,11 @@ class Listbox(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.QT_ListWidget = None
+        tsize = size                # convert tkinter size to pixels
+        if size[0] is not None and size[0] < 100:
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
 
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=tsize, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
 
     def QtCurrentRowChanged(self, state):
@@ -1237,10 +1240,10 @@ class Output(Element):
         #     self.my_stdout.write(str(m))
 
 
-    def Output(self,value=None, background_color=None, text_color=None, font=None):
+    def Output(self,value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
             self.QT_TextBrowser.setText(value)
-        super().Update(self.QT_TextBrowser, background_color=background_color, text_color=text_color, font=font)
+        super().Update(self.QT_TextBrowser, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
     def __del__(self):
@@ -7069,7 +7072,6 @@ def main():
                     ).Layout(layout)
     event, values = window.Read()
     print(event, values)
-    window.Close()
     window.Close()
 
 
