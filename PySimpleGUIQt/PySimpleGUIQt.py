@@ -102,7 +102,8 @@ DEFAULT_BUTTON_ELEMENT_SIZE = (80, 25 )  # In PIXELS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (4, 2)  # Padding between elements (row, col) in pixels
 # DEFAULT_ELEMENT_PADDING = (0, 0)  # Padding between elements (row, col) in pixels
-
+DEFAULT_PIXELS_TO_CHARS_SCALING = (10,25)      # 1 character represents x by y pixels
+DEFAULT_PIXEL_TO_CHARS_CUTOFF = 10             # number of chars that triggers using pixels instead of chars
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
@@ -336,12 +337,14 @@ POPUP_BUTTONS_NO_BUTTONS = 5
 # ------------------------------------------------------------------------- #
 class Element():
     def __init__(self, elem_type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
-                 key=None, pad=None, tooltip=None, visible=True):
+                 key=None, pad=None, tooltip=None, visible=True, size_px=(None, None)):
 
         if elem_type != ELEM_TYPE_GRAPH:
             self.Size = convert_tkinter_size_to_Qt(size)
         else:
             self.Size = size
+        if size_px != (None, None):
+            self.Size = size_px
         self.Type = elem_type
         self.AutoSizeText = auto_size_text
         # self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
@@ -505,10 +508,10 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
+    def __init__(self, default_text='', size=(None,None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False,
-                 do_not_clear=False, key=None, focus=False, pad=None, visible=True):
+                 do_not_clear=False, key=None, focus=False, pad=None, visible=True, size_px=(None,None)):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -526,7 +529,7 @@ class InputText(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
-                         font=font, tooltip=tooltip, visible=visible)
+                         font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
 
     class InputTextWidget(QWidget):
@@ -592,7 +595,7 @@ Input = InputText
 class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, visible_items=10, font=None, auto_complete=True, visible=True):
+                 readonly=False, visible_items=10, font=None, auto_complete=True, visible=True, size_px=(None,None)):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -613,7 +616,7 @@ class Combo(Element):
         self.AutoComplete = auto_complete
         self.QT_ComboBox = None
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
 
 
     def QtCurrentItemChanged(self, state):
@@ -669,7 +672,7 @@ Drop = InputCombo
 # ---------------------------------------------------------------------- #
 class OptionMenu(Element):
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         InputOptionMenu
         :param values:
@@ -691,7 +694,7 @@ class OptionMenu(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
 
     def Update(self, value=None, values=None, disabled=None):
         if values is not None:
@@ -728,7 +731,7 @@ InputOptionMenu = OptionMenu
 class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False, bind_return_key=False,
                  size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
-                 text_color=None, key=None, pad=None, tooltip=None, visible=True):
+                 text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Listbox Element
         :param values:
@@ -769,7 +772,7 @@ class Listbox(Element):
         self.QT_ListWidget = None
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
-                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
 
     def QtCurrentRowChanged(self, state):
         if self.ChangeSubmits:
@@ -813,7 +816,7 @@ class Listbox(Element):
 class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
-                 change_submits=False,  enable_events=False, visible=True):
+                 change_submits=False,  enable_events=False, visible=True, size_px=(None,None)):
         '''
         Radio Button Element
         :param text:
@@ -842,7 +845,7 @@ class Radio(Element):
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, size_px=size_px)
 
     def Update(self, value=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
@@ -866,7 +869,7 @@ class Radio(Element):
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None, visible=True):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Checkbox Element
         :param text:
@@ -893,7 +896,7 @@ class Checkbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, size_px=size_px)
 
     def QtCallbackStateChanged(self, state):
         if self.ChangeSubmits:
@@ -930,7 +933,7 @@ class Spin(Element):
     # TKSpinBox = None
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False,  enable_events=False, size=(None, None),
                  auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, visible=True, size_px=(None,None)):
         '''
         Spinner Element
         :param values:
@@ -955,7 +958,7 @@ class Spin(Element):
         self.QT_Spinner = None
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
-                         key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
 
@@ -989,7 +992,7 @@ class Multiline(Element, QWidget):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
                  key=None, focus=False,
-                 font=None, pad=None, tooltip=None, visible=True):
+                 font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -1018,11 +1021,11 @@ class Multiline(Element, QWidget):
         self.ChangeSubmits = change_submits or enable_events
         tsize = size                # convert tkinter size to pixels
         if size[0] is not None and size[0] < 100:
-            tsize = convert_tkinter_size_to_Qt(size)
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
         self.QT_TextEdit = None
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
 
@@ -1077,7 +1080,7 @@ class Multiline(Element, QWidget):
 #                           ScrolledOutput                               #
 # ---------------------------------------------------------------------- #
 class MultilineOutput(Element):
-    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -1107,7 +1110,7 @@ class MultilineOutput(Element):
         self.QT_TextBrowser = None
 
         super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
 
@@ -1138,7 +1141,7 @@ class MultilineOutput(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True):
+    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Text Element
         :param text:
@@ -1165,9 +1168,10 @@ class Text(Element):
         else:
             bg = background_color
         self.QT_Label = None
+        self.Visible = visible
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
         return
 
     def QtCallbackTextClicked(self, event):
@@ -1197,7 +1201,7 @@ T = Text
 # ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None, visible=True):
+                 key=None, visible=True, size_px=(None,None)):
         '''
         Output Element
         :param size:
@@ -1216,7 +1220,7 @@ class Output(Element):
         tsize = convert_tkinter_size_to_Qt(size) if size[0] is not None and size[0] < 100 else size
 
         super().__init__(ELEM_TYPE_OUTPUT, size=tsize, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key, visible=visible)
+                         tooltip=tooltip, key=key, visible=visible, size_px=size_px)
 
     def reroute_stdout(self):
         self.my_stdout = sys.stdout
@@ -1253,7 +1257,7 @@ class Button(Element):
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False,
-                 focus=False, pad=None, key=None, visible=True):
+                 focus=False, pad=None, key=None, visible=True, size_px=(None,None)):
         '''
         Button Element
         :param button_text:
@@ -1304,7 +1308,7 @@ class Button(Element):
         self.ColorChosen = None
         # self.temp_size = size if size != (NONE, NONE) else
 
-        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
+        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, size_px=size_px)
         return
 
     # Realtime button release callback
@@ -1378,8 +1382,8 @@ class Button(Element):
             qcolor = QColorDialog.getColor()
             rgb_color = qcolor.getRgb()
             color= '#' + ''.join('%02x'% i for i in rgb_color[:3])
-            if target_element.Type == ELEM_TYPE_BUTTON:
-                target_element.ColorChosen = color
+            if self.Target == (None, None):
+                self.FileOrFolderName = color
             else:
                 target_element.Update(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
@@ -1486,7 +1490,7 @@ class Button(Element):
 class ButtonMenu(Element):
     def __init__(self, button_text ,menu_def, tooltip=None,disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,border_width=None,
-                 size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None, visible=True):
+                 size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None, visible=True, size_px=(None,None)):
         '''
         Button Element
         :param button_text:
@@ -1528,7 +1532,7 @@ class ButtonMenu(Element):
 
         # self.temp_size = size if size != (NONE, NONE) else
 
-        super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
+        super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, size_px=size_px)
         return
 
 
@@ -1559,7 +1563,7 @@ class ButtonMenu(Element):
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, size=(None, None),start_value=0,  auto_size_text=None, bar_color=(None, None),
-                 style=None, border_width=None, relief=None, key=None, pad=None, visible=True):
+                 style=None, border_width=None, relief=None, key=None, pad=None, visible=True, size_px=(None,None)):
         '''
         ProgressBar Element
         :param max_value:
@@ -1586,10 +1590,11 @@ class ProgressBar(Element):
         self.StartValue = start_value
         tsize = size
         if size[0] is not None and size[0] < 100:
-            tsize = size[0]*10, size[1]*3
+            # tsize = size[0] * DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1] * DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+            tsize = size[0]*10, size[1]
         self.QT_QProgressBar = None
 
-        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=tsize, auto_size_text=auto_size_text, key=key, pad=pad, visible=visible)
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=tsize, auto_size_text=auto_size_text, key=key, pad=pad, visible=visible, size_px=size_px)
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
@@ -1611,8 +1616,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, data_base64=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None, click_submits=False,  enable_events=False, visible=True):
+    def __init__(self, filename=None, data=None, data_base64=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None, click_submits=False,  enable_events=False, visible=True, size_px=(None,None)):
         '''
         Image Element
         :param filename:
@@ -1634,7 +1638,7 @@ class Image(Element):
         self.QT_QLabel = None
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
 
@@ -1709,7 +1713,7 @@ class Canvas(Element):
 # ---------------------------------------------------------------------- #
 class Graph(Element):
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, key=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, visible=True, size_px=(None,None)):
         '''
         Graph Element
         :param canvas_size:
@@ -1727,7 +1731,7 @@ class Graph(Element):
         self.QT_QGraphicsScene = None
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
 
@@ -1882,7 +1886,7 @@ class Graph(Element):
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, visible=True, size_px=(None,None)):
         '''
         Frame Element
         :param title:
@@ -1916,7 +1920,7 @@ class Frame(Element):
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
-                         font=font, pad=pad, key=key, tooltip=tooltip, visible=visible)
+                         font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
     def AddRow(self, *args):
@@ -1980,7 +1984,7 @@ VSep = VerticalSeparator
 #                           Separator                                    #
 # ---------------------------------------------------------------------- #
 class HorizontalSeparator(Element):
-    def __init__(self, pad=None):
+    def __init__(self, pad=None, size_px=(None,None)):
         '''
         VerticalSeperator - A separator that spans only 1 row in a vertical fashion
         :param pad:
@@ -2176,7 +2180,7 @@ class TabGroup(Element):
 class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Slider Element
         :param range:
@@ -2213,7 +2217,7 @@ class Slider(Element):
         self.QT_Slider = None
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
-                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
 
@@ -2253,7 +2257,7 @@ class Slider(Element):
 class Dial(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Dial Element
         :param range:
@@ -2288,7 +2292,7 @@ class Dial(Element):
         self.QT_Dial = None
 
         super().__init__(ELEM_TYPE_INPUT_DIAL, size=temp_size, font=font, background_color=background_color,
-                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
 
@@ -2476,7 +2480,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, visible=True):
+                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Table Element
         :param values:
@@ -2519,7 +2523,7 @@ class Table(Element):
         self.QT_TableWidget = None
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
-                         size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
+                         size=size, pad=pad, key=key, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
 
@@ -2620,7 +2624,7 @@ class Tree(Element):
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, size=(200,600),
                  justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, visible=True, size_px=(None,None)):
         '''
         Tree Element
         :param headings:
@@ -2660,7 +2664,7 @@ class Tree(Element):
         self.Size = size
         self.QT_QTreeWidget = None
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip, size=size, visible=visible)
+                         key=key, tooltip=tooltip, size=size, visible=visible, size_px=size_px)
         return
 
     def treeview_selected(self, event):
@@ -3623,8 +3627,8 @@ def convert_tkinter_size_to_Qt(size):
     :return: size in pixels, pixels
     """
     qtsize = size
-    if size[1] is not None and size[1] < 10:        # change from character based size to pixels (roughly)
-        qtsize = size[0]*10, size[1]*25
+    if size[1] is not None and size[1] < DEFAULT_PIXEL_TO_CHARS_CUTOFF:        # change from character based size to pixels (roughly)
+        qtsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
     return qtsize
 
 
@@ -5206,6 +5210,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QTreeWidget.setFixedWidth(element_size[0])
                     element.QT_QTreeWidget.setFixedHeight(element_size[1])
                 height = element.NumRows
+                element.QT_QTreeWidget.setFixedHeight(height*25)        # convert num rows into pixels...crude but effective
 
                 if element.ColumnsToDisplay is None:  # Which cols to display
                     displaycolumns = element.ColumnHeadings
@@ -5946,7 +5951,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None),
+               window_location=(None, None), error_button_color=(None,None),
                tooltip_time=None):
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_BUTTON_ELEMENT_SIZE
@@ -5979,6 +5984,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_ELEMENT_TEXT_COLOR
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
+    global DEFAULT_ERROR_BUTTON_COLOR
     global _my_windows
 
     if icon:
@@ -6081,6 +6087,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if tooltip_time is not None:
         DEFAULT_TOOLTIP_TIME = tooltip_time
+
+    if error_button_color != (None,None):
+        print('error button')
+        DEFAULT_ERROR_BUTTON_COLOR = error_button_color
 
     return True
 
@@ -6740,7 +6750,7 @@ PopupTimed = PopupAutoClose
 
 
 # --------------------------- PopupError ---------------------------
-def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False,
+def PopupError(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6762,8 +6772,9 @@ def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, backg
     :param location:
     :return:
     """
+    tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
     Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
-          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
+          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
           keep_on_top=keep_on_top, location=location)
 
