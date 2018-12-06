@@ -102,7 +102,8 @@ DEFAULT_BUTTON_ELEMENT_SIZE = (80, 25 )  # In PIXELS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (4, 2)  # Padding between elements (row, col) in pixels
 # DEFAULT_ELEMENT_PADDING = (0, 0)  # Padding between elements (row, col) in pixels
-
+DEFAULT_PIXELS_TO_CHARS_SCALING = (10,25)      # 1 character represents x by y pixels
+DEFAULT_PIXEL_TO_CHARS_CUTOFF = 10             # number of chars that triggers using pixels instead of chars
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
@@ -1020,7 +1021,7 @@ class Multiline(Element, QWidget):
         self.ChangeSubmits = change_submits or enable_events
         tsize = size                # convert tkinter size to pixels
         if size[0] is not None and size[0] < 100:
-            tsize = convert_tkinter_size_to_Qt(size)
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
         self.QT_TextEdit = None
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
@@ -1381,8 +1382,8 @@ class Button(Element):
             qcolor = QColorDialog.getColor()
             rgb_color = qcolor.getRgb()
             color= '#' + ''.join('%02x'% i for i in rgb_color[:3])
-            if target_element.Type == ELEM_TYPE_BUTTON:
-                target_element.ColorChosen = color
+            if self.Target == (None, None):
+                self.FileOrFolderName = color
             else:
                 target_element.Update(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
@@ -1589,7 +1590,8 @@ class ProgressBar(Element):
         self.StartValue = start_value
         tsize = size
         if size[0] is not None and size[0] < 100:
-            tsize = size[0]*10, size[1]*3
+            # tsize = size[0] * DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1] * DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+            tsize = size[0]*10, size[1]
         self.QT_QProgressBar = None
 
         super().__init__(ELEM_TYPE_PROGRESS_BAR, size=tsize, auto_size_text=auto_size_text, key=key, pad=pad, visible=visible, size_px=size_px)
@@ -1614,8 +1616,7 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    def __init__(self, filename=None, data=None, data_base64=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None, click_submits=False,  enable_events=False, visible=True, size_px=(None,None)):
+    def __init__(self, filename=None, data=None, data_base64=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None, click_submits=False,  enable_events=False, visible=True, size_px=(None,None)):
         '''
         Image Element
         :param filename:
@@ -3626,8 +3627,8 @@ def convert_tkinter_size_to_Qt(size):
     :return: size in pixels, pixels
     """
     qtsize = size
-    if size[1] is not None and size[1] < 10:        # change from character based size to pixels (roughly)
-        qtsize = size[0]*10, size[1]*25
+    if size[1] is not None and size[1] < DEFAULT_PIXEL_TO_CHARS_CUTOFF:        # change from character based size to pixels (roughly)
+        qtsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
     return qtsize
 
 
@@ -5209,6 +5210,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QTreeWidget.setFixedWidth(element_size[0])
                     element.QT_QTreeWidget.setFixedHeight(element_size[1])
                 height = element.NumRows
+                element.QT_QTreeWidget.setFixedHeight(height*25)        # convert num rows into pixels...crude but effective
 
                 if element.ColumnsToDisplay is None:  # Which cols to display
                     displaycolumns = element.ColumnHeadings
@@ -5949,7 +5951,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None),
+               window_location=(None, None), error_button_color=(None,None),
                tooltip_time=None):
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_BUTTON_ELEMENT_SIZE
@@ -5982,6 +5984,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_ELEMENT_TEXT_COLOR
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
+    global DEFAULT_ERROR_BUTTON_COLOR
     global _my_windows
 
     if icon:
@@ -6084,6 +6087,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if tooltip_time is not None:
         DEFAULT_TOOLTIP_TIME = tooltip_time
+
+    if error_button_color != (None,None):
+        print('error button')
+        DEFAULT_ERROR_BUTTON_COLOR = error_button_color
 
     return True
 
@@ -6743,7 +6750,7 @@ PopupTimed = PopupAutoClose
 
 
 # --------------------------- PopupError ---------------------------
-def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, background_color=None, text_color=None, auto_close=False,
+def PopupError(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6765,8 +6772,9 @@ def PopupError(*args, title=None, button_color=DEFAULT_ERROR_BUTTON_COLOR, backg
     :param location:
     :return:
     """
+    tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
     Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
-          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
+          non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
           keep_on_top=keep_on_top, location=location)
 
