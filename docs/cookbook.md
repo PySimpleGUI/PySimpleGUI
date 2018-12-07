@@ -548,6 +548,35 @@ This Window doesn't close after button clicks.  To achieve this the buttons are 
           ExecuteCommandSubprocess(value[0])      
 ```    
      
+
+## Launch a Program With a Button
+
+Very simple script that will launch a program as a subprocess.  Great for making a desktop launcher toolbar.
+
+```python
+import subprocess  
+import PySimpleGUI as sg  
+  
+CHROME = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"  
+  
+  
+layout = [  [sg.Text('Text area', key='_TEXT_')],  
+            [sg.Input(do_not_clear=True, key='_URL_')],  
+            [sg.Button('Chrome'), sg.Button('Exit')]]  
+  
+window = sg.Window('Window Title').Layout(layout)  
+  
+while True:             # Event Loop  
+  event, values = window.Read()  
+    print(event, values)  
+    if event is None or event == 'Exit':  
+        break  
+ if event == 'Chrome':  
+        sp = subprocess.Popen([CHROME, values['_URL_']], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)  
+  
+window.Close()
+```
+
 ## Machine Learning GUI      
 A standard non-blocking GUI with lots of inputs.      
       
@@ -718,7 +747,9 @@ This simple program keep a window open, taking input values until the user termi
             break      
 ```      
       
- ## One Element Updating  Another
+## One Element Updating  Another - Compound Elements
+
+![image](https://user-images.githubusercontent.com/13696193/49649095-1be40700-f9f6-11e8-981e-f56eb8404ae7.png)
    
 You can easily build "compound elements" in a single like of code.  This recipe shows you how to add a numeric value onto a slider.
 
