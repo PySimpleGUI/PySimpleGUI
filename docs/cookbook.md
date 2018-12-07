@@ -718,7 +718,73 @@ This simple program keep a window open, taking input values until the user termi
             break      
 ```      
       
-      
+ ## One Element Updating  Another
+   
+You can easily build "compound elements" in a single like of code.  This recipe shows you how to add a numeric value onto a slider.
+
+```python
+import PySimpleGUI as sg  
+  
+layout = [[sg.Text('Slider Demonstration'), sg.Text('', key='_OUTPUT_')],  
+            [sg.T('0',key='_LEFT_'),  
+             sg.Slider((1,100), key='_SLIDER_', orientation='h', enable_events=True, disable_number_display=True),  
+             sg.T('0', key='_RIGHT_')],  
+            [sg.Button('Show'), sg.Button('Exit')]]  
+  
+window = sg.Window('Window Title').Layout(layout)  
+  
+while True:             # Event Loop  
+  event, values = window.Read()  
+    print(event, values)  
+    if event is None or event == 'Exit':  
+        break  
+  window.Element('_LEFT_').Update(values['_SLIDER_'])  
+    window.Element('_RIGHT_').Update(values['_SLIDER_'])  
+  
+window.Close()
+```
+
+## Multiple Windows
+
+This recipe is a design pattern for multiple windows where the first window is not active while the second window is showing.  The first window is hidden to discourage continued interaction.
+
+
+```Python
+"""  
+ PySimpleGUI The Complete Course Lesson 7 - Multiple Windows"""  
+import PySimpleGUI as sg  
+  
+# Design pattern 1 - First window does not remain active  
+  
+layout = [[ sg.Text('Window 1'),],  
+          [sg.Input(do_not_clear=True)],  
+          [sg.Text('', key='_OUTPUT_')],  
+          [sg.Button('Launch 2')]]  
+  
+win1 = sg.Window('Window 1').Layout(layout)  
+win2_active=False  
+while True:  
+    ev1, vals1 = win1.Read(timeout=100)  
+    if ev1 is None:  
+        break  
+  win1.FindElement('_OUTPUT_').Update(vals1[0])  
+  
+    if ev1 == 'Launch 2'  and not win2_active:  
+        win2_active = True  
+  win1.Hide()  
+        layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse  
+  [sg.Button('Exit')]]  
+  
+        win2 = sg.Window('Window 2').Layout(layout2)  
+        while True:  
+            ev2, vals2 = win2.Read()  
+            if ev2 is None or ev2 == 'Exit':  
+                win2.Close()  
+                win2_active = False  
+  win1.UnHide()  
+                break
+```
+   
 ## tkinter Canvas Widget      
       
 The Canvas Element is one of the few tkinter objects that are directly accessible.  The tkinter Canvas widget itself can be retrieved from a Canvas Element like this:      

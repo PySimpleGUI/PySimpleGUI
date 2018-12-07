@@ -459,6 +459,15 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
+    def ClickHandler(self, event):
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+
 
     def __del__(self):
         try:
@@ -1627,7 +1636,7 @@ class ProgressBar(Element):
 # ---------------------------------------------------------------------- #
 class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, visible=True, enable_events=False):
         '''
         Image Element
         :param filename:
@@ -1644,6 +1653,8 @@ class Image(Element):
         self.BackgroundColor = background_color
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
+        self.EnableEvents = enable_events
+
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
         return
@@ -2203,8 +2214,7 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+    def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None, disable_number_display=False, border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
         Slider Element
         :param range:
@@ -2233,6 +2243,7 @@ class Slider(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         self.TickInterval = tick_interval
+        self.DisableNumericDisplay = disable_number_display
         temp_size = size
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
@@ -4726,6 +4737,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if element.Tooltip is not None:
                         element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
                                                         timeout=DEFAULT_TOOLTIP_TIME)
+                    if element.EnableEvents:
+                        element.tktext_label.bind('<ButtonPress-1>', element.ClickHandler)
+
                 # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
@@ -4914,6 +4928,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale.configure(background=element.BackgroundColor)
                     if DEFAULT_SCROLLBAR_COLOR != COLOR_SYSTEM_DEFAULT:
                         tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
+                if element.DisableNumericDisplay:
+                    tkscale.config(showvalue=0)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
