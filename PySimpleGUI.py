@@ -342,7 +342,7 @@ class Element():
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
-        self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
+        self.Pad = pad
         self.Font = font
 
         self.TKStringVar = None
@@ -773,6 +773,15 @@ class Listbox(Element):
 
     def GetListValues(self):
         return self.Values
+
+
+    def SetFocus(self):
+        try:
+            self.TKListbox.focus_set()
+        except:
+            pass
+
+
 
     def __del__(self):
         try:
@@ -1854,7 +1863,6 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self.Images.append(image)
-        print(image, converted_point)
         text_id = self._TKCanvas2.create_image(converted_point, image=image, anchor=tk.NW)
         return text_id
 
@@ -3007,7 +3015,7 @@ Stretch = ErrorElement
 class Window:
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), button_color=None, font=None,
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
@@ -3090,6 +3098,8 @@ class Window:
         self._Hidden = False
         self._Size = size
         self.XFound = False
+        self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
+
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3572,7 +3582,6 @@ class Window:
 
 
 FlexForm = Window
-
 
 # ################################################################################
 # ################################################################################
@@ -4260,6 +4269,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             element_type = element.Type
             # Set foreground color
             text_color = element.TextColor
+            elementpad = element.Pad if element.Pad is not None else toplevel_form.ElementPadding
             # Determine Element size
             element_size = element.Size
             if (element_size == (None, None) and element_type != ELEM_TYPE_BUTTON):  # user did not specify a size
@@ -4288,7 +4298,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     col_frame = tk.Frame(tk_row_frame)
                     PackFormIntoFrame(element, col_frame, toplevel_form)
-                col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                col_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     col_frame.pack_forget()
 
@@ -4341,7 +4351,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True)
+                tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True)
                 if element.Visible is False:
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
@@ -4411,7 +4421,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.image = photo
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
-                tkbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
@@ -4447,7 +4457,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
-                element.TKEntry.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='x')
+                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='x')
                 if element.Visible is False:
                     element.TKEntry.pack_forget()
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
@@ -4500,7 +4510,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKCombo['state'] = 'disabled'
                 # if element.BackgroundColor is not None:
                 #     element.TKCombo.configure(background=element.BackgroundColor)
-                element.TKCombo.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCombo.pack_forget()
                 if element.DefaultValue:
@@ -4535,7 +4545,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKOptionMenu.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
-                element.TKOptionMenu.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element.TKOptionMenu.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKOptionMenu.pack_forget()
                 if element.Disabled == True:
@@ -4568,7 +4578,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKListbox.configure(yscrollcommand=vsb.set)
                 element.TKListbox.pack(side=tk.LEFT)
                 vsb.pack(side=tk.LEFT, fill='y')
-                listbox_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     listbox_frame.pack_forget()
                 if element.BindReturnKey:
@@ -4589,7 +4599,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                element.TKText.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKText.pack_forget()
                 if element.ChangeSubmits:
@@ -4626,7 +4636,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
-                element.TKCheckbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element.TKCheckbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCheckbutton.pack_forget()
                 if element.Tooltip is not None:
@@ -4649,7 +4659,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                       orientation=direction, BarColor=bar_color,
                                                       border_width=element.BorderWidth, relief=element.Relief,
                                                       style=element.BarStyle, key=element.Key)
-                element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
@@ -4681,7 +4691,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.configure(fg=text_color)
                 if element.Disabled:
                     element.TKRadio['state'] = 'disabled'
-                element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element.TKRadio.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
@@ -4697,7 +4707,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(background=element.BackgroundColor)
-                element.TKSpinBox.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element.TKSpinBox.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKSpinBox.pack_forget()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -4714,7 +4724,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 width, height = element_size
                 element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
                                           background_color=element.BackgroundColor, text_color=text_color, font=font,
-                                          pad=element.Pad)
+                                          pad=elementpad)
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Visible is False:
                     element._TKOut.pack_forget()
@@ -4746,7 +4756,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
-                    element.tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                    element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                     if element.Visible is False:
                         element.tktext_label.pack_forget()
                     if element.Tooltip is not None:
@@ -4764,7 +4774,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
-                element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element._TKCanvas.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element._TKCanvas.pack_forget()
                 if element.Tooltip is not None:
@@ -4784,7 +4794,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element._TKCanvas2.configure(background=element.BackgroundColor, highlightthickness=0)
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
-                element._TKCanvas.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                element._TKCanvas.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element._TKCanvas.pack_forget()
                     element._TKCanvas2.pack_forget()
@@ -4823,7 +4833,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 labeled_frame = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
-                labeled_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if not element.Visible:
                     labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
@@ -4848,7 +4858,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
                 else:
                     form.TKNotebook.add(element.TKFrame, text=element.Title)
-                form.TKNotebook.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
                 form.TabCount += 1
@@ -4947,7 +4957,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale.config(showvalue=0)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
-                tkscale.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
+                tkscale.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     tkscale.pack_forget()
                 element.TKScale = tkscale
@@ -5018,7 +5028,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
                 if element.RowHeight is not None:
                     ttk.Style().configure("Treeview", rowheight=element.RowHeight)
-                # scrollable_frame.pack(side=tk.LEFT,  padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
+                # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.BindReturnKey:
                     treeview.bind('<Return>', element.treeview_double_click)
@@ -5102,7 +5112,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
-                separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
+                separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
             # -------------------------  StatusBar element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
                 # auto_size_text = element.AutoSizeText
@@ -5148,7 +5158,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1],fill=tk.BOTH, expand=True)
+                tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1],fill=tk.BOTH, expand=True)
                 if element.Visible is False:
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
