@@ -187,25 +187,6 @@ MENU_DISABLED_CHARACTER = '!'
 MENU_KEY_SEPARATOR = '::'
 
 
-# a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
-class MyWindows():
-    def __init__(self):
-        self.NumOpenWindows = 0
-        self.user_defined_icon = None
-        self.hidden_master_root = None
-
-    def Decrement(self):
-        self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
-        # print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
-
-    def Increment(self):
-        self.NumOpenWindows += 1
-        # print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
-
-
-_my_windows = MyWindows()  # terrible hack using globals... means need a class for collecing windows
-
-
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
 # ====================================================================== #
@@ -1408,7 +1389,7 @@ class Button(Element):
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
-        global _my_windows
+        # global _my_windows
 
         # print('Button callback')
 
@@ -1502,7 +1483,8 @@ class Button(Element):
                 self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
-                _my_windows.Decrement()
+                # _my_windows.Decrement()
+                Window.DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_READ_FORM:  # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1517,7 +1499,8 @@ class Button(Element):
             self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
+                # _my_windows.Decrement()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             should_submit_window = False
             root = tk.Toplevel()
@@ -1621,7 +1604,8 @@ class ProgressBar(Element):
         try:
             self.ParentForm.TKroot.update()
         except:
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
+            # _my_windows.Decrement()
             return False
         return True
 
@@ -2800,7 +2784,7 @@ class Table(Element):
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, values=None, visible=None):
+    def Update(self, values=None, num_rows=None, visible=None):
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -2820,6 +2804,8 @@ class Table(Element):
             self.TKTreeview.pack_forget()
         elif visible is True:
             self.TKTreeview.pack()
+        if num_rows is not None:
+            self.TKTreeview.config(height=num_rows)
 
 
     def treeview_selected(self, event):
@@ -3021,6 +3007,9 @@ Stretch = ErrorElement
 #                       Window CLASS                                      #
 # ------------------------------------------------------------------------- #
 class Window:
+    NumOpenWindows = 0
+    user_defined_icon = None
+    hidden_master_root = None
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
@@ -3070,7 +3059,7 @@ class Window:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = icon if icon is not None else _my_windows.user_defined_icon
+        self.WindowIcon = icon if icon is not None else Window.user_defined_icon
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
@@ -3108,6 +3097,15 @@ class Window:
         self.XFound = False
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
 
+    @staticmethod
+    def IncrementOpenCount():
+        Window.NumOpenWindows += 1
+        # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
+
+    @staticmethod
+    def DecrementOpenCount():
+        Window.NumOpenWindows -= 1 * (Window.NumOpenWindows != 0)  # decrement if not 0
+        # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3254,7 +3252,8 @@ class Window:
                     rc = self.TKroot.update()
                 except:
                     self.TKrootDestroyed = True
-                    _my_windows.Decrement()
+                    Window.DecrementOpenCount()
+                    # _my_windows.Decrement()
                     # print('ROOT Destroyed')
                 results = BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
@@ -3294,12 +3293,14 @@ class Window:
             if self.RootNeedsDestroying:
                 # print('*** DESTROYING LATE ***')
                 self.TKroot.destroy()
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
+                # _my_windows.Decrement()
                 self.LastButtonClicked = None
                 return None, None
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
+                # _my_windows.Decrement()
         # Determine return values
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
             results =  BuildResults(self, False, self)
@@ -3330,13 +3331,15 @@ class Window:
             rc = self.TKroot.update()
         except:
             self.TKrootDestroyed = True
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
+            # _my_windows.Decrement()
             # print("read failed")
             # return None, None
         if self.RootNeedsDestroying:
             # print('*** DESTROYING LATE ***', self.ReturnValues)
             self.TKroot.destroy()
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
+            # _my_windows.Decrement()
             self.Values = None
             self.LastButtonClicked = None
             return None, None
@@ -3351,7 +3354,8 @@ class Window:
             rc = self.TKroot.update()
         except:
             self.TKrootDestroyed = True
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
+            # _my_windows.Decrement()
             # return None, None
         return self
 
@@ -3481,7 +3485,8 @@ class Window:
             return
         try:
             self.TKroot.destroy()
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
+            # _my_windows.Decrement()
         except:
             pass
 
@@ -3490,7 +3495,7 @@ class Window:
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
-        global _my_windows
+        # global _my_windows
         # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
             return
@@ -5225,21 +5230,28 @@ def ConvertFlexToTK(MyFlexForm):
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(my_flex_form):
-    global _my_windows
+    # global _my_windows
 
-    ow = _my_windows.NumOpenWindows
-
+    # ow = _my_windows.NumOpenWindows
+    ow = Window.NumOpenWindows
+    print(ow)
     # print('Starting TK open Windows = {}'.format(ow))
     if not ow and not my_flex_form.ForceTopLevel:
         # if first window being created, make a throwaway, hidden master root.  This stops one user
         # window from becoming the child of another user window. All windows are children of this
         # hidden window
-        _my_windows.Increment()
-        _my_windows.hidden_master_root = tk.Tk()
-        _my_windows.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really good
-        _my_windows.hidden_master_root.wm_overrideredirect(True) # damn, what did this do again?
-        _my_windows.hidden_master_root.withdraw()               # no, REALLY hide it
-        # root = tk.Tk()            # users windows are no longer using tk.Tk. They are all Toplevel windows
+        print("******")
+        Window.IncrementOpenCount()
+        Window.hidden_master_root = tk.Tk()
+        Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
+        Window.hidden_master_root.wm_overrideredirect(True)
+        Window.hidden_master_root.withdraw()
+        #  good
+        # _my_windows.Increment()
+        # _my_windows.hidden_master_root = tk.Tk()
+        # _my_windows.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really good
+        # _my_windows.hidden_master_root.wm_overrideredirect(True) # damn, what did this do again?
+        # _my_windows.hidden_master_root.withdraw()               # no, REALLY hide it
         root = tk.Toplevel()
     else:
         root = tk.Toplevel()
@@ -5248,10 +5260,10 @@ def StartupTK(my_flex_form):
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except:
         pass
-    # root.wm_overrideredirect(True)
     if my_flex_form.BackgroundColor is not None and my_flex_form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root.configure(background=my_flex_form.BackgroundColor)
-    _my_windows.Increment()
+    Window.IncrementOpenCount()
+    # _my_windows.Increment()
 
     my_flex_form.TKroot = root
     # Make moveable window
@@ -5304,7 +5316,8 @@ def StartupTK(my_flex_form):
         my_flex_form.TimerCancelled = True
         # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
+            # _my_windows.Decrement()
         if my_flex_form.RootNeedsDestroying:
             my_flex_form.TKroot.destroy()
             my_flex_form.RootNeedsDestroying = False
@@ -5400,7 +5413,7 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     :param value: int
     :return: True if not cancelled, OK....False if Error
     '''
-    global _my_windows
+    # global _my_windows
     if bar == None: return False
     if bar.BarExpired: return False
     message, w, h = ConvertArgsToSingleString(*args)
@@ -5412,7 +5425,8 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
         bar.BarExpired = True
         bar.ParentForm._Close()
         if rc:  # if update was OK but bar expired, decrement num windows
-            _my_windows.Decrement()
+            # _my_windows.Decrement()
+            Window.DecrementOpenCount()
     if bar.ParentForm.RootNeedsDestroying:
         try:
             bar.ParentForm.TKroot.destroy()
@@ -5747,14 +5761,15 @@ ScrolledTextBox = PopupScrolled
 # Sets the icon to be used by default                #
 # ===================================================#
 def SetGlobalIcon(icon):
-    global _my_windows
+    # global _my_windows
 
     try:
         with open(icon, 'r') as icon_file:
             pass
     except:
         raise FileNotFoundError
-    _my_windows.user_defined_icon = icon
+    # _my_windows.user_defined_icon = icon
+    Window.user_defined_icon = icon
     return True
 
 
@@ -5804,7 +5819,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
     global DEFAULT_ERROR_BUTTON_COLOR
-    global _my_windows
+    # global _my_windows
 
     if icon:
         try:
@@ -5812,7 +5827,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                 pass
         except:
             raise FileNotFoundError
-        _my_windows.user_defined_icon = icon
+        Window.user_defined_icon = icon
+        # _my_windows.user_defined_icon = icon
 
     if button_color != None:
         DEFAULT_BUTTON_COLOR = button_color
@@ -6723,10 +6739,11 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     :return: Contents of text field. None if closed using X or cancelled
     """
 
-    global _my_windows
+    # global _my_windows
 
     if no_window:
-        if _my_windows.NumOpenWindows:
+        # if _my_windows.NumOpenWindows:
+        if Window.NumOpenWindows:
             root = tk.Toplevel()
         else:
             root = tk.Tk()
@@ -6783,10 +6800,11 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :return:  string representing the path chosen, None if cancelled or window closed with X
     """
 
-    global _my_windows
+    # global _my_windows
 
     if no_window:
-        if _my_windows.NumOpenWindows:
+        # if _my_windows.NumOpenWindows:
+        if Window.NumOpenWindows:
             root = tk.Toplevel()
         else:
             root = tk.Tk()
