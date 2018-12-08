@@ -1668,8 +1668,6 @@ class Image(Element):
                 image = tk.PhotoImage(data=data)
             except:
                 return  # an error likely means the window has closed so exit
-            # else:
-            # image = data
         else:
             return
         width, height = size[0] or image.width(), size[1] or image.height()
@@ -1741,6 +1739,7 @@ class Graph(Element):
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
+        self.Images = []
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
         return
@@ -1844,6 +1843,30 @@ class Graph(Element):
         text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
                                               angle=angle)
         return text_id
+
+
+    def DrawImage(self, filename=None, data=None, location=(None, None), color='black', font=None, angle=0):
+        if location == (None, None):
+            return
+        if filename is not None:
+            image = tk.PhotoImage(file=filename)
+        elif data is not None:
+            # if type(data) is bytes:
+            try:
+                image = tk.PhotoImage(data=data)
+            except:
+                return  None # an error likely means the window has closed so exit
+        converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
+        self.Images.append(image)
+        print(image, converted_point)
+        text_id = self._TKCanvas2.create_image(converted_point, image=image, anchor=tk.NW)
+        return text_id
+
+
 
     def Erase(self):
         if self._TKCanvas2 is None:
@@ -5637,6 +5660,8 @@ class DebugWin():
             self.Close()
 
     def Close(self):
+        if self.window is None:
+            return
         self.window.Close()
         self.window.__del__()
         self.window = None

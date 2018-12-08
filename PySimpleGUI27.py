@@ -2647,17 +2647,11 @@ class Table(Element):
         :param max_col_width:
         :param select_mode:
         :param display_row_numbers:
-        :param num_rows:
-        :param row_height:
         :param font:
         :param justification:
         :param text_color:
         :param background_color:
-        :param alternating_row_color:
         :param size:
-        :param change_submits:
-        :param enable_events:
-        :param bind_return_key:
         :param pad:
         :param key:
         :param tooltip:
@@ -3013,7 +3007,7 @@ class Window(object):
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
-        raise DeprecationWarning('LayoutAndRead is no longer supported... change your call window.Layout(layout).Read()')
+        raise DeprecationWarning('LayoutAndReaLayoutAndRead is no longer supported... change your call window.Layout(layout).Read()')
         # self.AddRows(rows)
         # self.Show(non_blocking=non_blocking)
         # return self.ReturnValues
@@ -5531,6 +5525,8 @@ class DebugWin(object):
             self.Close()
 
     def Close(self):
+        if self.window is None:
+            return
         self.window.Close()
         self.window.__del__()
         self.window = None
@@ -6953,7 +6949,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.LayoutAndRead(layout)
+    (button, input_values) = window.Layout(layout).Read()
 
     if button != 'Ok':
         return None
