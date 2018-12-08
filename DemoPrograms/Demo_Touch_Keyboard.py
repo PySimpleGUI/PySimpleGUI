@@ -1,29 +1,31 @@
 import PySimpleGUI as sg
+# import PySimpleGUIQt as sg            # 100% portable to Qt by changing to this import
 
 
 class keyboard():
-    def __init__(self, font=('Arial', 16)):
+    def __init__(self, location=(None, None), font=('Arial', 16)):
         self.font = font
         numberRow = '1234567890'
         topRow = 'QWERTYUIOP'
         midRow = 'ASDFGHJKL'
         bottomRow = 'ZXCVBNM'
-        keyboard_layout = [[sg.Button(c, key=c, pad=(0, 0), size=(4, 2), font=self.font) for c in numberRow] + [
-            sg.Button('⌫', key='back', pad=(0, 0), size=(4, 2), font=self.font),
-            sg.Button('Esc', key='close', pad=(0, 0), size=(4, 2), font=self.font)],
-                           [sg.T(' ' * 4)] + [sg.Button(c, key=c, pad=(0, 0), size=(4, 2), font=self.font) for c in
-                                              topRow],
-                           [sg.T(' ' * 11)] + [sg.Button(c, key=c, pad=(0, 0), size=(4, 2), font=self.font) for c in
-                                               midRow],
-                           [sg.T(' ' * 18)] + [sg.Button(c, key=c, pad=(0, 0), size=(4, 2), font=self.font) for c in
-                                               bottomRow]]
+        keyboard_layout = [[sg.Button(c, key=c, size=(4, 2), font=self.font) for c in numberRow] + [
+            sg.Button('⌫', key='back', size=(4, 2), font=self.font),
+            sg.Button('Esc', key='close', size=(4, 2), font=self.font)],
+                           [sg.T(' ' * 4)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
+                                              topRow] + [sg.Stretch()],
+                           [sg.T(' ' * 11)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
+                                               midRow] + [sg.Stretch()],
+                           [sg.T(' ' * 18)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
+                                               bottomRow] + [sg.Stretch()]]
 
         self.window = sg.Window('keyboard',
                                 grab_anywhere=True,
                                 keep_on_top=True,
                                 alpha_channel=0,
-                                location=(850,350),
                                 no_titlebar=True,
+                                element_padding=(0,0),
+                                location=location
                                 ).Layout(keyboard_layout).Finalize()
         self.hide()
 
@@ -75,7 +77,9 @@ class GUI():
                                     grab_anywhere=True,
                                     no_titlebar=False,
                                     ).Layout(layout).Finalize()
-        self.keyboard = keyboard()
+        location = self.mainWindow.CurrentLocation()
+        location = location[0]-200, location[1]+200
+        self.keyboard = keyboard(location)
         self.focus = None
 
     def run(self):
