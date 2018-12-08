@@ -729,8 +729,7 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False, bind_return_key=False,
-                 size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
                  text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Listbox Element
@@ -3068,11 +3067,13 @@ class Window:
         self.DisableClose = disable_close
         self._Hidden = False
         self.QTApplication = None
+        self.QT_QMainWindow = None
         self._Size=size
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.FocusElement = None
         self.BackgroundImage = background_image
         self.XFound = False
+
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3499,7 +3500,8 @@ class Window:
             pass
 
     def CurrentLocation(self):
-        return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+        location = self.QT_QMainWindow.geometry()
+        return location.left(), location.top()
 
     class QTMainWindow(QWidget):
         def __init__(self,enable_key_events, window):
