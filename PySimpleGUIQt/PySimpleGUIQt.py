@@ -6,6 +6,7 @@ import textwrap
 import pickle
 import base64
 import calendar
+from random import randint
 
 FORCE_PYQT5 = False
 
@@ -239,24 +240,6 @@ EVENT_SYSTEM_TRAY_MESSAGE_CLICKED = '__MESSAGE_CLICKED__'
 MENU_KEY_SEPARATOR = '::'
 MENU_DISABLED_CHARACTER = '!'
 
-# a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
-class MyWindows():
-    def __init__(self):
-        self.NumOpenWindows = 0
-        self.user_defined_icon = None
-        self.hidden_master_root = None
-        self.QTApplication = None
-        self.active_popups = {}
-    def Decrement(self):
-        self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
-        # print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
-
-    def Increment(self):
-        self.NumOpenWindows += 1
-        # print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
-
-
-_my_windows = MyWindows()  # terrible hack using globals... means need a class for collecing windows
 
 
 # ====================================================================== #
@@ -1330,8 +1313,6 @@ class Button(Element):
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
-        global _my_windows
-
 
         # print('Button callback')
 
@@ -1419,7 +1400,7 @@ class Button(Element):
             self.ParentForm.QT_QMainWindow.close()
             if self.ParentForm.NonBlocking:
                 # TODO DESTROY WIN
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_READ_FORM:  # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1435,7 +1416,7 @@ class Button(Element):
             self.ParentForm.QT_QMainWindow.close()
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.QTApplication.exit()
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             should_submit_window = False
 
@@ -2542,17 +2523,21 @@ class Table(Element):
         print('Vertical Header value ', value)
 
 
-    def Update(self, values=None, visible=None):
+    def Update(self, values=None, num_rows=None, visible=None):
         if values is not None:
             self.Values = values
             self.SelectedRows = []
             self.QT_TableWidget.clear()
-            self.QT_TableWidget.setRowCount(len(self.Values))
-            self.QT_TableWidget.setColumnCount(len(self.Values[0]))
-            for rownum, rows in enumerate(self.Values):
-                # self.QT_TableWidget.insertRow(rownum)
-                for colnum, columns in enumerate(rows):
-                    self.QT_TableWidget.setItem(rownum, colnum, QTableWidgetItem(self.Values[rownum][colnum]))
+            if len(values) != 0:
+                self.QT_TableWidget.setRowCount(len(self.Values))
+                self.QT_TableWidget.setColumnCount(len(self.Values[0]))
+                for rownum, rows in enumerate(self.Values):
+                    # self.QT_TableWidget.insertRow(rownum)
+                    for colnum, columns in enumerate(rows):
+                        self.QT_TableWidget.setItem(rownum, colnum, QTableWidgetItem(self.Values[rownum][colnum]))
+        # if num_rows is not None:
+        #     self.QT_TableWidget.setFixedHeight(num_rows * 35 + 25)  # convert num rows into pixels...crude but effective
+
         super().Update(self.QT_TableWidget, visible=visible)
 
 
@@ -2799,11 +2784,10 @@ class SystemTray:
         self.LastMessage = None
         self.LastTitle = None
 
-        global _my_windows
 
-        if _my_windows.QTApplication is None:
-            _my_windows.QTApplication = QApplication(sys.argv)
-        self.App = _my_windows.QTApplication
+        if Window.QTApplication is None:
+            Window.QTApplication = QApplication(sys.argv)
+        self.App = Window.QTApplication
         self.QWidget = QWidget()
 
         qicon = None
@@ -2982,6 +2966,13 @@ class SystemTray:
 # ------------------------------------------------------------------------- #
 class Window:
 
+    NumOpenWindows = 0
+    user_defined_icon = None
+    hidden_master_root = None
+    QTApplication = None
+    active_popups = {}
+
+
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
@@ -3032,7 +3023,7 @@ class Window:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = icon if icon is not None else _my_windows.user_defined_icon
+        self.WindowIcon = icon if icon is not None else Window.user_defined_icon
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
@@ -3073,6 +3064,17 @@ class Window:
         self.FocusElement = None
         self.BackgroundImage = background_image
         self.XFound = False
+
+
+    @staticmethod
+    def IncrementOpenCount():
+        Window.NumOpenWindows += 1
+        # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
+
+    @staticmethod
+    def DecrementOpenCount():
+        Window.NumOpenWindows -= 1 * (Window.NumOpenWindows != 0)  # decrement if not 0
+        # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
 
     # ------------------------- Add ONE Row to Form ------------------------- #
@@ -3219,7 +3221,7 @@ class Window:
                     rc = self.TKroot.update()
                 except:
                     self.TKrootDestroyed = True
-                    _my_windows.Decrement()
+                    Window.DecrementOpenCount()
                 results = BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
                     return results
@@ -3248,10 +3250,10 @@ class Window:
             if self.RootNeedsDestroying:
                 self.LastButtonClicked = None
                 self.QTApplication.exit()
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
         # Determine return values
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
             results = BuildResults(self, False, self)
@@ -3292,7 +3294,7 @@ class Window:
             except:
                 print('* ERROR FINALIZING *')
                 self.TKrootDestroyed = True
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
         return self
 
 
@@ -3346,10 +3348,10 @@ class Window:
             print('*** Error loading form to disk ***')
 
     def GetScreenDimensions(self):
-        if _my_windows.QTApplication is None:
-            _my_windows.QTApplication = QApplication(sys.argv)
+        if Window.QTApplication is None:
+            Window.QTApplication = QApplication(sys.argv)
         try:
-            screen = _my_windows.QTApplication.primaryScreen()
+            screen = Window.QTApplication.primaryScreen()
         except:
             return None, None
         size = screen.size()
@@ -4634,8 +4636,14 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
                 element.QT_ListWidget = QListWidget()
-                style = ''
-                style = create_style_from_font(font)
+                style = element.QT_ListWidget.styleSheet()
+                style += """QScrollBar:vertical {              
+                            border: none;
+                            background:lightgray;
+                            width:12px;
+                            margin: 0px 0px 0px 0px;
+                        } """
+                style += create_style_from_font(font)
 
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
@@ -5252,6 +5260,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
 
                 style = ''
+                style += """QScrollBar:vertical {              
+                            border: none;
+                            background:lightgray;
+                            width:12px;
+                            margin: 0px 0px 0px 0px;
+                        } """
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
                 element.QT_QTreeWidget.setStyleSheet(style)
@@ -5351,17 +5365,16 @@ def stop_timer(timer):
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(window):
-    global _my_windows
     global using_pyqt5
 
-    ow = _my_windows.NumOpenWindows
+    ow = Window.NumOpenWindows
 
-    if _my_windows.QTApplication is None:
-        _my_windows.QTApplication = QApplication(sys.argv)
+    if Window.QTApplication is None:
+        Window.QTApplication = QApplication(sys.argv)
 
-    window.QTApplication = _my_windows.QTApplication
+    window.QTApplication = Window.QTApplication
 
-    _my_windows.Increment()
+    Window.IncrementOpenCount()
 
 
     # window.QTWindow = QWidget()
@@ -5479,7 +5492,7 @@ def StartupTK(window):
         window.TimerCancelled = True
         # print('..... BACK from MainLoop')
         if not window.FormRemainedOpen:
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
         if window.RootNeedsDestroying:
             # print('** Destroying window **')
             window.QT_QMainWindow.close()         # destroy the window
@@ -5576,7 +5589,6 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
     :param value: int
     :return: True if not cancelled, OK....False if Error
     '''
-    global _my_windows
     if bar == None: return False
     if bar.BarExpired: return False
     message, w, h = ConvertArgsToSingleString(*args)
@@ -5588,7 +5600,7 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
         bar.BarExpired = True
         bar.ParentForm._Close()
         if rc:  # if update was OK but bar expired, decrement num windows
-            _my_windows.Decrement()
+            Window.DecrementOpenCount()
     if bar.ParentForm.RootNeedsDestroying:
         try:
             bar.ParentForm.QT_QMainWindow.close()
@@ -5813,7 +5825,6 @@ _easy_print_data = None  # global variable... I'm cheating
 
 
 class DebugWin():
-    global _my_windows
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=False):
         # Show a form that's a running counter
@@ -5830,7 +5841,7 @@ class DebugWin():
             ]
         self.window.AddRows(self.layout)
         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
-        _my_windows.active_popups[self.window] = 'debug window'
+        Window.active_popups[self.window] = 'debug window'
         return
 
     def Print(self, *args, end=None, sep=None):
@@ -5840,7 +5851,7 @@ class DebugWin():
         if self.window is None:  # if window was destroyed already, just print
             print(*args, sep=sepchar, end=endchar)
             return
-        _my_windows.active_popups[self.window] = 'debug window'
+            Window.active_popups[self.window] = 'debug window'
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
@@ -5932,14 +5943,13 @@ ScrolledTextBox = PopupScrolled
 # Sets the icon to be used by default                #
 # ===================================================#
 def SetGlobalIcon(icon):
-    global _my_windows
 
     try:
         with open(icon, 'r') as icon_file:
             pass
     except:
         raise FileNotFoundError
-    _my_windows.user_defined_icon = icon
+        Window.user_defined_icon = icon
     return True
 
 
@@ -5990,7 +6000,6 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
     global DEFAULT_ERROR_BUTTON_COLOR
-    global _my_windows
 
     if icon:
         try:
@@ -5998,7 +6007,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                 pass
         except:
             raise FileNotFoundError
-        _my_windows.user_defined_icon = icon
+            Window.user_defined_icon = icon
 
     if button_color != None:
         DEFAULT_BUTTON_COLOR = button_color
@@ -6471,8 +6480,6 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param location:
     :return:
     """
-    global _my_windows
-
 
     if not args:
         args_to_print = ['']
@@ -6540,7 +6547,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     window.Layout(layout)
     if non_blocking:
         button, values = window.Read(timeout=0)
-        _my_windows.active_popups[window] = title
+        Window.active_popups[window] = title
     else:
         button, values = window.Read()
 
@@ -6925,11 +6932,10 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     :return: Contents of text field. None if closed using X or cancelled
     """
 
-    global _my_windows
 
     if no_window:
-        if _my_windows.QTApplication is None:
-            _my_windows.QTApplication = QApplication(sys.argv)
+        if Window.QTApplication is None:
+            Window.QTApplication = QApplication(sys.argv)
 
         folder_name = QFileDialog.getExistingDirectory(dir=initial_folder)
         return folder_name
@@ -6980,11 +6986,9 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :return:  string representing the path chosen, None if cancelled or window closed with X
     """
 
-    global _my_windows
-
     if no_window:
-        if _my_windows.QTApplication is None:
-            _my_windows.QTApplication = QApplication(sys.argv)
+        if Window.QTApplication is None:
+            Window.QTApplication = QApplication(sys.argv)
 
         if save_as:
             qt_types = convert_tkinter_filetypes_to_qt(file_types)
@@ -7059,22 +7063,148 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 def main():
-    layout = [[Text('You are running the PySimpleGUI.py file itself')],
-              [Text('You should be importing it rather than running it')],
-              [Text('Here is your sample input window....')],
-              [Text('Source File', size=(150, 25), justification='right'), InputText('Source', focus=True), FileBrowse()],
-              [Text('Destination Folder', size=(150, 25), justification='right'), InputText('Dest'), FolderBrowse()],
-              [Ok(bind_return_key=True), Cancel()]]
+    ChangeLookAndFeel('GreenTan')
+    # SetOptions(element_padding=(0,0))
+    # ------ Menu Definition ------ #
+    menu_def = [['&File', ['!&Open::KeyOpen', '&Save::KeySave', '---', '&Properties::KeyProp', 'E&xit']],
+                ['&Edit', ['&Paste', ['Special::KeySpecial', '!Normal', ], 'Undo'], ],
+                ['!&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
+                ['&Help', '&About...'], ]
 
-    window = Window('Demo window..',
-                    auto_size_buttons=False,
-                    default_element_size=(280,22),
-                    auto_size_text=False,
-                    default_button_element_size=(80,22)
-                    ).Layout(layout)
-    event, values = window.Read()
-    print(event, values)
+    treedata = TreeData()
+
+    treedata.Insert("", '_A_', 'Tree Item 1', [1, 2, 3], )
+    treedata.Insert("", '_B_', 'B', [4, 5, 6], )
+    treedata.Insert("_A_", '_A1_', 'Sub Item 1', ['can', 'be', 'anything'], )
+    treedata.Insert("", '_C_', 'C', [], )
+    treedata.Insert("_C_", '_C1_', 'C1', ['or'], )
+    treedata.Insert("_A_", '_A2_', 'Sub Item 2', [None, None])
+    treedata.Insert("_A1_", '_A3_', 'A30', ['getting deep'])
+    treedata.Insert("_C_", '_C2_', 'C2', ['nothing', 'at', 'all'])
+
+    for i in range(100):
+        treedata.Insert('_C_', i, i, [])
+
+    frame1 = [
+        [Input('Input Text', do_not_clear=True, size=(250, 35), tooltip='Input'), Stretch()],
+        [Multiline(size=(250, 75), do_not_clear=True, default_text='Multiline Input', tooltip='Multiline input'),
+         MultilineOutput(size=(250, 75), default_text='Multiline Output', tooltip='Multiline output')],
+    ]
+
+    frame2 = [
+        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3', 'Item 4', 'Item 5'], size=(200, 85), tooltip='Listbox',
+                    key='_LISTBOX_', font='Courier 12', text_color='red', background_color='white')],
+        [Combo(['Combo item 1', 'Combo item 2', 'Combo item 3'], size=(200, 35), tooltip='Combo')],
+        [Spin([1, 2, 3], size=(40, 30), tooltip='Spinner')],
+    ]
+
+    frame3 = [
+        [Checkbox('Checkbox1', True, tooltip='Checkbox'), Checkbox('Checkbox1')],
+        [Radio('Radio Button1', 1, tooltip='Radio'), Radio('Radio Button2', 1, default=True), Stretch()],
+    ]
+
+    frame4 = [
+        [Slider(range=(0, 100), orientation='v', size=(3, 30), default_value=40, tooltip='Slider'),
+         Dial(range=(0, 100), tick_interval=1, resolution=1, size=(150, 150), default_value=40, tooltip='Dial'),
+         Stretch()],
+    ]
+    matrix = [[str(x * y) for x in range(4)] for y in range(3)]
+
+    frame5 = [
+        [Table(values=matrix, max_col_width=25,
+                  auto_size_columns=True, display_row_numbers=True, change_submits=False, bind_return_key=True,
+                  justification='right', num_rows=8, alternating_row_color='lightblue', key='_table_',
+                  text_color='black', tooltip='Table'),
+         Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
+                 num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, size=(200, 150), tooltip='Tree'),
+         Stretch()],
+    ]
+
+    graph_elem = Graph((880, 150), (0, 0), (600, 300), key='+GRAPH+', tooltip='Graph')
+
+    frame6 = [
+        [graph_elem, Stretch()],
+    ]
+
+    tab1 = Tab('Graph Number 1', frame6, tooltip='Tab 1')
+    tab2 = Tab('Graph Number 2', [[]])
+
+    layout = [
+        [Menu(menu_def, key='_REALMENU_')],
+        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15')],
+                  [Text('You should be importing it rather than running it', font='ANY 15')],
+        # [Image(data_base64=logo, tooltip='Image', click_submits=True, key='_IMAGE_'),
+         [Frame('Input Text Group', frame1, title_color='red', tooltip='Text Group'), Stretch()],
+        [Frame('Multiple Choice Group', frame2, title_color='green'),
+         Frame('Binary Choice Group', frame3, title_color='purple'),
+         Frame('Variable Choice Group', frame4, title_color='blue'), Stretch()],
+        [Frame('Structured Data Group', frame5, title_color='red'), ],
+        # [Frame('Graphing Group', frame6)],
+        [TabGroup([[tab1, tab2]])],
+        [ProgressBar(max_value=600, start_value=400, size=(600, 25), key='+PROGRESS+'),
+         Text('', key='_PROGTEXT_'), Stretch(),
+         ButtonMenu('&Menu', ['Menu', ['&Pause Graph', 'Menu item::optional_key']], key='_MENU_',
+                       tooltip='Button Menu'),
+         Button('Button'), Button('Exit', tooltip='Exit button')],
+    ]
+
+    window = Window('Window Title',
+                       font=('Helvetica', 13),
+                       default_button_element_size=(100, 30),
+                       auto_size_buttons=False,
+                       default_element_size=(200, 22),
+                       border_depth=1,
+                       ).Layout(layout).Finalize()
+    graph_elem.DrawCircle((200, 200), 50, 'blue')
+    i = 0
+    graph_paused = False
+
+    # window.Element('_LISTBOX_').SetValue(['Listbox 1','Listbox 3'])
+    while True:  # Event Loop
+        # TimerStart()
+        event, values = window.Read(timeout=10)
+        print(event) if event != TIMEOUT_KEY else None
+        if event is None or event == 'Exit':
+            break
+        if values['_MENU_'] == 'Pause Graph':
+            graph_paused = not graph_paused
+        if event != TIMEOUT_KEY:
+            print(event, values)
+        if not graph_paused:
+            i += 1
+
+            if i < 600:
+                graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1,
+                                    color='#{:06x}'.format(randint(0, 0xffffff)))
+            else:
+                graph_elem.Move(-1, 0)
+                graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1,
+                                    color='#{:06x}'.format(randint(0, 0xffffff)))
+
+        window.FindElement('+PROGRESS+').UpdateBar(i % 600)
+        window.FindElement('_PROGTEXT_').Update((i % 600) // 6)
+
+        # TimerStop()
     window.Close()
+
+
+
+    # layout = [[Text('You are running the PySimpleGUI.py file itself')],
+    #           [Text('You should be importing it rather than running it')],
+    #           [Text('Here is your sample input window....')],
+    #           [Text('Source File', size=(150, 25), justification='right'), InputText('Source', focus=True), FileBrowse()],
+    #           [Text('Destination Folder', size=(150, 25), justification='right'), InputText('Dest'), FolderBrowse()],
+    #           [Ok(bind_return_key=True), Cancel()]]
+    #
+    # window = Window('Demo window..',
+    #                 auto_size_buttons=False,
+    #                 default_element_size=(280,22),
+    #                 auto_size_text=False,
+    #                 default_button_element_size=(80,22)
+    #                 ).Layout(layout)
+    # event, values = window.Read()
+    # print(event, values)
+    # window.Close()
 
 
 if __name__ == '__main__':

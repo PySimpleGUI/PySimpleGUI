@@ -59,20 +59,41 @@ The native GUI framework for perfectionists with deadlines
 #### Note regarding Python versions      
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.      
       
-#### Qt Version
+# Qt Version
 
-Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  There is a separate Readme file for the Qt version that you'll find there.  Give it a shot if you're looking for something a bit more "modern".  PySimpleGUIQt is currently in Alpha.  All of the widgets are operational and your source code is completely portable from one platform to another by simply changing the import statement.
+### Github
+Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
 
+Give it a shot if you're looking for something a bit more "modern".  PySimpleGUIQt is currently in Alpha.  All of the widgets are operational but some may not yet be full-featured.  If one is missing and your project needs it, log an Issue and you'll likely get priority support. 
+
+Here is a summary of the Qt Elements
+
+![scrolling graphics](https://user-images.githubusercontent.com/13696193/48665874-8bfd0e00-ea84-11e8-880d-8e164d9fea34.gif)
+
+Are there enough things on there to cover your GUI solution?
+
+
+### Source code compatibility
+Your source code is completely portable from one platform to another by simply changing the import statement.
+
+
+ ### Platforms
+ 
+  It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
+  
+However, Macs suck.  They suck on tkinter in particular.  I had to completely turn off the "Look and feel" calls for Macs.  Colored buttons in particular are broken.  Not in the PySimpleGUI code, of course.    It's mostly because Macs suck.  Consider using Qt instead of tkinter on the Mac.  Or, if using tkinter, bring your own button images.
       
 ------------------------------------------------------------------------      
       
       
-Looking for a GUI package?      
-* Taking your Python code from the world of command lines and into the convenience of a GUI?  *      
-* Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?      
-* Into Machine Learning and are sick of the command line?      
-* Would like to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?      
-* Want technical support?  Looking for an actively maintained package?
+Looking for a GUI package?     Are you 
+* looking to take your Python code from the world of command lines and into the convenience of a GUI?  *      
+* sitting on a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?      
+* into Machine Learning and are sick of the command line?      
+* wanting to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?      
+* a teacher wanting to teach your students how to program using a GUI?
+* a student that wants to put a GUI onto their project?
+* looking for an active project?
       
 Look no further, **you've found your GUI package**.      
       
@@ -110,7 +131,9 @@ Perhaps you're looking for a way to interact with your **Raspberry Pi** in a mor
 ![raspberry pi everything demo](https://user-images.githubusercontent.com/13696193/44279694-5b58ce80-a220-11e8-9ab6-d6021f5a944f.jpg)      
       
       
-      f
+ 
+
+ 
 In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this line into any of your `for` loops and get a nice meter:      
       
     OneLineProgressMeter('My meter title', current_value, max value, 'key')      
@@ -1326,6 +1349,7 @@ Window( title,
 		auto_size_buttons=None,
 		location=(None,None),
 		size=(None,None),
+		element_padding=None,
 		button_color=None,
 		font=None,
 		progress_bar_color=(None,None),
@@ -1352,7 +1376,9 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        default_button_element_size - Size of buttons on this window      
        auto_size_text - Bool. True if elements should size themselves according to contents. Defaults to True      
        auto_size_buttons - Bool. True if button elements should size themselves according to their text label      
-       location - (x,y) Location to place window in pixels      
+       location - (x,y) Location to place window in pixels  
+       size - (w,h) forces a window to be a paricular size
+       element_padding - (w,h) default padding amount for elements
        font - Font name and size for elements of the window      
        button_color - Default color for buttons (foreground, background). Can be text or hex      
        progress_bar_color - Foreground and background colors for progress bars      
@@ -1368,13 +1394,28 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        text_justification - Justification to use for Text Elements in this window      
        no_titlebar - Create window without a titlebar      
        grab_anywhere - Grab any location on the window to move the window      
-       keep_on_top - if True then window will always stop on top of other windows on the screen.  Great for floating toolbars.      
+       keep_on_top - if True then window will always stop on top of other windows on the screen.  Great for floating toolbars.     
+       resizable - if True - user can manually changge the wize of the window.  Defaults to False
+       disable_close - if True user will not be able to close using the X. 
       
       
 ### Window Location      
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.      
+
+### Window Size
+
+You can get your window's size by access the `Size`property.  The window has to be Read once or Finalized in order for the value to be correct. Note that it's a property, not a call.
+
+`my_windows_size = window.Size`
+
+To finalize your window:
+
+```pytyhon
+window = Window('My Title').Layout(layout).Finalize()
+```
       
-### Sizes      
+
+### Element Sizes      
 Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.      
       
 The default Element size for PySimpleGUI is `(45,1)`.      
@@ -1638,6 +1679,15 @@ Then to get the input value from the read it would be:
 values['mykey']    
 You also use the same key if you want to call Update on an element.  Please see the section below on Updates to understand that usage.    
     
+#### Visible
+Beginning in version 3.17 you can create Elements that are initially invisible that you can later make visible.
+
+To create an invisible Element, place the element in the layout like you normally would and add the parameter `visible=False`.  
+
+Later when you want to make that Element visible you simply call the Element's `Update` method and pass in the parameter `visible=True`
+
+This feature works best on Qt, but does work on the tkinter version as well.  The visible parameter can also be used with the Column and Frame "container" Elements.
+
       
 ### Output Elements      
 Building a window is simply making lists of Elements.  Each list is a row in the overall GUI dialog box.  The definition looks something like this:      
@@ -1645,6 +1695,10 @@ Building a window is simply making lists of Elements.  Each list is a row in the
     layout = [ [row 1 element, row 1 element],      
                [row 2 element, row 2 element, row 2 element] ]      
 The code is a crude representation of the GUI, laid out in text.      
+## Shortcut Functions / Multiple Function Names
+
+Many of the main method calls and Element names have shortcuts.  This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  `FindElement` was recently renamed to `Element` because it's a commonly used function.
+
       
 ##  Text Element      
       
@@ -1673,7 +1727,8 @@ The most basic element is the Text element.  It simply displays text.  Many of t
       
     Text - The text that's displayed      
     size - Element's size      
-    click_submits - if clicked will cause a read call to return they key value as the button      
+    click_submits - if clicked will cause a read call to return the key value of the button      
+    enable_events - same as click_submits
     relief - relief to use around the text      
     auto_size_text - Bool. Change width to match size of text      
     font - Font name and size to use      
@@ -1686,23 +1741,28 @@ The most basic element is the Text element.  It simply displays text.  Many of t
       
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.      
       
-**Fonts**
+### Fonts
       
 	Already discussed in the common parameters section.  Either string or a tuple.  
       
-**Color** in PySimpleGUI are in one of two formats - color name or RGB value.    
+### Color in PySimpleGUI are in one of two formats - color name or RGB value.    
       
  Individual colors are specified using either the color names as defined in tkinter or an RGB string of this format:      
       
     "#RRGGBB"        or          "darkblue"
       
-**auto_size_text**      
+### `auto_size_text      `
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.      
       
       
-**Shortcut functions**      
+### tcut functions      
 The shorthand functions for `Text` are `Txt` and `T`      
-      
+ 
+### Events `enable_events`
+
+ If you set the parameter `enable_events` or `click_submits` then you will get an event if the user clicks on the Text.  
+
+
 ### Text Methods     
     
 #### Update    
@@ -1741,25 +1801,12 @@ Multiline(	default_text='',
 			pad=None,
 			tooltip=None
 '''
-```
-
-    Multiline(default_text='',    
-              enter_submits = False,    
-              disabled=False,    
-              autoscroll=False,    
-              size=(None, None),    
-              auto_size_text=None,    
-              background_color=None,    
-              text_color=None,    
-              do_not_clear=False,    
-              key=None,    
-              focus=False,    
-              pad=None,    
-              tooltip=None)    
-.      
+```   
       
     default_text - Text to display in the text box      
-    enter_submits - Bool. If True, pressing Enter key submits window      
+    change_submits - Bool. If True, pressing Enter key submits window 
+    anable_events - Bool. same as change_submits
+    autoscroll - Bool.  Causes "cursor" to always be at the end of the text   
     size - Element's size      
     auto_size_text - Bool. Change width to match size of text      
       
@@ -1807,7 +1854,7 @@ You should be quite familiar with these parameters by now.  If not, read able an
 ##  Input Elements      
   These make up the majority of the window definition.  Optional variables at the Element level override the window level values (e.g. `size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.      
       
-## Text Input Element      
+## Text Input Element    Shortcuts (Input, In)  
       
     layout = [[sg.InputText('Default text')]]      
       
@@ -1850,12 +1897,15 @@ You should be quite familiar with these parameters by now.  If not, read able an
       
  There are two methods that can be called:      
       
-     InputText.Update(new_Value) - sets the input value      
-     Input.Text(Get() - returns the current value of the field.      
+     Input.Update(new_Value) - sets the input to new_value      
+     Input.Get() - returns the current value of the field.      
       
       
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`      
+
+#### `do_not_clear` Parameter
       
+**Important** - This trips a lot of people up.  If you do not set the `do_not_clear` parameter then the input field will clear when an event takes place.   The behavior is a "forms" style window development.  The assumption is that you want the field to clear.  If you are writing a chat program then you're thankful.  The rest of you, I'm sorry.
     
 ### TextInput Methods    
 ```python    
@@ -2033,6 +2083,11 @@ Sliders have a couple of slider-specific settings as well as appearance settings
        key- Dictionary key to use for return values      
        tooltip - Tooltip to display when hovered over wlement    
       
+### Qt Sliders
+
+There is an important difference between Qt and tkinter sliders.  On Qt, the slider values must be integer, not float.  If you want your slider to go from 0.1 to 1.0, then make your slider go from 1 to 10 and divide by 10.  It's an easy math thing to do and not a big deal.  Just deal with it.... you're writing software after all.  Presumably you know how to do these things.  ;-)
+
+
 ### Slider Methods    
 ```python    
 Update(self, value=None, range=(None, None), disabled=None):    
@@ -2173,6 +2228,14 @@ Parameter definitions
      key = Dictionary key to use for return values      
      pad - padding around element in the window    
      tooltip - text to show when mouse hovered over element         
+
+
+### Qt Differences - `values` is a range!
+
+Note that Qt does not allow arbitrary spinner values.  With PySimpleGUI-tkinter you can have any values in your list.  In Qt they must be integers.  Yea, it kinda sucks.  I'm working on it.
+
+On Qt values is a tuple representing a range.  On plain PySimpleGUI this value is a list of items.  Make sure on the plain version you specify items as a list using [] and not a generator using ().
+
       
 ### Spin Methods    
 ```python    
@@ -2185,24 +2248,33 @@ disabled - if True disables the element
 ## Image Element    
     
 Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format.  JPGs cannot be shown because tkinter does not naively support JPGs.  You can use the Python Imaging Library (PIL) package  to convert your image to PNG prior to calling PySimpleGUI if your images are in JPG format.    
-    
-     Image(filename=None,     
-           data=None,     
-           background_color=None,     
-           size=(None, None),     
-           pad=None,     
-           key=None,    
-           tooltip=None)    
-          
+```python   
+  Image(filename=None,
+		data=None,
+		data_base64=None,
+		background_color=None,
+		size=(None,None),
+		pad=None,
+		key=None,
+		tooltip=None,
+		click_submits=False,
+		enable_events=False,
+		visible=True,
+		size_px=(None,None)    
+```          
 Parameter definitions    
             
     filename - file name if the image is in a file    
-    data - if image is in RAM (PIL format?)    
+    data - if image is in RAM (PIL format?)  
+    data_base64 - image in base64 format  
     background_color - Color of background    
     size - Size (Width, Height) of image in pixels    
     pad - Padding around Element in the window    
     key - Key used to find the element    
     tooltip - text to show when mouse if hovered over image    
+    click_submits, enable_events - if True returns event when image is clicked
+    visible - if False will create image as hidden
+    size_px - size of image in pixels
     
 ### Image Methods    
     

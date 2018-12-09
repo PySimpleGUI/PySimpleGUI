@@ -26,7 +26,7 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release     Version 0.20.0
+ ## The Alpha Release     Version 0.18.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -37,7 +37,7 @@ Welcome to the Alpha Release of PySimpleGUI for Qt!
   
 You can use the exact same code that you are running on the older, tkinter, version of PySimpleGUI.    
   
-PySimpleGUIQt uses **PySide2** OR **PyQt5** for access to Qt.  **PyQt5 has been having  a number of problems recently however so tread lightly.**
+PySimpleGUIQt uses **PySide2** OR **PyQt5** for access to Qt.  PyQt5 has been having  a number of problems recently however so tread lightly.
   
 ## Porting your PySimpleGUI code to PySimpleGUIQt  
   
@@ -153,14 +153,13 @@ These Elements are "complete" (a relative term... more are more complete than ot
 Notable MISSING features at the moment include:  
 * Graphs Element Methods - erasing, draw arc, etc  
   
-# New PySimpleGUI Features only in Qt (or first introduced in Qt)
+# New PySimpleGUI Features only in Qt
 
 There are a number of new features that are only available in PySimpleGUIQt.  These include:
 * ButtonMenu Element
 * Dial Element
 * Stretcher Element
 * SystemTray feature
-* "Dynamic" windows that grow and shrink (uses invisible elements)
 
 ## SystemTray
 
@@ -219,7 +218,7 @@ You will find 3 parameters used to specify these 3 options on both the initializ
 
 ## Menu Definition
 ```python
-menu_def = ['BLANK', ['&Open', '&Save', ['1', '2', ['a', 'b']], '!&Properties', 'E&xit']]  
+menu_def = ['BLANK', ['&Open', '&Save', ['1', '2', ['a', 'b']], '&Properties', 'E&xit']]  
 ```
 
 A menu is defined using a list.  A "Menu entry" is a string that specifies:
@@ -227,7 +226,7 @@ A menu is defined using a list.  A "Menu entry" is a string that specifies:
 * keyboard shortcut
 * key
 
-See section on Menu Keys for more information on using keys with menus.
+See section on Menu Keys for more informatoin on using keys with menus.
 
 An entry without a key and keyboard shortcut is a simple string
 `'Menu Item'`
@@ -243,10 +242,6 @@ The first entry can be ignored.`'BLANK`' was chosen for this example. It's this 
 
 **Separators**
 If you want a separator between 2 items, add the entry `'---'` and it will add a separator item at that place in your menu.
-
-**Disabled menu entries**
-
-If you want to disable a menu entry, place a `!` before the menu entry
 
 
 ## SystemTray Methods
@@ -364,18 +359,6 @@ If you want to change the separator characters from :: top something else,change
 
 When a menu item has a key and it is chosen, then entire string is returned.  If Hide were selected, then Hide::key would be returned from the Read.  Note that the shortcut character & is NOT returned from Reads.
 
-
-## Dynamic Windows (Element Visibility)
-
-Finally, the ability to grow and shrink has been added as of release 0.20.0
-
-While the window **appears** to be dynamic, the reality is that the elements are created up front, when you define the window layout.  You will create these "extra" elements with the flag `visible=False`.  Then, when you wish to show those elements, call the element's `Update` method setting `visible=True`.  
-
-After you call the `Update` method, it's important to call `window.VisibilityChanged()` so that your window can change sizes.  Without that call your window will not shrink. It will grow properly, but it will not shrink.  While this could have been done by PySimpleGUI on the user's behalf, the thought was that perhaps the user wants the window size to remain the same and the element simply appears and disappears, leaving a blank spot.  If the window automatically grew and shrank, this would not be possible.  Just buck-up and make the call to `VisibilityChanged`.
-
-## `enable_events` Parameter
-
-All elements that are capable of producing events now have a parameter `enable_events`.  This is *identical* to the old parameter `change_submits` or `click_submits`.  The idea is to standardize on 1 name that all elements use.  The old parameters will continue to work, but the documentation and sample programs will steer you away from them and towards enable_events.
 
 # Release Notes:  
   
@@ -502,88 +485,6 @@ Image - New feature!  click_submits option (acts like a button in a way)
 Window - Get screen dimensions
 Slider - disable
 Dial - disable
-
-### 0.20.0 6-Dec-2018
-
-* Ability to change calculations between characters and pixels
-* size_px added to ALL elements that have a size parameter
-* General Element.Update(widget, background_color, text_color, font, visible)
-* visible parameter added to ALL elements
-* enable_events flag
-* Input text - enable events, visibility, size_px
-* Input text update added capabilities
-	* ability to highlight the input string
-	* background, text colors and font
-* Combo - enable events, visibility, size_px
-* Combo - auto complete feature
-* Combo - added to Update - background color, text color, font, visible
-* Listbox - enable events, visibility, size_px
-* Listbox - better scaling from characters to pixels
-* Listbox - ability to Update with set to index, text color, font, visibility
-* Radio - enable events, visibility, size_px
-* Radio - Update additions - background_color, text_color, font, visibility
-* Checkbox - enable events, visibility, size_px
-* Checkbox - Update additions - background_color, text_color, font, visibility
-* Spin - enable events, visibility, size_px
-* Spin - Update additions - background_color, text_color, font, visibility
-* Multiline input - enable events, visibility, size_px
-* Multiline input - Update additions - background_color, text_color, font, visibility
-* Multiline input better character to pixel scaling
-* Multiline output - enable events, visibility, size_px
-* Multiline output - Update additions - background_color, text_color, visibility
-* Text - enable events, size in pixels
-* Text - Update addition of visibility
-* Output - visible, size_px
-* Output - added update capability with new value, background_color, text_color, font, visibility
-* Button - enable events, visible, size_px
-* Button - Color Chooser feature completed
-* Button - Color Chooser can target (None, None) which will store the value to be returned with the values from Read()
-* Button - fixed bug in SaveAs button code.  Bad filter variable
-* Button - Updated added font, visibility
-* Button - new SetFocus() method will set the focus onto the button
-* ButtonMenu - Update method implemented that includes menu definition changes, text, button color, font, visibility
-* ProgressBar - added visibility, size_px
-* ProgressBar - added Update method for changing the visibility
-* Images - events, size_pix, visibility
-* Images - can now get click events for images!
-* Images - Update added visibility
-* Graph - visibility, size_px
-* Graph - Update method for changing visibility
-* Frame - visibility, size_px
-* Frame - Update method added that controls visibility
-* ALL elements inside of a Frame that's invisible will also be invisible
-* Tab - visible parameter added, however not yet functional!
-* TabGroup - enable events, visibility
-* TabGroup - Update for controlling visibility
-* Slider - enable events, size_px
-* Slider - Update method now includes visibility
-* Dial - enable events, size_px, visibility
-* Dial - Update method added visibilty control
-* Column - visibility added
-* Column - Added Update method to control visibility
-* ALL elements inside of an invisible Column Element will also be invisible
-* MenuBar - added visibility
-* MenuBar - Update can now change menu definitions at runtime, and control visibility
-* Table - enable events, size_px, visibility
-* Table - Update method can control visibility
-* Tree - enable events, size_px, visibility
-* Tree - Update method can control visibility
-* VisibilityChanged() function that must be called when using Qt so that the window will shrink or grow
-* window.GetScreenDimensions can now be called prior to window creation
-* window.Size property
-* enable_events added to all of the shortcut buttons and browse buttons
-* Ability to set a button image from a file
-* Combo - ability to set a default value
-* Combo - Readonly setting.  Allows for user editing of value
-* Menus - Ability to disable / enable any part of a menu by adding a ! before the entry name
-* Tabs - ability to set tab text color, background color, background color of seletected tab
-* Tabs - ability to set widget area's background color
-* Sliders - paging works properly (using page-up page-down or slider slider area to advance slider)
-* Tree - Setting number of visible rows implemented
-* Added 5 pixels to every window.  Have been having issues with text being cutoff on the right side
-* SetOptions - ability to change default error button color for popups
-
-
 
 # Design        
  ## Author 
