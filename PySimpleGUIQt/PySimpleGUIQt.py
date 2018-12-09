@@ -3362,12 +3362,11 @@ class Window:
         return screen_width, screen_height
 
     def Move(self, x, y):
-        # TODO
-        return
+        self.QT_QMainWindow.move(x, y)
 
     def Minimize(self):
-        # TODO
-        return
+        self.QT_QMainWindow.setWindowState(Qt.WindowMinimized)
+
 
     def StartMove(self, event):
         try:
@@ -4803,7 +4802,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     else:
                         style += "QProgressBar { border: %spx solid grey; border-radius: 5px; background-color: %s}"%(border_depth, DEFAULT_PROGRESS_BAR_COLOR[1])
 
-                    print(style)
                 element.QT_QProgressBar.setStyleSheet(style)
 
                 element.QT_QProgressBar.setTextVisible(False)
