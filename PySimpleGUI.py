@@ -962,6 +962,9 @@ class Spin(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
+    def Get(self):
+        return self.TKStringVar.get()
+
     def __del__(self):
         try:
             self.TKSpinBox.__del__()
@@ -5226,13 +5229,11 @@ def StartupTK(my_flex_form):
 
     # ow = _my_windows.NumOpenWindows
     ow = Window.NumOpenWindows
-    print(ow)
     # print('Starting TK open Windows = {}'.format(ow))
     if not ow and not my_flex_form.ForceTopLevel:
         # if first window being created, make a throwaway, hidden master root.  This stops one user
         # window from becoming the child of another user window. All windows are children of this
         # hidden window
-        print("******")
         Window.IncrementOpenCount()
         Window.hidden_master_root = tk.Tk()
         Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
