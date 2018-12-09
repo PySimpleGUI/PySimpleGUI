@@ -2980,7 +2980,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, background_image=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, background_image=None):
         '''
 
         :param title:
@@ -5433,8 +5433,6 @@ def StartupTK(window):
     if (window.GrabAnywhere is not False and not (
             window.NonBlocking and window.GrabAnywhere is not True)):
         pass
-    if not window.Resizable:
-        pass
 
     window.QFormLayout = QFormLayout()
     window.QT_Box_Layout = QVBoxLayout()
@@ -5471,6 +5469,11 @@ def StartupTK(window):
 
     if window._Size != (None, None):
         window.QT_QMainWindow.resize(window._Size[0], window._Size[1])
+
+    if not window.Resizable:
+        window.QT_QMainWindow.setFixedSize(*size)
+
+
 
     timer = None
     if window.AutoClose:
