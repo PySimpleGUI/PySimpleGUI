@@ -1567,9 +1567,9 @@ class ProgressBar(Element):
         self.Cancelled = False
         self.NotRunning = True
         self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
-        self.BarColor = bar_color
+        self.BarColor = bar_color if bar_color != (None, None) else DEFAULT_PROGRESS_BAR_COLOR
         self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
-        self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         self.StartValue = start_value
@@ -4781,19 +4781,29 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
               # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 element.QT_QProgressBar = QProgressBar()
-
+                orientation = element.Orientation.lower()[0]
                 if element.Size[0] is not None:
                     if element_size[0] is not None:
-                        element.QT_QProgressBar.setFixedWidth(element_size[0])
+                        element.QT_QProgressBar.setFixedWidth(element_size[orientation != 'h'])
                     if element_size[1] is not None:
-                        element.QT_QProgressBar.setFixedHeight(element_size[1])
+                        element.QT_QProgressBar.setFixedHeight(element_size[orientation == 'h'])
 
                 element.QT_QProgressBar.setMaximum(element.MaxValue)
                 element.QT_QProgressBar.setValue(element.StartValue)
-
+                if element.Orientation.lower().startswith('v'):
+                    element.QT_QProgressBar.setOrientation(QtCore.Qt.Vertical)
                 style = ''
-                style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
-                style += 'border: {}px solid gray; '.format(border_depth)
+                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+                # style += 'border: {}px solid gray; '.format(border_depth)
+                if element.BarColor != (None, None):
+                    if element.BarColor[0] is not None:
+                        style += "QProgressBar::chunk { background-color: %s; }"%element.BarColor[0]
+                    if element.BarColor[1] is not None:
+                        style += "QProgressBar { border: %spx solid grey; border-radius: 5px; background-color: %s; }"%(border_depth, element.BarColor[1])
+                    else:
+                        style += "QProgressBar { border: %spx solid grey; border-radius: 5px; background-color: %s}"%(border_depth, DEFAULT_PROGRESS_BAR_COLOR[1])
+
+                    print(style)
                 element.QT_QProgressBar.setStyleSheet(style)
 
                 element.QT_QProgressBar.setTextVisible(False)
@@ -4801,6 +4811,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QProgressBar.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_QProgressBar.setVisible(False)
+
                 qt_row_layout.addWidget(element.QT_QProgressBar)
             # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
@@ -5571,7 +5582,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, N
         bar_text = Text(single_line_message, size=(width*10, height*25 + 70), auto_size_text=True)
         form.AddRow(bar_text)
         form.AddRow((bar2))
-        form.AddRow((CloseButton('Cancel', button_color=button_color)))
+        form.AddRow((CloseButton('Cancel', button_color=button_color)),Stretch())
     else:
         single_line_message, width, height = ConvertArgsToSingleString(*args)
         bar2.TextToDisplay = single_line_message
@@ -5579,7 +5590,7 @@ def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, N
         bar2.CurrentValue = 0
         bar_text = Text(single_line_message, size=(width*10, height*25 + 3), auto_size_text=True)
         form.AddRow(bar2, bar_text)
-        form.AddRow((CloseButton('Cancel', button_color=button_color)))
+        form.AddRow((CloseButton('Cancel', button_color=button_color)), Stretch())
 
     form.NonBlocking = True
     form.Show(non_blocking=True)
@@ -5761,7 +5772,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
     global _one_line_progress_meters
 
-    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is not None else border_width
+    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
     try:
         meter_data = _one_line_progress_meters[key]
     except:  # a new meater is starting
