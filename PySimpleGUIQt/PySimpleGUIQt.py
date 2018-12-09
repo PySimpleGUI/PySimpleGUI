@@ -965,6 +965,8 @@ class Spin(Element):
             self.QT_Spinner.setDisabled(False)
         super().Update(self.QT_Spinner, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
+    def Get(self):
+        return self.QT_Spinner.value()
 
     def __del__(self):
         super().__del__()
