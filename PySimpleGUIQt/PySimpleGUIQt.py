@@ -4402,11 +4402,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 column_widget = QGroupBox()
                 element.QT_QGroupBox = column_widget
                 # column_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
-
-                style = create_style_from_font(font)
+                style = 'QGroupBox {'
+                style += create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'border: 0px solid gray; '
+                style += '}'
                 column_widget.setStyleSheet(style)
 
                 column_layout = QFormLayout()
@@ -4441,11 +4442,13 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_Label.setFixedHeight(element_size[1])
                 # element.QT_Label.setWordWrap(True)
-                style = create_style_from_font(font)
+                style = 'QLabel {'
+                style += create_style_from_font(font)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
+                style += '}'
                 element.QT_Label.setStyleSheet(style)
 
                 if element.ClickSubmits:
@@ -4472,7 +4475,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 btext = element.ButtonText
                 btype = element.BType
                 element.QT_QPushButton = QPushButton(btext)
-                style = create_style_from_font(font)
+                style = 'QPushButton {'
+                style += create_style_from_font(font)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -4481,6 +4485,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'border: none;'
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += '}'
                 element.QT_QPushButton.setStyleSheet(style)
                 if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
                     if element_size[0] is not None:
@@ -4534,6 +4539,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QLineEdit.setAlignment(Qt.AlignRight)
 
                 element.QT_QLineEdit.setText(str(default_text))
+                style = 'QLineEdit {'
                 style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
@@ -4541,7 +4547,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
-
+                style += '}'
                 element.QT_QLineEdit.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeText is False or element.Size[0] is not None:
@@ -4580,19 +4586,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     width = element_size[0]
                 else:
                     width = max_line_len
-                style = create_style_from_font(font)
-                if element.TextColor is not None:
+                style = 'QComboBox {'
+                style += create_style_from_font(font)
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
-                style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
-                style += """QScrollBar:vertical {              
-                            border: none;
-                            background:lightgray;
-                            width:12px;
-                            margin: 0px 0px 0px 0px;
-                        } """
+                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+                style += '}'
                 element.QT_ComboBox.setStyleSheet(style)
 
                 if not auto_size_text:
@@ -4632,20 +4634,22 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
                 element.QT_ListWidget = QListWidget()
                 style = element.QT_ListWidget.styleSheet()
-                style += """QScrollBar:vertical {              
-                            border: none;
-                            background:lightgray;
-                            width:12px;
-                            margin: 0px 0px 0px 0px;
-                        } """
+                # style += """QScrollBar:vertical {
+                #             border: none;
+                #             background:lightgray;
+                #             width:12px;
+                #             margin: 0px 0px 0px 0px;
+                #         } """
+                style = 'QListWidget {'
                 style += create_style_from_font(font)
 
-                if element.TextColor is not None:
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None:
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += '}'
                 element.QT_ListWidget.setStyleSheet(style)
                 if not auto_size_text:
                     if element_size[0] is not None:
@@ -4679,13 +4683,16 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 default_text = element.DefaultText
                 width, height = element_size
                 element.QT_TextEdit = QTextEdit()
-                style = create_style_from_font(font)
+                style = 'QTextEdit {'
+                style += create_style_from_font(font)
+
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += '}'
                 element.QT_TextEdit.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
@@ -4720,13 +4727,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 width, height = element_size
                 element.QT_TextBrowser = QTextBrowser()
                 element.QT_TextBrowser.setDisabled(False)
-                style = create_style_from_font(font)
+                style = 'QTextBrowser {'
+                style += create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += '}'
                 element.QT_TextBrowser.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
@@ -4792,9 +4801,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element.BarColor[0] is not None:
                         style += "QProgressBar::chunk { background-color: %s; }"%element.BarColor[0]
                     if element.BarColor[1] is not None:
-                        style += "QProgressBar { border: %spx solid grey; border-radius: 5px; background-color: %s; }"%(border_depth, element.BarColor[1])
+                        style += "QProgressBar { border: %spx solid grey; border-radius: 0px; background-color: %s; }"%(border_depth, element.BarColor[1])
                     else:
-                        style += "QProgressBar { border: %spx solid grey; border-radius: 5px; background-color: %s}"%(border_depth, DEFAULT_PROGRESS_BAR_COLOR[1])
+                        style += "QProgressBar { border: %spx solid grey; border-radius: 0px; background-color: %s}"%(border_depth, DEFAULT_PROGRESS_BAR_COLOR[1])
 
                 element.QT_QProgressBar.setStyleSheet(style)
 
@@ -4848,13 +4857,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.QT_Spinner = QSpinBox()
-                style = create_style_from_font(font)
+                style = 'QSpinBox {'
+                style += create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += '}'
                 element.QT_Spinner.setStyleSheet(style)
                 element.QT_Spinner.setRange(element.Values[0], element.Values[1])
                 if not auto_size_text:
@@ -4876,13 +4887,21 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             elif element_type == ELEM_TYPE_OUTPUT:
                 element.QT_TextBrowser = QTextBrowser()
                 element.QT_TextBrowser.setDisabled(False)
-                style = create_style_from_font(font)
+                style = 'QTextBrowser {'
+                style += create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                # style += """QScrollBar:vertical {
+                #             border: none;
+                #             background:lightgray;
+                #             width:12px;
+                #             margin: 0px 0px 0px 0px;
+                #         } """
+                style += '}'
                 element.QT_TextBrowser.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None:
@@ -5197,6 +5216,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.NumRows is not None:
                     element.QT_TableWidget.setFixedHeight(element.NumRows*35+25)
                 # element.QT_TableWidget = QTableWidget()
+                style = 'QTableWidget {'
                 style = create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
@@ -5204,12 +5224,13 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
-                style += """QScrollBar:vertical {              
+                style += """QScrollBar:vertical {
                             border: none;
                             background:lightgray;
                             width:12px;
                             margin: 0px 0px 0px 0px;
                         } """
+                style += '}'
                 element.QT_TableWidget.setStyleSheet(style)
 
                 if element.ChangeSubmits:
@@ -5272,7 +5293,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
 
-                style = ''
+                style = 'QTreeWidget {'
                 style += """QScrollBar:vertical {              
                             border: none;
                             background:lightgray;
@@ -5281,6 +5302,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         } """
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += '}'
                 element.QT_QTreeWidget.setStyleSheet(style)
 
                 if element.ShowExpanded:
@@ -7110,7 +7132,7 @@ def main():
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3', 'Item 4', 'Item 5'], size=(200, 85), tooltip='Listbox',
                     key='_LISTBOX_', font='Courier 12', text_color='red', background_color='white')],
-        [Combo(['Combo item 1', 'Combo item 2', 'Combo item 3'], size=(200, 35), tooltip='Combo')],
+        [Combo(['Combo item 1', 'Combo item 2', 'Combo item 3'], size=(200, 35), tooltip='Combo', visible_items=2)],
         [Spin([1, 2, 3], size=(40, 30), tooltip='Spinner')],
     ]
 
