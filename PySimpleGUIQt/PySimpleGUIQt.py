@@ -2537,8 +2537,8 @@ class Table(Element):
                     # self.QT_TableWidget.insertRow(rownum)
                     for colnum, columns in enumerate(rows):
                         self.QT_TableWidget.setItem(rownum, colnum, QTableWidgetItem(self.Values[rownum][colnum]))
-        # if num_rows is not None:
-        #     self.QT_TableWidget.setFixedHeight(num_rows * 35 + 25)  # convert num rows into pixels...crude but effective
+        if num_rows is not None:
+            self.QT_TableWidget.setFixedHeight(num_rows * 35 + 25)  # convert num rows into pixels...crude but effective
 
         super().Update(self.QT_TableWidget, visible=visible)
 
@@ -5194,8 +5194,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
                 element.QT_TableWidget = Table.QTTableWidget(toplevel_win)
-                height = element.NumRows
-                element.QT_TableWidget.setFixedHeight(height*35)
+                if element.NumRows is not None:
+                    element.QT_TableWidget.setFixedHeight(element.NumRows*35+25)
                 # element.QT_TableWidget = QTableWidget()
                 style = create_style_from_font(font)
                 if element.TextColor is not None:
