@@ -104,7 +104,7 @@ DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (4, 2)  # Padding between elements (row, col) in pixels
 # DEFAULT_ELEMENT_PADDING = (0, 0)  # Padding between elements (row, col) in pixels
 DEFAULT_PIXELS_TO_CHARS_SCALING = (10,25)      # 1 character represents x by y pixels
-DEFAULT_PIXEL_TO_CHARS_CUTOFF = 10             # number of chars that triggers using pixels instead of chars
+DEFAULT_PIXEL_TO_CHARS_CUTOFF = 12             # number of chars that triggers using pixels instead of chars
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
@@ -3068,14 +3068,14 @@ class Window:
         self.XFound = False
 
 
-    @staticmethod
-    def IncrementOpenCount():
-        Window.NumOpenWindows += 1
+    @classmethod
+    def IncrementOpenCount(self):
+        self.NumOpenWindows += 1
         # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
-    @staticmethod
-    def DecrementOpenCount():
-        Window.NumOpenWindows -= 1 * (Window.NumOpenWindows != 0)  # decrement if not 0
+    @classmethod
+    def DecrementOpenCount(self):
+        self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
         # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
 
@@ -4593,8 +4593,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'border: {}px solid gray; '.format(border_depth)
-                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += '}'
+                # style += """ QComboBox::down-arrow:on { border: 5px; width: 30px; height: 30px; }"""
+
                 element.QT_ComboBox.setStyleSheet(style)
 
                 if not auto_size_text:
@@ -5721,68 +5722,10 @@ def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, 
     :param StyleOffset:
     :return: False if should stop the meter
     '''
-    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if not border_width else border_width
-    # STATIC VARIABLE!
-    # This is a very clever form of static variable using a function attribute
-    # If the variable doesn't yet exist, then it will create it and initialize with the 3rd parameter
-    EasyProgressMeter.Data = getattr(EasyProgressMeter, 'Data', EasyProgressMeterDataClass())
-    # if no meter currently running
-    if EasyProgressMeter.Data.MeterID is None:  # Starting a new meter
-        print(
-            "Please change your call of EasyProgressMeter to use OneLineProgressMeter. EasyProgressMeter will be removed soon")
-        if int(current_value) >= int(max_value):
-            return False
-        del (EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
-        EasyProgressMeter.Data.ComputeProgressStats()
-        message = "\n".join([line for line in EasyProgressMeter.Data.StatMessages])
-        EasyProgressMeter.Data.MeterID, EasyProgressMeter.Data.MeterText = _ProgressMeter(title, int(max_value),
-                                                                                          message, *args,
-                                                                                          orientation=orientation,
-                                                                                          bar_color=bar_color,
-                                                                                          size=size,
-                                                                                          button_color=button_color,
-                                                                                          border_width=local_border_width)
-        EasyProgressMeter.Data.ParentForm = EasyProgressMeter.Data.MeterID.ParentForm
-        return True
-    # if exactly the same values as before, then ignore.
-    if EasyProgressMeter.Data.MaxValue == max_value and EasyProgressMeter.Data.CurrentValue == current_value:
-        return True
-    if EasyProgressMeter.Data.MaxValue != int(max_value):
-        EasyProgressMeter.Data.MeterID = None
-        EasyProgressMeter.Data.ParentForm = None
-        del (EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass()  # setup a new progress meter
-        return True  # HAVE to return TRUE or else the new meter will thing IT is failing when it hasn't
-    EasyProgressMeter.Data.CurrentValue = int(current_value)
-    EasyProgressMeter.Data.MaxValue = int(max_value)
-    EasyProgressMeter.Data.ComputeProgressStats()
-    message = ''
-    for line in EasyProgressMeter.Data.StatMessages:
-        message = message + str(line) + '\n'
-    message = "\n".join(EasyProgressMeter.Data.StatMessages)
-    args = args + (message,)
-    rc = _ProgressMeterUpdate(EasyProgressMeter.Data.MeterID, current_value,
-                              EasyProgressMeter.Data.MeterText, *args)
-    # if counter >= max then the progress meter is all done. Indicate none running
-    if current_value >= EasyProgressMeter.Data.MaxValue or not rc:
-        EasyProgressMeter.Data.MeterID = None
-        del (EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass()  # setup a new progress meter
-        return False  # even though at the end, return True so don't cause error with the app
-    return rc  # return whatever the update told us
 
+    print('EasyProgressMeter has been replaced.  Please use OneLineProgressMeter')
+    return False
 
-def EasyProgressMeterCancel(title, *args):
-    EasyProgressMeter.EasyProgressMeterData = getattr(EasyProgressMeter, 'EasyProgressMeterData',
-                                                      EasyProgressMeterDataClass())
-    if EasyProgressMeter.EasyProgressMeterData.MeterID is not None:
-        # tell the normal meter update that we're at max value which will close the meter
-        rc = EasyProgressMeter(title, EasyProgressMeter.EasyProgressMeterData.MaxValue,
-                               EasyProgressMeter.EasyProgressMeterData.MaxValue, ' *** CANCELLING ***',
-                               'Caller requested a cancel', *args)
-        return rc
-    return True
 
 
 # global variable containing dictionary will all currently running one-line progress meters.
@@ -7102,6 +7045,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 def main():
     ChangeLookAndFeel('GreenTan')
+    SetOptions(progress_meter_color=(COLOR_SYSTEM_DEFAULT))
     # SetOptions(element_padding=(0,0))
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open::KeyOpen', '&Save::KeySave', '---', '&Properties::KeyProp', 'E&xit']],
