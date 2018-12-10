@@ -3327,7 +3327,7 @@ class Window:
             return ErrorElement(key=key)
         return element
 
-    Element = FindElement
+    Element = FindElement       # shortcut function definition
 
     def FindElementWithFocus(self):
         return self.FocusElement
@@ -3438,27 +3438,12 @@ class Window:
     CloseNonBlockingForm = Close
     CloseNonBlocking = Close
 
-    # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
-    def OnClosingCallback(self):
-        if self.DisableClose:
-            return
-        print('Got closing callback')
-        self.TKroot.quit()  # kick the users out of the mainloop
-        if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
-            self.TKroot.destroy()  # kick the users out of the mainloop
-        else:
-            self.RootNeedsDestroying = True
-        self.TKrootDestroyed = True
-
-        return
 
     def Disable(self):
-        # TODO
-        return
+        self.QT_QMainWindow.setEnabled(False)
 
     def Enable(self):
-        # TODO
-        return
+        self.QT_QMainWindow.setEnabled(True)
 
     def Hide(self):
         self._Hidden = True
@@ -3566,6 +3551,9 @@ class Window:
             return QWidget.eventFilter(self, widget, event)
 
         def closeEvent(self, event):
+            if self.Window.DisableClose:
+                print('IGNORING CLOSE')
+                return
             # print('GOT A CLOSE EVENT!', event, self.Window.Title)
             self.Window.LastButtonClicked = None
             self.Window.XFound = True
@@ -4599,6 +4587,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += """QScrollBar:vertical {              
+                            border: none;
+                            background:lightgray;
+                            width:12px;
+                            margin: 0px 0px 0px 0px;
+                        } """
                 element.QT_ComboBox.setStyleSheet(style)
 
                 if not auto_size_text:
@@ -5200,6 +5194,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
                 element.QT_TableWidget = Table.QTTableWidget(toplevel_win)
+                height = element.NumRows
+                element.QT_TableWidget.setFixedHeight(height*35)
                 # element.QT_TableWidget = QTableWidget()
                 style = create_style_from_font(font)
                 if element.TextColor is not None:
@@ -5208,6 +5204,12 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
+                style += """QScrollBar:vertical {              
+                            border: none;
+                            background:lightgray;
+                            width:12px;
+                            margin: 0px 0px 0px 0px;
+                        } """
                 element.QT_TableWidget.setStyleSheet(style)
 
                 if element.ChangeSubmits:
@@ -7122,12 +7124,12 @@ def main():
          Dial(range=(0, 100), tick_interval=1, resolution=1, size=(150, 150), default_value=40, tooltip='Dial'),
          Stretch()],
     ]
-    matrix = [[str(x * y) for x in range(4)] for y in range(3)]
+    matrix = [[str(x * y) for x in range(4)] for y in range(8)]
 
     frame5 = [
         [Table(values=matrix, max_col_width=25,
                   auto_size_columns=True, display_row_numbers=True, change_submits=False, bind_return_key=True,
-                  justification='right', num_rows=8, alternating_row_color='lightblue', key='_table_',
+                  justification='right', num_rows=6, alternating_row_color='lightblue', key='_table_',
                   text_color='black', tooltip='Table'),
          Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
                  num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, size=(200, 150), tooltip='Tree'),
