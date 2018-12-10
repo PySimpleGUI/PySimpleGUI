@@ -5806,6 +5806,8 @@ _easy_print_data = None  # global variable... I'm cheating
 
 
 class DebugWin():
+    debug_window = None
+
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=False):
         # Show a form that's a running counter
@@ -5830,9 +5832,9 @@ class DebugWin():
         endchar = end if end is not None else '\n'
 
         if self.window is None:  # if window was destroyed already, just print
+            self.__init__()
             print(*args, sep=sepchar, end=endchar)
             return
-            Window.active_popups[self.window] = 'debug window'
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
@@ -5856,12 +5858,12 @@ def PrintClose():
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
               no_button=False, grab_anywhere=False, keep_on_top=False):
-    global _easy_print_data
 
-    if _easy_print_data is None:
-        _easy_print_data = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
+
+    if DebugWin.debug_window is None:
+        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                     no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-    _easy_print_data.Print(*args, end=end, sep=sep)
+    DebugWin.debug_window.Print(*args, end=end, sep=sep)
 
 
 Print = EasyPrint
@@ -5869,10 +5871,9 @@ eprint = EasyPrint
 
 
 def EasyPrintClose():
-    global _easy_print_data
-    if _easy_print_data is not None:
-        _easy_print_data.Close()
-        _easy_print_data = None
+    if DebugWin.debug_window is not None:
+        DebugWin.debug_window.Close()
+        DebugWin.debug_window = None
 
 
 # ========================  Scrolled Text Box   =====#
@@ -7045,7 +7046,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 def main():
     ChangeLookAndFeel('GreenTan')
-    SetOptions(progress_meter_color=(COLOR_SYSTEM_DEFAULT))
+    # SetOptions(progress_meter_color=(COLOR_SYSTEM_DEFAULT))
     # SetOptions(element_padding=(0,0))
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open::KeyOpen', '&Save::KeySave', '---', '&Properties::KeyProp', 'E&xit']],
