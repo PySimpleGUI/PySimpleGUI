@@ -3411,7 +3411,49 @@ One example is you have an input field that changes as you press buttons on an o
                          
     
 # Updating Elements (changing elements in active window)      
-      
+
+If you want to change Elements in your window after the window has been created, then you will call the Element's Update method.
+
+**NOTE** a window **must be Read or Finalized** before any Update calls can be made.  
+
+Here is an example of updating a Text Element
+
+```python
+import PySimpleGUI as sg  
+  
+layout = [ [sg.Text('My layout', key='_TEXT_')],  
+           [sg.Button('Read')]]  
+  
+window = sg.Window('My new window').Layout(layout)  
+  
+while True:             # Event Loop  
+  event, values = window.Read()  
+    if event is None:  
+        break  
+  window.Element('_TEXT_').Update('My new text value')
+```
+
+Notice the placement of the Update call.  If you wanted to Update the Text Element *prior* to the Read call, outside of the event loop, then you must call Finalize on the window first.
+
+In this example, the Update is done prior the Read.  Because of this, the Finalize call is added to the Window creation.
+```python
+import PySimpleGUI as sg  
+  
+layout = [ [sg.Text('My layout', key='_TEXT_')],  
+           [sg.Button('Read')]  
+         ]  
+  
+window = sg.Window('My new window').Layout(layout).Finalize()  
+  
+window.Element('_TEXT_').Update('My new text value')  
+  
+while True:             # Event Loop  
+  event, values = window.Read()  
+    if event is None:  
+        break
+```
+
+
 Persistent windows remain open and thus continue to interact with the user after the Read has returned.  Often the program wishes to communicate results (output information) or change an Element's values (such as populating a List Element).      
     
 You can use Update to do things like:      
@@ -3478,17 +3520,21 @@ It works as follows.  The call to `window.FindElement` returns the Element objec
     text_element.Update(font=font)      
       
 The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used as targets in  Button calls.      
-      
-   ### Updating Multiple Elements      
-  If you have a large number of Elements to update, you can call `Window.UpdateElements()`.      
-      
-`    UpdateElements(key_list,      
-                value_list)`      
-      
-`key_list` - list of keys for elements you wish to update      
-`value_list` - list of values, one for each key      
-      
-    window.UpdateElements(('name', 'address', 'phone'), ('Fred Flintstone', '123 Rock Quarry Road', '555#'))      
+
+### Locating Elements
+
+The Window method call that's used to find an element is:
+`FindElement`
+or the shortened version
+`Element`
+
+When you see a call to window.FindElement or window.Element, then you know an element is being addressed.  Normally this is done so you can call the element's Update method.  
+
+
+### ProgressBar / Progress Meters
+
+Note that to change a progress meter's progress, you call UpdateBar, not Update.      It's an old naming convention that's left over from before the Update calls were implemented.
+   
       
       
 # Keyboard & Mouse Capture      
