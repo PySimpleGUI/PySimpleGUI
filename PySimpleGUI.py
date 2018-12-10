@@ -103,6 +103,7 @@ DEFAULT_ELEMENT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR = None
 DEFAULT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_INPUT_ELEMENTS_COLOR = COLOR_SYSTEM_DEFAULT
+DEFAULT_INPUT_ELEMENTS_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_INPUT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[0])    # (Text, Background) or (Color "on", Color) as a way to remember
@@ -3100,14 +3101,14 @@ class Window:
         self.XFound = False
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
 
-    @staticmethod
-    def IncrementOpenCount():
-        Window.NumOpenWindows += 1
+    @classmethod
+    def IncrementOpenCount(self):
+        self.NumOpenWindows += 1
         # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
-    @staticmethod
-    def DecrementOpenCount():
-        Window.NumOpenWindows -= 1 * (Window.NumOpenWindows != 0)  # decrement if not 0
+    @classmethod
+    def DecrementOpenCount(self):
+        self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
         # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
     # ------------------------- Add ONE Row to Form ------------------------- #
@@ -3591,6 +3592,7 @@ class Window:
         return False
 
     def __del__(self):
+        # print('DELETING WINDOW')
         for row in self.Rows:
             for element in row:
                 element.__del__()
@@ -5650,6 +5652,8 @@ _easy_print_data = None  # global variable... I'm cheating
 
 
 class DebugWin():
+    debug_window = None
+
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
         # Show a form that's a running counter
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
@@ -5671,6 +5675,7 @@ class DebugWin():
         endchar = end if end is not None else '\n'
 
         if self.window is None:         # if window was destroyed already, just print
+            self.__init__()
             print(*args, sep=sepchar, end=endchar)
             return
 
@@ -5679,10 +5684,10 @@ class DebugWin():
             self.Close()
         print(*args, sep=sepchar, end=endchar)
         # Add extra check to see if the window was closed... if closed by X sometimes am not told
-        try:
-            state = self.window.TKroot.state()
-        except:
-            self.Close()
+        # try:
+        #     state = self.window.TKroot.state()
+        # except:
+        #     self.Close()
 
     def Close(self):
         if self.window is None:
@@ -5695,23 +5700,22 @@ def PrintClose():
     EasyPrintClose()
 
 
-def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False,  keep_on_top=False):
-    global _easy_print_data
+def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
 
-    if _easy_print_data is None:
-        _easy_print_data = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-    _easy_print_data.Print(*args, end=end, sep=sep)
+
+    if DebugWin.debug_window is None:
+        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+    DebugWin.debug_window.Print(*args, end=end, sep=sep)
+
 
 Print = EasyPrint
 eprint = EasyPrint
 
 
 def EasyPrintClose():
-    global _easy_print_data
-    if _easy_print_data is not None:
-        _easy_print_data.Close()
-        _easy_print_data = None
-
+    if DebugWin.debug_window is not None:
+        DebugWin.debug_window.Close()
+        DebugWin.debug_window = None
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
