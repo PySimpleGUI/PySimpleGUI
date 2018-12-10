@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.19.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.21.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release     Version 0.20.0
+ ## The Alpha Release     Version 0.21.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -574,15 +574,38 @@ Dial - disable
 * enable_events added to all of the shortcut buttons and browse buttons
 * Ability to set a button image from a file
 * Combo - ability to set a default value
-* Combo - Readonly setting.  Allows for user editing of value
+* Combo - Read only setting.  Allows for user editing of value
 * Menus - Ability to disable / enable any part of a menu by adding a ! before the entry name
-* Tabs - ability to set tab text color, background color, background color of seletected tab
+* Tabs - ability to set tab text color, background color, background color of selected tab
 * Tabs - ability to set widget area's background color
 * Sliders - paging works properly (using page-up page-down or slider slider area to advance slider)
 * Tree - Setting number of visible rows implemented
 * Added 5 pixels to every window.  Have been having issues with text being cutoff on the right side
 * SetOptions - ability to change default error button color for popups
 
+### 0.21.0 - 9-Dec-2018
+ 
+* Removed use of global variabels - using static class variabels instead
+* Listbox.Get() will return current listbox value
+* Progressbar now has color support
+* Progressbar can be vertical now
+* Can change bar or back and background color
+* (barcolor, background color - None if use default)
+* Table num_rows parameter implemented
+* Table.Update - can change number of visible rows
+* Window resizable parm - implemented, default changed from False to True
+* Window.Move - implemented
+* Window.Minimize - implemented
+* Window.Disable - implemented
+* Window.Enable - implemented
+* Window.CurrentLocation - implemented
+* Fixed too small scrollbar in Combobox
+* Fixed too small scrollbar in Listbox
+* Changed "text" window to a complex one for quick regression testing (try running PySimpleGUIQt.py by itself)
+
+### 0.22.0 - 9-Dec-2018
+
+* Spin.Get method - get the current spinner value
 
 
 # Design        
