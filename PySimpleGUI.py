@@ -1360,6 +1360,8 @@ class Button(Element):
         self.TKButton = None
         self.Target = target
         self.ButtonText = button_text
+        if sys.platform == 'darwin' and button_color is not None:
+            print('Button *** WARNING - Button colors are not supported on the Mac ***')
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
         self.ImageData = image_data
@@ -1521,6 +1523,8 @@ class Button(Element):
             if text is not None:
                 self.TKButton.configure(text=text)
                 self.ButtonText = text
+            if sys.platform == 'darwin' and button_color != (None, None):
+                print('Button.Update *** WARNING - Button colors are not supported on the Mac***')
             if button_color != (None, None):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
