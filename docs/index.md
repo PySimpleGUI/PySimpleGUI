@@ -31,9 +31,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.17.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.18.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.17.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.18.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.19.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4193,6 +4193,54 @@ Emergency patch release... going out same day as previous release
 * row_height parameter to Table Element
 * Stretch Element (DUMMY) so that can be source code compatible with Qt
 * ButtonMenu Element (DUMMY) so can be source code compat with Qt.  Will implement eventually
+
+## 3.18.0  11-Dec-2018
+
+ NOTE - **Menus are broken** on version 2.7.  Don't know how long they've been this way.  Please get off legacy Python if that's what you're running.
+ 
+* Default progress bar length changed to shorter
+* Master window and tracking of num open windows moved from global to Window class variable
+* Element visibility setting (when created and when Updating element)
+* Input text visiblity
+* Combo visiblity
+* Combo replaces InputCombo as the primary class name
+* Option menu visibility
+* Listbox visiblity
+* Listbox new SetFocus method
+* Radio visibility
+* Checkbox visibility
+* Spin visiblity
+* Spin new Get method returns current value
+* Multiline visiblity
+* Text visibility
+* StatusBar visiblity
+* Output visibility
+* Button visibility
+* Button SetFocus
+* ProgressBar - New Update method (used only for visibility)
+* Image - clickable images!  enable_events parameter
+* Image visibility
+* Canvas visibility
+* Graph visibility
+* Graph - new DrawImage capability (finally)
+* Frame visibility
+* Tab visibility (may not be fully functional)
+* TabGroup visibility
+* Slider visibility
+* Slider - new disable_number_display parameter
+* Column visibilty
+* Menu visibility - Not functional
+* Table visibility
+* Table - new num_rows parm for Update - changes number of visible rows
+* Tree visiblity
+* Window - New element_padding parameter will get padding for entire window
+* OneLineProgressMeter - Completely REPLACED the implementation
+* OneLineProgressMeter - can get reason for the cancellation (cancel button versus X)
+* EasyProgressMeter - completely removed. Use OneLineProgressMeter instead
+* Debug window, EasyPrint, Print - debug window will re-open if printed to after being closed
+* SetOptions - can change the error button color
+* Much bigger window created when running PySimpleGUI.py by itself.  Meant to help with regression testing
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
