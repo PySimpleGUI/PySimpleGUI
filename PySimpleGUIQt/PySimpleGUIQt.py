@@ -4540,7 +4540,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 element.QT_QLineEdit.setText(str(default_text))
                 style = 'QLineEdit {'
-                style = create_style_from_font(font)
+                style += create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
@@ -5218,7 +5218,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_TableWidget.setFixedHeight(element.NumRows*35+25)
                 # element.QT_TableWidget = QTableWidget()
                 style = 'QTableWidget {'
-                style = create_style_from_font(font)
+                style += create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;' % element.TextColor
                 if element.BackgroundColor is not None:
