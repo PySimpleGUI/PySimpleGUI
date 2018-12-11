@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
+    import PySimpleGUIQt as sg
 else:
     import PySimpleGUI27 as sg
 
@@ -683,13 +683,19 @@ layout = [[sg.Text('Hover mouse to see RGB value, click for white & black text',
                    background_color='light green',
                    pad=(0,(0,20))),]]
 
-# -- Create primary color viewer window by building rows and appending to layout --
-row = []
-for i, color in enumerate(color_map):
-    row.append(sg.Button(color, button_color=('black', color), key=color, tooltip=color_map[color]))
-    if (i+1) % 15 == 0:         # every 15 buttons make a new row
-        layout.append(row)
-        row = []
+# -- Create primary color viewer window --
+color_list = [key for key in color_map]
+for rows in range(40):
+
+    row = []
+    for i in range(12):
+        try:
+            color = color_list[rows+40*i]
+            row.append(sg.Button(color, button_color=('black', color), key=color))
+        except:
+            pass
+    layout.append(row)
+
 
 window = sg.Window('Color Viewer', grab_anywhere=False, font=('any 9')).Layout(layout)
 
