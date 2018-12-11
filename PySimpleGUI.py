@@ -103,7 +103,6 @@ DEFAULT_ELEMENT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR = None
 DEFAULT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_INPUT_ELEMENTS_COLOR = COLOR_SYSTEM_DEFAULT
-DEFAULT_INPUT_ELEMENTS_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_INPUT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_BUTTON_COLOR = (YELLOWS[0], PURPLES[0])    # (Text, Background) or (Color "on", Color) as a way to remember
@@ -128,7 +127,7 @@ RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')  # a nice green progress bar
-DEFAULT_PROGRESS_BAR_SIZE = (25, 20)  # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_SIZE = (20, 20)  # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
 PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
@@ -1156,6 +1155,10 @@ class StatusBar(Element):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
+        if visible is False:
+            self.TKText.pack_forget()
+        elif visible is True:
+            self.TKText.pack()
 
     def __del__(self):
         super().__del__()
@@ -1169,7 +1172,7 @@ class StatusBar(Element):
 class TKProgressBar():
     def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
-                 orientation='horizontal', BarColor=(None, None), key=None, visible=True):
+                 orientation='horizontal', BarColor=(None, None), key=None):
         self.Length = length
         self.Width = width
         self.Max = max
@@ -1295,7 +1298,7 @@ class Output(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key)
+                         tooltip=tooltip, key=key, visible=visible)
 
     @property
     def TKOut(self):
@@ -5354,273 +5357,120 @@ def ConvertArgsToSingleString(*args):
     return single_line_message, width_used, total_lines
 
 
-# ============================== ProgressMeter  =====#
-# ===================================================#
-def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, None), button_color=None,
-                   size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
-    '''
-    Create and show a form on tbe caller's behalf.
-    :param title:
-    :param max_value:
-    :param args: ANY number of arguments the caller wants to display
-    :param orientation:
-    :param bar_color:
-    :param size:
-    :param Style:
-    :param StyleOffset:
-    :return: ProgressBar object that is in the form
-    '''
-    local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
-    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
-    bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color,
-                       border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
-    form = Window(title, auto_size_text=True, grab_anywhere=grab_anywhere)
+METER_REASON_CANCELLED = 'cancelled'
+METER_REASON_CLOSED = 'closed'
+METER_REASON_REACHED_MAX = 'finished'
+METER_OK = True
+METER_STOPPED = False
 
-    # Form using a horizontal bar
-    if local_orientation[0].lower() == 'h':
-        single_line_message, width, height = ConvertArgsToSingleString(*args)
-        bar2.TextToDisplay = single_line_message
-        bar2.MaxValue = max_value
-        bar2.CurrentValue = 0
-        bar_text = Text(single_line_message, size=(width, height + 3), auto_size_text=True)
-        form.AddRow(bar_text)
-        form.AddRow((bar2))
-        form.AddRow((CloseButton('Cancel', button_color=button_color)))
-    else:
-        single_line_message, width, height = ConvertArgsToSingleString(*args)
-        bar2.TextToDisplay = single_line_message
-        bar2.MaxValue = max_value
-        bar2.CurrentValue = 0
-        bar_text = Text(single_line_message, size=(width, height + 3), auto_size_text=True)
-        form.AddRow(bar2, bar_text)
-        form.AddRow((CloseButton('Cancel', button_color=button_color)))
+class QuickMeter(object):
+    active_meters = {}
+    exit_reasons = {}
 
-    form.NonBlocking = True
-    form.Show(non_blocking=True)
-    return bar2, bar_text
+    def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
+                         button_color=(None, None), size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
+        self.start_time = datetime.datetime.utcnow()
+        self.key = key
+        self.orientation = orientation
+        self.bar_color = bar_color
+        self.size = size
+        self.grab_anywhere = grab_anywhere
+        self.button_color = button_color
+        self.border_width = border_width
+        self.title = title
+        self.current_value = current_value
+        self.max_value = max_value
+        self.close_reason = None
+        self.window = self.BuildWindow(*args)
 
+    def BuildWindow(self, *args):
+        layout = []
+        if self.orientation.lower().startswith('h'):
+            col = []
+            for arg in args:
+                col.append([T(arg)])
+            col.append([T('', size=(30,10), key='_STATS_')])
+            col.append([ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)])
+            col.append([Cancel(button_color=self.button_color), Stretch()])
+            layout += [Column(col)]
+        else:
+            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
+            col2 = []
+            for arg in args:
+                col2.append([T(arg)])
+            col2.append([T('', size=(30,10), key='_STATS_')])
+            col2.append([Cancel(button_color=self.button_color), Stretch()])
+            layout += [Column(col), Column(col2)]
+        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width)
+        self.window.Layout([layout]).Finalize()
 
-# ============================== ProgressMeterUpdate  =====#
-def _ProgressMeterUpdate(bar, value, text_elem, *args):
-    '''
-    Update the progress meter for a form
-    :param form: class ProgressBar
-    :param value: int
-    :return: True if not cancelled, OK....False if Error
-    '''
-    # global _my_windows
-    if bar == None: return False
-    if bar.BarExpired: return False
-    message, w, h = ConvertArgsToSingleString(*args)
-    text_elem.Update(message)
-    # bar.TextToDisplay = message
-    bar.CurrentValue = value
-    rc = bar.UpdateBar(value)
-    if value >= bar.MaxValue or not rc:
-        bar.BarExpired = True
-        bar.ParentForm._Close()
-        if rc:  # if update was OK but bar expired, decrement num windows
-            # _my_windows.Decrement()
-            Window.DecrementOpenCount()
-    if bar.ParentForm.RootNeedsDestroying:
-        try:
-            bar.ParentForm.TKroot.destroy()
-            # there is a bug with progress meters not decrementing the number of windows
-            # correctly when the X is used to close the window
-            # uncommenting this line fixes that problem, but causes a double-decrement when
-            # the cancel button is used... damned if you do, damned if you don't, so I'm choosing
-            # don't, as in don't decrement too many times. It's OK now to have a mismatch in
-            # number of windows because of the "hidden" master window. This ensures all windows
-            # will be toplevel.  Sorry about the bug, but the user never sees any problems as a result
-            # _my_windows.Decrement()
-        except:
-            pass
-        bar.ParentForm.RootNeedsDestroying = False
-        bar.ParentForm.__del__()
-        return False
+        return self.window
 
-    return rc
+    def UpdateMeter(self, current_value, max_value):
+        self.current_value = current_value
+        self.max_value = max_value
+        self.window.Element('_PROG_').UpdateBar(self.current_value, self.max_value)
+        self.window.Element('_STATS_').Update('\n'.join(self.ComputeProgressStats()))
+        event, values = self.window.Read(timeout=0)
+        if event in('Cancel', None) or current_value >= max_value:
+            self.window.Close()
+            del(QuickMeter.active_meters[self.key])
+            QuickMeter.exit_reasons[self.key] = METER_REASON_CANCELLED if event == 'Cancel' else METER_REASON_CLOSED if event is None else METER_REASON_REACHED_MAX
+            return QuickMeter.exit_reasons[self.key]
+        return METER_OK
 
 
-# ============================== EASY PROGRESS METER ========================================== #
-# class to hold the easy meter info (a global variable essentialy)
-class EasyProgressMeterDataClass():
-    def __init__(self, title='', current_value=1, max_value=10, start_time=None, stat_messages=()):
-        self.Title = title
-        self.CurrentValue = current_value
-        self.MaxValue = max_value
-        self.StartTime = start_time
-        self.StatMessages = stat_messages
-        self.ParentForm = None
-        self.MeterID = None
-        self.MeterText = None
-
-    # ===========================  COMPUTE PROGRESS STATS ======================#
     def ComputeProgressStats(self):
         utc = datetime.datetime.utcnow()
-        time_delta = utc - self.StartTime
+        time_delta = utc - self.start_time
         total_seconds = time_delta.total_seconds()
         if not total_seconds:
             total_seconds = 1
         try:
-            time_per_item = total_seconds / self.CurrentValue
+            time_per_item = total_seconds / self.current_value
         except:
             time_per_item = 1
-        seconds_remaining = (self.MaxValue - self.CurrentValue) * time_per_item
+        seconds_remaining = (self.max_value - self.current_value) * time_per_item
         time_remaining = str(datetime.timedelta(seconds=seconds_remaining))
         time_remaining_short = (time_remaining).split(".")[0]
         time_delta_short = str(time_delta).split(".")[0]
         total_time = time_delta + datetime.timedelta(seconds=seconds_remaining)
         total_time_short = str(total_time).split(".")[0]
-        self.StatMessages = [
-            '{} of {}'.format(self.CurrentValue, self.MaxValue),
-            '{} %'.format(100 * self.CurrentValue // self.MaxValue),
+        self.stat_messages = [
+            '{} of {}'.format(self.current_value, self.max_value),
+            '{} %'.format(100 * self.current_value // self.max_value),
             '',
-            ' {:6.2f} Iterations per Second'.format(self.CurrentValue / total_seconds),
-            ' {:6.2f} Seconds per Iteration'.format(total_seconds / (self.CurrentValue if self.CurrentValue else 1)),
+            ' {:6.2f} Iterations per Second'.format(self.current_value / total_seconds),
+            ' {:6.2f} Seconds per Iteration'.format(total_seconds / (self.current_value if self.current_value else 1)),
             '',
             '{} Elapsed Time'.format(time_delta_short),
             '{} Time Remaining'.format(time_remaining_short),
             '{} Estimated Total Time'.format(total_time_short)]
-        return
+        return self.stat_messages
 
 
-# ============================== EasyProgressMeter  =====#
-def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=(None, None),
-                      button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None):
-    '''
-    A ONE-LINE progress meter. Add to your code where ever you need a meter. No need for a second
-    function call before your loop. You've got enough code to write!
-    :param title: Title will be shown on the window
-    :param current_value: Current count of your items
-    :param max_value: Max value your count will ever reach. This indicates it should be closed
-    :param args:  VARIABLE number of arguements... you request it, we'll print it no matter what the item!
-    :param orientation:
-    :param bar_color:
-    :param size:
-    :param Style:
-    :param StyleOffset:
-    :return: False if should stop the meter
-    '''
-    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if not border_width else border_width
-    # STATIC VARIABLE!
-    # This is a very clever form of static variable using a function attribute
-    # If the variable doesn't yet exist, then it will create it and initialize with the 3rd parameter
-    EasyProgressMeter.Data = getattr(EasyProgressMeter, 'Data', EasyProgressMeterDataClass())
-    # if no meter currently running
-    if EasyProgressMeter.Data.MeterID is None:  # Starting a new meter
-        print(
-            "Please change your call of EasyProgressMeter to use OneLineProgressMeter. EasyProgressMeter will be removed soon")
-        if int(current_value) >= int(max_value):
-            return False
-        del (EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
-        EasyProgressMeter.Data.ComputeProgressStats()
-        message = "\n".join([line for line in EasyProgressMeter.Data.StatMessages])
-        EasyProgressMeter.Data.MeterID, EasyProgressMeter.Data.MeterText = _ProgressMeter(title, int(max_value),
-                                                                                          message, *args,
-                                                                                          orientation=orientation,
-                                                                                          bar_color=bar_color,
-                                                                                          size=size,
-                                                                                          button_color=button_color,
-                                                                                          border_width=local_border_width)
-        EasyProgressMeter.Data.ParentForm = EasyProgressMeter.Data.MeterID.ParentForm
-        return True
-    # if exactly the same values as before, then ignore.
-    if EasyProgressMeter.Data.MaxValue == max_value and EasyProgressMeter.Data.CurrentValue == current_value:
-        return True
-    if EasyProgressMeter.Data.MaxValue != int(max_value):
-        EasyProgressMeter.Data.MeterID = None
-        EasyProgressMeter.Data.ParentForm = None
-        del (EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass()  # setup a new progress meter
-        return True  # HAVE to return TRUE or else the new meter will thing IT is failing when it hasn't
-    EasyProgressMeter.Data.CurrentValue = int(current_value)
-    EasyProgressMeter.Data.MaxValue = int(max_value)
-    EasyProgressMeter.Data.ComputeProgressStats()
-    message = ''
-    for line in EasyProgressMeter.Data.StatMessages:
-        message = message + str(line) + '\n'
-    message = "\n".join(EasyProgressMeter.Data.StatMessages)
-    args = args + (message,)
-    rc = _ProgressMeterUpdate(EasyProgressMeter.Data.MeterID, current_value,
-                              EasyProgressMeter.Data.MeterText, *args)
-    # if counter >= max then the progress meter is all done. Indicate none running
-    if current_value >= EasyProgressMeter.Data.MaxValue or not rc:
-        EasyProgressMeter.Data.MeterID = None
-        del (EasyProgressMeter.Data)
-        EasyProgressMeter.Data = EasyProgressMeterDataClass()  # setup a new progress meter
-        return False  # even though at the end, return True so don't cause error with the app
-    return rc  # return whatever the update told us
-
-
-def EasyProgressMeterCancel(title, *args):
-    EasyProgressMeter.EasyProgressMeterData = getattr(EasyProgressMeter, 'EasyProgressMeterData',
-                                                      EasyProgressMeterDataClass())
-    if EasyProgressMeter.EasyProgressMeterData.MeterID is not None:
-        # tell the normal meter update that we're at max value which will close the meter
-        rc = EasyProgressMeter(title, EasyProgressMeter.EasyProgressMeterData.MaxValue,
-                               EasyProgressMeter.EasyProgressMeterData.MaxValue, ' *** CANCELLING ***',
-                               'Caller requested a cancel', *args)
-        return rc
-    return True
-
-
-# global variable containing dictionary will all currently running one-line progress meters.
-_one_line_progress_meters = {}
-
-
-# ============================== OneLineProgressMeter  =====#
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None, None),
+def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
-    global _one_line_progress_meters
+    if key not in QuickMeter.active_meters:
+        meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color,
+                           button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere)
+        QuickMeter.active_meters[key] = meter
+    else:
+        meter = QuickMeter.active_meters[key]
 
-    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is not None else border_width
-    try:
-        meter_data = _one_line_progress_meters[key]
-    except:  # a new meater is starting
-        if int(current_value) >= int(max_value):  # if already expired then it's an old meter, ignore
-            return False
-        meter_data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
-        _one_line_progress_meters[key] = meter_data
-        meter_data.ComputeProgressStats()
-        message = "\n".join([line for line in meter_data.StatMessages])
-        meter_data.MeterID, meter_data.MeterText = _ProgressMeter(title, int(max_value), message, *args,
-                                                                  orientation=orientation, bar_color=bar_color,
-                                                                  size=size, button_color=button_color,
-                                                                  border_width=local_border_width,
-                                                                  grab_anywhere=grab_anywhere)
-        meter_data.ParentForm = meter_data.MeterID.ParentForm
-        return True
-
-    # if exactly the same values as before, then ignore, return success.
-    if meter_data.MaxValue == max_value and meter_data.CurrentValue == current_value:
-        return True
-    meter_data.CurrentValue = int(current_value)
-    meter_data.MaxValue = int(max_value)
-    meter_data.ComputeProgressStats()
-    message = ''
-    for line in meter_data.StatMessages:
-        message = message + str(line) + '\n'
-    message = "\n".join(meter_data.StatMessages)
-    args = args + (message,)
-    rc = _ProgressMeterUpdate(meter_data.MeterID, current_value,
-                              meter_data.MeterText, *args)
-    # if counter >= max then the progress meter is all done. Indicate none running
-    if current_value >= meter_data.MaxValue or not rc:
-        del _one_line_progress_meters[key]
-        return False
-    return rc  # return whatever the update told us
-
+    rc = meter.UpdateMeter(current_value, max_value)
+    OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter,'exit_reasons', QuickMeter.exit_reasons)
+    return rc == METER_OK
 
 def OneLineProgressMeterCancel(key):
-    global _one_line_progress_meters
-
     try:
-        meter_data = _one_line_progress_meters[key]
+        meter = QuickMeter.active_meters[key]
+        meter.window.Close()
+        del(QuickMeter.active_meters[key])
+        QuickMeter.exit_reasons[key] = METER_REASON_CANCELLED
     except:  # meter is already deleted
         return
-    OneLineProgressMeter('', meter_data.MaxValue, meter_data.MaxValue, key=key)
+
 
 
 # input is #RRGGBB
@@ -6877,17 +6727,119 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 def main():
-    layout = [[Text('You are running the PySimpleGUI.py file itself')],
-              [Text('You should be importing it rather than running it', size=(50, 2))],
-              [Text('Here is your sample input window....')],
-              [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
-               FolderBrowse(tooltip='Browse for a folder')],
-              [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-              [Ok(bind_return_key=True), Cancel()]]
+    from random import randint
 
-    window = Window('Demo window..').Layout(layout)
-    event, values = window.Read()
+    ChangeLookAndFeel('GreenTan')
+    # ------ Menu Definition ------ #
+    menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
+                ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
+                ['&Help', '&About...'], ]
+
+    treedata = TreeData()
+
+    treedata.Insert("", '_A_', 'Tree Item 1', [1, 2, 3], )
+    treedata.Insert("", '_B_', 'B', [4, 5, 6], )
+    treedata.Insert("_A_", '_A1_', 'Sub Item 1', ['can', 'be', 'anything'], )
+    treedata.Insert("", '_C_', 'C', [], )
+    treedata.Insert("_C_", '_C1_', 'C1', ['or'], )
+    treedata.Insert("_A_", '_A2_', 'Sub Item 2', [None, None])
+    treedata.Insert("_A1_", '_A3_', 'A30', ['getting deep'])
+    treedata.Insert("_C_", '_C2_', 'C2', ['nothing', 'at', 'all'])
+
+    for i in range(100):
+        treedata.Insert('_C_', i, i, [])
+
+    frame1 = [
+        [Input('Input Text', size=(25, 1)), ],
+        [Multiline(size=(30, 5), default_text='Multiline Input')],
+    ]
+
+    frame2 = [
+        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
+        [Combo(['Combo item 1', ], size=(20, 3))],
+        [Spin([1, 2, 3], size=(4, 3))],
+    ]
+
+    frame3 = [
+        [Checkbox('Checkbox1', True), Checkbox('Checkbox1')],
+        [Radio('Radio Button1', 1), Radio('Radio Button2', 1, default=True)],
+        [T('', size=(1, 4))],
+    ]
+
+    frame4 = [
+        [Slider(range=(0, 100), orientation='v', size=(7, 15), default_value=40),
+         Slider(range=(0, 100), orientation='h', size=(11, 15), default_value=40), ],
+    ]
+    matrix = [[str(x * y) for x in range(4)] for y in range(8)]
+
+    frame5 = [
+        [Table(values=matrix, headings=matrix[0],
+                  auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',
+                  num_rows=10, alternating_row_color='lightblue', key='_table_', text_color='black',
+                  col_widths=[5, 5, 5, 5], size=(400, 200)), T(' '),
+         Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
+                 num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, )],
+    ]
+
+    graph_elem = Graph((800, 150), (0, 0), (800, 300), key='+GRAPH+')
+
+    frame6 = [
+        [graph_elem],
+    ]
+
+    tab1 = Tab('Graph Number 1', frame6)
+    tab2 = Tab('Graph Number 2', [[]])
+
+    layout = [
+        [Menu(menu_def)],
+        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15')],
+        [Text('You should be importing it rather than running it', font='ANY 15')],
+        [Frame('Input Text Group', frame1, title_color='red'), ],
+        [Frame('Multiple Choice Group', frame2, title_color='green'),
+         Frame('Binary Choice Group', frame3, title_color='purple'),
+         Frame('Variable Choice Group', frame4, title_color='blue')],
+        [Frame('Structured Data Group', frame5, title_color='red'), ],
+        # [Frame('Graphing Group', frame6)],
+        [TabGroup([[tab1, tab2]])],
+        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), Button('Exit')],
+    ]
+
+    window = Window('Window Title',
+                       font=('Helvetica', 13)).Layout(layout).Finalize()
+    graph_elem.DrawCircle((200, 200), 50, 'blue')
+    i = 0
+    while True:  # Event Loop
+        # TimerStart()
+        event, values = window.Read(timeout=0)
+        if event != TIMEOUT_KEY:
+            print(event, values)
+        if event is None or event == 'Exit':
+            break
+        if i < 800:
+            graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))
+        else:
+            graph_elem.Move(-1, 0)
+            graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))
+
+        window.FindElement('+PROGRESS+').UpdateBar(i % 800)
+
+        i += 1
+        # TimerStop()
     window.Close()
+
+
+    # layout = [[Text('You are running the PySimpleGUI.py file itself')],
+    #           [Text('You should be importing it rather than running it', size=(50, 2))],
+    #           [Text('Here is your sample input window....')],
+    #           [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
+    #            FolderBrowse(tooltip='Browse for a folder')],
+    #           [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
+    #           [Ok(bind_return_key=True), Cancel()]]
+    #
+    # window = Window('Demo window..').Layout(layout)
+    # event, values = window.Read()
+    # window.Close()
 
 if __name__ == '__main__':
     main()
