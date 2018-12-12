@@ -517,6 +517,17 @@ class InputText(Element):
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
 
+    def dragEnterEvent(self, e):
+        if e.mimeData().hasText():
+            e.accept()
+        else:
+            e.ignore()
+
+    def dropEvent(self, e):
+        self.QT_QLineEdit.setText(e.mimeData().text())
+
+
+
     class InputTextWidget(QWidget):
         def __init__(self, qt_qlineedit, element):
             self.QT_QLineEdit = qt_qlineedit
@@ -530,8 +541,9 @@ class InputText(Element):
             return QWidget.eventFilter(self, widget, event)
 
 
+
     def QtCallbackFocusInEvent(self,value):
-        print('Got focus!')
+        return
 
 
     def QtCallbackTextChanged(self, value):
@@ -616,6 +628,8 @@ class Combo(Element):
     def Qt_init(self):
         self.QT_ComboBox = QComboBox()
         self.QT_ComboBox.addItems(self.Values)
+
+
 
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
@@ -4538,6 +4552,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
                 element.QT_QLineEdit = qlineedit = QLineEdit()
+
+                qlineedit.setAcceptDrops(True)
+                qlineedit.dragEnterEvent = element.dragEnterEvent
+                qlineedit.dropEvent = element.dropEvent
 
                 if element.Justification[0] == 'c':
                     element.QT_QLineEdit.setAlignment(Qt.AlignCenter)
