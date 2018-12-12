@@ -167,7 +167,7 @@ RELIEF_TICK_POSITION_RIGHT = 'right'
 
 
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')  # a nice green progress bar
-DEFAULT_PROGRESS_BAR_SIZE = (250, 20)  # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_SIZE = (200, 20)  # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
 PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
@@ -511,6 +511,8 @@ class InputText(Element):
         self.Justification = justification or 'left'
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
+        self.QT_QLineEdit = None
+        self.ValueWasChanged = False
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
@@ -535,6 +537,10 @@ class InputText(Element):
     def QtCallbackTextChanged(self, value):
         if not self.ChangeSubmits:
             return
+        # if was changed using an "update" call, then skip the next changed callback
+        if self.ValueWasChanged:
+            self.ValueWasChanged = False
+            return
         element_callback_quit_mainloop(self)
 
     def QtCallbackReturnPressed(self):
@@ -549,6 +555,7 @@ class InputText(Element):
         if value is not None:
             self.QT_QLineEdit.setText(str(value))
             self.DefaultText = value
+            self.ValueWasChanged = True
         if select:
             self.QT_QLineEdit.setSelection(0,QtGui.QTextCursor.End )
         super().Update(self.QT_QLineEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
@@ -556,7 +563,6 @@ class InputText(Element):
 
 
     def Get(self):
-        return self.QT_QLineEdit.text()
         return self.QT_QLineEdit.text()
         # return self.TKStringVar.get()
 
@@ -1241,7 +1247,7 @@ class Output(Element):
 # ---------------------------------------------------------------------- #
 class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
-                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False,
+                 file_types=(("ALL Files", "*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False,
                  focus=False, pad=None, key=None, visible=True, size_px=(None,None)):
@@ -1347,7 +1353,7 @@ class Button(Element):
                     should_submit_window = True
             except:
                 pass
-        filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
+        filetypes = (("ALL Files", "*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = QFileDialog.getExistingDirectory(dir=self.InitialFolder)
             if folder_name != '':
@@ -3700,7 +3706,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*"),), initial_folder=None,
                tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False, enable_events=False,
                font=None, disabled=False,
                pad=None, key=None):
@@ -3711,7 +3717,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
-def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
+def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*"),), disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
                 font=None, pad=None, key=None):
@@ -3722,7 +3728,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*"),), initial_folder=None,
                disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
                pad=None, key=None):
@@ -3733,7 +3739,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
-def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*"),), initial_folder=None,
            disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
            pad=None, key=None):
@@ -4594,7 +4600,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'border: {}px solid gray; '.format(border_depth)
                 style += '}'
-                # style += """ QComboBox::down-arrow:on { border: 5px; width: 30px; height: 30px; }"""
+                # style += """QComboBox::on { border: 50px; width: 30px; height: 30px; }"""
 
                 element.QT_ComboBox.setStyleSheet(style)
 
@@ -5574,215 +5580,113 @@ def ConvertArgsToSingleString(*args):
     return single_line_message, width_used, total_lines
 
 
-# ============================== ProgressMeter  =====#
-# ===================================================#
-def _ProgressMeter(title, max_value, *args, orientation=None, bar_color=(None, None), button_color=None,
-                   size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
-    '''
-    Create and show a form on tbe caller's behalf.
-    :param title:
-    :param max_value:
-    :param args: ANY number of arguments the caller wants to display
-    :param orientation:
-    :param bar_color:
-    :param size:
-    :param Style:
-    :param StyleOffset:
-    :return: ProgressBar object that is in the form
-    '''
-    local_orientation = DEFAULT_METER_ORIENTATION if orientation is None else orientation
-    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
-    bar2 = ProgressBar(max_value, orientation=local_orientation, size=size, bar_color=bar_color,
-                       border_width=local_border_width, relief=DEFAULT_PROGRESS_BAR_RELIEF)
-    form = Window(title, auto_size_text=True, grab_anywhere=grab_anywhere)
+METER_REASON_CANCELLED = 'cancelled'
+METER_REASON_CLOSED = 'closed'
+METER_REASON_REACHED_MAX = 'finished'
+METER_OK = True
+METER_STOPPED = False
 
-    # Form using a horizontal bar
-    if local_orientation[0].lower() == 'h':
-        single_line_message, width, height = ConvertArgsToSingleString(*args)
-        bar2.TextToDisplay = single_line_message
-        bar2.MaxValue = max_value
-        bar2.CurrentValue = 0
-        bar_text = Text(single_line_message, size=(width*10, height*25 + 70), auto_size_text=True)
-        form.AddRow(bar_text)
-        form.AddRow((bar2))
-        form.AddRow((CloseButton('Cancel', button_color=button_color)),Stretch())
-    else:
-        single_line_message, width, height = ConvertArgsToSingleString(*args)
-        bar2.TextToDisplay = single_line_message
-        bar2.MaxValue = max_value
-        bar2.CurrentValue = 0
-        bar_text = Text(single_line_message, size=(width*10, height*25 + 3), auto_size_text=True)
-        form.AddRow(bar2, bar_text)
-        form.AddRow((CloseButton('Cancel', button_color=button_color)), Stretch())
+class QuickMeter(object):
+    active_meters = {}
+    exit_reasons = {}
 
-    form.NonBlocking = True
-    form.Show(non_blocking=True)
-    return bar2, bar_text
+    def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
+                         button_color=(None, None), size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
+        self.start_time = datetime.datetime.utcnow()
+        self.key = key
+        self.orientation = orientation
+        self.bar_color = bar_color
+        self.size = size
+        self.grab_anywhere = grab_anywhere
+        self.button_color = button_color
+        self.border_width = border_width
+        self.title = title
+        self.current_value = current_value
+        self.max_value = max_value
+        self.close_reason = None
+        self.window = self.BuildWindow(*args)
 
+    def BuildWindow(self, *args):
+        layout = []
+        if self.orientation.lower().startswith('h'):
+            col = [*[[T(arg)] for arg in args],
+                [T('', size=(25,8), key='_STATS_')],
+                [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)],[Cancel(button_color=self.button_color), Stretch()]  ]
+            layout += [Column(col)]
+        else:
+            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
+            col2 = [*[[T(arg)] for arg in args],
+                [T('', size=(25, 8), key='_STATS_')],[Cancel(button_color=self.button_color), Stretch()] ]
+            layout += [Column(col), Column(col2)]
+        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width)
+        self.window.Layout([layout]).Finalize()
 
-# ============================== ProgressMeterUpdate  =====#
-def _ProgressMeterUpdate(bar, value, text_elem, *args):
-    '''
-    Update the progress meter for a form
-    :param form: class ProgressBar
-    :param value: int
-    :return: True if not cancelled, OK....False if Error
-    '''
-    if bar == None: return False
-    if bar.BarExpired: return False
-    message, w, h = ConvertArgsToSingleString(*args)
-    text_elem.Update(message)
-    # bar.TextToDisplay = message
-    bar.CurrentValue = value
-    rc = bar.UpdateBar(value)
-    if value >= bar.MaxValue or not rc:
-        bar.BarExpired = True
-        bar.ParentForm._Close()
-        if rc:  # if update was OK but bar expired, decrement num windows
-            Window.DecrementOpenCount()
-    if bar.ParentForm.RootNeedsDestroying:
-        try:
-            bar.ParentForm.QT_QMainWindow.close()
+        return self.window
 
-            # bar.ParentForm.TKroot.destroy()
-            # there is a bug with progress meters not decrementing the number of windows
-            # correctly when the X is used to close the window
-            # uncommenting this line fixes that problem, but causes a double-decrement when
-            # the cancel button is used... damned if you do, damned if you don't, so I'm choosing
-            # don't, as in don't decrement too many times. It's OK now to have a mismatch in
-            # number of windows because of the "hidden" master window. This ensures all windows
-            # will be toplevel.  Sorry about the bug, but the user never sees any problems as a result
-            # _my_windows.Decrement()
-        except:
-            pass
-        bar.ParentForm.RootNeedsDestroying = False
-        bar.ParentForm.__del__()
-        return False
-
-    return rc
+    def UpdateMeter(self, current_value, max_value):
+        self.current_value = current_value
+        self.max_value = max_value
+        self.window.Element('_PROG_').UpdateBar(self.current_value, self.max_value)
+        self.window.Element('_STATS_').Update('\n'.join(self.ComputeProgressStats()))
+        event, values = self.window.Read(timeout=0)
+        if event in('Cancel', None) or current_value >= max_value:
+            self.window.Close()
+            del(QuickMeter.active_meters[self.key])
+            QuickMeter.exit_reasons[self.key] = METER_REASON_CANCELLED if event == 'Cancel' else METER_REASON_CLOSED if event is None else METER_REASON_REACHED_MAX
+            return QuickMeter.exit_reasons[self.key]
+        return METER_OK
 
 
-# ============================== EASY PROGRESS METER ========================================== #
-# class to hold the easy meter info (a global variable essentialy)
-class EasyProgressMeterDataClass():
-    def __init__(self, title='', current_value=1, max_value=10, start_time=None, stat_messages=()):
-        self.Title = title
-        self.CurrentValue = current_value
-        self.MaxValue = max_value
-        self.StartTime = start_time
-        self.StatMessages = stat_messages
-        self.ParentForm = None
-        self.MeterID = None
-        self.MeterText = None
-
-    # ===========================  COMPUTE PROGRESS STATS ======================#
     def ComputeProgressStats(self):
         utc = datetime.datetime.utcnow()
-        time_delta = utc - self.StartTime
+        time_delta = utc - self.start_time
         total_seconds = time_delta.total_seconds()
         if not total_seconds:
             total_seconds = 1
         try:
-            time_per_item = total_seconds / self.CurrentValue
+            time_per_item = total_seconds / self.current_value
         except:
             time_per_item = 1
-        seconds_remaining = (self.MaxValue - self.CurrentValue) * time_per_item
+        seconds_remaining = (self.max_value - self.current_value) * time_per_item
         time_remaining = str(datetime.timedelta(seconds=seconds_remaining))
         time_remaining_short = (time_remaining).split(".")[0]
         time_delta_short = str(time_delta).split(".")[0]
         total_time = time_delta + datetime.timedelta(seconds=seconds_remaining)
         total_time_short = str(total_time).split(".")[0]
-        self.StatMessages = [
-            '{} of {}'.format(self.CurrentValue, self.MaxValue),
-            '{} %'.format(100 * self.CurrentValue // self.MaxValue),
+        self.stat_messages = [
+            '{} of {}'.format(self.current_value, self.max_value),
+            '{} %'.format(100 * self.current_value // self.max_value),
             '',
-            ' {:6.2f} Iterations per Second'.format(self.CurrentValue / total_seconds),
-            ' {:6.2f} Seconds per Iteration'.format(total_seconds / (self.CurrentValue if self.CurrentValue else 1)),
+            ' {:6.2f} Iterations per Second'.format(self.current_value / total_seconds),
+            ' {:6.2f} Seconds per Iteration'.format(total_seconds / (self.current_value if self.current_value else 1)),
             '',
             '{} Elapsed Time'.format(time_delta_short),
             '{} Time Remaining'.format(time_remaining_short),
             '{} Estimated Total Time'.format(total_time_short)]
-        return
+        return self.stat_messages
 
 
-# ============================== EasyProgressMeter  =====#
-def EasyProgressMeter(title, current_value, max_value, *args, orientation=None, bar_color=(None, None),
-                      button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None):
-    '''
-    A ONE-LINE progress meter. Add to your code where ever you need a meter. No need for a second
-    function call before your loop. You've got enough code to write!
-    :param title: Title will be shown on the window
-    :param current_value: Current count of your items
-    :param max_value: Max value your count will ever reach. This indicates it should be closed
-    :param args:  VARIABLE number of arguements... you request it, we'll print it no matter what the item!
-    :param orientation:
-    :param bar_color:
-    :param size:
-    :param Style:
-    :param StyleOffset:
-    :return: False if should stop the meter
-    '''
-
-    print('EasyProgressMeter has been replaced.  Please use OneLineProgressMeter')
-    return False
-
-
-
-# global variable containing dictionary will all currently running one-line progress meters.
-_one_line_progress_meters = {}
-
-
-# ============================== OneLineProgressMeter  =====#
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None, None),
+def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
-    global _one_line_progress_meters
+    if key not in QuickMeter.active_meters:
+        meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color,
+                           button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere)
+        QuickMeter.active_meters[key] = meter
+    else:
+        meter = QuickMeter.active_meters[key]
 
-    local_border_width = DEFAULT_PROGRESS_BAR_BORDER_WIDTH if border_width is None else border_width
-    try:
-        meter_data = _one_line_progress_meters[key]
-    except:  # a new meater is starting
-        if int(current_value) >= int(max_value):  # if already expired then it's an old meter, ignore
-            return False
-        meter_data = EasyProgressMeterDataClass(title, 1, int(max_value), datetime.datetime.utcnow(), [])
-        _one_line_progress_meters[key] = meter_data
-        meter_data.ComputeProgressStats()
-        message = "\n".join([line for line in meter_data.StatMessages])
-        meter_data.MeterID, meter_data.MeterText = _ProgressMeter(title, int(max_value), message, *args,
-                                                                  orientation=orientation, bar_color=bar_color,
-                                                                  size=size, button_color=button_color,
-                                                                  border_width=local_border_width,
-                                                                  grab_anywhere=grab_anywhere)
-        meter_data.ParentForm = meter_data.MeterID.ParentForm
-        return True
-
-    # if exactly the same values as before, then ignore, return success.
-    if meter_data.MaxValue == max_value and meter_data.CurrentValue == current_value:
-        return True
-    meter_data.CurrentValue = int(current_value)
-    meter_data.MaxValue = int(max_value)
-    meter_data.ComputeProgressStats()
-    message = ''
-    for line in meter_data.StatMessages:
-        message = message + str(line) + '\n'
-    message = "\n".join(meter_data.StatMessages)
-    args = args + (message,)
-    rc = _ProgressMeterUpdate(meter_data.MeterID, current_value,
-                              meter_data.MeterText, *args)
-    # if counter >= max then the progress meter is all done. Indicate none running
-    if current_value >= meter_data.MaxValue or not rc:
-        del _one_line_progress_meters[key]
-        return False
-    return rc  # return whatever the update told us
-
+    rc = meter.UpdateMeter(current_value, max_value)
+    OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter,'exit_reasons', QuickMeter.exit_reasons)
+    return rc == METER_OK
 
 def OneLineProgressMeterCancel(key):
-    global _one_line_progress_meters
-
     try:
-        meter_data = _one_line_progress_meters[key]
+        meter = QuickMeter.active_meters[key]
+        meter.window.Close()
+        del(QuickMeter.active_meters[key])
+        QuickMeter.exit_reasons[key] = METER_REASON_CANCELLED
     except:  # meter is already deleted
         return
-    OneLineProgressMeter('', meter_data.MaxValue, meter_data.MaxValue, key=key)
 
 
 # input is #RRGGBB
@@ -6943,7 +6847,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
 
 # --------------------------- PopupGetFile ---------------------------
 
-def PopupGetFile(message, title=None, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
+def PopupGetFile(message, title=None, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                  location=(None, None), initial_folder=None):
