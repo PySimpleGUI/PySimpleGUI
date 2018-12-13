@@ -6,6 +6,18 @@ import time
 import PySimpleGUI as sg
 
 
+#-------------------------------------------------------------------------------#
+#  Works on Python 3                                                            #
+#  Uno card game using a GUI interface provided by PySimpleGUI                  #
+#  Based on this excellent text based version:                                  #
+#  http://code.activestate.com/recipes/580811-uno-text-based/                   #
+#  Contains all of the graphics inside the source file as base64 images         #
+#  Cards were obtained from Wikipedia                                           #
+#        https://en.wikipedia.org/wiki/Uno_(card_game)                          #
+#  Up to 4 players... any number can be computer controlled                     #
+#  Still needs some work but close enough for fun                               #
+#-------------------------------------------------------------------------------#
+
 yellow_color = '#FFAA00'
 blue_color = '#5555FF'
 red_color = '#FF5555'
@@ -344,53 +356,10 @@ class GameSettings():
         '''For Getting a Random Player for First Turn.'''
         return random.choice(self.players.keys())
 
-    def compileMainMenuElements(self):
-        def getBlankSpace(word, total):
-            return " " * (total - len(word))
-
-        def getPlayerBox(playerNum, rowNum):
-            if rowNum == 1:
-                name = self.playerStaging[playerNum - 1].getName()
-                return '{}{}'.format(name, getBlankSpace(name, 29))
-            elif rowNum == 2:
-                points = self.playerStaging[playerNum - 1].getPoints()
-                return 'Points: {}{}'.format(points, getBlankSpace(str(points), 21))
-
-        self.mainMenuElements = {'play1row1': 'No Player                    ',
-                                 'play1row2': '                             ',
-                                 'play2row1': 'No Player                    ',
-                                 'play2row2': '                             ',
-                                 'play3row1': 'No Player                    ',
-                                 'play3row2': '                             ',
-                                 'play4row1': 'No Player                    ',
-                                 'play4row2': '                             ',
-                                 'play1box': '\033[90m', 'play2box': '\033[90m', 'play3box': '\033[90m',
-                                 'play4box': '\033[90m',
-                                 'beginBox': '\033[90m', 'addBox': '\033[97m', 'removeBox': '\033[90m'
-                                 }
-        playerBoxKey = 'play{}box'
-        playerRowKey = 'play{}row{}'
-        i = 1
-        for j in self.playerStaging:
-            j
-            colorCode = ['\033[91m', '\033[94m', '\033[92m', '\033[93m']
-            key = playerBoxKey.format(i)
-            self.mainMenuElements[key] = colorCode[i - 1]
-            self.mainMenuElements[playerRowKey.format(i, 1)] = getPlayerBox(i, 1)
-            self.mainMenuElements[playerRowKey.format(i, 2)] = getPlayerBox(i, 2)
-            i += 1
-        if self.canBegin():
-            self.mainMenuElements['beginBox'] = '\033[95m'
-        if not self.canAddPlayer():
-            self.mainMenuElements['addBox'] = '\033[90m'
-        if self.canRemovePlayer():
-            self.mainMenuElements['removeBox'] = '\033[97m'
 
     def changeComputerSpeed(self):
         return
 
-    def getMainMenuElements(self):
-        return self.mainMenuElements
 
 
 class Deck():
@@ -811,8 +780,7 @@ class Match():
         self.passMax = len(self.turnList)
         # ----------------------------------------- Create the GUI window -----------------------------------------
         sg.SetOptions(background_color='black', element_background_color='black', text_color='white', border_width=0)
-        Card = lambda image_data, key: sg.Button('', image_data=image_data, image_subsample=4, image_size=(60, 80),
-                                                 button_color=('white', 'black'), key=key)
+        Card = lambda image_data, key: sg.Button('', image_data=image_data, image_subsample=4, image_size=(60, 80), button_color=('white', 'black'), key=key)
         CardBig = lambda image_data: sg.Button(button_text='', image_data=image_data, image_subsample=1, image_size=(200, 300),
                                                button_color=('white', 'black'), pad=(0, 0))
         CardBig2 = lambda image_data: sg.Image(data=image_data, size=(100, 300), pad=(0, 0), background_color='black')
@@ -825,7 +793,6 @@ class Match():
 
         col_players = [
             [OvalButton('Quit', greenbutton, key='_QUIT_', visible=False)],
-
             [T('Player', '_P1_', text_color=yellow_color)],
             [T('Cards', '_C1_', text_color=yellow_color)],
             [T(' ' * 15)],
@@ -836,15 +803,13 @@ class Match():
             [T('Cards', '_C3_', visible=False)],
             [T(' ' * 15, '_S4_', visible=False,)],
             [T('Player', '_P4_', visible=False)],
-            [T('Cards', '_C4_', visible=False)],
-        ]
+            [T('Cards', '_C4_', visible=False)],]
 
         col_cards_left = [
             [OvalButton('Draw', redbutton, key='_DRAW_')],
             [T('  '), Card(back, '_DRAW_')],
             [T('0 Cards Left', font='Helvetica 14', key='_CARDS_LEFT_')],
-            [OvalButton('Pass', bluebutton, key='_PASS_')],
-        ]
+            [OvalButton('Pass', bluebutton, key='_PASS_')],]
 
         NUM_COLS = 10           # how many cards shown across bottom in 1 row
         NUM_ROWS = 4
@@ -868,7 +833,6 @@ class Match():
                                  use_default_focus=False,
                                  disable_close=True,
                                  ).Layout(layout).Finalize()
-
 
     def clearShell(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -1000,9 +964,6 @@ class Match():
             if i in self.players:
                 for j in range(7):
                     self.dealCard(i)
-                    # if self.displayEffects and not self.simulation:
-                    #     print(self.drawScreen(True))
-                    #     time.sleep(.1)
 
     def eventReverse(self):
         if self.displayEffects and not self.simulation:
@@ -1046,7 +1007,7 @@ class Match():
         hide = False
         if not self.forcedWild:
             if self.players[self.turn].getType() == 'Human':
-                self.elements['Console'] = 'Wild Card! Specifiy a Color: (B)lue, (R)ed, (G)reen, (Y)ellow'
+                self.elements['Console'] = 'Wild Card! Specifiy a Color'
                 self.elements['Error'] = 'Specifiy A Color'
                 self.drawScreen()
                 while True:
@@ -1183,8 +1144,6 @@ class Match():
                         self.matchAbort = True
                         self.matchComplete = True
 
-        return
-
     def nextTurn(self):
         self.turnComplete = False
         self.handPosition = 0
@@ -1199,7 +1158,7 @@ class Match():
             self.eventSkip()
         elif self.drawAmount > 0:
             self.eventDraw()
-
+        #--------------  Main GUI event loop ---------------
         while not self.turnComplete:
             if turnType == 'Human':
                 self.players[self.turn].getLegalCards(self.currentColor, self.currentValue, self.zeroChange)
@@ -1213,7 +1172,6 @@ class Match():
                         self.players[self.turn].getForceDraws())
                 self.drawScreen()
                 ## GUI INPUT
-                # while True:
                 event, values = Match.window.Read()
 
                 playerInput = str(event)
@@ -1226,14 +1184,6 @@ class Match():
                         self.matchAbort = True
                         self.matchComplete = True
                         break
-                # playerInput = str(input("\033[97mSelection: \033[92m"))
-                # checked = self.checkInput(playerInput)
-                # while not checked['valid']:
-                #     print(self.drawScreen())
-                #     playerInput = str(input("\033[97mSelection: \033[92m"))
-                #     checked = self.checkInput(playerInput)
-                #
-                # playerInput = checked['entry']
 
                 if playerInput == '<':
                     self.handPosition -= 1
@@ -1351,20 +1301,12 @@ class Match():
         Update = lambda key, value, **kwargs: Match.window.Element(key).Update(value, **kwargs)
         elem = lambda key: self.elements[key]
         if self.simulation:
-            return ''
-        colorCombos = {
-            1: ['\033[91m', '\033[93m', '\033[92m', '\033[94m'],
-            2: ['\033[94m', '\033[91m', '\033[93m', '\033[92m'],
-            3: ['\033[92m', '\033[94m', '\033[91m', '\033[93m'],
-            4: ['\033[93m', '\033[92m', '\033[94m', '\033[91m']}
+            return
+
         currentTurn = self.turn
         if currentTurn == '':
             currentTurn = self.turnList[-1]
             hide = True
-        if wildSeed != 0:
-            colorMod = colorCombos[wildSeed]
-        else:
-            colorMod = ['', '', '', '']
 
         Update('_MESSAGES_', elem('Console'))
         Update('_MESSAGES2_', elem('Error'))
@@ -1444,7 +1386,6 @@ class Match():
     def resetDrawBool(self):
         for identity in self.players:
             self.players[identity].drew = False
-
 
 def clearShell():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -1575,78 +1516,6 @@ def addComputer(gs, name):
     gs.addPlayer(c)
 
     return gs
-
-
-def removePlayer(gs):
-    sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=32, cols=63))
-    sys.stdout.flush()
-    clearShell()
-
-    complete = False
-    playerNum = gs.getPlayerNum()
-    message = "\033[97mPlease Enter Player Number to Remove: \033[91m".format(playerNum)
-
-    while (not complete):
-        drawMainMenu(gs)
-        number = str(input(message))
-        if len(number) == 0:
-            gs.mainMenuError = ""
-            return gs
-        try:
-            number = int(number)
-            if 0 < number <= playerNum:
-                complete = True
-            else:
-                gs.mainMenuError = "Invalid Player Number!"
-        except:
-            gs.mainMenuError = "Please Enter the Player Number, not Name!"
-
-    gs.mainMenuError = ""
-    gs.removePlayer(number)
-    return gs
-
-
-def settingsMenu(gs):
-    while True:
-        sys.stdout.write("\x1b[8;32;63t")
-        sys.stdout.flush()
-        clearShell()
-        print('\n\t\tSettings')
-        print('\n\t1. Draw Effects\t\t\t{}'.format(gs.displayEffects))
-        print('\t2. Hide Computer Hands\t\t{}'.format(gs.hideComputerHands))
-        print('\t3. Computer Speed\t\t{}'.format(gs.computerSpeed.title()))
-        # print('\t4. Zero Card Changes Color\t{}'.format(gs.zeroChange))
-        # print('\t5. Run Simulations\t\t{}'.format(gs.computerSimulation))
-        print('\n\tA. Exit')
-
-        selection = str(input('\nSelection: ')).upper()
-        while selection not in ('1', '2', '3', '4', '5', 'A', ''):
-            print('\nSelection Invalid')
-            selection = str(input('\nSelection: ')).upper()
-
-        if selection == '1':
-            gs.displayEffects = not gs.displayEffects
-
-        elif selection == '2':
-            gs.hideComputerHands = not gs.hideComputerHands
-
-        elif selection == '3':
-            gs.changeComputerSpeed()
-            '''
-        elif selection == '4':
-            gs.zeroChange = not gs.zeroChange
-
-        elif selection == '5':
-            gs.computerSimulation = not gs.computerSimulation
-            '''
-        elif selection == 'A' or selection == '' or selection in ('4', '5'):
-            return gs
-
-def drawMainMenu(gs):
-    clearShell()
-    gs.compileMainMenuElements()
-    menuElements = gs.getMainMenuElements()
-    return ''
 
 
 
