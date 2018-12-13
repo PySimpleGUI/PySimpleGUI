@@ -1518,7 +1518,7 @@ class Button(Element):
 
         return
 
-    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, visible=None):
+    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, visible=None, image_subsample=None, image_size=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1535,7 +1535,12 @@ class Button(Element):
             self.TKButton['state'] = 'normal'
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
-            width, height = image.width(), image.height()
+            if image_size is not None:
+                width, height = image_size
+            else:
+                width, height = image.width(), image.height()
+            if image_subsample:
+                image = image.subsample(image_subsample)
             self.TKButton.config(image=image, width=width, height=height)
             self.TKButton.image = image
         if image_filename is not None:
@@ -4411,7 +4416,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-
+                if border_depth == 0:
+                    tkbutton.config(relief=tk.FLAT)
+                    tkbutton.config(highlightthickness=0)
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:  # if button has an image on it
@@ -5391,20 +5398,18 @@ class QuickMeter(object):
         layout = []
         if self.orientation.lower().startswith('h'):
             col = []
-            for arg in args:
-                col.append([T(arg)])
-            col.append([T('', size=(30,10), key='_STATS_')])
-            col.append([ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)])
-            col.append([Cancel(button_color=self.button_color), Stretch()])
-            layout += [Column(col)]
+            col += [[T(arg)] for arg in args]
+            col += [[T('', size=(30,10), key='_STATS_')],
+                    [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)],
+                    [Cancel(button_color=self.button_color), Stretch()]]
+            layout = [Column(col)]
         else:
             col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
             col2 = []
-            for arg in args:
-                col2.append([T(arg)])
-            col2.append([T('', size=(30,10), key='_STATS_')])
-            col2.append([Cancel(button_color=self.button_color), Stretch()])
-            layout += [Column(col), Column(col2)]
+            col2 += [[T(arg)] for arg in args]
+            col2 += [[T('', size=(30,10), key='_STATS_')],
+                     [Cancel(button_color=self.button_color), Stretch()]]
+            layout = [Column(col), Column(col2)]
         self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width)
         self.window.Layout([layout]).Finalize()
 
