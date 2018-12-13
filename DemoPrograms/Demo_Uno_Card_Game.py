@@ -4,7 +4,6 @@ import random
 import math
 import time
 import PySimpleGUI as sg
-from cards import *
 
 
 yellow_color = '#FFAA00'
@@ -267,40 +266,7 @@ class Hand():
         self.hand = []
 
     def show(self, scrollNum=0, hide=False):
-        if scrollNum == -1:
-            scrollNum = 0
-        output = ''
-        num = 0
-        header, footer, upper, lower = '', '', '', ''
-        header += ('\033[97m\u2666--\u2666\033[0m ')
-        upper += ('\033[97m|<-|\033[0m ')
-        lower += ('\033[97m|<-|\033[0m ')
-        footer += ('\033[97m\u2666--\u2666\033[0m ')
-        for i in range(10):
-            indexNum = i + (10 * scrollNum)
-            if indexNum < len(self):
-                header += (self[indexNum].getRow(0, hide) + ' ')
-                upper += (self[indexNum].getRow(1, hide) + ' ')
-                lower += (self[indexNum].getRow(2, hide) + ' ')
-                footer += (self[indexNum].getRow(3, hide) + ' ')
-                num += 1
-        for j in range(10 - num):
-            header += ('     ')
-            footer += ('     ')
-            upper += ('     ')
-            lower += ('     ')
-        header += ('\033[97m\u2666--\u2666\033[0m ')
-        upper += ('\033[97m|->|\033[0m ')
-        lower += ('\033[97m|->|\033[0m ')
-        footer += ('\033[97m\u2666--\u2666\033[0m ')
-        output += ('  ' + header + '\n  ' + upper + '\n  ' + lower + '\n  ' + footer + '\n\033[97m|-(<)--')
-        for k in range(num):
-            output += '({})'.format(k)
-            output += '--'
-        for l in range(10 - num):
-            output += '-----'
-        output += '(>)--|\033[0m\n'
-        return output
+        return ''
 
     def getCard(self, index):
         return self.hand[index]
@@ -421,12 +387,7 @@ class GameSettings():
             self.mainMenuElements['removeBox'] = '\033[97m'
 
     def changeComputerSpeed(self):
-        if self.computerSpeed == 'slow':
-            self.computerSpeed = 'normal'
-        elif self.computerSpeed == 'normal':
-            self.computerSpeed = 'fast'
-        elif self.computerSpeed == 'fast':
-            self.computerSpeed = 'slow'
+        return
 
     def getMainMenuElements(self):
         return self.mainMenuElements
@@ -540,7 +501,7 @@ class ComputerPlayer(Player):
 
                     if self.canDrawFour:
                         card = self.getCardByValue(self.wildCards, "+4")
-                        print(card)
+                        # print(card)
 
                     else:
                         card = random.choice(self.wildCards)
@@ -656,38 +617,6 @@ class Card():
         '+2': '+', 'R': 'R', 'W': 'W', '+4': '$', 'X': 'X'
     }
 
-    bigNums = {
-        "0": [" .d888b. ", "d88P Y88b", "888   888", "888   888", "888   888", "888   888", "d88P Y88b", " \"Y888P\" "],
-        "1": ["  d888   ", " d8888   ", "   888   ", "   888   ", "   888   ", "   888   ", "   888   ", " 8888888 "],
-        "2": [".d8888b. ", "d88P  Y88", "d8    888", "    .d88P", ".od888P\" ", "d88P\"    ", "888\"     ",
-              "888888888"],
-        "3": [" .d8888b.", "d88P  Y88", "     .d88", "   8888\" ", "     \"Y8b", "888    88", "Y88b  d88",
-              " \"Y8888P\""],
-        "4": ["    d88b ", "   d8P88 ", "  d8  88 ", " d8   88 ", "d8    88 ", "888888888", "      88 ", "      88 "],
-        "5": ["888888888", "888      ", "888      ", "8888888b ", "   \"Y88b ", "      888", "Y88b d88P",
-              "\"Y8888P\" "],
-        "6": [" .d888b. ", "d88P Y88b", "888      ", "888d888b ", "888P \"Y8b", "888   888", "Y88b d88b",
-              " \"Y888P\" "],
-        "7": ["888888888", "      d8P", "     d8P ", "    d8P  ", " 8888888 ", "  d8P    ", " d8P     ", "d8P      "],
-        "8": [" .d888b. ", "d8P   Y8b", "Y8b.  d8P", " \"Y8888\" ", " .dP\"Yb. ", "888   888", "Y88b d88P",
-              " \"Y888P\" "],
-        "9": [" .d888b. ", "d8P   Y8b", "88     88", "Y8b.  d88", " \"Y88P888", "      888", "Y88b d88P",
-              " \"Y888P\" "],
-        "X": ["Y8b   d8P", " Y8b d8P ", "  Y8o8P  ", "   Y8P   ", "   d8b   ", "  d888b  ", " d8P Y8b ", "d8P   Y8b"],
-        "W": ["88     88", "88     88", "88  o  88", "88 d8b 88", "88d888b88", "88P   Y88", "8P     Y8", "P       Y"],
-        "+2": ["  db     ", "  88     ", "C8888D   ", "  88 8888", "  VP    8", "     8888", "     8   ", "     8888"],
-        "+4": ["  db     ", "  88     ", "C8888D   ", "  88   d ", "  VP  d8 ", "     d 8 ", "    d8888", "       8 "],
-        "R9": ["    d88P ", "   d88P  ", "  d88P   ", " d88P    ", " Y88b    ", "  Y88b   ", "   Y88b  ", "    Y88b "],
-        "R8": ["   d88P  ", "  d88P   ", " d88P    ", "d88P     ", "Y88b     ", " Y88b    ", "  Y88b   ", "   Y88b  "],
-        "R7": ["  d88P  Y", " d88P    ", "d88P     ", "88P      ", "88b      ", "Y88b     ", " Y88b    ", "  Y88b  d"],
-        "R6": [" d88P  Y8", "d88P    Y", "88P      ", "8P       ", "8b       ", "88b      ", "Y88b    d", " Y88b  d8"],
-        "R5": ["d88P  Y88", "88P    Y8", "8P      Y", "P        ", "b        ", "8b      d", "88b    d8", "Y88b  d88"],
-        "R4": ["88P  Y88b", "8P    Y88", "P      Y8", "        Y", "        d", "b      d8", "8b    d88", "88b  d88P"],
-        "R3": ["8P  Y88b ", "P    Y88b", "      Y88", "       Y8", "       d8", "      d88", "b    d88P", "8b  d88P "],
-        "R2": ["P  Y88b  ", "    Y88b ", "     Y88b", "      Y88", "      d88", "     d88P", "    d88P ", "b  d88P  "],
-        "R1": ["  Y88b   ", "   Y88b  ", "    Y88b ", "     Y88b", "     d88P", "    d88P ", "   d88P  ", "  d88P   "],
-        "R0": [" Y88b    ", "  Y88b   ", "   Y88b  ", "    Y88b ", "    d88P ", "   d88P  ", "  d88P   ", " d88P    "],
-    }
 
     def __init__(self, color, value):
         '''Initializes Uno Card w/ Color and Value.'''
@@ -707,19 +636,7 @@ class Card():
 
     def getBigNum(self, reverse, reverseSeed=0):
         '''Returns list of strings to draw card's value on the pile.'''
-        bigNums = []
-        colorCode = self.colorCode
-        colorCodeDark = self.colorCodeDark
-        value = self.value
-        if value == 'R':
-            if not reverse:
-                value += str(reverseSeed)
-            else:
-                value += str(9 - reverseSeed)
-        for mid in self.bigNums[value]:
-            bigNums += ['{}| |{}'.format(colorCode, colorCodeDark) + mid + '{}| |\033[0m\t'.format(colorCode)]
-
-        return bigNums
+        return ''
 
     def getColor(self):
         '''Returns card's color.'''
@@ -738,35 +655,7 @@ class Card():
         return self.points
 
     def getRow(self, rowNum, hide=False):
-        value = self.value
-        displaySpace = self.displaySpace
-        if hide:
-            colorCode = '\033[97m'
-            value = '?'
-            displaySpace = ' '
-        else:
-            colorCode = self.colorCode
-            if self.isWild():
-                if rowNum == 0:
-                    colorCode = '\033[91m'
-                elif rowNum == 1:
-                    colorCode = '\033[93m'
-                elif rowNum == 2:
-                    colorCode = '\033[92m'
-                elif rowNum == 3:
-                    colorCode = '\033[94m'
-
-        if rowNum == 0:
-            return '{}\u2666--\u2666\033[0m'.format(colorCode)
-        elif rowNum == 1:
-            return '{}|{}{}|\033[0m'.format(colorCode, displaySpace, value)
-        elif rowNum == 2:
-            if hide:
-                return '{}|? |\033[0m'.format(colorCode)
-            else:
-                return '{}|  |\033[0m'.format(colorCode)
-        elif rowNum == 3:
-            return '{}\u2666--\u2666\033[0m'.format(colorCode)
+        return
 
     #############################################
 
@@ -935,6 +824,8 @@ class Match():
         OvalButton = lambda text, image_data, **kwargs: sg.Button(text, image_data=image_data, font='Helvetica 14', button_color=('white', 'black'), **kwargs)
 
         col_players = [
+            [OvalButton('Quit', greenbutton, key='_QUIT_', visible=False)],
+
             [T('Player', '_P1_', text_color=yellow_color)],
             [T('Cards', '_C1_', text_color=yellow_color)],
             [T(' ' * 15)],
@@ -946,7 +837,6 @@ class Match():
             [T(' ' * 15, '_S4_', visible=False,)],
             [T('Player', '_P4_', visible=False)],
             [T('Cards', '_C4_', visible=False)],
-            [OvalButton('Quit', greenbutton, key='_QUIT_')]
         ]
 
         col_cards_left = [
@@ -968,8 +858,8 @@ class Match():
              sg.Column(col_players)],
             [T(' ')],
             [T(' ')],
-            [T(' '*20), sg.T('', justification='center', size=(45, 2), font='Helvetica 18', key='_MESSAGES_')],
-            [T(' '*20), sg.T('', justification='center', size=(45, 2), font='Helvetica 18', key='_MESSAGES2_')],
+            [sg.T('', justification='center', size=(55, 2), font='Helvetica 18', key='_MESSAGES_')],
+            [sg.T('', justification='center', size=(55, 2), font='Helvetica 18', key='_MESSAGES2_')],
                 ]
         layout += cards
 
@@ -985,12 +875,12 @@ class Match():
 
     def begin(self):
         self.elements['Console'] = 'Beginning Game, Click Draw to Deal.'
-        print(self.drawScreen())
+        self.drawScreen()
         self.enterBreak()
         self.eventDealCards()
         self.turn = random.choice(self.turnList)
         self.elements['Console'] = 'First turn will be {}. Click Draw'.format(self.players[self.turn].getName())
-        print(self.drawScreen(True))
+        self.drawScreen(True)
         self.enterBreak()
         self.placeCard()
         self.elements['P{}Turn'.format(self.turn[-1])] = '\033[93m'
@@ -1005,7 +895,7 @@ class Match():
             self.elements['P{}Turn'.format(self.turn[-1])] = ''
             self.elements['Console'] = '{} Wins! Click Draw to Begin Point Tally'.format(
                 self.players[self.winnerID].getName())
-            print(self.drawScreen())
+            self.drawScreen()
             self.enterBreak()
 
             for identity in self.turnList:
@@ -1029,14 +919,14 @@ class Match():
                         self.buildHandVisual(identity)
 
                         if self.displayEffects and not self.simulation:
-                            print(self.drawScreen())
+                            self.drawScreen()
                             time.sleep(.1)
                     self.elements['P{}Turn'.format(self.turn[-1])] = ''
 
             self.players[self.winnerID].addPoints(points)
             self.elements['Console'] = '{} Won {} Points! Click Draw'.format(self.players[self.winnerID].getName(),
                                                                               points)
-            print(self.drawScreen())
+            self.drawScreen()
             self.enterBreak()
 
         gs.clearStaging()
@@ -1121,12 +1011,12 @@ class Match():
                 hide = self.hideComputerHands
             self.elements['Console'] = "Reverse Card Played! Reversing Turn Order.".format(
                 self.players[self.turn].getName())
-            print(self.drawScreen(hide))
+            self.drawScreen(hide)
             time.sleep(1)
             for i in range(10):
                 cardBigNums = self.pile[0].getBigNum(self.reverse, i)
                 self.elements['oMiddle'] = cardBigNums
-                print(self.drawScreen(hide))
+                self.drawScreen(hide)
                 if self.displayEffects and not self.simulation:
                     time.sleep(.1)
         cardBigNums = self.pile[0].getBigNum(self.reverse, 9)
@@ -1140,14 +1030,14 @@ class Match():
             if self.players[self.turn].getType() == "Computer":
                 hide = self.hideComputerHands
             self.elements['Console'] = "Skip Card Placed! Skipping {}'s Turn.".format(self.players[self.turn].getName())
-            print(self.drawScreen(hide))
+            self.drawScreen(hide)
             time.sleep(1)
             for i in range(2):
                 self.elements['P{}Turn'.format(self.turn[-1])] = '\033[91m'
-                print(self.drawScreen(hide))
+                self.drawScreen(hide)
                 time.sleep(.3)
                 self.elements['P{}Turn'.format(self.turn[-1])] = ''
-                print(self.drawScreen(hide))
+                self.drawScreen(hide)
                 time.sleep(.3)
         self.turnComplete = True
         self.event = ''
@@ -1158,7 +1048,7 @@ class Match():
             if self.players[self.turn].getType() == 'Human':
                 self.elements['Console'] = 'Wild Card! Specifiy a Color: (B)lue, (R)ed, (G)reen, (Y)ellow'
                 self.elements['Error'] = 'Specifiy A Color'
-                print(self.drawScreen())
+                self.drawScreen()
                 while True:
                     layout=[[sg.T('Wild Card! Specify a Color')],
                             [sg.Combo(('Blue', 'Red', 'Green', 'Yellow'))],
@@ -1190,7 +1080,7 @@ class Match():
             for i in range(10):
                 if seed > 4:
                     seed = 1
-                print(self.drawScreen(hide, wildSeed=seed))
+                self.drawScreen(hide, wildSeed=seed)
                 time.sleep(.1)
                 seed += 1
         self.pile[0].changeColor(self.wildColorChange)
@@ -1283,16 +1173,17 @@ class Match():
     def enterBreak(self):
         if not self.simulation:
             while True:
+                if Match.window is None:
+                    break
                 event, values = Match.window.Read()
                 if event == '_DRAW_':
                     break
                 if event == '_QUIT_':
                     if sg.PopupYesNo('Do you really want to quit?') == 'Yes':
-                        exit()
+                        self.matchAbort = True
+                        self.matchComplete = True
 
-        # if not self.simulation:
-        #     str(input())
-        return event, values
+        return
 
     def nextTurn(self):
         self.turnComplete = False
@@ -1320,7 +1211,7 @@ class Match():
                 if self.players[self.turn].getForceDraws() > 0:
                     self.elements['Error'] = 'Draw Card Played! Draw {} cards.'.format(
                         self.players[self.turn].getForceDraws())
-                print(self.drawScreen())
+                self.drawScreen()
                 ## GUI INPUT
                 # while True:
                 event, values = Match.window.Read()
@@ -1332,7 +1223,9 @@ class Match():
                     playerInput = 's'
                 elif event == '_QUIT_':
                     if sg.PopupYesNo('Do you really want to quit?') == 'Yes':
-                        exit()
+                        self.matchAbort = True
+                        self.matchComplete = True
+                        break
                 # playerInput = str(input("\033[97mSelection: \033[92m"))
                 # checked = self.checkInput(playerInput)
                 # while not checked['valid']:
@@ -1393,7 +1286,7 @@ class Match():
 
             elif turnType == 'Computer':
                 self.elements['Console'] = '{}\'s Turn'.format(self.players[self.turn].getName())
-                print(self.drawScreen(self.hideComputerHands))
+                self.drawScreen(self.hideComputerHands)
                 if not self.simulation:
                     time.sleep(self.computerSpeed)
                 # str(input())
@@ -1415,7 +1308,7 @@ class Match():
                         if cardIndex == 'd':
                             if len(self.deck) > 0:
                                 self.dealCard(self.turn)
-                                print(self.drawScreen(self.hideComputerHands))
+                                self.drawScreen(self.hideComputerHands)
                             else:
                                 self.turnComplete = True
                                 self.players[self.turn].removeForceDraw()
@@ -1440,7 +1333,8 @@ class Match():
 
     # --------------------------------------- drawScreen ---------------------------------------
     def drawScreen(self, hide=False, wildSeed=0):
-
+        if Match.window is None:
+            return
         def get_card_graphic(color, value):
             dict = Card.red_dict
             if color == 'red':
@@ -1478,11 +1372,11 @@ class Match():
         Update('_C1_', elem('P1Cards'))
         Update('_P2_', elem('P2Name'))
         Update('_C2_', elem('P2Cards'))
-        if elem('P3Name') != '':
+        if elem('P3Name') != '           ':
             Update('_P3_', elem('P3Name'), visible=True)
             Update('_C3_', elem('P3Cards'), visible=True)
             Update('_S3_', None, visible=True)
-        if elem('P4Name') != '':
+        if elem('P4Name') != '           ':
             Update('_P4_', elem('P4Name'), visible=True)
             Update('_C4_', elem('P4Cards'), visible=True)
             Update('_S4_',None, visible=True)
@@ -1580,14 +1474,19 @@ def mainMenu():
     current_player = 0
     while True:             # Event Loop
         event, values = window.Read()
-        print(event, values)
+        # print(event, values)
         if event is None or event == 'Exit':
             break
         if event == 'Begin':
-            window.Close()
+            window.Hide()
             gs.finalizePlayers()
+            # ---------------------- START THE MATCH ----------------------
             gs = playMatch(gs)
-            return
+            for i, id in enumerate(gs.players):
+                player = gs.players[id]
+                window.Element(i).Update('{} - {}\n{} points'.format(i+1, player.name, player.points))
+            window.UnHide()
+            window.Refresh()
         elif event == 'Settings':
             layout2 = [[sg.Checkbox('Hide computer hands', key='_HIDE_', default=True)],
                        [sg.T('Computer speed')],
@@ -1654,9 +1553,12 @@ def mainMenu():
 def playMatch(gs):
     m = Match(gs)
     m.begin()
+    Match.window.Element('_QUIT_').Update(visible=True)
     while (not m.isComplete()):
         m.nextTurn()
     gs = m.end(gs)
+    Match.window.Close()
+    Match.window = None
     return gs
 
 
@@ -1685,7 +1587,7 @@ def removePlayer(gs):
     message = "\033[97mPlease Enter Player Number to Remove: \033[91m".format(playerNum)
 
     while (not complete):
-        print(drawMainMenu(gs))
+        drawMainMenu(gs)
         number = str(input(message))
         if len(number) == 0:
             gs.mainMenuError = ""
@@ -1745,10 +1647,6 @@ def drawMainMenu(gs):
     gs.compileMainMenuElements()
     menuElements = gs.getMainMenuElements()
     return ''
-
-
-
-
 
 
 
