@@ -4509,11 +4509,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     combostyle = ttk.Style()
+                    #
+                    # style.map("C.TButton",
+                    #           foreground=[('pressed', 'red'), ('active', 'blue')],
+                    #           background=[('pressed', '!disabled', 'black'), ('active', 'white')]
+                    #           )
+
+                    # combostyle.map('PSG.TCombobox', background=[('selected', 'green')])
+                    # combostyle.configure('PSG.TCombobox.Listbox',fieldbackground='green')
+                    # combostyle.configure('PSG.TCombobox', foreground=text_color)
+                    # combostyle.configure('PSG.TCombobox', selectbackground='gray70')
+                    # combostyle.map('PSG.TCombobox', background=[('readonly','red')])
+                    # combostyle.configure('PSG.TCombobox.TEntry', background='red')
+                    # combostyle.configure('PSG.TCombobox', selectforeground=element.BackgroundColor)
+                    # combostyle.configure('PSG.TCombobox', fieldbackground='blue')
                     try:
                         combostyle.theme_create('combostyle',
                                                 settings={'TCombobox':
                                                               {'configure':
-                                                                   {'selectbackground': element.BackgroundColor,
+                                                                   {'selectbackground': 'gray50',
                                                                     'fieldbackground': element.BackgroundColor,
                                                                     'foreground': text_color,
                                                                     'background': element.BackgroundColor}
@@ -4523,7 +4537,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             combostyle.theme_settings('combostyle',
                                                       settings={'TCombobox':
                                                                     {'configure':
-                                                                         {'selectbackground': element.BackgroundColor,
+                                                                         {'selectbackground': 'gray50',
                                                                           'fieldbackground': element.BackgroundColor,
                                                                           'foreground': text_color,
                                                                           'background': element.BackgroundColor}
@@ -4532,6 +4546,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             pass
                     # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
                     combostyle.theme_use('combostyle')
+
                 element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
@@ -6817,7 +6832,7 @@ def main():
          Frame('Binary Choice Group', frame3, title_color='purple'),
          Frame('Variable Choice Group', frame4, title_color='blue')],
         [Frame('Structured Data Group', frame5, title_color='red'), ],
-        # [Frame('Graphing Group', frame6)],
+        [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]])],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), Button('Exit')],
     ]
