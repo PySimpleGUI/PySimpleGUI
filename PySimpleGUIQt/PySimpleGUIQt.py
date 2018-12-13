@@ -4618,7 +4618,14 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += 'border: {}px solid gray; '.format(border_depth)
                 style += '}'
-                # style += """QComboBox::on { border: 50px; width: 30px; height: 30px; }"""
+
+                style += 'QListView {'
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    style += 'color: %s;' % element.TextColor
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    style += 'background-color: %s;' % element.BackgroundColor
+                style += '}'
+
 
                 element.QT_ComboBox.setStyleSheet(style)
 
@@ -5470,9 +5477,10 @@ def StartupTK(window):
     #     window.QTWindow.setWindowFlags(Qt.WindowStaysOnTopHint)
 
 
-    style = ''
+    style = 'QMainWindow {'
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         style += 'background-color: %s;' % window.BackgroundColor
+    style += '}'
     window.QT_QMainWindow.setStyleSheet(style)
 
     if window.BackgroundImage is not None:
