@@ -31,7 +31,7 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.18.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.19.2-red.svg?longCache=true&style=for-the-badge)      
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.18.0-blue.svg?longCache=true&style=for-the-badge)      
   
@@ -77,7 +77,7 @@ Are there enough things on there to cover your GUI solution?
 Your source code is completely portable from one platform to another by simply changing the import statement.
 
 
- ### Platforms
+### Platforms
  
   It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
   
@@ -2288,6 +2288,8 @@ Choose **either** a filename or in-ram data image to use to replace current imag
     
 ## Button Element      
       
+**MAC USERS** - Macs suck when it comes to tkinter and button colors.  It sucks so badly with colors that the `LookAndFeel` call is disabled.  You cannot change button colors for Macs.  You're stuck with the system default color if you are using the tkinter version of PySimpleGUI.  The Qt version does not have this issue.
+      
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a window, whether it be Submit or Cancel, one way or another a button is involved in all windows.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.      
       
 The Types of buttons include:      
@@ -4240,6 +4242,14 @@ Emergency patch release... going out same day as previous release
 * Debug window, EasyPrint, Print - debug window will re-open if printed to after being closed
 * SetOptions - can change the error button color
 * Much bigger window created when running PySimpleGUI.py by itself.  Meant to help with regression testing
+
+## 3.19.2  13-Dec-2018
+
+* Warning for Mac's when trying to change button color
+* New parms for Button.Update - image_size and image_subsample
+* Buttons - remove highlight when border depth == 0
+* OneLineProgressMeter - better layout implementation
+
 
 
 ### Upcoming      

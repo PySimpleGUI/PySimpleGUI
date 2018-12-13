@@ -1235,6 +1235,13 @@ class Match():
                         pass
 
             elif turnType == 'Computer':
+                event, values = Match.window.Read(timeout=0)
+                if event == '_QUIT_':
+                    if sg.PopupYesNo('Do you really want to quit?') == 'Yes':
+                        self.matchAbort = True
+                        self.matchComplete = True
+                        break
+
                 self.elements['Console'] = '{}\'s Turn'.format(self.players[self.turn].getName())
                 self.drawScreen(self.hideComputerHands)
                 if not self.simulation:
