@@ -62,6 +62,7 @@ As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 v
 # Qt Version
 
 ### Github
+
 Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
 
 Give it a shot if you're looking for something a bit more "modern".  PySimpleGUIQt is currently in Alpha.  All of the widgets are operational but some may not yet be full-featured.  If one is missing and your project needs it, log an Issue and you'll likely get priority support. 
@@ -81,7 +82,7 @@ Your source code is completely portable from one platform to another by simply c
  
   It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
   
-However, Macs suck.  They suck on tkinter in particular.  I had to completely turn off the "Look and feel" calls for Macs.  Colored buttons in particular are broken.  Not in the PySimpleGUI code, of course.    It's mostly because Macs suck.  Consider using Qt instead of tkinter on the Mac.  Or, if using tkinter, bring your own button images.
+However, **Macs** suck.  They suck on tkinter in particular.  The "Look and feel" calls are disabled for Macs.  Colored buttons in particular are broken.  Not in the PySimpleGUI code, of course.    It's mostly because Macs suck.  Consider using Qt instead of tkinter on the Mac.  Or, if using tkinter, bring your own button images. 
       
 ------------------------------------------------------------------------      
       
@@ -1450,6 +1451,11 @@ Note - there is a warning message printed out if the user closes a non-blocking 
       
 To keep a window on top of all other windows on the screen, set keep_on_top = True when the window is created.  This feature makes for floating toolbars that are very helpful and always visible on your desktop.      
       
+### Focus
+
+PySimpleGUI will set a default focus location for you.  This generally means the first input field.  You can set the focus to a particular element.  If you are going to set the focus yourself, then you should turn off the automatic focus by setting `use_default_focus=False` in your Window call.
+
+
 ### Window Methods (things you can do with a Window object)      
       
 There are a few methods (functions) that you will see in this document that act on Windows.  The ones you will primarily be calling are:      
