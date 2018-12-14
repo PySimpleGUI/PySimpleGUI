@@ -3000,7 +3000,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, background_image=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None):
         '''
 
         :param title:
@@ -3086,6 +3086,7 @@ class Window:
         self.FocusElement = None
         self.BackgroundImage = background_image
         self.XFound = False
+        self.DisableMinimize = disable_minimize
 
 
     @classmethod
@@ -3573,7 +3574,6 @@ class Window:
         def closeEvent(self, event):
             if self.Window.DisableClose:
                 event.ignore()
-                print('IGNORING CLOSE')
                 return
             # print('GOT A CLOSE EVENT!', event, self.Window.Title)
             self.Window.LastButtonClicked = None
@@ -5460,8 +5460,7 @@ def StartupTK(window):
         flags |= QtCore.Qt.Tool
     if window.KeepOnTop:
         flags |= Qt.WindowStaysOnTopHint
-    # if window.DisableClose:
-    #     flags |= ~Qt.WindowCloseButtonHint
+
     if not using_pyqt5 and flags is not None:
         window.QT_QMainWindow.setWindowFlags(flags)
     if window.AlphaChannel:
@@ -5469,6 +5468,9 @@ def StartupTK(window):
     if window.WindowIcon is not None:
         window.QT_QMainWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
 
+    if window.DisableMinimize:
+        # flags |= ~Qt.WindowMinimizeButtonHint
+        window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMinimizeButtonHint)
     # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
     # shadow = QtWidgets.QGraphicsDropShadowEffect()
     # shadow.setBlurRadius(9.0)
@@ -5734,8 +5736,6 @@ def GetComplimentaryHex(color):
 
 # ========================  EasyPrint           =====#
 # ===================================================#
-_easy_print_data = None  # global variable... I'm cheating
-
 
 class DebugWin():
     debug_window = None
