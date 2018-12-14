@@ -456,13 +456,18 @@ class Element():
 
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None):
         style = str(widget.styleSheet())
+        add_brace = False
+        if len(style) != 0 and style[-1] == '}':
+            style = style[:-1]
+            add_brace = True
         if font is not None:
             style += create_style_from_font(font)
         if text_color is not None:
-            style += 'color: %s;' % text_color
+            style += ' color: %s;' % text_color
         if background_color is not None:
             style += 'background-color: %s;' % background_color
-        # print(style)
+        if add_brace:
+            style += '}'
         widget.setStyleSheet(style)
         set_widget_visiblity(widget, visible)
 
@@ -3505,10 +3510,7 @@ class Window:
     def BringToFront(self):
         self.QTMainWindow.activateWindow(self.QT_QMainWindow)
         self.QTMainWindow.raise_(self.QT_QMainWindow)
-        # try:
-        #     self.TKroot.lift()
-        # except:
-        #     pass
+
 
     def CurrentLocation(self):
         location = self.QT_QMainWindow.geometry()
