@@ -2472,7 +2472,7 @@ class Column(Element):
 #                           Pane                                       #
 # ---------------------------------------------------------------------- #
 class Pane(Element):
-    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', key=None, visible=True):
+    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, key=None, visible=True):
         '''
         Container for elements that are stacked into rows
         :param layout:
@@ -2491,17 +2491,24 @@ class Pane(Element):
         self.ParentWindow = None
         self.Rows = []
         self.TKFrame = None
-        self.TKColFrame = None
+        self.PanedWindow = None
         self.Orientation = orientation
         self.PaneList = pane_list
+        self.ShowHandle = show_handle
 
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
+        self.Rows = [pane_list]
 
         super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible)
         return
 
 
+    def Update(self, visible=None):
+        if visible is False:
+            self.PanedWindow.pack_forget()
+        elif visible is True:
+            self.PanedWindow.pack()
 
 
 
@@ -3961,6 +3968,18 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.ReturnValues[0] is not None:  # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
+            if element.Type == ELEM_TYPE_PANE:
+                element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
+                element.ReturnValuesList = []
+                element.ReturnValuesDictionary = {}
+                BuildResultsForSubform(element, initialize_only, top_level_form)
+                for item in element.ReturnValuesList:
+                    AddToReturnList(top_level_form, item)
+                if element.UseDictionary:
+                    top_level_form.UseDictionary = True
+                if element.ReturnValues[0] is not None:  # if a button was clicked
+                    button_pressed_text = element.ReturnValues[0]
+
             if element.Type == ELEM_TYPE_TAB_GROUP:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
@@ -4163,6 +4182,10 @@ def _FindElementFromKeyInSubForm(form, key):
                 if matching_elem is not None:
                     return matching_elem
             if element.Type == ELEM_TYPE_TAB_GROUP:
+                matching_elem = _FindElementFromKeyInSubForm(element, key)
+                if matching_elem is not None:
+                    return matching_elem
+            if element.Type == ELEM_TYPE_PANE:
                 matching_elem = _FindElementFromKeyInSubForm(element, key)
                 if matching_elem is not None:
                     return matching_elem
@@ -4379,8 +4402,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if element_type == ELEM_TYPE_PANE:
                 element.PanedWindow = tk.PanedWindow(tk_row_frame,
                                                      orient=tk.VERTICAL if element.Orientation.startswith('v') else tk.HORIZONTAL,
-                                                     relief=tk.RAISED)
-
+                                                     relief=tk.RAISED,
+                                                     )
+                if element.ShowHandle:
+                    element.PanedWindow.config(showhandle=True)
+                if element.Size != (None, None):
+                    element.PanedWindow.config(width=element.Size[0], height=element.Size[1])
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.PanedWindow.configure(background=element.BackgroundColor)
                 for pane in element.PaneList:
                     col_frame = tk.Frame(element.PanedWindow)
                     PackFormIntoFrame(pane, col_frame, toplevel_form)
