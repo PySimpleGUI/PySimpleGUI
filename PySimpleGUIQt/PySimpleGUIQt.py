@@ -3572,6 +3572,7 @@ class Window:
 
         def closeEvent(self, event):
             if self.Window.DisableClose:
+                event.ignore()
                 print('IGNORING CLOSE')
                 return
             # print('GOT A CLOSE EVENT!', event, self.Window.Title)
@@ -4626,7 +4627,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 style += '}'
 
-
                 element.QT_ComboBox.setStyleSheet(style)
 
                 if not auto_size_text:
@@ -5446,8 +5446,8 @@ def StartupTK(window):
 
     # window.QTWindow = QWidget()
 
-    window.QT_QMainWindow = window.QT_QMainWindowClass(window.ReturnKeyboardEvents, window)
-    window.QTWindow = window.QTMainWindow(window.ReturnKeyboardEvents, window)
+    window.QT_QMainWindow = Window.QT_QMainWindowClass(window.ReturnKeyboardEvents, window)
+    window.QTWindow = Window.QTMainWindow(window.ReturnKeyboardEvents, window)
     window.QT_QMainWindow.setCentralWidget(window.QTWindow)
 
     window.QT_QMainWindow.installEventFilter(window.QT_QMainWindow)
@@ -5460,6 +5460,8 @@ def StartupTK(window):
         flags |= QtCore.Qt.Tool
     if window.KeepOnTop:
         flags |= Qt.WindowStaysOnTopHint
+    # if window.DisableClose:
+    #     flags |= ~Qt.WindowCloseButtonHint
     if not using_pyqt5 and flags is not None:
         window.QT_QMainWindow.setWindowFlags(flags)
     if window.AlphaChannel:
