@@ -240,6 +240,7 @@ ELEM_TYPE_TREE = 'tree'
 ELEM_TYPE_ERROR = 'error'
 ELEM_TYPE_SEPARATOR = 'separator'
 ELEM_TYPE_STATUSBAR = 'statusbar'
+ELEM_TYPE_PANE = 'pane'
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -2413,7 +2414,7 @@ class Column(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key, visible=visible)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible)
         return
 
     def AddRow(self, *args):
@@ -2457,6 +2458,43 @@ class Column(Element):
         except:
             pass
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Pane                                       #
+# ---------------------------------------------------------------------- #
+class Pane(Element):
+    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', key=None, visible=True):
+        '''
+        Container for elements that are stacked into rows
+        :param layout:
+        :param background_color:
+        :param size:
+        :param pad:
+        :param scrollable:
+        :param vertical_scroll_only:
+        :param key:
+        '''
+        self.UseDictionary = False
+        self.ReturnValues = None
+        self.ReturnValuesList = []
+        self.ReturnValuesDictionary = {}
+        self.DictionaryKeyCounter = 0
+        self.ParentWindow = None
+        self.Rows = []
+        self.TKFrame = None
+        self.TKColFrame = None
+        self.Orientation = orientation
+        self.PaneList = pane_list
+
+        bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+
+
+        super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible)
+        return
+
+
+
 
 
 # ---------------------------------------------------------------------- #
@@ -4328,6 +4366,26 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
                                         highlightcolor=element.BackgroundColor)
+
+            # -------------------------  Pane element  ------------------------- #
+            if element_type == ELEM_TYPE_PANE:
+                element.PanedWindow = tk.PanedWindow(tk_row_frame,
+                                                     orient=tk.VERTICAL if element.Orientation.startswith('v') else tk.HORIZONTAL,
+                                                     relief=tk.RAISED)
+
+                for pane in element.PaneList:
+                    col_frame = tk.Frame(element.PanedWindow)
+                    PackFormIntoFrame(pane, col_frame, toplevel_form)
+                    element.PanedWindow.add(col_frame)
+                    if pane.BackgroundColor != COLOR_SYSTEM_DEFAULT and pane.BackgroundColor is not None:
+                        col_frame.configure(background=pane.BackgroundColor, highlightbackground=pane.BackgroundColor,
+                                        highlightcolor=pane.BackgroundColor)
+
+                element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                if element.Visible is False:
+                    element.PanedWindow.pack_forget()
+
+
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
@@ -6824,7 +6882,7 @@ def main():
          Frame('Binary Choice Group', frame3, title_color='purple'),
          Frame('Variable Choice Group', frame4, title_color='blue')],
         [Frame('Structured Data Group', frame5, title_color='red'), ],
-        [Frame('Graphing Group', frame6)],
+        # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]])],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), Button('Exit')],
     ]
