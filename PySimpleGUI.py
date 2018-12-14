@@ -2464,7 +2464,7 @@ class Column(Element):
 #                           Pane                                       #
 # ---------------------------------------------------------------------- #
 class Pane(Element):
-    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, key=None, visible=True):
+    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED ,key=None, visible=True):
         '''
         Container for elements that are stacked into rows
         :param layout:
@@ -2487,6 +2487,7 @@ class Pane(Element):
         self.Orientation = orientation
         self.PaneList = pane_list
         self.ShowHandle = show_handle
+        self.Relief = relief
 
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
@@ -4392,10 +4393,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  Pane element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
+
                 element.PanedWindow = tk.PanedWindow(tk_row_frame,
                                                      orient=tk.VERTICAL if element.Orientation.startswith('v') else tk.HORIZONTAL,
-                                                     relief=tk.RAISED,
                                                      )
+                if element.Relief is not None:
+                    element.PanedWindow.configure(relief=element.Relief)
                 if element.ShowHandle:
                     element.PanedWindow.config(showhandle=True)
                 if element.Size != (None, None):
