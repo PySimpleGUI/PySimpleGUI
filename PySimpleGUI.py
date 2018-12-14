@@ -2413,6 +2413,7 @@ class Column(Element):
         self.ReturnValuesDictionary = {}
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
+        self.ParentPanedWindow = None
         self.Rows = []
         self.TKFrame = None
         self.TKColFrame = None
@@ -2452,9 +2453,15 @@ class Column(Element):
 
     def Update(self, visible=None):
         if visible is False:
-            self.TKColFrame.pack_forget()
+            if self.TKColFrame:
+                self.TKColFrame.pack_forget()
+            if self.ParentPanedWindow:
+                self.ParentPanedWindow.remove(self.TKColFrame)
         elif visible is True:
-            self.TKColFrame.pack()
+            if self.TKColFrame:
+                self.TKColFrame.pack()
+            if self.ParentPanedWindow:
+                self.ParentPanedWindow.add(self.TKColFrame)
 
 
     def __del__(self):
@@ -2472,7 +2479,7 @@ class Column(Element):
 #                           Pane                                       #
 # ---------------------------------------------------------------------- #
 class Pane(Element):
-    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED ,key=None, visible=True):
+    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED, handle_size=None, key=None, visible=True):
         '''
         Container for elements that are stacked into rows
         :param layout:
@@ -2496,6 +2503,7 @@ class Pane(Element):
         self.PaneList = pane_list
         self.ShowHandle = show_handle
         self.Relief = relief
+        self.HandleSize =  handle_size or 8
 
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
@@ -4373,30 +4381,30 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 if element.Scrollable:
-                    col_frame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
-                    PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
-                    col_frame.TKFrame.update()
+                    pane.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
+                    PackFormIntoFrame(element, pane.TKColFrame.TKFrame, toplevel_form)
+                    pane.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
-                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),
-                                                height=col_frame.TKFrame.winfo_reqheight() / 2)
+                        pane.TKColFrame.canvas.config(width=pane.TKColFrame.TKFrame.winfo_reqwidth(),
+                                                height=pane.TKColFrame.TKFrame.winfo_reqheight() / 2)
                     else:
-                        col_frame.canvas.config(width=element.Size[0], height=element.Size[1])
+                        pane.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
 
                     if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
-                        col_frame.canvas.config(background=element.BackgroundColor)
-                        col_frame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
+                        pane.TKColFrame.canvas.config(background=element.BackgroundColor)
+                        pane.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                  highlightthickness=0)
-                        col_frame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
+                        pane.TKColFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                 else:
-                    col_frame = tk.Frame(tk_row_frame)
-                    PackFormIntoFrame(element, col_frame, toplevel_form)
-                col_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                    pane.TKColFrame = tk.Frame(tk_row_frame)
+                    PackFormIntoFrame(element, pane.TKColFrame, toplevel_form)
+                pane.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
-                    col_frame.pack_forget()
+                    pane.TKColFrame.pack_forget()
 
-                element.TKColFrame = col_frame
+                element.TKColFrame = pane.TKColFrame
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
+                    pane.TKColFrame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
                                         highlightcolor=element.BackgroundColor)
 
             # -------------------------  Pane element  ------------------------- #
@@ -4407,6 +4415,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                      )
                 if element.Relief is not None:
                     element.PanedWindow.configure(relief=element.Relief)
+                element.PanedWindow.configure(handlesize=element.HandleSize)
                 if element.ShowHandle:
                     element.PanedWindow.config(showhandle=True)
                 if element.Size != (None, None):
@@ -4414,11 +4423,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.PanedWindow.configure(background=element.BackgroundColor)
                 for pane in element.PaneList:
-                    col_frame = tk.Frame(element.PanedWindow)
-                    PackFormIntoFrame(pane, col_frame, toplevel_form)
-                    element.PanedWindow.add(col_frame)
+                    pane.TKColFrame = tk.Frame(element.PanedWindow)
+                    pane.ParentPanedWindow = element.PanedWindow
+                    PackFormIntoFrame(pane, pane.TKColFrame, toplevel_form)
+                    element.PanedWindow.add(pane.TKColFrame)
                     if pane.BackgroundColor != COLOR_SYSTEM_DEFAULT and pane.BackgroundColor is not None:
-                        col_frame.configure(background=pane.BackgroundColor, highlightbackground=pane.BackgroundColor,
+                        pane.TKColFrame.configure(background=pane.BackgroundColor, highlightbackground=pane.BackgroundColor,
                                         highlightcolor=pane.BackgroundColor)
 
                 element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
