@@ -2479,7 +2479,7 @@ class Column(Element):
 #                           Pane                                       #
 # ---------------------------------------------------------------------- #
 class Pane(Element):
-    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED, handle_size=None, key=None, visible=True):
+    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
         '''
         Container for elements that are stacked into rows
         :param layout:
@@ -2504,7 +2504,7 @@ class Pane(Element):
         self.ShowHandle = show_handle
         self.Relief = relief
         self.HandleSize =  handle_size or 8
-
+        self.BorderDepth = border_width
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Rows = [pane_list]
@@ -4409,9 +4409,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  Pane element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
-
+                bd = element.BorderDepth if element.BorderDepth is not None else border_depth
                 element.PanedWindow = tk.PanedWindow(tk_row_frame,
                                                      orient=tk.VERTICAL if element.Orientation.startswith('v') else tk.HORIZONTAL,
+                                                     borderwidth=bd,
+                                                     bd=bd,
                                                      )
                 if element.Relief is not None:
                     element.PanedWindow.configure(relief=element.Relief)
@@ -4426,7 +4428,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     pane.TKColFrame = tk.Frame(element.PanedWindow)
                     pane.ParentPanedWindow = element.PanedWindow
                     PackFormIntoFrame(pane, pane.TKColFrame, toplevel_form)
-                    element.PanedWindow.add(pane.TKColFrame)
+                    if pane.Visible:
+                        element.PanedWindow.add(pane.TKColFrame)
                     if pane.BackgroundColor != COLOR_SYSTEM_DEFAULT and pane.BackgroundColor is not None:
                         pane.TKColFrame.configure(background=pane.BackgroundColor, highlightbackground=pane.BackgroundColor,
                                         highlightcolor=pane.BackgroundColor)
