@@ -3503,10 +3503,12 @@ class Window:
             self.QT_QMainWindow.setWindowOpacity(self._AlphaChannel)
 
     def BringToFront(self):
-        try:
-            self.TKroot.lift()
-        except:
-            pass
+        self.QTMainWindow.activateWindow(self.QT_QMainWindow)
+        self.QTMainWindow.raise_(self.QT_QMainWindow)
+        # try:
+        #     self.TKroot.lift()
+        # except:
+        #     pass
 
     def CurrentLocation(self):
         location = self.QT_QMainWindow.geometry()
