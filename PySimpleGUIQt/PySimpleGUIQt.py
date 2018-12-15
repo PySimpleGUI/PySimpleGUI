@@ -2933,7 +2933,7 @@ class SystemTray:
         elif messageicon is not None:
             self.TrayIcon.showMessage(title, message, messageicon, time)
         else:
-            self.TrayIcon.showMessage(title, message, time)
+            self.TrayIcon.showMessage(title, message, QIcon(), time)
 
         self.LastMessage = message
         self.LastTitle = title
