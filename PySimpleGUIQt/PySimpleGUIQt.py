@@ -5475,6 +5475,7 @@ def StartupTK(window):
     if window.DisableMinimize:
         # flags |= ~Qt.WindowMinimizeButtonHint
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMinimizeButtonHint)
+        window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMaximizeButtonHint)
     # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
     # shadow = QtWidgets.QGraphicsDropShadowEffect()
     # shadow.setBlurRadius(9.0)
