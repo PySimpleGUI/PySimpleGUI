@@ -5475,6 +5475,10 @@ def StartupTK(window):
     if window.DisableMinimize:
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMinimizeButtonHint)
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMaximizeButtonHint)
+
+    if window.DisableClose:
+        window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowCloseButtonHint)
+
     # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
     # shadow = QtWidgets.QGraphicsDropShadowEffect()
     # shadow.setBlurRadius(9.0)
@@ -5785,12 +5789,7 @@ class DebugWin():
             self.output_element.Update(outstring, append=True)
         else:
             print(*args, sep=sepchar, end=endchar)
-        # TODO
-        # Add extra check to see if the window was closed... if closed by X sometimes am not told
-        # try:
-        #     state = self.window.TKroot.state()
-        # except:
-        #     self.Close()
+
 
     def Close(self):
         self.window.Close()
