@@ -971,6 +971,25 @@ class Spin(Element):
                          key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
+    class StringBox(QSpinBox):
+        def __init__(self, strings, parent=None):
+            super(Spin.StringBox, self).__init__(parent)
+            self.setStrings(strings)
+
+        def strings(self):
+            return self._strings
+
+        def setStrings(self, strings):
+            self._strings = tuple(strings)
+            self._values = dict(zip(strings, range(len(strings))))
+            self.setRange(0, len(strings) - 1)
+
+        def textFromValue(self, value):
+            return self._strings[value]
+
+        def valueFromText(self, text):
+            return self._values[text]
+
 
     def QtCallbackValueChanged(self, value):
         if not self.ChangeSubmits:
@@ -980,9 +999,11 @@ class Spin(Element):
     def Update(self, value=None, values=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
         if values != None:
             self.Values = values
-            self.QT_Spinner.setRange(self.Values[0], self.Values[1])
+            self.QT_Spinner.setStrings(values)
+            # self.QT_Spinner.setRange(self.Values[0], self.Values[1])
         if value is not None:
-            self.QT_Spinner.setValue(value)
+            # self.QT_Spinner.setValue(value)
+            self.QT_Spinner.setValue(self.QT_Spinner.valueFromText(value))
             self.DefaultValue = value
         if disabled == True:
             self.QT_Spinner.setDisabled(True)
@@ -4092,7 +4113,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = []
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
-                    value = str(element.QT_Spinner.value())
+                    # value = str(element.QT_Spinner.value())
+                    value = str(element.QT_Spinner.textFromValue(element.QT_Spinner.value()))
                 elif element.Type == ELEM_TYPE_INPUT_DIAL:
                     value = str(element.QT_Dial.value())
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
@@ -4893,6 +4915,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.QT_Spinner = QSpinBox()
+                element.QT_Spinner = Spin.StringBox(element.Values)
+                if element.DefaultValue is not None:
+                    print(element.DefaultValue)
+                    element.QT_Spinner.setValue(element.QT_Spinner.valueFromText(element.DefaultValue))
                 style = 'QSpinBox {'
                 style += create_style_from_font(font)
                 if element.TextColor is not None:
@@ -4903,7 +4929,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style += 'border: {}px solid gray; '.format(border_depth)
                 style += '}'
                 element.QT_Spinner.setStyleSheet(style)
-                element.QT_Spinner.setRange(element.Values[0], element.Values[1])
+                # element.QT_Spinner.setRange(element.Values[0], element.Values[1])
                 if not auto_size_text:
                     if element_size[0] is not None:
                         element.QT_Spinner.setFixedWidth(element_size[0])
@@ -5751,6 +5777,13 @@ class DebugWin():
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
         # Show a form that's a running counter
+        self.size = size
+        self.location = location
+        self.font = font
+        self.no_titlebar = no_titlebar
+        self.no_button = no_button
+        self.grab_anywhere = grab_anywhere
+        self.keep_on_top = keep_on_top
         self.do_not_reroute_stdout = do_not_reroute_stdout
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
@@ -5775,12 +5808,11 @@ class DebugWin():
         endchar = end if end is not None else '\n'
 
         if self.window is None:  # if window was destroyed already, just print
-            self.__init__()
-            print(*args, sep=sepchar, end=endchar)
-            return
+            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
+            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
         if self.do_not_reroute_stdout:
             outstring = ''
             for arg in args:
