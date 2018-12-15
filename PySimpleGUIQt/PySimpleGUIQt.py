@@ -1003,8 +1003,11 @@ class Spin(Element):
             # self.QT_Spinner.setRange(self.Values[0], self.Values[1])
         if value is not None:
             # self.QT_Spinner.setValue(value)
-            self.QT_Spinner.setValue(self.QT_Spinner.valueFromText(value))
-            self.DefaultValue = value
+            try:
+                self.QT_Spinner.setValue(self.QT_Spinner.valueFromText(value))
+                self.DefaultValue = value
+            except:
+                pass
         if disabled == True:
             self.QT_Spinner.setDisabled(True)
         elif disabled == False:
@@ -4912,13 +4915,13 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_Radio_Button)
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
-                width, height = element_size
-                width = 0 if auto_size_text else element_size[0]
-                element.QT_Spinner = QSpinBox()
+                # element.QT_Spinner = QSpinBox()
                 element.QT_Spinner = Spin.StringBox(element.Values)
-                if element.DefaultValue is not None:
-                    print(element.DefaultValue)
-                    element.QT_Spinner.setValue(element.QT_Spinner.valueFromText(element.DefaultValue))
+                if element.DefaultValue is not None:         # try to set the default value without crashing on error
+                    try:
+                        element.QT_Spinner.setValue(element.QT_Spinner.valueFromText(element.DefaultValue))
+                    except:
+                        pass
                 style = 'QSpinBox {'
                 style += create_style_from_font(font)
                 if element.TextColor is not None:
