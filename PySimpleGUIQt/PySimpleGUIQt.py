@@ -5473,7 +5473,6 @@ def StartupTK(window):
         window.QT_QMainWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
 
     if window.DisableMinimize:
-        # flags |= ~Qt.WindowMinimizeButtonHint
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMinimizeButtonHint)
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMaximizeButtonHint)
     # window.QTWindow.setAttribute(Qt.WA_TranslucentBackground)
@@ -5746,18 +5745,21 @@ class DebugWin():
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=False):
+                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
         # Show a form that's a running counter
+        self.do_not_reroute_stdout = do_not_reroute_stdout
+
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
         self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-        self.output_element = Output(size=win_size)
+        self.output_element = MultilineOutput(size=win_size, key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
+
         if no_button:
             self.layout = [[self.output_element]]
         else:
             self.layout = [
                 [self.output_element],
-                [DummyButton('Quit')]
+                [DummyButton('Quit'), Stretch()]
             ]
         self.window.AddRows(self.layout)
         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
@@ -5775,7 +5777,14 @@ class DebugWin():
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
-        print(*args, sep=sepchar, end=endchar)
+        if self.do_not_reroute_stdout:
+            outstring = ''
+            for arg in args:
+                outstring += str(arg) + sepchar
+            outstring += endchar
+            self.output_element.Update(outstring, append=True)
+        else:
+            print(*args, sep=sepchar, end=endchar)
         # TODO
         # Add extra check to see if the window was closed... if closed by X sometimes am not told
         # try:
@@ -5794,12 +5803,12 @@ def PrintClose():
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
 
 
     if DebugWin.debug_window is None:
         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
-                                    no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+                                    no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, do_not_reroute_stdout=do_not_reroute_stdout)
     DebugWin.debug_window.Print(*args, end=end, sep=sep)
 
 
