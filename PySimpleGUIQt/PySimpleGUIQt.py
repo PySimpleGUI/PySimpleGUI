@@ -985,7 +985,7 @@ class Spin(Element):
             self.setRange(0, len(strings) - 1)
 
         def textFromValue(self, value):
-            return self._strings[value]
+            return str(self._strings[value])
 
         def valueFromText(self, text):
             return self._values[text]
@@ -4384,6 +4384,20 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
 # =====================================   TK CODE STARTS HERE ====================================================== #
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
+def style_entry(**kwargs):
+    generated_style = ''
+    for Qt_property, value in kwargs.items():
+        generated_style += "\t{} : {};\n".format(Qt_property.replace('_','-'), value)
+
+        # generated_style += "}"
+    return generated_style
+
+def generate_style(qt_element_type, entries):
+    generated_style = qt_element_type + " {\n"
+    generated_style += entries
+    generated_style += "}"
+    return generated_style
+
 
 def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
@@ -4593,15 +4607,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QLineEdit.setAlignment(Qt.AlignRight)
 
                 element.QT_QLineEdit.setText(str(default_text))
-                style = 'QLineEdit {'
-                style += create_style_from_font(font)
-                if element.TextColor is not None:
-                    style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None:
-                    style += 'background-color: %s;' % element.BackgroundColor
-                style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
-                style += 'border: {}px solid gray; '.format(border_depth)
-                style += '}'
+
+                style = create_style_from_font(font)
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    style += style_entry(color=element.TextColor)
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    style += style_entry(background_color=element.BackgroundColor)
+                style += style_entry(margin ='{}px {}px {}px {}px;'.format(*full_element_pad),
+                                     border='{}px solid gray; '.format(border_depth))
+                style = generate_style('QLineEdit', style)
                 element.QT_QLineEdit.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeText is False or element.Size[0] is not None:
@@ -5029,6 +5043,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QGraphicsView.setScene(element.QT_QGraphicsScene)
                 style = ''
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+
+                # print(style)
                 element.QT_QGraphicsView.setStyleSheet(style)
 
                 qgraphicsview.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -5518,11 +5534,12 @@ def StartupTK(window):
     #     window.QTWindow.setWindowFlags(Qt.WindowStaysOnTopHint)
 
 
-    style = 'QMainWindow {'
+    # style = 'QMainWindow {'
+    # style = window.QT_QMainWindow.styleSheet()
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-        style += 'background-color: %s;' % window.BackgroundColor
-    style += '}'
-    window.QT_QMainWindow.setStyleSheet(style)
+        style = 'background-color: %s;' % window.BackgroundColor
+        # style += '}'
+        window.QT_QMainWindow.setStyleSheet(style)
 
     if window.BackgroundImage is not None:
         qlabel = QLabel(window.QTWindow)
