@@ -5854,7 +5854,7 @@ def PrintClose():
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
 
 
     if DebugWin.debug_window is None:
