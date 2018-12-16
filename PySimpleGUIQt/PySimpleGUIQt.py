@@ -5044,9 +5044,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style = ''
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
 
-                print(style)
+                # print(style)
                 element.QT_QGraphicsView.setStyleSheet(style)
-
 
                 qgraphicsview.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
                 qgraphicsview.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
