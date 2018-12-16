@@ -901,8 +901,7 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
-                 tooltip=None, visible=True):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
         Spinner Element
         :param values:
@@ -3078,7 +3077,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False):
         '''
         Main window object where Elements will be laid out in rows
         :param title:
@@ -3154,6 +3153,7 @@ class Window:
         self.TimeoutKey = '_timeout_'
         self.TimerCancelled = False
         self.DisableClose = disable_close
+        self.DisableMinimize = disable_minimize
         self._Hidden = False
         self._Size = size
         self.XFound = False
@@ -5403,6 +5403,9 @@ def StartupTK(my_flex_form):
     if not my_flex_form.Resizable:
         root.resizable(False, False)
 
+    if my_flex_form.DisableMinimize:
+        root.attributes("-toolwindow", 1)
+
     if my_flex_form.KeepOnTop:
         root.wm_attributes("-topmost", 1)
 
@@ -5617,24 +5620,33 @@ def GetComplimentaryHex(color):
 
 # ========================  EasyPrint           =====#
 # ===================================================#
-_easy_print_data = None  # global variable... I'm cheating
-
-
 class DebugWin():
     debug_window = None
 
-    def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
+    def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
+                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
         # Show a form that's a running counter
+        self.size = size
+        self.location = location
+        self.font = font
+        self.no_titlebar = no_titlebar
+        self.no_button = no_button
+        self.grab_anywhere = grab_anywhere
+        self.keep_on_top = keep_on_top
+        self.do_not_reroute_stdout = do_not_reroute_stdout
+
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location, font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-        self.output_element = Output(size=win_size)
+        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
+                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+        self.output_element = Multiline(size=win_size, autoscroll=True, key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
+
         if no_button:
-            self.layout =   [[self.output_element]]
+            self.layout = [[self.output_element]]
         else:
-            self.layout =   [
-                            [self.output_element],
-                            [DummyButton('Quit')]
-                            ]
+            self.layout = [
+                [self.output_element],
+                [DummyButton('Quit'), Stretch()]
+            ]
         self.window.AddRows(self.layout)
         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
         return
@@ -5643,38 +5655,100 @@ class DebugWin():
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
-        if self.window is None:         # if window was destroyed already, just print
-            self.__init__()
-            print(*args, sep=sepchar, end=endchar)
-            return
-
+        if self.window is None:  # if window was destroyed alread re-open it
+            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
-        print(*args, sep=sepchar, end=endchar)
-        # Add extra check to see if the window was closed... if closed by X sometimes am not told
-        # try:
-        #     state = self.window.TKroot.state()
-        # except:
-        #     self.Close()
+            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
+        if self.do_not_reroute_stdout:
+            outstring = ''
+            for arg in args:
+                outstring += str(arg) + sepchar
+            outstring += endchar
+            self.output_element.Update(outstring, append=True)
+        else:
+            print(*args, sep=sepchar, end=endchar)
+
 
     def Close(self):
-        if self.window is None:
-            return
         self.window.Close()
         self.window.__del__()
         self.window = None
+
 
 def PrintClose():
     EasyPrintClose()
 
 
-def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
+def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
 
 
     if DebugWin.debug_window is None:
-        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
+                                    no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, do_not_reroute_stdout=do_not_reroute_stdout)
     DebugWin.debug_window.Print(*args, end=end, sep=sep)
+#
+#
+#
+#
+#
+# class DebugWin():
+#     debug_window = None
+#
+#     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
+#         # Show a form that's a running counter
+#         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
+#         self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location, font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+#         self.output_element = Output(size=win_size)
+#         if no_button:
+#             self.layout =   [[self.output_element]]
+#         else:
+#             self.layout =   [
+#                             [self.output_element],
+#                             [DummyButton('Quit')]
+#                             ]
+#         self.window.AddRows(self.layout)
+#         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
+#         return
+#
+#     def Print(self, *args, end=None, sep=None):
+#         sepchar = sep if sep is not None else ' '
+#         endchar = end if end is not None else '\n'
+#
+#         if self.window is None:         # if window was destroyed already, just print
+#             self.__init__()
+#             print(*args, sep=sepchar, end=endchar)
+#             return
+#
+#         event, values = self.window.Read(timeout=0)
+#         if event == 'Quit' or event is None:
+#             self.Close()
+#         print(*args, sep=sepchar, end=endchar)
+#         # Add extra check to see if the window was closed... if closed by X sometimes am not told
+#         # try:
+#         #     state = self.window.TKroot.state()
+#         # except:
+#         #     self.Close()
+#
+#     def Close(self):
+#         if self.window is None:
+#             return
+#         self.window.Close()
+#         self.window.__del__()
+#         self.window = None
+#
+# def PrintClose():
+#     EasyPrintClose()
+#
+#
+# def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
+#
+#
+#     if DebugWin.debug_window is None:
+#         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+#     DebugWin.debug_window.Print(*args, end=end, sep=sep)
 
 
 Print = EasyPrint
