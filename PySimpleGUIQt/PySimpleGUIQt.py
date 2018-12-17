@@ -4392,7 +4392,7 @@ def style_entry(**kwargs):
         # generated_style += "}"
     return generated_style
 
-def generate_style(qt_element_type, entries):
+def style_generate(qt_element_type, entries):
     generated_style = qt_element_type + " {\n"
     generated_style += entries
     generated_style += "}"
@@ -4466,12 +4466,13 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 column_widget = QGroupBox()
                 element.QT_QGroupBox = column_widget
                 # column_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
-                style = 'QGroupBox {'
-                style += create_style_from_font(font)
+                style = create_style_from_font(font)
                 if element.BackgroundColor is not None:
+                    style = style_entry(background_color=element.BackgroundColor)
                     style += 'background-color: %s;' % element.BackgroundColor
-                style += 'border: 0px solid gray; '
-                style += '}'
+                style += style_entry(border='0px solid gray')
+                # style += 'border: 0px solid gray; '
+                style = style_generate('QGroupBox', style)
                 column_widget.setStyleSheet(style)
 
                 column_layout = QFormLayout()
@@ -4482,7 +4483,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
 
-                column_widget.setStyleSheet(style)
+                # column_widget.setStyleSheet(style)
                 if not element.Visible:
                     column_widget.setVisible(False)
 
@@ -4615,7 +4616,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += style_entry(background_color=element.BackgroundColor)
                 style += style_entry(margin ='{}px {}px {}px {}px;'.format(*full_element_pad),
                                      border='{}px solid gray; '.format(border_depth))
-                style = generate_style('QLineEdit', style)
+                style = style_generate('QLineEdit', style)
                 element.QT_QLineEdit.setStyleSheet(style)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeText is False or element.Size[0] is not None:
@@ -5795,7 +5796,7 @@ class DebugWin():
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
+                 grab_anywhere=False, keep_on_top=False, title=None, do_not_reroute_stdout=False):
         # Show a form that's a running counter
         self.size = size
         self.location = location
@@ -5807,7 +5808,7 @@ class DebugWin():
         self.do_not_reroute_stdout = do_not_reroute_stdout
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
+        self.window = Window(title=title or 'Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
         self.output_element = MultilineOutput(size=win_size, key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
 
@@ -5854,7 +5855,7 @@ def PrintClose():
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
 
 
     if DebugWin.debug_window is None:
@@ -5876,11 +5877,11 @@ def EasyPrintClose():
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None), location=(None, None)):
+                  size=(None, None), location=(None, None), title=None, non_blocking=False):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
-    form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
+    window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
                   auto_close_duration=auto_close_duration, location=location)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
@@ -5900,18 +5901,20 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
     if height:
         height_computed = height
     computed_size = (max_line_width*10, height_computed*16)
-    form.AddRow(MultilineOutput(complete_output, size=computed_size))
+    window.AddRow(MultilineOutput(complete_output, size=computed_size))
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
+    button = DummyButton if non_blocking else Button
     if yes_no:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
-        button, values = form.Read()
-        form.Close()
-        return button
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('Yes'), button('No'))
     else:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Button('OK', size=(5, 1), button_color=button_color))
-    button, values = form.Read()
-    form.Close()
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('OK', size=(5, 1), button_color=button_color))
+
+    if non_blocking:
+        button, values = window.Read(timeout=0)
+        Window.active_popups[window] = title
+    else:
+        button, values = window.Read()
     return button
 
 
