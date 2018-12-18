@@ -103,7 +103,7 @@ class GameOfLife:
             [self.graph],
             [sg.Button('Go!', key='_DONE_'),
              sg.Text('  Delay (ms)') , sg.Slider([0,400], orientation='h', key='_SLIDER_', size=(15,15)),
-             sg.Text('  Num Generations'), sg.Slider([0, 1000],default_value=200, orientation='h',size=(15,15), key='_SLIDER2_')]
+             sg.Text('  Num Generations'), sg.Slider([0, 3000],default_value=400, orientation='h',size=(15,15), key='_SLIDER2_')]
         ]
 
         self.window = sg.Window('Window Title', ).Layout(layout).Finalize()
