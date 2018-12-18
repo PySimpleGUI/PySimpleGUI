@@ -97,14 +97,13 @@ class GameOfLife:
             self.t += 1
 
     def init_graphics(self):
-        self.graph = sg.Graph((600, 600), (0, 0), (450, 450), key='_GRAPH_', change_submits=True, drag_submits=False,
-                              background_color='lightblue')
+        self.graph = sg.Graph((600, 600), (0, 0), (450, 450), key='_GRAPH_', change_submits=True, drag_submits=False, background_color='lightblue')
         layout = [
             [sg.Text('Game of Life    ', font='ANY 15'), sg.Text('', key='_OUTPUT_', size=(30,1), font='ANY 15')],
             [self.graph],
             [sg.Button('Go!', key='_DONE_'),
-             sg.Text('    Delay (ms)') , sg.Slider([0,400], orientation='h', key='_SLIDER_'),
-             sg.Text('    Number Generations'), sg.Slider([0, 1000],default_value=200, orientation='h', key='_SLIDER2_')]
+             sg.Text('  Delay (ms)') , sg.Slider([0,400], orientation='h', key='_SLIDER_', size=(15,15)),
+             sg.Text('  Num Generations'), sg.Slider([0, 1000],default_value=200, orientation='h',size=(15,15), key='_SLIDER2_')]
         ]
 
         self.window = sg.Window('Window Title', ).Layout(layout).Finalize()
