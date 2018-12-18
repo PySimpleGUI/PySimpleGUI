@@ -241,6 +241,7 @@ ELEM_TYPE_ERROR = 'error'
 ELEM_TYPE_SEPARATOR = 'separator'
 ELEM_TYPE_STATUSBAR = 'statusbar'
 ELEM_TYPE_PANE = 'pane'
+# STRETCH == ERROR ELEMENT as a filler
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -1882,6 +1883,13 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self._TKCanvas2.delete('all')
+
+
+    def DeleteFigure(self, id):
+        try:
+            self._TKCanvas2.delete(id)
+        except:
+            print('DeleteFigure - bad ID {}'.format(id))
 
     def Update(self, background_color, visible=None):
         if self._TKCanvas2 is None:
@@ -4282,7 +4290,7 @@ if sys.version_info[0] >= 3:
                 i += 1
 else:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        if isinstance(sub_menu_info, types.StringType):
+        if isinstance(sub_menu_info, (str,unicode)):
             if not is_sub_menu and not skip:
                 # print(f'Adding command {sub_menu_info}')
                 pos = sub_menu_info.find('&')
@@ -4309,7 +4317,7 @@ else:
             while i < (len(sub_menu_info)):
                 item = sub_menu_info[i]
                 if i != len(sub_menu_info) - 1:
-                    if not isinstance(sub_menu_info[i + 1], types.StringType):
+                    if not isinstance(sub_menu_info[i + 1], (str, unicode)):
                         new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
                         pos = sub_menu_info[i].find('&')
                         if pos != -1:
@@ -5771,11 +5779,11 @@ def EasyPrintClose():
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None), location=(None, None)):
+                  size=(None, None), location=(None, None), title=None, non_blocking=False):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
-    form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
+    window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
                   auto_close_duration=auto_close_duration, location=location)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
@@ -5794,18 +5802,19 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
     height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
     if height:
         height_computed = height
-    form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
+    window.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
+    button = DummyButton if non_blocking else Button
     if yes_no:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
-        button, values = form.Read()
-        form.Close()
-        return button
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('Yes'), button('No'))
     else:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Button('OK', size=(5, 1), button_color=button_color))
-    button, values = form.Read()
-    form.Close()
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('OK', size=(5, 1), button_color=button_color))
+
+    if non_blocking:
+        button, values = window.Read(timeout=0)
+    else:
+        button, values = window.Read()
     return button
 
 
