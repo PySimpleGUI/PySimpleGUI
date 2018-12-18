@@ -31,11 +31,11 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.19.2-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.20.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.18.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.20.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.19.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -195,6 +195,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Listbox      
         Option Menu      
         Slider      
+        Dial
         Graph      
         Frame with title      
         Icons      
@@ -205,6 +206,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Trees    
         Progress Bar            Async/Non-Blocking Windows      
         Tabbed windows      
+        Paned windows
         Persistent Windows      
         Redirect Python Output/Errors to scrolling window      
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)      
@@ -589,8 +591,7 @@ Note that you should not call Popup yourself with different button_types.  Rely 
 There is a scrolled version of Popups should you have a lot of information to display.      
 
 ```python
-PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,  
-                  size=(None, None), location=(None, None))
+PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None), title=None, non_blocking=False)
 ```      
 Typical usage:
 
@@ -607,7 +608,9 @@ This call will create a scrolled box 80 characters wide and a height dependent u
       
 sg.PopupScrolled(my_text, size=(80, None))      
       
-Note that the default max number of lines before scrolling happens is set to 50. At 50 lines the scrolling will begin.      
+Note that the default max number of lines before scrolling happens is set to 50. At 50 lines the scrolling will begin.     
+
+If `non_blocking` parameter is set, then  the call will not blocking waiting for the user to close the window.  Execution will immediately return to the user.  Handy when you want to dump out debug info without disrupting the program flow.
       
 ### PopupNoWait      
       
@@ -766,6 +769,7 @@ Another call in the 'Easy' families of APIs is `EasyPrint`.  It will output to a
     print = sg.EasyPrint      
       
 at the top of your code.      
+
 There are a number of names for the same EasyPrint function.  `Print` is one of the better ones to use as it's easy to remember.   It is simply `print` with a capital P.      
       
     import PySimpleGUI as sg      
@@ -787,8 +791,9 @@ Just like the standard print call, `EasyPrint` supports the `sep` and `end` keyw
        
 You can change the size of the debug window using the `SetOptions` call with the `debug_win_size` parameter.      
     
-*A word of caution.*  There are known problems when multiple PySimpleGUI windows are opened.  If you open one of these debug windows, if you close it using the Quit button, it can have the side-effect of causing other visible windows to also close.  It's a known architectural issue.    
+There is an option to tell PySimpleGUI to reroute all of your stdout and stderr output to this window.  To do so call EasyPrint with the parameter `do_not_reroute_stdout` set to True.  After calling it once with this parameter set to True, all future calls to a normal`print` will go to the debug window.
     
+If you close the debug window it will re-open the next time you Print to it.
       
 ---      
 # Custom window API Calls  (Your First window)      
@@ -1368,7 +1373,8 @@ Window( title,
 		grab_anywhere=False,
 		keep_on_top=False,
 		resizable=False,
-		disable_close=False):     
+		disable_close=False,
+		disable_minimize=False):     
 ```      
           
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `window` values.      
@@ -1398,6 +1404,7 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        keep_on_top - if True then window will always stop on top of other windows on the screen.  Great for floating toolbars.     
        resizable - if True - user can manually changge the wize of the window.  Defaults to False
        disable_close - if True user will not be able to close using the X. 
+       disable_minimize - if True user will not be able to minimize the window
       
       
 ### Window Location      
@@ -2893,12 +2900,13 @@ DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color
 DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None)    
 DrawText(self, text, location, color='black', font=None, angle=0)    
 Erase(background_color)    
+DeleteFigure(figure_id)
 Update()    
 Move(self, x_direction, y_direction)    
 MoveFigure(self, figure, x_direction, y_direction)    
 TKCanvas    
 ```    
-All of the Drawing methods return a "figure" that can be used move the figure    
+All of the Drawing methods return a "***figure***" that can be used move and delete the figure    
     
 DrawLine - draws a line    
 DrawPoint - draws a single point    
@@ -2911,6 +2919,7 @@ Erase - erases entire graph
 Update - changes background color    
 Move - moves everything an x,y direction    
 MoveFigure - moves an individual figure    
+DeleteFigure - delete an individual figure
     
       
 ## Table Element      
@@ -3123,7 +3132,28 @@ Update(disabled = None)
 ```    
 WARNING - This Update method does not yet work!    
     
-    
+## Pane Element
+
+New in version 3.20 is the Pane Element, a super-cool tkinter feature.  You won't find this one in PySimpleGUIQt, only PySimpleGUI.   It's difficult to describe one of these things.  Think of them as "Tabs without labels" that you can slide.
+
+![pane3](https://user-images.githubusercontent.com/13696193/50035040-fcd50e80-ffcd-11e8-939c-df8ab8d64712.gif)
+
+```python
+  
+Pane(pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
+```    
+
+***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
+
+Calls can get a little hairy looking if you try to declare everything in-line as you can see in this example.
+
+```python
+sg.Pane([col5, sg.Column([[sg.Pane([col1, col2, col4], handle_size=15, orientation='v',  background_color=None, show_handle=True, visible=True, key='_PANE_', border_width=0,  relief=sg.RELIEF_GROOVE),]]),col3 ], orientation='h', background_color=None, size=(160,160), relief=sg.RELIEF_RAISED, border_width=0)
+```
+
+Combing these with *visibility* make for an interesting interface with entire panes being hidden from view until neded by the user.  It's one way of producing "dynamic" windows.
+
+
 ## Colors    
 Starting in version 2.5 you can change the background colors for the window and the Elements.      
       
@@ -4256,6 +4286,16 @@ Emergency patch release... going out same day as previous release
 * Buttons - remove highlight when border depth == 0
 * OneLineProgressMeter - better layout implementation
 
+## 3.20.0 & 1.20.0 18-Dec-2018
+
+* New Pane Element
+* Graphh.DeleteFigure method
+* disable_minimize - New parameter for Window
+* Fix for 2.7 menus
+* Debug Window no longer re-routes stdout by default
+* Can re-route by specifying in Print / EasyPrint call
+* New non-blocking for PopupScrolled
+* Can set title for PopupScrolled window
 
 
 ### Upcoming      
