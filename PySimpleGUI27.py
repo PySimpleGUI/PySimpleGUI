@@ -252,6 +252,8 @@ ELEM_TYPE_TREE = 'tree'
 ELEM_TYPE_ERROR = 'error'
 ELEM_TYPE_SEPARATOR = 'separator'
 ELEM_TYPE_STATUSBAR = 'statusbar'
+ELEM_TYPE_PANE = 'pane'
+# STRETCH == ERROR ELEMENT as a filler
 
 # -------------------------  Popup Buttons Types  ------------------------- #
 POPUP_BUTTONS_YES_NO = 1
@@ -912,8 +914,7 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
-                 tooltip=None, visible=True):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
         Spinner Element
         :param values:
@@ -1372,6 +1373,8 @@ class Button(Element):
         self.TKButton = None
         self.Target = target
         self.ButtonText = button_text
+        if sys.platform == 'darwin' and button_color is not None:
+            print('Button *** WARNING - Button colors are not supported on the Mac ***')
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
         self.ImageData = image_data
@@ -1528,11 +1531,13 @@ class Button(Element):
 
         return
 
-    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, visible=None):
+    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, visible=None, image_subsample=None, image_size=None):
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
                 self.ButtonText = text
+            if sys.platform == 'darwin' and button_color != (None, None):
+                print('Button.Update *** WARNING - Button colors are not supported on the Mac***')
             if button_color != (None, None):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
         except:
@@ -1543,7 +1548,12 @@ class Button(Element):
             self.TKButton['state'] = 'normal'
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
-            width, height = image.width(), image.height()
+            if image_size is not None:
+                width, height = image_size
+            else:
+                width, height = image.width(), image.height()
+            if image_subsample:
+                image = image.subsample(image_subsample)
             self.TKButton.config(image=image, width=width, height=height)
             self.TKButton.image = image
         if image_filename is not None:
@@ -1877,6 +1887,13 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self._TKCanvas2.delete('all')
+
+
+    def DeleteFigure(self, id):
+        try:
+            self._TKCanvas2.delete(id)
+        except:
+            print('DeleteFigure - bad ID {}'.format(id))
 
     def Update(self, background_color, visible=None):
         if self._TKCanvas2 is None:
@@ -2407,6 +2424,7 @@ class Column(Element):
         self.ReturnValuesDictionary = {}
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
+        self.ParentPanedWindow = None
         self.Rows = []
         self.TKFrame = None
         self.TKColFrame = None
@@ -2416,7 +2434,7 @@ class Column(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key, visible=visible)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible)
         return
 
     def AddRow(self, *args):
@@ -2446,9 +2464,15 @@ class Column(Element):
 
     def Update(self, visible=None):
         if visible is False:
-            self.TKColFrame.pack_forget()
+            if self.TKColFrame:
+                self.TKColFrame.pack_forget()
+            if self.ParentPanedWindow:
+                self.ParentPanedWindow.remove(self.TKColFrame)
         elif visible is True:
-            self.TKColFrame.pack()
+            if self.TKColFrame:
+                self.TKColFrame.pack()
+            if self.ParentPanedWindow:
+                self.ParentPanedWindow.add(self.TKColFrame)
 
 
     def __del__(self):
@@ -2460,6 +2484,52 @@ class Column(Element):
         except:
             pass
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Pane                                       #
+# ---------------------------------------------------------------------- #
+class Pane(Element):
+    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
+        '''
+        Container for elements that are stacked into rows
+        :param layout:
+        :param background_color:
+        :param size:
+        :param pad:
+        :param scrollable:
+        :param vertical_scroll_only:
+        :param key:
+        '''
+        self.UseDictionary = False
+        self.ReturnValues = None
+        self.ReturnValuesList = []
+        self.ReturnValuesDictionary = {}
+        self.DictionaryKeyCounter = 0
+        self.ParentWindow = None
+        self.Rows = []
+        self.TKFrame = None
+        self.PanedWindow = None
+        self.Orientation = orientation
+        self.PaneList = pane_list
+        self.ShowHandle = show_handle
+        self.Relief = relief
+        self.HandleSize =  handle_size or 8
+        self.BorderDepth = border_width
+        bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+
+        self.Rows = [pane_list]
+
+        super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible)
+        return
+
+
+    def Update(self, visible=None):
+        if visible is False:
+            self.PanedWindow.pack_forget()
+        elif visible is True:
+            self.PanedWindow.pack()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -3027,7 +3097,7 @@ class Window(object):
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False):
         '''
         Main window object where Elements will be laid out in rows
         :param title:
@@ -3103,6 +3173,7 @@ class Window(object):
         self.TimeoutKey = '_timeout_'
         self.TimerCancelled = False
         self.DisableClose = disable_close
+        self.DisableMinimize = disable_minimize
         self._Hidden = False
         self._Size = size
         self.XFound = False
@@ -3918,6 +3989,18 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.ReturnValues[0] is not None:  # if a button was clicked
                     button_pressed_text = element.ReturnValues[0]
 
+            if element.Type == ELEM_TYPE_PANE:
+                element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
+                element.ReturnValuesList = []
+                element.ReturnValuesDictionary = {}
+                BuildResultsForSubform(element, initialize_only, top_level_form)
+                for item in element.ReturnValuesList:
+                    AddToReturnList(top_level_form, item)
+                if element.UseDictionary:
+                    top_level_form.UseDictionary = True
+                if element.ReturnValues[0] is not None:  # if a button was clicked
+                    button_pressed_text = element.ReturnValues[0]
+
             if element.Type == ELEM_TYPE_TAB_GROUP:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
@@ -4123,6 +4206,10 @@ def _FindElementFromKeyInSubForm(form, key):
                 matching_elem = _FindElementFromKeyInSubForm(element, key)
                 if matching_elem is not None:
                     return matching_elem
+            if element.Type == ELEM_TYPE_PANE:
+                matching_elem = _FindElementFromKeyInSubForm(element, key)
+                if matching_elem is not None:
+                    return matching_elem
             if element.Type == ELEM_TYPE_TAB:
                 matching_elem = _FindElementFromKeyInSubForm(element, key)
                 if matching_elem is not None:
@@ -4207,7 +4294,7 @@ if sys.version_info[0] >= 3:
                 i += 1
 else:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        if isinstance(sub_menu_info, types.StringType):
+        if isinstance(sub_menu_info, (str,unicode)):
             if not is_sub_menu and not skip:
                 # print(f'Adding command {sub_menu_info}')
                 pos = sub_menu_info.find('&')
@@ -4234,7 +4321,7 @@ else:
             while i < (len(sub_menu_info)):
                 item = sub_menu_info[i]
                 if i != len(sub_menu_info) - 1:
-                    if not isinstance(sub_menu_info[i + 1], types.StringType):
+                    if not isinstance(sub_menu_info[i + 1], (str, unicode)):
                         new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
                         pos = sub_menu_info[i].find('&')
                         if pos != -1:
@@ -4306,31 +4393,64 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 if element.Scrollable:
-                    col_frame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
-                    PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
-                    col_frame.TKFrame.update()
+                    element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
+                    PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
+                    element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
-                        col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),
-                                                height=col_frame.TKFrame.winfo_reqheight() / 2)
+                        element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth(),
+                                                height=element.TKColFrame.TKFrame.winfo_reqheight() / 2)
                     else:
-                        col_frame.canvas.config(width=element.Size[0], height=element.Size[1])
+                        element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
 
                     if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
-                        col_frame.canvas.config(background=element.BackgroundColor)
-                        col_frame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
+                        element.TKColFrame.canvas.config(background=element.BackgroundColor)
+                        element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                  highlightthickness=0)
-                        col_frame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
+                        element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                 else:
-                    col_frame = tk.Frame(tk_row_frame)
-                    PackFormIntoFrame(element, col_frame, toplevel_form)
-                col_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                    element.TKColFrame = tk.Frame(tk_row_frame)
+                    PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
+                element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
-                    col_frame.pack_forget()
+                    element.TKColFrame.pack_forget()
 
-                element.TKColFrame = col_frame
+                element.TKColFrame = element.TKColFrame
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
+                    element.TKColFrame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
                                         highlightcolor=element.BackgroundColor)
+
+            # -------------------------  Pane element  ------------------------- #
+            if element_type == ELEM_TYPE_PANE:
+                bd = element.BorderDepth if element.BorderDepth is not None else border_depth
+                element.PanedWindow = tk.PanedWindow(tk_row_frame,
+                                                     orient=tk.VERTICAL if element.Orientation.startswith('v') else tk.HORIZONTAL,
+                                                     borderwidth=bd,
+                                                     bd=bd,
+                                                     )
+                if element.Relief is not None:
+                    element.PanedWindow.configure(relief=element.Relief)
+                element.PanedWindow.configure(handlesize=element.HandleSize)
+                if element.ShowHandle:
+                    element.PanedWindow.config(showhandle=True)
+                if element.Size != (None, None):
+                    element.PanedWindow.config(width=element.Size[0], height=element.Size[1])
+                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.PanedWindow.configure(background=element.BackgroundColor)
+                for pane in element.PaneList:
+                    pane.TKColFrame = tk.Frame(element.PanedWindow)
+                    pane.ParentPanedWindow = element.PanedWindow
+                    PackFormIntoFrame(pane, pane.TKColFrame, toplevel_form)
+                    if pane.Visible:
+                        element.PanedWindow.add(pane.TKColFrame)
+                    if pane.BackgroundColor != COLOR_SYSTEM_DEFAULT and pane.BackgroundColor is not None:
+                        pane.TKColFrame.configure(background=pane.BackgroundColor, highlightbackground=pane.BackgroundColor,
+                                        highlightcolor=pane.BackgroundColor)
+
+                element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                if element.Visible is False:
+                    element.PanedWindow.pack_forget()
+
+
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
@@ -4419,7 +4539,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-
+                if border_depth == 0:
+                    tkbutton.config(relief=tk.FLAT)
+                    tkbutton.config(highlightthickness=0)
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:  # if button has an image on it
@@ -4502,11 +4624,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     combostyle = tkinter.ttk.Style()
+                    #
+                    # style.map("C.TButton",
+                    #           foreground=[('pressed', 'red'), ('active', 'blue')],
+                    #           background=[('pressed', '!disabled', 'black'), ('active', 'white')]
+                    #           )
+
+                    # combostyle.map('PSG.TCombobox', background=[('selected', 'green')])
+                    # combostyle.configure('PSG.TCombobox.Listbox',fieldbackground='green')
+                    # combostyle.configure('PSG.TCombobox', foreground=text_color)
+                    # combostyle.configure('PSG.TCombobox', selectbackground='gray70')
+                    # combostyle.map('PSG.TCombobox', background=[('readonly','red')])
+                    # combostyle.configure('PSG.TCombobox.TEntry', background='red')
+                    # combostyle.configure('PSG.TCombobox', selectforeground=element.BackgroundColor)
+                    # combostyle.configure('PSG.TCombobox', fieldbackground='blue')
                     try:
                         combostyle.theme_create('combostyle',
                                                 settings={'TCombobox':
                                                               {'configure':
-                                                                   {'selectbackground': element.BackgroundColor,
+                                                                   {'selectbackground': 'gray50',
                                                                     'fieldbackground': element.BackgroundColor,
                                                                     'foreground': text_color,
                                                                     'background': element.BackgroundColor}
@@ -4516,7 +4652,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             combostyle.theme_settings('combostyle',
                                                       settings={'TCombobox':
                                                                     {'configure':
-                                                                         {'selectbackground': element.BackgroundColor,
+                                                                         {'selectbackground': 'gray50',
                                                                           'fieldbackground': element.BackgroundColor,
                                                                           'foreground': text_color,
                                                                           'background': element.BackgroundColor}
@@ -4525,6 +4661,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             pass
                     # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
                     combostyle.theme_use('combostyle')
+
                 element.TKCombo = tkinter.ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
@@ -5286,6 +5423,9 @@ def StartupTK(my_flex_form):
     if not my_flex_form.Resizable:
         root.resizable(False, False)
 
+    if my_flex_form.DisableMinimize:
+        root.attributes("-toolwindow", 1)
+
     if my_flex_form.KeepOnTop:
         root.wm_attributes("-topmost", 1)
 
@@ -5410,20 +5550,18 @@ class QuickMeter(object):
         layout = []
         if self.orientation.lower().startswith('h'):
             col = []
-            for arg in args:
-                col.append([T(arg)])
-            col.append([T('', size=(30,10), key='_STATS_')])
-            col.append([ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)])
-            col.append([Cancel(button_color=self.button_color), Stretch()])
-            layout += [Column(col)]
+            col += [[T(arg)] for arg in args]
+            col += [[T('', size=(30,10), key='_STATS_')],
+                    [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)],
+                    [Cancel(button_color=self.button_color), Stretch()]]
+            layout = [Column(col)]
         else:
             col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
             col2 = []
-            for arg in args:
-                col2.append([T(arg)])
-            col2.append([T('', size=(30,10), key='_STATS_')])
-            col2.append([Cancel(button_color=self.button_color), Stretch()])
-            layout += [Column(col), Column(col2)]
+            col2 += [[T(arg)] for arg in args]
+            col2 += [[T('', size=(30,10), key='_STATS_')],
+                     [Cancel(button_color=self.button_color), Stretch()]]
+            layout = [Column(col), Column(col2)]
         self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width)
         self.window.Layout([layout]).Finalize()
 
@@ -5524,24 +5662,33 @@ def GetComplimentaryHex(color):
 
 # ========================  EasyPrint           =====#
 # ===================================================#
-_easy_print_data = None  # global variable... I'm cheating
-
-
 class DebugWin(object):
     debug_window = None
 
-    def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
+    def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
+                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
         # Show a form that's a running counter
+        self.size = size
+        self.location = location
+        self.font = font
+        self.no_titlebar = no_titlebar
+        self.no_button = no_button
+        self.grab_anywhere = grab_anywhere
+        self.keep_on_top = keep_on_top
+        self.do_not_reroute_stdout = do_not_reroute_stdout
+
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location, font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-        self.output_element = Output(size=win_size)
+        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
+                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+        self.output_element = Multiline(size=win_size, autoscroll=True, key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
+
         if no_button:
-            self.layout =   [[self.output_element]]
+            self.layout = [[self.output_element]]
         else:
-            self.layout =   [
-                            [self.output_element],
-                            [DummyButton('Quit')]
-                            ]
+            self.layout = [
+                [self.output_element],
+                [DummyButton('Quit'), Stretch()]
+            ]
         self.window.AddRows(self.layout)
         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
         return
@@ -5554,27 +5701,27 @@ class DebugWin(object):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
-        if self.window is None:         # if window was destroyed already, just print
-            self.__init__()
-            print(*args, sep=sepchar, end=endchar)
-            return
-
+        if self.window is None:  # if window was destroyed alread re-open it
+            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
-        print(*args, sep=sepchar, end=endchar)
-        # Add extra check to see if the window was closed... if closed by X sometimes am not told
-        # try:
-        #     state = self.window.TKroot.state()
-        # except:
-        #     self.Close()
+            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
+        if self.do_not_reroute_stdout:
+            outstring = ''
+            for arg in args:
+                outstring += str(arg) + sepchar
+            outstring += endchar
+            self.output_element.Update(outstring, append=True)
+        else:
+            print(*args, sep=sepchar, end=endchar)
+
 
     def Close(self):
-        if self.window is None:
-            return
         self.window.Close()
         self.window.__del__()
         self.window = None
+
 
 def PrintClose():
     EasyPrintClose()
@@ -5583,6 +5730,8 @@ def PrintClose():
 def EasyPrint(*args, **_3to2kwargs):
 
 
+    if 'do_not_reroute_stdout' in _3to2kwargs: do_not_reroute_stdout = _3to2kwargs['do_not_reroute_stdout']; del _3to2kwargs['do_not_reroute_stdout']
+    else: do_not_reroute_stdout = False
     if 'keep_on_top' in _3to2kwargs: keep_on_top = _3to2kwargs['keep_on_top']; del _3to2kwargs['keep_on_top']
     else: keep_on_top = False
     if 'grab_anywhere' in _3to2kwargs: grab_anywhere = _3to2kwargs['grab_anywhere']; del _3to2kwargs['grab_anywhere']
@@ -5602,8 +5751,69 @@ def EasyPrint(*args, **_3to2kwargs):
     if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
     else: size = (None, None)
     if DebugWin.debug_window is None:
-        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
+                                    no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, do_not_reroute_stdout=do_not_reroute_stdout)
     DebugWin.debug_window.Print(*args, end=end, sep=sep)
+#
+#
+#
+#
+#
+# class DebugWin():
+#     debug_window = None
+#
+#     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
+#         # Show a form that's a running counter
+#         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
+#         self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location, font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+#         self.output_element = Output(size=win_size)
+#         if no_button:
+#             self.layout =   [[self.output_element]]
+#         else:
+#             self.layout =   [
+#                             [self.output_element],
+#                             [DummyButton('Quit')]
+#                             ]
+#         self.window.AddRows(self.layout)
+#         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
+#         return
+#
+#     def Print(self, *args, end=None, sep=None):
+#         sepchar = sep if sep is not None else ' '
+#         endchar = end if end is not None else '\n'
+#
+#         if self.window is None:         # if window was destroyed already, just print
+#             self.__init__()
+#             print(*args, sep=sepchar, end=endchar)
+#             return
+#
+#         event, values = self.window.Read(timeout=0)
+#         if event == 'Quit' or event is None:
+#             self.Close()
+#         print(*args, sep=sepchar, end=endchar)
+#         # Add extra check to see if the window was closed... if closed by X sometimes am not told
+#         # try:
+#         #     state = self.window.TKroot.state()
+#         # except:
+#         #     self.Close()
+#
+#     def Close(self):
+#         if self.window is None:
+#             return
+#         self.window.Close()
+#         self.window.__del__()
+#         self.window = None
+#
+# def PrintClose():
+#     EasyPrintClose()
+#
+#
+# def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
+#
+#
+#     if DebugWin.debug_window is None:
+#         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+#     DebugWin.debug_window.Print(*args, end=end, sep=sep)
 
 
 Print = EasyPrint
@@ -5618,6 +5828,10 @@ def EasyPrintClose():
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, **_3to2kwargs):
+    if 'non_blocking' in _3to2kwargs: non_blocking = _3to2kwargs['non_blocking']; del _3to2kwargs['non_blocking']
+    else: non_blocking = False
+    if 'title' in _3to2kwargs: title = _3to2kwargs['title']; del _3to2kwargs['title']
+    else: title = None
     if 'location' in _3to2kwargs: location = _3to2kwargs['location']; del _3to2kwargs['location']
     else: location = (None, None)
     if 'size' in _3to2kwargs: size = _3to2kwargs['size']; del _3to2kwargs['size']
@@ -5633,7 +5847,7 @@ def PopupScrolled(*args, **_3to2kwargs):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
-    form = Window(args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
+    window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
                   auto_close_duration=auto_close_duration, location=location)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
@@ -5652,18 +5866,19 @@ def PopupScrolled(*args, **_3to2kwargs):
     height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
     if height:
         height_computed = height
-    form.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
+    window.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
+    button = DummyButton if non_blocking else Button
     if yes_no:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Yes(), No())
-        button, values = form.Read()
-        form.Close()
-        return button
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('Yes'), button('No'))
     else:
-        form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Button('OK', size=(5, 1), button_color=button_color))
-    button, values = form.Read()
-    form.Close()
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('OK', size=(5, 1), button_color=button_color))
+
+    if non_blocking:
+        button, values = window.Read(timeout=0)
+    else:
+        button, values = window.Read()
     return button
 
 
