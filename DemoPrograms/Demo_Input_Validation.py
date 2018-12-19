@@ -20,8 +20,6 @@ while True:             # Event Loop
     event, values = window.Read()
     if event in  (None, 'Exit'):
         break
-    if not len(values['_INPUT_']):      # if field is empty ignore
-        continue
-    if values['_INPUT_'][-1] not in ('0123456789'):                 # if last char entered not a digit
-        window.Element('_INPUT_').Update(values['_INPUT_'][:-1])    # delete last char from input
+    if len(values['_INPUT_']) and values['_INPUT_'][-1] not in ('0123456789'):  # if last char entered not a digit
+        window.Element('_INPUT_').Update(values['_INPUT_'][:-1])                # delete last char from input
 window.Close()
