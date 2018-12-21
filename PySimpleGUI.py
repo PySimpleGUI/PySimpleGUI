@@ -241,6 +241,8 @@ ELEM_TYPE_ERROR = 'error'
 ELEM_TYPE_SEPARATOR = 'separator'
 ELEM_TYPE_STATUSBAR = 'statusbar'
 ELEM_TYPE_PANE = 'pane'
+ELEM_TYPE_BUTTONMENU = 'buttonmenu'
+
 # STRETCH == ERROR ELEMENT as a filler
 
 # -------------------------  Popup Buttons Types  ------------------------- #
@@ -1572,6 +1574,113 @@ class Button(Element):
         except:
             pass
         super().__del__()
+
+
+
+# ---------------------------------------------------------------------- #
+#                           ButtonMenu Class                             #
+# ---------------------------------------------------------------------- #
+class ButtonMenu(Element):
+    def __init__(self, button_text,menu_def, tooltip=None,disabled=False,
+                 image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,border_width=None,
+                 size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None, tearoff=False, visible=True):
+        '''
+        Button Element
+        :param button_text:
+        :param button_type:
+        :param target:
+        :param tooltip:
+        :param file_types:
+        :param initial_folder:
+        :param disabled:
+        :param image_filename:
+        :param image_size:
+        :param image_subsample:
+        :param border_width:
+        :param size:
+        :param auto_size_button:
+        :param button_color:
+        :param default_value:
+        :param font:
+        :param bind_return_key:
+        :param focus:
+        :param pad:
+        :param key:
+        '''
+        self.MenuDefinition = menu_def
+        self.AutoSizeButton = auto_size_button
+        self.ButtonText = button_text
+        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.TextColor = self.ButtonColor[0]
+        self.BackgroundColor = self.ButtonColor[1]
+        self.BorderWidth = border_width
+        self.ImageFilename = image_filename
+        self.ImageData = image_data
+        self.ImageSize = image_size
+        self.ImageSubsample = image_subsample
+        self.Disabled = disabled
+        self.IsButtonMenu = True
+        self.MenuItemChosen = None
+        self.Tearoff = tearoff
+        self.TKButtonMenu = None
+        # self.temp_size = size if size != (NONE, NONE) else
+
+        super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
+        return
+
+
+    def MenuItemChosenCallback(self, item_chosen):
+        # print('IN MENU ITEM CALLBACK', item_chosen)
+        self.MenuItemChosen = item_chosen
+        self.ParentForm.LastButtonClicked = item_chosen
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
+
+    def Update(self, menu_definition, visible=None):
+        self.MenuDefinition = menu_definition
+        if menu_definition is not None:
+            self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
+            AddMenuItem(self.TKMenu, menu_definition[1], self)
+        # for menu_entry in menu_definition:
+        #     # print(f'Adding a Menubar ENTRY {menu_entry}')
+        #     baritem = tk.Menu(menubar, tearoff=self.Tearoff)
+        #     pos = menu_entry[0].find('&')
+        #     # print(pos)
+        #     if pos != -1:
+        #         if pos == 0 or menu_entry[0][pos - 1] != "\\":
+        #             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
+        #     if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
+        #         menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem, underline=pos)
+        #         menubar.entryconfig(menu_entry[0][len(MENU_DISABLED_CHARACTER):], state='disabled')
+        #     else:
+        #         menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
+        #
+        #     if len(menu_entry) > 1:
+        #         AddMenuItem(baritem, menu_entry[1], self)
+        self.TKButtonMenu.configure(menu=self.TKMenu)
+
+    def UpdateQt(self, menu_definition=None, text=None, button_color=(None, None), font=None, visible=None):
+        if menu_definition is not None:
+            menu_def = menu_definition
+            qmenu = QMenu(self.QT_QPushButton)
+            qmenu.setTitle(menu_def[0])
+            AddMenuItem(qmenu, menu_def[1], self)
+            self.QT_QPushButton.setMenu(qmenu)
+        super().Update(self.QT_QPushButton, background_color=button_color[1], text_color=button_color[0], font=font, visible=visible)
+
+
+
+    def __del__(self):
+        try:
+            self.TKButton.__del__()
+        except:
+            pass
+        super().__del__()
+
+
+
 
 
 # ---------------------------------------------------------------------- #
@@ -3070,6 +3179,10 @@ class ErrorElement(Element):
     def __del__(self):
         super().__del__()
 
+# ---------------------------------------------------------------------- #
+#                           Stretch Element                              #
+# ---------------------------------------------------------------------- #
+# This is for source code compatibility with tkinter version. No tkinter equivalent
 Stretch = ErrorElement
 
 # ------------------------------------------------------------------------- #
@@ -4089,6 +4202,11 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
+                elif element.Type == ELEM_TYPE_BUTTONMENU:
+                    if element.MenuItemChosen is not None:
+                        button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
+                    value = element.MenuItemChosen
+                    element.MenuItemChosen = None
             else:
                 value = None
 
@@ -4236,6 +4354,7 @@ def _FindElementWithFocusInSubForm(form):
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+        return_val = None
         if type(sub_menu_info) is str:
             if not is_sub_menu and not skip:
                 # print(f'Adding command {sub_menu_info}')
@@ -4253,11 +4372,11 @@ if sys.version_info[0] >= 3:
 
                     if item_without_key[0] == MENU_DISABLED_CHARACTER:
                         top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
                         top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                     else:
                         top_menu.add_command(label=item_without_key, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                                         command=lambda: element.MenuItemChosenCallback(sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
@@ -4265,6 +4384,7 @@ if sys.version_info[0] >= 3:
                 if i != len(sub_menu_info) - 1:
                     if type(sub_menu_info[i + 1]) == list:
                         new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
+                        return_val = new_menu
                         pos = sub_menu_info[i].find('&')
                         if pos != -1:
                             if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
@@ -4280,6 +4400,7 @@ if sys.version_info[0] >= 3:
                 else:
                     AddMenuItem(top_menu, item, element)
                 i += 1
+        return return_val
 else:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
         if isinstance(sub_menu_info, (str,unicode)):
@@ -4299,11 +4420,11 @@ else:
 
                     if item_without_key[0] == MENU_DISABLED_CHARACTER:
                         top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
                         top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                     else:
                         top_menu.add_command(label=item_without_key, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                                         command=lambda: element.MenuItemChosenCallback(sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
@@ -4372,9 +4493,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elementpad = element.Pad if element.Pad is not None else toplevel_form.ElementPadding
             # Determine Element size
             element_size = element.Size
-            if (element_size == (None, None) and element_type != ELEM_TYPE_BUTTON):  # user did not specify a size
+            if (element_size == (None, None) and element_type not in (ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):  # user did not specify a size
                 element_size = toplevel_form.DefaultElementSize
-            elif (element_size == (None, None) and element_type == ELEM_TYPE_BUTTON):
+            elif (element_size == (None, None) and element_type in (ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):
                 element_size = toplevel_form.DefaultButtonElementSize
             else:
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
@@ -4571,6 +4692,122 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+            # -------------------------  BUTTONMENU element  ------------------------- #
+            elif element_type == ELEM_TYPE_BUTTONMENU:
+                element.Location = (row_num, col_num)
+                btext = element.ButtonText
+                if element.AutoSizeButton is not None:
+                    auto_size = element.AutoSizeButton
+                else:
+                    auto_size = toplevel_form.AutoSizeButtons
+                if auto_size is False or element.Size[0] is not None:
+                    width, height = element_size
+                else:
+                    width = 0
+                    height = toplevel_form.DefaultButtonElementSize[1]
+                if element.ButtonColor != (None, None) and element.ButtonColor != DEFAULT_BUTTON_COLOR:
+                    bc = element.ButtonColor
+                elif toplevel_form.ButtonColor != (None, None) and toplevel_form.ButtonColor != DEFAULT_BUTTON_COLOR:
+                    bc = toplevel_form.ButtonColor
+                else:
+                    bc = DEFAULT_BUTTON_COLOR
+                border_depth = element.BorderWidth
+                tkbutton = tk.Menubutton(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth, font=font)
+                element.TKButtonMenu = tkbutton
+                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
+                    tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                elif bc[1] == COLOR_SYSTEM_DEFAULT:
+                    tkbutton.config(foreground=bc[0])
+                if border_depth == 0:
+                    tkbutton.config(relief=tk.FLAT)
+                    tkbutton.config(highlightthickness=0)
+                element.TKButton = tkbutton  # not used yet but save the TK button in case
+                wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
+                if element.ImageFilename:  # if button has an image on it
+                    tkbutton.config(highlightthickness=0)
+                    photo = tk.PhotoImage(file=element.ImageFilename)
+                    if element.ImageSize != (None, None):
+                        width, height = element.ImageSize
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                    else:
+                        width, height = photo.width(), photo.height()
+                    tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
+                    tkbutton.image = photo
+                if element.ImageData:  # if button has an image on it
+                    tkbutton.config(highlightthickness=0)
+                    photo = tk.PhotoImage(data=element.ImageData)
+                    if element.ImageSize != (None, None):
+                        width, height = element.ImageSize
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                    else:
+                        width, height = photo.width(), photo.height()
+                    tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
+                    tkbutton.image = photo
+                if width != 0:
+                    tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
+                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+
+                menu_def = element.MenuDefinition
+
+                top_menu = tk.Menu(tkbutton, tearoff=False)
+                AddMenuItem(top_menu, menu_def[1], element)
+
+                tkbutton.configure(menu=top_menu)
+
+                if element.Visible is False:
+                    tkbutton.pack_forget()
+                if element.Disabled == True:
+                    element.TKButton['state'] = 'disabled'
+                if element.Tooltip is not None:
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
+
+                # btext = element.ButtonText
+                # element.QT_QPushButton = QPushButton(btext)
+                # style = create_style_from_font(font)
+                # if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                #     style += 'color: %s;' % element.TextColor
+                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                #     style += 'background-color: %s;' % element.BackgroundColor
+                # if element.BorderWidth == 0:
+                #     style += 'border: none;'
+                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+                # style += 'border: {}px solid gray; '.format(border_depth)
+                # element.QT_QPushButton.setStyleSheet(style)
+                # if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
+                #     if element_size[0] is not None:
+                #         element.QT_QPushButton.setFixedWidth(element_size[0])
+                #     if element_size[1] is not None:
+                #         element.QT_QPushButton.setFixedHeight(element_size[1])
+                #
+                # if element.ImageData:
+                #     ba = QtCore.QByteArray.fromBase64(element.ImageData)
+                #     pixmap = QtGui.QPixmap()
+                #     pixmap.loadFromData(ba)
+                #     element.QT_QPushButton.setIcon(pixmap)
+                #     element.QT_QPushButton.setIconSize(pixmap.rect().size())
+                #
+                # if element.Disabled:
+                #     element.QT_QPushButton.setDisabled(True)
+                #
+                # if element.Tooltip:
+                #     element.QT_QPushButton.setToolTip(element.Tooltip)
+                # # element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
+                #
+                # menu_def = element.MenuDefinition
+                #
+                # qmenu = QMenu(element.QT_QPushButton)
+                # qmenu.setTitle(menu_def[0])
+                # AddMenuItem(qmenu, menu_def[1], element)
+                #
+                # element.QT_QPushButton.setMenu(qmenu)
+                # if element.Tooltip:
+                #     element.QT_QPushButton.setToolTip(element.Tooltip)
+                # if not element.Visible:
+                #     element.QT_QPushButton.setVisible(False)
+                # qt_row_layout.addWidget(element.QT_QPushButton)
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
@@ -4610,47 +4847,59 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     width = max_line_len
                 element.TKStringVar = tk.StringVar()
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                style_name = 'TCombobox'
+                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    # print('Combo special style', element.TextColor, element.BackgroundColor)
+                    style_name = 'PSG.TCombobox'
                     combostyle = ttk.Style()
                     #
-                    # style.map("C.TButton",
+                    # combostyle.map("C.TButton",
                     #           foreground=[('pressed', 'red'), ('active', 'blue')],
                     #           background=[('pressed', '!disabled', 'black'), ('active', 'white')]
                     #           )
-
                     # combostyle.map('PSG.TCombobox', background=[('selected', 'green')])
-                    # combostyle.configure('PSG.TCombobox.Listbox',fieldbackground='green')
-                    # combostyle.configure('PSG.TCombobox', foreground=text_color)
-                    # combostyle.configure('PSG.TCombobox', selectbackground='gray70')
-                    # combostyle.map('PSG.TCombobox', background=[('readonly','red')])
+                    # combostyle.configure('PSG.TCombobox.Listbox',foreground='green')
+                    # combostyle.map('PSG.TCombobox', foreground=[('active','purple')])
+                    # combostyle.map('PSG.TCombobox.textarea', foreground=[('active','purple')])
+                    # combostyle.map('PSG.TCombobox.rightdownarrow', arrowcolor=[('active','purple')])
                     # combostyle.configure('PSG.TCombobox.TEntry', background='red')
-                    # combostyle.configure('PSG.TCombobox', selectforeground=element.BackgroundColor)
-                    # combostyle.configure('PSG.TCombobox', fieldbackground='blue')
-                    try:
-                        combostyle.theme_create('combostyle',
-                                                settings={'TCombobox':
-                                                              {'configure':
-                                                                   {'selectbackground': 'gray50',
-                                                                    'fieldbackground': element.BackgroundColor,
-                                                                    'foreground': text_color,
-                                                                    'background': element.BackgroundColor}
-                                                               }})
-                    except:
-                        try:
-                            combostyle.theme_settings('combostyle',
-                                                      settings={'TCombobox':
-                                                                    {'configure':
-                                                                         {'selectbackground': 'gray50',
-                                                                          'fieldbackground': element.BackgroundColor,
-                                                                          'foreground': text_color,
-                                                                          'background': element.BackgroundColor}
-                                                                     }})
-                        except:
-                            pass
-                    # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-                    combostyle.theme_use('combostyle')
+                    # combostyle.configure('PSG.TCombobox', background=element.BackgroundColor)
+                    combostyle.configure('PSG.TCombobox', foreground=element.TextColor)     # WORKS
+                    combostyle.configure('PSG.TCombobox', selectbackground='gray70')        # WORKS
+                    combostyle.configure('PSG.TCombobox', selectforeground=element.TextColor)   # WORKS
+                    # combostyle.configure('PSG.TCombobox.Listbox', background='purple')
+                    # toplevel_form.TKroot.option_add("*TCombobox*Background", element.BackgroundColor)        # WORK for drop-down list (Changes all)
+                    # combostyle.map('PSG.TCombobox', background=[('active', 'purple'), ('disabled', 'purple')])
+                    # combostyle.configure('PSG.TCombobox.PopdownFrame', background=element.BackgroundColor)
+                    # combostyle.configure('PSG.TCombobox.field', fieldbackground=element.BackgroundColor)
+                    # combostyle.configure('PSG.TCombobox.Listbox', background=element.BackgroundColor)
+                    # print(combostyle.element_names())
+                    # print(combostyle.element_options('PSG.TCombobox'))
+                    # try:
+                    #     combostyle.theme_create('combostyle',
+                    #                             settings={'TCombobox':
+                    #                                           {'configure':
+                    #                                                {'selectbackground': 'gray50',
+                    #                                                 'fieldbackground': element.BackgroundColor,
+                    #                                                 'foreground': text_color,
+                    #                                                 'background': element.BackgroundColor}
+                    #                                            }})
+                    # except:
+                    #     try:
+                    #         combostyle.theme_settings('combostyle',
+                    #                                   settings={'TCombobox':
+                    #                                                 {'configure':
+                    #                                                      {'selectbackground': 'gray50',
+                    #                                                       'fieldbackground': element.BackgroundColor,
+                    #                                                       'foreground': text_color,
+                    #                                                       'background': element.BackgroundColor}
+                    #                                                  }})
+                    #     except:
+                    #         pass
+                    # # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
+                    # combostyle.theme_use('combostyle')
 
-                element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font)
+                element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
                 # element.TKCombo['state']='readonly'
@@ -5697,67 +5946,6 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                     no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, do_not_reroute_stdout=do_not_reroute_stdout)
     DebugWin.debug_window.Print(*args, end=end, sep=sep)
-#
-#
-#
-#
-#
-# class DebugWin():
-#     debug_window = None
-#
-#     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
-#         # Show a form that's a running counter
-#         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-#         self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location, font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-#         self.output_element = Output(size=win_size)
-#         if no_button:
-#             self.layout =   [[self.output_element]]
-#         else:
-#             self.layout =   [
-#                             [self.output_element],
-#                             [DummyButton('Quit')]
-#                             ]
-#         self.window.AddRows(self.layout)
-#         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
-#         return
-#
-#     def Print(self, *args, end=None, sep=None):
-#         sepchar = sep if sep is not None else ' '
-#         endchar = end if end is not None else '\n'
-#
-#         if self.window is None:         # if window was destroyed already, just print
-#             self.__init__()
-#             print(*args, sep=sepchar, end=endchar)
-#             return
-#
-#         event, values = self.window.Read(timeout=0)
-#         if event == 'Quit' or event is None:
-#             self.Close()
-#         print(*args, sep=sepchar, end=endchar)
-#         # Add extra check to see if the window was closed... if closed by X sometimes am not told
-#         # try:
-#         #     state = self.window.TKroot.state()
-#         # except:
-#         #     self.Close()
-#
-#     def Close(self):
-#         if self.window is None:
-#             return
-#         self.window.Close()
-#         self.window.__del__()
-#         self.window = None
-#
-# def PrintClose():
-#     EasyPrintClose()
-#
-#
-# def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=False):
-#
-#
-#     if DebugWin.debug_window is None:
-#         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-#     DebugWin.debug_window.Print(*args, end=end, sep=sep)
-
 
 Print = EasyPrint
 eprint = EasyPrint
@@ -5770,8 +5958,7 @@ def EasyPrintClose():
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None), location=(None, None), title=None, non_blocking=False):
+def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None), title=None, non_blocking=False):
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
@@ -5879,11 +6066,6 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     # global _my_windows
 
     if icon:
-        try:
-            with open(icon, 'r') as icon_file:
-                pass
-        except:
-            raise FileNotFoundError
         Window.user_defined_icon = icon
         # _my_windows.user_defined_icon = icon
 
