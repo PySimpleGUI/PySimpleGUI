@@ -1631,8 +1631,8 @@ class ButtonMenu(Element):
 
     def MenuItemChosenCallback(self, item_chosen):
         # print('IN MENU ITEM CALLBACK', item_chosen)
-        self.MenuItemChosen = item_chosen
-        self.ParentForm.LastButtonClicked = item_chosen
+        self.MenuItemChosen = item_chosen.replace('&','')
+        self.ParentForm.LastButtonClicked = self.Key
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
@@ -4203,10 +4203,13 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
-                    if element.MenuItemChosen is not None:
-                        button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
+
+                    # if element.MenuItemChosen is not None:
+                    #     button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
+                    # value = element.MenuItemChosen
+                    # element.MenuItemChosen = None
             else:
                 value = None
 
