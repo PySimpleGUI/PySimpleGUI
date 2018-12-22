@@ -347,6 +347,22 @@ class Element():
         self.TooltipObject = None
         self.Visible = visible
 
+
+    def RightClickMenuCallback(self, event):
+        self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
+        self.TKRightClickMenu.grab_release()
+
+    def MenuItemChosenCallback(self, item_chosen):      # TEXT Menu item callback
+        # print('IN MENU ITEM CALLBACK', item_chosen)
+        self.MenuItemChosen = item_chosen.replace('&','')
+        self.ParentForm.LastButtonClicked = self.MenuItemChosen
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
+
+
+
     def FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
             for element in row:
@@ -1060,7 +1076,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,  tooltip=None, visible=True):
+    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, right_click_menu=None, tooltip=None, visible=True):
         '''
         Text Element
         :param text:
@@ -1085,6 +1101,9 @@ class Text(Element):
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
             bg = background_color
+        self.RightClickMenu = right_click_menu
+        self.TKRightClickMenu = None
+
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
@@ -1629,7 +1648,7 @@ class ButtonMenu(Element):
         return
 
 
-    def MenuItemChosenCallback(self, item_chosen):
+    def MenuItemChosenCallback(self, item_chosen):          # ButtonMenu Menu Item Chosen Callback
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&','')
         self.ParentForm.LastButtonClicked = self.Key
@@ -1747,7 +1766,7 @@ class ProgressBar(Element):
 # ---------------------------------------------------------------------- #
 class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None, visible=True, enable_events=False):
+                 tooltip=None, right_click_menu=None, visible=True, enable_events=False):
         '''
         Image Element
         :param filename:
@@ -1765,6 +1784,7 @@ class Image(Element):
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
         self.EnableEvents = enable_events
+        self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -1797,7 +1817,7 @@ class Image(Element):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
-    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None, visible=True):
+    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Canvas Element
         :param canvas:
@@ -1809,6 +1829,7 @@ class Canvas(Element):
         '''
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
+        self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -1830,7 +1851,7 @@ class Canvas(Element):
 # ---------------------------------------------------------------------- #
 class Graph(Element):
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, enable_events=False, key=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, right_click_menu=None, visible=True):
         '''
         Graph Element
         :param canvas_size:
@@ -1851,6 +1872,8 @@ class Graph(Element):
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
         self.Images = []
+        self.RightClickMenu = right_click_menu
+
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
         return
@@ -2084,7 +2107,7 @@ class Graph(Element):
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, right_click_menu=None, visible=True):
         '''
         Frame Element
         :param title:
@@ -2114,7 +2137,7 @@ class Frame(Element):
         self.TitleLocation = title_location
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-
+        self.RightClickMenu = right_click_menu
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
@@ -2504,7 +2527,7 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, key=None, visible=True):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
         '''
         Container for elements that are stacked into rows
         :param layout:
@@ -2527,12 +2550,15 @@ class Column(Element):
         self.TKColFrame = None
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
+        self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+
 
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible)
         return
+
 
     def AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
@@ -2874,7 +2900,7 @@ class Menu(Element):
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key, visible=visible)
         return
 
-    def MenuItemChosenCallback(self, item_chosen):
+    def MenuItemChosenCallback(self, item_chosen):              # Menu Menu Item Chosen Callback
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = item_chosen
@@ -2915,7 +2941,7 @@ class Menu(Element):
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, visible=True):
+                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Table Element
         :param values:
@@ -2958,6 +2984,8 @@ class Table(Element):
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
+        self.RightClickMenu = right_click_menu
+
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
@@ -3023,7 +3051,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None, visible=True):
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None,right_click_menu=None, visible=True):
         '''
         Tree Element
         :param headings:
@@ -3060,6 +3088,7 @@ class Tree(Element):
         self.TKTreeview = None
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
+        self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip, visible=visible)
@@ -3198,7 +3227,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None):
         '''
         Main window object where Elements will be laid out in rows
         :param title:
@@ -3279,6 +3308,7 @@ class Window:
         self._Size = size
         self.XFound = False
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
+        self.RightClickMenu = right_click_menu
 
     @classmethod
     def IncrementOpenCount(self):
@@ -4530,7 +4560,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     element.TKColFrame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
                                         highlightcolor=element.BackgroundColor)
-
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.TKColFrame.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Pane element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
                 bd = element.BorderDepth if element.BorderDepth is not None else border_depth
@@ -4616,6 +4651,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.bind('<Button-1>', element.TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    tktext_label.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 stringvar = tk.StringVar()
@@ -4767,50 +4808,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
 
-                # btext = element.ButtonText
-                # element.QT_QPushButton = QPushButton(btext)
-                # style = create_style_from_font(font)
-                # if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                #     style += 'color: %s;' % element.TextColor
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     style += 'background-color: %s;' % element.BackgroundColor
-                # if element.BorderWidth == 0:
-                #     style += 'border: none;'
-                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
-                # style += 'border: {}px solid gray; '.format(border_depth)
-                # element.QT_QPushButton.setStyleSheet(style)
-                # if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
-                #     if element_size[0] is not None:
-                #         element.QT_QPushButton.setFixedWidth(element_size[0])
-                #     if element_size[1] is not None:
-                #         element.QT_QPushButton.setFixedHeight(element_size[1])
-                #
-                # if element.ImageData:
-                #     ba = QtCore.QByteArray.fromBase64(element.ImageData)
-                #     pixmap = QtGui.QPixmap()
-                #     pixmap.loadFromData(ba)
-                #     element.QT_QPushButton.setIcon(pixmap)
-                #     element.QT_QPushButton.setIconSize(pixmap.rect().size())
-                #
-                # if element.Disabled:
-                #     element.QT_QPushButton.setDisabled(True)
-                #
-                # if element.Tooltip:
-                #     element.QT_QPushButton.setToolTip(element.Tooltip)
-                # # element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
-                #
-                # menu_def = element.MenuDefinition
-                #
-                # qmenu = QMenu(element.QT_QPushButton)
-                # qmenu.setTitle(menu_def[0])
-                # AddMenuItem(qmenu, menu_def[1], element)
-                #
-                # element.QT_QPushButton.setMenu(qmenu)
-                # if element.Tooltip:
-                #     element.QT_QPushButton.setToolTip(element.Tooltip)
-                # if not element.Visible:
-                #     element.QT_QPushButton.setVisible(False)
-                # qt_row_layout.addWidget(element.QT_QPushButton)
+
             # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
@@ -5166,7 +5164,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                         timeout=DEFAULT_TOOLTIP_TIME)
                     if element.EnableEvents:
                         element.tktext_label.bind('<ButtonPress-1>', element.ClickHandler)
-
+                    if element.RightClickMenu or toplevel_form.RightClickMenu:
+                        menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                        top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                        AddMenuItem(top_menu, menu[1], element)
+                        element.TKRightClickMenu = top_menu
+                        element.tktext_label.bind('<Button-3>', element.RightClickMenuCallback)
                 # -------------------------  Canvas element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
@@ -5182,7 +5185,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element._TKCanvas.bind('<Button-3>', element.RightClickMenuCallback)
                 # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 width, height = element_size
@@ -5208,6 +5216,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas2.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if element.DragSubmits:
                     element._TKCanvas2.bind('<Motion>', element.MotionCallBack)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element._TKCanvas2.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 menu_def = element.MenuDefinition
@@ -5252,6 +5266,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    labeled_frame.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 element.TKFrame = tk.Frame(form.TKNotebook)
@@ -5447,6 +5467,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.TKTreeview.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 frame = tk.Frame(tk_row_frame)
@@ -5511,6 +5537,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.TKTreeview.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
@@ -7186,7 +7218,7 @@ def main():
     tab1 = Tab('Graph Number 1', frame6)
     tab2 = Tab('Graph Number 2', [[]])
 
-    layout = [
+    layout1 = [
         [Menu(menu_def)],
         [Text('You are running the PySimpleGUI.py file itself', font='ANY 15')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
@@ -7200,8 +7232,12 @@ def main():
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), Button('Exit')],
     ]
 
+    layout=[[Column(layout1)]]
+
     window = Window('Window Title',
-                       font=('Helvetica', 13)).Layout(layout).Finalize()
+                    font=('Helvetica', 13),
+                    right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
+                    ).Layout(layout).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
