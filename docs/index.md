@@ -189,11 +189,14 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
             Close window      
             Realtime      
             Calendar chooser      
-            Color chooser      
+            Color chooser   
+            Button Menu   
         Checkboxes      
         Radio Buttons      
         Listbox      
-        Option Menu      
+        Option Menu 
+        Menubar
+        Button Menu     
         Slider      
         Dial
         Graph      
@@ -229,7 +232,8 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Save / Load window to/from disk      
         Borderless (no titlebar) windows      
         Always on top windows      
-        Menus with ALT-hotkey      
+        Menus with ALT-hotkey    
+        Right click pop-up menu  
         Tooltips      
         Clickable links    
         Transparent windows
@@ -1123,11 +1127,20 @@ TabGroup - tab clicked
 Slider - slider moved
 Table - row selected
 Tree - node selected
+ButtonMenu - menu item chosen
+Right click menu - menu item chosen
 
 ### Other Events
 
-#### Menubar menu item chosen
-You will receive the menu text and the key that was part of the definition
+#### Menubar menu item chosen for MenuBar menus and ButtonMenu menus
+
+You will receive the key for the MenuBar and ButtonMenu.  Use that key to read the value in the return values dictionary.  The value shown will be the full text plus key for the menu item chosen.  Remember that you can put keys onto menu items.  You will get the text and the key together as you defined it in the menu
+ definition.
+
+#### Right Click menu item chosen
+
+Unlike menu bar and button menus, you will directly receive the menu item text and its key value.  You will not do a dictionary lookup to get the value.  It is the event code returned from WindowRead().
+
 
 #### Windows - keyboard, mouse scroll wheel
 
@@ -1374,7 +1387,8 @@ Window( title,
 		keep_on_top=False,
 		resizable=False,
 		disable_close=False,
-		disable_minimize=False):     
+		disable_minimize=False,
+		right_click_menu=None):     
 ```      
           
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `window` values.      
@@ -1405,6 +1419,7 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        resizable - if True - user can manually changge the wize of the window.  Defaults to False
        disable_close - if True user will not be able to close using the X. 
        disable_minimize - if True user will not be able to minimize the window
+       right_click_menu - menu definition that will be used on wall elements that support right click. If a  definition is specified on an element then it will be used instead.
       
       
 ### Window Location      
@@ -1734,6 +1749,7 @@ The most basic element is the Text element.  It simply displays text.  Many of t
 			justification=None,
 			pad=None,
 			key=None,
+			right_click_menu=None,
 			tooltip=None)
 ```			      
 .      
@@ -1749,7 +1765,8 @@ The most basic element is the Text element.  It simply displays text.  Many of t
     background_color - background color      
     justification - Justification for the text. String - 'left', 'right', 'center'      
     pad - (x,y) amount of padding in pixels to use around element when packing      
-    key - used to identify element.  This value will return as button if click_submits True      
+    key - used to identify element.  This value will return as button if click_submits True     
+    right_click_menu - menu definition to displat if right clicked
     tooltip - string representing tooltip      
       
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.      
@@ -1812,6 +1829,7 @@ Multiline(	default_text='',
 			focus=False,
 			font=None,
 			pad=None,
+		    right_click_menu=None,
 			tooltip=None
 '''
 ```   
@@ -1820,7 +1838,8 @@ Multiline(	default_text='',
     change_submits - Bool. If True, pressing Enter key submits window 
     anable_events - Bool. same as change_submits
     autoscroll - Bool.  Causes "cursor" to always be at the end of the text   
-    size - Element's size      
+    size - Element's size  
+    right_click_menu - menu definition to displat if right clicked    
     auto_size_text - Bool. Change width to match size of text      
       
 ### Multiline Methods    
@@ -1856,6 +1875,7 @@ Output(	size=(None, None),
 		pad=None,
 		font=None,
 		tooltip=None,
+		right_click_menu=None,
 		key=None)
 ```
 
@@ -1887,7 +1907,8 @@ You should be quite familiar with these parameters by now.  If not, read able an
                     change_submits=False
                     do_not_clear=False,    
                     key=None,    
-                    focus=False,    
+                    focus=False,  
+                    right_click_menu=None,  
                     pad=None):      
     '''    
       
@@ -1999,6 +2020,7 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
                  text_color=None      
                  key=None      
                  pad=None      
+		 		 right_click_menu=None                
                  tooltip=None):      
       
 .      
@@ -2273,6 +2295,7 @@ Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format
 		click_submits=False,
 		enable_events=False,
 		visible=True,
+		right_click_menu=None,		
 		size_px=(None,None)    
 ```          
 Parameter definitions    
@@ -2616,6 +2639,50 @@ Update - Change the button element
     
 GetText - Returns the current text shown on a button
 
+
+## ButtonMenu Element
+
+The ButtonMenu element produces a unique kind of effect.  It's a button, that when clicked, shows you a menu.   It's like clicking one of the top-level menu items on a MenuBar.  As a result, the menu definition take the format of a single  menu entry from  a normal menu definition.  A normal menu definition is  a list of lists.  This definition is one of those lists.
+
+Here is a sample definition:
+```python
+ ['Menu', ['&Pause Graph', 'Menu item::optional_key']]
+```
+The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
+
+
+```python
+ButtonMenu( button_text,
+			menu_def, 
+			tooltip=None,
+			disabled=False, 
+			image_filename=None, 
+			image_data=None, 
+			image_size=(None, None), 
+			image_subsample=None,
+			border_width=None,
+			size=(None, None), 
+			auto_size_button=None, 
+			button_color=None, 
+			font=None, 
+			pad=None, 
+			key=None, 
+			visible=True, 
+			size_px=(None,None)):
+```
+
+One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
+
+This is the effect:
+
+![buttonmenu](https://user-images.githubusercontent.com/13696193/50387000-bc0d8180-06c0-11e9-8d17-3b22ed665e78.gif)
+
+Return values for ButtonMenus are sent via the return values dictionary.  If a selection is made, then an event is generated that will equal the ButtonMenu's key value.  Use that key value to look up the value selected by the user.  This is the same mechanism as the Menu Bar Element, but differs from the pop-up (right click) menu.
+
+
+
+
+
 ## Vertical Separator Element    
 This element has limited usefulness and is being included more for completeness than anything else.  It will draw a line between elements.
 ```python
@@ -2709,12 +2776,19 @@ max - changes the max value
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.      
       
 Columns are specified in exactly the same way as a window is, as a list of lists.      
-      
-    def Column(layout - the list of rows that define the layout      
-            background_color - color of background      
-            size - size of visible portion of column      
-            pad - element padding to use when packing      
-            scrollable - bool. True if should add scrollbars      
+   
+```python
+Column(  layout, 
+		 background_color=None,
+		 size=(None, None), 
+		 pad=None, 
+		 scrollable=False, 
+		 vertical_scroll_only=False,
+		 right_click_menu=None, 
+		 key=None,
+		 visible=True)
+```      
+   
       
       
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:      
@@ -2767,7 +2841,23 @@ The default background color for Columns is the same as the default window backg
 ## Frame Element (Labelled Frames, Frames with a title)      
       
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.      
-      
+
+```python
+Frame(  title, 
+		layout, 
+		title_color=None, 
+		background_color=None, 
+		title_location=None,
+		relief=DEFAULT_FRAME_RELIEF, 
+		size=(None, None), 
+		font=None,
+		pad=None, 
+		border_width=None,
+		key=None, 
+		tooltip=None, 
+		right_click_menu=None, 
+		visible=True)
+```      
     def Frame(title - the label / title to put on frame      
                   layout - list of rows of elements the frame contains      
                   title_color - color of the title text      
@@ -2807,6 +2897,17 @@ Notice how the Frame layout looks identical to a window layout.  A window works 
       
 ## Canvas Element      
       
+```python
+Canvas(canvas=None,
+	   background_color=None, 
+	   size=(None, None),
+	   pad=None, 
+	   key=None, 
+	   tooltip=None, 
+	   right_click_menu=None, 
+	   visible=True)
+```
+
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.      
       
 ### Matplotlib, Pyplot Integration      
@@ -2998,6 +3099,29 @@ def Update(self, values=None):
     
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.    
     
+```python
+Tree(   data=None,
+		headings=None, 
+		visible_column_map=None, 
+		col_widths=None, col0_width=10,
+		def_col_width=10,
+		auto_size_columns=True, 
+		max_col_width=20, 
+		select_mode=None, 
+		show_expanded=False, 
+		change_submits=False, 
+		enable_events=False, 
+		font=None,
+		justification='right', 
+		text_color=None, 
+		background_color=None,
+		num_rows=None,
+		pad=None, 
+		key=None, 
+		tooltip=None,
+		right_click_menu=None, 
+		visible=True)
+```
 ```    
 class Tree(data=None - data in TreeData format    
          headings=None - list of strings representing your headings    
@@ -3634,8 +3758,10 @@ Use realtime keyboard capture by calling
 
 
 # Menus      
+
+## MenuBar
       
-Beginning in version 3.01 you can add a menubar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as values.  The value returned will be the entire menu entry, including the key if you specified one.
+Beginning in version 3.01 you can add a MenuBar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as in the values dictionary.  The value returned will be the entire menu entry, including the key if you specified one.
 
       
 This definition:      
@@ -3650,6 +3776,29 @@ They menu_def layout produced this window:
       
 ![menu](https://user-images.githubusercontent.com/13696193/45306723-56b7cb00-b4eb-11e8-8cbd-faef0c90f8b4.jpg)      
       
+
+To add a menu to a Window place the `Menu` or `MenuBar` element into your layout.
+
+    layout = [[sg.Menu(menu_def)]]
+
+It doesn't really matter where you place the Menu Element in your layout as it will always be located at the top of the window.
+
+## ButtonMenus
+
+Button menus were introduced in version 3.21, having been previously released in PySimpleGUIQt.  They work exactly the same and are source code compatible between PySimpleGUI and PySimpleGUIQt.  These types of menus take a single menu entry where a Menu Bar takes a list of menu entries.
+
+## Right Click Menus
+
+Right Click Menus were introduced in version 3.21.  Almost every element has a right_click_menu parameter and there is a window-level setting for rich click menu that will attach a right click menu to all elements in the window.
+
+The menu definition is the same a s the button menu definition, a single menu entry.
+
+```python
+right_click_menu = ['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']]
+```
+The first string in a right click menu and a button menu is ***ignored***.  It is not used.  Normally you would put the string that is shown on the menu bar in that location.
+
+**Return values for right click menus are different than menu bars and button menus.**  Instead of the value being returned through the values dictionary, it is instead sent back as an Event.  You will not
      
 ## Menu Shortcut keys      
 You have used ALT-key in other Windows programs to navigate menus.  For example Alt-F+X exits the program.  The Alt-F pulls down the File menu.  The X selects the entry marked Exit.      
