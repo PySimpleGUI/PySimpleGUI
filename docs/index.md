@@ -1630,12 +1630,14 @@ Sets the window's transparency.  0 is completely transparent.  1 is fully visibl
      Radio Buttons      
      Listbox      
      Slider      
-     Multi-line Text Input      
+     Multi-line Text Input/Output
+     Multi-line Text Output (Qt only)   
      Scroll-able Output  
      Vertical Separator    
      Progress Bar      
      Option Menu      
-     Menu      
+     Menu
+     ButtonMenu      
      Frame      
      Column      
      Graph      
@@ -1644,6 +1646,8 @@ Sets the window's transparency.  0 is completely transparent.  1 is fully visibl
      Tree    
      Tab, TabGroup    
      StatusBar
+     Pane
+     Stretch (Qt only)
        
 
       
@@ -1737,20 +1741,21 @@ Many of the main method calls and Element names have shortcuts.  This enables yo
       
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.      
 ```python
-    Text(   text,
-			size=(None, None),
-			auto_size_text=None,
-			click_submits=False,
-			enable_events=False,
-			relief=None,
-			font=None,
-			text_color=None,
-			background_color=None,
-			justification=None,
-			pad=None,
-			key=None,
-			right_click_menu=None,
-			tooltip=None)
+   Text(text,
+		size=(None, None), 
+		auto_size_text=None,
+		click_submits=False, 
+        enable_events=False,
+        relief=None,
+		font=None, 
+		text_color=None, 
+		background_color=None, 
+		justification=None, 
+		pad=None, 
+		key=None, 
+		right_click_menu=None, 
+		tooltip=None, 
+		visible=True)
 ```			      
 .      
       
@@ -1766,7 +1771,7 @@ The most basic element is the Text element.  It simply displays text.  Many of t
     justification - Justification for the text. String - 'left', 'right', 'center'      
     pad - (x,y) amount of padding in pixels to use around element when packing      
     key - used to identify element.  This value will return as button if click_submits True     
-    right_click_menu - menu definition to displat if right clicked
+    right_click_menu - menu definition to display if right clicked
     tooltip - string representing tooltip      
       
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.      
@@ -1785,7 +1790,7 @@ Some commonly used elements have 'shorthand' versions of the functions to make t
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.      
       
       
-### tcut functions      
+### Chortcut functions      
 The shorthand functions for `Text` are `Txt` and `T`      
  
 ### Events `enable_events`
@@ -1796,13 +1801,18 @@ The shorthand functions for `Text` are `Txt` and `T`
 ### Text Methods     
     
 #### Update    
+
+
+If you want to change the text, font, or colors after the element has been created, then use the `Update` method.
+
 ```python    
- Update(value = None, background_color=None, text_color=None, font=None)    
+ Update(value = None, background_color=None, text_color=None, font=None, visible=None)    
 ```    
 value - new value to set text element to    
 background_color - new background color    
 text_color - text color to display    
-font - font to use to display    
+font - font to use to display 
+visible - visibility   
     
     
 ##  Multiline Text Element      
@@ -1829,8 +1839,9 @@ Multiline(	default_text='',
 			focus=False,
 			font=None,
 			pad=None,
-		    right_click_menu=None,
 			tooltip=None
+			right_click_menu=None,
+			visible=True)
 '''
 ```   
       
@@ -1876,7 +1887,8 @@ Output(	size=(None, None),
 		font=None,
 		tooltip=None,
 		right_click_menu=None,
-		key=None)
+		key=None,
+		visible=True)
 ```
 
 size - Size of Output Element (width, height) in characters
@@ -1893,7 +1905,7 @@ You should be quite familiar with these parameters by now.  If not, read able an
       
 ![inputtext 2](https://user-images.githubusercontent.com/13696193/44959861-b5fe5580-aec3-11e8-8040-53ec241b5079.jpg)      
       
-      
+```python
       def InputText(default_text ='',    
                     size=(None, None),    
                     disabled=False,     
@@ -1909,8 +1921,9 @@ You should be quite familiar with these parameters by now.  If not, read able an
                     key=None,    
                     focus=False,  
                     right_click_menu=None,  
-                    pad=None):      
-    '''    
+                    pad=None,
+                    vitible=True):      
+```
       
 .      
       
@@ -1967,11 +1980,13 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
                background_color=None      
                text_color=None      
                change_submits=False 
+               enable_events=False
                readonly=True     
                disabled=False      
                key=None      
                pad=None      
-               tooltip=None      
+               tooltip=None   
+               visible=True)   
 .      
       
      values - Choices to be displayed. List of strings      
@@ -2021,7 +2036,8 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
                  key=None      
                  pad=None      
 		 		 right_click_menu=None                
-                 tooltip=None):      
+                 tooltip=None,
+                 visible=True):      
       
 .      
       
@@ -2093,7 +2109,8 @@ Sliders have a couple of slider-specific settings as well as appearance settings
             text_color=None,     
             key=None,     
             pad=None,    
-            tooltip=None)    
+            tooltip=None,
+            visible=True)    
     
 .      
       
@@ -2125,7 +2142,7 @@ There is an important difference between Qt and tkinter sliders.  On Qt, the sli
 
 ### Slider Methods    
 ```python    
-Update(self, value=None, range=(None, None), disabled=None):    
+Update(self, value=None, range=(None, None), disabled=None, visible=None):    
 ```    
 value - set current selection to value    
 range - change range of valid values    
@@ -2151,7 +2168,8 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
            text_color = None,      
            key = None,    
            pad = None,    
-           tooltip = None)      
+           tooltip = None,
+           visible=True)      
       
 .      
       
@@ -2170,7 +2188,7 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
       
 ### Radio Button Methods    
 ```python    
-Update(value=None, disabled=None)    
+Update(value=None, disabled=None, visible=None)    
 ```    
 value - bool - if True change to selected    
 disabled - if True disables the element    
@@ -2196,7 +2214,8 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
              disabled = False,    
              key = None,    
              pad = None,    
-             tooltip = None):      
+             tooltip = None,
+             visible=True):      
 .      
       
      text - Text to display next to checkbox      
@@ -2216,7 +2235,7 @@ Shortcut functions -   CBox, CB, Check
     
 ### Checkbox Methods    
 ```python    
-Update(value=None, disabled=None)    
+Update(value=None, disabled=None, visible=None)    
 Get()    
 ```    
 Update - changes the element    
@@ -2245,7 +2264,8 @@ An up/down spinner control.  The valid values are passed in as a list.
          text_color = None,      
          key = None.    
          pad = None,    
-         tooltip = None):      
+         tooltip = None,
+         visible=True):      
     
     
     
@@ -2274,7 +2294,7 @@ On Qt values is a tuple representing a range.  On plain PySimpleGUI this value i
       
 ### Spin Methods    
 ```python    
-Update(value=None, values=None, disabled=None)    
+Update(value=None, values=None, disabled=None, visible=None)    
 ```    
 value - set the current value    
 values - set available choices    
@@ -2296,7 +2316,8 @@ Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format
 		enable_events=False,
 		visible=True,
 		right_click_menu=None,		
-		size_px=(None,None)    
+		size_px=(None,None)  
+		visible=True)  
 ```          
 Parameter definitions    
             
@@ -2316,7 +2337,7 @@ Parameter definitions
     
 Like other Elements, the Image Element has an update method.  Call Update if you want to change the image.    
     
-    def Update(self, filename=None, data=None):    
+    def Update(self, filename=None, data=None, visible=None):    
     
     
 Choose **either** a filename or in-ram data image to use to replace current image    
@@ -2392,7 +2413,8 @@ The most basic Button element call to use is `Button`
            bind_return_key=False      
            focus=False      
            pad=None      
-           key=None):      
+           key=None,
+           visible=True):      
       
 Parameters      
       
@@ -2625,7 +2647,7 @@ If there are more than 1 button on a window, the FIRST button that is of type Cl
     
 ### Button Methods    
 ```python    
-Update(text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None)
+Update(text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, visible=None)
 
 GetText()    
 ```    
@@ -2983,13 +3005,20 @@ You can move your figures around on the canvas by supplying the Figure ID the x,
       
 This Element is relatively new and may have some parameter additions or deletions.  It shouldn't break your code however.      
       
-    def Graph( canvas_size - size of canvas in pixels      
-                      graph_bottom_left - the x,y location of your coordinate system's bottom left point      
-                      graph_top_right - the x,y location of your coordinate system's top right point      
-                      background_color - color to use for background      
-                      pad - element padding for pack      
-                      key -  key used to lookup element      
-                      tooltip - tooltip text      
+```python
+  Graph(canvas_size, 
+		graph_bottom_left, 
+		graph_top_right, 
+		background_color=None, 
+		pad=None,
+		change_submits=False,
+		drag_submits=False
+		enable_events=False,
+		key=None,
+		tooltip=None,
+		right_click_menu=None, 
+		visible=True)
+```    
       
 ### Graph Methods    
 ```python    
@@ -3054,7 +3083,8 @@ Table(  values,
 		bind_return_key=False,
 		pad=None,
 		key=None,
-		tooltip=None):
+		tooltip=None,
+		visible=True):
 
 ```
 
@@ -3252,9 +3282,9 @@ Tab Groups now return a value when a Read returns.  They return which tab is cur
       
 ### Tab Element Methods    
 ```python    
-Update(disabled = None)    
+Update(disabled = None, visible=None)    
 ```    
-WARNING - This Update method does not yet work!    
+WARNING - This Update method may not be working correctly
     
 ## Pane Element
 
@@ -3838,6 +3868,96 @@ To add the `key` `_MY_KEY_` to the Special menu entry, the code would be:
       
  If you want to change the characters that indicate a key follows from '::' to something else, change the variable `MENU_KEY_SEPARATOR`   
 
+
+# Running Multiple Windows
+
+If you wish to run multiple windows in your event loop, then there are 2 methods for doing this.  
+
+1. First window does not remain active while second window is visible
+2. First window remains active while second window is visible
+
+You will find the 2 design matters in 2 demo programs in the Demo Program area of the GitHub (http://www.PySimpleGUI.com)
+
+***Critically important***
+When creating a new window you must use a "fresh" layout every time.  You cannot reuse a layout from a previous window.  As a result you will see the layout for window 2 being defined inside of the larger event loop.
+
+A rule of thumb to follow:
+
+> If you are calling `Window` then you should define your window layout
+> in the statement just prior to the `Window` call.
+
+
+## Multi-Window Design Pattern 1 - both windows active
+
+```python
+import PySimpleGUI as sg  
+  
+# Design pattern 2 - First window remains active  
+  
+layout = [[ sg.Text('Window 1'),],  
+          [sg.Input(do_not_clear=True)],  
+          [sg.Text('', key='_OUTPUT_')],  
+          [sg.Button('Launch 2'), sg.Button('Exit')]]  
+  
+win1 = sg.Window('Window 1').Layout(layout)  
+  
+win2_active = False  
+while True:  
+    ev1, vals1 = win1.Read(timeout=100)  
+    win1.FindElement('_OUTPUT_').Update(vals1[0])  
+    if ev1 is None or ev1 == 'Exit':  
+        break  
+  
+     if not win2_active and ev1 == 'Launch 2':  
+        win2_active = True  
+        layout2 = [[sg.Text('Window 2')],  
+                   [sg.Button('Exit')]]  
+  
+        win2 = sg.Window('Window 2').Layout(layout2)  
+  
+    if win2_active:  
+        ev2, vals2 = win2.Read(timeout=100)  
+        if ev2 is None or ev2 == 'Exit':  
+            win2_active  = False  
+            win2.Close()
+```
+
+
+## Multi-Window Design Pattern 2 - only 1 active window
+
+```python
+import PySimpleGUIQt as sg  
+  
+# Design pattern 1 - First window does not remain active  
+  
+layout = [[ sg.Text('Window 1'),],  
+          [sg.Input(do_not_clear=True)],  
+          [sg.Text('', key='_OUTPUT_')],  
+          [sg.Button('Launch 2')]]  
+  
+win1 = sg.Window('Window 1').Layout(layout)  
+win2_active=False  
+while True:  
+    ev1, vals1 = win1.Read(timeout=100)  
+    if ev1 is None:  
+        break  
+    win1.FindElement('_OUTPUT_').Update(vals1[0])  
+  
+    if ev1 == 'Launch 2'  and not win2_active:  
+        win2_active = True  
+        win1.Hide()  
+        layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse  
+                   [sg.Button('Exit')]]  
+  
+        win2 = sg.Window('Window 2').Layout(layout2)  
+        while True:  
+            ev2, vals2 = win2.Read()  
+            if ev2 is None or ev2 == 'Exit':  
+                win2.Close()  
+                win2_active = False  
+                win1.UnHide()  
+                break
+```
     
 # Sample Applications      
       
