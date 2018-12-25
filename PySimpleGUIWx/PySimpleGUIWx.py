@@ -12,6 +12,7 @@ import pickle
 import calendar
 import base64
 import os
+import tempfile
 
 g_time_start = 0
 g_time_end = 0
@@ -2549,12 +2550,14 @@ class SystemTray:
                 self.SetIcon(self.icon, tooltip=self.tooltip)
             elif data_base64:
                 ico1 = base64.b64decode(data_base64)
-                fout = open("zzztemp_icon.ico", "wb")
+                temp_filename = next(tempfile._get_candidate_names()) + '.ico'
+                print(temp_filename)
+                fout = open(temp_filename, "wb")
                 fout.write(ico1)
                 fout.close()
-                self.icon = wx.Icon('zzztemp_icon.ico', wx.BITMAP_TYPE_ICO)
+                self.icon = wx.Icon(temp_filename, wx.BITMAP_TYPE_ICO)
                 self.SetIcon(self.icon, tooltip=self.tooltip)
-                os.remove("zzztemp_icon.ico")
+                os.remove(temp_filename)
             self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.OnTaskBarLeftClick)
             self.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDoubleClick)
             self.Bind(wx.adv.EVT_TASKBAR_RIGHT_DOWN, self.OnTaskBarRightClick)
@@ -2634,13 +2637,13 @@ class SystemTray:
         # if not self.Shown:
         #     self.Shown = True
         #     self.TrayIcon.show()
-        if timeout == 0:
-            self.App.processEvents()
-            return self.MenuItemChosen
-        elif timeout is not None:
+        timeout1 = timeout
+        if timeout1 == 0:
+            timeout1 = 1
+        if timeout1 is not None:
             self.timer = wx.Timer(self.TaskBarIcon)
             self.TaskBarIcon.Bind(wx.EVT_TIMER, self.timer_timeout)
-            self.timer.Start(milliseconds=timeout, oneShot=wx.TIMER_ONE_SHOT)
+            self.timer.Start(milliseconds=timeout1, oneShot=wx.TIMER_ONE_SHOT)
         self.RunningMainLoop = True
         self.App.MainLoop()
         self.RunningMainLoop = False
@@ -3325,7 +3328,7 @@ class Window:
     #         return QWidget.eventFilter(self, widget, event)
 
     def OnClose(self, event):
-        print(f'CLOSE EVENT! event = {event}')
+        # print(f'CLOSE EVENT! event = {event}')
         if self.DisableClose:
             return
         # print('GOT A CLOSE EVENT!', event, self.Window.Title)
