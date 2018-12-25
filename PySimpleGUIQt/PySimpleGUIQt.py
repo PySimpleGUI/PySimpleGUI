@@ -12,8 +12,7 @@ FORCE_PYQT5 = False
 
 if not FORCE_PYQT5:
     try:
-        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-            QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
         from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
@@ -24,8 +23,7 @@ if not FORCE_PYQT5:
         import PySide2.QtWidgets as QtWidgets
         using_pyqt5 = False
     except:
-        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-            QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
         from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
@@ -557,6 +555,7 @@ class InputText(Element):
         # if was changed using an "update" call, then skip the next changed callback
         if self.ValueWasChanged:
             self.ValueWasChanged = False
+            print('skipping update')
             return
         element_callback_quit_mainloop(self)
 
@@ -572,7 +571,9 @@ class InputText(Element):
         if value is not None:
             self.QT_QLineEdit.setText(str(value))
             self.DefaultText = value
-            self.ValueWasChanged = True
+            # was getting into an infinite loop when the update was triggering a text changed callback, but unable
+            # to dupliate this
+            # self.ValueWasChanged = True
         if select:
             self.QT_QLineEdit.setSelection(0,QtGui.QTextCursor.End )
         super().Update(self.QT_QLineEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
@@ -2815,6 +2816,14 @@ class ErrorElement(Element):
         super().__del__()
 
 
+
+# ---------------------------------------------------------------------- #
+#                           Pane  Element                                #
+# ---------------------------------------------------------------------- #
+
+# This is for source code compatibility with tkinter version. No Qt equivalent
+Pane = ErrorElement
+
 # ------------------------------------------------------------------------- #
 #                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
@@ -2909,6 +2918,7 @@ class SystemTray:
         else:
             self.timer = start_systray_read_timer(self, timeout)
             self.App.exec_()
+
             if self.timer:
                 stop_timer(self.timer)
 
@@ -3707,16 +3717,16 @@ def create_style_from_font(font):
         _font = font
 
     style = ''
-    style += 'font-family: %s;' % _font[0]
+    style += 'font-family: %s;\n' % _font[0]
     style += 'font-size: %spt;' % _font[1]
     font_items = ''
     for item in _font[2:]:
         if item == 'underline':
-            style += 'text-decoration: underline;'
+            style += 'text-decoration: underline;\n'
         else:
             font_items += item + ' '
     if font_items != '':
-        style += 'font: %s;' % font_items
+        style += 'font: %s' % font_items
     return style
 
 def set_widget_visiblity(widget, visible):
@@ -4399,6 +4409,29 @@ def style_generate(qt_element_type, entries):
     return generated_style
 
 
+class Style(object):
+    def __init__(self, id, **kwargs):
+        self.content = id + " {\n}"
+        self.add(**kwargs)
+
+    def add(self, **kwargs):
+        self.content = self.content[:-1]
+        for key, value in kwargs.items():
+            if isinstance(value, (tuple, list)):
+                value, isnot = value
+            else:
+                isnot = None
+            if value is not None and value != isnot:
+                self.content += "\t{} : {};\n".format(key.replace("_", "-"), value)
+        self.content += "}"
+
+    def append(self, value):
+        self.content = self.content[:-1] + value + "\n}"
+
+    def __repr__(self):
+        return self.content
+
+
 def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
     border_depth = toplevel_win.BorderDepth if toplevel_win.BorderDepth is not None else DEFAULT_BORDER_WIDTH
@@ -4507,14 +4540,11 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     if element_size[1] is not None:
                         element.QT_Label.setFixedHeight(element_size[1])
                 # element.QT_Label.setWordWrap(True)
-                style = 'QLabel {'
-                style += create_style_from_font(font)
-                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'background-color: %s;' % element.BackgroundColor
-                style += '}'
-                element.QT_Label.setStyleSheet(style)
+                style = Style('QLabel')
+                style.append(create_style_from_font(font))
+                style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
+                style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                element.QT_Label.setStyleSheet(style.content)
 
                 if element.ClickSubmits:
                     element.QT_Label.mousePressEvent = element.QtCallbackTextClicked
@@ -4540,18 +4570,14 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 btext = element.ButtonText
                 btype = element.BType
                 element.QT_QPushButton = QPushButton(btext)
-                style = 'QPushButton {'
-                style += create_style_from_font(font)
-                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'background-color: %s;' % element.BackgroundColor
-                if element.BorderWidth == 0:
-                    style += 'border: none;'
-                style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
-                style += 'border: {}px solid gray; '.format(border_depth)
-                style += '}'
-                element.QT_QPushButton.setStyleSheet(style)
+                style = Style('QPushButton')
+                style.append(create_style_from_font(font))
+                style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
+                style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                style.add(border=('none', element.BorderWidth!=0))
+                style.add(margin='{}px {}px {}px {}px'.format(*full_element_pad))
+                style.add(border='{}px solid gray '.format(border_depth))
+                element.QT_QPushButton.setStyleSheet(style.content)
                 if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
                     if element_size[0] is not None:
                         element.QT_QPushButton.setFixedWidth(element_size[0])
@@ -4606,18 +4632,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QLineEdit.setAlignment(Qt.AlignCenter)
                 elif element.Justification[0] == 'r':
                     element.QT_QLineEdit.setAlignment(Qt.AlignRight)
-
                 element.QT_QLineEdit.setText(str(default_text))
 
-                style = create_style_from_font(font)
-                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    style += style_entry(color=element.TextColor)
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    style += style_entry(background_color=element.BackgroundColor)
-                style += style_entry(margin ='{}px {}px {}px {}px;'.format(*full_element_pad),
-                                     border='{}px solid gray; '.format(border_depth))
-                style = style_generate('QLineEdit', style)
-                element.QT_QLineEdit.setStyleSheet(style)
+                style = Style('QLineEdit')
+                style.append(create_style_from_font(font))
+                style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
+                style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                style.add(margin='{}px {}px {}px {}px'.format(*full_element_pad))
+                style.add(border='{}px solid gray '.format(border_depth))
+                element.QT_QLineEdit.setStyleSheet(style.content)
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeText is False or element.Size[0] is not None:
                     if element_size[0] is not None:
@@ -4655,23 +4678,17 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     width = element_size[0]
                 else:
                     width = max_line_len
-                style = 'QComboBox {'
-                style += create_style_from_font(font)
-                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'background-color: %s;' % element.BackgroundColor
-                style += 'border: {}px solid gray; '.format(border_depth)
-                style += '}'
 
-                style += 'QListView {'
-                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'color: %s;' % element.TextColor
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    style += 'background-color: %s;' % element.BackgroundColor
-                style += '}'
+                style = Style('QComboBox')
+                style.append(create_style_from_font(font))
+                style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
+                style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                style.add(border='{}px solid gray '.format(border_depth))
+                style2 = Style('QListView')
+                style2.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
+                style2.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
 
-                element.QT_ComboBox.setStyleSheet(style)
+                element.QT_ComboBox.setStyleSheet(style.content+style2.content)
 
                 if not auto_size_text:
                     if element_size[0] is not None:
@@ -5043,6 +5060,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QGraphicsScene.setSceneRect(0,0,element.CanvasSize[0],element.CanvasSize[1])
                 element.QT_QGraphicsView.setScene(element.QT_QGraphicsScene)
                 style = ''
+                style += 'border: {}px solid gray; '.format(0)
+
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
 
                 # print(style)
@@ -5984,12 +6003,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_ERROR_BUTTON_COLOR
 
     if icon:
-        try:
-            with open(icon, 'r') as icon_file:
-                pass
-        except:
-            raise FileNotFoundError
-            Window.user_defined_icon = icon
+        Window.user_defined_icon = icon
 
     if button_color != None:
         DEFAULT_BUTTON_COLOR = button_color
@@ -7145,7 +7159,7 @@ def main():
     # window.Element('_LISTBOX_').SetValue(['Listbox 1','Listbox 3'])
     while True:  # Event Loop
         # TimerStart()
-        event, values = window.Read(timeout=10)
+        event, values = window.Read(timeout=0)
         print(event) if event != TIMEOUT_KEY else None
         if event is None or event == 'Exit':
             break
