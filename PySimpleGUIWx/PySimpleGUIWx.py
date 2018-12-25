@@ -2527,7 +2527,7 @@ class SystemTray:
 
         self.App = wx.App(False)
         frame = wx.Frame(None, title='Tray icon frame')
-        self.TaskBarIcon = SystemTray.CustomTaskBarIcon(frame, self.App, self.Menu, filename=self.Filename, tooltip=tooltip)
+        self.TaskBarIcon = SystemTray.CustomTaskBarIcon(frame, self.App, self.Menu, filename=self.Filename, data_base64=data_base64, tooltip=tooltip)
 
         # self.App.MainLoop()
 
@@ -2540,20 +2540,21 @@ class SystemTray:
             self.menu_item_chosen = None
             self.menu = menu
             self.id_to_text = {}
+            self.filename = filename
+            self.data_base64 = data_base64
+            self.tooltip = tooltip or wx.EmptyString
+
             if filename:
-                icon = wx.Icon(filename, wx.BITMAP_TYPE_ICO)
-                if tooltip is not None:
-                    self.SetIcon(icon, tooltip=tooltip)
-                else:
-                    self.SetIcon(icon)
+                self.icon = wx.Icon(filename, wx.BITMAP_TYPE_ICO)
+                self.SetIcon(self.icon, tooltip=self.tooltip)
             elif data_base64:
                 ico1 = base64.b64decode(data_base64)
                 fout = open("zzztemp_icon.ico", "wb")
                 fout.write(ico1)
                 fout.close()
-                icon = wx.Icon('zzztemp_icon.ico', wx.BITMAP_TYPE_ICO)
-                self.TrayIcon.SetIcon(icon, tooltip=tooltip)
-                # os.remove("zzztemp_icon.ico")
+                self.icon = wx.Icon('zzztemp_icon.ico', wx.BITMAP_TYPE_ICO)
+                self.SetIcon(self.icon, tooltip=self.tooltip)
+                os.remove("zzztemp_icon.ico")
             self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.OnTaskBarLeftClick)
             self.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDoubleClick)
             self.Bind(wx.adv.EVT_TASKBAR_RIGHT_DOWN, self.OnTaskBarRightClick)
@@ -2657,11 +2658,11 @@ class SystemTray:
 
 
     def Hide(self):
-        self.TrayIcon.hide()
+        self.TaskBarIcon.RemoveIcon()
 
 
     def UnHide(self):
-        self.TrayIcon.show()
+        self.TaskBarIcon.SetIcon(icon=self.TaskBarIcon.icon, tooltip=self.TaskBarIcon.tooltip)
 
 
     def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):
@@ -5053,7 +5054,12 @@ def StartupTK(window):
 
     frame.Bind(wx.EVT_CLOSE, window.OnClose)
 
-    frame.SetIcon(wx.Icon(window.WindowIcon))
+    try:
+        with open(window.WindowIcon, 'r') as icon_file:
+            pass
+        frame.SetIcon(wx.Icon(window.WindowIcon))
+    except:
+        pass
 
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         panel.SetBackgroundColour(window.BackgroundColor)
