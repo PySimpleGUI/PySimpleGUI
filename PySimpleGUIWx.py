@@ -3,12 +3,15 @@
 import sys
 
 import wx
+import wx.adv
 import wx.lib.inspection
 import types
 import datetime
 import textwrap
 import pickle
 import calendar
+import base64
+import os
 
 g_time_start = 0
 g_time_end = 0
@@ -46,7 +49,7 @@ def TimerStop():
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
-DEFAULT_ELEMENT_SIZE = (250, 20)  # In CHARACTERS
+DEFAULT_ELEMENT_SIZE = (250, 26)  # In pixels
 DEFAULT_BUTTON_ELEMENT_SIZE = (10, 1)  # In CHARACTERS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (3, 2)  # Padding between elements (row, col) in pixels
@@ -60,9 +63,11 @@ DEFAULT_DEBUG_WINDOW_SIZE = (80, 20)
 DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
-DEFAULT_PIXELS_TO_CHARS_SCALING = (10,25)      # 1 character represents x by y pixels
-DEFAULT_PIXEL_TO_CHARS_CUTOFF = 12             # number of chars that triggers using pixels instead of chars
+DEFAULT_PIXELS_TO_CHARS_SCALING = (10,26)      # 1 character represents x by y pixels
+DEFAULT_PIXEL_TO_CHARS_CUTOFF = 15             # number of chars that triggers using pixels instead of chars
 
+MENU_DISABLED_CHARACTER = '!'
+MENU_KEY_SEPARATOR = '::'
 
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
@@ -171,7 +176,20 @@ MESSAGE_BOX_LINE_WIDTH = 60
 TIMEOUT_KEY = '__TIMEOUT__'
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
+EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED = '__DOUBLE_CLICKED__'
+EVENT_SYSTEM_TRAY_ICON_ACTIVATED = '__ACTIVATED__'
+EVENT_SYSTEM_TRAY_ICON_RIGHT_CLICK = '__RIGHT_CLICK__'
+EVENT_SYSTEM_TRAY_MESSAGE_CLICKED = '__MESSAGE_CLICKED__'
 
+# Icons for displaying system tray messages
+SYSTEM_TRAY_MESSAGE_ICON_INFORMATION = wx.ICON_INFORMATION
+SYSTEM_TRAY_MESSAGE_ICON_WARNING = wx.ICON_WARNING
+SYSTEM_TRAY_MESSAGE_ICON_CRITICAL = wx.ICON_ERROR
+SYSTEM_TRAY_MESSAGE_ICON_NOICON = None
+
+ICON_SCREEN_DEPTH = -1
+
+ICON_STOP = 512
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows():
@@ -755,7 +773,7 @@ class Radio(Element):
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
                  change_submits=False):
         '''
-        Radio Button Element
+        Radio Button
         :param text:
         :param group_id:
         :param default:
@@ -1218,7 +1236,7 @@ class Button(Element):
                  size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False,
                  focus=False, pad=None, key=None, visible=True, size_px=(None,None)):
         '''
-        Button Element
+        Button
         :param button_text:
         :param button_type:
         :param target:
@@ -2480,6 +2498,240 @@ class ErrorElement(Element):
     def __del__(self):
         super().__del__()
 
+Stretch = ErrorElement
+
+
+# ------------------------------------------------------------------------- #
+#                       Tray CLASS                                      #
+# ------------------------------------------------------------------------- #
+class SystemTray:
+    def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None):
+        '''
+        SystemTray - create an icon in the system tray
+        :param menu: Menu definition
+        :param filename: filename for icon
+        :param data: in-ram image for icon
+        :param data_base64: basee-64 data for icon
+        :param tooltip: tooltip string
+        '''
+        self.Menu = menu
+        self.TrayIcon = None
+        self.Shown = False
+        self.MenuItemChosen = TIMEOUT_KEY
+        self.LastMessage = None
+        self.LastTitle = None
+        self.App = None
+        self.Filename = filename
+        self.timer = None
+        self.DataBase64 = data_base64
+
+        self.App = wx.App(False)
+        frame = wx.Frame(None, title='Tray icon frame')
+        self.TaskBarIcon = SystemTray.CustomTaskBarIcon(frame, self.App, self.Menu, filename=self.Filename, tooltip=tooltip)
+
+        # self.App.MainLoop()
+
+
+    class CustomTaskBarIcon(wx.adv.TaskBarIcon):
+        def __init__(self, frame, app, menu, filename=None, data_base64=None, tooltip=None):
+            wx.adv.TaskBarIcon.__init__(self)
+            self.frame = frame
+            self.app = app
+            self.menu_item_chosen = None
+            self.menu = menu
+            self.id_to_text = {}
+            if filename:
+                icon = wx.Icon(filename, wx.BITMAP_TYPE_ICO)
+                if tooltip is not None:
+                    self.SetIcon(icon, tooltip=tooltip)
+                else:
+                    self.SetIcon(icon)
+            elif data_base64:
+                ico1 = base64.b64decode(data_base64)
+                fout = open("zzztemp_icon.ico", "wb")
+                fout.write(ico1)
+                fout.close()
+                icon = wx.Icon('zzztemp_icon.ico', wx.BITMAP_TYPE_ICO)
+                self.TrayIcon.SetIcon(icon, tooltip=tooltip)
+                # os.remove("zzztemp_icon.ico")
+            self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.OnTaskBarLeftClick)
+            self.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDoubleClick)
+            self.Bind(wx.adv.EVT_TASKBAR_RIGHT_DOWN, self.OnTaskBarRightClick)
+            self.Bind(wx.EVT_MENU, self.OnMenu)
+
+        def OnTaskBarActivate(self, evt):
+            pass
+
+        def OnTaskBarClose(self, evt):
+            self.frame.Close()
+
+        def OnTaskBarLeftClick(self, evt):
+            # print('Got a LEFT click!')
+            self.menu_item_chosen = EVENT_SYSTEM_TRAY_ICON_ACTIVATED
+            self.app.ExitMainLoop()
+
+
+        def OnTaskBarLeftDoubleClick(self, evt):
+            # print('Got a double click!')
+            self.menu_item_chosen = EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED
+            self.app.ExitMainLoop()
+
+        def CreatePopupMenu(self):
+            # print(f'Popup menu = {self.menu}')
+            menu = wx.Menu()
+            AddMenuItem(menu, self.menu[1], self)
+            # print(f'Dictionary = {self.id_to_text}')
+            # menu = wx.Menu()
+            # menu.Append(wx.ID_ANY, 'Exit')
+            # menu.Append(wx.ID_ANY, 'Item2')
+            # submenu = wx.Menu()
+            # submenu.Append(-1, 'Sub item')
+            # menu.AppendSubMenu(submenu, 'sub')
+            return menu
+
+        def OnTaskBarRightClick(self, evt):
+            # print('Got a right click!')
+            self.menu_item_chosen = EVENT_SYSTEM_TRAY_ICON_RIGHT_CLICK
+            # self.app.ExitMainLoop()
+
+        def OnMenu(self, event):
+            # print(f'On Menu {event}')
+            menu = event.EventObject
+            text=''
+            item = menu.FindItemById(event.Id)
+            # for item in menu.MenuItems:
+            #     if item.Id == event.Id:
+            #         print('** FOUND MENU ENTRY! **')
+            # print(f'item = {item}')
+            text = self.id_to_text[item]
+            # text = self.id_to_text[item.Id]
+            self.menu_item_chosen = text
+            self.app.ExitMainLoop()
+
+    # callback function when message is clicked
+    def messageClicked(self):
+        self.MenuItemChosen = EVENT_SYSTEM_TRAY_MESSAGE_CLICKED
+        self.App.exit()
+
+
+
+    def start_systray_read_timer(tray, amount):
+        timer = QtCore.QTimer()
+        timer.timeout.connect(tray.timer_timeout)
+        timer.start(amount)
+        return timer
+
+    def stop_timer(timer):
+        timer.stop()
+
+    def Read(self, timeout=None):
+        '''
+        Reads the context menu
+        :param timeout: Optional.  Any value other than None indicates a non-blocking read
+        :return:
+        '''
+        # if not self.Shown:
+        #     self.Shown = True
+        #     self.TrayIcon.show()
+        if timeout == 0:
+            self.App.processEvents()
+            return self.MenuItemChosen
+        elif timeout is not None:
+            self.timer = wx.Timer(self.TaskBarIcon)
+            self.TaskBarIcon.Bind(wx.EVT_TIMER, self.timer_timeout)
+            self.timer.Start(milliseconds=timeout, oneShot=wx.TIMER_ONE_SHOT)
+        self.RunningMainLoop = True
+        self.App.MainLoop()
+        self.RunningMainLoop = False
+        if self.timer:
+            self.timer.Stop()
+        self.MenuItemChosen = self.TaskBarIcon.menu_item_chosen
+        return self.MenuItemChosen
+
+    def timer_timeout(self, event):
+        # print('GOT TIMEOUT')
+        self.timer.Stop()
+        self.timer = None
+        self.TaskBarIcon.menu_item_chosen = TIMEOUT_KEY
+        self.App.ExitMainLoop()
+
+
+    def Hide(self):
+        self.TrayIcon.hide()
+
+
+    def UnHide(self):
+        self.TrayIcon.show()
+
+
+    def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):
+        '''
+        Shows a balloon above icon in system tray
+        :param title:  Title shown in balloon
+        :param message: Message to be displayed
+        :param filename: Optional icon filename
+        :param data: Optional in-ram icon
+        :param data_base64: Optional base64 icon
+        :param time: How long to display message in milliseconds
+        :return:
+        '''
+        if messageicon is None:
+            self.TaskBarIcon.ShowBalloon(title, message, msec=time)
+        else:
+            self.TaskBarIcon.ShowBalloon(title, message, msec=time, flags=messageicon)
+
+        return self
+
+    def Close(self):
+        '''
+
+        :return:
+        '''
+        self.TrayIcon.Hide()
+        # Don't close app because windows could be depending on it
+        # self.App.quit()
+
+
+    def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
+        '''
+        Updates the menu, tooltip or icon
+        :param menu: menu defintion
+        :param tooltip: string representing tooltip
+        :param filename:  icon filename
+        :param data:  icon raw image
+        :param data_base64: icon base 64 image
+        :return:
+        '''
+        # Menu
+        if menu is not None:
+            self.TaskBarIcon.menu = menu
+        # Tooltip
+        # if tooltip is not None:
+        #     self.TrayIcon.setToolTip(str(tooltip))
+        # Icon
+        # qicon = None
+        # if filename is not None:
+        #     icon = wx.Icon(filename, wx.BITMAP_TYPE_ICO)
+        #     self.TaskBarIcon.SetIcon(icon, tooltip=tooltip)
+        # elif data is not None:
+        #     ba = QtCore.QByteArray.fromRawData(data)
+        #     pixmap = QtGui.QPixmap()
+        #     pixmap.loadFromData(ba)
+        #     qicon = QIcon(pixmap)
+        # elif data_base64 is not None:
+        #     ico1 = base64.b64decode(data_base64)
+        #     fout = open("zzztemp_icon.ico", "wb")
+        #     fout.write(ico1)
+        #     fout.close()
+        #     icon = wx.Icon('zzztemp_icon.ico', wx.BITMAP_TYPE_ICO)
+        #     self.TrayIcon.SetIcon(icon, tooltip=tooltip)
+        #     os.remove("zzztemp_icon.ico")
+        # if qicon is not None:
+        #     self.TrayIcon.setIcon(qicon)
+
+
+
+
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
@@ -3082,7 +3334,7 @@ class Window:
             self.RootNeedsDestroying = True
         else:
             self.RootNeedsDestroying = True
-            self.QTApplication.exit()  # kick the users out of the mainloop
+            self.App.ExitMainLoop()  # kick the users out of the mainloop
         self.MasterFrame.Destroy()
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
@@ -3230,7 +3482,6 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
          bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
@@ -3714,6 +3965,7 @@ def _FindElementWithFocusInSubForm(form):
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+        return_val = None
         if type(sub_menu_info) is str:
             if not is_sub_menu and not skip:
                 # print(f'Adding command {sub_menu_info}')
@@ -3722,22 +3974,72 @@ if sys.version_info[0] >= 3:
                     if pos == 0 or sub_menu_info[pos - 1] != "\\":
                         sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
                 if sub_menu_info == '---':
-                    top_menu.add('separator')
+                    top_menu.Append(wx.ID_SEPARATOR)
                 else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                    try:
+                        item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+                    except:
+                        item_without_key = sub_menu_info
+
+                    if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                        id = top_menu.Append(wx.ID_ANY, item_without_key[len(MENU_DISABLED_CHARACTER):])
+                        element.id_to_text[id] = sub_menu_info[1:]
+                        top_menu.Enable(id.Id, False)
+                    else:
+                        id = top_menu.Append(wx.ID_ANY, item_without_key)
+                        element.id_to_text[id] = sub_menu_info
+
         else:
             i = 0
             while i < (len(sub_menu_info)):
                 item = sub_menu_info[i]
                 if i != len(sub_menu_info) - 1:
                     if type(sub_menu_info[i + 1]) == list:
-                        new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
+                        new_menu = wx.Menu()
+                        return_val = new_menu
                         pos = sub_menu_info[i].find('&')
                         if pos != -1:
                             if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
                                 sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                        if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
+                            id = top_menu.AppendSubMenu(new_menu, sub_menu_info[i][len(MENU_DISABLED_CHARACTER):])
+                            top_menu.Enable(id.Id, False)
+                        else:
+                            top_menu.AppendSubMenu(new_menu, sub_menu_info[i])
+                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                        i += 1  # skip the next one
+                    else:
+                        AddMenuItem(top_menu, item, element)
+                else:
+                    AddMenuItem(top_menu, item, element)
+                i += 1
+        return return_val
+
+if sys.version_info[0] >= 3:
+    def AddMenuItem2(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+        if type(sub_menu_info) is str:
+            if not is_sub_menu and not skip:
+                # print(f'Adding command {sub_menu_info}')
+                pos = sub_menu_info.find('&')
+                if pos != -1:
+                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
+                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
+                if sub_menu_info == '---':
+                    top_menu.Append(wx.ID_SEPARATOR)
+                else:
+                    top_menu.Append(wx.ID_ANY, sub_menu_info)
+        else:
+            i = 0
+            while i < (len(sub_menu_info)):
+                item = sub_menu_info[i]
+                if i != len(sub_menu_info) - 1:
+                    if type(sub_menu_info[i + 1]) == list:
+                        new_menu = wx.Menu()
+                        pos = sub_menu_info[i].find('&')
+                        if pos != -1:
+                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
+                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
+                        top_menu.AppendSubMenu(new_menu, sub_menu_info[i])
                         AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
                         i += 1  # skip the next one
                     else:
@@ -3879,7 +4181,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 statictext = element.WxStaticText = wx.StaticText(form.MasterPanel, -1, element.DisplayText)
-                hsizer.Add(element.WxStaticText, 0, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
                 # auto_size_text = element.AutoSizeText
                 display_text = element.DisplayText  # text to display
                 if auto_size_text is False:
@@ -3893,6 +4194,24 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         width = max_line_len
                     height = num_lines
+                lrsizer = wx.BoxSizer(wx.HORIZONTAL)
+                if full_element_pad[1] == full_element_pad[3]:   # if right = left
+                    lrsizer.Add(element.WxStaticText, 0, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
+                else:
+                    sizer = wx.BoxSizer(wx.HORIZONTAL)
+                    sizer.Add(element.WxStaticText,0,wx.LEFT, border=full_element_pad[3])
+                    lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
+
+                top_bottom_sizer  = wx.BoxSizer(wx.HORIZONTAL)
+                if full_element_pad[0] == full_element_pad[2]:   # if top = bottom
+                    top_bottom_sizer.Add(lrsizer, 0, wx.TOP|wx.BOTTOM,  border=full_element_pad[0])
+                else:
+                    sizer = wx.BoxSizer(wx.HORIZONTAL)
+                    sizer.Add(lrsizer,0,wx.TOP, border=full_element_pad[0])
+                    top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
+
+                hsizer.Add(top_bottom_sizer, 0)
+
                 # print(element_size,element.Size, width, height)
                 if not auto_size_text:
                     statictext.SetMinSize((width,height))
@@ -3940,7 +4259,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     auto_size = element.AutoSizeButton
                 else:
                     auto_size = toplevel_form.AutoSizeButtons
-
                 if auto_size is False or element.Size[0] is not None:
                     width, height = element_size
                 else:
@@ -3949,7 +4267,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if auto_size:
                     element.WxButton.SetWindowStyleFlag(element.WxButton.GetWindowStyleFlag() | wx.BU_EXACTFIT)
-
+                else:
+                    element.WxButton.SetMinSize(convert_tkinter_size_to_Wx((width,height)))
                 if element.ButtonColor != (None, None) and element.ButtonColor != DEFAULT_BUTTON_COLOR:
                     bc = element.ButtonColor
                 elif toplevel_form.ButtonColor != (None, None) and toplevel_form.ButtonColor != DEFAULT_BUTTON_COLOR:
@@ -3960,7 +4279,24 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 button.SetBackgroundColour(bc[1])
                 button.SetForegroundColour(bc[0])
 
-                hsizer.Add(button, 1, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
+                lrsizer = wx.BoxSizer(wx.HORIZONTAL)
+                if full_element_pad[1] == full_element_pad[3]:   # if right = left
+                    lrsizer.Add(button, 0, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
+                else:
+                    sizer = wx.BoxSizer(wx.HORIZONTAL)
+                    sizer.Add(button,0,wx.LEFT, border=full_element_pad[3])
+                    lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
+
+                top_bottom_sizer  = wx.BoxSizer(wx.HORIZONTAL)
+                if full_element_pad[0] == full_element_pad[2]:   # if top = bottom
+                    top_bottom_sizer.Add(lrsizer, 0, wx.TOP|wx.BOTTOM,  border=full_element_pad[0])
+                else:
+                    sizer = wx.BoxSizer(wx.HORIZONTAL)
+                    sizer.Add(lrsizer,0,wx.TOP, border=full_element_pad[0])
+                    top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
+
+                hsizer.Add(top_bottom_sizer, 0)
+
 
                 # border_depth = element.BorderWidth
             #     if btype != BUTTON_TYPE_REALTIME:
@@ -4021,7 +4357,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel)
                 text_ctrl.SetMinSize(element_size)
 
-                hsizer.Add(element.WxTextControl,0,wx.LEFT|wx.RIGHT, border=full_element_pad[1])
+                lrsizer = wx.BoxSizer(wx.HORIZONTAL)
+                if full_element_pad[1] == full_element_pad[3]:   # if right = left
+                    lrsizer.Add(element.WxTextControl, 0, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
+                else:
+                    sizer = wx.BoxSizer(wx.HORIZONTAL)
+                    sizer.Add(element.WxTextControl,0,wx.LEFT, border=full_element_pad[3])
+                    lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
+
+                top_bottom_sizer  = wx.BoxSizer(wx.HORIZONTAL)
+                if full_element_pad[0] == full_element_pad[2]:   # if top = bottom
+                    top_bottom_sizer.Add(lrsizer, 0, wx.TOP|wx.BOTTOM,  border=full_element_pad[0])
+                else:
+                    sizer = wx.BoxSizer(wx.HORIZONTAL)
+                    sizer.Add(lrsizer,0,wx.TOP, border=full_element_pad[0])
+                    top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
+
+                hsizer.Add(top_bottom_sizer, 0)
+
+
 
                 # default_text = element.DefaultText
                 # element.TKStringVar = tk.StringVar()
@@ -4675,7 +5029,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         #
         # # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
-        containing_frame.Add(hsizer,0, wx.TOP|wx.BOTTOM, border=full_element_pad[0])
+        containing_frame.Add(hsizer,0, wx.TOP|wx.BOTTOM, border=0)
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
         # tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=False)
         # if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -4739,7 +5093,9 @@ def StartupTK(window):
     window.MasterFrame.Show()
     # ....................................... DONE creating and laying out window ..........................#
     wx.lib.inspection.InspectionTool().Show()
+    window.CurrentlyRunningMainloop = True
     window.App.MainLoop()
+    window.CurrentlyRunningMainloop = False
     # window.SetIcon(window.WindowIcon)
 
     # root.attributes('-alpha', window.AlphaChannel)  # Make window visible again
@@ -6199,18 +6555,18 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
 
 def main():
-    layout = [[Text('You are running the PySimpleGUI.py file itself')],
-              [Text('You should be importing it rather than running it', justification='r', size=(50, 2))],
+    layout = [[Text('TEXT1',), Text('TEXT2', )],
+              [Text('You should be importing it rather than running it', justification='r', size=(50, 1))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
                FolderBrowse()],
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-              [Ok(), Cancel()]]
+              [Button('Ok')]]
 
     window = Window('Demo window..',
-                    default_element_size=(300,25),
+                    # default_element_size=(35,1),
                     auto_size_text=True,
-                    auto_size_buttons=False,
+                    auto_size_buttons=True,
                     disable_close=False,
                     ).Layout(layout)
     event, values = window.Read()
