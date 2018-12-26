@@ -9,14 +9,14 @@
         
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
         
-[![Downloads](http://pepy.tech/badge/pysimpleguiqt)](http://pepy.tech/project/pysimplegui)        
+[![Downloads](http://pepy.tech/badge/pysimpleguiwx)](http://pepy.tech/project/pysimplegui)        
   
       
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-1000-yellow.svg)  
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.21.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.2.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 The WxPython port of PySimpleGUI
 
 
- ## The Engineering Pre-Release     Version 0.1.0
+ ## The Engineering Pre-Release     Version 0.2.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -173,6 +173,14 @@ When a menu item has a key and it is chosen, then entire string is returned.  If
   * Read, with or without a timeout
   * Catch single click, double click events
   * Source code compatiable with Qt
+
+### 0.2.0   -   26-Dec-2018
+
+* Correctly handling base64 images
+* Support for clicking message balloon
+* Can Hide and  UnHide the  icon
+
+
 
 # Design        
  ## Author 

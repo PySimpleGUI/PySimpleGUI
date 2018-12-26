@@ -2545,7 +2545,7 @@ class SystemTray:
             self.filename = filename
             self.data_base64 = data_base64
             self.tooltip = tooltip or wx.EmptyString
-
+ 
             if filename:
                 self.icon = wx.Icon(filename, wx.BITMAP_TYPE_ICO)
                 self.SetIcon(self.icon, tooltip=self.tooltip)
