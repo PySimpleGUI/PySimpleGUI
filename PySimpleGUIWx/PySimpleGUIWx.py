@@ -5,6 +5,7 @@ import sys
 import wx
 import wx.adv
 import wx.lib.inspection
+from wx.lib.embeddedimage import PyEmbeddedImage
 import types
 import datetime
 import textwrap
@@ -2549,22 +2550,16 @@ class SystemTray:
                 self.icon = wx.Icon(filename, wx.BITMAP_TYPE_ICO)
                 self.SetIcon(self.icon, tooltip=self.tooltip)
             elif data_base64:
-                ico1 = base64.b64decode(data_base64)
-                temp_filename = next(tempfile._get_candidate_names()) + '.ico'
-                print(temp_filename)
-                fout = open(temp_filename, "wb")
-                fout.write(ico1)
-                fout.close()
-                self.icon = wx.Icon(temp_filename, wx.BITMAP_TYPE_ICO)
+                self.icon = PyEmbeddedImage(data_base64).GetIcon()
                 self.SetIcon(self.icon, tooltip=self.tooltip)
-                os.remove(temp_filename)
             self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.OnTaskBarLeftClick)
             self.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDoubleClick)
             self.Bind(wx.adv.EVT_TASKBAR_RIGHT_DOWN, self.OnTaskBarRightClick)
+            self.Bind(wx.adv.EVT_TASKBAR_BALLOON_CLICK, self.OnTaskBarMessageClick)
             self.Bind(wx.EVT_MENU, self.OnMenu)
 
         def OnTaskBarActivate(self, evt):
-            pass
+            passf
 
         def OnTaskBarClose(self, evt):
             self.frame.Close()
@@ -2572,6 +2567,11 @@ class SystemTray:
         def OnTaskBarLeftClick(self, evt):
             # print('Got a LEFT click!')
             self.menu_item_chosen = EVENT_SYSTEM_TRAY_ICON_ACTIVATED
+            self.app.ExitMainLoop()
+
+        def OnTaskBarMessageClick(self, evt):
+            # print('Got a LEFT click!')
+            self.menu_item_chosen = EVENT_SYSTEM_TRAY_MESSAGE_CLICKED
             self.app.ExitMainLoop()
 
 
@@ -2619,15 +2619,6 @@ class SystemTray:
 
 
 
-    def start_systray_read_timer(tray, amount):
-        timer = QtCore.QTimer()
-        timer.timeout.connect(tray.timer_timeout)
-        timer.start(amount)
-        return timer
-
-    def stop_timer(timer):
-        timer.stop()
-
     def Read(self, timeout=None):
         '''
         Reads the context menu
@@ -2640,6 +2631,11 @@ class SystemTray:
         timeout1 = timeout
         if timeout1 == 0:
             timeout1 = 1
+            # if wx.GetApp():
+            #     wx.GetApp().ProcessPendingEvents()
+            # self.App.ProcessPendingEvents()
+            # self.App.ProcessIdle()
+            # return self.MenuItemChosen
         if timeout1 is not None:
             self.timer = wx.Timer(self.TaskBarIcon)
             self.TaskBarIcon.Bind(wx.EVT_TIMER, self.timer_timeout)
