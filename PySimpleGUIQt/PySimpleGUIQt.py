@@ -5060,8 +5060,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_QGraphicsScene.setSceneRect(0,0,element.CanvasSize[0],element.CanvasSize[1])
                 element.QT_QGraphicsView.setScene(element.QT_QGraphicsScene)
                 style = ''
-                style += 'border: {}px solid gray; '.format(0)
-
+                style += 'border: 0px solid gray; '
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
 
                 # print(style)
@@ -5715,10 +5714,12 @@ class QuickMeter(object):
         if self.orientation.lower().startswith('h'):
             col = [*[[T(arg)] for arg in args],
                 [T('', size=(25,8), key='_STATS_')],
-                [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)],[Cancel(button_color=self.button_color), Stretch()]  ]
+                   [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size,
+                                bar_color=self.bar_color)],
+                   [Cancel(button_color=self.button_color), Stretch()]  ]
             layout += [Column(col)]
         else:
-            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
+            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size, bar_color=self.bar_color)]]
             col2 = [*[[T(arg)] for arg in args],
                 [T('', size=(25, 8), key='_STATS_')],[Cancel(button_color=self.button_color), Stretch()] ]
             layout += [Column(col), Column(col2)]
