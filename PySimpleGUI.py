@@ -324,6 +324,19 @@ class ToolTip:
 # ------------------------------------------------------------------------- #
 class Element():
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+        '''
+        Element
+        :param type:
+        :param size:
+        :param auto_size_text:
+        :param font:
+        :param background_color:
+        :param text_color:
+        :param key:
+        :param pad:
+        :param tooltip:
+        :param visible:
+        '''
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -359,8 +372,6 @@ class Element():
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
-
 
 
     def FindReturnKeyBoundButton(self, form):
@@ -495,13 +506,26 @@ class Element():
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, pad=None, visible=True):
+                 change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, pad=None, right_click_menu=None, visible=True):
         '''
-        Input a line of text Element
-        :param default_text: Default value to display
-        :param size: Size of field in characters
-        :param password_char: If non-blank, will display this character for every character typed
-        :param background_color: Color for Element. Text or RGB Hex
+        InputText
+        :param default_text:
+        :param size:
+        :param disabled:
+        :param password_char:
+        :param justification:
+        :param background_color:
+        :param text_color:
+        :param font:
+        :param tooltip:
+        :param change_submits:
+        :param enable_events:
+        :param do_not_clear:
+        :param key:
+        :param focus:
+        :param pad:
+        :param right_click_menu:
+        :param visible:
         '''
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
@@ -512,6 +536,7 @@ class InputText(Element):
         self.Justification = justification
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
+        self.RightClickMenu = right_click_menu
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible)
 
@@ -563,11 +588,22 @@ class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None, readonly=False, font=None, visible=True):
         '''
-        Input Combo Box Element (also called Dropdown box)
+        Combo
         :param values:
-        :param size: Size of field in characters
-        :param auto_size_text: True if should shrink field to fit the default text
-        :param background_color: Color for Element. Text or RGB Hex
+        :param default_value:
+        :param size:
+        :param auto_size_text:
+        :param background_color:
+        :param text_color:
+        :param change_submits:
+        :param enable_events:
+        :param disabled:
+        :param key:
+        :param pad:
+        :param tooltip:
+        :param readonly:
+        :param font:
+        :param visible:
         '''
         self.Values = values
         self.DefaultValue = default_value
@@ -640,7 +676,7 @@ class OptionMenu(Element):
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
-        InputOptionMenu
+        OptionMenu
         :param values:
         :param default_value:
         :param size:
@@ -651,6 +687,7 @@ class OptionMenu(Element):
         :param key:
         :param pad:
         :param tooltip:
+        :param visible:
         '''
         self.Values = values
         self.DefaultValue = default_value
@@ -698,13 +735,14 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False,enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False,enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Listbox Element
+        Listbox
         :param values:
         :param default_values:
         :param select_mode:
         :param change_submits:
+        :param enable_events:
         :param bind_return_key:
         :param size:
         :param disabled:
@@ -715,6 +753,8 @@ class Listbox(Element):
         :param key:
         :param pad:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.Values = values
         self.DefaultValues = default_values
@@ -734,6 +774,7 @@ class Listbox(Element):
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
@@ -799,7 +840,7 @@ class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None, change_submits=False, enable_events=False, visible=True):
         '''
-        Radio Button Element
+        Radio
         :param text:
         :param group_id:
         :param default:
@@ -813,6 +854,8 @@ class Radio(Element):
         :param pad:
         :param tooltip:
         :param change_submits:
+        :param enable_events:
+        :param visible:
         '''
         self.InitialState = default
         self.Text = text
@@ -858,7 +901,7 @@ class Radio(Element):
 class Checkbox(Element):
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, change_submits=False,enable_events=False, disabled=False, key=None, pad=None, tooltip=None, visible=True):
         '''
-        Checkbox Element
+        Checkbox
         :param text:
         :param default:
         :param size:
@@ -867,10 +910,12 @@ class Checkbox(Element):
         :param background_color:
         :param text_color:
         :param change_submits:
+        :param enable_events:
         :param disabled:
         :param key:
         :param pad:
         :param tooltip:
+        :param visible:
         '''
         self.Text = text
         self.InitialState = default
@@ -922,11 +967,12 @@ class Spin(Element):
     # TKSpinBox = None
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False,enable_events=False , size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
-        Spinner Element
+        Spin
         :param values:
         :param initial_value:
         :param disabled:
         :param change_submits:
+        :param enable_events:
         :param size:
         :param auto_size_text:
         :param font:
@@ -935,6 +981,7 @@ class Spin(Element):
         :param key:
         :param pad:
         :param tooltip:
+        :param visible:
         '''
         self.Values = values
         self.DefaultValue = initial_value
@@ -997,9 +1044,9 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Multiline Element
+        Multiline
         :param default_text:
         :param enter_submits:
         :param disabled:
@@ -1016,6 +1063,8 @@ class Multiline(Element):
         :param font:
         :param pad:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
 
         self.DefaultText = default_text
@@ -1027,6 +1076,7 @@ class Multiline(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
+        self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
@@ -1078,11 +1128,12 @@ class Multiline(Element):
 class Text(Element):
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, right_click_menu=None, tooltip=None, visible=True):
         '''
-        Text Element
+        Text
         :param text:
         :param size:
         :param auto_size_text:
         :param click_submits:
+        :param enable_events:
         :param relief:
         :param font:
         :param text_color:
@@ -1090,7 +1141,9 @@ class Text(Element):
         :param justification:
         :param pad:
         :param key:
+        :param right_click_menu:
         :param tooltip:
+        :param visible:
         '''
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
@@ -1140,11 +1193,12 @@ T = Text
 class StatusBar(Element):
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False, relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None, visible=True):
         '''
-        Text Element
+        StatusBar
         :param text:
         :param size:
         :param auto_size_text:
         :param click_submits:
+        :param enable_events:
         :param relief:
         :param font:
         :param text_color:
@@ -1153,6 +1207,7 @@ class StatusBar(Element):
         :param pad:
         :param key:
         :param tooltip:
+        :param visible:
         '''
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
@@ -1195,6 +1250,7 @@ class TKProgressBar():
     def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
                  orientation='horizontal', BarColor=(None, None), key=None):
+
         self.Length = length
         self.Width = width
         self.Max = max
@@ -1258,19 +1314,19 @@ class TKProgressBar():
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
-        frame = tk.Frame(parent)
-        tk.Frame.__init__(self, frame)
-        self.output = tk.Text(frame, width=width, height=height, bd=bd, font=font)
+        self.frame = tk.Frame(parent)
+        tk.Frame.__init__(self, self.frame)
+        self.output = tk.Text(self.frame, width=width, height=height, bd=bd, font=font)
         if background_color and background_color != COLOR_SYSTEM_DEFAULT:
             self.output.configure(background=background_color)
-            frame.configure(background=background_color)
+            self.frame.configure(background=background_color)
         if text_color and text_color != COLOR_SYSTEM_DEFAULT:
             self.output.configure(fg=text_color)
-        self.vsb = tk.Scrollbar(frame, orient="vertical", command=self.output.yview)
+        self.vsb = tk.Scrollbar(self.frame, orient="vertical", command=self.output.yview)
         self.output.configure(yscrollcommand=self.vsb.set)
         self.output.pack(side="left", fill="both", expand=True)
         self.vsb.pack(side="left", fill="y", expand=False)
-        frame.pack(side="left", padx=pad[0], pady=pad[1], expand=True, fill='y')
+        self.frame.pack(side="left", padx=pad[0], pady=pad[1], expand=True, fill='y')
         self.previous_stdout = sys.stdout
         self.previous_stderr = sys.stderr
 
@@ -1304,9 +1360,9 @@ class TKOutput(tk.Frame):
 # ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None, visible=True):
+                 key=None, right_click_menu=None, visible=True):
         '''
-        Output Element
+        Output
         :param size:
         :param background_color:
         :param text_color:
@@ -1314,10 +1370,13 @@ class Output(Element):
         :param font:
         :param tooltip:
         :param key:
+        :param right_click_menu:
+        :param visible:
         '''
         self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible)
@@ -1354,7 +1413,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False, enable_events=False, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True):
         '''
-        Button Element
+        Button
         :param button_text:
         :param button_type:
         :param target:
@@ -1362,19 +1421,22 @@ class Button(Element):
         :param file_types:
         :param initial_folder:
         :param disabled:
+        :param change_submits:
+        :param enable_events:
         :param image_filename:
+        :param image_data:
         :param image_size:
         :param image_subsample:
         :param border_width:
         :param size:
         :param auto_size_button:
         :param button_color:
-        :param default_value:
         :param font:
         :param bind_return_key:
         :param focus:
         :param pad:
         :param key:
+        :param visible:
         '''
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
@@ -1612,27 +1674,24 @@ class ButtonMenu(Element):
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None, tearoff=False, visible=True):
         '''
-        Button Element
+        ButtonMenu
         :param button_text:
-        :param button_type:
-        :param target:
+        :param menu_def:
         :param tooltip:
-        :param file_types:
-        :param initial_folder:
         :param disabled:
         :param image_filename:
+        :param image_data:
         :param image_size:
         :param image_subsample:
         :param border_width:
         :param size:
         :param auto_size_button:
         :param button_color:
-        :param default_value:
         :param font:
-        :param bind_return_key:
-        :param focus:
         :param pad:
         :param key:
+        :param tearoff:
+        :param visible:
         '''
         self.MenuDefinition = menu_def
         self.AutoSizeButton = auto_size_button
@@ -1717,7 +1776,7 @@ class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
                  style=None, border_width=None, relief=None, key=None, pad=None, visible=True):
         '''
-        ProgressBar Element
+        ProgressBar
         :param max_value:
         :param orientation:
         :param size:
@@ -1728,6 +1787,7 @@ class ProgressBar(Element):
         :param relief:
         :param key:
         :param pad:
+        :param visible:
         '''
         self.MaxValue = max_value
         self.TKProgressBar = None
@@ -1776,7 +1836,7 @@ class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True, enable_events=False):
         '''
-        Image Element
+        Image
         :param filename:
         :param data:
         :param background_color:
@@ -1784,6 +1844,9 @@ class Image(Element):
         :param pad:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
+        :param enable_events:
         '''
         self.Filename = filename
         self.Data = data
@@ -1827,13 +1890,15 @@ class Image(Element):
 class Canvas(Element):
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Canvas Element
+        Canvas
         :param canvas:
         :param background_color:
         :param size:
         :param pad:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
@@ -1858,17 +1923,21 @@ class Canvas(Element):
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
-    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, enable_events=False, key=None,
-                 tooltip=None, right_click_menu=None, visible=True):
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Graph Element
+        Graph
         :param canvas_size:
         :param graph_bottom_left:
         :param graph_top_right:
         :param background_color:
         :param pad:
+        :param change_submits:
+        :param drag_submits:
+        :param enable_events:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
@@ -2117,7 +2186,7 @@ class Frame(Element):
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True):
         '''
-        Frame Element
+        Frame
         :param title:
         :param layout:
         :param title_color:
@@ -2130,6 +2199,8 @@ class Frame(Element):
         :param border_width:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.UseDictionary = False
         self.ReturnValues = None
@@ -2219,9 +2290,9 @@ VSep = VerticalSeparator
 # ---------------------------------------------------------------------- #
 class Tab(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, tooltip=None, visible=True):
+                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Tab Element
+        Tab
         :param title:
         :param layout:
         :param title_color:
@@ -2232,6 +2303,8 @@ class Tab(Element):
         :param border_width:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.UseDictionary = False
         self.ReturnValues = None
@@ -2247,6 +2320,7 @@ class Tab(Element):
         self.ParentNotebook = None
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.RightClickMenu = right_click_menu
 
         self.Layout(layout)
 
@@ -2306,7 +2380,7 @@ class TabGroup(Element):
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
                  font=None, change_submits=False, enable_events=False,pad=None, border_width=None, theme=None, key=None, tooltip=None, visible=True):
         '''
-        TabGroup Element
+        TabGroup
         :param layout:
         :param tab_location:
         :param title_color:
@@ -2314,11 +2388,13 @@ class TabGroup(Element):
         :param background_color:
         :param font:
         :param change_submits:
+        :param enable_events:
         :param pad:
         :param border_width:
         :param theme:
         :param key:
         :param tooltip:
+        :param visible:
         '''
         self.UseDictionary = False
         self.ReturnValues = None
@@ -2387,14 +2463,17 @@ class TabGroup(Element):
 class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None, disable_number_display=False, border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
-        Slider Element
+        Slider
         :param range:
         :param default_value:
         :param resolution:
+        :param tick_interval:
         :param orientation:
+        :param disable_number_display:
         :param border_width:
         :param relief:
         :param change_submits:
+        :param enable_events:
         :param disabled:
         :param size:
         :param font:
@@ -2403,6 +2482,7 @@ class Slider(Element):
         :param key:
         :param pad:
         :param tooltip:
+        :param visible:
         '''
         self.TKScale = None
         self.Range = (1, 10) if range == (None, None) else range
@@ -2537,14 +2617,16 @@ class TkScrollableFrame(tk.Frame):
 class Column(Element):
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
         '''
-        Container for elements that are stacked into rows
+        Column
         :param layout:
         :param background_color:
         :param size:
         :param pad:
         :param scrollable:
         :param vertical_scroll_only:
+        :param right_click_menu:
         :param key:
+        :param visible:
         '''
         self.UseDictionary = False
         self.ReturnValues = None
@@ -2623,14 +2705,18 @@ class Column(Element):
 class Pane(Element):
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
         '''
-        Container for elements that are stacked into rows
-        :param layout:
+        Pane
+        :param pane_list:
         :param background_color:
         :param size:
         :param pad:
-        :param scrollable:
-        :param vertical_scroll_only:
+        :param orientation:
+        :param show_handle:
+        :param relief:
+        :param handle_size:
+        :param border_width:
         :param key:
+        :param visible:
         '''
         self.UseDictionary = False
         self.ReturnValues = None
@@ -2891,13 +2977,14 @@ class TKCalendar(ttk.Frame):
 class Menu(Element):
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None, visible=True):
         '''
-        Menu Element
+        Menu
         :param menu_definition:
         :param background_color:
         :param size:
         :param tearoff:
         :param pad:
         :param key:
+        :param visible:
         '''
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
@@ -2942,6 +3029,7 @@ class Menu(Element):
     def __del__(self):
         super().__del__()
 
+MenuBar = Menu          # another name for Menu to make it clear it's the Menu Bar
 
 # ---------------------------------------------------------------------- #
 #                           Table                                        #
@@ -2951,7 +3039,7 @@ class Table(Element):
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Table Element
+        Table
         :param values:
         :param headings:
         :param visible_column_map:
@@ -2961,14 +3049,22 @@ class Table(Element):
         :param max_col_width:
         :param select_mode:
         :param display_row_numbers:
+        :param num_rows:
+        :param row_height:
         :param font:
         :param justification:
         :param text_color:
         :param background_color:
+        :param alternating_row_color:
         :param size:
+        :param change_submits:
+        :param enable_events:
+        :param bind_return_key:
         :param pad:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.Values = values
         self.ColumnHeadings = headings
@@ -3061,14 +3157,19 @@ class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None,right_click_menu=None, visible=True):
         '''
-        Tree Element
+        Tree
+        :param data:
         :param headings:
         :param visible_column_map:
         :param col_widths:
+        :param col0_width:
         :param def_col_width:
         :param auto_size_columns:
         :param max_col_width:
         :param select_mode:
+        :param show_expanded:
+        :param change_submits:
+        :param enable_events:
         :param font:
         :param justification:
         :param text_color:
@@ -3077,6 +3178,8 @@ class Tree(Element):
         :param pad:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.TreeData = data
         self.ColumnHeadings = headings
@@ -3237,7 +3340,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None):
         '''
-        Main window object where Elements will be laid out in rows
+        Window
         :param title:
         :param default_element_size:
         :param default_button_element_size:
@@ -3245,6 +3348,7 @@ class Window:
         :param auto_size_buttons:
         :param location:
         :param size:
+        :param element_padding:
         :param button_color:
         :param font:
         :param progress_bar_color:
@@ -3263,6 +3367,8 @@ class Window:
         :param keep_on_top:
         :param resizable:
         :param disable_close:
+        :param disable_minimize:
+        :param right_click_menu:
         '''
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
@@ -4559,6 +4665,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                 else:
                     element.TKColFrame = tk.Frame(tk_row_frame)
+                    if element.Size != (None, None):
+                        print(f'Frame size = {element.Size}')
+                        element.TKColFrame.configure(width=element.Size[0], height=element.Size[1])
                     PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
                 element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
@@ -4604,8 +4713,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.PanedWindow.pack_forget()
-
-
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
@@ -4848,6 +4955,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.TKEntry.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 max_line_len = max([len(str(l)) for l in element.Values])
@@ -4997,6 +5110,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.TKListbox.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 default_text = element.DefaultText
@@ -5023,6 +5142,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.TKText.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
@@ -5138,6 +5263,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKOut.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element._TKOut.bind('<Button-3>', element.RightClickMenuCallback)
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
@@ -5309,6 +5440,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.TKFrame.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
 
@@ -5821,11 +5958,11 @@ class QuickMeter(object):
             col = []
             col += [[T(arg)] for arg in args]
             col += [[T('', size=(30,10), key='_STATS_')],
-                    [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)],
+                    [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size, bar_color=self.bar_color)],
                     [Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col)]
         else:
-            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
+            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size, bar_color=self.bar_color)]]
             col2 = []
             col2 += [[T(arg)] for arg in args]
             col2 += [[T('', size=(30,10), key='_STATS_')],
