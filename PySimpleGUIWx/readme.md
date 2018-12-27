@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.2.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 The WxPython port of PySimpleGUI
 
 
- ## The Engineering Pre-Release     Version 0.2.0
+ ## The Engineering Pre-Release     Version 0.3.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -181,12 +181,20 @@ When a menu item has a key and it is chosen, then entire string is returned.  If
 * Can Hide and  UnHide the  icon
 
 
+### 0.3.0   -   27-Dec-2018
+
+* Hooked up buttons!
+* Browse file button is only file/folder button that works
+* Text, Input and Button elements are the only working elements
+* SystemTray can take any kind of image as icon
+* Read with Timeout (non-zero) works
+* Popups
+
 
 # Design        
- ## Author 
+# Author 
  Mike B.        
         
-# Demo Code Contributors        
    
 # License        
  GNU Lesser General Public License (LGPL 3) +        
