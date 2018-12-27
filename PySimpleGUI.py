@@ -542,7 +542,7 @@ class InputText(Element):
 
     def Update(self, value=None, disabled=None, select=None, visible=None):
         if disabled is True:
-            self.TKEntry['state'] = 'disabled'
+            self.TKEntry['state'] = 'readonly'
         elif disabled is False:
             self.TKEntry['state'] = 'normal'
         if value is not None:
@@ -4944,7 +4944,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     focus_set = True
                     element.TKEntry.focus_set()
                 if element.Disabled:
-                    element.TKEntry['state'] = 'disabled'
+                    element.TKEntry['state'] = 'readonly'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.RightClickMenu or toplevel_form.RightClickMenu:
