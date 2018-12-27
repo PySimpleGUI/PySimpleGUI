@@ -10,16 +10,31 @@ import types
 import datetime
 import textwrap
 import pickle
-import calendar
-import base64
 import os
-import tempfile
+import time
+
+"""
+    21-Dec-2018
+    Welcome to the "core" PySimpleGUIWx port!
+
+    This marks the 3rd port of the PySimpleGUI GUI SDK.  Each port gets a little better than
+    the previous.  
+
+    It will take a while for this Wx port to be completed, but should be running with a fully selection
+    of widgets fairly quickly.  The Qt port required 1 week to get to "Alpha" condition
+
+    Enjoy!
+"""
 
 g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
 
-import time
+
+RUN_INSPECTION_TOOL = False
+
+# Because looks matter...
+DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
 
 
 def TimerStart():
@@ -35,19 +50,6 @@ def TimerStop():
     g_time_delta = g_time_end - g_time_start
     print(g_time_delta)
 
-
-"""
-    21-Dec-2018
-    Welcome to the "core" PySimpleGUIWx port!
-    
-    This marks the 3rd port of the PySimpleGUI GUI SDK.  Each port gets a little better than
-    the previous.  
-
-    It will take a while for this Wx port to be completed, but should be running with a fully selection
-    of widgets fairly quickly.  The Qt port required 1 week to get to "Alpha" condition
-
-    Enjoy!
-"""
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
@@ -1238,7 +1240,7 @@ class Button(Element):
                  size=(None, None), auto_size_button=None, button_color=None, font=None, bind_return_key=False,
                  focus=False, pad=None, key=None, visible=True, size_px=(None,None)):
         '''
-        Button
+        Button Element
         :param button_text:
         :param button_type:
         :param target:
@@ -1289,6 +1291,7 @@ class Button(Element):
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, size_px=size_px)
         return
+
     # Realtime button release callback
     def ButtonReleaseCallBack(self, parm):
         self.LastButtonClickedWasRealtime = False
@@ -1302,12 +1305,12 @@ class Button(Element):
         else:
             self.ParentForm.LastButtonClicked = self.ButtonText
         if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick out of loop if read was called
+            pass  # kick out of loop if read was called
 
     # -------  Button Callback  ------- #
-    def ButtonCallBack(self):
+    def ButtonCallBack(self, event):
 
-        # print('Button callback')
+        print('Button callback')
 
         # print(f'Parent = {self.ParentForm}   Position = {self.Position}')
         # Buttons modify targets or return from the form
@@ -1338,49 +1341,55 @@ class Button(Element):
                     should_submit_window = True
             except:
                 pass
-        filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
+        filetypes = (("ALL Files", "*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
+            folder_name = QFileDialog.getExistingDirectory(dir=self.InitialFolder)
             if folder_name != '':
-                try:
-                    strvar.set(folder_name)
-                    self.TKStringVar.set(folder_name)
-                except:
-                    pass
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = folder_name
+                else:
+                    target_element.Update(folder_name)
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            if sys.platform == 'darwin':
-                file_name = tk.filedialog.askopenfilename(
-                    initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
+            # qt_types = "PNG files (*.png)|*.png"
+            print(qt_types)
+            if self.InitialFolder:
+                dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_OPEN)
             else:
-                file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
-                                                          initialdir=self.InitialFolder)  # show the 'get file' dialog box
+                dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types)
+            file_name = ''
+            if dialog.ShowModal() == wx.ID_OK:
+                file_name = dialog.GetFilename()
             if file_name != '':
-                strvar.set(file_name)
-                self.TKStringVar.set(file_name)
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_name
+                else:
+                    target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
-            color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
-            color = color[1]  # save only the #RRGGBB portion
-            strvar.set(color)
-            self.TKStringVar.set(color)
+            qcolor = QColorDialog.getColor()
+            rgb_color = qcolor.getRgb()
+            color= '#' + ''.join('%02x'% i for i in rgb_color[:3])
+            if self.Target == (None, None):
+                self.FileOrFolderName = color
+            else:
+                target_element.Update(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            if sys.platform == 'darwin':
-                file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
-            else:
-                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+            qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
+            file_name = QFileDialog.getOpenFileNames(dir=self.InitialFolder, filter=qt_types)
             if file_name != '':
-                file_name = ';'.join(file_name)
-                strvar.set(file_name)
-                self.TKStringVar.set(file_name)
+                file_name = ';'.join(file_name[0])
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_name
+                else:
+                    target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            if sys.platform == 'darwin':
-                file_name = tk.filedialog.asksaveasfilename(
-                    initialdir=self.InitialFolder)  # show the 'get file' dialog box
-            else:
-                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
-                                                            initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
+            file_name = QFileDialog.getSaveFileName(dir=self.InitialFolder, filter=qt_types)
             if file_name != '':
-                strvar.set(file_name)
-                self.TKStringVar.set(file_name)
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_name
+                else:
+                    target_element.Update(file_name[0])
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1389,12 +1398,12 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
-            self.ParentForm._Close()
             if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
+                self.ParentForm.App.ExitMainLoop()
+            self.ParentForm.MasterFrame.Close()
             if self.ParentForm.NonBlocking:
-                self.ParentForm.TKroot.destroy()
-                _my_windows.Decrement()
+                Window.DecrementOpenCount()
+            self.ParentForm._Close()
         elif self.BType == BUTTON_TYPE_READ_FORM:  # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1404,64 +1413,68 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
-                self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+                self.ParentForm.App.ExitMainLoop()
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
+            if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
+                self.ParentForm.App.ExitMainLoop()
+            self.ParentForm.MasterFrame.Close()
             self.ParentForm._Close()
-            if self.ParentForm.NonBlocking:
-                self.ParentForm.TKroot.destroy()
-                _my_windows.Decrement()
+            Window.DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             should_submit_window = False
-            root = tk.Toplevel()
-            root.title('Calendar Chooser')
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element,
-                                    close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y)
-            self.TKCal.pack(expand=1, fill='both')
-            root.update()
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
+                self.ParentForm.App.ExitMainLoop()
         return
 
-    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None):
-        try:
-            if text is not None:
-                self.TKButton.configure(text=text)
-                self.ButtonText = text
-            if button_color != (None, None):
-                self.TKButton.config(foreground=button_color[0], background=button_color[1])
-        except:
-            return
-        if disabled == True:
-            self.TKButton['state'] = 'disabled'
-        elif disabled == False:
-            self.TKButton['state'] = 'normal'
-        if image_data is not None:
-            image = tk.PhotoImage(data=image_data)
-            width, height = image.width(), image.height()
-            self.TKButton.config(image=image, width=width, height=height)
-            self.TKButton.image = image
-        if image_filename is not None:
-            self.TKButton.config(highlightthickness=0)
-            photo = tk.PhotoImage(file=image_filename)
-            width, height = photo.width(), photo.height()
-            self.TKButton.config(image=photo, width=width, height=height)
-            self.TKButton.image = photo
+    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, font=None, visible=None):
+        if text is not None:
+            self.QT_QPushButton.setText(str(text))
+            self.ButtonText = text
+        if self.ParentForm.Font and (self.Font == DEFAULT_FONT or not self.Font):
+            font = self.ParentForm.Font
+        elif self.Font is not None:
+            font = self.Font
+        else:
+            font = DEFAULT_FONT
+
+        fg = bg = None
+        if button_color != (None, None):
+            self.ButtonColor = button_color
+            fg, bg = button_color
+        if self.Disabled != disabled and disabled is not None:
+            if not disabled:            # if enabling buttons, set the color
+                fg, bg = self.ButtonColor
+            self.Disabled = disabled
+            if disabled:
+                self.QT_QPushButton.setDisabled(True)
+            else:
+                self.QT_QPushButton.setDisabled(False)
+        # fg, bg = self.ButtonColor
+        # print(f'Button update fg, bg {fg}, {bg}')
+        super().Update(self.QT_QPushButton, background_color=bg, text_color=fg, font=font, visible=visible)
+
 
     def GetText(self):
         return self.ButtonText
 
+    def SetFocus(self):
+        self.QT_QPushButton.setFocus()
+
+
     def __del__(self):
-        try:
-            self.TKButton.__del__()
-        except:
-            pass
         super().__del__()
 
+
+def convert_tkinter_filetypes_to_wx(filetypes):
+    wx_filetypes = ''
+    for item in filetypes:
+        filetype = item[0] + ' (' + item[1] + ')|'+ item[1]
+        wx_filetypes += filetype
+    return wx_filetypes
 
 # ---------------------------------------------------------------------- #
 #                           ProgreessBar                                 #
@@ -2736,7 +2749,7 @@ class Window:
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
-                 auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
+                 auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None):
         '''
@@ -2828,6 +2841,7 @@ class Window:
         self.App = None
         self.MasterFrame =  None
         self.MasterPanel = None
+
 
 
     @classmethod
@@ -2937,7 +2951,7 @@ class Window:
         except:
             pass
 
-    def timer_timeout(self):
+    def timer_timeout(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.TimerCancelled:
@@ -2945,7 +2959,7 @@ class Window:
         self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
         if self.CurrentlyRunningMainloop:
-            self.QTApplication.exit()  # kick the users out of the mainloop
+            self.App.ExitMainLoop()
 
     def autoclose_timer_callback(self):
         # print('*** TIMEOUT CALLBACK ***')
@@ -2998,19 +3012,21 @@ class Window:
             # normal read blocking code....
             if timeout != None:
                 self.TimerCancelled = False
-                timer = start_window_read_timer(self, timeout)
+                timer = wx.Timer(self.App)
+                self.App.Bind(wx.EVT_TIMER, self.timer_timeout)
+                timer.Start(milliseconds=timeout, oneShot=wx.TIMER_ONE_SHOT)
             else:
                 timer = None
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title}')
-            ################################# CALL GUI MAINLOOP ############################
+            ################################# CALL GUWxTextControlI MAINLOOP ############################
 
-            self.QTApplication.exec_()
+            self.App.MainLoop()
             # self.LastButtonClicked = 'TEST'
             self.CurrentlyRunningMainloop = False
             self.TimerCancelled = True
             if timer:
-                stop_timer(timer)
+                timer.Stop()
             if self.RootNeedsDestroying:
                 self.LastButtonClicked = None
                 self.QTApplication.exit()
@@ -3039,11 +3055,6 @@ class Window:
             self.Show(non_blocking=True)
         else:
             self.QTApplication.processEvents()              # refresh the window
-        if 0:       # TODO add window closed with X logic
-            self.TKrootDestroyed = True
-            _my_windows.Decrement()
-            # print("read failed")
-            # return None, None
         return BuildResults(self, False, self)
 
 
@@ -3371,6 +3382,10 @@ def element_callback_quit_mainloop(element):
         element.ParentForm.QTApplication.exit()  # kick the users out of the mainloop
 
 
+def quit_mainloop(window):
+    window.App.ExitMainLoop()
+
+
 # =========================================================================== #
 # Stops the mainloop and sets the event information                           #
 # =========================================================================== #
@@ -3454,7 +3469,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
                   font=font, pad=pad, key=key)
 
 
-# -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
+# -------------------------  SAVE BUTTON  lazy function  ------------------------- #
 def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
          disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3462,7 +3477,7 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
+# -------------------------  SUBMIT BUTTON lazy function  ------------------------- #
 def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
            bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3470,7 +3485,7 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
+# -------------------------  OPEN BUTTON lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
          bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3478,7 +3493,7 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  OK BUTTON Element lazy function  ------------------------- #
+# -------------------------  OK BUTTON lazy function  ------------------------- #
 def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
        bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3486,7 +3501,7 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  YES BUTTON Element lazy function  ------------------------- #
+# -------------------------  YES BUTTON lazy function  ------------------------- #
 def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
        bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3494,7 +3509,7 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
+# -------------------------  CANCEL BUTTON lazy function  ------------------------- #
 def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
            tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3502,7 +3517,7 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
+# -------------------------  QUIT BUTTON lazy function  ------------------------- #
 def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
          font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3510,7 +3525,7 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  Exit BUTTON Element lazy function  ------------------------- #
+# -------------------------  Exit BUTTON lazy function  ------------------------- #
 def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
          font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3518,7 +3533,7 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  YES BUTTON Element lazy function  ------------------------- #
+# -------------------------  YES BUTTON lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
         font=None, bind_return_key=True, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3526,7 +3541,7 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  NO BUTTON Element lazy function  ------------------------- #
+# -------------------------  NO BUTTON lazy function  ------------------------- #
 def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
        font=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3534,7 +3549,7 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  NO BUTTON Element lazy function  ------------------------- #
+# -------------------------  NO BUTTON lazy function  ------------------------- #
 def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -3542,7 +3557,7 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
+# -------------------------  GENERIC BUTTON lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                  border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
@@ -3553,7 +3568,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  CLOSE BUTTON Element lazy function  ------------------------- #
+# -------------------------  CLOSE BUTTON lazy function  ------------------------- #
 def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
                 bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
@@ -3567,7 +3582,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
 CButton = CloseButton
 
 
-# -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
+# -------------------------  GENERIC BUTTON lazy function  ------------------------- #
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
                bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
@@ -3582,7 +3597,7 @@ ReadFormButton = ReadButton
 RButton = ReadFormButton
 
 
-# -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
+# -------------------------  Realtime BUTTON lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                    border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                    font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
@@ -3593,7 +3608,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
+# -------------------------  Dummy BUTTON lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
                 disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
@@ -3743,9 +3758,9 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
 
             if not initialize_only:
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
-                    value = element.TKStringVar.get()
+                    value = element.WxTextControl.GetValue()
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                        element.TKStringVar.set('')
+                        element.WxTextControl.SetValue('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.TKIntVar.get()
                     value = (value != 0)
@@ -4241,6 +4256,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_BUTTON:
                 element.WxButton = button = wx.Button(form.MasterPanel, style=wx.BORDER_NONE)
                 button.SetLabelText(element.ButtonText)
+                button.Bind(wx.EVT_BUTTON, element.ButtonCallBack)
+                # form.MasterPanel.Bind(wx.EVT_BUTTON, element.ButtonCallBack)
 
                 element.Location = (row_num, col_num)
                 if element.AutoSizeButton is not None:
@@ -5041,12 +5058,16 @@ def StartupTK(window):
 
     frame.Bind(wx.EVT_CLOSE, window.OnClose)
 
-    try:
-        with open(window.WindowIcon, 'r') as icon_file:
-            pass
-        frame.SetIcon(wx.Icon(window.WindowIcon))
-    except:
-        pass
+    if window.WindowIcon:
+        if type(window.WindowIcon) is bytes:
+            icon = PyEmbeddedImage(window.WindowIcon).GetIcon()
+        else:
+            if os.path.exists(window.WindowIcon):
+                icon = wx.Icon(window.WindowIcon, wx.BITMAP_TYPE_ANY)
+            else:
+                icon = PyEmbeddedImage(DEFAULT_BASE64_ICON).GetIcon()
+        if icon:
+            frame.SetIcon(icon)
 
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         panel.SetBackgroundColour(window.BackgroundColor)
@@ -5085,11 +5106,21 @@ def StartupTK(window):
     outer2.Fit(window.MasterFrame)
     window.MasterFrame.Show()
     # ....................................... DONE creating and laying out window ..........................#
-    wx.lib.inspection.InspectionTool().Show()
+
+    if RUN_INSPECTION_TOOL:
+        wx.lib.inspection.InspectionTool().Show()
     window.CurrentlyRunningMainloop = True
+
+    if window.Timeout:
+        timer = wx.Timer(window.App)
+        window.App.Bind(wx.EVT_TIMER, window.timer_timeout)
+        timer.Start(milliseconds=window.Timeout, oneShot=wx.TIMER_ONE_SHOT)
+    else:
+        timer = None
     window.App.MainLoop()
     window.CurrentlyRunningMainloop = False
-    # window.SetIcon(window.WindowIcon)
+    if timer:
+        timer.Stop()
 
     # root.attributes('-alpha', window.AlphaChannel)  # Make window visible again
 
@@ -6552,12 +6583,12 @@ def main():
               [Text('You should be importing it rather than running it', justification='r', size=(50, 1))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
-               FolderBrowse()],
+               FileBrowse()],
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
               [Button('Ok')]]
 
     window = Window('Demo window..',
-                    # default_element_size=(35,1),
+                    default_element_size=(35,1),
                     auto_size_text=True,
                     auto_size_buttons=True,
                     disable_close=False,
@@ -6565,8 +6596,6 @@ def main():
     event, values = window.Read()
     print(event, values)
     window.Close()
-
-DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
 
 
 if __name__ == '__main__':
