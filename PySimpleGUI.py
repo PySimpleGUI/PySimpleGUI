@@ -3740,6 +3740,9 @@ class Window:
     def Minimize(self):
         self.TKroot.iconify()
 
+    def Maximize(self):
+        self.TKroot.attributes('-fullscreen', True)
+
     def StartMove(self, event):
         try:
             self.TKroot.x = event.x
@@ -5483,7 +5486,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  SLIDER Box element  ------------------------- #
+                # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
                 slider_width = element_size[1]
