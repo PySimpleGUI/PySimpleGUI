@@ -1400,6 +1400,7 @@ class Button(Element):
             self.ParentForm.FormRemainedOpen = False
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.App.ExitMainLoop()
+            self.ParentForm.IgnoreClose = True
             self.ParentForm.MasterFrame.Close()
             if self.ParentForm.NonBlocking:
                 Window.DecrementOpenCount()
@@ -1415,8 +1416,13 @@ class Button(Element):
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.App.ExitMainLoop()
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = self.Key
+            else:
+                self.ParentForm.LastButtonClicked = self.ButtonText
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.App.ExitMainLoop()
+            self.ParentForm.IgnoreClose = True
             self.ParentForm.MasterFrame.Close()
             self.ParentForm._Close()
             Window.DecrementOpenCount()
@@ -2749,7 +2755,7 @@ class Window:
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
-                 auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
+                 auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None):
         '''
@@ -2841,7 +2847,7 @@ class Window:
         self.App = None
         self.MasterFrame =  None
         self.MasterPanel = None
-
+        self.IgnoreClose = False
 
 
     @classmethod
@@ -2961,13 +2967,13 @@ class Window:
         if self.CurrentlyRunningMainloop:
             self.App.ExitMainLoop()
 
-    def autoclose_timer_callback(self):
-        # print('*** TIMEOUT CALLBACK ***')
-        self.autoclose_timer.stop()
-        self.QT_QMainWindow.close()
+    def autoclose_timer_callback(self, event):
+        print('*** TIMEOUT CALLBACK ***')
+        # self.autoclose_timer.stop()
+        self.MasterFrame.Close()
         if self.CurrentlyRunningMainloop:
             # print("quitting window")
-            self.QTApplication.exit()  # kick the users out of the mainloop
+            self.App.ExitMainLoop()
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
@@ -3028,8 +3034,8 @@ class Window:
             if timer:
                 timer.Stop()
             if self.RootNeedsDestroying:
-                self.LastButtonClicked = None
-                self.QTApplication.exit()
+                # self.LastButtonClicked = None
+                self.App.Close()
                 Window.DecrementOpenCount()
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
@@ -3054,7 +3060,10 @@ class Window:
         if not self.Shown:
             self.Show(non_blocking=True)
         else:
-            self.QTApplication.processEvents()              # refresh the window
+            # event = wx.Event()
+            # self.App.QueueEvent(event)
+            while self.App.HasPendingEvents():
+                self.App.ProcessPendingEvents()
         return BuildResults(self, False, self)
 
 
@@ -3327,8 +3336,9 @@ class Window:
         if self.DisableClose:
             return
         # print('GOT A CLOSE EVENT!', event, self.Window.Title)
-        self.LastButtonClicked = None
-        self.XFound = True
+        if not self.IgnoreClose:
+            self.LastButtonClicked = None
+            self.XFound = True
         if not self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
             self.RootNeedsDestroying = True
         else:
@@ -5117,7 +5127,20 @@ def StartupTK(window):
         timer.Start(milliseconds=window.Timeout, oneShot=wx.TIMER_ONE_SHOT)
     else:
         timer = None
-    window.App.MainLoop()
+
+    if window.AutoClose:
+        timer = wx.Timer(window.App)
+        window.App.Bind(wx.EVT_TIMER, window.autoclose_timer_callback)
+        timer.Start(milliseconds=window.AutoCloseDuration*1000, oneShot=wx.TIMER_ONE_SHOT)
+
+    if not window.NonBlocking:
+        window.App.MainLoop()
+    else:
+        # event = wx.NewEvent
+        # window.App.AddPendingEvent(wx.EVT_IDLE)
+        while window.App.HasPendingEvents():
+            window.App.ProcessPendingEvents()
+
     window.CurrentlyRunningMainloop = False
     if timer:
         timer.Stop()
@@ -6242,7 +6265,7 @@ PopupAnnoying = PopupNoTitlebar
 
 # --------------------------- PopupAutoClose ---------------------------
 def PopupAutoClose(*args, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
-                   auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
+                   auto_close=True, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                    location=(None, None)):
     """
@@ -6591,7 +6614,10 @@ def main():
                     default_element_size=(35,1),
                     auto_size_text=True,
                     auto_size_buttons=True,
+                    no_titlebar=True,
                     disable_close=False,
+                    disable_minimize=True,
+                    grab_anywhere=True,
                     ).Layout(layout)
     event, values = window.Read()
     print(event, values)
