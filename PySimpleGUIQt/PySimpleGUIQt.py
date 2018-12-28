@@ -3427,6 +3427,9 @@ class Window:
     def Minimize(self):
         self.QT_QMainWindow.setWindowState(Qt.WindowMinimized)
 
+    def Maximize(self):
+        self.QT_QMainWindow.setWindowState(Qt.WindowMaximized)
+
 
     def StartMove(self, event):
         try:
