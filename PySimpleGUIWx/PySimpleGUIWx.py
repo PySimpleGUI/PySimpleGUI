@@ -1064,21 +1064,22 @@ class Text(Element):
         pixelsize = size
         if size[1] is not None and size[1] < 10:
             pixelsize = size[0]*10, size[1]*20
+        self.WxStaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
+
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None):
         if value is not None:
+            self.WxStaticText.SetLabel(value)
             self.DisplayText = value
-            stringvar = self.TKStringVar
-            stringvar.set(value)
         if background_color is not None:
-            self.TKText.configure(background=background_color)
+            self.WxStaticText.SetBackgroundColour(background_color)
         if text_color is not None:
-            self.TKText.configure(fg=text_color)
+            self.WxStaticText.SetForegroundColour(text_color)
         if font is not None:
-            self.TKText.configure(font=font)
+            self.WxStaticText.SetFont(font)
 
     def __del__(self):
         super().__del__()
@@ -1310,7 +1311,7 @@ class Button(Element):
     # -------  Button Callback  ------- #
     def ButtonCallBack(self, event):
 
-        print('Button callback')
+        # print('Button callback')
 
         # print(f'Parent = {self.ParentForm}   Position = {self.Position}')
         # Buttons modify targets or return from the form
@@ -3411,6 +3412,37 @@ def convert_tkinter_size_to_Wx(size):
     return qtsize
 
 
+def font_to_wx_font(font):
+    """
+    Convert from font string/tyuple into a Qt style sheet string
+    :param font: "Arial 10 Bold" or ('Arial', 10, 'Bold)
+    :return: style string that can be combined with other style strings
+    """
+
+    if font is None:
+        return ''
+
+    if type(font) is str:
+        _font = font.split(' ')
+    else:
+        _font = font
+    name = _font[0]
+    family = _font[0]
+    point_size = int(_font[1])
+
+    # style = _font[2]
+
+    underline =  'underline' in _font[2:]
+    bold =  'bold' in _font
+
+    wxfont = wx.Font(point_size,
+                     wx.FONTFAMILY_DEFAULT,
+                     wx.FONTSTYLE_NORMAL,
+                     wx.FONTWEIGHT_BOLD if bold else wx.FONTWEIGHT_NORMAL,
+                     underline,
+                     faceName=family)
+
+    return wxfont
 
 
 # ################################################################################
@@ -4102,6 +4134,25 @@ else:
 # ------------------------------------------------------------------------------------------------------------------ #
 
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
+    def pad_widget(widget):
+        lrsizer = wx.BoxSizer(wx.HORIZONTAL)
+        if full_element_pad[1] == full_element_pad[3]:  # if right = left
+            lrsizer.Add(widget, 0, wx.LEFT | wx.RIGHT, border=full_element_pad[1])
+        else:
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
+            sizer.Add(widget, 0, wx.LEFT, border=full_element_pad[3])
+            lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
+
+        top_bottom_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        if full_element_pad[0] == full_element_pad[2]:  # if top = bottom
+            top_bottom_sizer.Add(lrsizer, 0, wx.TOP | wx.BOTTOM, border=full_element_pad[0])
+        else:
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
+            sizer.Add(lrsizer, 0, wx.TOP, border=full_element_pad[0])
+            top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
+        return top_bottom_sizer
+
+
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
 
@@ -4194,7 +4245,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 statictext = element.WxStaticText = wx.StaticText(form.MasterPanel, -1, element.DisplayText)
-                # auto_size_text = element.AutoSizeText
+                if font:
+                    statictext.SetFont(font_to_wx_font(font))
                 display_text = element.DisplayText  # text to display
                 if auto_size_text is False:
                     width, height = element_size
@@ -4207,27 +4259,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         width = max_line_len
                     height = num_lines
-                lrsizer = wx.BoxSizer(wx.HORIZONTAL)
-                if full_element_pad[1] == full_element_pad[3]:   # if right = left
-                    lrsizer.Add(element.WxStaticText, 0, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
-                else:
-                    sizer = wx.BoxSizer(wx.HORIZONTAL)
-                    sizer.Add(element.WxStaticText,0,wx.LEFT, border=full_element_pad[3])
-                    lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
 
-                top_bottom_sizer  = wx.BoxSizer(wx.HORIZONTAL)
-                if full_element_pad[0] == full_element_pad[2]:   # if top = bottom
-                    top_bottom_sizer.Add(lrsizer, 0, wx.TOP|wx.BOTTOM,  border=full_element_pad[0])
-                else:
-                    sizer = wx.BoxSizer(wx.HORIZONTAL)
-                    sizer.Add(lrsizer,0,wx.TOP, border=full_element_pad[0])
-                    top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
+                hsizer.Add(pad_widget(element.WxStaticText), 0)
 
-                hsizer.Add(top_bottom_sizer, 0)
-
-                # print(element_size,element.Size, width, height)
                 if not auto_size_text:
                     statictext.SetMinSize((width,height))
+                if element.Tooltip:
+                    statictext.SetToolTipString(element.Tooltip)
                 # ---===--- LABEL widget create and place --- #
                 # stringvar = tk.StringVar()
                 # element.TKStringVar = stringvar
@@ -4266,6 +4304,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_BUTTON:
                 element.WxButton = button = wx.Button(form.MasterPanel, style=wx.BORDER_NONE)
                 button.SetLabelText(element.ButtonText)
+                if font:
+                    button.SetFont(font_to_wx_font(font))
                 button.Bind(wx.EVT_BUTTON, element.ButtonCallBack)
                 # form.MasterPanel.Bind(wx.EVT_BUTTON, element.ButtonCallBack)
 
@@ -4294,23 +4334,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 button.SetBackgroundColour(bc[1])
                 button.SetForegroundColour(bc[0])
 
-                lrsizer = wx.BoxSizer(wx.HORIZONTAL)
-                if full_element_pad[1] == full_element_pad[3]:   # if right = left
-                    lrsizer.Add(button, 0, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
-                else:
-                    sizer = wx.BoxSizer(wx.HORIZONTAL)
-                    sizer.Add(button,0,wx.LEFT, border=full_element_pad[3])
-                    lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
-
-                top_bottom_sizer  = wx.BoxSizer(wx.HORIZONTAL)
-                if full_element_pad[0] == full_element_pad[2]:   # if top = bottom
-                    top_bottom_sizer.Add(lrsizer, 0, wx.TOP|wx.BOTTOM,  border=full_element_pad[0])
-                else:
-                    sizer = wx.BoxSizer(wx.HORIZONTAL)
-                    sizer.Add(lrsizer,0,wx.TOP, border=full_element_pad[0])
-                    top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
-
-                hsizer.Add(top_bottom_sizer, 0)
+                sizer = pad_widget(button)
+                hsizer.Add(sizer, 0)
 
 
                 # border_depth = element.BorderWidth
@@ -6602,7 +6627,7 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
 
 def main():
-    layout = [[Text('TEXT1',), Text('TEXT2', )],
+    layout = [[Text('TEXT1',tooltip='Tooltip'), Text('TEXT2', )],
               [Text('You should be importing it rather than running it', justification='r', size=(50, 1))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
