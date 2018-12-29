@@ -23,20 +23,22 @@
 # PySimpleGUI      
       
    
-# NEW for NOV 2018 -  Run Qt using PySimpleGUI!      
             
 ## Supports both Python 2.7 & 3 when using tkinter
 ## Supports both PySide2 and PyQt5 (limited support)
-## PySimpleGUI source code can run either on Qt or tkinter by changing only the import
+## PySimpleGUI source code can run either on Qt, tkinter, WxPython by changing only the import statement
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.20.0-red.svg?longCache=true&style=for-the-badge)      
+
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.21.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.20.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.21.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
+
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
 [ReadTheDocs](http://pysimplegui.readthedocs.io/)      
@@ -74,11 +76,17 @@ Here is a summary of the Qt Elements
 Are there enough things on there to cover your GUI solution?
 
 
-### Source code compatibility
+## Source code compatibility
 Your source code is completely portable from one platform to another by simply changing the import statement.
 
+# WxPython Version
 
-### Platforms
+Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.   
+
+The Windowing code is coming together with Reads now operational which means Popups work.  It's very early in the port however with MANY more Elements left to implement.  3 down, 20-something to go.
+
+
+# Platforms
  
   It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
   
@@ -88,10 +96,12 @@ However, **Macs** suck.  They suck on tkinter in particular.  The "Look and feel
       
       
 Looking for a GUI package?     Are you 
+
 * looking to take your Python code from the world of command lines and into the convenience of a GUI?  *      
 * sitting on a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?      
 * into Machine Learning and are sick of the command line?      
 * wanting to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?      
+* would like to run a program in the system tray?
 * a teacher wanting to teach your students how to program using a GUI?
 * a student that wants to put a GUI onto their project?
 * looking for an active project?
@@ -116,12 +126,16 @@ Or how about a ***custom GUI*** in 1 line of code?
       
       
   Build beautiful customized windows that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve your real problems.   Look through the Cookbook, find a matching recipe, copy, paste, run within minutes.  This is the process PySimpleGUI was designed to facilitate.      
+
+Your windows don't have to look like "boring" old windows.  Add a few custom graphics to your windows to polish things up.
       
+![batterup2](https://user-images.githubusercontent.com/13696193/50378902-6aa2bb00-060a-11e9-8f2f-d746694fa4ee.gif)
+    
+
+![uno_final](https://user-images.githubusercontent.com/13696193/49945232-67952580-feba-11e8-90c8-7dc31c5f7c67.gif)     
       
-![borderless grayed buttons](https://user-images.githubusercontent.com/13696193/45168664-d848e980-b1c9-11e8-886e-63279ae4017f.jpg)      
-      
-      
-      
+
+
 PySimpleGUI wraps tkinter or Qt so that you get all the same widgets as you would tkinter/Qt, but you interact with them in a more friendly way.  It does the layout and boilerplate code for you and presents you with a simple, efficient interface.      
       
            
@@ -3337,6 +3351,196 @@ This call sets all of the different color options.
                progress_meter_color = ('green', 'blue')      
                button_color=('white','#475841'))      
       
+# SystemTray
+
+This is a PySimpleGUIQt and PySimpleGUIWx only feature.  Don't know of a way to do it using tkinter.  Your source code for SystemTray is identical for the Qt and Wx implementations.  You can switch frameworks by simply changing your import statement.
+
+In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then  you perform Reads in order to get events.
+
+Here is the definition of the SystemTray object.
+
+```python
+SystemTray(menu=None, filename=None, data=None, data_base64=None, tooltip=None):  
+        '''  
+ SystemTray - create an icon in the system tray  
+ :param menu: Menu definition 
+ :param filename: filename for icon  
+ :param data: in-ram image for icon  
+ :param data_base64: basee-64 data for icon  
+ :param tooltip: tooltip string '''
+```
+
+You'll notice that there are 3 different ways to specify the icon image.  The base-64 parameter allows you to define a variable in your .py code that is the encoded image so that you do not need any additional files.  Very handy feature.
+
+## System Tray Design Pattern
+
+Here is a design pattern you can use to get a jump-start.
+
+This program will create a system tray icon and perform a blocking Read.  If the item "Open" is chosen from the system tray, then a popup is shown.
+
+```python
+import PySimpleGUIQt as sg  
+  
+menu_def = ['BLANK', ['&Open', '---', '&Save', ['1', '2', ['a', 'b']], '&Properties', 'E&xit']]  
+  
+tray = sg.SystemTray(menu=menu_def, filename=r'default_icon.ico')  
+  
+while True:  # The event loop  
+  menu_item = tray.Read()  
+    print(menu_item)  
+    if menu_item == 'Exit':  
+        break  
+    elif menu_item == 'Open':  
+        sg.Popup('Menu item chosen', menu_item)
+        
+```
+The design pattern creates an icon that will display this menu:
+![snag-0293](https://user-images.githubusercontent.com/13696193/49057441-8bbfe980-f1cd-11e8-93e7-1aeda9ccd173.jpg)
+
+### Icons
+
+When specifying "icons", you can use 3 different formats.  
+* `filename`- filename
+* `data_base64` - base64 byte string
+* '`data` - in-ram bitmap or other "raw" image
+
+You will find 3 parameters used to specify these 3 options on both the initialize statement and on the Update method.
+
+## Menu Definition
+```python
+menu_def = ['BLANK', ['&Open', '&Save', ['1', '2', ['a', 'b']], '!&Properties', 'E&xit']]  
+```
+
+A menu is defined using a list.  A "Menu entry" is a string that specifies:
+* text shown
+* keyboard shortcut
+* key
+
+See section on Menu Keys for more information on using keys with menus.
+
+An entry without a key and keyboard shortcut is a simple string
+`'Menu Item'`
+
+If you want to make the "M" be a keyboard shortcut, place an `&` in front of the letter that is the shortcut.
+`'&Menu Item'`
+
+You can add "keys" to make menu items unique or as another way of identifying a menu item than the text shown.  The key is added to the text portion by placing `::` after the text.
+
+`'Menu Item::key'`
+
+The first entry can be ignored.`'BLANK`' was chosen for this example. It's this way because normally you would specify these menus under some heading on a menu-bar.  But here there is no heading so it's filled in with any value you want.
+
+**Separators**
+If you want a separator between 2 items, add the entry `'---'` and it will add a separator item at that place in your menu.
+
+**Disabled menu entries**
+
+If you want to disable a menu entry, place a `!` before the menu entry
+
+
+## SystemTray Methods
+
+### Read - Read the context menu or check for events
+
+```python
+def Read(timeout=None)
+    '''  
+ Reads the context menu  
+ :param timeout: Optional.  Any value other than None indicates a non-blocking read
+ :return:   String representing meny item chosen. None if nothing read.  
+    '''
+```
+The `timeout` parameter specifies how long to wait for an event to take place.  If nothing happens within the timeout period, then a "timeout event" is returned.  These types of reads make it possible to run asynchronously.  To run non-blocked, specify `timeout=0`on the Read call.
+
+Read returns the menu text, complete with key, for the menu item chosen.  If you specified `Open::key` as the menu entry, and the user clicked on `Open`, then you will receive the string `Open::key` upon completion of the Read.
+
+#### Read special return values
+
+In addition to Menu Items, the Read call can return several special values.    They include:
+
+EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED - Tray icon was double clicked
+EVENT_SYSTEM_TRAY_ICON_ACTIVATED - Tray icon was single clicked
+EVENT_SYSTEM_TRAY_MESSAGE_CLICKED - a message balloon was clicked
+TIMEOUT_KEY is returned if no events are available if the timeout value is set in the Read call
+
+
+### Hide
+
+Hides the icon.  Note that no message balloons are shown while an icon is hidden.
+
+```python
+def Hide() 
+```
+
+### Close
+
+Does the same thing as hide
+```python
+def Close()
+```
+
+
+### UnHide
+
+Shows a previously hidden icon
+
+```python
+def UnHide()
+```
+
+### ShowMessage
+
+Shows a balloon above the icon in the system tray area.  You can specify your own icon to be shown in the balloon, or you can set `messageicon` to one of the preset values.  
+
+This message has a custom icon.
+
+![snag-0286](https://user-images.githubusercontent.com/13696193/49057459-a85c2180-f1cd-11e8-9a66-aa331d7e034c.jpg)
+
+The preset `messageicon` values are:
+
+    SYSTEM_TRAY_MESSAGE_ICON_INFORMATION 
+    SYSTEM_TRAY_MESSAGE_ICON_WARNING
+    SYSTEM_TRAY_MESSAGE_ICON_CRITICAL 
+    SYSTEM_TRAY_MESSAGE_ICON_NOICON
+
+```python
+ShowMessage(title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):  
+    '''  
+ Shows a balloon above icon in system tray  
+ :param title:  Title shown in balloon  
+ :param message: Message to be displayed  
+ :param filename: Optional icon filename  
+ :param data: Optional in-ram icon  
+ :param data_base64: Optional base64 icon  
+ :param time: How long to display message in milliseconds  :return:  
+ '''
+```
+Note, on windows it may be necessary to make a registry change to enable message balloons to be seen.  To fix this, you must create the DWORD you see in this screenshot.
+
+![snag-0285](https://user-images.githubusercontent.com/13696193/49056144-6381bc00-f1c8-11e8-9f44-199394823369.jpg)
+
+
+### Update
+
+You can update any of these items within a SystemTray object
+* Menu definition
+* Icon
+* Tooltip
+
+ Change them all or just 1.
+
+```python
+Update(menu=None, tooltip=None,filename=None, data=None, data_base64=None,)
+    '''  
+ Updates the menu, tooltip or icon  
+ :param menu: menu defintion  
+ :param tooltip: string representing tooltip  
+ :param filename:  icon filename  
+ :param data:  icon raw image  
+ :param data_base64: icon base 64 image  
+ :return:  
+ '''
+```
       
       
 # Global Settings      
@@ -4565,6 +4769,32 @@ Emergency patch release... going out same day as previous release
 * Can re-route by specifying in Print / EasyPrint call
 * New non-blocking for PopupScrolled
 * Can set title for PopupScrolled window
+
+
+## 3.21.0 & 1.21.0 28-Dec-2018
+
+* ButtonMenu Element
+* Embedded base64 default icon
+* Input Text Right click menu
+* Disabled Input Text are now 'readonly' instead of disabled
+* Listbox right click menu
+* Multiline right click menu
+* Text right click menu
+* Output right click menu
+* Image right click menu
+* Canvas right click menu
+* Graph right click menu
+* Frame right click menu
+* Tab, tabgroup right click menu (unsure if works correctly)
+* Column right click menu
+* Table right click menu
+* Tree right click menu
+* Window level right click menu
+* Window icon can be filename or bytes (Base64 string)
+* Window.Maximize method
+* Attempted to use Styles better with Combobox
+* Fixed bug blocking setting bar colors in OneLineProgressMeter
+
 
 
 ### Upcoming      
