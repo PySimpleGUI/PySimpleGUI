@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.4.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 The WxPython port of PySimpleGUI
 
 
- ## The Engineering Pre-Release     Version 0.3.0
+ ## The Engineering Pre-Release     Version 0.4.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -165,6 +165,11 @@ If you want to change the separator characters from :: top something else,change
 When a menu item has a key and it is chosen, then entire string is returned.  If Hide were selected, then Hide::key would be returned from the Read.  Note that the shortcut character & is NOT returned from Reads.
 
 
+## Popups
+
+Starting with release 0.4.0, most of the Popup functions work.  This means you can do things like show information in a window when there's a choice made in a System Tray menu.  Or if your program finds some event it wishes to inform the user about.  For example, when new Issues are posted on a GitHub project.
+
+
 # Release Notes:  
   
 ### 0.1.0   -   25-Dec-2018
@@ -189,6 +194,25 @@ When a menu item has a key and it is chosen, then entire string is returned.  If
 * SystemTray can take any kind of image as icon
 * Read with Timeout (non-zero) works
 * Popups
+
+
+### 0.4.0 PySimpleGUIWx  30-Dec-2018
+
+* Text Element - colors, font work
+* Text Update method works
+* Button - Close button implemented
+* Button - Implemented basic button, correctly presented Values on Read
+* Button - Can now set font
+* Changed overall "App" variable usage for better mainloop control
+* Windows - Timeouts and non-blocking Reads work
+* Windows - Autoclose works
+* Windows - Non-blocking calls supported (timeout=0)
+* Windows - Grab anywhere works
+* Windows - No title-bar works
+* Windows - Location and Size working correctly
+* Correctly adding element padding to Text, Input, Buttons
+* Popups - most Popups work (except for the input type that involve folders)
+
 
 
 # Design        
