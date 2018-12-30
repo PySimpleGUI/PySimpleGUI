@@ -2780,14 +2780,14 @@ class SystemTray:
 
 
 class DragFrame(wx.Frame):
-    def __init__(self, bind_to):
+    def __init__(self):
         wx.Frame.__init__(self, None)
-        Window.highest_level_app.Bind(wx.EVT_MOTION, self.on_mouse)
 
     def on_mouse(self, event):
         '''
         implement dragging
         '''
+        # print('on_mouse')
         if not event.Dragging():
             self._dragPos = None
             return
@@ -3034,11 +3034,14 @@ class Window:
         self.App.ExitMainLoop()
 
 
-    def autoclose_timer_callback(self, event):
-        # print('*** AUTOCLOSE TIMEOUT CALLBACK ***')
-        self.MasterFrame.Close()
+    def autoclose_timer_callback(self, frame):
+        # print('*** AUTOCLOSE TIMEOUT CALLBACK ***', frame)
+        try:
+            frame.Close()
+        except:
+            pass        # if user has already closed the frame will get an error
+
         if self.CurrentlyRunningMainloop:
-            # print("quitting window")
             self.App.ExitMainLoop()
 
 
@@ -5168,17 +5171,20 @@ def StartupTK(window):
         app = Window.highest_level_app
 
     if window.GrabAnywhere:
-        frame = DragFrame(app)
+        frame = DragFrame()
     else:
         frame = wx.Frame(None, title=window.Title)
 
     panel = wx.Panel(frame)
 
+    if window.GrabAnywhere:
+        panel.Bind(wx.EVT_MOTION, frame.on_mouse)
+
+
     window.App = app
     window.MasterFrame =  frame
     window.MasterPanel = panel
     window.MasterFrame.panel = panel
-
     frame.Bind(wx.EVT_CLOSE, window.OnClose)
 
     if window.WindowIcon:
@@ -5255,8 +5261,8 @@ def StartupTK(window):
         timer = None
 
     if window.AutoClose:
-        window.timer = wx.Timer(window.App, id=1234 )
-        window.App.Bind(wx.EVT_TIMER, window.autoclose_timer_callback, id=1234)
+        window.timer = wx.Timer(window.App, id=Window.NumOpenWindows)
+        window.App.Bind(wx.EVT_TIMER, lambda frame: window.autoclose_timer_callback(window.MasterFrame), id=Window.NumOpenWindows)
         window.timer.Start(milliseconds=window.AutoCloseDuration*1000, oneShot=wx.TIMER_ONE_SHOT)
     # ------------------------------------ MAINLOOP ------------------------------------
     if not window.NonBlocking:
@@ -5472,11 +5478,12 @@ def GetComplimentaryHex(color):
 
 # ========================  EasyPrint           =====#
 # ===================================================#
+
 class DebugWin():
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
+                 grab_anywhere=False, keep_on_top=False, title=None, do_not_reroute_stdout=False):
         # Show a form that's a running counter
         self.size = size
         self.location = location
@@ -5488,9 +5495,9 @@ class DebugWin():
         self.do_not_reroute_stdout = do_not_reroute_stdout
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
+        self.window = Window(title=title or 'Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-        self.output_element = Multiline(size=win_size, autoscroll=True, key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
+        self.output_element = Multiline(size=win_size, key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
 
         if no_button:
             self.layout = [[self.output_element]]
@@ -5501,13 +5508,14 @@ class DebugWin():
             ]
         self.window.AddRows(self.layout)
         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
+        Window.active_popups[self.window] = 'debug window'
         return
 
     def Print(self, *args, end=None, sep=None):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
-        if self.window is None:  # if window was destroyed alread re-open it
+        if self.window is None:  # if window was destroyed already, just print
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
         event, values = self.window.Read(timeout=0)
         if event == 'Quit' or event is None:
@@ -5534,7 +5542,7 @@ def PrintClose():
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
 
 
     if DebugWin.debug_window is None:
@@ -5542,19 +5550,6 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
                                     no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, do_not_reroute_stdout=do_not_reroute_stdout)
     DebugWin.debug_window.Print(*args, end=end, sep=sep)
 
-
-def PrintClose():
-    EasyPrintClose()
-
-
-def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
-
-
-    if DebugWin.debug_window is None:
-        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
-                                    no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, do_not_reroute_stdout=do_not_reroute_stdout)
-    DebugWin.debug_window.Print(*args, end=end, sep=sep)
 
 Print = EasyPrint
 eprint = EasyPrint
@@ -6124,9 +6119,9 @@ def ObjToString(obj, extra='    '):
 
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
-          auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False,
-          icon=DEFAULT_WINDOW_ICON, line_width=None,
+
+def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
+          auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None,
           font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Popup - Display a popup box with as many parms as you wish to include
@@ -6155,8 +6150,8 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         local_line_width = line_width
     else:
         local_line_width = MESSAGE_BOX_LINE_WIDTH
-    title = args_to_print[0] if args_to_print[0] is not None else 'None'
-    window = Window(title, auto_size_text=True, background_color=background_color, button_color=button_color,
+    _title =  title if title is not None else args_to_print[0]
+    window = Window(_title, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
     max_line_total, total_lines = 0, 0
@@ -6185,15 +6180,11 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     # show either an OK or Yes/No depending on paramater
     if custom_text != (None, None):
         if type(custom_text) is not tuple:
-            window.AddRow(PopupButton(custom_text, size=(len(custom_text), 1), button_color=button_color, focus=True,
-                                      bind_return_key=True))
+            window.AddRow(PopupButton(custom_text,size=(len(custom_text),1), button_color=button_color, focus=True, bind_return_key=True))
         elif custom_text[1] is None:
-            window.AddRow(
-                PopupButton(custom_text[0], size=(len(custom_text[0]), 1), button_color=button_color, focus=True,
-                            bind_return_key=True))
+            window.AddRow(PopupButton(custom_text[0],size=(len(custom_text[0]),1), button_color=button_color, focus=True, bind_return_key=True))
         else:
-            window.AddRow(PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True,
-                                      size=(len(custom_text[0]), 1)),
+            window.AddRow(PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True, size=(len(custom_text[0]), 1)),
                           PopupButton(custom_text[1], button_color=button_color, size=(len(custom_text[0]), 1)))
     elif button_type is POPUP_BUTTONS_YES_NO:
         window.AddRow(PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
@@ -6567,10 +6558,11 @@ def PopupYesNo(*args, button_color=None, background_color=None, text_color=None,
 #   The PopupGet_____ functions - Will return user input                     #
 ##############################################################################
 
+
 # --------------------------- PopupGetFolder ---------------------------
 
 
-def PopupGetFolder(message, default_path='', no_window=False, size=(None, None), button_color=None,
+def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                    grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
     """
@@ -6593,28 +6585,23 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
 
 
     if no_window:
-        if Window.NumOpenWindows:
-            root = tk.Toplevel()
-        else:
-            root = tk.Tk()
-        try:
-            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-        except:
-            pass
-        folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
-        root.destroy()
+        if Window.QTApplication is None:
+            Window.QTApplication = QApplication(sys.argv)
+
+        folder_name = QFileDialog.getExistingDirectory(dir=initial_folder)
         return folder_name
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
-              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
+              [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
+    _title = title if title is not None else message
+    window = Window(title=_title, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.LayoutAndRead(layout)
+    (button, input_values) = window.Layout(layout).Read()
 
     if button != 'Ok':
         return None
@@ -6625,7 +6612,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
 
 # --------------------------- PopupGetFile ---------------------------
 
-def PopupGetFile(message, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*.*"),),
+def PopupGetFile(message, title=None, default_path='', default_extension='', save_as=False, file_types=(("ALL Files", "*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                  location=(None, None), initial_folder=None):
@@ -6650,37 +6637,34 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
     :return:  string representing the path chosen, None if cancelled or window closed with X
     """
 
-
     if no_window:
-        if Window.NumOpenWindows:
-            root = tk.Toplevel()
-        else:
-            root = tk.Tk()
-        try:
-            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-        except:
-            pass
+        if Window.QTApplication is None:
+            Window.QTApplication = QApplication(sys.argv)
+
         if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
-                                                       defaultextension=default_extension)  # show the 'get file' dialog box
+            qt_types = convert_tkinter_filetypes_to_qt(file_types)
+            filename = QFileDialog.getSaveFileName(dir=initial_folder, filter=qt_types)
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types,
-                                                     defaultextension=default_extension)  # show the 'get file' dialog box
-        root.destroy()
-        return filename
+            qt_types = convert_tkinter_filetypes_to_qt(file_types)
+            filename = QFileDialog.getOpenFileName(dir=initial_folder, filter=qt_types)
+        return filename[0]
+
 
     browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder) if save_as else FileBrowse(
         file_types=file_types, initial_folder=initial_folder)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), browse_button],
-              [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
+              [InputText(default_text=default_path, size=(30,1)), browse_button],
+              [CButton('Ok', size=(60, 20), bind_return_key=True), CButton('Cancel', size=(60, 20))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+    _title = title if title is not None else message
+
+    window = Window(title=_title, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
     (button, input_values) = window.Layout(layout).Read()
+    # window.Close()
     if button != 'Ok':
         return None
     else:
@@ -6690,7 +6674,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
 # --------------------------- PopupGetText ---------------------------
 
-def PopupGetText(message, default_text='', password_char='', size=(None, None), button_color=None,
+def PopupGetText(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                  background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                  grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
@@ -6713,9 +6697,11 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, password_char=password_char)],
-              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
+              [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    _title = title if title is not None else message
+
+    window = Window(title=_title, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
