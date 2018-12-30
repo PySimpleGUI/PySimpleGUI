@@ -4707,13 +4707,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                  highlightthickness=0)
                         element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                 else:
-                    # element.TKColFrame = tk.Frame(tk_row_frame)
-                    element.TKColFrame = TkFixedFrame(tk_row_frame)
-                    PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
-                    element.TKColFrame.TKFrame.update()
                     if element.Size != (None, None):
-                        element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
-
+                        element.TKColFrame = TkFixedFrame(tk_row_frame)
+                        PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
+                        element.TKColFrame.TKFrame.update()
+                        if element.Size != (None, None):
+                            element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
+                    else:
+                        element.TKColFrame = tk.Frame(tk_row_frame)
+                        PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
 
                 element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
