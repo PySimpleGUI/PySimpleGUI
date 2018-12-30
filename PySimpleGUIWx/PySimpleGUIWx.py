@@ -503,10 +503,10 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
+    def __init__(self, default_text='', size=(None,None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False,
-                 do_not_clear=False, key=None, focus=False, pad=None):
+                 change_submits=False, enable_events=False,
+                 do_not_clear=False, key=None, focus=False, pad=None, visible=True, size_px=(None,None)):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -520,32 +520,66 @@ class InputText(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
-        self.Justification = justification
+        self.Justification = justification or 'left'
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
+        self.QT_QLineEdit = None
+        self.ValueWasChanged = False
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
-                         font=font, tooltip=tooltip)
+                         font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
-    def Update(self, value=None, disabled=None):
+
+    def dragEnterEvent(self, e):
+        if e.mimeData().hasText():
+            e.accept()
+        else:
+            e.ignore()
+
+    def dropEvent(self, e):
+        self.QT_QLineEdit.setText(e.mimeData().text())
+
+
+    def QtCallbackFocusInEvent(self,value):
+        return
+
+
+    def QtCallbackTextChanged(self, value):
+        if not self.ChangeSubmits:
+            return
+        # if was changed using an "update" call, then skip the next changed callback
+        if self.ValueWasChanged:
+            self.ValueWasChanged = False
+            print('skipping update')
+            return
+        element_callback_quit_mainloop(self)
+
+    def QtCallbackReturnPressed(self):
+        self.ReturnKeyHandler(None)
+        return
+
+    def Update(self, value=None, disabled=None, select=None, background_color=None, text_color=None, font=None, visible=None):
         if disabled is True:
-            self.TKEntry['state'] = 'disabled'
+            self.QT_QLineEdit.setDisabled(True)
         elif disabled is False:
-            self.TKEntry['state'] = 'normal'
+            self.QT_QLineEdit.setDisabled(False)
         if value is not None:
-            try:
-                self.TKStringVar.set(value)
-            except:
-                pass
+            self.QT_QLineEdit.setText(str(value))
             self.DefaultText = value
+            # was getting into an infinite loop when the update was triggering a text changed callback, but unable
+            # to dupliate this
+            # self.ValueWasChanged = True
+        if select:
+            self.QT_QLineEdit.setSelection(0,QtGui.QTextCursor.End )
+        super().Update(self.QT_QLineEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
 
     def Get(self):
-        return self.TKStringVar.get()
+        return self.QT_QLineEdit.text()
+        # return self.TKStringVar.get()
 
     def SetFocus(self):
-        try:
-            self.TKEntry.focus_set()
-        except:
-            pass
+        self.QT_QLineEdit.setFocus()
 
     def __del__(self):
         super().__del__()
@@ -2546,10 +2580,13 @@ class SystemTray:
         self.Filename = filename
         self.timer = None
         self.DataBase64 = data_base64
+        if Window.highest_level_app is None:
+            self.App = Window.highest_level_app =  wx.App(False)
+        else:
+            self.App = Window.highest_level_app
 
-        self.App = wx.App(False)
         frame = wx.Frame(None, title='Tray icon frame')
-        self.TaskBarIcon = SystemTray.CustomTaskBarIcon(frame, self.App, self.Menu, filename=self.Filename, data_base64=data_base64, tooltip=tooltip)
+        self.TaskBarIcon = self.CustomTaskBarIcon(frame, self.App, self.Menu, filename=self.Filename, data_base64=data_base64, tooltip=tooltip)
 
         # self.App.MainLoop()
 
@@ -2637,17 +2674,21 @@ class SystemTray:
         #     self.Shown = True
         #     self.TrayIcon.show()
         timeout1 = timeout
-        if timeout1 == 0:
-            timeout1 = 1
+        # if timeout1 == 0:
+        #     timeout1 = 1
             # if wx.GetApp():
             #     wx.GetApp().ProcessPendingEvents()
             # self.App.ProcessPendingEvents()
             # self.App.ProcessIdle()
             # return self.MenuItemChosen
         if timeout1 is not None:
-            self.timer = wx.Timer(self.TaskBarIcon)
-            self.TaskBarIcon.Bind(wx.EVT_TIMER, self.timer_timeout)
-            self.timer.Start(milliseconds=timeout1, oneShot=wx.TIMER_ONE_SHOT)
+            try:
+                self.timer = wx.Timer(self.TaskBarIcon)
+                self.TaskBarIcon.Bind(wx.EVT_TIMER, self.timer_timeout)
+                self.timer.Start(milliseconds=timeout1, oneShot=wx.TIMER_ONE_SHOT)
+            except:
+                print('*** Got error in Read ***')
+                Popup(f'*** Read error TaskBarIcon = {self.TaskBarIcon}\n')
         self.RunningMainLoop = True
         self.App.MainLoop()
         self.RunningMainLoop = False
@@ -2657,8 +2698,6 @@ class SystemTray:
         return self.MenuItemChosen
 
     def timer_timeout(self, event):
-        # print('GOT TIMEOUT')
-        self.timer.Stop()
         self.timer = None
         self.TaskBarIcon.menu_item_chosen = TIMEOUT_KEY
         self.App.ExitMainLoop()
@@ -2740,6 +2779,26 @@ class SystemTray:
 
 
 
+class DragFrame(wx.Frame):
+    def __init__(self, bind_to):
+        wx.Frame.__init__(self, None)
+        Window.highest_level_app.Bind(wx.EVT_MOTION, self.on_mouse)
+
+    def on_mouse(self, event):
+        '''
+        implement dragging
+        '''
+        if not event.Dragging():
+            self._dragPos = None
+            return
+        # self.CaptureMouse()
+        if not self._dragPos:
+            self._dragPos = event.GetPosition()
+        else:
+            pos = event.GetPosition()
+            displacement = self._dragPos - pos
+            self.SetPosition( self.GetPosition() - displacement )
+
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
@@ -2751,7 +2810,7 @@ class Window:
     hidden_master_root = None
     QTApplication = None
     active_popups = {}
-
+    highest_level_app = None
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
@@ -2833,7 +2892,7 @@ class Window:
         self.Resizable = resizable
         self._AlphaChannel = alpha_channel
         self.Timeout = None
-        self.TimeoutKey = '_timeout_'
+        self.TimeoutKey = TIMEOUT_KEY
         self.TimerCancelled = False
         self.DisableClose = disable_close
         self._Hidden = False
@@ -2961,6 +3020,7 @@ class Window:
     def timer_timeout(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
+        print('timer timeout')
         if self.TimerCancelled:
             return
         self.LastButtonClicked = self.TimeoutKey
@@ -2968,9 +3028,13 @@ class Window:
         if self.CurrentlyRunningMainloop:
             self.App.ExitMainLoop()
 
+    def non_block_timer_timeout(self, event):
+        # print('non-blocking timer timeout')
+        self.App.ExitMainLoop()
+
+
     def autoclose_timer_callback(self, event):
-        print('*** TIMEOUT CALLBACK ***')
-        # self.autoclose_timer.stop()
+        # print('*** AUTOCLOSE TIMEOUT CALLBACK ***')
         self.MasterFrame.Close()
         if self.CurrentlyRunningMainloop:
             # print("quitting window")
@@ -3036,7 +3100,8 @@ class Window:
                 timer.Stop()
             if self.RootNeedsDestroying:
                 # self.LastButtonClicked = None
-                self.App.Close()
+                # self.App.Close()
+                self.MasterFrame.Close()
                 Window.DecrementOpenCount()
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
@@ -3063,8 +3128,19 @@ class Window:
         else:
             # event = wx.Event()
             # self.App.QueueEvent(event)
-            while self.App.HasPendingEvents():
-                self.App.ProcessPendingEvents()
+            timer = wx.Timer(self.App)
+            self.App.Bind(wx.EVT_TIMER, self.timer_timeout)
+            timer.Start(milliseconds=0, oneShot=wx.TIMER_ONE_SHOT)
+            self.CurrentlyRunningMainloop = True
+            # print(f'In main {self.Title}')
+            ################################# CALL GUWxTextControlI MAINLOOP ############################
+
+            self.App.MainLoop()
+            # self.LastButtonClicked = 'TEST'
+            self.CurrentlyRunningMainloop = False
+            timer.Stop()
+            # while self.App.HasPendingEvents():
+            #     self.App.ProcessPendingEvents()
         return BuildResults(self, False, self)
 
 
@@ -4247,6 +4323,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 statictext = element.WxStaticText = wx.StaticText(form.MasterPanel, -1, element.DisplayText)
                 if font:
                     statictext.SetFont(font_to_wx_font(font))
+                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    statictext.SetForegroundColour(element.TextColor)
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    statictext.SetBackgroundColour(element.BackgroundColor)
                 display_text = element.DisplayText  # text to display
                 if auto_size_text is False:
                     width, height = element_size
@@ -5082,8 +5162,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 def StartupTK(window):
 
     ow = Window.NumOpenWindows
-    app = wx.App()
-    frame = wx.Frame(None, title=window.Title)
+    if Window.highest_level_app is None:
+        app = Window.highest_level_app = wx.App(False)
+    else:
+        app = Window.highest_level_app
+
+    if window.GrabAnywhere:
+        frame = DragFrame(app)
+    else:
+        frame = wx.Frame(None, title=window.Title)
+
     panel = wx.Panel(frame)
 
     window.App = app
@@ -5121,8 +5209,12 @@ def StartupTK(window):
 
 
     InitializeResults(window)
-    # if window.NoTitleBar:
-    #     window.TKroot.wm_overrideredirect(True)
+
+    if window.NoTitleBar:
+        window.MasterFrame.SetWindowStyleFlag(wx.NO_BORDER)
+    # else:
+    #     window.MasterFrame.SetWindowStyleFlag(0)
+
     vsizer = wx.BoxSizer(wx.VERTICAL)
     PackFormIntoFrame(window, vsizer, window)
 
@@ -5154,17 +5246,17 @@ def StartupTK(window):
         timer = None
 
     if window.AutoClose:
-        timer = wx.Timer(window.App)
-        window.App.Bind(wx.EVT_TIMER, window.autoclose_timer_callback)
-        timer.Start(milliseconds=window.AutoCloseDuration*1000, oneShot=wx.TIMER_ONE_SHOT)
+        window.timer = wx.Timer(window.App, id=1234 )
+        window.App.Bind(wx.EVT_TIMER, window.autoclose_timer_callback, id=1234)
+        window.timer.Start(milliseconds=window.AutoCloseDuration*1000, oneShot=wx.TIMER_ONE_SHOT)
 
     if not window.NonBlocking:
         window.App.MainLoop()
     else:
-        # event = wx.NewEvent
-        # window.App.AddPendingEvent(wx.EVT_IDLE)
-        while window.App.HasPendingEvents():
-            window.App.ProcessPendingEvents()
+        window.non_block_timer = wx.Timer(window.App, id=5678)
+        window.App.Bind(wx.EVT_TIMER, window.non_block_timer_timeout, id=5678)
+        window.non_block_timer.Start(milliseconds=0, oneShot=wx.TIMER_ONE_SHOT)
+        window.App.MainLoop()
 
     window.CurrentlyRunningMainloop = False
     if timer:
@@ -6639,7 +6731,7 @@ def main():
                     default_element_size=(35,1),
                     auto_size_text=True,
                     auto_size_buttons=True,
-                    no_titlebar=True,
+                    no_titlebar=False,
                     disable_close=False,
                     disable_minimize=True,
                     grab_anywhere=True,
