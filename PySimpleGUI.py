@@ -4713,8 +4713,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.TKColFrame = TkFixedFrame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                         element.TKColFrame.TKFrame.update()
-                        if element.Size != (None, None):
-                            element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
+                        if element.Size[1] is not None:
+                            element.TKColFrame.canvas.config(height=element.Size[1])
+                        elif element.Size[0] is not None:
+                            element.TKColFrame.canvas.config(width=element.Size[0])
                     else:
                         element.TKColFrame = tk.Frame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
