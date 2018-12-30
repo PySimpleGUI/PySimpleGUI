@@ -3020,13 +3020,14 @@ class Window:
     def timer_timeout(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        print('timer timeout')
+        # print('timer timeout')
         if self.TimerCancelled:
             return
         self.LastButtonClicked = self.TimeoutKey
         self.FormRemainedOpen = True
         if self.CurrentlyRunningMainloop:
             self.App.ExitMainLoop()
+
 
     def non_block_timer_timeout(self, event):
         # print('non-blocking timer timeout')
@@ -3039,6 +3040,7 @@ class Window:
         if self.CurrentlyRunningMainloop:
             # print("quitting window")
             self.App.ExitMainLoop()
+
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
@@ -3091,9 +3093,7 @@ class Window:
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title}')
             ################################# CALL GUWxTextControlI MAINLOOP ############################
-
             self.App.MainLoop()
-            # self.LastButtonClicked = 'TEST'
             self.CurrentlyRunningMainloop = False
             self.TimerCancelled = True
             if timer:
@@ -3149,18 +3149,18 @@ class Window:
             return self
         if not self.Shown:
             self.Show(non_blocking=True)
-        else:
-            try:
-                self.QTApplication.processEvents()              # refresh the window
-            except:
-                print('* ERROR FINALIZING *')
-                self.TKrootDestroyed = True
-                Window.DecrementOpenCount()
+        # else:
+        #     try:
+        #         self.QTApplication.processEvents()              # refresh the window
+        #     except:
+        #         print('* ERROR FINALIZING *')
+        #         self.TKrootDestroyed = True
+        #         Window.DecrementOpenCount()
         return self
 
 
     def Refresh(self):
-        self.QTApplication.processEvents()              # refresh the window
+        # self.QTApplication.processEvents()              # refresh the window
         return self
 
     def VisibilityChanged(self):
@@ -4345,7 +4345,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if not auto_size_text:
                     statictext.SetMinSize((width,height))
                 if element.Tooltip:
-                    statictext.SetToolTipString(element.Tooltip)
+                    statictext.SetToolTip(element.Tooltip)
                 # ---===--- LABEL widget create and place --- #
                 # stringvar = tk.StringVar()
                 # element.TKStringVar = stringvar
@@ -5227,11 +5227,20 @@ def StartupTK(window):
     outer2.Add(outersizer, 1, wx.LEFT|wx.RIGHT|wx.EXPAND, border=DEFAULT_MARGINS[0])
 
     window.MasterPanel.SetSizer(outer2)
-    # TODO - If there's a manually set Size and Location, set them here
-
 
     outer2.Fit(window.MasterFrame)
+
+    if window.Location != (None, None):
+        window.MasterFrame.Move(window.Location[0], window.Location[1])
+    else:
+        window.MasterFrame.Center(wx.BOTH)
+
+    if window._Size != (None, None):
+        window.MasterFrame.SetSize(window._Size[0], window._Size[1])
+
     window.MasterFrame.Show()
+
+
     # ....................................... DONE creating and laying out window ..........................#
 
     if RUN_INSPECTION_TOOL:
@@ -5249,7 +5258,7 @@ def StartupTK(window):
         window.timer = wx.Timer(window.App, id=1234 )
         window.App.Bind(wx.EVT_TIMER, window.autoclose_timer_callback, id=1234)
         window.timer.Start(milliseconds=window.AutoCloseDuration*1000, oneShot=wx.TIMER_ONE_SHOT)
-
+    # ------------------------------------ MAINLOOP ------------------------------------
     if not window.NonBlocking:
         window.App.MainLoop()
     else:
