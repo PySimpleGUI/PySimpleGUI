@@ -20,6 +20,7 @@ import datetime
 import textwrap
 import pickle
 import calendar
+from random import randint
 
 g_time_start = 0
 g_time_end = 0
@@ -5015,66 +5016,47 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 style_name = 'TCombobox'
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    # print('Combo special style', element.TextColor, element.BackgroundColor)
-                    style_name = 'PSG.TCombobox'
+                    # Creates 1 style per Text Color/ Background Color combination
+                    style_name = element.TextColor + element.BackgroundColor + '.TCombobox'
+                    print(style_name)
                     combostyle = ttk.Style()
-                    #
-                    # combostyle.map("C.TButton",
-                    #           foreground=[('pressed', 'red'), ('active', 'blue')],
-                    #           background=[('pressed', '!disabled', 'black'), ('active', 'white')]
-                    #           )
-                    # combostyle.map('PSG.TCombobox', background=[('selected', 'green')])
-                    # combostyle.configure('PSG.TCombobox.Listbox',foreground='green')
-                    # combostyle.map('PSG.TCombobox', foreground=[('active','purple')])
-                    # combostyle.map('PSG.TCombobox.textarea', foreground=[('active','purple')])
-                    # combostyle.map('PSG.TCombobox.rightdownarrow', arrowcolor=[('active','purple')])
-                    # combostyle.configure('PSG.TCombobox.TEntry', background='red')
-                    # combostyle.configure('PSG.TCombobox', background=element.BackgroundColor)
-                    combostyle.configure('PSG.TCombobox', foreground=element.TextColor)     # WORKS
-                    combostyle.configure('PSG.TCombobox', selectbackground='gray70')        # WORKS
-                    combostyle.configure('PSG.TCombobox', selectforeground=element.TextColor)   # WORKS
-                    # combostyle.configure('PSG.TCombobox.Listbox', background='purple')
-                    # toplevel_form.TKroot.option_add("*TCombobox*Background", element.BackgroundColor)        # WORK for drop-down list (Changes all)
-                    # combostyle.map('PSG.TCombobox', background=[('active', 'purple'), ('disabled', 'purple')])
-                    # combostyle.configure('PSG.TCombobox.PopdownFrame', background=element.BackgroundColor)
-                    # combostyle.configure('PSG.TCombobox.field', fieldbackground=element.BackgroundColor)
-                    # combostyle.configure('PSG.TCombobox.Listbox', background=element.BackgroundColor)
-                    # print(combostyle.element_names())
-                    # print(combostyle.element_options('PSG.TCombobox'))
-                    # try:
-                    #     combostyle.theme_create('combostyle',
-                    #                             settings={'TCombobox':
-                    #                                           {'configure':
-                    #                                                {'selectbackground': 'gray50',
-                    #                                                 'fieldbackground': element.BackgroundColor,
-                    #                                                 'foreground': text_color,
-                    #                                                 'background': element.BackgroundColor}
-                    #                                            }})
-                    # except:
-                    #     try:
-                    #         combostyle.theme_settings('combostyle',
-                    #                                   settings={'TCombobox':
-                    #                                                 {'configure':
-                    #                                                      {'selectbackground': 'gray50',
-                    #                                                       'fieldbackground': element.BackgroundColor,
-                    #                                                       'foreground': text_color,
-                    #                                                       'background': element.BackgroundColor}
-                    #                                                  }})
-                    #     except:
-                    #         pass
-                    # # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-                    # combostyle.theme_use('combostyle')
+
+                    # Creates a unique name for each field element(Sure there is a better way to do this)
+                    unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
+                    # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
+
+                    print(unique_field)
+                    # Clones over the TCombobox.field element from the "alt" theme.
+                    # This is what will allow us to change the background color without altering the whole programs theme
+                    combostyle.element_create(unique_field, "from", "alt")
+
+                    # Create widget layout using cloned "alt" field
+                    combostyle.layout(style_name, [
+                        (unique_field, {'children': [('Combobox.downarrow', {'side': 'right', 'sticky': 'ns'}),
+                                                     ('Combobox.padding',
+                                                      {'children': [('Combobox.focus',
+                                                                     {'children': [('Combobox.textarea',
+                                                                                    {'sticky': 'nswe'})],
+                                                                      'expand': '1',
+                                                                      'sticky': 'nswe'})],
+                                                       'expand': '1',
+                                                       'sticky': 'nswe'})],
+                                        'sticky': 'nswe'})])
+
+                    # Copy default TCombobox settings
+                    combostyle.configure(style_name, *combostyle.configure("TCombobox"))
+
+                    # Set individual widget options
+                    combostyle.configure(style_name, foreground=element.TextColor)
+                    combostyle.configure(style_name, selectbackground='gray70')
+                    combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
+                    combostyle.configure(style_name, selectforeground=element.TextColor)
 
                 element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
-                # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
 
-                # if element.InitializeAsDisabled:
-                #     element.TKCombo['state'] = 'disabled'
-                # if element.BackgroundColor is not None:
-                #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCombo.pack_forget()
@@ -7353,7 +7335,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 def main():
     from random import randint
 
-    ChangeLookAndFeel('GreenTan')
+    ChangeLookAndFeel('Black')
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
