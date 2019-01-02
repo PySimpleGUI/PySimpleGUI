@@ -3741,15 +3741,18 @@ class Window:
         FillFormWithValues(self, values_dict)
         return self
 
-    def FindElement(self, key):
+    def FindElement(self, key, silent_on_error=None):
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
-            print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-            PopupError('Keyword error in FindElement Call',
-                       'Bad key = {}'.format(key),
-                       'Your bad line of code may resemble this:',
-                       'window.FindElement("{}")'.format(key))
-            return ErrorElement(key=key)
+            if not silent_on_error == True:
+                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+                PopupError('Keyword error in FindElement Call',
+                           'Bad key = {}'.format(key),
+                           'Your bad line of code may resemble this:',
+                           'window.FindElement("{}")'.format(key))
+                return ErrorElement(key=key)
+            else:
+                return False
         return element
 
     Element =  FindElement          # Shortcut function
