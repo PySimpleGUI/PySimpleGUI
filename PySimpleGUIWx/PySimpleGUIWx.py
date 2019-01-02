@@ -2688,7 +2688,6 @@ class SystemTray:
                 self.timer.Start(milliseconds=timeout1, oneShot=wx.TIMER_ONE_SHOT)
             except:
                 print('*** Got error in Read ***')
-                Popup(f'*** Read error TaskBarIcon = {self.TaskBarIcon}\n')
         self.RunningMainLoop = True
         self.App.MainLoop()
         self.RunningMainLoop = False
@@ -2752,6 +2751,13 @@ class SystemTray:
         # Menu
         if menu is not None:
             self.TaskBarIcon.menu = menu
+        if filename:
+            self.icon = wx.Icon(filename, wx.BITMAP_TYPE_ANY)
+        elif data_base64:
+            self.icon = PyEmbeddedImage(data_base64).GetIcon()
+        else:
+            self.icon = PyEmbeddedImage(DEFAULT_BASE64_ICON).GetIcon()
+        self.TaskBarIcon.SetIcon(self.icon, tooltip=tooltip or '')
         # Tooltip
         # if tooltip is not None:
         #     self.TrayIcon.setToolTip(str(tooltip))
