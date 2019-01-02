@@ -3420,7 +3420,7 @@ class Window:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = Window.user_defined_icon if Window.user_defined_icon is not None else icon if icon is not None else DEFAULT_WINDOW_ICON
+        self.WindowIcon = icon if icon is not None else Window.user_defined_icon
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
