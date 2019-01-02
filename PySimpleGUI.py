@@ -20,6 +20,7 @@ import datetime
 import textwrap
 import pickle
 import calendar
+from random import randint
 
 g_time_start = 0
 g_time_end = 0
@@ -61,8 +62,9 @@ def TimerStop():
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 
+# Base64 encoded GIF file
+DEFAULT_BASE64_ICON = b'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'
 
-DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
 if sys.version_info[0] >= 3:
     DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
 else:
@@ -5023,66 +5025,47 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 style_name = 'TCombobox'
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    # print('Combo special style', element.TextColor, element.BackgroundColor)
-                    style_name = 'PSG.TCombobox'
+                    # Creates 1 style per Text Color/ Background Color combination
+                    style_name = element.TextColor + element.BackgroundColor + '.TCombobox'
+                    print(style_name)
                     combostyle = ttk.Style()
-                    #
-                    # combostyle.map("C.TButton",
-                    #           foreground=[('pressed', 'red'), ('active', 'blue')],
-                    #           background=[('pressed', '!disabled', 'black'), ('active', 'white')]
-                    #           )
-                    # combostyle.map('PSG.TCombobox', background=[('selected', 'green')])
-                    # combostyle.configure('PSG.TCombobox.Listbox',foreground='green')
-                    # combostyle.map('PSG.TCombobox', foreground=[('active','purple')])
-                    # combostyle.map('PSG.TCombobox.textarea', foreground=[('active','purple')])
-                    # combostyle.map('PSG.TCombobox.rightdownarrow', arrowcolor=[('active','purple')])
-                    # combostyle.configure('PSG.TCombobox.TEntry', background='red')
-                    # combostyle.configure('PSG.TCombobox', background=element.BackgroundColor)
-                    combostyle.configure('PSG.TCombobox', foreground=element.TextColor)     # WORKS
-                    combostyle.configure('PSG.TCombobox', selectbackground='gray70')        # WORKS
-                    combostyle.configure('PSG.TCombobox', selectforeground=element.TextColor)   # WORKS
-                    # combostyle.configure('PSG.TCombobox.Listbox', background='purple')
-                    # toplevel_form.TKroot.option_add("*TCombobox*Background", element.BackgroundColor)        # WORK for drop-down list (Changes all)
-                    # combostyle.map('PSG.TCombobox', background=[('active', 'purple'), ('disabled', 'purple')])
-                    # combostyle.configure('PSG.TCombobox.PopdownFrame', background=element.BackgroundColor)
-                    # combostyle.configure('PSG.TCombobox.field', fieldbackground=element.BackgroundColor)
-                    # combostyle.configure('PSG.TCombobox.Listbox', background=element.BackgroundColor)
-                    # print(combostyle.element_names())
-                    # print(combostyle.element_options('PSG.TCombobox'))
-                    # try:
-                    #     combostyle.theme_create('combostyle',
-                    #                             settings={'TCombobox':
-                    #                                           {'configure':
-                    #                                                {'selectbackground': 'gray50',
-                    #                                                 'fieldbackground': element.BackgroundColor,
-                    #                                                 'foreground': text_color,
-                    #                                                 'background': element.BackgroundColor}
-                    #                                            }})
-                    # except:
-                    #     try:
-                    #         combostyle.theme_settings('combostyle',
-                    #                                   settings={'TCombobox':
-                    #                                                 {'configure':
-                    #                                                      {'selectbackground': 'gray50',
-                    #                                                       'fieldbackground': element.BackgroundColor,
-                    #                                                       'foreground': text_color,
-                    #                                                       'background': element.BackgroundColor}
-                    #                                                  }})
-                    #     except:
-                    #         pass
-                    # # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-                    # combostyle.theme_use('combostyle')
+
+                    # Creates a unique name for each field element(Sure there is a better way to do this)
+                    unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
+                    # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
+
+                    print(unique_field)
+                    # Clones over the TCombobox.field element from the "alt" theme.
+                    # This is what will allow us to change the background color without altering the whole programs theme
+                    combostyle.element_create(unique_field, "from", "alt")
+
+                    # Create widget layout using cloned "alt" field
+                    combostyle.layout(style_name, [
+                        (unique_field, {'children': [('Combobox.downarrow', {'side': 'right', 'sticky': 'ns'}),
+                                                     ('Combobox.padding',
+                                                      {'children': [('Combobox.focus',
+                                                                     {'children': [('Combobox.textarea',
+                                                                                    {'sticky': 'nswe'})],
+                                                                      'expand': '1',
+                                                                      'sticky': 'nswe'})],
+                                                       'expand': '1',
+                                                       'sticky': 'nswe'})],
+                                        'sticky': 'nswe'})])
+
+                    # Copy default TCombobox settings
+                    combostyle.configure(style_name, *combostyle.configure("TCombobox"))
+
+                    # Set individual widget options
+                    combostyle.configure(style_name, foreground=element.TextColor)
+                    combostyle.configure(style_name, selectbackground='gray70')
+                    combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
+                    combostyle.configure(style_name, selectforeground=element.TextColor)
 
                 element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
-                # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
 
-                # if element.InitializeAsDisabled:
-                #     element.TKCombo['state'] = 'disabled'
-                # if element.BackgroundColor is not None:
-                #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCombo.pack_forget()
@@ -7361,7 +7344,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 def main():
     from random import randint
 
-    ChangeLookAndFeel('GreenTan')
+    ChangeLookAndFeel('Black')
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
@@ -7389,7 +7372,7 @@ def main():
 
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
-        [Combo(['Combo item 1', ], size=(20, 3))],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Spin([1, 2, 3], size=(4, 3))],
     ]
 

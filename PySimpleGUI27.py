@@ -4573,7 +4573,7 @@ if sys.version_info[0] >= 3:
         return return_val
 else:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        if isinstance(sub_menu_info, (str,unicode)):
+        if not isinstance(sub_menu_info, list):
             if not is_sub_menu and not skip:
                 # print(f'Adding command {sub_menu_info}')
                 pos = sub_menu_info.find('&')
@@ -4600,7 +4600,7 @@ else:
             while i < (len(sub_menu_info)):
                 item = sub_menu_info[i]
                 if i != len(sub_menu_info) - 1:
-                    if not isinstance(sub_menu_info[i + 1], (str, unicode)):
+                    if isinstance(sub_menu_info[i + 1], list):
                         new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
                         pos = sub_menu_info[i].find('&')
                         if pos != -1:
