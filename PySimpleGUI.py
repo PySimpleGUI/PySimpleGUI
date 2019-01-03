@@ -3062,7 +3062,7 @@ MenuBar = Menu          # another name for Menu to make it clear it's the Menu B
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, vertical_scroll_only=True,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Table
@@ -3116,7 +3116,7 @@ class Table(Element):
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
         self.RightClickMenu = right_click_menu
-
+        self.RowColors = row_colors
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
@@ -3412,7 +3412,7 @@ class Window:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = self.WindowIcon = Window.user_defined_icon if Window.user_defined_icon is not None else icon if icon is not None else DEFAULT_WINDOW_ICON
+        self.WindowIcon = Window.user_defined_icon if Window.user_defined_icon is not None else icon if icon is not None else DEFAULT_WINDOW_ICON
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
@@ -3738,7 +3738,7 @@ class Window:
     def FindElement(self, key, silent_on_error=None):
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
-            if not silent_on_error == True:
+            if not silent_on_error:
                 print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
                 PopupError('Keyword error in FindElement Call',
                            'Bad key = {}'.format(key),
@@ -4973,7 +4973,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
 
 
-            # -------------------------  INPUT (Single Line) element  ------------------------- #
+            # -------------------------  INPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
                 element.TKStringVar = tk.StringVar()
@@ -5010,7 +5010,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKEntry.bind('<Button-3>', element.RightClickMenuCallback)
-            # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
+            # -------------------------  COMBOBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False:
@@ -5079,7 +5079,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
+            # -------------------------  OPTION MENU Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False:
@@ -5178,7 +5178,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKText.bind('<Button-3>', element.RightClickMenuCallback)
-            # -------------------------  INPUT CHECKBOX element  ------------------------- #
+            # -------------------------  CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
@@ -5225,7 +5225,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
-                # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
+                # -------------------------  RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
@@ -5259,7 +5259,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  INPUT SPIN Box element  ------------------------- #
+                # -------------------------  SPIN element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
@@ -5615,9 +5615,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i+element.StartingRowNumber] + value
-                    id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i % 2)
+                    id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i)
                 if element.AlternatingRowColor is not None:
-                    treeview.tag_configure(1, background=element.AlternatingRowColor)
+                    for row in range(0, len(element.Values), 2):
+                        treeview.tag_configure(row, background=element.AlternatingRowColor)
+                if element.RowColors is not None:
+                    for row,color in element.RowColors:
+                        treeview.tag_configure(row, background=color)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", background=element.BackgroundColor,
                                           fieldbackground=element.BackgroundColor)
