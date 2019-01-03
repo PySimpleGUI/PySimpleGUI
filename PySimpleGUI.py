@@ -5616,12 +5616,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     if element.DisplayRowNumbers:
                         value = [i+element.StartingRowNumber] + value
                     id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i)
-                if element.AlternatingRowColor is not None:
+                if element.AlternatingRowColor is not None:         # alternating colors
                     for row in range(0, len(element.Values), 2):
                         treeview.tag_configure(row, background=element.AlternatingRowColor)
-                if element.RowColors is not None:
-                    for row,color in element.RowColors:
-                        treeview.tag_configure(row, background=color)
+                if element.RowColors is not None:                   # individual row colors
+                    for row_def in element.RowColors:
+                        if len(row_def) == 2:                       # only background is specified
+                            treeview.tag_configure(row_def[0], background=row_def[1])
+                        else:
+                            treeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
+
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", background=element.BackgroundColor,
                                           fieldbackground=element.BackgroundColor)
