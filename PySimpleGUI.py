@@ -1639,10 +1639,15 @@ class Button(Element):
             self.TKButton.image = image
         if image_filename is not None:
             self.TKButton.config(highlightthickness=0)
-            photo = tk.PhotoImage(file=image_filename)
-            width, height = photo.width(), photo.height()
-            self.TKButton.config(image=photo, width=width, height=height)
-            self.TKButton.image = photo
+            image = tk.PhotoImage(file=image_filename)
+            if image_size is not None:
+                width, height = image_size
+            else:
+                width, height = image.width(), image.height()
+            if image_subsample:
+                image = image.subsample(image_subsample)
+            self.TKButton.config(image=image, width=width, height=height)
+            self.TKButton.image = image
         if visible is False:
             self.TKButton.pack_forget()
         elif visible is True:
@@ -1711,6 +1716,7 @@ class ButtonMenu(Element):
         self.MenuItemChosen = None
         self.Tearoff = tearoff
         self.TKButtonMenu = None
+        self.TKMenu = None
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
@@ -1731,32 +1737,11 @@ class ButtonMenu(Element):
         if menu_definition is not None:
             self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
             AddMenuItem(self.TKMenu, menu_definition[1], self)
-        # for menu_entry in menu_definition:
-        #     # print(f'Adding a Menubar ENTRY {menu_entry}')
-        #     baritem = tk.Menu(menubar, tearoff=self.Tearoff)
-        #     pos = menu_entry[0].find('&')
-        #     # print(pos)
-        #     if pos != -1:
-        #         if pos == 0 or menu_entry[0][pos - 1] != "\\":
-        #             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
-        #     if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
-        #         menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem, underline=pos)
-        #         menubar.entryconfig(menu_entry[0][len(MENU_DISABLED_CHARACTER):], state='disabled')
-        #     else:
-        #         menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
-        #
-        #     if len(menu_entry) > 1:
-        #         AddMenuItem(baritem, menu_entry[1], self)
         self.TKButtonMenu.configure(menu=self.TKMenu)
-
-    def UpdateQt(self, menu_definition=None, text=None, button_color=(None, None), font=None, visible=None):
-        if menu_definition is not None:
-            menu_def = menu_definition
-            qmenu = QMenu(self.QT_QPushButton)
-            qmenu.setTitle(menu_def[0])
-            AddMenuItem(qmenu, menu_def[1], self)
-            self.QT_QPushButton.setMenu(qmenu)
-        super().Update(self.QT_QPushButton, background_color=button_color[1], text_color=button_color[0], font=font, visible=visible)
+        if visible is False:
+            self.TKButtonMenu.pack_forget()
+        elif visible is True:
+            self.TKButtonMenu.pack()
 
 
 
