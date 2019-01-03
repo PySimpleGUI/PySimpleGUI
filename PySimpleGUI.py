@@ -369,7 +369,7 @@ class Element():
         self.Tooltip = tooltip
         self.TooltipObject = None
         self.Visible = visible
-
+        self.TKRightClickMenu = None
 
     def RightClickMenuCallback(self, event):
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
@@ -1404,9 +1404,9 @@ class Output(Element):
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
         if visible is False:
-            self._TKOut.pack_forget()
+            self._TKOut.frame.pack_forget()
         elif visible is True:
-            self._TKOut.pack()
+            self._TKOut.frame.pack()
 
     def __del__(self):
         try:
@@ -5275,7 +5275,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                                           pad=elementpad)
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Visible is False:
-                    element._TKOut.pack_forget()
+                    element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.RightClickMenu or toplevel_form.RightClickMenu:
