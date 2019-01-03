@@ -4641,7 +4641,7 @@ else:
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
 
-def PackFormIntoFrame(form, containing_frame, toplevel_form):
+def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
 
@@ -5318,7 +5318,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
                     if element.BackgroundColor is not None:
-                        element.tktext_label.config(background=element.BackgroundColor);
+                        element.tktext_label.config(background=element.BackgroundColor)
 
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
@@ -5791,7 +5791,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     return
 
 
-def ConvertFlexToTK(MyFlexForm):
+def ConvertFlexToTK(MyFlexForm:Window):
     master = MyFlexForm.TKroot
     master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
@@ -5830,9 +5830,8 @@ def ConvertFlexToTK(MyFlexForm):
 
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def StartupTK(my_flex_form):
+def StartupTK(my_flex_form:Window):
     # global _my_windows
-
     # ow = _my_windows.NumOpenWindows
     ow = Window.NumOpenWindows
     # print('Starting TK open Windows = {}'.format(ow))
