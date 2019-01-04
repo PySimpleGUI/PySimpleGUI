@@ -5033,7 +5033,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                                         'sticky': 'nswe'})])
 
                     # Copy default TCombobox settings
-                    combostyle.configure(style_name, *combostyle.configure("TCombobox"))
+                    # combostyle.configure(style_name, *combostyle.configure("TCombobox"))
 
                     # Set individual widget options
                     combostyle.configure(style_name, foreground=element.TextColor)
