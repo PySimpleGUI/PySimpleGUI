@@ -915,7 +915,7 @@ class Checkbox(Element):
 
 
     def Get(self):
-        return self.TKIntVar.get()
+        return self.QT_Checkbox.isChecked()
 
     def Update(self, value=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
         self.QT_Checkbox.setChecked(value or False)
@@ -1274,7 +1274,7 @@ class Output(Element):
         #     self.my_stdout.write(str(m))
 
 
-    def Output(self,value=None, background_color=None, text_color=None, font=None, visible=None):
+    def Update(self,value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
             self.QT_TextBrowser.setText(value)
         super().Update(self.QT_TextBrowser, background_color=background_color, text_color=text_color, font=font, visible=visible)
