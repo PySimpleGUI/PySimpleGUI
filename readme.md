@@ -4264,8 +4264,19 @@ ValueError: script '.......\src\tkinter' not found
       
 Then try adding **`--hidden-import tkinter`** to your command      
       
-      
-      
+# Creating a Mac App File      
+
+There are reports that PyInstaller can be used to create App files.  It's not been officially tested.
+
+Run this command on your Mac
+
+> pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
+
+
+This info was located on Reddit with the source traced back to:
+https://github.com/pyinstaller/pyinstaller/issues/1350
+
+
 ## Fun Stuff      
 Here are some things to try if you're bored or want to further customize      
       
