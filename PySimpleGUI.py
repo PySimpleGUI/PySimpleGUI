@@ -4344,7 +4344,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                     try:
-                        value = element.TKIntVar.get()
+                        value = float(element.TKScale.get())
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
@@ -5033,6 +5033,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                                         'sticky': 'nswe'})])
 
                     # Copy default TCombobox settings
+                    # Getting an error on this line of code
                     # combostyle.configure(style_name, *combostyle.configure("TCombobox"))
 
                     # Set individual widget options
