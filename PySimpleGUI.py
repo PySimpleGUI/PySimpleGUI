@@ -3355,7 +3355,9 @@ class Window:
     hidden_master_root = None
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None),
+                 size=(None, None), min_size=(None, None), max_size=(None, None),
+                 element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
@@ -3441,6 +3443,8 @@ class Window:
         self.DisableMinimize = disable_minimize
         self._Hidden = False
         self._Size = size
+        self.MinSize = min_size
+        self.MaxSize = max_size
         self.XFound = False
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.RightClickMenu = right_click_menu
@@ -3542,6 +3546,18 @@ class Window:
             self.TKroot.iconbitmap(wicon)
         except:
             pass
+
+    def SetMinSize(self):
+        if not all(self.MinSize):
+            return None
+        width, height = self.MinSize
+        self.TKroot.tk.call('wm', 'minsize', self.TKroot._w, width, height)
+
+    def SetMaxSize(self):
+        if not all(self.MaxSize):
+            return None
+        width, height = self.MaxSize
+        self.TKroot.tk.call('wm', 'maxsize', self.TKroot._w, width, height)
 
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
@@ -5889,6 +5905,8 @@ def StartupTK(my_flex_form:Window):
     ConvertFlexToTK(my_flex_form)
 
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
+    my_flex_form.SetMinSize()
+    my_flex_form.SetMaxSize()
 
     try:
         root.attributes('-alpha', my_flex_form.AlphaChannel)  # Make window visible again
@@ -7418,7 +7436,7 @@ def main():
     layout=[[Column(layout1)]]
 
     window = Window('Window Title',
-                    font=('Helvetica', 13),
+                    font=('Helvetica', 13), min_size=(500, 500), resizable=True,
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     ).Layout(layout).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
