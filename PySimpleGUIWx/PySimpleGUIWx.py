@@ -3367,9 +3367,9 @@ class Window:
         :param alpha: From 0 to 1 with 0 being completely transparent
         :return:
         '''
-        self._AlphaChannel = alpha
+        self._AlphaChannel = alpha*100
         if self._AlphaChannel is not None:
-            self.QT_QMainWindow.setWindowOpacity(self._AlphaChannel)
+            self.MasterFrame.SetTransparent(self._AlphaChannel)
 
     @property
     def AlphaChannel(self):
@@ -3377,9 +3377,9 @@ class Window:
 
     @AlphaChannel.setter
     def AlphaChannel(self, alpha):
-        self._AlphaChannel = alpha
+        self._AlphaChannel = alpha*100
         if self._AlphaChannel is not None:
-            self.QT_QMainWindow.setWindowOpacity(self._AlphaChannel)
+            self.MasterFrame.SetTransparent(self._AlphaChannel)
 
     def BringToFront(self):
         self.QTMainWindow.activateWindow(self.QT_QMainWindow)
@@ -5289,6 +5289,9 @@ def StartupTK(window):
 
     if window._Size != (None, None):
         window.MasterFrame.SetSize(window._Size[0], window._Size[1])
+
+    if window._AlphaChannel is not None:
+        window.SetAlpha(window._AlphaChannel*100)
 
     window.MasterFrame.Show()
 
