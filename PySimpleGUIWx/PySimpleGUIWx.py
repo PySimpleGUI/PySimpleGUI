@@ -480,21 +480,18 @@ class Element():
 
 
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None):
-        style = str(widget.styleSheet())
-        add_brace = False
-        if len(style) != 0 and style[-1] == '}':
-            style = style[:-1]
-            add_brace = True
-        if font is not None:
-            style += create_style_from_font(font)
-        if text_color is not None:
-            style += ' color: %s;' % text_color
-        if background_color is not None:
-            style += 'background-color: %s;' % background_color
-        if add_brace:
-            style += '}'
-        widget.setStyleSheet(style)
-        set_widget_visiblity(widget, visible)
+        if font:
+            widget.SetFont(font_to_wx_font(font))
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.SetForegroundColour(text_color)
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.SetBackgroundColour(background_color)
+        if visible is True:
+            widget.Enable(True)
+        elif visible is False:
+            widget.Enable(False)
+
+
 
     def __del__(self):
         pass
@@ -525,6 +522,7 @@ class InputText(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.QT_QLineEdit = None
         self.ValueWasChanged = False
+        self.WxTextControl = None
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
@@ -559,18 +557,15 @@ class InputText(Element):
 
     def Update(self, value=None, disabled=None, select=None, background_color=None, text_color=None, font=None, visible=None):
         if disabled is True:
-            self.QT_QLineEdit.setDisabled(True)
+            self.WxTextControl.Enable(True)
         elif disabled is False:
-            self.QT_QLineEdit.setDisabled(False)
+            self.WxTextControl.Enable(False)
         if value is not None:
-            self.QT_QLineEdit.setText(str(value))
+            self.WxTextControl.SetValue(str(value))
             self.DefaultText = value
-            # was getting into an infinite loop when the update was triggering a text changed callback, but unable
-            # to dupliate this
-            # self.ValueWasChanged = True
         if select:
-            self.QT_QLineEdit.setSelection(0,QtGui.QTextCursor.End )
-        super().Update(self.QT_QLineEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
+            self.WxTextControl.SelectAll()
+        super().Update(self.WxTextControl, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
 
@@ -1377,30 +1372,75 @@ class Button(Element):
             except:
                 pass
         filetypes = (("ALL Files", "*"),) if self.FileTypes is None else self.FileTypes
-        if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = QFileDialog.getExistingDirectory(dir=self.InitialFolder)
+        if self.BType == BUTTON_TYPE_BROWSE_FOLDER:                     # Browse Folder
+            wx_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
+            if self.InitialFolder:
+                dialog = wx.DirDialog(self.ParentForm.MasterFrame, style=wx.FD_OPEN)
+            else:
+                dialog = wx.DirDialog(self.ParentForm.MasterFrame)
+            folder_name = ''
+            if dialog.ShowModal() == wx.ID_OK:
+                folder_name = dialog.GetPath()
             if folder_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = folder_name
                 else:
                     target_element.Update(folder_name)
-        elif self.BType == BUTTON_TYPE_BROWSE_FILE:
+        elif self.BType == BUTTON_TYPE_BROWSE_FILE:                     # Browse File
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
             # qt_types = "PNG files (*.png)|*.png"
             print(qt_types)
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_OPEN)
             else:
-                dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types)
+                dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types, style=wx.FD_OPEN)
             file_name = ''
             if dialog.ShowModal() == wx.ID_OK:
-                file_name = dialog.GetFilename()
+                file_name = dialog.GetPath()
+            else:
+                file_name = ''
             if file_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
                 else:
-                    target_element.Update(file_name[0])
-        elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
+                    target_element.Update(file_name)
+        elif self.BType == BUTTON_TYPE_BROWSE_FILES:                    # Browse Files
+            qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
+            print(qt_types)
+            if self.InitialFolder:
+                dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_MULTIPLE)
+            else:
+                dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types, style=wx.FD_MULTIPLE)
+            file_names = ''
+            if dialog.ShowModal() == wx.ID_OK:
+                file_names = dialog.GetPaths()
+                print(file_names)
+            else:
+                file_names = ''
+            if file_names != '':
+                file_names = ';'.join(file_names)
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_names
+                else:
+                    target_element.Update(file_names)
+        elif self.BType == BUTTON_TYPE_SAVEAS_FILE:                     # Save As File
+            qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
+            print(qt_types)
+            if self.InitialFolder:
+                dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+            else:
+                dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types, style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+            file_name = ''
+            if dialog.ShowModal() == wx.ID_OK:
+                file_name = dialog.GetPath()
+            else:
+                file_name = ''
+            if file_name != '':
+                if target_element.Type == ELEM_TYPE_BUTTON:
+                    target_element.FileOrFolderName = file_name
+                else:
+                    target_element.Update(file_name)
+        elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:                   # Color Chooser
             qcolor = QColorDialog.getColor()
             rgb_color = qcolor.getRgb()
             color= '#' + ''.join('%02x'% i for i in rgb_color[:3])
@@ -1408,24 +1448,7 @@ class Button(Element):
                 self.FileOrFolderName = color
             else:
                 target_element.Update(color)
-        elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
-            file_name = QFileDialog.getOpenFileNames(dir=self.InitialFolder, filter=qt_types)
-            if file_name != '':
-                file_name = ';'.join(file_name[0])
-                if target_element.Type == ELEM_TYPE_BUTTON:
-                    target_element.FileOrFolderName = file_name
-                else:
-                    target_element.Update(file_name[0])
-        elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
-            file_name = QFileDialog.getSaveFileName(dir=self.InitialFolder, filter=qt_types)
-            if file_name != '':
-                if target_element.Type == ELEM_TYPE_BUTTON:
-                    target_element.FileOrFolderName = file_name
-                else:
-                    target_element.Update(file_name[0])
-        elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
+        elif self.BType == BUTTON_TYPE_CLOSES_WIN:                      # Closes Window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
             if self.Key is not None:
@@ -4484,25 +4507,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # # -------------------------  INPUT (Single Line) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel)
+                if font:
+                    text_ctrl.SetFont(font_to_wx_font(font))
+                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetForegroundColour(element.TextColor)
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetBackgroundColour(element.BackgroundColor)
+
                 text_ctrl.SetMinSize(element_size)
 
-                lrsizer = wx.BoxSizer(wx.HORIZONTAL)
-                if full_element_pad[1] == full_element_pad[3]:   # if right = left
-                    lrsizer.Add(element.WxTextControl, 0, wx.LEFT|wx.RIGHT,  border=full_element_pad[1])
-                else:
-                    sizer = wx.BoxSizer(wx.HORIZONTAL)
-                    sizer.Add(element.WxTextControl,0,wx.LEFT, border=full_element_pad[3])
-                    lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
 
-                top_bottom_sizer  = wx.BoxSizer(wx.HORIZONTAL)
-                if full_element_pad[0] == full_element_pad[2]:   # if top = bottom
-                    top_bottom_sizer.Add(lrsizer, 0, wx.TOP|wx.BOTTOM,  border=full_element_pad[0])
-                else:
-                    sizer = wx.BoxSizer(wx.HORIZONTAL)
-                    sizer.Add(lrsizer,0,wx.TOP, border=full_element_pad[0])
-                    top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
+                sizer = pad_widget(text_ctrl)
+                hsizer.Add(sizer, 0)
 
-                hsizer.Add(top_bottom_sizer, 0)
 
 
 
