@@ -479,6 +479,9 @@ class Element():
             self.ParentForm.TKroot.quit()
 
 
+    def WxCallbackKeyboard(self, value):
+        element_callback_quit_mainloop(self)
+
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None):
         if font:
             widget.SetFont(font_to_wx_font(font))
@@ -542,15 +545,10 @@ class InputText(Element):
         return
 
 
-    def QtCallbackTextChanged(self, value):
-        if not self.ChangeSubmits:
-            return
-        # if was changed using an "update" call, then skip the next changed callback
-        if self.ValueWasChanged:
-            self.ValueWasChanged = False
-            print('skipping update')
-            return
-        element_callback_quit_mainloop(self)
+    # def WxCallbackKeyboard(self, value):
+    #     if not self.ChangeSubmits:
+    #         return
+    #     element_callback_quit_mainloop(self)
 
     def QtCallbackReturnPressed(self):
         self.ReturnKeyHandler(None)
@@ -1068,7 +1066,7 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, border_width=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
         """
         Text
         :param text:
@@ -1104,6 +1102,7 @@ class Text(Element):
         if size[1] is not None and size[1] < 10:
             pixelsize = size[0]*10, size[1]*20
         self.WxStaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
@@ -1476,7 +1475,7 @@ class Button(Element):
             if self.ParentForm.NonBlocking:
                 Window.DecrementOpenCount()
             self.ParentForm._Close()
-        elif self.BType == BUTTON_TYPE_READ_FORM:  # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
+        elif self.BType == BUTTON_TYPE_READ_FORM:                       # Read Button
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
             if self.Key is not None:
@@ -3505,7 +3504,7 @@ def element_callback_quit_mainloop(element):
         element.ParentForm.LastButtonClicked = ''
     element.ParentForm.FormRemainedOpen = True
     if element.ParentForm.CurrentlyRunningMainloop:
-        element.ParentForm.QTApplication.exit()  # kick the users out of the mainloop
+        element.ParentForm.App.ExitMainLoop() # kick the users out of the mainloop
 
 
 def quit_mainloop(window):
@@ -4359,7 +4358,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #                             highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
-                statictext = element.WxStaticText = wx.StaticText(form.MasterPanel, -1, element.DisplayText)
+                if element.Justification is not None:
+                    justification = element.Justification
+                elif toplevel_form.TextJustification is not None:
+                    justification = toplevel_form.TextJustification
+                else:
+                    justification = DEFAULT_TEXT_JUSTIFICATION
+                style = wx.ALIGN_LEFT if justification.startswith('l') else wx.ALIGN_CENTER if justification.startswith('c') else wx.ALIGN_RIGHT
+                print(border_depth, element.BorderWidth)
+                if border_depth:
+                    if element.Relief:
+                        if element.Relief in (RELIEF_SOLID, RELIEF_FLAT):
+                            style |= wx.SIMPLE_BORDER
+                        elif element.Relief == RELIEF_SUNKEN:
+                            style |= wx.SUNKEN_BORDER
+                        elif element.Relief in(RELIEF_RAISED, RELIEF_RIDGE):
+                            style |= wx.RAISED_BORDER
+                        elif element.Relief in (RELIEF_SUNKEN, RELIEF_SUNKEN):
+                            style |= wx.SUNKEN_BORDER
+                statictext = element.WxStaticText = wx.StaticText(form.MasterPanel, -1, element.DisplayText, style=style)
                 if font:
                     statictext.SetFont(font_to_wx_font(font))
                 if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
@@ -4379,27 +4396,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width = max_line_len
                     height = num_lines
 
+                if element.ClickSubmits:
+                    statictext.Bind(wx.EVT_LEFT_UP, element.WxCallbackKeyboard)
+
                 hsizer.Add(pad_widget(element.WxStaticText), 0)
 
                 if not auto_size_text:
                     statictext.SetMinSize((width,height))
+
                 if element.Tooltip:
                     statictext.SetToolTip(element.Tooltip)
                 if not element.Visible:
                     statictext.Hide()
-                # ---===--- LABEL widget create and place --- #
-                # stringvar = tk.StringVar()
-                # element.TKStringVar = stringvar
-                # stringvar.set(display_text)
-                # if auto_size_text:
-                #     width = 0
-                # if element.Justification is not None:
-                #     justification = element.Justification
-                # elif toplevel_form.TextJustification is not None:
-                #     justification = toplevel_form.TextJustification
-                # else:
-                #     justification = DEFAULT_TEXT_JUSTIFICATION
-                # justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
+
+
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                 #                         justify=justify, bd=border_depth, font=font)
@@ -4460,6 +4470,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if not element.Visible:
                     button.Hide()
+                if element.Tooltip:
+                    button.SetToolTip(element.Tooltip)
+
 
                 # border_depth = element.BorderWidth
             #     if btype != BUTTON_TYPE_REALTIME:
@@ -4517,53 +4530,44 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # # -------------------------  INPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
-                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel)
+                if element.Justification is not None:
+                    justification = element.Justification
+                elif toplevel_form.TextJustification is not None:
+                    justification = toplevel_form.TextJustification
+                else:
+                    justification = DEFAULT_TEXT_JUSTIFICATION
+                justify = wx.ALIGN_LEFT if justification.startswith('l') else wx.ALIGN_CENTER_HORIZONTAL if justification.startswith('c') else wx.ALIGN_RIGHT
+                if element.PasswordCharacter:
+                    justify |= wx.TE_PASSWORD
+                print(f'justify = {justify:0x}')
+                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=justify)
+                if element.DefaultText:
+                    text_ctrl.SetValue(element.DefaultText)
                 if font:
                     text_ctrl.SetFont(font_to_wx_font(font))
                 if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
                     text_ctrl.SetForegroundColour(element.TextColor)
                 if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     text_ctrl.SetBackgroundColour(element.BackgroundColor)
-
                 text_ctrl.SetMinSize(element_size)
-
                 if element.Disabled:
                     text_ctrl.Enable(False)
-
+                if element.ChangeSubmits:
+                    text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
                 sizer = pad_widget(text_ctrl)
+
                 hsizer.Add(sizer, 0)
 
                 if not element.Visible:
                     text_ctrl.Hide()
+                if element.Tooltip:
+                    text_ctrl.SetToolTip(element.Tooltip)
 
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
+                    focus_set = True
+                    element.SetFocus()
 
-                # default_text = element.DefaultText
-                # element.TKStringVar = tk.StringVar()
-                # element.TKStringVar.set(default_text)
-                # show = element.PasswordCharacter if element.PasswordCharacter else ""
-                # if element.Justification is not None:
-                #     justification = element.Justification
-                # else:
-                #     justification = DEFAULT_TEXT_JUSTIFICATION
-                # justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
-                # # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                # element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar,
-                #                            bd=border_depth, font=font, show=show, justify=justify)
-                # if element.ChangeSubmits:
-                #     element.TKEntry.bind('<Key>', element.KeyboardHandler)
                 # element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     element.TKEntry.configure(background=element.BackgroundColor)
-                # if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                #     element.TKEntry.configure(fg=text_color)
-                # element.TKEntry.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='x')
-                # if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                #     focus_set = True
-                #     element.TKEntry.focus_set()
-                # if element.Disabled:
-                #     element.TKEntry['state'] = 'disabled'
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 pass
@@ -5244,25 +5248,12 @@ def StartupTK(window):
             pass #TODO make moveable
 
 
-    # if not window.Resizable:
-    #     root.resizable(False, False)
-
-    # if window.KeepOnTop:
-    #     root.wm_attributes("-topmost", 1)
-
-
     InitializeResults(window)
 
     if window.NoTitleBar:
         window.MasterFrame.SetWindowStyleFlag(wx.NO_BORDER)
     if window.KeepOnTop:
         window.MasterFrame.ToggleWindowStyle(wx.STAY_ON_TOP)
-
-    # if flags:
-    #     window.MasterFrame.SetWindowStyleFlag(flags)
-
-    # else:
-    #     window.MasterFrame.SetWindowStyleFlag(0)
 
     vsizer = wx.BoxSizer(wx.VERTICAL)
     PackFormIntoFrame(window, vsizer, window)
@@ -6761,7 +6752,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 def main():
     layout = [[Text('TEXT1',tooltip='Tooltip'), Text('TEXT2', )],
-              [Text('You should be importing it rather than running it', justification='r', size=(50, 1))],
+              [Text('You should be importing it rather than running it', justification='l', size=(50, 1))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
                FileBrowse()],
