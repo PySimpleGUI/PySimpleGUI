@@ -487,10 +487,11 @@ class Element():
         if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             widget.SetBackgroundColour(background_color)
         if visible is True:
-            widget.Enable(True)
+            widget.Show()
+            self.ParentForm.VisibilityChanged()
         elif visible is False:
-            widget.Enable(False)
-
+            widget.Hide()
+            self.ParentForm.VisibilityChanged()
 
 
     def __del__(self):
@@ -565,16 +566,19 @@ class InputText(Element):
             self.DefaultText = value
         if select:
             self.WxTextControl.SelectAll()
+        # if visible:
+        #     self.WxTextControl.Show()
+        #     self.ParentForm.VisibilityChanged()
+        # elif visible is False:
+        #     self.WxTextControl.Hide()
         super().Update(self.WxTextControl, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
-
     def Get(self):
-        return self.QT_QLineEdit.text()
-        # return self.TKStringVar.get()
+        return self.WxTextControl.GetValue()
 
     def SetFocus(self):
-        self.QT_QLineEdit.setFocus()
+        self.WxTextControl.SetFocus()
 
     def __del__(self):
         super().__del__()
@@ -1064,28 +1068,34 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None,
-                 text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
-        '''
-        Text Element
+    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
+        """
+        Text
         :param text:
         :param size:
         :param auto_size_text:
         :param click_submits:
+        :param enable_events:
         :param relief:
         :param font:
         :param text_color:
         :param background_color:
         :param justification:
         :param pad:
+        :param margins:
         :param key:
         :param tooltip:
-        '''
+        :param visible:
+        :param size_px:
+        """
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
-        self.ClickSubmits = click_submits
+        self.ClickSubmits = click_submits or enable_events
+        self.Margins = margins
+        self.Visible = visible
+        self.size_px = size_px
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
@@ -1096,10 +1106,10 @@ class Text(Element):
         self.WxStaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
         return
 
-    def Update(self, value=None, background_color=None, text_color=None, font=None):
+    def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
             self.WxStaticText.SetLabel(value)
             self.DisplayText = value
@@ -1109,6 +1119,9 @@ class Text(Element):
             self.WxStaticText.SetForegroundColour(text_color)
         if font is not None:
             self.WxStaticText.SetFont(font)
+        super().Update(self.WxStaticText, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
 
     def __del__(self):
         super().__del__()
@@ -1519,7 +1532,7 @@ class Button(Element):
                 self.QT_QPushButton.setDisabled(False)
         # fg, bg = self.ButtonColor
         # print(f'Button update fg, bg {fg}, {bg}')
-        super().Update(self.QT_QPushButton, background_color=bg, text_color=fg, font=font, visible=visible)
+        super().Update(self.WxButton, background_color=bg, text_color=fg, font=font, visible=visible)
 
 
     def GetText(self):
@@ -3196,11 +3209,7 @@ class Window:
         return self
 
     def VisibilityChanged(self):
-        self.Refresh()
-        self.Size = self.Size
-        self.Refresh()
-        self.Size = self.Size
-        self.Refresh()
+        self.SizeChanged()
         return self
 
     def Fill(self, values_dict):
@@ -3463,13 +3472,20 @@ class Window:
 
     @property
     def Size(self):
-        size =  self.QT_QMainWindow.sizeHint()
-        return [size.width(), size.height()]
+        size = self.MasterFrame.GetSize()
+        return size
 
     @Size.setter
     def Size(self, size):
-        self.QT_QMainWindow.resize(QSize(size[0], size[1]))
+        self.MasterFrame.SetSize(size[0], size[1])
 
+
+    def SizeChanged(self):
+        size = self.Size
+        self.Size = size[0]+1, size[1]+1
+        self.Size = size
+        self.MasterFrame.SetSizer(self.OuterSizer)
+        self.OuterSizer.Fit(self.MasterFrame)
 
 
     def __enter__(self):
@@ -4378,6 +4394,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     statictext.SetMinSize((width,height))
                 if element.Tooltip:
                     statictext.SetToolTip(element.Tooltip)
+                if not element.Visible:
+                    statictext.Hide()
                 # ---===--- LABEL widget create and place --- #
                 # stringvar = tk.StringVar()
                 # element.TKStringVar = stringvar
@@ -4449,6 +4467,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 sizer = pad_widget(button)
                 hsizer.Add(sizer, 0)
 
+                if not element.Visible:
+                    button.Hide()
 
                 # border_depth = element.BorderWidth
             #     if btype != BUTTON_TYPE_REALTIME:
@@ -4504,7 +4524,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #         element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
 
-            # # -------------------------  INPUT (Single Line) element  ------------------------- #
+            # # -------------------------  INPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel)
                 if font:
@@ -4516,11 +4536,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 text_ctrl.SetMinSize(element_size)
 
+                if element.Disabled:
+                    text_ctrl.Enable(False)
 
                 sizer = pad_widget(text_ctrl)
                 hsizer.Add(sizer, 0)
 
-
+                if not element.Visible:
+                    text_ctrl.Hide()
 
 
                 # default_text = element.DefaultText
@@ -5251,13 +5274,13 @@ def StartupTK(window):
     outersizer.Fit(window.MasterFrame)
     outersizer.Add(vsizer, 1, wx.TOP|wx.BOTTOM|wx.EXPAND, border=DEFAULT_MARGINS[1])
 
-    outer2 = wx.BoxSizer(wx.VERTICAL)
-    outer2.Fit(window.MasterFrame)
-    outer2.Add(outersizer, 1, wx.LEFT|wx.RIGHT|wx.EXPAND, border=DEFAULT_MARGINS[0])
+    window.OuterSizer = wx.BoxSizer(wx.VERTICAL)
+    window.OuterSizer.Fit(window.MasterFrame)
+    window.OuterSizer.Add(outersizer, 1, wx.LEFT|wx.RIGHT|wx.EXPAND, border=DEFAULT_MARGINS[0])
 
-    window.MasterPanel.SetSizer(outer2)
+    window.MasterPanel.SetSizer(window.OuterSizer)
 
-    outer2.Fit(window.MasterFrame)
+    window.OuterSizer.Fit(window.MasterFrame)
 
     if window.Location != (None, None):
         window.MasterFrame.Move(window.Location[0], window.Location[1])
