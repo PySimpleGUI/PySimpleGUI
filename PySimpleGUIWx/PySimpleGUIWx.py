@@ -3231,8 +3231,8 @@ class Window:
 
     def FindElementWithFocus(self):
         return self.FocusElement
-        element = _FindElementWithFocusInSubForm(self)
-        return element
+        # element = _FindElementWithFocusInSubForm(self)
+        # return element
 
     def SaveToDisk(self, filename):
         try:
@@ -3250,16 +3250,8 @@ class Window:
             print('*** Error loading form to disk ***')
 
     def GetScreenDimensions(self):
-        if Window.QTApplication is None:
-            Window.QTApplication = QApplication(sys.argv)
-        try:
-            screen = Window.QTApplication.primaryScreen()
-        except:
-            return None, None
-        size = screen.size()
-        screen_width = size.width()
-        screen_height = size.height()
-        return screen_width, screen_height
+        size = wx.GetDisplaySize()
+        return size
 
     def Move(self, x, y):
         self.QT_QMainWindow.move(x, y)
@@ -3356,10 +3348,10 @@ class Window:
             self._Hidden = False
 
     def Disappear(self):
-        self.AlphaChannel = 0
+        self.MasterFrame.SetTransparent(0)
 
     def Reappear(self):
-        self.AlphaChannel = 255
+        self.MasterFrame.SetTransparent(255)
 
     def SetAlpha(self, alpha):
         '''
@@ -3367,19 +3359,18 @@ class Window:
         :param alpha: From 0 to 1 with 0 being completely transparent
         :return:
         '''
-        self._AlphaChannel = alpha
+        self._AlphaChannel = alpha*255
         if self._AlphaChannel is not None:
-            self.QT_QMainWindow.setWindowOpacity(self._AlphaChannel)
+            self.MasterFrame.SetTransparent(self._AlphaChannel)
 
     @property
     def AlphaChannel(self):
         return self._AlphaChannel
 
+
     @AlphaChannel.setter
     def AlphaChannel(self, alpha):
-        self._AlphaChannel = alpha
-        if self._AlphaChannel is not None:
-            self.QT_QMainWindow.setWindowOpacity(self._AlphaChannel)
+        self.SetAlpha(alpha)
 
     def BringToFront(self):
         self.QTMainWindow.activateWindow(self.QT_QMainWindow)
@@ -3387,8 +3378,8 @@ class Window:
 
 
     def CurrentLocation(self):
-        location = self.QT_QMainWindow.geometry()
-        return location.left(), location.top()
+        location = self.MasterFrame.GetPosition()
+        return location
 
     # class QTMainWindow(QWidget):
     #     def __init__(self,enable_key_events, window):
@@ -5264,6 +5255,12 @@ def StartupTK(window):
 
     if window.NoTitleBar:
         window.MasterFrame.SetWindowStyleFlag(wx.NO_BORDER)
+    if window.KeepOnTop:
+        window.MasterFrame.ToggleWindowStyle(wx.STAY_ON_TOP)
+
+    # if flags:
+    #     window.MasterFrame.SetWindowStyleFlag(flags)
+
     # else:
     #     window.MasterFrame.SetWindowStyleFlag(0)
 
@@ -5289,6 +5286,9 @@ def StartupTK(window):
 
     if window._Size != (None, None):
         window.MasterFrame.SetSize(window._Size[0], window._Size[1])
+
+    if window._AlphaChannel is not None:
+        window.SetAlpha(window._AlphaChannel)
 
     window.MasterFrame.Show()
 
