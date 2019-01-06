@@ -68,7 +68,7 @@ DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
 DEFAULT_PIXELS_TO_CHARS_SCALING = (10,26)      # 1 character represents x by y pixels
-DEFAULT_PIXEL_TO_CHARS_CUTOFF = 15             # number of chars that triggers using pixels instead of chars
+DEFAULT_PIXEL_TO_CHARS_CUTOFF = 20             # number of chars that triggers using pixels instead of chars
 
 MENU_DISABLED_CHARACTER = '!'
 MENU_KEY_SEPARATOR = '::'
@@ -246,8 +246,9 @@ ELEM_TYPE_INPUT_COMBO = 'combo'
 ELEM_TYPE_INPUT_OPTION_MENU = 'option menu'
 ELEM_TYPE_INPUT_RADIO = 'radio'
 ELEM_TYPE_INPUT_MULTILINE = 'multiline'
+ELEM_TYPE_MULTILINE_OUTPUT = 'multioutput'
 ELEM_TYPE_INPUT_CHECKBOX = 'checkbox'
-ELEM_TYPE_INPUT_SPIN = 'spind'
+ELEM_TYPE_INPUT_SPIN = 'spin'
 ELEM_TYPE_BUTTON = 'button'
 ELEM_TYPE_BUTTONMENU = 'buttonmenu'
 ELEM_TYPE_IMAGE = 'image'
@@ -418,7 +419,7 @@ class Element():
         MyForm = self.ParentForm
         button_element = self.FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
-            button_element.ButtonCallBack()
+            button_element.ButtonCallBack(event)
 
     def ListboxSelectHandler(self, event):
         # first, get the results table built
@@ -993,9 +994,8 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False,
-                 key=None, focus=False,
-                 font=None, pad=None, tooltip=None):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
+                 key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -1021,45 +1021,131 @@ class Multiline(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
+        tsize = size                # convert tkinter size to pixels
+        if size[0] is not None and size[0] < 100:
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+        self.WxTextControl = None
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None):
-        if value is not None:
-            try:
-                if not append:
-                    self.TKText.delete('1.0', tk.END)
-                self.TKText.insert(tk.END, value)
-            except:
-                pass
-            self.DefaultText = value
-        if self.Autoscroll:
-            self.TKText.see(tk.END)
-        if disabled == True:
-            self.TKText.configure(state='disabled')
-        elif disabled == False:
-            self.TKText.configure(state='normal')
-        if background_color is not None:
-            self.TKText.configure(background=background_color)
-        if text_color is not None:
-            self.TKText.configure(fg=text_color)
-        if font is not None:
-            self.TKText.configure(font=font)
+
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+            if value is not None and not append:
+                self.WxTextControl.SetLabel(value)
+            elif value is not None and append:
+                self.WxTextControl.AppendText(value)
+            if background_color is not None:
+                self.WxTextControl.SetBackgroundColour(background_color)
+            if text_color is not None:
+                self.WxTextControl.SetForegroundColour(text_color)
+            if font is not None:
+                self.WxTextControl.SetFont(font)
+            if disabled:
+                self.WxTextControl.Enable(True)
+            elif disabled is False:
+                self.WxTextControl.Enable(False)
+            super().Update(self.WxTextControl, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+    #
+    # def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+    #     if value is not None and not append:
+    #         self.DefaultText = value
+    #         self.QT_TextEdit.setText(str(value))
+    #     elif value is not None and append:
+    #         self.DefaultText = value
+    #         self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
+    #     if disabled == True:
+    #         self.QT_TextEdit.setDisabled(True)
+    #     elif disabled == False:
+    #         self.QT_TextEdit.setDisabled(False)
+    #     super().Update(self.QT_TextEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
 
     def Get(self):
-        return self.TKText.get(1.0, tk.END)
+        self.WxTextControl.GetValue()
 
     def SetFocus(self):
-        try:
-            self.TKText.focus_set()
-        except:
-            pass
+        self.WxTextControl.SetFocus()
+
 
     def __del__(self):
         super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Multiline Output                             #
+# ---------------------------------------------------------------------- #
+class MultilineOutput(Element):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+        '''
+        Multiline Element
+        :param default_text:
+        :param enter_submits:
+        :param disabled:
+        :param autoscroll:
+        :param size:
+        :param auto_size_text:
+        :param background_color:
+        :param text_color:
+        :param do_not_clear:
+        :param key:
+        :param focus:
+        :param pad:
+        :param tooltip:
+        :param font:
+        '''
+        self.DefaultText = default_text
+        self.EnterSubmits = enter_submits
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        self.Focus = focus
+        self.do_not_clear = do_not_clear
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.Autoscroll = autoscroll
+        self.Disabled = disabled
+        self.ChangeSubmits = change_submits or enable_events
+        tsize = size                # convert tkinter size to pixels
+        if size[0] is not None and size[0] < 100:
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+        self.WxTextControl = None
+
+        super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=tsize, auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
+        return
+
+
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+            if value is not None and not append:
+                self.WxTextControl.SetLabel(value)
+            elif value is not None and append:
+                self.WxTextControl.AppendText(value)
+            if background_color is not None:
+                self.WxTextControl.SetBackgroundColour(background_color)
+            if text_color is not None:
+                self.WxTextControl.SetForegroundColour(text_color)
+            if font is not None:
+                self.WxTextControl.SetFont(font)
+            if disabled:
+                self.WxTextControl.Enable(True)
+            elif disabled is False:
+                self.WxTextControl.Enable(False)
+            super().Update(self.WxTextControl, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
+    def Get(self):
+        self.WxTextControl.GetValue()
+
+    def SetFocus(self):
+        self.WxTextControl.SetFocus()
+
+    def __del__(self):
+        super().__del__()
+
+
+
+
 
 
 # ---------------------------------------------------------------------- #
@@ -1195,35 +1281,6 @@ class TKProgressBar():
             pass
 
 
-# ---------------------------------------------------------------------- #
-#                           TKOutput                                     #
-#   New Type of TK Widget that's a Text Widget in disguise               #
-#       Note that it's inherited from the TKFrame class so that the      #
-#       Scroll bar will span the length of the frame                     #
-# ---------------------------------------------------------------------- #
-class TKOutput():
-    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
-        self.previous_stdout = sys.stdout
-        self.previous_stderr = sys.stderr
-
-        sys.stdout = self
-        sys.stderr = self
-
-    def write(self, txt):
-        pass
-
-    def Close(self):
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
-
-    def flush(self):
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
-
-    def __del__(self):
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
-
 
 # ---------------------------------------------------------------------- #
 #                           Output                                       #
@@ -1231,7 +1288,7 @@ class TKOutput():
 # ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None):
+                 key=None, visible=True, size_px=(None,None)):
         '''
         Output Element
         :param size:
@@ -1245,30 +1302,44 @@ class Output(Element):
         self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.WxTextControl = None
 
-        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key)
+        tsize = convert_tkinter_size_to_Wx(size) if size[0] is not None and size[0] < 100 else size
 
-    @property
-    def TKOut(self):
-        if self._TKOut is None:
-            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
-        return self._TKOut
+        super().__init__(ELEM_TYPE_OUTPUT, size=tsize, background_color=bg, text_color=fg, pad=pad, font=font,
+                         tooltip=tooltip, key=key, visible=visible, size_px=size_px)
 
-    def Update(self, value=None):
+    class RedirectText(object):
+        def __init__(self, aWxTextCtrl):
+            self.out = aWxTextCtrl
+
+        def write(self, string):
+            self.out.AppendText(string)
+
+    def reroute_stdout(self):
+        self.redir = self.RedirectText(self.WxTextControl)
+        print('Redirecting', self.WxTextControl)
+        self.my_stdout = sys.stdout
+        self.my_stderr = sys.stderr
+        sys.stdout = self.redir
+        # sys.stderr = self.WxTextControl
+
+    #
+    # def write(self, m):
+    #     # print('in the ')
+    #     if m is not None:
+    #         self.WxTextControl.AppendText(m)
+
+
+    def Update(self,value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
-            # try:
-            self._TKOut.output.delete('1.0', tk.END)
-            self._TKOut.output.insert(tk.END, value)
-            # except:
-            #     pass
+            self.WxTextControl.AppendText(value)
+        super().Update(self.WxTextControl, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
 
     def __del__(self):
-        try:
-            self._TKOut.__del__()
-        except:
-            pass
+        sys.stdout = self.my_stdout
+        sys.stderr = self.my_stderr
         super().__del__()
 
 
@@ -1329,6 +1400,7 @@ class Button(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.QT_QPushButton = None
         self.ColorChosen = None
+        self.Relief = None
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, size_px=size_px)
@@ -1401,7 +1473,6 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:                     # Browse File
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
             # qt_types = "PNG files (*.png)|*.png"
-            print(qt_types)
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_OPEN)
             else:
@@ -1418,7 +1489,6 @@ class Button(Element):
                     target_element.Update(file_name)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:                    # Browse Files
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
-            print(qt_types)
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_MULTIPLE)
             else:
@@ -1426,7 +1496,6 @@ class Button(Element):
             file_names = ''
             if dialog.ShowModal() == wx.ID_OK:
                 file_names = dialog.GetPaths()
-                print(file_names)
             else:
                 file_names = ''
             if file_names != '':
@@ -1437,7 +1506,6 @@ class Button(Element):
                     target_element.Update(file_names)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:                     # Save As File
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
-            print(qt_types)
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
             else:
@@ -3085,6 +3153,21 @@ class Window:
         if self.CurrentlyRunningMainloop:
             self.App.ExitMainLoop()
 
+    def callback_keyboard_char(self, event:wx.KeyEvent):
+        self.LastButtonClicked = None
+        self.FormRemainedOpen = True
+        if event.ClassName == 'wxMouseEvent':
+            if event.WheelRotation < 0:
+                self.LastKeyboardEvent = 'MouseWheel:Down'
+            else:
+                self.LastKeyboardEvent = 'MouseWheel:Up'
+        else:
+            self.LastKeyboardEvent = event.GetKeyCode()
+        if not self.NonBlocking:
+            BuildResults(self, False, self)
+        if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
+            self.App.ExitMainLoop()  # kick the users out of the mainloop
+        event.DoAllowNextEvent()
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
@@ -3960,12 +4043,9 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
-                    try:
-                        value = element.TKText.get(1.0, tk.END)
-                        if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                            element.TKText.delete('1.0', tk.END)
-                    except:
-                        value = None
+                    value = element.WxTextControl.GetValue()
+                    if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
+                        element.WxTextControl.SetValue('')
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
                         value = element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
@@ -4365,7 +4445,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 style = wx.ALIGN_LEFT if justification.startswith('l') else wx.ALIGN_CENTER if justification.startswith('c') else wx.ALIGN_RIGHT
-                print(border_depth, element.BorderWidth)
+                # print(border_depth, element.BorderWidth)
                 if border_depth:
                     if element.Relief:
                         if element.Relief in (RELIEF_SOLID, RELIEF_FLAT):
@@ -4410,35 +4490,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     statictext.Hide()
 
 
-                # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
-                #                         justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 # wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
                 # if not auto_size_text and height == 1:
                 #     wraplen = 0
-                # print("wraplen, width, height", wraplen, width, height)
-                # tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
-                # if element.Relief is not None:
-                #     tktext_label.configure(relief=element.Relief)
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     tktext_label.configure(background=element.BackgroundColor)
-                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                #     tktext_label.configure(fg=element.TextColor)
-                # tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True)
-                # element.TKText = tktext_label
-                # if element.ClickSubmits:
-                #     tktext_label.bind('<Button-1>', element.TextClickedHandler)
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
-                element.WxButton = button = wx.Button(form.MasterPanel, style=wx.BORDER_NONE)
+                element.WxButton = button = wx.Button(form.MasterPanel, style=wx.NO_BORDER)
                 button.SetLabelText(element.ButtonText)
                 if font:
                     button.SetFont(font_to_wx_font(font))
                 button.Bind(wx.EVT_BUTTON, element.ButtonCallBack)
-                # form.MasterPanel.Bind(wx.EVT_BUTTON, element.ButtonCallBack)
 
                 element.Location = (row_num, col_num)
                 if element.AutoSizeButton is not None:
@@ -4474,7 +4536,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     button.SetToolTip(element.Tooltip)
 
 
-                # border_depth = element.BorderWidth
             #     if btype != BUTTON_TYPE_REALTIME:
             #         tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,
             #                              command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth, font=font)
@@ -4483,13 +4544,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #                              bd=border_depth, font=font)
             #         tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
             #         tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-            #     if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
-            #         tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
-            #     elif bc[1] == COLOR_SYSTEM_DEFAULT:
-            #         tkbutton.config(foreground=bc[0])
-            #
-            #     element.TKButton = tkbutton  # not used yet but save the TK button in case
-            #     wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
             #     if element.ImageFilename:  # if button has an image on it
             #         tkbutton.config(highlightthickness=0)
             #         photo = tk.PhotoImage(file=element.ImageFilename)
@@ -4539,8 +4593,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 justify = wx.ALIGN_LEFT if justification.startswith('l') else wx.ALIGN_CENTER_HORIZONTAL if justification.startswith('c') else wx.ALIGN_RIGHT
                 if element.PasswordCharacter:
                     justify |= wx.TE_PASSWORD
-                print(f'justify = {justify:0x}')
+
                 element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=justify)
+
                 if element.DefaultText:
                     text_ctrl.SetValue(element.DefaultText)
                 if font:
@@ -4554,6 +4609,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     text_ctrl.Enable(False)
                 if element.ChangeSubmits:
                     text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
+                if element.ChangeSubmits:
+                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element.ReturnKeyHandler)
+
                 sizer = pad_widget(text_ctrl)
 
                 hsizer.Add(sizer, 0)
@@ -4567,7 +4625,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     focus_set = True
                     element.SetFocus()
 
-                # element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 pass
@@ -4688,31 +4745,102 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #     if element.Tooltip is not None:
             #         element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  INPUT MULTI LINE element  ------------------------- #
+            # -------------------------  INPUT MULTILINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
-                pass
-                # default_text = element.DefaultText
-                # width, height = element_size
-                # element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
-                #                                               bd=border_depth, font=font)
-                # element.TKText.insert(1.0, default_text)  # set the default text
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     element.TKText.configure(background=element.BackgroundColor)
-                #     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                # element.TKText.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
-                # if element.ChangeSubmits:
-                #     element.TKText.bind('<Key>', element.KeyboardHandler)
-                # if element.EnterSubmits:
-                #     element.TKText.bind('<Return>', element.ReturnKeyHandler)
-                # if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                #     focus_set = True
-                #     element.TKText.focus_set()
-                # if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                #     element.TKText.configure(fg=text_color)
-                # if element.Disabled == True:
-                #     element.TKText['state'] = 'disabled'
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                justify = 0
+                if element.EnterSubmits:
+                    justify |= wx.TE_PROCESS_ENTER
+                justify |= wx.TE_MULTILINE
+                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=justify)
+
+                if element.DefaultText:
+                    text_ctrl.SetValue(element.DefaultText)
+                if font:
+                    text_ctrl.SetFont(font_to_wx_font(font))
+                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetForegroundColour(element.TextColor)
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetBackgroundColour(element.BackgroundColor)
+                text_ctrl.SetMinSize(element_size)
+                if element.Disabled:
+                    text_ctrl.Enable(False)
+                if element.ChangeSubmits:
+                    text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
+                if element.EnterSubmits:
+                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element.ReturnKeyHandler)
+
+                sizer = pad_widget(text_ctrl)
+
+                hsizer.Add(sizer, 0)
+
+                if not element.Visible:
+                    text_ctrl.Hide()
+                if element.Tooltip:
+                    text_ctrl.SetToolTip(element.Tooltip)
+
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
+                    focus_set = True
+                    element.SetFocus()
+            # ------------------------- OUTPUT MULTILINE element  ------------------------- #
+            elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
+                style = 0
+                if element.EnterSubmits:
+                    style |= wx.TE_PROCESS_ENTER
+                style |= wx.TE_MULTILINE | wx.TE_READONLY
+                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=style)
+                if element.DefaultText:
+                    text_ctrl.SetValue(element.DefaultText)
+                if font:
+                    text_ctrl.SetFont(font_to_wx_font(font))
+                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetForegroundColour(element.TextColor)
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetBackgroundColour(element.BackgroundColor)
+                text_ctrl.SetMinSize(element_size)
+                if element.Disabled:
+                    text_ctrl.Enable(False)
+                if element.ChangeSubmits:
+                    text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
+                if element.EnterSubmits:
+                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element.ReturnKeyHandler)
+
+                sizer = pad_widget(text_ctrl)
+
+                hsizer.Add(sizer, 0)
+
+                if not element.Visible:
+                    text_ctrl.Hide()
+                if element.Tooltip:
+                    text_ctrl.SetToolTip(element.Tooltip)
+
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
+                    focus_set = True
+                    element.SetFocus()
+                # -------------------------  OUTPUT element  ------------------------- #
+            elif element_type == ELEM_TYPE_OUTPUT:
+                style = 0
+                style |= wx.TE_MULTILINE | wx.TE_READONLY
+                style = wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL
+                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=style)
+
+                if font:
+                    text_ctrl.SetFont(font_to_wx_font(font))
+                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetForegroundColour(element.TextColor)
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    text_ctrl.SetBackgroundColour(element.BackgroundColor)
+                text_ctrl.SetMinSize(element_size)
+
+                sizer = pad_widget(text_ctrl)
+
+                hsizer.Add(sizer, 0)
+
+                if not element.Visible:
+                    text_ctrl.Hide()
+                if element.Tooltip:
+                    text_ctrl.SetToolTip(element.Tooltip)
+                element.reroute_stdout()
+
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 pass
@@ -4813,17 +4941,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip,
                 #                                     timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  OUTPUT element  ------------------------- #
-            elif element_type == ELEM_TYPE_OUTPUT:
-                pass
-                # width, height = element_size
-                # element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
-                #                           background_color=element.BackgroundColor, text_color=text_color, font=font,
-                #                           pad=element.Pad)
-                # element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  IMAGE element  ------------------------- #
+            # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 pass
                 # if element.Filename is not None:
@@ -5203,14 +5321,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def StartupTK(window):
+def StartupTK(window:Window):
 
     ow = Window.NumOpenWindows
     if Window.highest_level_app is None:
         app = Window.highest_level_app = wx.App(False)
     else:
         app = Window.highest_level_app
-
+    # -------- grab anywhere --------
     if window.GrabAnywhere:
         frame = DragFrame()
     else:
@@ -5243,17 +5361,22 @@ def StartupTK(window):
         panel.SetBackgroundColour(window.BackgroundColor)
     Window.IncrementOpenCount()
 
-    # Make moveable window
-    if (window.GrabAnywhere is not False and not (window.NonBlocking and window.GrabAnywhere is not True)):
-            pass #TODO make moveable
-
-
     InitializeResults(window)
 
+    # ----------------------------- handle settings using Style Flags -----------------------------
+    style = window.MasterFrame.GetWindowStyle()
     if window.NoTitleBar:
-        window.MasterFrame.SetWindowStyleFlag(wx.NO_BORDER)
+        style |= wx.NO_BORDER
     if window.KeepOnTop:
-        window.MasterFrame.ToggleWindowStyle(wx.STAY_ON_TOP)
+        style |= wx.STAY_ON_TOP
+    if window.ReturnKeyboardEvents:
+        style |= wx.WANTS_CHARS
+        window.App.Bind(wx.EVT_CHAR_HOOK, window.callback_keyboard_char)     # would be nice if it were key-UP
+        window.App.Bind(wx.EVT_MOUSEWHEEL, window.callback_keyboard_char)     # would be nice if it were key-UP
+    if style:
+        window.MasterFrame.SetWindowStyleFlag(style)
+
+
 
     vsizer = wx.BoxSizer(wx.VERTICAL)
     PackFormIntoFrame(window, vsizer, window)
@@ -5316,12 +5439,6 @@ def StartupTK(window):
 
     # root.attributes('-alpha', window.AlphaChannel)  # Make window visible again
 
-    # if window.ReturnKeyboardEvents and not window.NonBlocking:
-    #     root.bind("<KeyRelease>", window._KeyboardCallback)
-    #     root.bind("<MouseWheel>", window._MouseWheelCallback)
-    # elif window.ReturnKeyboardEvents:
-    #     root.bind("<Key>", window._KeyboardCallback)
-    #     root.bind("<MouseWheel>", window._MouseWheelCallback)
 
     # if window.AutoClose:
     #     duration = DEFAULT_AUTOCLOSE_TIME if window.AutoCloseDuration is None else window.AutoCloseDuration
@@ -5534,7 +5651,7 @@ class DebugWin():
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
         self.window = Window(title=title or 'Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
-        self.output_element = Multiline(size=win_size, key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
+        self.output_element = MultilineOutput(size=win_size,  key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
 
         if no_button:
             self.layout = [[self.output_element]]
