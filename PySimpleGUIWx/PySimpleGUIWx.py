@@ -340,9 +340,9 @@ class ToolTip:
 #           Row                                                          #
 #               Form                                                     #
 # ---------------------------------------------------------------------- #
-# ------------------------------------------------------------------------- #
-#                       Element CLASS                                       #
-# ------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------- #
+#                       Element CLASS                                    #
+# ---------------------------------------------------------------------- #
 class Element():
     def __init__(self, elem_type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
                  key=None, pad=None, tooltip=None, visible=True, size_px=(None, None)):
@@ -881,7 +881,7 @@ class Checkbox(Element):
         self.Text = text
         self.InitialState = default
         self.Value = None
-        self.TKCheckbutton = None
+        self.WxCheckbox = None
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits
@@ -3228,7 +3228,9 @@ class Window:
             if self.RootNeedsDestroying:
                 # self.LastButtonClicked = None
                 # self.App.Close()
-                self.MasterFrame.Close()
+                try:
+                    self.MasterFrame.Close()
+                except: pass
                 Window.DecrementOpenCount()
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
@@ -4001,7 +4003,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.WxTextControl.SetValue('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
-                    value = element.TKIntVar.get()
+                    value = element.WxCheckbox.GetValue()
                     value = (value != 0)
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
                     RadVar = element.TKIntVar.get()
@@ -4815,7 +4817,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.SetFocus()
-                # -------------------------  OUTPUT element  ------------------------- #
+                # -------------------------  OUTPUT element  -----------------fd-------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 style = 0
                 style |= wx.TE_MULTILINE | wx.TE_READONLY
@@ -4842,7 +4844,32 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
-                pass
+                element.WxCheckbox = checkbox = wx.CheckBox(form.MasterPanel)
+                if element.Text:
+                    checkbox.SetLabel(element.Text)
+                if font:
+                    checkbox.SetFont(font_to_wx_font(font))
+                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    checkbox.SetForegroundColour(element.TextColor)
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    checkbox.SetBackgroundColour(element.BackgroundColor)
+                checkbox.SetMinSize(element_size)
+                if element.Disabled:
+                    checkbox.Enable(False)
+                if element.ChangeSubmits:
+                    checkbox.Bind(wx.EVT_CHECKBOX, element.WxCallbackCheckbox)
+
+                sizer = pad_widget(checkbox)
+
+                hsizer.Add(sizer, 0)
+
+                if not element.Visible:
+                    checkbox.Hide()
+                if element.Tooltip:
+                    checkbox.SetToolTip(element.Tooltip)
+
+                element.WxCheckbox = checkbox
+
             #     width = 0 if auto_size_text else element_size[0]
             #     default_value = element.InitialState
             #     element.TKIntVar = tk.IntVar()
@@ -5338,7 +5365,6 @@ def StartupTK(window:Window):
     if window.GrabAnywhere:
         panel.Bind(wx.EVT_MOTION, frame.on_mouse)
 
-
     window.App = app
     window.MasterFrame =  frame
     window.MasterPanel = panel
@@ -5366,15 +5392,18 @@ def StartupTK(window:Window):
     style = 0
     if window.NoTitleBar:
         style |= wx.BORDER_NONE
+    else:
+        style = wx.BORDER_DEFAULT
     if window.KeepOnTop:
         style |= wx.STAY_ON_TOP
     if window.ReturnKeyboardEvents:
-        style |= wx.WANTS_CHARS
-        window.App.Bind(wx.EVT_CHAR_HOOK, window.callback_keyboard_char)     # would be nice if it were key-UP
-        window.App.Bind(wx.EVT_MOUSEWHEEL, window.callback_keyboard_char)     # would be nice if it were key-UP
+        # style |= wx.WANTS_CHARS
+        window.App.Bind(wx.EVT_CHAR_HOOK, window.callback_keyboard_char)
+        window.App.Bind(wx.EVT_MOUSEWHEEL, window.callback_keyboard_char)
 
     if style:
         window.MasterFrame.SetWindowStyleFlag(style)
+
     # ----------------------------- Sizer creation and PACK FORM -----------------------------
     vsizer = wx.BoxSizer(wx.VERTICAL)
     PackFormIntoFrame(window, vsizer, window)
