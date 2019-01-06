@@ -1144,10 +1144,6 @@ class MultilineOutput(Element):
         super().__del__()
 
 
-
-
-
-
 # ---------------------------------------------------------------------- #
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
@@ -1303,6 +1299,7 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.WxTextControl = None
+        self.redir = None
 
         tsize = convert_tkinter_size_to_Wx(size) if size[0] is not None and size[0] < 100 else size
 
@@ -1317,14 +1314,16 @@ class Output(Element):
             self.out.AppendText(string)
 
     def reroute_stdout(self):
-        self.redir = self.RedirectText(self.WxTextControl)
-        print('Redirecting', self.WxTextControl)
         self.my_stdout = sys.stdout
         self.my_stderr = sys.stderr
+        self.redir = self.RedirectText(self.WxTextControl)
+        print('Redirecting', self.WxTextControl)
         sys.stdout = self.redir
-        # sys.stderr = self.WxTextControl
+        sys.stderr = self.redir
+        print('REDIRECT complete')
+        print('REDIRECT complete')
 
-    #
+
     # def write(self, m):
     #     # print('in the ')
     #     if m is not None:
@@ -1338,6 +1337,7 @@ class Output(Element):
 
 
     def __del__(self):
+        print('Deleting Output Element')
         sys.stdout = self.my_stdout
         sys.stderr = self.my_stderr
         super().__del__()
@@ -2889,8 +2889,8 @@ class SystemTray:
 
 
 class DragFrame(wx.Frame):
-    def __init__(self):
-        wx.Frame.__init__(self, None)
+    def __init__(self, title=''):
+        wx.Frame.__init__(self, None, title=title)
 
     def on_mouse(self, event):
         '''
@@ -3167,7 +3167,8 @@ class Window:
             BuildResults(self, False, self)
         if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
             self.App.ExitMainLoop()  # kick the users out of the mainloop
-        event.DoAllowNextEvent()
+        if event.ClassName != 'wxMouseEvent':
+            event.DoAllowNextEvent()
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
@@ -4363,7 +4364,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
-        tk_row_frame = 00000        # TODO Get horizontal ROW widget to put others into
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
@@ -5330,7 +5330,7 @@ def StartupTK(window:Window):
         app = Window.highest_level_app
     # -------- grab anywhere --------
     if window.GrabAnywhere:
-        frame = DragFrame()
+        frame = DragFrame(title=window.Title)
     else:
         frame = wx.Frame(None, title=window.Title)
 
@@ -5364,23 +5364,23 @@ def StartupTK(window:Window):
     InitializeResults(window)
 
     # ----------------------------- handle settings using Style Flags -----------------------------
-    style = window.MasterFrame.GetWindowStyle()
+    style = 0
     if window.NoTitleBar:
-        style |= wx.NO_BORDER
+        style |= wx.BORDER_NONE
     if window.KeepOnTop:
         style |= wx.STAY_ON_TOP
     if window.ReturnKeyboardEvents:
         style |= wx.WANTS_CHARS
         window.App.Bind(wx.EVT_CHAR_HOOK, window.callback_keyboard_char)     # would be nice if it were key-UP
         window.App.Bind(wx.EVT_MOUSEWHEEL, window.callback_keyboard_char)     # would be nice if it were key-UP
+
     if style:
         window.MasterFrame.SetWindowStyleFlag(style)
-
-
-
+    # ----------------------------- Sizer creation and PACK FORM -----------------------------
     vsizer = wx.BoxSizer(wx.VERTICAL)
     PackFormIntoFrame(window, vsizer, window)
 
+    # ----------------------------- Sizers to create margins -----------------------------
     outersizer = wx.BoxSizer(wx.VERTICAL)
     outersizer.Fit(window.MasterFrame)
     outersizer.Add(vsizer, 1, wx.TOP|wx.BOTTOM|wx.EXPAND, border=DEFAULT_MARGINS[1])
@@ -5393,6 +5393,7 @@ def StartupTK(window:Window):
 
     window.OuterSizer.Fit(window.MasterFrame)
 
+    # ----------------------------- window location, size and alpha -----------------------------
     if window.Location != (None, None):
         window.MasterFrame.Move(window.Location[0], window.Location[1])
     else:
@@ -5404,11 +5405,11 @@ def StartupTK(window:Window):
     if window._AlphaChannel is not None:
         window.SetAlpha(window._AlphaChannel)
 
+    # ----------------------------- DISPLAY the window -----------------------------
     window.MasterFrame.Show()
 
 
     # ....................................... DONE creating and laying out window ..........................#
-
     if RUN_INSPECTION_TOOL:
         wx.lib.inspection.InspectionTool().Show()
     window.CurrentlyRunningMainloop = True
@@ -5437,27 +5438,6 @@ def StartupTK(window:Window):
     if timer:
         timer.Stop()
 
-    # root.attributes('-alpha', window.AlphaChannel)  # Make window visible again
-
-
-    # if window.AutoClose:
-    #     duration = DEFAULT_AUTOCLOSE_TIME if window.AutoCloseDuration is None else window.AutoCloseDuration
-    #     window.TKAfterID = root.after(duration * 1000, window._AutoCloseAlarmCallback)
-    #
-    # if window.Timeout != None:
-    #     window.TKAfterID = root.after(window.Timeout, window._TimeoutAlarmCallback)
-    # if window.NonBlocking:
-    #     window.TKroot.protocol("WM_DESTROY_WINDOW", window.OnClosingCallback)
-    #     window.TKroot.protocol("WM_DELETE_WINDOW", window.OnClosingCallback)
-    # else:  # it's a blocking form
-        # print('..... CALLING MainLoop')
-        # window.CurrentlyRunningMainloop = True
-        # window.TKroot.protocol("WM_DESTROY_WINDOW", window.OnClosingCallback)
-        # window.TKroot.protocol("WM_DELETE_WINDOW", window.OnClosingCallback)
-        # window.TKroot.mainloop()
-        # window.CurrentlyRunningMainloop = False
-        # window.TimerCancelled = True
-        # print('..... BACK from MainLoop')
         # if not window.FormRemainedOpen:
         #     _my_windows.Decrement()
         # if window.RootNeedsDestroying:
