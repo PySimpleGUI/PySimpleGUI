@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.4.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.5.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 The WxPython port of PySimpleGUI
 
 
- ## The Engineering Pre-Release     Version 0.4.0
+ ## The Engineering Pre-Release     Version 0.5.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -72,8 +72,22 @@ while True:
 
 This is the first relase of this feature and it has some limitations.
 
-* Timeouts must be None (completely blocking) or non-zero.  A value of 0 is invalid at the moment
-* Base64 and in-ram icon images are not yet supported
+These Elements are "complete" or at least ready to use:
+
+* Text
+* Input Text
+* Buttons including file browse
+* Input multiline
+* Outputmultiline
+* Popups
+
+It won't take long to poke at these and hit errors.  For example, the code to do Button Updates is not complete.  Most of the time you won't be doing this. 
+
+Due to the small size of the development team features may feel a little "thin" for a while.  The idea is to implement with enough depth that 80% of the uses are covered.  It's a multi-pass, iterative approach.  
+
+If you, the reader, are having problems or have hit a spot where something is not yet implemented, then open an Issue.  They are often completed in a day.  This process of users pushing the boundaries is what drives the priorities for development.  It's "real world" kinds of problems that have made PySimpleGUI what it is today.
+
+The Output Element is coded up, but I can't get the stdout to route through the widget.
 
 
 ## Menu Definitions
@@ -212,6 +226,19 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * Windows - Location and Size working correctly
 * Correctly adding element padding to Text, Input, Buttons
 * Popups - most Popups work (except for the input type that involve folders)
+
+### 0.5.0 PySimpleGUIWx 6-Jan-2019
+
+* New element - Multiline input
+* New element - Multiline output
+* Borderless Windows
+* Grab anywhere windows
+* Alpha channel for windows
+* Finishing up the Text and Input Text Elements
+* Visibilty for all Elements
+* Input Get / Set focus
+* Output element - unable to get stdout to re-route
+* Debug window works
 
 
 

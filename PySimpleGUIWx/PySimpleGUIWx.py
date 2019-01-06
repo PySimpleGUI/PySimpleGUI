@@ -30,7 +30,6 @@ g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
 
-
 RUN_INSPECTION_TOOL = False
 
 # Because looks matter...
