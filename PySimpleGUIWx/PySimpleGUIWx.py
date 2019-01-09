@@ -1484,7 +1484,6 @@ class Button(Element):
                     target_element.Update(folder_name)
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:                     # Browse File
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
-            # qt_types = "PNG files (*.png)|*.png"
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_OPEN)
             else:
@@ -4377,6 +4376,21 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         return top_bottom_sizer
 
 
+    def do_font_and_color(widget):
+        if font:
+            widget.SetFont(font_to_wx_font(font))
+        if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.SetForegroundColour(element.TextColor)
+        if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.SetBackgroundColour(element.BackgroundColor)
+        widget.SetMinSize(element_size)
+        if element.Disabled:
+            widget.Enable(False)
+        if not element.Visible:
+            widget.Hide()
+        if element.Tooltip:
+            widget.SetToolTip(element.Tooltip)
+
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
 
@@ -4654,7 +4668,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.PasswordCharacter:
                     justify |= wx.TE_PASSWORD
 
-                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=justify)
+                element.WxTextControl = text_ctrl = wx.TextCtrl(toplevel_form.MasterPanel, style=justify)
 
                 if element.DefaultText:
                     text_ctrl.SetValue(element.DefaultText)
@@ -4811,7 +4825,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.EnterSubmits:
                     justify |= wx.TE_PROCESS_ENTER
                 justify |= wx.TE_MULTILINE
-                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=justify)
+                element.WxTextControl = text_ctrl = wx.TextCtrl(toplevel_form.MasterPanel, style=justify)
 
                 if element.DefaultText:
                     text_ctrl.SetValue(element.DefaultText)
@@ -4847,18 +4861,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.EnterSubmits:
                     style |= wx.TE_PROCESS_ENTER
                 style |= wx.TE_MULTILINE | wx.TE_READONLY
-                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=style)
+                element.WxTextControl = text_ctrl = wx.TextCtrl(toplevel_form.MasterPanel, style=style)
                 if element.DefaultText:
                     text_ctrl.SetValue(element.DefaultText)
-                if font:
-                    text_ctrl.SetFont(font_to_wx_font(font))
-                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
-                    text_ctrl.SetForegroundColour(element.TextColor)
-                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
-                    text_ctrl.SetBackgroundColour(element.BackgroundColor)
-                text_ctrl.SetMinSize(element_size)
-                if element.Disabled:
-                    text_ctrl.Enable(False)
+
+                do_font_and_color(element.WxTextControl)
+                
                 if element.ChangeSubmits:
                     text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
                 if element.EnterSubmits:
@@ -4868,10 +4876,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 hsizer.Add(sizer, 0)
 
-                if not element.Visible:
-                    text_ctrl.Hide()
-                if element.Tooltip:
-                    text_ctrl.SetToolTip(element.Tooltip)
 
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
@@ -4881,77 +4885,33 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 style = 0
                 style |= wx.TE_MULTILINE | wx.TE_READONLY
                 style = wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL
-                element.WxTextControl = text_ctrl = wx.TextCtrl(form.MasterPanel, style=style)
+                element.WxTextControl = text_ctrl = wx.TextCtrl(toplevel_form.MasterPanel, style=style)
 
-                if font:
-                    text_ctrl.SetFont(font_to_wx_font(font))
-                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
-                    text_ctrl.SetForegroundColour(element.TextColor)
-                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
-                    text_ctrl.SetBackgroundColour(element.BackgroundColor)
-                text_ctrl.SetMinSize(element_size)
+                do_font_and_color(element.WxTextControl)
 
                 sizer = pad_widget(text_ctrl)
 
                 hsizer.Add(sizer, 0)
 
-                if not element.Visible:
-                    text_ctrl.Hide()
-                if element.Tooltip:
-                    text_ctrl.SetToolTip(element.Tooltip)
                 element.reroute_stdout()
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 element = element # type:Checkbox
-                element.WxCheckbox = checkbox = wx.CheckBox(form.MasterPanel)
+                element.WxCheckbox = widget = wx.CheckBox(toplevel_form.MasterPanel)
                 if element.Text:
-                    checkbox.SetLabel(element.Text)
-                if font:
-                    checkbox.SetFont(font_to_wx_font(font))
-                if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
-                    checkbox.SetForegroundColour(element.TextColor)
-                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
-                    checkbox.SetBackgroundColour(element.BackgroundColor)
-                checkbox.SetMinSize(element_size)
-                if element.Disabled:
-                    checkbox.Enable(False)
-                if element.ChangeSubmits:
-                    checkbox.Bind(wx.EVT_CHECKBOX, element.WxCallbackKeyboard)
+                    widget.SetLabel(element.Text)
+                do_font_and_color(element.WxCheckbox)
+                sizer = pad_widget(widget)
 
-                sizer = pad_widget(checkbox)
+                if element.ChangeSubmits:
+                    widget.Bind(wx.EVT_CHECKBOX, element.WxCallbackKeyboard)
 
                 hsizer.Add(sizer, 0)
 
-                if not element.Visible:
-                    checkbox.Hide()
-                if element.Tooltip:
-                    checkbox.SetToolTip(element.Tooltip)
                 if element.InitialState:
-                    checkbox.SetValue(True)
-                element.WxCheckbox = checkbox
-            #     width = 0 if auto_size_text else element_size[0]
-            #     default_value = element.InitialState
-            #     element.TKIntVar = tk.IntVar()
-            #     element.TKIntVar.set(default_value if default_value is not None else 0)
-            #     if element.ChangeSubmits:
-            #         element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-            #                                                variable=element.TKIntVar, bd=border_depth, font=font,
-            #                                                command=element.CheckboxHandler)
-            #     else:
-            #         element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-            #                                                variable=element.TKIntVar, bd=border_depth, font=font)
-            #     if default_value is None or element.Disabled:
-            #         element.TKCheckbutton.configure(state='disable')
-            #     if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-            #         element.TKCheckbutton.configure(background=element.BackgroundColor)
-            #         element.TKCheckbutton.configure(selectcolor=element.BackgroundColor)
-            #         element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
-            #     if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-            #         element.TKCheckbutton.configure(fg=text_color)
-            #     element.TKCheckbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-            #     if element.Tooltip is not None:
-            #         element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
-            #                                         timeout=DEFAULT_TOOLTIP_TIME)
+                    widget.SetValue(True)
+                element.WxCheckbox = widget
+
             # # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 # self.MaxValue = max_value
@@ -4973,39 +4933,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.WxGauge = gauge = wx.Gauge(toplevel_form.MasterPanel, wx.ID_ANY, range=element.MaxValue, style=style, size=element_size)
                 if element.StartValue is not None:
                     gauge.SetValue(element.StartValue)
-                if element.BarColor[0] not in (None, COLOR_SYSTEM_DEFAULT):
-                    gauge.SetForegroundColour(element.BarColor[0])
-                if element.BarColor[1] not in (None, COLOR_SYSTEM_DEFAULT):
-                    gauge.SetBackgroundColour(element.BarColor[1])
-
-                gauge.SetMinSize(element_size)
-
+                do_font_and_color(element.WxGauge)
                 sizer = pad_widget(gauge)
-
                 hsizer.Add(sizer, 0)
-
-                if not element.Visible:
-                    gauge.Hide()
-                if element.Tooltip:
-                    gauge.SetToolTip(element.Tooltip)
-
-
-            #     # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
-            #     width = element_size[0]
-            #     fnt = tkinter.font.Font()
-            #     char_width = fnt.measure('A')  # single character width
-            #     progress_length = width * char_width
-            #     progress_width = element_size[1]
-            #     direction = element.Orientation
-            #     if element.BarColor != (None, None):  # if element has a bar color, use it
-            #         bar_color = element.BarColor
-            #     else:
-            #         bar_color = DEFAULT_PROGRESS_BAR_COLOR
-            #     element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width,
-            #                                           orientation=direction, BarColor=bar_color,
-            #                                           border_width=element.BorderWidth, relief=element.Relief,
-            #                                           style=element.BarStyle, key=element.Key)
-            #     element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 pass
@@ -6859,11 +6789,19 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
 
 
     if no_window:
-        if Window.QTApplication is None:
-            Window.QTApplication = QApplication(sys.argv)
+        app = wx.App(False)
+        frame = wx.Frame()
 
-        folder_name = QFileDialog.getExistingDirectory(dir=initial_folder)
+        if initial_folder:
+            dialog = wx.DirDialog(frame, style=wx.FD_OPEN)
+        else:
+            dialog = wx.DirDialog(frame)
+        folder_name = ''
+        if dialog.ShowModal() == wx.ID_OK:
+            folder_name = dialog.GetPath()
         return folder_name
+
+
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
@@ -6912,17 +6850,21 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     """
 
     if no_window:
-        if Window.QTApplication is None:
-            Window.QTApplication = QApplication(sys.argv)
+        app = wx.App(False)
+        frame = wx.Frame()
 
-        if save_as:
-            qt_types = convert_tkinter_filetypes_to_qt(file_types)
-            filename = QFileDialog.getSaveFileName(dir=initial_folder, filter=qt_types)
+        qt_types = convert_tkinter_filetypes_to_wx(file_types)
+        style = wx.FD_SAVE if save_as else wx.FD_OPEN
+        if initial_folder:
+            dialog = wx.FileDialog(frame, defaultDir=initial_folder, wildcard=qt_types,
+                                   style=style)
         else:
-            qt_types = convert_tkinter_filetypes_to_qt(file_types)
-            filename = QFileDialog.getOpenFileName(dir=initial_folder, filter=qt_types)
-        return filename[0]
-
+            dialog = wx.FileDialog(frame, wildcard=qt_types, style=style)
+        if dialog.ShowModal() == wx.ID_OK:
+            file_name = dialog.GetPath()
+        else:
+            file_name = ''
+        return file_name
 
     browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder) if save_as else FileBrowse(
         file_types=file_types, initial_folder=initial_folder)
