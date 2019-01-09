@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 #!/usr/bin/python3
+#!/usr/bin/python3
 import sys
 
 import wx
@@ -124,7 +125,7 @@ RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')  # a nice green progress bar
-DEFAULT_PROGRESS_BAR_SIZE = (25, 20)  # Size of Progress Bar (characters for length, pixels for width)
+DEFAULT_PROGRESS_BAR_SIZE = (20, 20)  # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
 PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
@@ -370,7 +371,7 @@ class Element():
         self.TKEntry = None
         self.TKImage = None
 
-        self.ParentForm = None
+        self.ParentForm = None      # type: Window
         self.ParentContainer = None  # will be a Form, Column, or Frame element
         self.TextInputDefault = None
         self.Position = (0, 0)  # Default position Row 0, Col 0
@@ -862,7 +863,7 @@ class Radio(Element):
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Checkbox Element
         :param text:
@@ -880,15 +881,14 @@ class Checkbox(Element):
         '''
         self.Text = text
         self.InitialState = default
-        self.Value = None
-        self.WxCheckbox = None
+        self.WxCheckbox:wx.CheckBox = None
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible, size_px=size_px)
 
     def Get(self):
         return self.TKIntVar.get()
@@ -896,14 +896,14 @@ class Checkbox(Element):
     def Update(self, value=None, disabled=None):
         if value is not None:
             try:
-                self.TKIntVar.set(value)
+                self.WxCheckbox.SetValue(value)
                 self.InitialState = value
             except:
                 pass
         if disabled == True:
-            self.TKCheckbutton.configure(state='disabled')
+            self.WxCheckbox.Disable()
         elif disabled == False:
-            self.TKCheckbutton.configure(state='normal')
+            self.WxCheckbox.Enable()
 
     def __del__(self):
         super().__del__()
@@ -922,9 +922,9 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None),
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,  enable_events=False, size=(None, None),
                  auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
-                 tooltip=None):
+                 tooltip=None, visible=True, size_px=(None,None)):
         '''
         Spinner Element
         :param values:
@@ -942,51 +942,64 @@ class Spin(Element):
         '''
         self.Values = values
         self.DefaultValue = initial_value
-        self.ChangeSubmits = change_submits
-        self.TKSpinBox = None
+        self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.WxSpinCtrl : wx.SpinCtrl = None
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
-                         key=key, pad=pad, tooltip=tooltip)
+                         key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
-    def Update(self, value=None, values=None, disabled=None):
+    class StringBox(wx.SpinCtrl):
+        def __init__(self, strings, parent=None):
+            super(Spin.StringBox, self).__init__(parent)
+            self.setStrings(strings)
+
+        def strings(self):
+            return self._strings
+
+        def setStrings(self, strings):
+            self._strings = tuple(strings)
+            self._values = dict(zip(strings, range(len(strings))))
+            self.setRange(0, len(strings) - 1)
+
+        def textFromValue(self, value):
+            return str(self._strings[value])
+
+        def valueFromText(self, text):
+            return self._values[text]
+
+
+    def QtCallbackValueChanged(self, value):
+        if not self.ChangeSubmits:
+            return
+        element_callback_quit_mainloop(self)
+
+    def Update(self, value=None, values=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
         if values != None:
-            old_value = self.TKStringVar.get()
             self.Values = values
-            self.TKSpinBox.configure(values=values)
-            self.TKStringVar.set(old_value)
+            self.QT_Spinner.setStrings(values)
+            # self.QT_Spinner.setRange(self.Values[0], self.Values[1])
         if value is not None:
+            # self.QT_Spinner.setValue(value)
             try:
-                self.TKStringVar.set(value)
+                self.QT_Spinner.setValue(self.QT_Spinner.valueFromText(value))
+                self.DefaultValue = value
             except:
                 pass
-        self.DefaultValue = value
         if disabled == True:
-            self.TKSpinBox.configure(state='disabled')
+            self.QT_Spinner.setDisabled(True)
         elif disabled == False:
-            self.TKSpinBox.configure(state='normal')
+            self.QT_Spinner.setDisabled(False)
+        super().Update(self.QT_Spinner, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-    def SpinChangedHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+    def Get(self):
+        return self.QT_Spinner.value()
 
     def __del__(self):
-        try:
-            self.TKSpinBox.__del__()
-        except:
-            pass
         super().__del__()
-
 
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
@@ -1182,7 +1195,7 @@ class Text(Element):
         pixelsize = size
         if size[1] is not None and size[1] < 10:
             pixelsize = size[0]*10, size[1]*20
-        self.WxStaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
+        self.WxStaticText:wx.StaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
@@ -1190,6 +1203,8 @@ class Text(Element):
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
+        if self.ParentForm.TKrootDestroyed:
+            return
         if value is not None:
             self.WxStaticText.SetLabel(value)
             self.DisplayText = value
@@ -1275,7 +1290,15 @@ class TKProgressBar():
         except:
             pass
 
+class RedirectText(object):
+    def __init__(self, aWxTextCtrl):
+        self.out = aWxTextCtrl
 
+    def write(self, string):
+        self.out.AppendText(string)
+
+    def flush(self):
+        return
 
 # ---------------------------------------------------------------------- #
 #                           Output                                       #
@@ -1299,35 +1322,24 @@ class Output(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.WxTextControl = None
         self.redir = None
+        self.output = None
 
         tsize = convert_tkinter_size_to_Wx(size) if size[0] is not None and size[0] < 100 else size
 
         super().__init__(ELEM_TYPE_OUTPUT, size=tsize, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible, size_px=size_px)
 
-    class RedirectText(object):
-        def __init__(self, aWxTextCtrl):
-            self.out = aWxTextCtrl
-
-        def write(self, string):
-            self.out.AppendText(string)
-
     def reroute_stdout(self):
         self.my_stdout = sys.stdout
         self.my_stderr = sys.stderr
-        self.redir = self.RedirectText(self.WxTextControl)
-        print('Redirecting', self.WxTextControl)
+        self.redir = RedirectText(self.WxTextControl)
         sys.stdout = self.redir
         sys.stderr = self.redir
-        print('REDIRECT complete')
-        print('REDIRECT complete')
+        Window.stdout_is_rerouted = True
+        Window.stdout_location = self.redir
 
-
-    # def write(self, m):
-    #     # print('in the ')
-    #     if m is not None:
-    #         self.WxTextControl.AppendText(m)
-
+    def reroute_again(self):
+        sys.stdout = self.redir
 
     def Update(self,value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
@@ -1336,9 +1348,10 @@ class Output(Element):
 
 
     def __del__(self):
-        print('Deleting Output Element')
-        sys.stdout = self.my_stdout
-        sys.stderr = self.my_stderr
+        try:
+            sys.stdout = self.my_stdout
+            sys.stderr = self.my_stderr
+        except: pass
         super().__del__()
 
 
@@ -1619,12 +1632,13 @@ def convert_tkinter_filetypes_to_wx(filetypes):
         wx_filetypes += filetype
     return wx_filetypes
 
+
 # ---------------------------------------------------------------------- #
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
-    def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
-                 style=None, border_width=None, relief=None, key=None, pad=None):
+    def __init__(self, max_value, orientation=None, size=(None, None),start_value=0,  auto_size_text=None, bar_color=(None, None),
+                 style=None, border_width=None, relief=None, key=None, pad=None, visible=True, size_px=(None,None)):
         '''
         ProgressBar Element
         :param max_value:
@@ -1643,31 +1657,36 @@ class ProgressBar(Element):
         self.Cancelled = False
         self.NotRunning = True
         self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
-        self.BarColor = bar_color
+        self.BarColor = bar_color if bar_color != (None, None) else DEFAULT_PROGRESS_BAR_COLOR
         self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
-        self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
-        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad)
+        self.StartValue = start_value
+        tsize = size
+        if size[0] is not None and size[0] < 100:
+            # tsize = size[0] * DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1] * DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+            tsize = size[0]*10, size[1]
+        self.WxGauge = None # type: wx.Gauge
+
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=tsize, auto_size_text=auto_size_text, key=key, pad=pad, visible=visible, size_px=size_px)
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
-        if self.ParentForm.TKrootDestroyed:
-            return False
-        self.TKProgressBar.Update(current_count, max=max)
-        try:
-            self.ParentForm.TKroot.update()
-        except:
-            _my_windows.Decrement()
-            return False
+        try:    # Could havae been destroyed by user
+            if max is not None:
+                self.WxGauge.SetRange(max)
+            self.WxGauge.SetValue(current_count)
+        except: pass
         return True
 
+
+    def Update(self, visible=None):
+        super().Update(self.WxGauge, visible=visible)
+
     def __del__(self):
-        try:
-            self.TKProgressBar.__del__()
-        except:
-            pass
         super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -2919,6 +2938,8 @@ class Window:
     QTApplication = None
     active_popups = {}
     highest_level_app = None
+    stdout_is_rerouted = False
+    stdout_location = None
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
@@ -3225,6 +3246,8 @@ class Window:
             self.TimerCancelled = True
             if timer:
                 timer.Stop()
+            if Window.stdout_is_rerouted:
+                sys.stdout = Window.stdout_location
             if self.RootNeedsDestroying:
                 # self.LastButtonClicked = None
                 # self.App.Close()
@@ -3265,6 +3288,8 @@ class Window:
             ################################# CALL GUWxTextControlI MAINLOOP ############################
 
             self.App.MainLoop()
+            if Window.stdout_is_rerouted:
+                sys.stdout = Window.stdout_location
             # self.LastButtonClicked = 'TEST'
             self.CurrentlyRunningMainloop = False
             timer.Stop()
@@ -3936,7 +3961,10 @@ def BuildResults(form, initialize_only, top_level_form):
     form.DictionaryKeyCounter = 0
     form.ReturnValuesDictionary = {}
     form.ReturnValuesList = []
-    BuildResultsForSubform(form, initialize_only, top_level_form)
+    try:
+        BuildResultsForSubform(form, initialize_only, top_level_form)
+    except:
+        print('Error building return values')
     if not top_level_form.LastButtonClickedWasRealtime:
         top_level_form.LastButtonClicked = None
     return form.ReturnValues
@@ -4412,7 +4440,38 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
-                pass
+                vsizer = wx.BoxSizer(wx.VERTICAL)
+                PackFormIntoFrame(element, vsizer, toplevel_form)
+                hsizer.Add(pad_widget(vsizer), 0)
+
+            # # column_widget = QWidget()
+            # column_widget = QGroupBox()
+            # element.QT_QGroupBox = column_widget
+            # # column_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
+            # style = create_style_from_font(font)
+            # if element.BackgroundColor is not None:
+            #     style = style_entry(background_color=element.BackgroundColor)
+            #     style += 'background-color: %s;' % element.BackgroundColor
+            # style += style_entry(border='0px solid gray')
+            # # style += 'border: 0px solid gray; '
+            # style = style_generate('QGroupBox', style)
+            # column_widget.setStyleSheet(style)
+            #
+            # column_layout = QFormLayout()
+            # column_vbox = QVBoxLayout()
+            #
+            # PackFormIntoFrame(element, column_layout, toplevel_win)
+            #
+            # column_vbox.addLayout(column_layout)
+            # column_widget.setLayout(column_vbox)
+            #
+            # # column_widget.setStyleSheet(style)
+            # if not element.Visible:
+            #     column_widget.setVisible(False)
+            #
+            # qt_row_layout.addWidget(column_widget)
+
+
             #     if element.Scrollable:
             #         col_frame = TkScrollableFrame(tk_row_frame,
             #                                       element.VerticalScrollOnly)  # do not use yet!  not working
@@ -4457,14 +4516,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             style |= wx.RAISED_BORDER
                         elif element.Relief in (RELIEF_SUNKEN, RELIEF_SUNKEN):
                             style |= wx.SUNKEN_BORDER
-                statictext = element.WxStaticText = wx.StaticText(form.MasterPanel, -1, element.DisplayText, style=style)
+                statictext = element.WxStaticText = wx.StaticText(toplevel_form.MasterPanel, -1, element.DisplayText, style=style)
                 if font:
                     statictext.SetFont(font_to_wx_font(font))
                 if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
                     statictext.SetForegroundColour(element.TextColor)
                 if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     statictext.SetBackgroundColour(element.BackgroundColor)
-                display_text = element.DisplayText  # text to display
+                display_text = element.DisplayText      # text to display
                 if auto_size_text is False:
                     width, height = element_size
                 else:
@@ -4477,7 +4536,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width = max_line_len
                     height = num_lines
 
-                if element.ClickSubmits:
+                if element.ClickSubmits:                # bind events
                     statictext.Bind(wx.EVT_LEFT_UP, element.WxCallbackKeyboard)
 
                 hsizer.Add(pad_widget(element.WxStaticText), 0)
@@ -4497,7 +4556,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     wraplen = 0
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
-                element.WxButton = button = wx.Button(form.MasterPanel, style=wx.NO_BORDER)
+                element.WxButton = button = wx.Button(toplevel_form.MasterPanel, style=wx.NO_BORDER)
                 button.SetLabelText(element.ButtonText)
                 if font:
                     button.SetFont(font_to_wx_font(font))
@@ -4841,9 +4900,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip:
                     text_ctrl.SetToolTip(element.Tooltip)
                 element.reroute_stdout()
-
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
+                element = element # type:Checkbox
                 element.WxCheckbox = checkbox = wx.CheckBox(form.MasterPanel)
                 if element.Text:
                     checkbox.SetLabel(element.Text)
@@ -4857,7 +4916,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled:
                     checkbox.Enable(False)
                 if element.ChangeSubmits:
-                    checkbox.Bind(wx.EVT_CHECKBOX, element.WxCallbackCheckbox)
+                    checkbox.Bind(wx.EVT_CHECKBOX, element.WxCallbackKeyboard)
 
                 sizer = pad_widget(checkbox)
 
@@ -4867,9 +4926,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     checkbox.Hide()
                 if element.Tooltip:
                     checkbox.SetToolTip(element.Tooltip)
-
+                if element.InitialState:
+                    checkbox.SetValue(True)
                 element.WxCheckbox = checkbox
-
             #     width = 0 if auto_size_text else element_size[0]
             #     default_value = element.InitialState
             #     element.TKIntVar = tk.IntVar()
@@ -4895,7 +4954,42 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
             # # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
-                pass
+                # self.MaxValue = max_value
+                # self.TKProgressBar = None
+                # self.Cancelled = False
+                # self.NotRunning = True
+                # self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
+                # self.BarColor = bar_color if bar_color != (None, None) else DEFAULT_PROGRESS_BAR_COLOR
+                # self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
+                # self.BorderWidth = border_width if border_width is not None else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+                # self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
+                # self.BarExpired = False
+                # self.StartValue = start_value
+                #
+                element = element # type: ProgressBar
+                style = wx.GA_HORIZONTAL if element.Orientation.startswith('h') else wx.GA_VERTICAL
+                element_size = element_size[::-1] if element.Orientation.startswith('v') else element_size
+                element_size = wx.Size((element_size[0], element_size[1]))
+                element.WxGauge = gauge = wx.Gauge(toplevel_form.MasterPanel, wx.ID_ANY, range=element.MaxValue, style=style, size=element_size)
+                if element.StartValue is not None:
+                    gauge.SetValue(element.StartValue)
+                if element.BarColor[0] not in (None, COLOR_SYSTEM_DEFAULT):
+                    gauge.SetForegroundColour(element.BarColor[0])
+                if element.BarColor[1] not in (None, COLOR_SYSTEM_DEFAULT):
+                    gauge.SetBackgroundColour(element.BarColor[1])
+
+                gauge.SetMinSize(element_size)
+
+                sizer = pad_widget(gauge)
+
+                hsizer.Add(sizer, 0)
+
+                if not element.Visible:
+                    gauge.Hide()
+                if element.Tooltip:
+                    gauge.SetToolTip(element.Tooltip)
+
+
             #     # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
             #     width = element_size[0]
             #     fnt = tkinter.font.Font()
@@ -5354,6 +5448,8 @@ def StartupTK(window:Window):
         app = Window.highest_level_app = wx.App(False)
     else:
         app = Window.highest_level_app
+    Window.IncrementOpenCount()
+
     # -------- grab anywhere --------
     if window.GrabAnywhere:
         frame = DragFrame(title=window.Title)
@@ -5371,6 +5467,7 @@ def StartupTK(window:Window):
     window.MasterFrame.panel = panel
     frame.Bind(wx.EVT_CLOSE, window.OnClose)
 
+    # ----------------------------- Icon -----------------------------
     if window.WindowIcon:
         if type(window.WindowIcon) is bytes:
             icon = PyEmbeddedImage(window.WindowIcon).GetIcon()
@@ -5382,12 +5479,26 @@ def StartupTK(window:Window):
         if icon:
             frame.SetIcon(icon)
 
+    # ----------------------------- Background -----------------------------
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         panel.SetBackgroundColour(window.BackgroundColor)
-    Window.IncrementOpenCount()
+
+    if window.BackgroundImage:
+        if type(window.BackgroundImage) is bytes:
+            pic = PyEmbeddedImage(window.BackgroundImage).GetBitmap()
+        else:
+            if os.path.exists(window.BackgroundImage):
+                pic = wx.Image(window.BackgroundImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+            else:
+                pic = PyEmbeddedImage(DEFAULT_BASE64_ICON).GetBitmap()
+        window.bitmap1 = wx.StaticBitmap(window.MasterPanel, -1, pic, (0, 0))
+
+
 
     InitializeResults(window)
 
+    # -----------------------------  -----------------------------
+    # -----------------------------  -----------------------------
     # ----------------------------- handle settings using Style Flags -----------------------------
     style = 0
     if window.NoTitleBar:
@@ -5436,7 +5547,6 @@ def StartupTK(window:Window):
     # ----------------------------- DISPLAY the window -----------------------------
     window.MasterFrame.Show()
 
-
     # ....................................... DONE creating and laying out window ..........................#
     if RUN_INSPECTION_TOOL:
         wx.lib.inspection.InspectionTool().Show()
@@ -5462,6 +5572,8 @@ def StartupTK(window:Window):
         window.non_block_timer.Start(milliseconds=0, oneShot=wx.TIMER_ONE_SHOT)
         window.App.MainLoop()
 
+    if Window.stdout_is_rerouted:
+        sys.stdout = Window.stdout_location
     window.CurrentlyRunningMainloop = False
     if timer:
         timer.Stop()
@@ -5540,7 +5652,7 @@ class QuickMeter(object):
         if self.orientation.lower().startswith('h'):
             col = []
             col += [[T(arg)] for arg in args]
-            col += [[T('', size=(30,10), key='_STATS_')],
+            col += [[T('', size=(25,8), key='_STATS_')],
                     [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)],
                     [Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col)]
@@ -5548,7 +5660,7 @@ class QuickMeter(object):
             col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
             col2 = []
             col2 += [[T(arg)] for arg in args]
-            col2 += [[T('', size=(30,10), key='_STATS_')],
+            col2 += [[T('', size=(25,8), key='_STATS_')],
                      [Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col), Column(col2)]
         self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width)
@@ -5985,7 +6097,7 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                        'Dark': {'BACKGROUND': 'gray25',
                                 'TEXT': 'white',
                                 'INPUT': 'gray30',
-                                'TEXT_INPUT': 'white',
+                                'TEXT_INPUT': 'black',
                                 'SCROLL': 'gray44',
                                 'BUTTON': ('white', '#004F00'),
                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
@@ -6021,7 +6133,7 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                        'Black': {'BACKGROUND': 'black',
                                  'TEXT': 'white',
                                  'INPUT': 'gray30',
-                                 'TEXT_INPUT': 'white',
+                                 'TEXT_INPUT': 'black',
                                  'SCROLL': 'gray44',
                                  'BUTTON': ('black', 'white'),
                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
@@ -6876,6 +6988,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 def main():
+    ChangeLookAndFeel('Black')
     layout = [[Text('TEXT1',tooltip='Tooltip'), Text('TEXT2', )],
               [Text('You should be importing it rather than running it', justification='l', size=(50, 1))],
               [Text('Here is your sample input window....')],
