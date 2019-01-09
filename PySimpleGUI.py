@@ -3547,16 +3547,20 @@ class Window:
         except:
             pass
 
-    def SetMinSize(self):
-        if not all(self.MinSize):
+    def SetMinSize(self, size=None):
+        if not size:
+            size = self.MinSize
+        if not any(size):
             return None
-        width, height = self.MinSize
+        width, height = size
         self.TKroot.tk.call('wm', 'minsize', self.TKroot._w, width, height)
 
-    def SetMaxSize(self):
-        if not all(self.MaxSize):
+    def SetMaxSize(self, size=None):
+        if not size:
+            size = self.MaxSize
+        if not any(size):
             return None
-        width, height = self.MaxSize
+        width, height = size
         self.TKroot.tk.call('wm', 'maxsize', self.TKroot._w, width, height)
 
     def _GetElementAtLocation(self, location):
@@ -5905,8 +5909,8 @@ def StartupTK(my_flex_form:Window):
     ConvertFlexToTK(my_flex_form)
 
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
-    my_flex_form.SetMinSize()
-    my_flex_form.SetMaxSize()
+    my_flex_form.SetMinSize(my_flex_form.MinSize)
+    my_flex_form.SetMaxSize(my_flex_form.MaxSize)
 
     try:
         root.attributes('-alpha', my_flex_form.AlphaChannel)  # Make window visible again
@@ -7439,6 +7443,7 @@ def main():
                     font=('Helvetica', 13), min_size=(500, 500), resizable=True,
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     ).Layout(layout).Finalize()
+    window.SetMaxSize(size=(1000, 0))
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
