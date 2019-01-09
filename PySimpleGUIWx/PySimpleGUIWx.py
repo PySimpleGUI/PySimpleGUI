@@ -1306,7 +1306,7 @@ class RedirectText(object):
 # ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None, visible=True, size_px=(None,None)):
+                 key=None, visible=True, size_px=(None,None), disabled=False):
         '''
         Output Element
         :param size:
@@ -1320,9 +1320,11 @@ class Output(Element):
         self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
-        self.WxTextControl = None
+        self.WxTextControl = None # type: wx.TextCtrl
         self.redir = None
         self.output = None
+        self.Disabled = disabled
+
 
         tsize = convert_tkinter_size_to_Wx(size) if size[0] is not None and size[0] < 100 else size
 
