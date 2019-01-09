@@ -1639,7 +1639,7 @@ def convert_tkinter_filetypes_to_wx(filetypes):
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, size=(None, None),start_value=0,  auto_size_text=None, bar_color=(None, None),
-                 style=None, border_width=None, relief=None, key=None, pad=None, visible=True, size_px=(None,None)):
+                 style=None, border_width=None, relief=None, key=None, pad=None, disabled=False, visible=True, size_px=(None,None)):
         '''
         ProgressBar Element
         :param max_value:
@@ -1664,6 +1664,7 @@ class ProgressBar(Element):
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         self.StartValue = start_value
+        self.Disabled = disabled
         tsize = size
         if size[0] is not None and size[0] < 100:
             # tsize = size[0] * DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1] * DEFAULT_PIXELS_TO_CHARS_SCALING[1]
@@ -5436,16 +5437,16 @@ def StartupTK(window:Window):
     if window.NoTitleBar:
         style |= wx.BORDER_NONE
     else:
-        style = wx.BORDER_DEFAULT
+        style |= wx.BORDER_DEFAULT
     if window.KeepOnTop:
         style |= wx.STAY_ON_TOP
+    if style:
+        window.MasterFrame.SetWindowStyleFlag(style)
+
     if window.ReturnKeyboardEvents:
         # style |= wx.WANTS_CHARS
         window.App.Bind(wx.EVT_CHAR_HOOK, window.callback_keyboard_char)
         window.App.Bind(wx.EVT_MOUSEWHEEL, window.callback_keyboard_char)
-
-    if style:
-        window.MasterFrame.SetWindowStyleFlag(style)
 
     # ----------------------------- Sizer creation and PACK FORM -----------------------------
     vsizer = wx.BoxSizer(wx.VERTICAL)
