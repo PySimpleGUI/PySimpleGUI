@@ -3176,7 +3176,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None,right_click_menu=None, visible=True):
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,right_click_menu=None, visible=True):
         '''
         Tree
         :param data:
@@ -3221,7 +3221,9 @@ class Tree(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
+        self.RowHeight = row_height
         self.IconList = {}
+
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip, visible=visible)
@@ -5585,6 +5587,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
+                element = element       # type: Table
                 frame = tk.Frame(tk_row_frame)
 
                 height = element.NumRows
@@ -5616,7 +5619,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
                 element.TKTreeview = ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height,
-                                                  selectmode=element.SelectMode)
+                                                  selectmode=element.SelectMode,)
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
                     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
@@ -5689,6 +5692,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     element.TKTreeview.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
+                element = element   #type: Tree
                 frame = tk.Frame(tk_row_frame)
 
                 height = element.NumRows
@@ -5710,7 +5714,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 # ------------- GET THE TREEVIEW WIDGET -------------
                 element.TKTreeview = ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='tree headings', height=height,
-                                                  selectmode=element.SelectMode, )
+                                                  selectmode=element.SelectMode)
                 treeview = element.TKTreeview
                 for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
                     treeview.heading(heading, text=heading)
@@ -5750,6 +5754,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
 
+                ttk.Style().configure("Treeview", font=font)
+                if element.RowHeight:
+                    ttk.Style().configure("Treeview", rowheight=element.RowHeight)
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
@@ -5770,6 +5777,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     element.TKTreeview.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
+                element = element       # type: VerticalSeparator
                 separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
             # -------------------------  StatusBar element  ------------------------- #
