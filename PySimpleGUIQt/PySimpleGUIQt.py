@@ -5391,7 +5391,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         except:
                             width = element.DefaultColumnWidth
                     # treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
-                print(element.TreeData)
                 def add_treeview_data(node, widget):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     child = QTreeWidgetItem(widget)
