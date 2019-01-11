@@ -56,6 +56,8 @@ else:
     So far can interact with the basic Widgets and get button clicks back.  Can't yet read which button caused the event.
 """
 
+LOGO_BASE64 = b'R0lGODlhIQAgAPcAAAAAADBpmDBqmTFqmjJrmzJsnDNtnTRrmTZtmzZumzRtnTdunDRunTRunjVvnzdwnzhwnjlxnzVwoDZxoTdyojhzozl0ozh0pDp1pjp2pjp2pzx0oj12pD52pTt3qD54pjt4qDx4qDx5qTx5qj16qj57qz57rD58rT98rkB4pkJ7q0J9rEB9rkF+rkB+r0d9qkZ/rEl7o0h8p0x9pk5/p0l+qUB+sEyBrE2Crk2Er0KAsUKAskSCtEeEtUWEtkaGuEiHuEiHukiIu0qKu0mJvEmKvEqLvk2Nv1GErVGFr1SFrVGHslaHsFCItFSIs1COvlaPvFiJsVyRuWCNsWSPsWeQs2SQtGaRtW+Wt2qVuGmZv3GYuHSdv3ievXyfvV2XxGWZwmScx2mfyXafwHikyP9gWP5pYJmdt6GbrqakuamgsayovYClw4Ory4SszI+vyoSv0JGvx5SzzJi0y5m2zp++16C6z6a/05/A2qHC3aXB2K3I3brP4MKxvsLU48LV5c3a5QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAhACAAAAj/AP8JHEiwoMGDCA1uoYIFYZmHZhIe9HIggEUBdgo+3FhGIsEqAiyKXDBnIEeOHgHFEMkyQII4/07KTEijpU01MWWiNDhDgM+fNhHg1Llz4BQCBAYoXar0p4ABaHISJXjnQYMIBbJq1YoUKYQ+UnUOVLJBoBUGaCMoMMB2a4EuYWcKlCBnoAMHMv5lacC3bwMGV+LK5cBEIJ0JKQTWkMC4MeM3gk8KZGPhRpTKApFQoDChs2cOAoluHDjmwoUX//wkMX2hgmvXHUKL7kiQSw6BOFjrvvBBtuiETjQI15ABg/EQvqce5JMjhHPnIEB4UJFcLsIlJEiM2L5dBIzq1gv+p2liwkSJ8+hXgN85mqAUFPBPyJffYj1KyQL12HDB3wWL/yxoEdl9+P1Thw4I6mDDggu2MSBt7eUkUB07VGihhW48GJZJtO3RAw8ggmghGQ/+NhAYPqToQ4g8QFGicgMBoeKMPqTxYoEE/aDjjjuecWOEBMExhBBBFFnkD0Cs8WNCeBRBhBBQRvmEfUAi9IURRWRZxJQciuWRQHmEccQRYhgU3pdofhkQADs='
+
 g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
@@ -1028,8 +1030,7 @@ class Spin(Element):
 class Multiline(Element, QWidget):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
-                 key=None, focus=False,
-                 font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+                 key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -2199,8 +2200,12 @@ class TabGroup(Element):
 
     def Update(self, visible=None):
         super().Update(self.QT_QTabWidget, visible=visible)
-
         return self
+
+    def QtCallbackStateChanged(self, state):
+        if self.ChangeSubmits:
+            element_callback_quit_mainloop(self)
+
 
     def __del__(self):
         for row in self.Rows:
@@ -2753,7 +2758,7 @@ class Tree(Element):
 
 class TreeData(object):
     class Node(object):
-        def __init__(self, parent, key, text, values, icon):
+        def __init__(self, parent, key, text, values, icon=None):
             self.parent = parent
             self.children = []
             self.key = key
@@ -4140,6 +4145,13 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.QT_TextEdit.setText('')
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
+                    try:
+                        value = element.QT_QTabWidget.getCurrentIndex()
+                        tab_key = element.FindKeyFromTabName(value)
+                        if tab_key is not None:
+                            value = tab_key
+                    except:
+                        value = None
                     value = 0
                 elif element.Type == ELEM_TYPE_TABLE:
                     value = []
@@ -4449,7 +4461,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
         ######################### LOOP THROUGH ELEMENTS ON ROW #########################
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
-        tk_row_frame = 000000 #TODO get something to "pack into"
         qt_row_layout = QHBoxLayout()
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_win  # save the button's parent form object
@@ -5168,7 +5179,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
-
                 tab_widget = QWidget()
                 element.QT_QWidget = tab_widget
                 # tab_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -5221,7 +5231,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QTabWidget.setVisible(False)
 
                 if element.ChangeSubmits:
-                    pass
+                    element.QT_QTabWidget.currentChanged.connect(element.QtCallbackStateChanged)
             # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element.QT_Slider = QSlider()
@@ -5381,18 +5391,28 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         except:
                             width = element.DefaultColumnWidth
                     # treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
-
+                print(element.TreeData)
                 def add_treeview_data(node, widget):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     child = QTreeWidgetItem(widget)
                     if node.key != '':
                         child.setText(0, str(node.text))
                         # child.setData(0,0,node.values)
-                        if node.icon is not None:
+                        if type(node.icon) is bytes:
+                            ba = QtCore.QByteArray.fromBase64(node.icon)
+                            pixmap = QtGui.QPixmap()
+                            pixmap.loadFromData(ba)
+                            qicon = QIcon(pixmap)
+                            child.setIcon(0, qicon)
+                        elif node.icon is not None:
                             qicon = QIcon(node.icon)
                             child.setIcon(0, qicon)
+
                     for node in node.children:
                         add_treeview_data(node, child)
+
+                # for node in element.TreeData.root_node.children:
+                #     add_treeview_data(node, element.QT_QTreeWidget)
 
                 add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
 
@@ -5538,11 +5558,9 @@ def StartupTK(window):
         window.QT_QMainWindow.setWindowOpacity(window.AlphaChannel)
     if window.WindowIcon is not None:
         window.QT_QMainWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
-
     if window.DisableMinimize:
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMinimizeButtonHint)
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMaximizeButtonHint)
-
     if window.DisableClose:
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowCloseButtonHint)
 
