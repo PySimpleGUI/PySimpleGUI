@@ -359,7 +359,7 @@ class Element():
         self.TKEntry = None
         self.TKImage = None
 
-        self.ParentForm = None
+        self.ParentForm = None      # type: Window
         self.ParentContainer = None  # will be a Form, Column, or Frame element
         self.TextInputDefault = None
         self.Position = (0, 0)  # Default position Row 0, Col 0
@@ -3221,6 +3221,7 @@ class Tree(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
+        self.IconList = {}
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip, visible=visible)
@@ -3243,13 +3244,26 @@ class Tree(Element):
     def add_treeview_data(self, node):
         # print(f'Inserting {node.key} under parent {node.parent}')
         if node.key != '':
-            self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
-                                   open=self.ShowExpanded)
+            if node.icon:
+                try:
+                    if type(node.icon) is bytes:
+                        photo = tk.PhotoImage(data=node.icon)
+                    else:
+                        photo = tk.PhotoImage(file=node.icon)
+                    node.photo = photo
+                    self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                                    open=self.ShowExpanded, image=node.photo)
+                except:
+                    self.photo = None
+            else:
+                self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                                open=self.ShowExpanded)
+
         for node in node.children:
             self.add_treeview_data(node)
 
 
-    def Update(self, values=None, key=None, value=None, text=None, visible=None):
+    def Update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -3265,6 +3279,16 @@ class Tree(Element):
                 self.TKTreeview.item(key, values=value)
             if text is not None:
                 self.TKTreeview.item(key, text=text)
+            if icon is not None:
+                try:
+                    if type(icon) is bytes:
+                        photo = tk.PhotoImage(data=icon)
+                    else:
+                        photo = tk.PhotoImage(file=icon)
+                    self.TKTreeview.item(key, image=photo)
+                    self.IconList[key] = photo              # save so that it's not deleted (save reference)
+                except:
+                    pass
             item = self.TKTreeview.item(key)
         if visible is False:
             self.TKTreeview.pack_forget()
@@ -3278,12 +3302,13 @@ class Tree(Element):
 
 class TreeData(object):
     class Node(object):
-        def __init__(self, parent, key, text, values):
+        def __init__(self, parent, key, text, values, icon=None):
             self.parent = parent
             self.children = []
             self.key = key
             self.text = text
             self.values = values
+            self.icon = icon
 
         def _Add(self, node):
             self.children.append(node)
@@ -3296,8 +3321,8 @@ class TreeData(object):
     def _AddNode(self, key, node):
         self.tree_dict[key] = node
 
-    def Insert(self, parent, key, text, values):
-        node = self.Node(parent, key, text, values)
+    def Insert(self, parent, key, text, values, icon=None):
+        node = self.Node(parent, key, text, values, icon)
         self.tree_dict[key] = node
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
@@ -3603,6 +3628,8 @@ class Window:
             # if the last button clicked was realtime, emulate a read non-blocking
             # the idea is to quickly return realtime buttons without any blocks until released
             if self.LastButtonClickedWasRealtime:
+                self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
+
                 # print(f'RTime down {self.LastButtonClicked}' )
                 try:
                     rc = self.TKroot.update()
@@ -5015,14 +5042,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     # Creates 1 style per Text Color/ Background Color combination
                     style_name = element.TextColor + element.BackgroundColor + '.TCombobox'
-                    print(style_name)
+                    # print(style_name)
                     combostyle = ttk.Style()
 
                     # Creates a unique name for each field element(Sure there is a better way to do this)
                     unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
                     # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
 
-                    print(unique_field)
+                    # print(unique_field)
                     # Clones over the TCombobox.field element from the "alt" theme.
                     # This is what will allow us to change the background color without altering the whole programs theme
                     combostyle.element_create(unique_field, "from", "alt")
@@ -5577,7 +5604,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                         except:
                             column_widths[i] = col_width
                 if element.ColumnsToDisplay is None:
-                    displaycolumns = element.ColumnHeadings
+                    displaycolumns = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 else:
                     displaycolumns = []
                     for i, should_display in enumerate(element.ColumnsToDisplay):
@@ -5594,8 +5621,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 if element.DisplayRowNumbers:
                     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
                     treeview.column(element.RowHeaderText, width=50, anchor=anchor)
-                for i, heading in enumerate(element.ColumnHeadings):
-                    treeview.heading(heading, text=heading)
+
+                headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
+                for i, heading in enumerate(headings):
+                    # treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
                         width = max(column_widths[i], len(heading))
                     else:
@@ -5603,8 +5632,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
-
                     treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
+
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
@@ -5697,7 +5726,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 def add_treeview_data(node):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
-                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded)
+                        if node.icon:
+                            if type(node.icon) is bytes:
+                                photo = tk.PhotoImage(data=node.icon)
+                            else:
+                                photo = tk.PhotoImage(file=node.icon)
+                            node.photo = photo
+                            # except:
+                            #     self.photo = None
+                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded, image=node.photo)
+                        else:
+                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded)
+
                     for node in node.children:
                         add_treeview_data(node)
 
@@ -7340,7 +7380,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 def main():
     from random import randint
 
-    ChangeLookAndFeel('Black')
+    ChangeLookAndFeel('GreenTan')
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
