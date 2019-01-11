@@ -5393,19 +5393,22 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     # treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
                 def add_treeview_data(node, widget):
                     # print(f'Inserting {node.key} under parent {node.parent}')
-                    child = QTreeWidgetItem(widget)
-                    if node.key != '':
+                    if node != element.TreeData.root_node:
+                        child = QTreeWidgetItem(widget)
                         child.setText(0, str(node.text))
-                        # child.setData(0,0,node.values)
-                        if type(node.icon) is bytes:
-                            ba = QtCore.QByteArray.fromBase64(node.icon)
-                            pixmap = QtGui.QPixmap()
-                            pixmap.loadFromData(ba)
-                            qicon = QIcon(pixmap)
-                            child.setIcon(0, qicon)
-                        elif node.icon is not None:
-                            qicon = QIcon(node.icon)
-                            child.setIcon(0, qicon)
+                    else:
+                        child = widget
+                    # if node.key != '':
+                    # child.setData(0,0,node.values)
+                    if type(node.icon) is bytes:
+                        ba = QtCore.QByteArray.fromBase64(node.icon)
+                        pixmap = QtGui.QPixmap()
+                        pixmap.loadFromData(ba)
+                        qicon = QIcon(pixmap)
+                        child.setIcon(0, qicon)
+                    elif node.icon is not None:
+                        qicon = QIcon(node.icon)
+                        child.setIcon(0, qicon)
 
                     for node in node.children:
                         add_treeview_data(node, child)
