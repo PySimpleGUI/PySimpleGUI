@@ -470,6 +470,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
+
     def KeyboardHandler(self, event):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
@@ -483,7 +484,8 @@ class Element():
     def WxCallbackKeyboard(self, value):
         element_callback_quit_mainloop(self)
 
-    def Update(self, widget, background_color=None, text_color=None, font=None, visible=None):
+
+    def Update(self, widget, background_color=None, text_color=None, font=None, visible=None, disabled=None, tooltip=None):
         if font:
             widget.SetFont(font_to_wx_font(font))
         if text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -496,6 +498,12 @@ class Element():
         elif visible is False:
             widget.Hide()
             self.ParentForm.VisibilityChanged()
+        if disabled:
+            widget.Enable(False)
+        elif disabled is False:
+            widget.Enable(True)
+        if tooltip is not None:
+            widget.SetToolTip(tooltip)
 
 
     def __del__(self):
@@ -591,10 +599,10 @@ Input = InputText
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
-class InputCombo(Element):
+class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, font=None):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
+                 readonly=False, visible_items=10, font=None, auto_complete=True, visible=True, size_px=(None,None)):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -604,63 +612,53 @@ class InputCombo(Element):
         '''
         self.Values = values
         self.DefaultValue = default_value
-        self.ChangeSubmits = change_submits
-        self.TKCombo = None
+        self.ChangeSubmits = change_submits or enable_events
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
         self.Readonly = readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
-
+        self.VisibleItems = visible_items
+        self.AutoComplete = auto_complete
+        self.WxComboBox = None     # type: wx.ComboBox
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None):
+
+    def QtCurrentItemChanged(self, state):
+        if self.ChangeSubmits:
+            element_callback_quit_mainloop(self)
+
+
+
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
-            try:
-                self.TKCombo['values'] = values
-                self.TKCombo.current(0)
-            except:
-                pass
-            self.Values = values
-        if value is not None:
-            for index, v in enumerate(self.Values):
-                if v == value:
-                    try:
-                        self.TKCombo.current(index)
-                    except:
-                        pass
-                    self.DefaultValue = value
-                    break
+            self.WxComboBox.Set(values)
+        if value:
+            self.WxComboBox.SetSelection(self.WxComboBox.FindString(value))
         if set_to_index is not None:
-            try:
-                self.TKCombo.current(set_to_index)
-                self.DefaultValue = self.Values[set_to_index]
-            except:
-                pass
-        if disabled == True:
-            self.TKCombo['state'] = 'disable'
-        elif disabled == False:
-            self.TKCombo['state'] = 'enable'
-            if readonly is not None:
-                self.Readonly = readonly
-            if self.Readonly:
-                self.TKCombo['state'] = 'readonly'
-        if font is not None:
-            self.TKText.configure(font=font)
+            self.WxComboBox.SetSelection(set_to_index)
+        if disabled is True:
+            self.WxComboBox.Enable(False)
+        elif disabled is False:
+            self.WxComboBox.Enable(True)
+        if readonly is not None:
+            self.WxComboBox.SetWindowStyle(wx.CB_READONLY)
+
+        super().Update(self.WxComboBox, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
 
     def __del__(self):
-        try:
-            self.TKCombo.__del__()
-        except:
-            pass
+
         super().__del__()
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
-Combo = InputCombo
+InputCombo = Combo
 DropDown = InputCombo
 Drop = InputCombo
+
 
 
 # ---------------------------------------------------------------------- #
@@ -807,9 +805,9 @@ class Listbox(Element):
 class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
-                 change_submits=False):
-        '''
-        Radio Button
+                 change_submits=False, enable_events=False, visible=True, size_px=(None, None)):
+        """
+
         :param text:
         :param group_id:
         :param default:
@@ -823,38 +821,34 @@ class Radio(Element):
         :param pad:
         :param tooltip:
         :param change_submits:
-        '''
+        :param enable_events:
+        :param visible:
+        :param size_px:
+        """
         self.InitialState = default
         self.Text = text
-        self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
         self.Disabled = disabled
         self.TextColor = text_color or DEFAULT_TEXT_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
+        self.WxRadioButton = None       # type: wx.RadioButton
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible, size_px=size_px)
 
-    def Update(self, value=None, disabled=None):
-        location = EncodeRadioRowCol(self.Position[0], self.Position[1])
-        if value is not None:
-            try:
-                self.TKIntVar.set(location)
-            except:
-                pass
-            self.InitialState = value
-        if disabled == True:
-            self.TKRadio['state'] = 'disabled'
-        elif disabled == False:
-            self.TKRadio['state'] = 'normal'
+
+    def Update(self, value=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
+        if value:
+            self.WxRadioButton.SetValue(True)
+        elif value is False:
+            self.WxRadioButton.SetValue(False)
+        super().Update(self.WxRadioButton, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
 
     def __del__(self):
-        try:
-            self.TKRadio.__del__()
-        except:
-            pass
         super().__del__()
 
 
@@ -1186,7 +1180,6 @@ class Text(Element):
         self.Relief = relief
         self.ClickSubmits = click_submits or enable_events
         self.Margins = margins
-        self.Visible = visible
         self.size_px = size_px
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
@@ -1199,7 +1192,7 @@ class Text(Element):
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, visible=visible)
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
@@ -2319,8 +2312,7 @@ class Slider(Element):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
         '''
         Column Element
         :param layout:
@@ -2337,18 +2329,15 @@ class Column(Element):
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
         self.Rows = []
-        self.TKFrame = None
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
-        # self.ImageFilename = image_filename
-        # self.ImageData = image_data
-        # self.ImageSize = image_size
-        # self.ImageSubsample = image_subsample
+        self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-
+        self.WxBoxSizer = None      # type: wx.BoxSizer
+        self.WxHSizer = None        # type: wx.BoxSizer
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, pad=pad, key=key, visible=visible)
         return
 
     def AddRow(self, *args):
@@ -2375,6 +2364,15 @@ class Column(Element):
         row = self.Rows[row_num]
         element = row[col_num]
         return element
+
+
+    def Update(self, visible=None):
+        if visible:
+            self.WxHSizer.Show(self.WxBoxSizer, recursive=True)
+            self.ParentForm.VisibilityChanged()
+        elif visible is False:
+            self.WxHSizer.Hide(self.WxBoxSizer, recursive=True)
+            self.ParentForm.VisibilityChanged()
 
     def __del__(self):
         for row in self.Rows:
@@ -3671,6 +3669,28 @@ def font_to_wx_font(font):
     return wxfont
 
 
+
+def preprocess_radio_elements(top_window, window):
+    for row in window.Rows:
+        for element in row:
+            if element.Type == ELEM_TYPE_INPUT_RADIO:
+                if element.WxRadioButton is None:
+                    element.WxRadioButton = wx.RadioButton(top_window.MasterPanel, id=wx.ID_ANY, label=element.Text, style=wx.RB_GROUP)
+                    create_wx_radio_buttons(top_window, top_window, element.GroupID)
+            if element.Type in (ELEM_TYPE_COLUMN, ELEM_TYPE_FRAME,ELEM_TYPE_TAB_GROUP, ELEM_TYPE_TAB) :
+                preprocess_radio_elements(top_window, element)
+
+
+def create_wx_radio_buttons(top_window, window, group_id):
+    for row in window.Rows:
+        for element in row:
+            if element.Type == ELEM_TYPE_INPUT_RADIO:
+                if element.GroupID == group_id and element.WxRadioButton is None:
+                    element.WxRadioButton = wx.RadioButton(top_window.MasterPanel, id=wx.ID_ANY, label=element.Text )
+            if element.Type in (ELEM_TYPE_COLUMN, ELEM_TYPE_FRAME,ELEM_TYPE_TAB_GROUP, ELEM_TYPE_TAB) :
+                create_wx_radio_buttons(top_window, element, group_id)
+
+
 # ################################################################################
 # ################################################################################
 #  END OF ELEMENT DEFINITIONS
@@ -4036,9 +4056,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.WxCheckbox.GetValue()
                     value = (value != 0)
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
-                    RadVar = element.TKIntVar.get()
-                    this_rowcol = EncodeRadioRowCol(row_num, col_num)
-                    value = RadVar == this_rowcol
+                    value = element.WxRadioButton.GetValue()
                 elif element.Type == ELEM_TYPE_BUTTON:
                     if top_level_form.LastButtonClicked == element.ButtonText:
                         button_pressed_text = top_level_form.LastButtonClicked
@@ -4055,7 +4073,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         except:
                             value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
-                    value = element.TKStringVar.get()
+                    value = element.WxComboBox.GetValue()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     value = element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
@@ -4378,7 +4396,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
         return top_bottom_sizer
 
-
+    #
+    # font, text color, background color, size, disabled, visible, tooltip
+    #
     def do_font_and_color(widget):
         if font:
             widget.SetFont(font_to_wx_font(font))
@@ -4457,9 +4477,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
-                vsizer = wx.BoxSizer(wx.VERTICAL)
+                element = element   # type: Column
+                # element.WxBoxSizer = vsizer = wx.BoxSizer(wx.VERTICAL)
+                element.WxBoxSizer = vsizer = wx.BoxSizer(wx.VERTICAL)
+                element.WxHSizer = hsizer
                 PackFormIntoFrame(element, vsizer, toplevel_form)
+                if element.Size != (None, None):
+                    vsizer.SetMinSize(element.Size)
                 hsizer.Add(pad_widget(vsizer), 0)
+                if not element.Visible:
+                    hsizer.Hide(vsizer, recursive=True)
 
             # # column_widget = QWidget()
             # column_widget = QGroupBox()
@@ -4515,6 +4542,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #                             highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
+                element = element       # type: Text
                 if element.Justification is not None:
                     justification = element.Justification
                 elif toplevel_form.TextJustification is not None:
@@ -4704,7 +4732,27 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
-                pass
+                element = element       # type: Combo
+                if element.Readonly:
+                    element.WxComboBox = widget = wx.Choice(toplevel_form.MasterPanel,
+                                                              id=wx.ID_ANY,
+                                                              choices=element.Values)
+                else:
+                    element.WxComboBox = widget = wx.ComboBox(toplevel_form.MasterPanel,
+                                                            id=wx.ID_ANY,
+                                                            choices=element.Values)
+                if element.DefaultValue:
+                    widget.SetSelection(widget.FindString(element.DefaultValue))
+                if element.Readonly:
+                    element.WxComboBox.SetWindowStyle(wx.CB_READONLY)
+
+                do_font_and_color(element.WxComboBox)
+                sizer = pad_widget(widget)
+
+                if element.ChangeSubmits:
+                    widget.Bind(wx.EVT_COMBOBOX, element.WxCallbackKeyboard)
+
+                hsizer.Add(sizer, 0)
 
                 # max_line_len = max([len(str(l)) for l in element.Values])
                 # if auto_size_text is False:
@@ -4824,6 +4872,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT MULTILINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
+                element = element   # type: Multiline
                 justify = 0
                 if element.EnterSubmits:
                     justify |= wx.TE_PROCESS_ENTER
@@ -4860,6 +4909,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.SetFocus()
             # ------------------------- OUTPUT MULTILINE element  ------------------------- #
             elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
+                element = element                   # type: MultilineOutput
                 style = 0
                 if element.EnterSubmits:
                     style |= wx.TE_PROCESS_ENTER
@@ -4885,6 +4935,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.SetFocus()
                 # -------------------------  OUTPUT element  -----------------fd-------- #
             elif element_type == ELEM_TYPE_OUTPUT:
+                element = element                   # type: Output
                 style = 0
                 style |= wx.TE_MULTILINE | wx.TE_READONLY
                 style = wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL
@@ -4899,7 +4950,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.reroute_stdout()
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
-                element = element # type:Checkbox
+                element = element                   # type:Checkbox
                 element.WxCheckbox = widget = wx.CheckBox(toplevel_form.MasterPanel)
                 if element.Text:
                     widget.SetLabel(element.Text)
@@ -4917,19 +4968,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # # -------------------------  PROGRESS BAR element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
-                # self.MaxValue = max_value
-                # self.TKProgressBar = None
-                # self.Cancelled = False
-                # self.NotRunning = True
-                # self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
-                # self.BarColor = bar_color if bar_color != (None, None) else DEFAULT_PROGRESS_BAR_COLOR
-                # self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
-                # self.BorderWidth = border_width if border_width is not None else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
-                # self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
-                # self.BarExpired = False
-                # self.StartValue = start_value
-                #
-                element = element # type: ProgressBar
+                element = element                   # type: ProgressBar
                 style = wx.GA_HORIZONTAL if element.Orientation.startswith('h') else wx.GA_VERTICAL
                 element_size = element_size[::-1] if element.Orientation.startswith('v') else element_size
                 element_size = wx.Size((element_size[0], element_size[1]))
@@ -4941,37 +4980,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 hsizer.Add(sizer, 0)
                 # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
-                pass
-                # width = 0 if auto_size_text else element_size[0]
-                # default_value = element.InitialState
-                # ID = element.GroupID
-                # # see if ID has already been placed
-                # value = EncodeRadioRowCol(row_num, col_num)  # value to set intvar to if this radio is selected
-                # if ID in toplevel_form.RadioDict:
-                #     RadVar = toplevel_form.RadioDict[ID]
-                # else:
-                #     RadVar = tk.IntVar()
-                #     toplevel_form.RadioDict[ID] = RadVar
-                # element.TKIntVar = RadVar  # store the RadVar in Radio object
-                # if default_value:  # if this radio is the one selected, set RadVar to match
-                #     element.TKIntVar.set(value)
-                # if element.ChangeSubmits:
-                #     element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-                #                                      variable=element.TKIntVar, value=value, bd=border_depth, font=font,
-                #                                      command=element.RadioHandler)
-                # else:
-                #     element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
-                #                                      variable=element.TKIntVar, value=value, bd=border_depth, font=font)
-                # if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
-                #     element.TKRadio.configure(background=element.BackgroundColor)
-                #     element.TKRadio.configure(selectcolor=element.BackgroundColor)
-                # if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                #     element.TKRadio.configure(fg=text_color)
-                # if element.Disabled:
-                #     element.TKRadio['state'] = 'disabled'
-                # element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                element = element                   # type: Radio
+                widget = element.WxRadioButton      # type: wx.RadioButton
+                do_font_and_color(element.WxRadioButton)
+                sizer = pad_widget(widget)
+                if element.ChangeSubmits:
+                    widget.Bind(wx.EVT_RADIOBUTTON, element.WxCallbackKeyboard)
+                hsizer.Add(sizer, 0)
+                if element.InitialState:
+                    widget.SetValue(True)
+
                 # -------------------------  INPUT SPIN Box element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
                 pass
@@ -5450,6 +5468,11 @@ def StartupTK(window:Window):
 
     # ----------------------------- Sizer creation and PACK FORM -----------------------------
     vsizer = wx.BoxSizer(wx.VERTICAL)
+
+    preprocess_radio_elements(window, window)
+
+    # ----------------------------- Do the packing of the elements -----------------------------
+
     PackFormIntoFrame(window, vsizer, window)
 
     # ----------------------------- Sizers to create margins -----------------------------
@@ -6933,7 +6956,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 def main():
-    ChangeLookAndFeel('Black')
+    # ChangeLookAndFeel('Black')
     layout = [[Text('TEXT1',tooltip='Tooltip'), Text('TEXT2', )],
               [Text('You should be importing it rather than running it', justification='l', size=(50, 1))],
               [Text('Here is your sample input window....')],
