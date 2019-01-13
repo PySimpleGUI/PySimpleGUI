@@ -4806,6 +4806,24 @@ Emergency patch release... going out same day as previous release
 * Attempted to use Styles better with Combobox
 * Fixed bug blocking setting bar colors in OneLineProgressMeter
 
+# 3.22.0 PySimpleGUI
+
+* Added type hints to some portions of the code
+* Output element can be made invisible
+* Image sizing and subsample for Button images
+* Invisibility for ButtonMenus
+* Attempt at specifying size of Column elements (limited success)
+* Table Element
+  * New row_colors paramter
+  * New vertical_scroll_only parameter
+* Tree Element
+  * New row_height paramter
+  * New feature - Icons for tree entries using filename or Base64 images
+* Fix for bug sending back continuous mouse events
+* New paramter silence_on_error for FindElement / Element calls
+* Slider returns float now
+* Fix for Menus when using Python 2.7
+* Combobox Styling (again)
 
 
 ### Upcoming      
@@ -4914,3 +4932,6 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNTM2MjYwNTMwXX0=
+-->
