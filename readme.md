@@ -3199,7 +3199,13 @@ Unlike Tables there is no standard format for trees.  Thus the data structure pa
 * Get a TreeData Object    
 * "Insert" data into the tree    
 * Pass the filled in TreeData object to Tree Element    
-    
+
+#### TreeData format
+```python
+def TreeData()
+def Insert(self, parent, key, text, values, icon=None)
+```
+
 To "insert" data into the tree the TreeData method Insert is called.    
     
 `Insert(parent_key, key, display_text, values)`    
@@ -4941,5 +4947,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc4OTg2NDU3Ml19
+eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
 -->
