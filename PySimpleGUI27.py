@@ -29,15 +29,16 @@ else:
 
 import types
 import datetime
+import time
 import textwrap
 import pickle
 import calendar
+from random import randint
 
 g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
 
-import time
 
 
 def TimerStart():
@@ -73,8 +74,9 @@ def TimerStop():
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 
+# Base64 encoded GIF file
+DEFAULT_BASE64_ICON = b'R0lGODlhIQAgAPcAAAAAADBpmDBqmTFqmjJrmzJsnDNtnTRrmTZtmzZumzRtnTdunDRunTRunjVvnzdwnzhwnjlxnzVwoDZxoTdyojhzozl0ozh0pDp1pjp2pjp2pzx0oj12pD52pTt3qD54pjt4qDx4qDx5qTx5qj16qj57qz57rD58rT98rkB4pkJ7q0J9rEB9rkF+rkB+r0d9qkZ/rEl7o0h8p0x9pk5/p0l+qUB+sEyBrE2Crk2Er0KAsUKAskSCtEeEtUWEtkaGuEiHuEiHukiIu0qKu0mJvEmKvEqLvk2Nv1GErVGFr1SFrVGHslaHsFCItFSIs1COvlaPvFiJsVyRuWCNsWSPsWeQs2SQtGaRtW+Wt2qVuGmZv3GYuHSdv3ievXyfvV2XxGWZwmScx2mfyXafwHikyP7TPP/UO//UPP/UPf/UPv7UP//VQP/WQP/WQf/WQv/XQ//WRP7XSf/XSv/YRf/YRv/YR//YSP/YSf/YSv/ZS//aSv/aS/7YTv/aTP/aTf/bTv/bT//cT/7aUf/cUP/cUf/cUv/cU//dVP/dVf7dVv/eVv/eV//eWP/eWf/fWv/fW/7cX/7cYf7cZP7eZf7dav7eb//gW//gXP/gXf/gXv/gX//gYP/hYf/hYv/iYf/iYv7iZP7iZf/iZv/kZv7iaP/kaP/ka//ma//lbP/lbv/mbP/mbv7hdP7lcP/ncP/nc//ndv7gef7gev7iff7ke/7kfv7lf//ocf/ocv/odP/odv/peP/pe//ofIClw4Ory4GszoSszIqqxI+vyoSv0JGvx5OxyZSxyZSzzJi0y5m2zpC10pi715++16C6z6a/05/A2qHC3aXB2K3I3bLH2brP4P7jgv7jh/7mgf7lhP7mhf7liv/qgP7qh/7qiP7rjf7sjP7nkv7nlv7nmP7pkP7qkP7rkv7rlv7slP7sl/7qmv7rnv7snv7sn/7un/7sqv7vq/7vrf7wpv7wqf7wrv7wsv7wtv7ytv7zvP7zv8LU48LV5c3a5f70wP7z0AAAACH5BAEAAP8ALAAAAAAhACAAAAj/AP8JHEiwoMGDCA1uoYIF4bhK1vwlPOjlQICLApwVpFTGzBk1siYSrCLgoskFyQZKMsOypRyR/GKYnBkgQbF/s8603KnmWkIaNIMaw6lzZ8tYB2cIWMo0KIJj/7YV9XgGDRo14gpOIUBggNevXpkKGCDsXySradSoZcMmDsFnDxpEKEC3bl2uXCFQ+7emjV83bt7AgTNroJINAq0wWBxBgYHHdgt0+cdnMJw5c+jQqYNnoARkAx04kPEvS4PTqBswuPIPUp06duzcuYMHT55wAjkwEahsQgqBNSQIHy582D9BePTs2dOnjx8/f1gJ9GXhRpTqApFQoDChu3cOAps///9D/g+gQvYGjrlw4cU/fUnYX6hAn34HgZMABQo0iJB/Qoe8UxAXOQiEg3wIXvCBQLUU4mAhh0R4SCLqJOSEBhhqkAEGHIYgUDaGICIiIoossogj6yBUTQ4htNgiCCB4oIJAtJTIyI2MOOLIIxMtQQIJIwQZpAgwCKRNI43o6Igll1ySSTsI7dOECSaUYOWVKwhkiyVMYuJlJpp0IpA6oJRTkBQopHnCmmu2IBA2mmQi5yZ0fgJKPP+0IwoooZwzkDQ2uCCoCywUyoIW/5DDyaKefOLoJ6LU8w87pJgDTzqmDNSMDpzqYMOnn/7yTyiglBqKKKOMUopA7JgCy0DdeMEjUDM71GqrrcH8QwqqqpbiayqToqJKLwN5g45A0/TAw7LL2krGP634aoopp5yiiiqrZLuKK+jg444uBIHhw7g+MMsDFP/k4wq22rririu4xItLLriAUxAQ5ObrwzL/0PPKu7fIK3C8uxz0w8EIIwzMP/cM7HC88hxEzBBCBGGxxT8AwQzDujws7zcJQVMEEUKUbPITAt1D78OSivSFEUXEXATKA+HTscC80CPSQNGEccQRYhjUDzfxcjPPzkgnLVBAADs='
 
-DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
 if sys.version_info[0] >= 3:
     DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
 else:
@@ -369,7 +371,7 @@ class Element(object):
         self.TKEntry = None
         self.TKImage = None
 
-        self.ParentForm = None
+        self.ParentForm = None      # type: Window
         self.ParentContainer = None  # will be a Form, Column, or Frame element
         self.TextInputDefault = None
         self.Position = (0, 0)  # Default position Row 0, Col 0
@@ -379,7 +381,7 @@ class Element(object):
         self.Tooltip = tooltip
         self.TooltipObject = None
         self.Visible = visible
-
+        self.TKRightClickMenu = None
 
     def RightClickMenuCallback(self, event):
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
@@ -1414,9 +1416,9 @@ class Output(Element):
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
         if visible is False:
-            self._TKOut.pack_forget()
+            self._TKOut.frame.pack_forget()
         elif visible is True:
-            self._TKOut.pack()
+            self._TKOut.frame.pack()
 
     def __del__(self):
         try:
@@ -1649,10 +1651,15 @@ class Button(Element):
             self.TKButton.image = image
         if image_filename is not None:
             self.TKButton.config(highlightthickness=0)
-            photo = tk.PhotoImage(file=image_filename)
-            width, height = photo.width(), photo.height()
-            self.TKButton.config(image=photo, width=width, height=height)
-            self.TKButton.image = photo
+            image = tk.PhotoImage(file=image_filename)
+            if image_size is not None:
+                width, height = image_size
+            else:
+                width, height = image.width(), image.height()
+            if image_subsample:
+                image = image.subsample(image_subsample)
+            self.TKButton.config(image=image, width=width, height=height)
+            self.TKButton.image = image
         if visible is False:
             self.TKButton.pack_forget()
         elif visible is True:
@@ -1721,6 +1728,7 @@ class ButtonMenu(Element):
         self.MenuItemChosen = None
         self.Tearoff = tearoff
         self.TKButtonMenu = None
+        self.TKMenu = None
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
@@ -1741,32 +1749,11 @@ class ButtonMenu(Element):
         if menu_definition is not None:
             self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
             AddMenuItem(self.TKMenu, menu_definition[1], self)
-        # for menu_entry in menu_definition:
-        #     # print(f'Adding a Menubar ENTRY {menu_entry}')
-        #     baritem = tk.Menu(menubar, tearoff=self.Tearoff)
-        #     pos = menu_entry[0].find('&')
-        #     # print(pos)
-        #     if pos != -1:
-        #         if pos == 0 or menu_entry[0][pos - 1] != "\\":
-        #             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
-        #     if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
-        #         menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem, underline=pos)
-        #         menubar.entryconfig(menu_entry[0][len(MENU_DISABLED_CHARACTER):], state='disabled')
-        #     else:
-        #         menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
-        #
-        #     if len(menu_entry) > 1:
-        #         AddMenuItem(baritem, menu_entry[1], self)
         self.TKButtonMenu.configure(menu=self.TKMenu)
-
-    def UpdateQt(self, menu_definition=None, text=None, button_color=(None, None), font=None, visible=None):
-        if menu_definition is not None:
-            menu_def = menu_definition
-            qmenu = QMenu(self.QT_QPushButton)
-            qmenu.setTitle(menu_def[0])
-            AddMenuItem(qmenu, menu_def[1], self)
-            self.QT_QPushButton.setMenu(qmenu)
-        super().Update(self.QT_QPushButton, background_color=button_color[1], text_color=button_color[0], font=font, visible=visible)
+        if visible is False:
+            self.TKButtonMenu.pack_forget()
+        elif visible is True:
+            self.TKButtonMenu.pack()
 
 
 
@@ -2551,6 +2538,30 @@ class Slider(Element):
 # ---------------------------------------------------------------------- #
 #                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
+class TkFixedFrame(tk.Frame):
+    def __init__(self, master, **kwargs):
+        tk.Frame.__init__(self, master, **kwargs)
+
+        self.canvas = tk.Canvas(self)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+
+        # reset the view
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
+
+        # create a frame inside the canvas which will be scrolled with it
+        self.TKFrame = tk.Frame(self.canvas, **kwargs)
+        self.frame_id = self.canvas.create_window(0, 0, window=self.TKFrame, anchor="nw")
+        self.canvas.config(borderwidth=0, highlightthickness=0)
+        self.TKFrame.config(borderwidth=0, highlightthickness=0)
+        self.config(borderwidth=0, highlightthickness=0)
+
+
+
+# ---------------------------------------------------------------------- #
+#                          TkScrollableFrame (Used by Column)            #
+# ---------------------------------------------------------------------- #
 class TkScrollableFrame(tk.Frame):
     def __init__(self, master, vertical_only, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
@@ -3048,7 +3059,7 @@ MenuBar = Menu          # another name for Menu to make it clear it's the Menu B
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Table
@@ -3095,12 +3106,14 @@ class Table(Element):
         self.RowHeight = row_height
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
+        self.VerticalScrollOnly = vertical_scroll_only
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
         self.RightClickMenu = right_click_menu
+        self.RowColors = row_colors
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
@@ -3167,7 +3180,7 @@ class Table(Element):
 # ---------------------------------------------------------------------- #
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
-                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None, tooltip=None,right_click_menu=None, visible=True):
+                 def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False, change_submits=False, enable_events=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,right_click_menu=None, visible=True):
         '''
         Tree
         :param data:
@@ -3212,6 +3225,9 @@ class Tree(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
+        self.RowHeight = row_height
+        self.IconList = {}
+
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip, visible=visible)
@@ -3234,13 +3250,26 @@ class Tree(Element):
     def add_treeview_data(self, node):
         # print(f'Inserting {node.key} under parent {node.parent}')
         if node.key != '':
-            self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
-                                   open=self.ShowExpanded)
+            if node.icon:
+                try:
+                    if type(node.icon) is bytes:
+                        photo = tk.PhotoImage(data=node.icon)
+                    else:
+                        photo = tk.PhotoImage(file=node.icon)
+                    node.photo = photo
+                    self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                                    open=self.ShowExpanded, image=node.photo)
+                except:
+                    self.photo = None
+            else:
+                self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                                open=self.ShowExpanded)
+
         for node in node.children:
             self.add_treeview_data(node)
 
 
-    def Update(self, values=None, key=None, value=None, text=None, visible=None):
+    def Update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -3256,6 +3285,16 @@ class Tree(Element):
                 self.TKTreeview.item(key, values=value)
             if text is not None:
                 self.TKTreeview.item(key, text=text)
+            if icon is not None:
+                try:
+                    if type(icon) is bytes:
+                        photo = tk.PhotoImage(data=icon)
+                    else:
+                        photo = tk.PhotoImage(file=icon)
+                    self.TKTreeview.item(key, image=photo)
+                    self.IconList[key] = photo              # save so that it's not deleted (save reference)
+                except:
+                    pass
             item = self.TKTreeview.item(key)
         if visible is False:
             self.TKTreeview.pack_forget()
@@ -3269,26 +3308,27 @@ class Tree(Element):
 
 class TreeData(object):
     class Node(object):
-        def __init__(self, parent, key, text, values):
+        def __init__(self, parent, key, text, values, icon=None):
             self.parent = parent
             self.children = []
             self.key = key
             self.text = text
             self.values = values
+            self.icon = icon
 
         def _Add(self, node):
             self.children.append(node)
 
     def __init__(self):
         self.tree_dict = {}
-        self.root_node = self.Node("", "", 'root', [])
+        self.root_node = self.Node("", "", 'root', [], None)
         self.tree_dict[""] = self.root_node
 
     def _AddNode(self, key, node):
         self.tree_dict[key] = node
 
-    def Insert(self, parent, key, text, values):
-        node = self.Node(parent, key, text, values)
+    def Insert(self, parent, key, text, values, icon=None):
+        node = self.Node(parent, key, text, values, icon)
         self.tree_dict[key] = node
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
@@ -3396,7 +3436,7 @@ class Window(object):
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = icon if icon is not None else Window.user_defined_icon
+        self.WindowIcon = Window.user_defined_icon if Window.user_defined_icon is not None else icon if icon is not None else DEFAULT_WINDOW_ICON
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
@@ -3594,6 +3634,8 @@ class Window(object):
             # if the last button clicked was realtime, emulate a read non-blocking
             # the idea is to quickly return realtime buttons without any blocks until released
             if self.LastButtonClickedWasRealtime:
+                self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
+
                 # print(f'RTime down {self.LastButtonClicked}' )
                 try:
                     rc = self.TKroot.update()
@@ -3719,15 +3761,18 @@ class Window(object):
         FillFormWithValues(self, values_dict)
         return self
 
-    def FindElement(self, key):
+    def FindElement(self, key, silent_on_error=False):
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
-            print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-            PopupError('Keyword error in FindElement Call',
-                       'Bad key = {}'.format(key),
-                       'Your bad line of code may resemble this:',
-                       'window.FindElement("{}")'.format(key))
-            return ErrorElement(key=key)
+            if not silent_on_error:
+                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+                PopupError('Keyword error in FindElement Call',
+                           'Bad key = {}'.format(key),
+                           'Your bad line of code may resemble this:',
+                           'window.FindElement("{}")'.format(key))
+                return ErrorElement(key=key)
+            else:
+                return False
         return element
 
     Element =  FindElement          # Shortcut function
@@ -4340,7 +4385,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                     try:
-                        value = element.TKIntVar.get()
+                        value = float(element.TKScale.get())
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
@@ -4687,10 +4732,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                  highlightthickness=0)
                         element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                 else:
-                    element.TKColFrame = tk.Frame(tk_row_frame)
                     if element.Size != (None, None):
-                        element.TKColFrame.configure(width=element.Size[0], height=element.Size[1])
-                    PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
+                        element.TKColFrame = TkFixedFrame(tk_row_frame)
+                        PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
+                        element.TKColFrame.TKFrame.update()
+                        if element.Size[1] is not None:
+                            element.TKColFrame.canvas.config(height=element.Size[1])
+                        elif element.Size[0] is not None:
+                            element.TKColFrame.canvas.config(width=element.Size[0])
+                    else:
+                        element.TKColFrame = tk.Frame(tk_row_frame)
+                        PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
+
                 element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
@@ -4946,7 +4999,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
 
 
-            # -------------------------  INPUT (Single Line) element  ------------------------- #
+            # -------------------------  INPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
                 element.TKStringVar = tk.StringVar()
@@ -4983,7 +5036,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKEntry.bind('<Button-3>', element.RightClickMenuCallback)
-            # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
+            # -------------------------  COMBOBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False:
@@ -4993,66 +5046,49 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 style_name = 'TCombobox'
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    # print('Combo special style', element.TextColor, element.BackgroundColor)
-                    style_name = 'PSG.TCombobox'
+                    # Creates 1 style per Text Color/ Background Color combination
+                    style_name = element.TextColor + element.BackgroundColor + '.TCombobox'
+                    # print(style_name)
                     combostyle = tkinter.ttk.Style()
-                    #
-                    # combostyle.map("C.TButton",
-                    #           foreground=[('pressed', 'red'), ('active', 'blue')],
-                    #           background=[('pressed', '!disabled', 'black'), ('active', 'white')]
-                    #           )
-                    # combostyle.map('PSG.TCombobox', background=[('selected', 'green')])
-                    # combostyle.configure('PSG.TCombobox.Listbox',foreground='green')
-                    # combostyle.map('PSG.TCombobox', foreground=[('active','purple')])
-                    # combostyle.map('PSG.TCombobox.textarea', foreground=[('active','purple')])
-                    # combostyle.map('PSG.TCombobox.rightdownarrow', arrowcolor=[('active','purple')])
-                    # combostyle.configure('PSG.TCombobox.TEntry', background='red')
-                    # combostyle.configure('PSG.TCombobox', background=element.BackgroundColor)
-                    combostyle.configure('PSG.TCombobox', foreground=element.TextColor)     # WORKS
-                    combostyle.configure('PSG.TCombobox', selectbackground='gray70')        # WORKS
-                    combostyle.configure('PSG.TCombobox', selectforeground=element.TextColor)   # WORKS
-                    # combostyle.configure('PSG.TCombobox.Listbox', background='purple')
-                    # toplevel_form.TKroot.option_add("*TCombobox*Background", element.BackgroundColor)        # WORK for drop-down list (Changes all)
-                    # combostyle.map('PSG.TCombobox', background=[('active', 'purple'), ('disabled', 'purple')])
-                    # combostyle.configure('PSG.TCombobox.PopdownFrame', background=element.BackgroundColor)
-                    # combostyle.configure('PSG.TCombobox.field', fieldbackground=element.BackgroundColor)
-                    # combostyle.configure('PSG.TCombobox.Listbox', background=element.BackgroundColor)
-                    # print(combostyle.element_names())
-                    # print(combostyle.element_options('PSG.TCombobox'))
-                    # try:
-                    #     combostyle.theme_create('combostyle',
-                    #                             settings={'TCombobox':
-                    #                                           {'configure':
-                    #                                                {'selectbackground': 'gray50',
-                    #                                                 'fieldbackground': element.BackgroundColor,
-                    #                                                 'foreground': text_color,
-                    #                                                 'background': element.BackgroundColor}
-                    #                                            }})
-                    # except:
-                    #     try:
-                    #         combostyle.theme_settings('combostyle',
-                    #                                   settings={'TCombobox':
-                    #                                                 {'configure':
-                    #                                                      {'selectbackground': 'gray50',
-                    #                                                       'fieldbackground': element.BackgroundColor,
-                    #                                                       'foreground': text_color,
-                    #                                                       'background': element.BackgroundColor}
-                    #                                                  }})
-                    #     except:
-                    #         pass
-                    # # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-                    # combostyle.theme_use('combostyle')
+
+
+                    # Creates a unique name for each field element(Sure there is a better way to do this)
+                    unique_field = str(time.time()).replace('.','') + '.TCombobox.field'
+                    # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
+
+                    # print(unique_field)
+                    # Clones over the TCombobox.field element from the "alt" theme.
+                    # This is what will allow us to change the background color without altering the whole programs theme
+                    combostyle.element_create(unique_field, "from", "alt")
+
+                    # Create widget layout using cloned "alt" field
+                    combostyle.layout(style_name, [
+                        (unique_field, {'children': [('Combobox.downarrow', {'side': 'right', 'sticky': 'ns'}),
+                                                     ('Combobox.padding',
+                                                      {'children': [('Combobox.focus',
+                                                                     {'children': [('Combobox.textarea',
+                                                                                    {'sticky': 'nswe'})],
+                                                                      'expand': '1',
+                                                                      'sticky': 'nswe'})],
+                                                       'expand': '1',
+                                                       'sticky': 'nswe'})],
+                                        'sticky': 'nswe'})])
+
+                    # Copy default TCombobox settings
+                    # Getting an error on this line of code
+                    # combostyle.configure(style_name, *combostyle.configure("TCombobox"))
+
+                    # Set individual widget options
+                    combostyle.configure(style_name, foreground=element.TextColor)
+                    combostyle.configure(style_name, selectbackground='gray70')
+                    combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
+                    combostyle.configure(style_name, selectforeground=element.TextColor)
 
                 element.TKCombo = tkinter.ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
-                # element.TKCombo['state']='readonly'
                 element.TKCombo['values'] = element.Values
 
-                # if element.InitializeAsDisabled:
-                #     element.TKCombo['state'] = 'disabled'
-                # if element.BackgroundColor is not None:
-                #     element.TKCombo.configure(background=element.BackgroundColor)
                 element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCombo.pack_forget()
@@ -5071,7 +5107,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
+            # -------------------------  OPTION MENU Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False:
@@ -5170,7 +5206,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKText.bind('<Button-3>', element.RightClickMenuCallback)
-            # -------------------------  INPUT CHECKBOX element  ------------------------- #
+            # -------------------------  CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
@@ -5217,7 +5253,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
-                # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
+                # -------------------------  RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
@@ -5251,7 +5287,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  INPUT SPIN Box element  ------------------------- #
+                # -------------------------  SPIN element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
@@ -5282,7 +5318,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                           pad=elementpad)
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Visible is False:
-                    element._TKOut.pack_forget()
+                    element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.RightClickMenu or toplevel_form.RightClickMenu:
@@ -5313,7 +5349,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
                     if element.BackgroundColor is not None:
-                        element.tktext_label.config(background=element.BackgroundColor);
+                        element.tktext_label.config(background=element.BackgroundColor)
 
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
@@ -5556,6 +5592,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
+                element = element       # type: Table
                 frame = tk.Frame(tk_row_frame)
 
                 height = element.NumRows
@@ -5575,7 +5612,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         except:
                             column_widths[i] = col_width
                 if element.ColumnsToDisplay is None:
-                    displaycolumns = element.ColumnHeadings
+                    displaycolumns = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 else:
                     displaycolumns = []
                     for i, should_display in enumerate(element.ColumnsToDisplay):
@@ -5587,13 +5624,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
                 element.TKTreeview = tkinter.ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height,
-                                                  selectmode=element.SelectMode)
+                                                  selectmode=element.SelectMode,)
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
                     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
                     treeview.column(element.RowHeaderText, width=50, anchor=anchor)
-                for i, heading in enumerate(element.ColumnHeadings):
-                    treeview.heading(heading, text=heading)
+
+                headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
+                for i, heading in enumerate(headings):
+                    # treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
                         width = max(column_widths[i], len(heading))
                     else:
@@ -5601,15 +5640,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
-
                     treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
+
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
                         value = [i+element.StartingRowNumber] + value
-                    id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i % 2)
-                if element.AlternatingRowColor is not None:
-                    treeview.tag_configure(1, background=element.AlternatingRowColor)
+                    id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i)
+                if element.AlternatingRowColor is not None:         # alternating colors
+                    for row in range(0, len(element.Values), 2):
+                        treeview.tag_configure(row, background=element.AlternatingRowColor)
+                if element.RowColors is not None:                   # individual row colors
+                    for row_def in element.RowColors:
+                        if len(row_def) == 2:                       # only background is specified
+                            treeview.tag_configure(row_def[0], background=row_def[1])
+                        else:
+                            treeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
+
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", background=element.BackgroundColor,
                                           fieldbackground=element.BackgroundColor)
@@ -5622,9 +5669,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BindReturnKey:
                     treeview.bind('<Return>', element.treeview_double_click)
                     treeview.bind('<Double-Button-1>', element.treeview_double_click)
+
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
+
+                if not element.VerticalScrollOnly:
+                    hscrollbar = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
+                    hscrollbar.pack(side=tk.BOTTOM, fill='x')
+                    hscrollbar.config(command=treeview.xview)
+                    treeview.configure(xscrollcommand=hscrollbar.set)
+
                 treeview.configure(yscrollcommand=scrollbar.set)
 
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
@@ -5642,6 +5697,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKTreeview.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
+                element = element   #type: Tree
                 frame = tk.Frame(tk_row_frame)
 
                 height = element.NumRows
@@ -5663,7 +5719,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ------------- GET THE TREEVIEW WIDGET -------------
                 element.TKTreeview = tkinter.ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='tree headings', height=height,
-                                                  selectmode=element.SelectMode, )
+                                                  selectmode=element.SelectMode)
                 treeview = element.TKTreeview
                 for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
                     treeview.heading(heading, text=heading)
@@ -5675,11 +5731,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         except:
                             width = element.DefaultColumnWidth
                     treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
-
                 def add_treeview_data(node):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
-                        treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded)
+                        if node.icon:
+                            if type(node.icon) is bytes:
+                                photo = tk.PhotoImage(data=node.icon)
+                            else:
+                                photo = tk.PhotoImage(file=node.icon)
+                            node.photo = photo
+                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded, image=node.photo)
+                        else:
+                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded)
+
                     for node in node.children:
                         add_treeview_data(node)
 
@@ -5692,6 +5756,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
 
+                tkinter.ttk.Style().configure("Treeview", font=font)
+                if element.RowHeight:
+                    tkinter.ttk.Style().configure("Treeview", rowheight=element.RowHeight)
                 scrollbar = tk.Scrollbar(frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
@@ -5712,6 +5779,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKTreeview.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
+                element = element       # type: VerticalSeparator
                 separator = tkinter.ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
             # -------------------------  StatusBar element  ------------------------- #
@@ -5819,7 +5887,6 @@ def ConvertFlexToTK(MyFlexForm):
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(my_flex_form):
     # global _my_windows
-
     # ow = _my_windows.NumOpenWindows
     ow = Window.NumOpenWindows
     # print('Starting TK open Windows = {}'.format(ow))
@@ -7734,7 +7801,7 @@ def main():
 
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
-        [Combo(['Combo item 1', ], size=(20, 3))],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Spin([1, 2, 3], size=(4, 3))],
     ]
 

@@ -31,9 +31,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.21.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.22.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.21.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.22.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -1507,7 +1507,7 @@ There are a few methods (functions) that you will see in this document that act 
     window.Close() - To close your window, if a button hasn't already closed it    
     window.Disable() - Use to disable the window inputwhen opening another window on top of the primnary  Window      
     window.Enable() - Re-enable a Disabled window      
-    window.FindElement(key) - Returns the element that has a matching key value  
+    window.FindElement(key, silent_on_error=False) - Returns the element that has a matching key value  
     window.Move(x,y) - Moves window to location x,y on screen'
     window.SetAlpha(alpha) - Changes window transparency
     window.BringToFront() - Brings the window to the top of other windows on the screen
@@ -1532,6 +1532,9 @@ window = sg.Window('My window title').Layout(layout)
 #### Finalize()    
     
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
+
+If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call Read or Finalize prior to making those calls.
+
     
 #### Read(timeout=None, timeout_key='__TIMEOUT_ _ ')    
     
@@ -3091,6 +3094,8 @@ Table(  values,
 		text_color=None,
 		background_color=None,
 		alternating_row_color=None,
+		row_colors=None,
+		vertical_scroll_only=True,
 		size=(None,None),
 		change_submits=False,
 		enable_events=False,
@@ -3098,6 +3103,7 @@ Table(  values,
 		pad=None,
 		key=None,
 		tooltip=None,
+		right_click_menu=None,
 		visible=True):
 
 ```
@@ -3117,6 +3123,8 @@ font - font for table entries
 justification - left, right, center      
 text_color - color of text      
 alternating row color - if set will change background color for alternating rows
+row_colors - list of tuples representing (row_number, color) e.g. row_colors = ((5, 'white', 'blue'), (0,'red'), (15,'yellow'))
+vertical_scroll_only - if True will not show a horizontal scrollbar.   NOTE - will have to disable to get horizontal scrollbars
 background_color - cell background color      
 size - (None, number of rows) - don't use, use num_rows instead
 enable_events - will return a 'row selected' event when row is selected
@@ -3147,7 +3155,8 @@ The Tree Element and Table Element are close cousins.   Many of the parameters f
 Tree(   data=None,
 		headings=None, 
 		visible_column_map=None, 
-		col_widths=None, col0_width=10,
+		col_widths=None, 
+		col0_width=10,
 		def_col_width=10,
 		auto_size_columns=True, 
 		max_col_width=20, 
@@ -3160,6 +3169,7 @@ Tree(   data=None,
 		text_color=None, 
 		background_color=None,
 		num_rows=None,
+		row_height=None,
 		pad=None, 
 		key=None, 
 		tooltip=None,
@@ -3181,7 +3191,8 @@ class Tree(data=None - data in TreeData format
          justification='right' - justification for data display    
          text_color=None- color of text to display    
          background_color=None - background color    
-         num_rows=None - number of rows to display    
+         num_rows=None - number of rows to display   
+         row_height=None - height of rows in pixels 
          pad=None - element padding    
          key=None - key for element    
          tooltip=None - tooltip    
@@ -3191,7 +3202,13 @@ Unlike Tables there is no standard format for trees.  Thus the data structure pa
 * Get a TreeData Object    
 * "Insert" data into the tree    
 * Pass the filled in TreeData object to Tree Element    
-    
+
+#### TreeData format
+```python
+def TreeData()
+def Insert(self, parent, key, text, values, icon=None)
+```
+
 To "insert" data into the tree the TreeData method Insert is called.    
     
 `Insert(parent_key, key, display_text, values)`    
@@ -3211,6 +3228,14 @@ Note that you ***can*** use the same values for display_text and keys.  The only
     
 When Reading a window the Table Element will return a list of rows that are selected by the user.  The list will be empty is no rows are selected.    
     
+#### Icons on Tree Entries
+
+If you wish to show an icon next to a tree item, then you specify the icon in the call to `Insert`.  You pass in a filename or a Base64 bytes string using the optional `icon` parameter.
+
+Here is the result of showing an icon with a tree entry.
+
+![image](https://user-images.githubusercontent.com/13696193/51087270-2b561e80-171f-11e9-8260-6142ea9b1137.png)
+
       
 ## Tab and Tab Group Elements      
       
@@ -4423,7 +4448,7 @@ Listboxes are still without scrollwheels. The mouse can drag to see more items. 
       
 3.0 We've come a long way baby!  Time for a major revision bump.  One reason is that the numbers started to confuse people  the latest release was 2.30, but some people read it as 2.3 and thought it went backwards.  I kinda messed up the 2.x series of numbers, so why not start with a clean slate.  A lot has happened anyway so it's well earned.      
       
-One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn this off for windows with sliders.  This feature is enabled in the Window call.      
+One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn off for windows with sliders.  This feature is enabled in the Window call.      
       
 Related to the Grab Anywhere feature is the no_titlebar option, again found in the call to Window.  Your window will be a spiffy, borderless window.  It's a really interesting effect.  Slight problem is that you do not have an icon on the taskbar with these types of windows, so if you don't supply a button to close the window, there's no way to close it other than task manager.      
       
@@ -4773,7 +4798,7 @@ Emergency patch release... going out same day as previous release
 ## 3.20.0 & 1.20.0 18-Dec-2018
 
 * New Pane Element
-* Graphh.DeleteFigure method
+* Graph.DeleteFigure method
 * disable_minimize - New parameter for Window
 * Fix for 2.7 menus
 * Debug Window no longer re-routes stdout by default
@@ -4806,6 +4831,24 @@ Emergency patch release... going out same day as previous release
 * Attempted to use Styles better with Combobox
 * Fixed bug blocking setting bar colors in OneLineProgressMeter
 
+# 3.22.0 PySimpleGUI / 1.22.0 PySimpleGUI27
+
+* Added type hints to some portions of the code
+* Output element can be made invisible
+* Image sizing and subsample for Button images
+* Invisibility for ButtonMenus
+* Attempt at specifying size of Column elements (limited success)
+* Table Element
+  * New row_colors parameter
+  * New vertical_scroll_only parameter - NOTE - will have to disable to get horizontal scrollbars
+* Tree Element
+  * New row_height parameter
+  * New feature - Icons for tree entries using filename or Base64 images
+* Fix for bug sending back continuous mouse events
+* New parameter silence_on_error for FindElement / Element calls
+* Slider returns float now
+* Fix for Menus when using Python 2.7
+* Combobox Styling (again)
 
 
 ### Upcoming      
@@ -4914,3 +4957,6 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTE2NzI2ODY1NTldfQ==
+-->
