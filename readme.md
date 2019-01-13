@@ -3225,6 +3225,12 @@ Note that you ***can*** use the same values for display_text and keys.  The only
     
 When Reading a window the Table Element will return a list of rows that are selected by the user.  The list will be empty is no rows are selected.    
     
+#### Icons on Tree Entries
+
+If you wish to show an icon next to a tree item, then you specify the icon in the call to `Insert`.  You pass in a filename or a Base64 bytes string.
+
+
+
       
 ## Tab and Tab Group Elements      
       
@@ -4947,5 +4953,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
+eyJoaXN0b3J5IjpbLTEyMTAwNjEzMzNdfQ==
 -->
