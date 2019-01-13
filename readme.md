@@ -3121,7 +3121,7 @@ justification - left, right, center
 text_color - color of text      
 alternating row color - if set will change background color for alternating rows
 row_colors - list of tuples representing (row_number, color) e.g. row_colors = ((5, 'white', 'blue'), (0,'red'), (15,'yellow'))
-vertical_scroll_only - if True will not show a horizontal scrollbar
+vertical_scroll_only - if True will not show a horizontal scrollbar.   NOTE - will have to disable to get horizontal scrollbars
 background_color - cell background color      
 size - (None, number of rows) - don't use, use num_rows instead
 enable_events - will return a 'row selected' event when row is selected
@@ -4781,7 +4781,7 @@ Emergency patch release... going out same day as previous release
 ## 3.20.0 & 1.20.0 18-Dec-2018
 
 * New Pane Element
-* Graphh.DeleteFigure method
+* Graph.DeleteFigure method
 * disable_minimize - New parameter for Window
 * Fix for 2.7 menus
 * Debug Window no longer re-routes stdout by default
@@ -4814,7 +4814,7 @@ Emergency patch release... going out same day as previous release
 * Attempted to use Styles better with Combobox
 * Fixed bug blocking setting bar colors in OneLineProgressMeter
 
-# 3.22.0 PySimpleGUI
+# 3.22.0 PySimpleGUI / 1.22.0 PySimpleGUI27
 
 * Added type hints to some portions of the code
 * Output element can be made invisible
@@ -4822,13 +4822,13 @@ Emergency patch release... going out same day as previous release
 * Invisibility for ButtonMenus
 * Attempt at specifying size of Column elements (limited success)
 * Table Element
-  * New row_colors paramter
-  * New vertical_scroll_only parameter
+  * New row_colors parameter
+  * New vertical_scroll_only parameter - NOTE - will have to disable to get horizontal scrollbars
 * Tree Element
-  * New row_height paramter
+  * New row_height parameter
   * New feature - Icons for tree entries using filename or Base64 images
 * Fix for bug sending back continuous mouse events
-* New paramter silence_on_error for FindElement / Element calls
+* New parameter silence_on_error for FindElement / Element calls
 * Slider returns float now
 * Fix for Menus when using Python 2.7
 * Combobox Styling (again)
@@ -4941,5 +4941,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU2MzA4MDAwN119
+eyJoaXN0b3J5IjpbMjI3Nzc1NzhdfQ==
 -->
