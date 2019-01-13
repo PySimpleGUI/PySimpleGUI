@@ -3092,6 +3092,7 @@ Table(  values,
 		background_color=None,
 		alternating_row_color=None,
 		row_colors=None,
+		vertical_scroll_only=True,
 		size=(None,None),
 		change_submits=False,
 		enable_events=False,
@@ -3099,6 +3100,7 @@ Table(  values,
 		pad=None,
 		key=None,
 		tooltip=None,
+		right_click_menu=None,
 		visible=True):
 
 ```
@@ -3118,6 +3120,7 @@ font - font for table entries
 justification - left, right, center      
 text_color - color of text      
 alternating row color - if set will change background color for alternating rows
+row_colors - list of tuples representing (row_number, color)
 background_color - cell background color      
 size - (None, number of rows) - don't use, use num_rows instead
 enable_events - will return a 'row selected' event when row is selected
@@ -4937,5 +4940,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyMzUyMTc2ODBdfQ==
+eyJoaXN0b3J5IjpbLTE2NjUwNzMzNzRdfQ==
 -->
