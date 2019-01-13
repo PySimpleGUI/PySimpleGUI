@@ -1507,7 +1507,7 @@ There are a few methods (functions) that you will see in this document that act 
     window.Close() - To close your window, if a button hasn't already closed it    
     window.Disable() - Use to disable the window inputwhen opening another window on top of the primnary  Window      
     window.Enable() - Re-enable a Disabled window      
-    window.FindElement(key, silent_on_error=None) - Returns the element that has a matching key value  
+    window.FindElement(key, silent_on_error=False) - Returns the element that has a matching key value  
     window.Move(x,y) - Moves window to location x,y on screen'
     window.SetAlpha(alpha) - Changes window transparency
     window.BringToFront() - Brings the window to the top of other windows on the screen
@@ -1532,6 +1532,9 @@ window = sg.Window('My window title').Layout(layout)
 #### Finalize()    
     
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
+
+If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call Read or Finalize prior to making those calls.
+
     
 #### Read(timeout=None, timeout_key='__TIMEOUT_ _ ')    
     
@@ -4955,5 +4958,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzI3OTQ1Nzg4XX0=
+eyJoaXN0b3J5IjpbLTE2NzI2ODY1NTldfQ==
 -->
