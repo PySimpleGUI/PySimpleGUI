@@ -17,6 +17,7 @@ else:
 
 import types
 import datetime
+import time
 import textwrap
 import pickle
 import calendar
@@ -26,7 +27,6 @@ g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
 
-import time
 
 
 def TimerStart():
@@ -3309,7 +3309,7 @@ class TreeData(object):
 
     def __init__(self):
         self.tree_dict = {}
-        self.root_node = self.Node("", "", 'root', [])
+        self.root_node = self.Node("", "", 'root', [], None)
         self.tree_dict[""] = self.root_node
 
     def _AddNode(self, key, node):
@@ -3749,7 +3749,7 @@ class Window:
         FillFormWithValues(self, values_dict)
         return self
 
-    def FindElement(self, key, silent_on_error=None):
+    def FindElement(self, key, silent_on_error=False):
         element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             if not silent_on_error:
@@ -5039,8 +5039,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     # print(style_name)
                     combostyle = ttk.Style()
 
+                    unique_field = str(time.time()).replace('.','') + '.TCombobox.field'
                     # Creates a unique name for each field element(Sure there is a better way to do this)
-                    unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
+                    # unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
                     # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
 
                     # print(unique_field)
@@ -5718,7 +5719,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                         except:
                             width = element.DefaultColumnWidth
                     treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
-
                 def add_treeview_data(node):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
@@ -5728,8 +5728,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                             else:
                                 photo = tk.PhotoImage(file=node.icon)
                             node.photo = photo
-                            # except:
-                            #     self.photo = None
                             treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded, image=node.photo)
                         else:
                             treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values, open=element.ShowExpanded)
