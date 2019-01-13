@@ -3091,6 +3091,7 @@ Table(  values,
 		text_color=None,
 		background_color=None,
 		alternating_row_color=None,
+		row_colors=None,
 		size=(None,None),
 		change_submits=False,
 		enable_events=False,
@@ -3183,7 +3184,8 @@ class Tree(data=None - data in TreeData format
          justification='right' - justification for data display    
          text_color=None- color of text to display    
          background_color=None - background color    
-         num_rows=None - number of rows to display    
+         num_rows=None - number of rows to display   
+         row_height=None - height of rows in pixels 
          pad=None - element padding    
          key=None - key for element    
          tooltip=None - tooltip    
@@ -4935,5 +4937,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc3MTQ2ODQzNV19
+eyJoaXN0b3J5IjpbLTEyMzUyMTc2ODBdfQ==
 -->
