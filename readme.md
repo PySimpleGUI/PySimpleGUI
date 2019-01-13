@@ -31,9 +31,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.21.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.22.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.21.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.22.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -3147,7 +3147,8 @@ The Tree Element and Table Element are close cousins.   Many of the parameters f
 Tree(   data=None,
 		headings=None, 
 		visible_column_map=None, 
-		col_widths=None, col0_width=10,
+		col_widths=None, 
+		col0_width=10,
 		def_col_width=10,
 		auto_size_columns=True, 
 		max_col_width=20, 
@@ -3160,6 +3161,7 @@ Tree(   data=None,
 		text_color=None, 
 		background_color=None,
 		num_rows=None,
+		row_height=None,
 		pad=None, 
 		key=None, 
 		tooltip=None,
@@ -4933,5 +4935,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTM2MjYwNTMwXX0=
+eyJoaXN0b3J5IjpbMTc3MTQ2ODQzNV19
 -->
