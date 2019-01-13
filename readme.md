@@ -3120,7 +3120,8 @@ font - font for table entries
 justification - left, right, center      
 text_color - color of text      
 alternating row color - if set will change background color for alternating rows
-row_colors - list of tuples representing (row_number, color)
+row_colors - list of tuples representing (row_number, color) e.g. row_colors = ((5, 'white', 'blue'), (0,'red'), (15,'yellow'))
+vertical_scroll_only - if True will not show a horizontal scrollbar
 background_color - cell background color      
 size - (None, number of rows) - don't use, use num_rows instead
 enable_events - will return a 'row selected' event when row is selected
@@ -4940,5 +4941,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2NjUwNzMzNzRdfQ==
+eyJoaXN0b3J5IjpbMTU2MzA4MDAwN119
 -->
