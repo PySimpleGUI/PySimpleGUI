@@ -1851,6 +1851,9 @@ class Image(Element):
             print('* Warning... no image specified in Image Element! *')
         self.EnableEvents = enable_events
         self.RightClickMenu = right_click_menu
+        self.AnimatedFrames = None
+        self.CurrentFrameNumber = 0
+        self.TotalAnimatedFrames = 0
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -1874,6 +1877,30 @@ class Image(Element):
             self.tktext_label.pack_forget()
         elif visible is True:
             self.tktext_label.pack()
+
+    def UpdateAnimation(self, source, size=(None, None)):
+        if self.AnimatedFrames is None:
+            self.AnimatedFrames = []
+            for i in range(1000):
+                if type(source) is not bytes:
+                    try:
+                        self.AnimatedFrames.append(tk.PhotoImage(file=source, format='gif -index %i' % (i)))
+                    except:
+                        break
+                else:
+                    try:
+                        self.AnimatedFrames.append(tk.PhotoImage(data=source, format='gif -index %i' % (i)))
+                    except:
+                        break
+                if size != (None, None):
+                    self.AnimatedFrames[i].configure
+                self.TotalAnimatedFrames += 1
+        # show the frame
+        self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
+        self.tktext_label.configure(image=self.AnimatedFrames[self.CurrentFrameNumber])
+
+
+
 
     def __del__(self):
         super().__del__()
@@ -5628,7 +5655,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
-                    # treeview.heading(heading, text=heading)
+                    treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
                         width = max(column_widths[i], len(heading))
                     else:
