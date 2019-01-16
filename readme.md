@@ -2368,10 +2368,9 @@ Starting in version 3.23 you can specify an animated GIF as an image and can ani
 
 ```python
 UpdateAnimation(source,
-				size=(None, None), 
-				time_between_frames=0)
+	         	time_between_frames=0)
 ```
-Source can be a filename or a base64 bytes variable.
+Source can be a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename 
 
     
 ## Button Element      
@@ -4981,5 +4980,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTAzOTExOTcwNiwtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbMjAyMDkxMTE0MywtMTE0ODQ5MDYyM119
 -->
