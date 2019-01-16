@@ -2370,7 +2370,9 @@ Starting in version 3.23 you can specify an animated GIF as an image and can ani
 UpdateAnimation(source,
 	         	time_between_frames=0)
 ```
-Source can be a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename 
+`source` can be a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename parameter and base64 parameter into 2 parameters.
+
+`time_between_frames` is an optional parameter.  It will keep track of the amount of time between frame changes for you to give you a smooth animation.  You can call the function as often as you want
 
     
 ## Button Element      
@@ -4980,5 +4982,6 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjAyMDkxMTE0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTE2MjE1MjA1MDYsLTExNDg0OTA2MjNdfQ
+==
 -->
