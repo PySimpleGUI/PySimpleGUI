@@ -155,9 +155,9 @@ In addition to a primary GUI, you can add a Progress Meter to your code with ONE
       
   ![easyprogressmeter](https://user-images.githubusercontent.com/13696193/44960065-83099100-aec6-11e8-8aa8-96e4b100a0e4.jpg)      
       
-You can build an async media player GUI with custom buttons in 30 lines of code.      
+It's simple to show animated GIFs.  A single line of code
       
-![media player 2](https://user-images.githubusercontent.com/13696193/44960091-eeebf980-aec6-11e8-884e-80d4447a83cd.jpg)      
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)      
       
       
 How about embedding a game inside of a GUI?  This game of Pong is written in tkinter and then dropped into the PySimpleGUI window creating a game that has an accompanying GUI.      
@@ -252,6 +252,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Clickable links    
         Transparent windows
         Movable windows  
+        Animated GIFs
         No async programming required (no callbacks to worry about)      
       
       
@@ -4982,7 +4983,8 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
       
       
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process. 
+In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE1MTQ0MjY0NiwtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTExODYxODAzNDYsLTExNDg0OTA2MjNdfQ
+==
 -->
