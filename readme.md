@@ -31,9 +31,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.22.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.23.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.22.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.23.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -155,9 +155,9 @@ In addition to a primary GUI, you can add a Progress Meter to your code with ONE
       
   ![easyprogressmeter](https://user-images.githubusercontent.com/13696193/44960065-83099100-aec6-11e8-8aa8-96e4b100a0e4.jpg)      
       
-You can build an async media player GUI with custom buttons in 30 lines of code.      
+It's simple to show animated GIFs.  A single line of code
       
-![media player 2](https://user-images.githubusercontent.com/13696193/44960091-eeebf980-aec6-11e8-884e-80d4447a83cd.jpg)      
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)      
       
       
 How about embedding a game inside of a GUI?  This game of Pong is written in tkinter and then dropped into the PySimpleGUI window creating a game that has an accompanying GUI.      
@@ -252,6 +252,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Clickable links    
         Transparent windows
         Movable windows  
+        Animated GIFs
         No async programming required (no callbacks to worry about)      
       
       
@@ -1533,7 +1534,7 @@ window = sg.Window('My window title').Layout(layout)
     
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
 
-If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call Read or Finalize prior to making those calls.
+If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
     
 #### Read(timeout=None, timeout_key='__TIMEOUT_ _ ')    
@@ -1561,10 +1562,10 @@ Sets the window's icon that will be shown on the titlebar.    Can either be a fi
 #### Fill(values_dict)    
 Populates the windows fields with the values shown in the dictionary.      
     
-#### Element(key)         (shorthand version)
-#### FindElement(key)    
+#### Element(key, silent_on_error=False)         (shorthand version)
+#### FindElement(key, silent_on_error=False)    
     
-Rerturns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
+Returns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
     
 #### FindElementWithFocus()    
 
@@ -2350,15 +2351,34 @@ Parameter definitions
     visible - if False will create image as hidden
     size_px - size of image in pixels
     
-### Image Methods    
+### `Update` Method
     
-Like other Elements, the Image Element has an update method.  Call Update if you want to change the image.    
+Like other Elements, the Image Element has an `Update` method.  Call Update if you want to change the image.    
     
     def Update(self, filename=None, data=None, visible=None):    
     
     
 Choose **either** a filename or in-ram data image to use to replace current image    
-    
+
+### `UpdateAnimation` Method  for Animated GIFs
+
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)
+
+
+Starting in version 3.23 you can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
+
+```python
+UpdateAnimation(source,
+	         	time_between_frames=0)
+```
+`source` can be a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename parameter and base64 parameter into 2 parameters.
+
+`time_between_frames` is an optional parameter.  It will keep track of the amount of time between frame changes for you to give you a smooth animation.  With this parameter you can call the function as often as you want and it will advance to the next frame only after the correct amount of time has lapsed. 
+
+You can call the method without setting the `time_between_frames` value and it will show a frame and immediately move on to the next frame.  This enables you to do the inter-frame timing.
+
+
+
     
 ## Button Element      
       
@@ -4851,6 +4871,15 @@ Emergency patch release... going out same day as previous release
 * Combobox Styling (again)
 
 
+# 3.23.0 1.23.0 16-Jan-2019
+
+* Animated GIFs!
+* Calendar Chooser stays on top of other windows
+* Fixed bug of no column headings for Tables
+* Tables now use the font parameter
+
+
+
 ### Upcoming      
 Make suggestions people!  Future release features      
       
@@ -4954,9 +4983,8 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
       
       
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
-      
-The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2NzI2ODY1NTldfQ==
+eyJoaXN0b3J5IjpbLTExODYxODAzNDYsLTExNDg0OTA2MjNdfQ
+==
 -->
