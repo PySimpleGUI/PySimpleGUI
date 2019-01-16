@@ -1880,7 +1880,7 @@ class Image(Element):
         elif visible is True:
             self.tktext_label.pack()
 
-    def UpdateAnimation(self, source, size=(None, None), time_between_frames=0):
+    def UpdateAnimation(self, source, time_between_frames=0):
         if self.AnimatedFrames is None:
             self.AnimatedFrames = []
             for i in range(1000):
@@ -1894,8 +1894,6 @@ class Image(Element):
                         self.AnimatedFrames.append(tk.PhotoImage(data=source, format='gif -index %i' % (i)))
                     except:
                         break
-                if size != (None, None):
-                    self.AnimatedFrames[i].configure
                 self.TotalAnimatedFrames += 1
             self.LastFrameTime = time.time()
         # show the frame
@@ -4927,10 +4925,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 if element.ImageFilename:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
                     photo = tk.PhotoImage(file=element.ImageFilename)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
-                        if element.ImageSubsample:
-                            photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
@@ -4938,10 +4936,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 if element.ImageData:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
                     photo = tk.PhotoImage(data=element.ImageData)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
-                        if element.ImageSubsample:
-                            photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
