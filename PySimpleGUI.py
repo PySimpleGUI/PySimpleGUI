@@ -1600,6 +1600,7 @@ class Button(Element):
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
+            root.wm_attributes("-topmost", 1)
             self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
