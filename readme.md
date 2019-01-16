@@ -2367,9 +2367,11 @@ Choose **either** a filename or in-ram data image to use to replace current imag
 Starting in version 3.23 you can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
 
 ```python
-def Update(self, value=None, disabled=None, select=None, visible=None)
+UpdateAnimation(source,
+				size=(None, None), 
+				time_between_frames=0)
 ```
-
+Source can be a filename or a base64 bytes variable.
 
     
 ## Button Element      
@@ -4979,6 +4981,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1MzE5ODQ4NTQsLTExNDg0OTA2MjNdfQ
-==
+eyJoaXN0b3J5IjpbMTAzOTExOTcwNiwtMTE0ODQ5MDYyM119
 -->
