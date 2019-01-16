@@ -5692,6 +5692,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
                 if element.RowHeight is not None:
                     ttk.Style().configure("Treeview", rowheight=element.RowHeight)
+                ttk.Style().configure("Treeview", font=font)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.BindReturnKey:
