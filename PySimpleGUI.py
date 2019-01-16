@@ -4917,10 +4917,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 if element.ImageFilename:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
                     photo = tk.PhotoImage(file=element.ImageFilename)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
-                        if element.ImageSubsample:
-                            photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
@@ -4928,10 +4928,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 if element.ImageData:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
                     photo = tk.PhotoImage(data=element.ImageData)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
-                        if element.ImageSubsample:
-                            photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
