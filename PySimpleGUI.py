@@ -1608,6 +1608,7 @@ class Button(Element):
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
+            root.wm_attributes("-topmost", 1)
             self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
@@ -1854,6 +1855,7 @@ class Image(Element):
         self.AnimatedFrames = None
         self.CurrentFrameNumber = 0
         self.TotalAnimatedFrames = 0
+        self.LastFrameTime = 0
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -1878,7 +1880,7 @@ class Image(Element):
         elif visible is True:
             self.tktext_label.pack()
 
-    def UpdateAnimation(self, source, size=(None, None)):
+    def UpdateAnimation(self, source, size=(None, None), time_between_frames=0):
         if self.AnimatedFrames is None:
             self.AnimatedFrames = []
             for i in range(1000):
@@ -1895,8 +1897,20 @@ class Image(Element):
                 if size != (None, None):
                     self.AnimatedFrames[i].configure
                 self.TotalAnimatedFrames += 1
+            self.LastFrameTime = time.time()
         # show the frame
-        self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
+
+        now = time.time()
+
+        if time_between_frames:
+            if (now - self.LastFrameTime) * 1000 > time_between_frames:
+                self.LastFrameTime = now
+                self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
+            else:                   # don't reshow the frame again if not time for new frame
+                return
+        else:
+            self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
+
         self.tktext_label.configure(image=self.AnimatedFrames[self.CurrentFrameNumber])
 
 
@@ -5687,6 +5701,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                     ttk.Style().configure("Treeview", foreground=element.TextColor)
                 if element.RowHeight is not None:
                     ttk.Style().configure("Treeview", rowheight=element.RowHeight)
+                ttk.Style().configure("Treeview", font=font)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.BindReturnKey:
