@@ -2372,7 +2372,11 @@ UpdateAnimation(source,
 ```
 `source` can be a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename parameter and base64 parameter into 2 parameters.
 
-`time_between_frames` is an optional parameter.  It will keep track of the amount of time between frame changes for you to give you a smooth animation.  With this parameter you can call the function as often as you want and it will advance to the next frame only after the correct amount of time has lapsed.  Or, you can call the method without setting this value and it will show a frame and immediately mopve on to the next frame.
+`time_between_frames` is an optional parameter.  It will keep track of the amount of time between frame changes for you to give you a smooth animation.  With this parameter you can call the function as often as you want and it will advance to the next frame only after the correct amount of time has lapsed. 
+
+You can call the method without setting the `time_between_frames` value and it will show a frame and immediately move on to the next frame.  This enables you to do the inter-frame timing.
+
+
 
     
 ## Button Element      
@@ -4978,7 +4982,7 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
       
       
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about us
+In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process. 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE2ODE3MDk4MiwtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbMTE1MTQ0MjY0NiwtMTE0ODQ5MDYyM119
 -->
