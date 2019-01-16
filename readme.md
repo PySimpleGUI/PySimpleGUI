@@ -2359,9 +2359,16 @@ Like other Elements, the Image Element has an `Update` method.  Call Update if y
     
 Choose **either** a filename or in-ram data image to use to replace current image    
 
-### `UpdateAnimation` Method    
+### `UpdateAnimation` Method  for Animated GIFs
 
-Starting in version 3.23 you can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff.
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)
+
+
+Starting in version 3.23 you can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
+
+```python
+def Update(self, value=None, disabled=None, select=None, visible=None)
+```
 
 
     
@@ -4972,5 +4979,6 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbLTE1MzE5ODQ4NTQsLTExNDg0OTA2MjNdfQ
+==
 -->
