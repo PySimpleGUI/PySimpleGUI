@@ -1872,7 +1872,7 @@ class Image(Element):
         elif visible is True:
             self.tktext_label.pack()
 
-    def UpdateAnimation(self, source, size=(None, None), time_between_frames=0):
+    def UpdateAnimation(self, source, time_between_frames=0):
         if self.AnimatedFrames is None:
             self.AnimatedFrames = []
             for i in range(1000):
@@ -1886,8 +1886,6 @@ class Image(Element):
                         self.AnimatedFrames.append(tk.PhotoImage(data=source, format='gif -index %i' % (i)))
                     except:
                         break
-                if size != (None, None):
-                    self.AnimatedFrames[i].configure
                 self.TotalAnimatedFrames += 1
             self.LastFrameTime = time.time()
         # show the frame

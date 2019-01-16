@@ -1612,6 +1612,7 @@ class Button(Element):
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
+            root.wm_attributes("-topmost", 1)
             self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
@@ -1855,6 +1856,10 @@ class Image(Element):
             print('* Warning... no image specified in Image Element! *')
         self.EnableEvents = enable_events
         self.RightClickMenu = right_click_menu
+        self.AnimatedFrames = None
+        self.CurrentFrameNumber = 0
+        self.TotalAnimatedFrames = 0
+        self.LastFrameTime = 0
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -1878,6 +1883,42 @@ class Image(Element):
             self.tktext_label.pack_forget()
         elif visible is True:
             self.tktext_label.pack()
+
+    def UpdateAnimation(self, source, size=(None, None), time_between_frames=0):
+        if self.AnimatedFrames is None:
+            self.AnimatedFrames = []
+            for i in range(1000):
+                if type(source) is not bytes:
+                    try:
+                        self.AnimatedFrames.append(tk.PhotoImage(file=source, format='gif -index %i' % (i)))
+                    except:
+                        break
+                else:
+                    try:
+                        self.AnimatedFrames.append(tk.PhotoImage(data=source, format='gif -index %i' % (i)))
+                    except:
+                        break
+                if size != (None, None):
+                    self.AnimatedFrames[i].configure
+                self.TotalAnimatedFrames += 1
+            self.LastFrameTime = time.time()
+        # show the frame
+
+        now = time.time()
+
+        if time_between_frames:
+            if (now - self.LastFrameTime) * 1000 > time_between_frames:
+                self.LastFrameTime = now
+                self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
+            else:                   # don't reshow the frame again if not time for new frame
+                return
+        else:
+            self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
+
+        self.tktext_label.configure(image=self.AnimatedFrames[self.CurrentFrameNumber])
+
+
+
 
     def __del__(self):
         super().__del__()
@@ -5051,9 +5092,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # print(style_name)
                     combostyle = tkinter.ttk.Style()
 
-
-                    # Creates a unique name for each field element(Sure there is a better way to do this)
                     unique_field = str(time.time()).replace('.','') + '.TCombobox.field'
+                    # Creates a unique name for each field element(Sure there is a better way to do this)
+                    # unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
                     # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
 
                     # print(unique_field)
@@ -5632,7 +5673,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
-                    # treeview.heading(heading, text=heading)
+                    treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
                         width = max(column_widths[i], len(heading))
                     else:
@@ -5664,6 +5705,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkinter.ttk.Style().configure("Treeview", foreground=element.TextColor)
                 if element.RowHeight is not None:
                     tkinter.ttk.Style().configure("Treeview", rowheight=element.RowHeight)
+                tkinter.ttk.Style().configure("Treeview", font=font)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
                 if element.BindReturnKey:
