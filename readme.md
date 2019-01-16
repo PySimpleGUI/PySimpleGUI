@@ -31,9 +31,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.22.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.23.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.22.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.23.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4851,6 +4851,15 @@ Emergency patch release... going out same day as previous release
 * Combobox Styling (again)
 
 
+# 3.23.0 1.23.0 16-Jan-2019
+
+* Animated GIFs!
+* Calendar Chooser stays on top of other windows
+* Fixed bug of no column headings for Tables
+* Tables now use the font parameter
+
+
+
 ### Upcoming      
 Make suggestions people!  Future release features      
       
@@ -4958,5 +4967,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjAxMTQwMTUzXX0=
+eyJoaXN0b3J5IjpbMTk2MTk5ODU0Nl19
 -->
