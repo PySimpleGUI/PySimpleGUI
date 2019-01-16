@@ -1533,7 +1533,7 @@ window = sg.Window('My window title').Layout(layout)
     
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
 
-If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call Read or Finalize prior to making those calls.
+If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
     
 #### Read(timeout=None, timeout_key='__TIMEOUT_ _ ')    
@@ -1561,10 +1561,10 @@ Sets the window's icon that will be shown on the titlebar.    Can either be a fi
 #### Fill(values_dict)    
 Populates the windows fields with the values shown in the dictionary.      
     
-#### Element(key)         (shorthand version)
-#### FindElement(key)    
+#### Element(key, silent_on_error=False)         (shorthand version)
+#### FindElement(key, silent_on_error=False)    
     
-Rerturns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
+Returns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
     
 #### FindElementWithFocus()    
 
@@ -4958,5 +4958,5 @@ In the hands of a competent programmer, this tool is **amazing**.   It's a must-
       
 The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2NzI2ODY1NTldfQ==
+eyJoaXN0b3J5IjpbMjAxMTQwMTUzXX0=
 -->
