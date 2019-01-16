@@ -155,7 +155,7 @@ In addition to a primary GUI, you can add a Progress Meter to your code with ONE
       
   ![easyprogressmeter](https://user-images.githubusercontent.com/13696193/44960065-83099100-aec6-11e8-8aa8-96e4b100a0e4.jpg)      
       
-It's simple to show animated GIFs.  A single line of code
+It's simple to show animated GIFs. 
       
 ![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)      
       
@@ -4871,7 +4871,7 @@ Emergency patch release... going out same day as previous release
 * Combobox Styling (again)
 
 
-# 3.23.0 1.23.0 16-Jan-2019
+# 3.23.0 PySimpleGUI /  1.23.0 PySimpleGUI27 16-Jan-2019
 
 * Animated GIFs!
 * Calendar Chooser stays on top of other windows
@@ -4985,6 +4985,5 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExODYxODAzNDYsLTExNDg0OTA2MjNdfQ
-==
+eyJoaXN0b3J5IjpbMzI2MjQ0MTg3LC0xMTQ4NDkwNjIzXX0=
 -->
