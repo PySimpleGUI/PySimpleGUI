@@ -771,9 +771,15 @@ def PopupAnimated(image_source,
 ```
 image_source - The GIF file specified as a string filename or a base64 variable
 message - optional text message to be displayed under the animation
-background_color - the backgrouned color to use for the window and all of the other parts of the window
+background_color - the background color to use for the window and all of the other parts of the window
+text_color - color to use for optional text
 font - font to use for the optional text
+no_titlebar - no titlebar window setting
+location - location to show the window
+alpha_channel - alpha channel to use for the window
+time_between_frames - amount of time in milliseconds to use between frames
 
+***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
     
 
 # Progress Meters!      
@@ -4986,14 +4992,6 @@ GNU Lesser General Public License (LGPL 3) +
       
 ## How Do I      
 Finally, I must thank the fine folks at How Do I.      
-https://github.com/gleitz/howdoi      
-Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**      
-Here are the steps to run that application      
-      
-    Install howdoi:      
-          pip install howdoi      
-    Test your install:      
-          python -m
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTM4NTI1MjcyNSwtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
 -->
