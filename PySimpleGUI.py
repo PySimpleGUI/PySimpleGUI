@@ -1856,6 +1856,7 @@ class Image(Element):
         self.CurrentFrameNumber = 0
         self.TotalAnimatedFrames = 0
         self.LastFrameTime = 0
+        self.Source = filename or data
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -1881,7 +1882,12 @@ class Image(Element):
             self.tktext_label.pack()
 
     def UpdateAnimation(self, source, time_between_frames=0):
+        if self.Source != source:
+            self.AnimatedFrames = None
+            self.Source = source
+
         if self.AnimatedFrames is None:
+            self.TotalAnimatedFrames = 0
             self.AnimatedFrames = []
             for i in range(1000):
                 if type(source) is not bytes:
@@ -1896,6 +1902,7 @@ class Image(Element):
                         break
                 self.TotalAnimatedFrames += 1
             self.LastFrameTime = time.time()
+            self.CurrentFrameNumber = 0
         # show the frame
 
         now = time.time()
@@ -1908,8 +1915,8 @@ class Image(Element):
                 return
         else:
             self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
-
-        self.tktext_label.configure(image=self.AnimatedFrames[self.CurrentFrameNumber])
+        image = self.AnimatedFrames[self.CurrentFrameNumber]
+        self.tktext_label.configure(image=image, width=image.width(), heigh=image.height())
 
 
 
@@ -3419,6 +3426,8 @@ class Window:
     NumOpenWindows = 0
     user_defined_icon = None
     hidden_master_root = None
+    animated_popup_dict = {}
+
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
@@ -7420,6 +7429,32 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
         return None
     else:
         return input_values[0]
+
+# --------------------------- PopupAnimated ---------------------------
+
+
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=.8, time_between_frames=0):
+
+    if image_source is None:
+        for image in Window.animated_popup_dict:
+            window = Window.animated_popup_dict[image]
+            window.Close()
+        Window.animated_popup_dict = {}
+        return
+
+    if image_source not in Window.animated_popup_dict:
+        layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
+        if message:
+            layout.Append(Text(message, background_color=background_color, text_color=text_color, font=font))
+
+        window = Window('Animated GIF', no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
+                           background_color=background_color, location=location, alpha_channel=alpha_channel).Layout(layout)
+        Window.animated_popup_dict[image_source] = window
+    else:
+        window = Window.animated_popup_dict[image_source]
+        window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
+
+    button, values = window.Read(timeout=0)
 
 
 
