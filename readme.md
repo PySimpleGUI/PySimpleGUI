@@ -31,9 +31,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.23.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.24.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.23.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.24.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4907,6 +4907,9 @@ Emergency patch release... going out same day as previous release
 * Fixed bug of no column headings for Tables
 * Tables now use the font parameter
 
+# 3.24.0 1.24.0 16-Jan-2019
+
+* PopupAnimated - A popup call for showing "loading" type of windows
 
 
 ### Upcoming      
@@ -4987,11 +4990,8 @@ GNU Lesser General Public License (LGPL 3) +
 * [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
 * [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
 * [frakman1](https://github.com/frakman1) - Sample code error
-* [deajan](https://github.com/deajan) - Custom button text for Popups
-
-      
-## How Do I      
-Finally, I must thank the fine folks at How Do I.      
+* [deajan](https://github.com/deajan) - Custom button tex
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0OD
+Q5MDYyM119
 -->
