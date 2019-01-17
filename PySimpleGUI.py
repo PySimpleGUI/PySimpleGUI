@@ -7445,16 +7445,16 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     if image_source not in Window.animated_popup_dict:
         layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
         if message:
-            layout.Append(Text(message, background_color=background_color, text_color=text_color, font=font))
+            layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
         window = Window('Animated GIF', no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                           background_color=background_color, location=location, alpha_channel=alpha_channel).Layout(layout)
+                           background_color=background_color, location=location, alpha_channel=alpha_channel).Layout(layout).Finalize()
         Window.animated_popup_dict[image_source] = window
     else:
         window = Window.animated_popup_dict[image_source]
         window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
-
-    button, values = window.Read(timeout=0)
+    window.Refresh()
+    # button, values = window.Read(timeout=0)
 
 
 
