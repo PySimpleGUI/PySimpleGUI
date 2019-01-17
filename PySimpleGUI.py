@@ -3430,7 +3430,7 @@ class Window:
 
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
@@ -3519,6 +3519,7 @@ class Window:
         self.XFound = False
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.RightClickMenu = right_click_menu
+        self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
 
     @classmethod
     def IncrementOpenCount(self):
@@ -5884,10 +5885,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=False)
+        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=False)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
-        toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
+        toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
     return
 
 
@@ -7432,7 +7433,6 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 # --------------------------- PopupAnimated ---------------------------
 
-
 def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=.8, time_between_frames=0):
 
     if image_source is None:
@@ -7448,13 +7448,13 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
         window = Window('Animated GIF', no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                           background_color=background_color, location=location, alpha_channel=alpha_channel).Layout(layout).Finalize()
+                           background_color=background_color, location=location, alpha_channel=alpha_channel, element_padding=(0,0), margins=(0,0)).Layout(layout).Finalize()
         Window.animated_popup_dict[image_source] = window
     else:
         window = Window.animated_popup_dict[image_source]
         window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
-    window.Refresh()
-    # button, values = window.Read(timeout=0)
+
+    window.Refresh()        # call refresh instead of Read to save significant CPU time
 
 
 

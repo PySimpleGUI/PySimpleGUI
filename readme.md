@@ -750,9 +750,38 @@ This is a typpical call
 ![popupgetfolder](https://user-images.githubusercontent.com/13696193/44957861-45484080-aea5-11e8-926c-cf607a45251c.jpg)      
       
     
+### PopupAnimated
+ 
+ ![ring](https://user-images.githubusercontent.com/13696193/51296743-6ee4ad00-19eb-11e9-91f5-cd8086ad1b50.gif)
+
+The animated Popup enables you to easily display a "loading" style animation specified through a GIF file that is either stored in a file or a base64 variable.
+
+```python
+def PopupAnimated(image_source, 
+			      message=None,
+			      background_color=None, 
+			      text_color=None, 
+			      font=None, 
+			      no_titlebar=True, 
+			      grab_anywhere=True, 
+			      keep_on_top=True, 
+			      location=(None, None), 
+			      alpha_channel=.8,
+			      time_between_frames=0)
+```
+image_source - The GIF file specified as a string filename or a base64 variable
+message - optional text message to be displayed under the animation
+background_color - the background color to use for the window and all of the other parts of the window
+text_color - color to use for optional text
+font - font to use for the optional text
+no_titlebar - no titlebar window setting
+location - location to show the window
+alpha_channel - alpha channel to use for the window
+time_between_frames - amount of time in milliseconds to use between frames
+
+***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
     
-    
-    
+
 # Progress Meters!      
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?      
       
@@ -4856,7 +4885,7 @@ Emergency patch release... going out same day as previous release
 * Added type hints to some portions of the code
 * Output element can be made invisible
 * Image sizing and subsample for Button images
-* Invisibility for ButtonMenus
+* Invisibility for ButtonMenusup
 * Attempt at specifying size of Column elements (limited success)
 * Table Element
   * New row_colors parameter
@@ -4963,27 +4992,6 @@ GNU Lesser General Public License (LGPL 3) +
       
 ## How Do I      
 Finally, I must thank the fine folks at How Do I.      
-https://github.com/gleitz/howdoi      
-Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**      
-Here are the steps to run that application      
-      
-    Install howdoi:      
-          pip install howdoi      
-    Test your install:      
-          python -m howdoi howdoi.py      
-    To run it:      
-          Python HowDoI.py      
-      
-The pip command is all there is to the setup.      
-      
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.      
-For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.      
-      
-![howdoiwithhistory](https://user-images.githubusercontent.com/13696193/45064009-5fd61180-b07f-11e8-8ead-eb0d1ff3a6be.jpg)      
-      
-      
-      
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzI2MjQ0MTg3LC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
 -->
