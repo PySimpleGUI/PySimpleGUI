@@ -4856,7 +4856,7 @@ Emergency patch release... going out same day as previous release
 * Added type hints to some portions of the code
 * Output element can be made invisible
 * Image sizing and subsample for Button images
-* Invisibility for ButtonMenus
+* Invisibility for ButtonMenusup
 * Attempt at specifying size of Column elements (limited success)
 * Table Element
   * New row_colors parameter
@@ -4985,5 +4985,5 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzI2MjQ0MTg3LC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbMTk2NzQxMzQwOCwtMTE0ODQ5MDYyM119
 -->
