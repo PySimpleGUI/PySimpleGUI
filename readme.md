@@ -750,6 +750,9 @@ This is a typpical call
 ![popupgetfolder](https://user-images.githubusercontent.com/13696193/44957861-45484080-aea5-11e8-926c-cf607a45251c.jpg)      
       
     
+### PopupAnimated
+
+
     
     
     
@@ -4985,5 +4988,5 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk2NzQxMzQwOCwtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTM5Mjc2ODkzMiwtMTE0ODQ5MDYyM119
 -->
