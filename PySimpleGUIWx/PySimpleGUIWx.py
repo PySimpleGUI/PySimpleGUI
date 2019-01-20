@@ -6828,14 +6828,19 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 def main():
-    # ChangeLookAndFeel('Black')
-    layout = [[Text('TEXT1',tooltip='Tooltip'), Text('TEXT2', )],
-              [Text('You should be importing it rather than running it', justification='l', size=(50, 1))],
+    ChangeLookAndFeel('GreenTan')
+    layout = [
+              [Text('Welcome to PySimpleGUI!', font='Arial 15', text_color='red')],
+              [Text('You should be importing this module rather than running it', justification='l', size=(50, 1))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
                FileBrowse()],
               [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-              [Button('Ok')]]
+              [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_',
+                        enable_events=True, readonly=False, tooltip='Combo box', disabled=False, font='Courier 18',
+                        size=(12, 1))],
+              [Spin(values=['Spin a', 'Spin b', 'Spin c'], font='ANY 15', key='_SPIN_', size=(10, 1), enable_events=True)],
+              [Button('Ok'), Button('Exit')]]
 
     window = Window('Demo window..',
                     default_element_size=(35,1),
@@ -6846,8 +6851,12 @@ def main():
                     disable_minimize=True,
                     grab_anywhere=True,
                     ).Layout(layout)
-    event, values = window.Read()
-    print(event, values)
+
+    while True:
+        event, values = window.Read()
+        print(event, values)
+        if event in (None, 'Exit'):
+            break
     window.Close()
 
 
