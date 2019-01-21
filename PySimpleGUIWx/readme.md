@@ -86,9 +86,10 @@ Remember, these are Engineering Releases.
 * Radio Button
 * Combobox
 * Spinner
-* 
+
 
 #### Features
+* System Tray
 * Debug Print
 * Invisible/Visible Elements
 * All Popups
@@ -98,8 +99,8 @@ Remember, these are Engineering Releases.
 * Multiple windows
 * Read with timeout
 * Background images
-* One Line Progress Meter (tm
-* Autoclosing windows
+* One Line Progress Meter (tm)
+* Auto-closing windows
 * No titlebar windows
 * Grab anywhere windows
 * Alpha channel
@@ -496,5 +497,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTExNjc0OTg3OV19
+eyJoaXN0b3J5IjpbNTY4NjYwMTU4XX0=
 -->
