@@ -57,6 +57,8 @@ Super-simple GUI to use... Powerfully customizable
 Home of the 1-line custom GUI & 1-line progress meter      
     
 The native GUI framework for perfectionists with deadlines    
+
+Actively developed and supported (It's 2019 and still going strong)
       
 #### Note regarding Python versions      
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.      
@@ -83,7 +85,7 @@ Your source code is completely portable from one platform to another by simply c
 
 Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.   
 
-The Windowing code is coming together with Reads now operational which means Popups work.  It's very early in the port however with MANY more Elements left to implement.  3 down, 20-something to go.
+The Windowing code is coming together with Reads now operational which means Popups work.  The elements are getting completed on a regular basis.  3 more were just checked in.  
 
 
 # Platforms
@@ -4989,9 +4991,8 @@ GNU Lesser General Public License (LGPL 3) +
 * [spectre6000](https://github.com/spectre6000) - Readme updates
 * [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
 * [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
-* [frakman1](https://github.com/frakman1) - Sample code error
-* [deajan](https://github.com/deajan) - Custom button tex
+* [frakman1](https://github.com/frakman1) - Sample
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0OD
-Q5MDYyM119
+eyJoaXN0b3J5IjpbLTIwNzIzMjA2ODIsMjY2MzY0NDE3LDQ0OT
+QzMzI0MywtMTE0ODQ5MDYyM119
 -->

@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.6.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.7.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -56,13 +56,14 @@ There are a couple of easy reasons to use PySimpleGUIWx over PySimpleGUIQt. One 
 
 Why use PySimpleGUI? 
 1.  It's simple and easy to program GUIs
-2.  You can move between the GUI frameworks tkinter, Qt and WxPython by chaning a single line of code, the import statemlkent.
-3.  It's fun
+2.  You can move between the GUI frameworks tkinter, Qt and WxPython by changing a single line of code, the import statement.
+3. Get the same custom layout and access to the same widgets but in a simple, easy to use and understand interface.
+4.  It's fun to program GUIs again
 
 
 
 
- ## The Engineering Pre-Release     Version 0.6.0
+ ## The Engineering Pre-Release     Version 0.7.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -78,12 +79,18 @@ Remember, these are Engineering Releases.
 * Input Text
 * Buttons including file/folder browse
 * Input multiline
-* Outputmultiline
+* Output multiline
 * Output
 * Columns
 * Progress Meters
+* Checkbox
+* Radio Button
+* Combobox
+* Spinner
+
 
 #### Features
+* System Tray
 * Debug Print
 * Invisible/Visible Elements
 * All Popups
@@ -93,8 +100,8 @@ Remember, these are Engineering Releases.
 * Multiple windows
 * Read with timeout
 * Background images
-* One Line Progress Meter (tm
-* Autoclosing windows
+* One Line Progress Meter (tm)
+* Auto-closing windows
 * No titlebar windows
 * Grab anywhere windows
 * Alpha channel
@@ -103,8 +110,15 @@ Remember, these are Engineering Releases.
 * Get screen size
 * Get window location
 * Change window size
+* Window move
+* Window minimize
+* Window maximize
+* Window Disable
+* Window Enable
+* Window Hide
+* Window UnHide
+* Window Bring to front
 * Look and Feel settings
-* 
 * Default Icon
 * Base64 Icons
 
@@ -248,122 +262,8 @@ When a menu item has a key and it is chosen, then entire string is returned.  If
 Starting with release 0.4.0, most of the Popup functions work.  This means you can do things like show information in a window when there's a choice made in a System Tray menu.  Or if your program finds some event it wishes to inform the user about.  For example, when new Issues are posted on a GitHub project.
 
 
-# Release Notes:  
-  
-### 0.1.0   -   25-Dec-2018
+     
 
-* Support for SystemTray
-  * Read, with or without a timeout
-  * Catch single click, double click events
-  * Source code compatiable with Qt
-
-### 0.2.0   -   26-Dec-2018
-
-* Correctly handling base64 images
-* Support for clicking message balloon
-* Can Hide and  UnHide the  icon
-
-
-### 0.3.0   -   27-Dec-2018
-
-* Hooked up buttons!
-* Browse file button is only file/folder button that works
-* Text, Input and Button elements are the only working elements
-* SystemTray can take any kind of image as icon
-* Read with Timeout (non-zero) works
-* Popups
-
-
-### 0.4.0 PySimpleGUIWx  30-Dec-2018
-
-* Text Element - colors, font work
-* Text Update method works
-* Button - Close button implemented
-* Button - Implemented basic button, correctly presented Values on Read
-* Button - Can now set font
-* Changed overall "App" variable usage for better mainloop control
-* Windows - Timeouts and non-blocking Reads work
-* Windows - Autoclose works
-* Windows - Non-blocking calls supported (timeout=0)
-* Windows - Grab anywhere works
-* Windows - No title-bar works
-* Windows - Location and Size working correctly
-* Correctly adding element padding to Text, Input, Buttons
-* Popups - most Popups work (except for the input type that involve folders)
-
-### 0.5.0 PySimpleGUIWx 6-Jan-2019
-
-* New element - Multiline input
-* New element - Multiline output
-* Borderless Windows
-* Grab anywhere windows
-* Alpha channel for windows
-* Finishing up the Text and Input Text Elements
-* Visibilty for all Elements
-* Input Get / Set focus
-* Output element - unable to get stdout to re-route
-* Debug window works
-
-
-### 0.6.0 9-Jan-2019
-
-* Column Element
-* Checkbox Element with events
-* Output Element
-* Background Image (I think works)
-* Debug Print
-* One Line Progress Meter
-* All Popups works
-
-
-
-# Design        
-# Author 
- Mike B.        
-        
-   
-# License        
- GNU Lesser General Public License (LGPL 3) +        
-        
-# AcknowledgmentsRelease     Version 0.6.0
- [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
-              
-  
-## What's working
-
-Remember, these are Engineering Releases.
-
-These Elements are "complete" or at least ready to use:
-
-* Text
-* Input Text
-* Buttons including file/folder browse
-* Input multiline
-* Outputmultiline
-* Output
-* Columns
-* Progress Meters
-* Check box
-
-And these features are working
-* All Popups
-* Keyboard key events
-* Mouse wheel events
-* Multiple windows
-* Read with timeout
-* Background images
-* Debug Print
-* One Line Progress Meter (tm)
-
-
-
-It won't take long to poke at these and hit errors.  For example, the code to do Button Updates is not complete.  Most of the time you won't be doing this. 
-
-Due to the small size of the development team, features may feel a little "thin" for a while.  The idea is to implement with enough depth that 80% of the uses are covered.  It's a multi-pass, iterative approach.  
-
-If you, the reader, are having problems or have hit a spot where something is not yet implemented, then open an Issue.  They are often completed in a day.  This process of users pushing the boundaries is what drives the priorities for development.  It's "real world" kinds of problems that have made PySimpleGUI what it is today.
-
-  
         
 ## SystemTray
 
@@ -545,7 +445,7 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * Grab anywhere windows
 * Alpha channel for windows
 * Finishing up the Text and Input Text Elements
-* Visibilty for all Elements
+* Visibility for all Elements
 * Input Get / Set focus
 * Output element - unable to get stdout to re-route
 * Debug window works
@@ -561,6 +461,31 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * One Line Progress Meter
 * All Popups works
 
+### 0.7.0 PySimpleGUIWx 21-Jan-2019
+
+* Element.Update support for disabled and tooltip
+* Combo Element
+* Newest Combo parameters
+* Radio Element
+* Newest Radio parameters (size_px, visible, enable_events)
+* Type hints on Wx widgets
+* Spinner Element
+* Newest Spinner parameters
+* Text Element visibility
+* Column Element size_px parameter (unclear if works... likely does not)
+* Column visibility
+* Column Update method added
+* System Tray - support for any kind of image format for icons
+* Window.Move
+* Window.Minimize
+* Window.Maximize
+* Window.Disable
+* Window.Enable
+* Window.Hide
+* Window.UnHide
+* Window.BringToFront
+* Popup non_blocking - returns window and button not just button
+* More comprehensive test harness when running PySimpleGUIWx.py
 
 
 # Design        
@@ -572,3 +497,6 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
  GNU Lesser General Public License (LGPL 3) +        
         
 # Acknowledgments
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTUzMjI3ODQ0OV19
+-->
