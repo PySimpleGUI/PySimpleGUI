@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.6.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.7.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -561,6 +561,31 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * One Line Progress Meter
 * All Popups works
 
+### 0.7.0 PySimpleGUIWx 21-Jan-2019
+
+* Element.Update support for disabled and tooltip
+* Combo Element
+* Newest Combo paramters
+* Radio Element
+* Newest Radio paramters (size_px, visible, enable_events)
+* Type hints on Wx widgets
+* Spinner Element
+* Newest Spinner paramters
+* Text Element visibility
+* Column Element size_px parameter (unclear if works... likely does not)
+* Column visibility
+* Column Update method added
+* System Tray - support for any kind of image format for icons
+* Window.Move
+* Window.Minimize
+* Window.Maximize
+* Window.Disable
+* Window.Enable
+* Window.Hide
+* Window.UnHide
+* Window.BringToFront
+* Popup non_blocking - returns window and button not just button
+* More comprehensive test harness when running PySimpleGUIWx.py
 
 
 # Design        
@@ -572,3 +597,6 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
  GNU Lesser General Public License (LGPL 3) +        
         
 # Acknowledgments
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNjM3MDE5XX0=
+-->
