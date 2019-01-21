@@ -104,7 +104,7 @@ Remember, these are Engineering Releases.
 * Get window location
 * Change window size
 * Look and Feel settings
-* 
+
 * Default Icon
 * Base64 Icons
 
@@ -248,130 +248,8 @@ When a menu item has a key and it is chosen, then entire string is returned.  If
 Starting with release 0.4.0, most of the Popup functions work.  This means you can do things like show information in a window when there's a choice made in a System Tray menu.  Or if your program finds some event it wishes to inform the user about.  For example, when new Issues are posted on a GitHub project.
 
 
-# Release Notes:  
-  
-### 0.1.0   -   25-Dec-2018
+     
 
-* Support for SystemTray
-  * Read, with or without a timeout
-  * Catch single click, double click events
-  * Source code compatiable with Qt
-
-### 0.2.0   -   26-Dec-2018
-
-* Correctly handling base64 images
-* Support for clicking message balloon
-* Can Hide and  UnHide the  icon
-
-
-### 0.3.0   -   27-Dec-2018
-
-* Hooked up buttons!
-* Browse file button is only file/folder button that works
-* Text, Input and Button elements are the only working elements
-* SystemTray can take any kind of image as icon
-* Read with Timeout (non-zero) works
-* Popups
-
-
-### 0.4.0 PySimpleGUIWx  30-Dec-2018
-
-* Text Element - colors, font work
-* Text Update method works
-* Button - Close button implemented
-* Button - Implemented basic button, correctly presented Values on Read
-* Button - Can now set font
-* Changed overall "App" variable usage for better mainloop control
-* Windows - Timeouts and non-blocking Reads work
-* Windows - Autoclose works
-* Windows - Non-blocking calls supported (timeout=0)
-* Windows - Grab anywhere works
-* Windows - No title-bar works
-* Windows - Location and Size working correctly
-* Correctly adding element padding to Text, Input, Buttons
-* Popups - most Popups work (except for the input type that involve folders)
-
-### 0.5.0 PySimpleGUIWx 6-Jan-2019
-
-* New element - Multiline input
-* New element - Multiline output
-* Borderless Windows
-* Grab anywhere windows
-* Alpha channel for windows
-* Finishing up the Text and Input Text Elements
-* Visibilty for all Elements
-* Input Get / Set focus
-* Output element - unable to get stdout to re-route
-* Debug window works
-
-
-### 0.6.0 9-Jan-2019
-
-* Column Element
-* Checkbox Element with events
-* Output Element
-* Background Image (I think works)
-* Debug Print
-* One Line Progress Meter
-* All Popups works
-
-
-
-# Design        
-# Author 
- Mike B.        
-        
-   
-# License        
- GNU Lesser General Public License (LGPL 3) +        
-        
-# Version 0.7.0
- [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
-              
-  
-## What's working
-
-Remember, these are Engineering Releases.
-
-These Elements are "complete" or at least ready to use:
-
-* Text
-* Input Text
-* Buttons including file/folder browse
-* Input multiline
-* Output multiline
-* Output
-* Columns
-* Progress Meters
-* Check box
-* Radio Buttons
-* Combobox
-* Spinner
-
-
-And these features are working
-* System Tray
-* All Popups
-* Keyboard key events
-* Mouse wheel events
-* Multiple windows
-* Read with timeout
-* Background images
-* Debug Print
-* One Line Progress Meter (tm)
-* Window operations - move, minimize, maximize, disable, bring to front, hide, unhide
-* Fonts, colors, tooltips
-
-
-
-
-It won't take long to poke at these and hit errors.  For example, the code to do Button Updates is not complete.  Most of the time you won't be doing this. 
-
-Due to the small size of the development team, features may feel a little "thin" for a while.  The idea is to implement with enough depth that 80% of the uses are covered.  It's a multi-pass, iterative approach.  
-
-If you, the reader, are having problems or have hit a spot where something is not yet implemented, then open an Issue.  They are often completed in a day.  This process of users pushing the boundaries is what drives the priorities for development.  It's "real world" kinds of problems that have made PySimpleGUI what it is today.
-
-  
         
 ## SystemTray
 
@@ -606,5 +484,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1MzUzNzE1MzNdfQ==
+eyJoaXN0b3J5IjpbNjg2NjIyOTA4XX0=
 -->
