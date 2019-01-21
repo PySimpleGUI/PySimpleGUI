@@ -78,10 +78,15 @@ Remember, these are Engineering Releases.
 * Input Text
 * Buttons including file/folder browse
 * Input multiline
-* Outputmultiline
+* Output multiline
 * Output
 * Columns
 * Progress Meters
+* Checkbox
+* Radio Button
+* Combobox
+* Spinner
+* 
 
 #### Features
 * Debug Print
@@ -103,8 +108,15 @@ Remember, these are Engineering Releases.
 * Get screen size
 * Get window location
 * Change window size
+* Window move
+* Window minimize
+* Window maximize
+* Window Disable
+* Window Enable
+* Window Hide
+* Window UnHide
+* Window Bring to front
 * Look and Feel settings
-
 * Default Icon
 * Base64 Icons
 
@@ -484,5 +496,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjg2NjIyOTA4XX0=
+eyJoaXN0b3J5IjpbMTExNjc0OTg3OV19
 -->
