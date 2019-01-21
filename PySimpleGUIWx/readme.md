@@ -344,6 +344,7 @@ These Elements are "complete" or at least ready to use:
 * Columns
 * Progress Meters
 * Check box
+* Combo
 
 And these features are working
 * All Popups
@@ -354,6 +355,7 @@ And these features are working
 * Background images
 * Debug Print
 * One Line Progress Meter (tm)
+* 
 
 
 
@@ -545,7 +547,7 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * Grab anywhere windows
 * Alpha channel for windows
 * Finishing up the Text and Input Text Elements
-* Visibilty for all Elements
+* Visibility for all Elements
 * Input Get / Set focus
 * Output element - unable to get stdout to re-route
 * Debug window works
@@ -565,12 +567,12 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 
 * Element.Update support for disabled and tooltip
 * Combo Element
-* Newest Combo paramters
+* Newest Combo parameters
 * Radio Element
-* Newest Radio paramters (size_px, visible, enable_events)
+* Newest Radio parameters (size_px, visible, enable_events)
 * Type hints on Wx widgets
 * Spinner Element
-* Newest Spinner paramters
+* Newest Spinner parameters
 * Text Element visibility
 * Column Element size_px parameter (unclear if works... likely does not)
 * Column visibility
@@ -598,5 +600,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjM3MDE5XX0=
+eyJoaXN0b3J5IjpbLTI5NzY5OTA1M119
 -->
