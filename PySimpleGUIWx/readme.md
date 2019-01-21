@@ -56,13 +56,14 @@ There are a couple of easy reasons to use PySimpleGUIWx over PySimpleGUIQt. One 
 
 Why use PySimpleGUI? 
 1.  It's simple and easy to program GUIs
-2.  You can move between the GUI frameworks tkinter, Qt and WxPython by chaning a single line of code, the import statemlkent.
-3.  It's fun
+2.  You can move between the GUI frameworks tkinter, Qt and WxPython by changing a single line of code, the import statement.
+3. Get the same custom layoutg
+4.  It's fun to program GUIs again
 
 
 
 
- ## The Engineering Pre-Release     Version 0.6.0
+ ## The Engineering Pre-Release     Version 0.7.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -497,5 +498,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTY4NjYwMTU4XX0=
+eyJoaXN0b3J5IjpbLTEwNzMzMzEyNzFdfQ==
 -->
