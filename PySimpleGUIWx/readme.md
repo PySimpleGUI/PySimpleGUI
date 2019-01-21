@@ -339,12 +339,15 @@ These Elements are "complete" or at least ready to use:
 * Input Text
 * Buttons including file/folder browse
 * Input multiline
-* Outputmultiline
+* Output multiline
 * Output
 * Columns
 * Progress Meters
 * Check box
-* Combo
+* Radio Buttons
+* Combobox
+* Spinner
+
 
 And these features are working
 * All Popups
@@ -355,7 +358,9 @@ And these features are working
 * Background images
 * Debug Print
 * One Line Progress Meter (tm)
-* 
+* Window operations - move, minimize, maximize, disable, bring to front, hide, unhide
+* Fonts, colors, tooltips
+
 
 
 
@@ -600,5 +605,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI5NzY5OTA1M119
+eyJoaXN0b3J5IjpbMTM1NzU0MTgxMl19
 -->
