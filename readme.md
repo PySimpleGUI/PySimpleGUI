@@ -83,10 +83,13 @@ Your source code is completely portable from one platform to another by simply c
 
 # WxPython Version
 
-Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.   
+Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.    The System Tray feature is complete and working very well.
 
-The Windowing code is coming together with Reads now operational which means Popups work.  The elements are getting completed on a regular basis.  3 more were just checked in.  
+The Windowing code is coming together with Reads now operational which means Popups work.  The elements are getting completed on a regular basis.  3 more were just checked in. At least 1 new element is getting completed a week.  
 
+# Support
+
+PySimpleGUI is an active project.  Bugs are fixed, features are added, often.  Should you run into trouble, open an issue on the GitHub site and you'll receive help by someone in the community.  
 
 # Platforms
  
@@ -4988,11 +4991,8 @@ GNU Lesser General Public License (LGPL 3) +
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
 * [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
 * Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
-* [spectre6000](https://github.com/spectre6000) - Readme updates
-* [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
-* [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
-* [frakman1](https://github.com/frakman1) - Sample
+* [spectre6000](https://github.com/spectre
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNzIzMjA2ODIsMjY2MzY0NDE3LDQ0OT
-QzMzI0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbMTE2NjQwNTUyLDI2NjM2NDQxNyw0NDk0Mz
+MyNDMsLTExNDg0OTA2MjNdfQ==
 -->
