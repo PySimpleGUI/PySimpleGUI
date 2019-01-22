@@ -1,7 +1,7 @@
-        
+ 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
         
-[![Downloads](http://pepy.tech/badge/pysimpleguiwx)](http://pepy.tech/project/pysimplegui)        
+![Downloads](http://pepy.tech/badge/pysimpleguiwx)](http://pepy.tech/project/pysimplegui)        
   
       
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-1000-yellow.svg)  
@@ -9,38 +9,6 @@
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.7.0-orange.svg?longCache=true&style=for-the-badge)        
-        
-                
-        
-# PySimpleGUIWx        
-
-The WxPython port of PySimpleGUI
-
-## Why?
-
-Why use PySimpleGUIWx?  
-
-There are a couple of easy reasons to use PySimpleGUIWx over PySimpleGUIQt. One is footprint.  PyInstaller EXE for PySimpleGUIWx is 9 MB, on Qt it's 240 MB.  Another is cool widgets.  WxPython has some nice advanced widgets that will hopefully be offered thought PySimpleGUIWx.
-
-Why use PySimpleGUI? 
-1.  It's simple and easy to program GUIs
-2.  You can move between the GUI frameworks tkinter, Qt and WxPython by chaning a single line of code, the import statemlkent.
-3.  It's fun
-
-
-
-
- ## The Engineering Pre-        
-![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
-        
-[![Downloads](http://pepy.tech/badge/pysimpleguiwx)](http://pepy.tech/project/pysimplegui)        
-  
-      
- ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-1000-yellow.svg)  
-         
- ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
-        
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.6.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -380,5 +348,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjg3MTU5NTA0XX0=
+eyJoaXN0b3J5IjpbODg2MzA1Mjk2XX0=
 -->
