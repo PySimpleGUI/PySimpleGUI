@@ -48,7 +48,7 @@ DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEA
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 DEFAULT_WINDOW_ICON = 'default_icon.ico'
-DEFAULT_ELEMENT_SIZE = (45, 1)  # In CHARACTERS
+DEFAULT_ELEMENT_SIZE = (250, 26)  # In pixels
 DEFAULT_BUTTON_ELEMENT_SIZE = (10, 1)  # In CHARACTERS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (5, 3)  # Padding between elements (row, col) in pixels
@@ -464,6 +464,7 @@ class Element():
 
 
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None, disabled=None, tooltip=None):
+        return
         if font:
             widget.SetFont(font_to_wx_font(font))
         if text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -1024,49 +1025,56 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, relief=None, font=None,
-                 text_color=None, background_color=None, justification=None, pad=None, key=None, tooltip=None):
-        '''
-        Text Element
+    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, border_width=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
+        """
+        Text
         :param text:
         :param size:
         :param auto_size_text:
         :param click_submits:
+        :param enable_events:
         :param relief:
         :param font:
         :param text_color:
         :param background_color:
         :param justification:
         :param pad:
+        :param margins:
         :param key:
         :param tooltip:
-        '''
+        :param visible:
+        :param size_px:
+        """
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
-        self.ClickSubmits = click_submits
+        self.ClickSubmits = click_submits or enable_events
+        self.Margins = margins
+        self.size_px = size_px
         if background_color is None:
             bg = DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
         else:
             bg = background_color
-        self.Widget = None  # type: remi.gui.Label
+        pixelsize = size
+        if size[1] is not None and size[1] < 10:
+            pixelsize = size[0]*10, size[1]*20
+        self.WxStaticText:wx.StaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
 
-        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, visible=visible)
         return
 
-    def Update(self, value=None, background_color=None, text_color=None, font=None):
+    def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
-            self.DisplayText = value
-            stringvar = self.TKStringVar
-            stringvar.set(value)
-        if background_color is not None:
-            self.TKText.configure(background=background_color)
-        if text_color is not None:
-            self.TKText.configure(fg=text_color)
-        if font is not None:
-            self.TKText.configure(font=font)
+            self.Widget.set_text(value)
+        # if background_color is not None:
+        #     self.TKText.configure(background=background_color)
+        # if text_color is not None:
+        #     self.TKText.configure(fg=text_color)
+        # if font is not None:
+        #     self.TKText.configure(font=font)
 
     def __del__(self):
         super().__del__()
@@ -1442,8 +1450,7 @@ class Button(Element):
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, font=None, visible=None):
         if text is not None:
-            self.QT_QPushButton.setText(str(text))
-            self.ButtonText = text
+            self.Widget.set_text(text)
         if self.ParentForm.Font and (self.Font == DEFAULT_FONT or not self.Font):
             font = self.ParentForm.Font
         elif self.Font is not None:
@@ -1465,11 +1472,11 @@ class Button(Element):
                 self.QT_QPushButton.setDisabled(False)
         # fg, bg = self.ButtonColor
         # print(f'Button update fg, bg {fg}, {bg}')
-        super().Update(self.WxButton, background_color=bg, text_color=fg, font=font, visible=visible)
+        super().Update(self.Widget, background_color=bg, text_color=fg, font=font, visible=visible)
 
 
     def GetText(self):
-        return self.ButtonText
+        return self.Widget.get_text()
 
     def SetFocus(self):
         self.QT_QPushButton.setFocus()
@@ -2632,10 +2639,11 @@ class Window:
         self.BackgroundImage = background_image
         self.XFound = False
         self.DisableMinimize = disable_minimize
-        self.App = None  # type: wx.App
         self.MasterFrame = None  # type: wx.Frame
         self.MasterPanel = None  # type wx.Panel
         self.IgnoreClose = False
+        self.thread_id = None
+        self.App = None         # type: Window.MyApp
         self.MessageQueue = Queue()
 
     @classmethod
@@ -2760,7 +2768,10 @@ class Window:
             except:             # timeout
                 self.LastButtonClicked = timeout_key
         elif timeout == 0:
-            self.LastButtonClicked = self.MessageQueue.get_nowait()
+            try:
+                self.LastButtonClicked = self.MessageQueue.get_nowait()
+            except:
+                self.LastButtonClicked = timeout_key
         else:
             self.LastButtonClicked = self.MessageQueue.get()
         # print('--------------------- BACK FROM MESSAGE QUEUE GET ----------------------')
@@ -2988,12 +2999,14 @@ class Window:
         return None
 
     def Close(self):
+        self.App.close()
         if self.TKrootDestroyed:
             return
         # try:
         #     self.MasterFrame.Close()
         # except:
         #     print('error closing window')
+
 
     CloseNonBlockingForm = Close
     CloseNonBlocking = Close
@@ -3096,13 +3109,12 @@ class Window:
                 element.__del__()
 
 
-    def remi_thread(self, window):
-        # print('In Remi Thread....', window)
+    def remi_thread(self):
         logging.getLogger('remi').setLevel(level=logging.CRITICAL)
         logging.getLogger('remi').disabled = True
         logging.disable(logging.CRITICAL)
-        remi.start(window.MyApp, debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(window,))  # standalone=True)
-        window.MessageQueue.put(None)
+        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
+        self.MessageQueue.put(None)
 
     class MyApp(remi.App):
         def __init__(self,*args):
@@ -3110,6 +3122,7 @@ class Window:
             # print(args[-1])
             userdata = args[-1].userdata
             self.window = userdata[0]       # type: Window
+            self.window.App = self
             super(Window.MyApp, self).__init__(*args)
 
         def main(self, name='world'):
@@ -3117,6 +3130,8 @@ class Window:
             wid = remi.gui.VBox()
             wid.style['justify-content'] = 'flex-start'
             wid.style['align-items'] = 'baseline'
+            wid.style['background-color'] = self.window.BackgroundColor
+
             PackFormIntoFrame(self.window, wid, self.window)
             #
             # lbl = remi.gui.Label("Close or reload the page, the console thread will stop automatically.")
@@ -3182,7 +3197,7 @@ def convert_tkinter_size_to_Wx(size):
     return qtsize
 
 
-def font_to_wx_font(font):
+def font_parse_string(font):
     """
     Convert from font string/tyuple into a Qt style sheet string
     :param font: "Arial 10 Bold" or ('Arial', 10, 'Bold)
@@ -3196,23 +3211,15 @@ def font_to_wx_font(font):
         _font = font.split(' ')
     else:
         _font = font
-    name = _font[0]
     family = _font[0]
     point_size = int(_font[1])
 
-    # style = _font[2]
+    style = _font[2:] if len(_font) > 1 else None
 
-    underline =  'underline' in _font[2:]
-    bold =  'bold' in _font
+    # underline =  'underline' in _font[2:]
+    # bold =  'bold' in _font
 
-    wxfont = wx.Font(point_size,
-                     wx.FONTFAMILY_DEFAULT,
-                     wx.FONTSTYLE_NORMAL,
-                     wx.FONTWEIGHT_BOLD if bold else wx.FONTWEIGHT_NORMAL,
-                     underline,
-                     faceName=family)
-
-    return wxfont
+    return family, point_size, style
 
 
 
@@ -3860,6 +3867,50 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
 
+    def pad_widget(widget):
+        lrsizer = wx.BoxSizer(wx.HORIZONTAL)
+        if full_element_pad[1] == full_element_pad[3]:  # if right = left
+            lrsizer.Add(widget, 0, wx.LEFT | wx.RIGHT, border=full_element_pad[1])
+        else:
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
+            sizer.Add(widget, 0, wx.LEFT, border=full_element_pad[3])
+            lrsizer.Add(sizer, 0, wx.RIGHT, border=full_element_pad[1])
+
+        top_bottom_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        if full_element_pad[0] == full_element_pad[2]:  # if top = bottom
+            top_bottom_sizer.Add(lrsizer, 0, wx.TOP | wx.BOTTOM, border=full_element_pad[0])
+        else:
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
+            sizer.Add(lrsizer, 0, wx.TOP, border=full_element_pad[0])
+            top_bottom_sizer.Add(sizer, 0, wx.BOTTOM, border=full_element_pad[2])
+        return top_bottom_sizer
+
+    #
+    # font, text color, background color, size, disabled, visible, tooltip
+    #
+    def do_font_and_color(widget):
+        font_info = font_parse_string(font)  # family, point size, other
+        widget.style['font-family'] = font_info[0]
+        if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.style['background-color'] = element.BackgroundColor
+        if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.style['color'] = element.TextColor
+        widget.style['font-size'] = '{}px'.format(font_info[1])
+        size = convert_tkinter_size_to_Wx(element_size)
+        widget.style['height'] = '{}px'.format(size[1])
+        widget.style['width'] = '{}px'.format(size[0])
+        #
+        # widget.SetMinSize(element_size)
+        # if element.Disabled:
+        #     widget.Enable(False)
+        # if not element.Visible:
+        #     widget.Hide()
+        # if element.Tooltip:
+        #     widget.SetToolTip(element.Tooltip)
+
+
+
+
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
@@ -3875,6 +3926,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         tk_row_frame = remi.gui.HBox()        # TODO Get horizontal ROW widget to put others into
         tk_row_frame.style['justify-content'] = 'flex-start'
         tk_row_frame.style['align-items'] = 'baseline'
+        tk_row_frame.style['background-color'] = toplevel_form.BackgroundColor
+
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
@@ -3933,6 +3986,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element   # type: Text
                 element.Widget = remi.gui.Label(element.DisplayText)
                 element.Widget.set_layout_orientation(True)
+                do_font_and_color(element.Widget)
+                if element.Justification:
+                    if element.Justification.startswith('c'):
+                        element.Widget.style['text-align'] = 'center'
+                    elif element.Justification.startswith('r'):
+                        element.Widget.style['text-align'] = 'right'
+
                 tk_row_frame.append(element.Widget)
 
                 # auto_size_text = element.AutoSizeText
@@ -3986,8 +4046,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
                 size = convert_tkinter_size_to_Wx(element_size)
+                print(size)
                 element.Widget = remi.gui.Button(element.ButtonText, width=size[0], height=size[1], margin='10px')
                 element.Widget.onclick.connect(element.ButtonCallBack)
+                do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
 
             #     stringvar = tk.StringVar()
@@ -4069,6 +4131,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget = remi.gui.TextInput()
                 if element.DefaultText:
                     element.Widget.set_value(element.DefaultText)
+                do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
 
                 # default_text = element.DefaultText
@@ -4795,8 +4858,9 @@ def StartupTK(window:Window):
     # master.update_idletasks()  # don't forget
 
 
-    thread = threading.Thread(target=window.remi_thread, args=(window,), daemon=True)
-    thread.start()
+    window.thread_id = threading.Thread(target=window.remi_thread, daemon=True)
+    window.thread_id.daemon = True
+    window.thread_id.start()
     item = window.MessageQueue.get()        # Get the layout complete message
 
 
@@ -6393,7 +6457,8 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
 
 def main():
-    layout = [[Text('You are running the PySimpleGUI.py file itself')],
+    SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
+    layout = [[Text('You are running the PySimpleGUI.py file itself', background_color='blue', font='Courier 20')],
               [Text('You should be importing it rather than running it', size=(50, 2))],
               [Text('Here is your sample input window....')],
               [Text('Source Folder',justification='right'), InputText('Source', focus=True),
@@ -6401,7 +6466,7 @@ def main():
               [Text('Destination Folder', justification='right'), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel()]]
 
-    window = Window('Demo window..').Layout(layout)
+    window = Window('Demo window..', background_color='blue', font='Courier 18').Layout(layout)
     while True:
         event, values = window.Read()
         print(event, values)
