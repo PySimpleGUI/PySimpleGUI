@@ -4046,7 +4046,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
                 size = convert_tkinter_size_to_Wx(element_size)
-                print(size)
                 element.Widget = remi.gui.Button(element.ButtonText, width=size[0], height=size[1], margin='10px')
                 element.Widget.onclick.connect(element.ButtonCallBack)
                 do_font_and_color(element.Widget)
