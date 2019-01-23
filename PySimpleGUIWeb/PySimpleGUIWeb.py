@@ -3110,10 +3110,17 @@ class Window:
 
 
     def remi_thread(self):
-        logging.getLogger('remi').setLevel(level=logging.CRITICAL)
         logging.getLogger('remi').disabled = True
-        logging.disable(logging.CRITICAL)
-        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
+        logging.getLogger('remi.server.ws').disabled = True
+        logging.getLogger('remi.server').disabled = True
+        logging.getLogger('remi.request').disabled = True
+        # use this code to start the application instead of the **start** call
+        s = remi.Server(self.MyApp, start=True, title=self.Title, address='0.0.0.0', port=8081, start_browser=True, userdata=(self,),  multiple_instance=True, update_interval=.001)
+
+        # logging.getLogger('remi').setLevel(level=logging.CRITICAL)
+        # logging.getLogger('remi').disabled = True
+        # logging.disable(logging.CRITICAL)
+        # remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
         self.MessageQueue.put(None)
 
     class MyApp(remi.App):
@@ -3130,7 +3137,8 @@ class Window:
             wid = remi.gui.VBox()
             wid.style['justify-content'] = 'flex-start'
             wid.style['align-items'] = 'baseline'
-            wid.style['background-color'] = self.window.BackgroundColor
+            if self.window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                wid.style['background-color'] = self.window.BackgroundColor
 
             PackFormIntoFrame(self.window, wid, self.window)
             #
@@ -3929,7 +3937,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         tk_row_frame = remi.gui.HBox()        # TODO Get horizontal ROW widget to put others into
         tk_row_frame.style['justify-content'] = 'flex-start'
         tk_row_frame.style['align-items'] = 'baseline'
-        tk_row_frame.style['background-color'] = toplevel_form.BackgroundColor
+        if toplevel_form.BackgroundColor not in(None, COLOR_SYSTEM_DEFAULT):
+            tk_row_frame.style['background-color'] = toplevel_form.BackgroundColor
 
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
@@ -6458,16 +6467,16 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
 
 def main():
-    SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
-    layout = [[Text('You are running the PySimpleGUI.py file itself', background_color='blue', font='Courier 20')],
+    # SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
+    layout = [[Text('You are running the PySimpleGUI.py file itself', font='Courier 20')],
               [Text('You should be importing it rather than running it', size=(60, 1))],
-              [Text('Here is your sample input window....')],
-              [Text('Source Folder',justification='right', size=(40,1)), InputText('Source', focus=True, disabled=True),
+              [Text('Here is your sample window....')],
+              [Text('Source Folder', justification='right', size=(40,1)), InputText('Source', focus=True, disabled=True),
                FolderBrowse()],
               [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel(disabled=True), Exit()]]
 
-    window = Window('Demo window..', background_color='blue', font='Courier 18').Layout(layout)
+    window = Window('Demo window..', font='Courier 18').Layout(layout)
     while True:
         event, values = window.Read()
         print(event, values)

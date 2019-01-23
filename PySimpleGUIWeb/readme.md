@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.1.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -28,7 +28,7 @@ PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.
 
 At the moment (22-Jan-2019) the port has barely begun but it's far enough along to see that it's going to work.  The Text, Input Text and Button elements are "functional".  You can run simple PySimpleGUI programs and they actually WORK correctly.
 
-## Engineering Pre-Release   Version 0.1.0
+## Engineering Pre-Release   Version 0.2.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -69,21 +69,39 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python is not supported.
   
 ## What Works
 
-Text Element
-Input Text Element
-Button Element
+* Text Element
+* Input Text Element
+* Button Element
 
-Things like colors, fonts, etc, are not yet completed.  This is SO early in the process, but it's exciting to see at the same time.
+
 
 # Release Notes:  
   
-### 0.1.0   -   22-Jan-2019
+## 0.1.0 PySimpleGUIWeb 22-Jan-2019
 
 * Initial release
 * Text Element
 * Input Text Element
 * Button Element
 * Window class
+
+
+## 0.2.0 PySimpleGUIWeb 23-Jan-2019
+
+Day 2 of development brings fonts, sizes, and colors...
+
+* For all elements (Text, Input Text, Button):
+	* Font family
+	* Font size
+	* Text Color
+	* Background Color
+	* Disable
+	* Size
+* Button Color
+* Read timeouts (zero, non-zero, None/pend)
+* Window close
+* Window background color
+
 
 
 # Design        
