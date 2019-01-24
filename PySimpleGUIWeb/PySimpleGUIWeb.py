@@ -129,15 +129,18 @@ DEFAULT_SLIDER_BORDER_WIDTH = 1
 DEFAULT_SLIDER_RELIEF = 00000
 DEFAULT_FRAME_RELIEF = 00000
 
-DEFAULT_LISTBOX_SELECT_MODE = 00000
-SELECT_MODE_MULTIPLE = 00000
+
+DEFAULT_LISTBOX_SELECT_MODE = 'extended'
+SELECT_MODE_MULTIPLE = 'multiple'
 LISTBOX_SELECT_MODE_MULTIPLE = 'multiple'
-SELECT_MODE_BROWSE = 00000
+SELECT_MODE_BROWSE = 'browse'
 LISTBOX_SELECT_MODE_BROWSE = 'browse'
-SELECT_MODE_EXTENDED =00000
+SELECT_MODE_EXTENDED = 'extended'
 LISTBOX_SELECT_MODE_EXTENDED = 'extended'
-SELECT_MODE_SINGLE = 00000
+SELECT_MODE_SINGLE = 'single'
 LISTBOX_SELECT_MODE_SINGLE = 'single'
+SELECT_MODE_CONTIGUOUS = 'contiguous'
+LISTBOX_SELECT_MODE_CONTIGUOUS = 'contiguous'
 
 TABLE_SELECT_MODE_NONE = 00000
 TABLE_SELECT_MODE_BROWSE = 00000
@@ -494,7 +497,8 @@ class Element():
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False, do_not_clear=False, key=None, focus=False, pad=None):
+                 change_submits=False, enable_events=False,
+                 do_not_clear=False, key=None, focus=False, pad=None, visible=True, size_px=(None, None)):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -508,12 +512,14 @@ class InputText(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
-        self.Justification = justification
+        self.Justification = justification or 'left'
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
-        self.Widget = None          # type: remi.gui.TextInput
+        self.ChangeSubmits = change_submits or enable_events
+        self.QT_QLineEdit = None
+        self.ValueWasChanged = False
+        self.Widget = None  # type: remi.gui.TextInput
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
-                         font=font, tooltip=tooltip)
+                         font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
     def Update(self, value=None, disabled=None):
         if disabled is True:
@@ -548,10 +554,10 @@ Input = InputText
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
-class InputCombo(Element):
+class Combo(Element):
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None,
-                 readonly=False, font=None):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None,
+                 readonly=False, visible_items=10, font=None, auto_complete=True, visible=True, size_px=(None,None)):
         '''
         Input Combo Box Element (also called Dropdown box)
         :param values:
@@ -561,63 +567,52 @@ class InputCombo(Element):
         '''
         self.Values = values
         self.DefaultValue = default_value
-        self.ChangeSubmits = change_submits
-        self.TKCombo = None
+        self.ChangeSubmits = change_submits or enable_events
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
         self.Readonly = readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
-
+        self.VisibleItems = visible_items
+        self.AutoComplete = auto_complete
+        self.Widget = None          # type: remi.gui.DropDown
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None):
+
+    def QtCurrentItemChanged(self, state):
+        if self.ChangeSubmits:
+            element_callback_quit_mainloop(self)
+
+
+
+    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
-            try:
-                self.TKCombo['values'] = values
-                self.TKCombo.current(0)
-            except:
-                pass
-            self.Values = values
-        if value is not None:
-            for index, v in enumerate(self.Values):
-                if v == value:
-                    try:
-                        self.TKCombo.current(index)
-                    except:
-                        pass
-                    self.DefaultValue = value
-                    break
+            self.WxComboBox.Set(values)
+        if value:
+            self.WxComboBox.SetSelection(self.WxComboBox.FindString(value))
         if set_to_index is not None:
-            try:
-                self.TKCombo.current(set_to_index)
-                self.DefaultValue = self.Values[set_to_index]
-            except:
-                pass
-        if disabled == True:
-            self.TKCombo['state'] = 'disable'
-        elif disabled == False:
-            self.TKCombo['state'] = 'enable'
-            if readonly is not None:
-                self.Readonly = readonly
-            if self.Readonly:
-                self.TKCombo['state'] = 'readonly'
-        if font is not None:
-            self.TKText.configure(font=font)
+            self.WxComboBox.SetSelection(set_to_index)
+        if disabled is True:
+            self.WxComboBox.Enable(False)
+        elif disabled is False:
+            self.WxComboBox.Enable(True)
+        if readonly is not None:
+            self.WxComboBox.SetWindowStyle(wx.CB_READONLY)
+
+        super().Update(self.WxComboBox, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
 
     def __del__(self):
-        try:
-            self.TKCombo.__del__()
-        except:
-            pass
+
         super().__del__()
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
-Combo = InputCombo
-DropDown = InputCombo
-Drop = InputCombo
+InputCombo = Combo
+DropDown = Combo
+Drop = Combo
 
 
 # ---------------------------------------------------------------------- #
@@ -678,13 +673,13 @@ class OptionMenu(Element):
 InputOptionMenu = OptionMenu
 
 
+
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False,
-                 size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
-                 text_color=None, key=None, pad=None, tooltip=None):
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
+                 text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Listbox Element
         :param values:
@@ -705,7 +700,7 @@ class Listbox(Element):
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
         self.Disabled = disabled
         if select_mode == LISTBOX_SELECT_MODE_BROWSE:
@@ -716,47 +711,54 @@ class Listbox(Element):
             self.SelectMode = SELECT_MODE_MULTIPLE
         elif select_mode == LISTBOX_SELECT_MODE_SINGLE:
             self.SelectMode = SELECT_MODE_SINGLE
+        elif select_mode == LISTBOX_SELECT_MODE_CONTIGUOUS:
+            self.SelectMode = SELECT_MODE_CONTIGUOUS
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.Widget = None          # type: remi.gui.ListView
+        tsize = size                # convert tkinter size to pixels
+        if size[0] is not None and size[0] < 100:
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
 
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
-                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=tsize, auto_size_text=auto_size_text, font=font,
+                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
 
-    def Update(self, values=None, disabled=None):
-        if disabled == True:
-            self.TKListbox.configure(state='disabled')
-        elif disabled == False:
-            self.TKListbox.configure(state='normal')
+    def QtCurrentRowChanged(self, state):
+        if self.ChangeSubmits:
+            element_callback_quit_mainloop(self)
+
+
+    def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
-            self.TKListbox.delete(0, 'end')
-            for item in values:
-                self.TKListbox.insert(tk.END, item)
-            self.TKListbox.selection_set(0, 0)
             self.Values = values
+            for i in range(self.QT_ListWidget.count()):
+                self.QT_ListWidget.takeItem(0)
+            self.QT_ListWidget.addItems(values)
+        if disabled == True:
+            self.QT_ListWidget.setDisabled(True)
+        elif disabled == False:
+            self.QT_ListWidget.setDisabled(False)
+        if set_to_index is not None:
+            self.QT_ListWidget.setCurrentRow(set_to_index)
+        super().Update(self.QT_ListWidget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+        return
 
     def SetValue(self, values):
-        for index, item in enumerate(self.Values):
-            try:
-                if item in values:
-                    self.TKListbox.selection_set(index)
-                else:
-                    self.TKListbox.selection_clear(index)
-            except:
-                pass
-        self.DefaultValues = values
+        # for index, item in enumerate(self.Values):
+        for index, value in enumerate(self.Values):
+            item = self.QT_ListWidget.item(index)
+            if value in values:
+                self.QT_ListWidget.setItemSelected(item, True)
+
 
     def GetListValues(self):
         return self.Values
 
     def __del__(self):
-        try:
-            self.TKListBox.__del__()
-        except:
-            pass
         super().__del__()
-
 
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
@@ -820,7 +822,7 @@ class Radio(Element):
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, change_submits=False, disabled=False, key=None, pad=None, tooltip=None):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Checkbox Element
         :param text:
@@ -838,33 +840,33 @@ class Checkbox(Element):
         '''
         self.Text = text
         self.InitialState = default
-        self.Value = None
-        self.TKCheckbutton = None
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
+        self.Widget = None      # type: remi.gui.CheckBox
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip)
+                         tooltip=tooltip, visible=visible, size_px=size_px)
 
     def Get(self):
-        return self.TKIntVar.get()
+        return self.WxCheckbox.GetValue()
 
     def Update(self, value=None, disabled=None):
         if value is not None:
             try:
-                self.TKIntVar.set(value)
+                self.WxCheckbox.SetValue(value)
                 self.InitialState = value
             except:
                 pass
         if disabled == True:
-            self.TKCheckbutton.configure(state='disabled')
+            self.WxCheckbox.Disable()
         elif disabled == False:
-            self.TKCheckbutton.configure(state='normal')
+            self.WxCheckbox.Enable()
 
     def __del__(self):
         super().__del__()
+
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -2999,6 +3001,7 @@ class Window:
 
     def Close(self):
         self.App.close()
+
         if self.TKrootDestroyed:
             return
         # try:
@@ -3109,18 +3112,20 @@ class Window:
 
 
     def remi_thread(self):
+        print('Starting Remi Thread')
         logging.getLogger('remi').disabled = True
         logging.getLogger('remi.server.ws').disabled = True
         logging.getLogger('remi.server').disabled = True
         logging.getLogger('remi.request').disabled = True
         # use this code to start the application instead of the **start** call
-        s = remi.Server(self.MyApp, start=True, title=self.Title, address='0.0.0.0', port=8081, start_browser=True, userdata=(self,),  multiple_instance=False, update_interval=.001)
+        # s = remi.Server(self.MyApp, start=True, title=self.Title, address='0.0.0.0', port=8081, start_browser=True, userdata=(self,),  multiple_instance=False, update_interval=.001)
 
         # logging.getLogger('remi').setLevel(level=logging.CRITICAL)
         # logging.getLogger('remi').disabled = True
         # logging.disable(logging.CRITICAL)
-        # remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
+        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
         self.MessageQueue.put(None)
+        print('Exiting Remi Thread')
 
     class MyApp(remi.App):
         def __init__(self,*args):
@@ -3592,8 +3597,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.Widget.set_value('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
-                    value = element.TKIntVar.get()
-                    value = (value != 0)
+                    element = element       # type: Checkbox
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
                     RadVar = element.TKIntVar.get()
                     this_rowcol = EncodeRadioRowCol(row_num, col_num)
@@ -3614,15 +3619,15 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         except:
                             value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
-                    value = element.TKStringVar.get()
+                    element = element  # type: Combo
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     value = element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
-                    try:
-                        items = element.TKListbox.curselection()
-                        value = [element.Values[int(item)] for item in items]
-                    except:
-                        value = ''
+                    element = element  # type: Listbox
+                    value = element.Widget.get_value()
+                    # items = element.TKListbox.curselection()
+                    # value = [element.Values[int(item)] for item in items]
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
                     try:
                         value = element.TKStringVar.get()
@@ -3907,6 +3912,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # if not auto_size_text:
         widget.style['height'] = '{}px'.format(size[1])
         widget.style['width'] = '{}px'.format(size[0])
+        widget.style['margin'] = '{}px {}px {}px {}px'.format(*full_element_pad)
         if element.Disabled:
             widget.set_enabled(False)
         #
@@ -3965,6 +3971,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element_size = toplevel_form.DefaultButtonElementSize
             else:
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
+
+            full_element_pad = [0, 0, 0, 0]  # Top, Right, Bottom, Left
+            elementpad = element.Pad if element.Pad is not None else toplevel_form.ElementPadding
+            if type(elementpad[0]) != tuple:  # left and right
+                full_element_pad[1] = full_element_pad[3] = elementpad[0]
+            else:
+                full_element_pad[3], full_element_pad[1] = elementpad[0]
+            if type(elementpad[1]) != tuple:  # top and bottom
+                full_element_pad[0] = full_element_pad[2] = elementpad[1]
+            else:
+                full_element_pad[0], full_element_pad[2] = elementpad[1]
+
+
+
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 pass
@@ -4170,10 +4190,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKEntry['state'] = 'disabled'
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  COMBO BOX (Drop Down) element  ------------------------- #
+            # -------------------------  COMBO element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
-                pass
-
+                element = element  # type: Combo
+                element.Widget = remi.gui.DropDown.new_from_list(element.Values)
+                if element.DefaultValue is not None:
+                    element.Widget.select_by_value(element.DefaultValue)
+                do_font_and_color(element.Widget)
+                tk_row_frame.append(element.Widget)
                 # max_line_len = max([len(str(l)) for l in element.Values])
                 # if auto_size_text is False:
                 #     width = element_size[0]
@@ -4257,7 +4281,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
             # # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
-                pass
+                element = element  # type: Listbox
+                element.Widget = remi.gui.ListView.new_from_list(element.Values)
+                do_font_and_color(element.Widget)
+                tk_row_frame.append(element.Widget)
             #     max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
             #     if auto_size_text is False:
             #         width = element_size[0]
@@ -4317,7 +4344,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
-                pass
+                element = element  # type: Checkbox
+                element.Widget = remi.gui.CheckBoxLabel(element.Text)
+                if element.InitialState:
+                    element.Widget.set_value(element.InitialState)
+                do_font_and_color(element.Widget)
+                tk_row_frame.append(element.Widget)
+
             #     width = 0 if auto_size_text else element_size[0]
             #     default_value = element.InitialState
             #     element.TKIntVar = tk.IntVar()
@@ -5917,7 +5950,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
-        PopupButton = CloseButton
+        PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if custom_text != (None, None):
         if type(custom_text) is not tuple:
@@ -5953,7 +5986,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
-
+    window.Close()
     return button
 
 
@@ -6487,4 +6520,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    print('back from main')
     exit(69)
