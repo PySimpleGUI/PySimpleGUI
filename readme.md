@@ -4991,8 +4991,8 @@ GNU Lesser General Public License (LGPL 3) +
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
 * [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
 * Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
-* [spectre6000](https://github.com/spectre
+*  [GraDesk](https://github.com/sidbmw/ICS
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE2NjQwNTUyLDI2NjM2NDQxNyw0NDk0Mz
-MyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2Mz
+Y0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MDYyM119
 -->

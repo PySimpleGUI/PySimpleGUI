@@ -494,8 +494,7 @@ class Element():
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False,
-                 do_not_clear=False, key=None, focus=False, pad=None):
+                 change_submits=False, do_not_clear=False, key=None, focus=False, pad=None):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -1059,8 +1058,8 @@ class Text(Element):
         pixelsize = size
         if size[1] is not None and size[1] < 10:
             pixelsize = size[0]*10, size[1]*20
-        self.WxStaticText:wx.StaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
+        self.Disabled = False
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, visible=visible)
@@ -3110,10 +3109,17 @@ class Window:
 
 
     def remi_thread(self):
-        logging.getLogger('remi').setLevel(level=logging.CRITICAL)
         logging.getLogger('remi').disabled = True
-        logging.disable(logging.CRITICAL)
-        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
+        logging.getLogger('remi.server.ws').disabled = True
+        logging.getLogger('remi.server').disabled = True
+        logging.getLogger('remi.request').disabled = True
+        # use this code to start the application instead of the **start** call
+        s = remi.Server(self.MyApp, start=True, title=self.Title, address='0.0.0.0', port=8081, start_browser=True, userdata=(self,),  multiple_instance=False, update_interval=.001)
+
+        # logging.getLogger('remi').setLevel(level=logging.CRITICAL)
+        # logging.getLogger('remi').disabled = True
+        # logging.disable(logging.CRITICAL)
+        # remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
         self.MessageQueue.put(None)
 
     class MyApp(remi.App):
@@ -3130,7 +3136,8 @@ class Window:
             wid = remi.gui.VBox()
             wid.style['justify-content'] = 'flex-start'
             wid.style['align-items'] = 'baseline'
-            wid.style['background-color'] = self.window.BackgroundColor
+            if self.window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                wid.style['background-color'] = self.window.BackgroundColor
 
             PackFormIntoFrame(self.window, wid, self.window)
             #
@@ -3897,8 +3904,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             widget.style['color'] = element.TextColor
         widget.style['font-size'] = '{}px'.format(font_info[1])
         size = convert_tkinter_size_to_Wx(element_size)
+        # if not auto_size_text:
         widget.style['height'] = '{}px'.format(size[1])
         widget.style['width'] = '{}px'.format(size[0])
+        if element.Disabled:
+            widget.set_enabled(False)
         #
         # widget.SetMinSize(element_size)
         # if element.Disabled:
@@ -3926,7 +3936,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         tk_row_frame = remi.gui.HBox()        # TODO Get horizontal ROW widget to put others into
         tk_row_frame.style['justify-content'] = 'flex-start'
         tk_row_frame.style['align-items'] = 'baseline'
-        tk_row_frame.style['background-color'] = toplevel_form.BackgroundColor
+        if toplevel_form.BackgroundColor not in(None, COLOR_SYSTEM_DEFAULT):
+            tk_row_frame.style['background-color'] = toplevel_form.BackgroundColor
 
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
@@ -3992,7 +4003,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.Widget.style['text-align'] = 'center'
                     elif element.Justification.startswith('r'):
                         element.Widget.style['text-align'] = 'right'
-
                 tk_row_frame.append(element.Widget)
 
                 # auto_size_text = element.AutoSizeText
@@ -6456,20 +6466,21 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
 
 def main():
-    SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
-    layout = [[Text('You are running the PySimpleGUI.py file itself', background_color='blue', font='Courier 20')],
-              [Text('You should be importing it rather than running it', size=(50, 2))],
-              [Text('Here is your sample input window....')],
-              [Text('Source Folder',justification='right'), InputText('Source', focus=True),
+    ChangeLookAndFeel('GreenTan' )
+    # SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
+    layout = [[Text('You are running the PySimpleGUI.py file itself', font='Courier 20')],
+              [Text('You should be importing it rather than running it', size=(60, 1))],
+              [Text('Here is your sample window....')],
+              [Text('Source Folder', justification='right', size=(40,1)), InputText('Source', focus=True, disabled=True),
                FolderBrowse()],
-              [Text('Destination Folder', justification='right'), InputText('Dest'), FolderBrowse()],
-              [Ok(), Cancel()]]
+              [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
+              [Ok(), Cancel(disabled=True), Exit()]]
 
-    window = Window('Demo window..', background_color='blue', font='Courier 18').Layout(layout)
+    window = Window('Demo window..', font='Arial 18').Layout(layout)
     while True:
         event, values = window.Read()
         print(event, values)
-        if event is None:
+        if event in (None, 'Exit'):
             break
     window.Close()
 
