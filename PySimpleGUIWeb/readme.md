@@ -75,7 +75,10 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python is not supported.
 * Combobox Element
 * Checkbox Element
 * Listbox Element
-* Window back
+* Window background color
+* Element padding
+* Read with timeout
+* Read with timeout = 0
 
 
 # Release Notes:  
@@ -125,5 +128,5 @@ Day 2 of development brings fonts, sizes, and colors...
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjg2MzA1ODA1XX0=
+eyJoaXN0b3J5IjpbLTExNjA2ODQzMzldfQ==
 -->
