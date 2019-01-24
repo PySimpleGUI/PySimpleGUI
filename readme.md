@@ -11,6 +11,7 @@
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
+[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
@@ -4990,9 +4991,9 @@ GNU Lesser General Public License (LGPL 3) +
 * one of the most critical constructs in PySimpleGUI      
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
 * [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
-* Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
-*  [GraDesk](https://github.com/sidbmw/ICS
+* Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade ma
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2Mz
-Y0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbMjU1MTEwODY5LC0yOTY3ODM1NSwtNzc0MD
+c0MjMwLDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNd
+fQ==
 -->
