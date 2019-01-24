@@ -3112,7 +3112,6 @@ class Window:
 
 
     def remi_thread(self):
-        print('Starting Remi Thread')
         logging.getLogger('remi').disabled = True
         logging.getLogger('remi.server.ws').disabled = True
         logging.getLogger('remi.server').disabled = True
@@ -3125,7 +3124,7 @@ class Window:
         # logging.disable(logging.CRITICAL)
         remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
         self.MessageQueue.put(None)
-        print('Exiting Remi Thread')
+
 
     class MyApp(remi.App):
         def __init__(self,*args):
