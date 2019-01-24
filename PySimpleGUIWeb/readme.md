@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -72,7 +72,10 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python is not supported.
 * Text Element
 * Input Text Element
 * Button Element
-
+* Combobox Element
+* Checkbox Element
+* Listbox Element
+* Window back
 
 
 # Release Notes:  
@@ -102,6 +105,14 @@ Day 2 of development brings fonts, sizes, and colors...
 * Window close
 * Window background color
 
+## 0.3.0 PySimpleGUIWeb 24-Jan-2019
+
+* Checkbox Element
+* Combobox Element
+* Listbox Element
+* Element padding for all elements
+
+
 
 
 # Design        
@@ -113,3 +124,6 @@ Day 2 of development brings fonts, sizes, and colors...
  GNU Lesser General Public License (LGPL 3) +        
         
 # Acknowledgments
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMjg2MzA1ODA1XX0=
+-->
