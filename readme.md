@@ -4954,7 +4954,7 @@ GNU Lesser General Public License (LGPL 3) +
 * [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
 * [frakman1](https://github.com/frakman1) - Sample code error
 * [deajan](https://github.com/deajan) - Custom button text for Popups
-* [ICS4U](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
+* [GRADESK](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
 
       
 ## How Do I      
@@ -4987,7 +4987,8 @@ eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
 -->
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTYwNjM3MTE4LC01MDkzNTkxMjMsLTI0OD
-k3NjI5LDEzMDc2OTI1OSwtMjk2NzgzNTUsLTc3NDA3NDIzMCwy
-NjYzNjQ0MTcsNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbLTE0NjE0MjgxLC02MDYzNzExOCwtNTA5Mz
+U5MTIzLC0yNDg5NzYyOSwxMzA3NjkyNTksLTI5Njc4MzU1LC03
+NzQwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MD
+YyM119
 -->
