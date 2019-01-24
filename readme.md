@@ -4255,55 +4255,6 @@ There are too many to list!!
 
 There are over 130 sample programs to give you a jump start.
 
-Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:      
-      
-  | Source File| Description |      
-|--|--|      
-|**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single window      
-|**Demo_Borderless_Window.py**| Create clean looking windows with no border      
-|**Demo_Button_States.py**| One way of implementing disabling of buttons      
-|**Demo_Calendar.py** | Demo of the Calendar Chooser button      
-|**Demo_Canvas.py** | window with a Canvas Element that is updated outside of the window      
-|**Demo_Chat.py** | A chat window with scrollable history      
-|**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project      
-|**Demo_Color.py** | How to interact with color using RGB hex values and named colors      
-|**Demo_Columns.py** | Using the Column Element to create more complex windows      
-|**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility      
-|**Demo_Cookbook_Browser.py** | Source code browser for all Recipes in Cookbook      
-|**Demo_Dictionary.py** | Specifying and using return values in dictionary format      
-**Demo_DOC_Viewer_PIL.py** | Display a PDF, HTML, ebook file, etc in your window      
-|**Demo_DisplayHash1and256.py** | Using high level API and custom window to implement a simple display hash code utility      
-|**Demo_DuplicateFileFinder.py** | High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter      
-|**Demo_Fill_Form.py** | How to perform a bulk-fill for a window.  Saving and loading a window from disk      
-|**Demo Font Sizer.py** | Demonstrates Elements updating other Elements      
-|**Demo_Func_Callback_Simulator.py** | For the Raspberry Pi crowd. Event loop that simulates traditional GUI callback functions should you already have an architecture that uses them      
-|**Demo_GoodColors.py** | Using some of the pre-defined PySimpleGUI individual colors      
-|**Demo_HowDoI.py** | This is a utility to be experienced! It will change how you code      
-|**Demo_Img_Viewer.py** | Display jpg, png,tiff, bmp files      
-|**Demo_Keyboard.py** | Using blocking keyboard events      
-|**Demo_Keyboard_Realtime.py** | Using non-blocking / realtime keyboard events      
-|**Demo_Machine_Learning.py** | A sample Machine Learning front end      
-|**Demo_Matplotlib.py** | Integrating with Matplotlib to create a single graph      
-|**Demo_Matplotlib_Animated.py** | Animated Matplotlib line graph      
-|**Demo_Matplotlib_Animated_Scatter.py** | Animated Matplotlib scatter graph      
-|**Demo_Matplotlib_Browser.py** | Browse Matplotlib gallery      
-|**Demo_Media_Player.py** | Non-blocking window with a media player layout.  Demonstrates  button graphics, Update method      
-|**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices      
-|**Demo_NonBlocking_Form.py** | a basic async window      
-|**Demo_OpenCV.py** | Integrated with OpenCV      
-|**Demo_Password_Login** | Password protection using SHA1      
-|**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate      
-|**Demo_Pi_LEDs.py** | Control GPIO using buttons      
-|**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons      
-|**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files      
-| **Demo_Progress_Meters.py** | Demonstrates using 2 progress meters simultaneously      
-|**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook      
-|**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts      
-|**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts      
-|**Demo_Tabbed_Form.py** | Using the Tab feature      
-|**Demo_Table_Simulation.py** | Use input fields to display and edit tables      
-|**Demo_Timer.py** | Simple non-blocking window      
-      
 ## Packages Used In Demos      
       
       
@@ -4983,9 +4934,6 @@ MikeB
       
 GNU Lesser General Public License (LGPL 3) +      
       
-
-
-
 ## Acknowledgments      
       
 *  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence      
@@ -4996,9 +4944,50 @@ GNU Lesser General Public License (LGPL 3) +
 * [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.      
 * [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help      
 * [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it      
-* [jfongattw](https://github
+* [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
+* one of the most critical constructs in PySimpleGUI      
+* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
+* [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
+* Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
+* [spectre6000](https://github.com/spectre6000) - Readme updates
+* [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
+* [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
+* [frakman1](https://github.com/frakman1) - Sample code error
+* [deajan](https://github.com/deajan) - Custom button text for Popups
+* [deajan](https://github.com/deajan) - Custom button text for Popups
+
+      
+## How Do I      
+Finally, I must thank the fine folks at How Do I.      
+https://github.com/gleitz/howdoi      
+Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**      
+Here are the steps to run that application      
+      
+    Install howdoi:      
+          pip install howdoi      
+    Test your install:      
+          python -m howdoi howdoi.py      
+    To run it:      
+          Python HowDoI.py      
+      
+The pip command is all there is to the setup.      
+      
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.      
+For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.      
+      
+![howdoiwithhistory](https://user-images.githubusercontent.com/13696193/45064009-5fd61180-b07f-11e8-8ead-eb0d1ff3a6be.jpg)      
+      
+      
+      
+In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
+      
+The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTUwOTM1OTEyMywtMjQ4OTc2MjksMTMwNz
-Y5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2NDQxNyw0
-NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
+-->
+
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbOTYyMTMwNzk5LC01MDkzNTkxMjMsLTI0OD
+k3NjI5LDEzMDc2OTI1OSwtMjk2NzgzNTUsLTc3NDA3NDIzMCwy
+NjYzNjQ0MTcsNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
 -->
