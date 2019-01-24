@@ -34,7 +34,7 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.24.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
 
@@ -87,6 +87,12 @@ Your source code is completely portable from one platform to another by simply c
 Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.    The System Tray feature is complete and working very well.
 
 The Windowing code is coming together with Reads now operational which means Popups work.  The elements are getting completed on a regular basis.  3 more were just checked in. At least 1 new element is getting completed a week.  
+
+# Web Version
+
+New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in your Web Browser!
+
+
 
 # Support
 
@@ -4989,10 +4995,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it      
 * [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
 * one of the most critical constructs in PySimpleGUI      
-* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
-* [rtrrtr](https://github.com/rtrrtr) Helped get the 
+* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_sub
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MzA0ODY5NDIsLTI5Njc4MzU1LC03Nz
-QwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MDYy
-M119
+eyJoaXN0b3J5IjpbLTczODI4ODMzLC0yOTY3ODM1NSwtNzc0MD
+c0MjMwLDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNd
+fQ==
 -->
