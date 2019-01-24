@@ -1058,7 +1058,6 @@ class Text(Element):
         pixelsize = size
         if size[1] is not None and size[1] < 10:
             pixelsize = size[0]*10, size[1]*20
-        self.WxStaticText:wx.StaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.Disabled = False
 
@@ -3115,7 +3114,7 @@ class Window:
         logging.getLogger('remi.server').disabled = True
         logging.getLogger('remi.request').disabled = True
         # use this code to start the application instead of the **start** call
-        s = remi.Server(self.MyApp, start=True, title=self.Title, address='0.0.0.0', port=8081, start_browser=True, userdata=(self,),  multiple_instance=True, update_interval=.001)
+        s = remi.Server(self.MyApp, start=True, title=self.Title, address='0.0.0.0', port=8081, start_browser=True, userdata=(self,),  multiple_instance=False, update_interval=.001)
 
         # logging.getLogger('remi').setLevel(level=logging.CRITICAL)
         # logging.getLogger('remi').disabled = True
@@ -6467,6 +6466,7 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
 
 def main():
+    ChangeLookAndFeel('GreenTan' )
     # SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
     layout = [[Text('You are running the PySimpleGUI.py file itself', font='Courier 20')],
               [Text('You should be importing it rather than running it', size=(60, 1))],
@@ -6476,7 +6476,7 @@ def main():
               [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
               [Ok(), Cancel(disabled=True), Exit()]]
 
-    window = Window('Demo window..', font='Courier 18').Layout(layout)
+    window = Window('Demo window..', font='Arial 18').Layout(layout)
     while True:
         event, values = window.Read()
         print(event, values)
