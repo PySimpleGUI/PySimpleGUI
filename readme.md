@@ -36,9 +36,11 @@
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWe_For_Python_3.x_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)[Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2.2-orange.svg?longCache=true&style=for-the-badge)
+
+[Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
 [ReadTheDocs](http://pysimplegui.readthedocs.io/)      
       
@@ -4988,9 +4990,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
 * one of the most critical constructs in PySimpleGUI      
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
-* [rtrrtr](https://github.com/rtrrtr) Helped get the 2
+* [rtrrtr](https://github.com/rtrrtr) Helped get the 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwNjY0NTIyMDcsLTI5Njc4MzU1LC03Nz
+eyJoaXN0b3J5IjpbLTE0MzA0ODY5NDIsLTI5Njc4MzU1LC03Nz
 QwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MDYy
 M119
 -->
