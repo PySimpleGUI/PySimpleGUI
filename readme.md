@@ -92,7 +92,7 @@ The Windowing code is coming together with Reads now operational which means Pop
 
 New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in your Web Browser!
 
-The underlying framework supplying the web capability is the Python package Remi.  https://github.com/dddomodossola/remi  Remi provides the widgets as well as a web server for you to connect to.  It's an exiting new platform to be running on
+The underlying framework supplying the web capability is the Python package Remi.  https://github.com/dddomodossola/remi  Remi provides the widgets as well as a web server for you to connect to.  It's an exiting new platform to be running on and has temporarily bumped the WxPython port from the highest priority.  PySimpleGUIWeb is the current high priority project.
 
 # Support
 
@@ -4993,10 +4993,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.      
 * [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help      
 * [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it      
-* [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
-* one of the most critical constructs in PySimpleGUI     
+* [jfongattw](https://github.co
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTg0MTk4MDIxOSwxMzA3NjkyNTksLTI5Nj
-c4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMzI0Mywt
-MTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2Nz
+gzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC0x
+MTQ4NDkwNjIzXX0=
 -->
