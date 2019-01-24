@@ -4984,6 +4984,8 @@ MikeB
 GNU Lesser General Public License (LGPL 3) +      
       
 
+
+
 ## Acknowledgments      
       
 *  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence      
@@ -4994,9 +4996,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.      
 * [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help      
 * [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it      
-* [jfongattw](https://github.c
+* [jfongattw](https://github
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjEzMTY1ODc2LC0yNDg5NzYyOSwxMzA3Nj
-kyNTksLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0
-OTQzMzI0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTUwOTM1OTEyMywtMjQ4OTc2MjksMTMwNz
+Y5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2NDQxNyw0
+NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->
