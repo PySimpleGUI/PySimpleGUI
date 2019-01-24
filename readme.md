@@ -11,15 +11,13 @@
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
-[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
+[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)  
+[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)  
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
       
-      
-      
-      
-      
+
       
 # PySimpleGUI      
       
@@ -27,7 +25,7 @@
             
 ## Supports both Python 2.7 & 3 when using tkinter
 ## Supports both PySide2 and PyQt5 (limited support)
-## PySimpleGUI source code can run either on Qt, tkinter, WxPython by changing only the import statement
+## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Remi by changing only the import statement
 
 
 
@@ -40,7 +38,7 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
 
-[Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
+![Python Version](https://img.shields.io/badge/PySimpleGUIWe_For_Python_3.x_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)[Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
 [ReadTheDocs](http://pysimplegui.readthedocs.io/)      
       
@@ -4990,10 +4988,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
 * one of the most critical constructs in PySimpleGUI      
 * [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
-* [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
-* Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade ma
+* [rtrrtr](https://github.com/rtrrtr) Helped get the 2
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjU1MTEwODY5LC0yOTY3ODM1NSwtNzc0MD
-c0MjMwLDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNd
-fQ==
+eyJoaXN0b3J5IjpbLTEwNjY0NTIyMDcsLTI5Njc4MzU1LC03Nz
+QwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MDYy
+M119
 -->
