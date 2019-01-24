@@ -92,7 +92,7 @@ The Windowing code is coming together with Reads now operational which means Pop
 
 New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in your Web Browser!
 
-
+The underlying framework supplying the webcomonent is the Remi package.
 
 # Support
 
@@ -4995,9 +4995,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it      
 * [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
 * one of the most critical constructs in PySimpleGUI      
-* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_sub
+* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTczODI4ODMzLC0yOTY3ODM1NSwtNzc0MD
+eyJoaXN0b3J5IjpbMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MD
 c0MjMwLDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNd
 fQ==
 -->
