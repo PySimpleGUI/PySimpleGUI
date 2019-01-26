@@ -1,14 +1,14 @@
  
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
         
-![Downloads](http://pepy.tech/badge/pysimpleguiweb)]       
+![Downloads](http://pepy.tech/badge/pysimpleguiweb)]  
   
       
- ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-1000-yellow.svg)  
+ ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-10,000-yellow.svg)  
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.4.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.4.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -16,7 +16,7 @@
 
 PySimpleGUI running in your web browser!
 
-Your source code will work on tkinter, Qt, W
+Your source code will work on tkinter, Qt, WxPython and now in a browser (thanks to Remi)
 
 ## Primary PySimpleGUI Documentation
 
@@ -162,6 +162,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMzg2NTg0NzEsMTIxMzM1MjYzNiwtMT
-E2MDY4NDMzOV19
+eyJoaXN0b3J5IjpbMTI1OTA2NTM5NCwxMjEzMzUyNjM2LC0xMT
+YwNjg0MzM5XX0=
 -->
