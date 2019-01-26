@@ -26,9 +26,18 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
-At the moment (22-Jan-2019) the port has barely begun but it's far enough along to see that it's going to work.  The Text, Input Text and Button elements are "functional".  You can run simple PySimpleGUI programs and they actually WORK correctly.
+At the moment (Jan 26 2019) these elements are operational:
+* Text
+* Single line text input
+* Multiline Input 
+* Multiline Output 
+* Listbox 
+* Combobox
+* Checkbox
+* Slider
+* Spinner (numbers only...hardcoded to 0 to 100)
 
-## Engineering Pre-Release   Version 0.2.0
+## Engineering Pre-Release   Version 0.4.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -63,7 +72,7 @@ You can learn more about Remi on its homepage.
 
 https://github.com/dddomodossola/remi
 
-PySimpleGUIWeb runs only on Python 3. Legacy Python is not supported.
+PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
   
   
   
@@ -115,6 +124,30 @@ Day 2 of development brings fonts, sizes, and colors...
 * Listbox Element
 * Element padding for all elements
 
+## 0.4.0 PySimpleGUIWeb 26-Jan-2019
+
+Functioning Elements
+* Text
+* Single line text input
+* Multiline Input 
+* Multiline Output 
+* Listbox 
+* Combobox
+* Checkbox
+* Slider
+* Spinner (numbers only...hardcoded to 0 to 100)
+
+New features
+* Tooltips for all elements (so cool this works)
+* Input Text events
+* Text clicked event
+* Listbox selected event
+* Combobox selected event
+* Checkbox Update
+* Disable parameter for all elements
+* Window.Close shuts down the server
+* Enabled exceptions during packing operation
+* New test harness exercises all element types
 
 
 
@@ -128,5 +161,5 @@ Day 2 of development brings fonts, sizes, and colors...
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNjA2ODQzMzldfQ==
+eyJoaXN0b3J5IjpbMTA4MjAwNzAwLC0xMTYwNjg0MzM5XX0=
 -->
