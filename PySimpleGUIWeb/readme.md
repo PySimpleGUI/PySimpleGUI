@@ -8,13 +8,15 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.4.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
 # PySimpleGUIWeb     
 
-PySimpleGUI running in your web browser
+PySimpleGUI running in your web browser!
+
+Your source code will work on tkinter, Qt, W
 
 ## Primary PySimpleGUI Documentation
 
@@ -52,14 +54,14 @@ Installation is quite simple:
 
 Should this not work, you can copy and paste the file PySimpleGUIWeb.py into your application folder.
 
-## Using
+## Using PySimpleGUIWeb
 
 There are a lot of examples in the PySimpleGUI Cookbook as well as on the GitHub site.  At the moment very few will work due to the limited number of features of the 0.1.0 release.  It shouldn't be too long before they'll work.
 
 To use PySimpleGUIWeb you need to import it:
 `import PySimpleGUIWeb as sg`
 
-From there follow the code examples in the Coookbook and the Demo Programs.  The only difference in those programs is the import statement.  The remainder of the code should work without modification.
+From there follow the code examples in the Cookbook and the Demo Programs.  The only difference in those programs is the import statement.  The remainder of the code should work without modification.
 
              
 ## Requirements
@@ -160,5 +162,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIxMzM1MjYzNiwtMTE2MDY4NDMzOV19
+eyJoaXN0b3J5IjpbLTIwMzg2NTg0NzEsMTIxMzM1MjYzNiwtMT
+E2MDY4NDMzOV19
 -->
