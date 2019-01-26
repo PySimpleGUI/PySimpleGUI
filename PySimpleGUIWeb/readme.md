@@ -1,20 +1,22 @@
  
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
         
-![Downloads](http://pepy.tech/badge/pysimpleguiweb)]       
+![Downloads](http://pepy.tech/badge/pysimpleguiweb)
   
       
- ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-1000-yellow.svg)  
+ ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-10,000-yellow.svg)  
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.3.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.4.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
 # PySimpleGUIWeb     
 
-PySimpleGUI running in your web browser
+PySimpleGUI running in your web browser!
+
+Your source code will work on tkinter, Qt, WxPython and now in a browser (thanks to Remi)
 
 ## Primary PySimpleGUI Documentation
 
@@ -26,9 +28,18 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
-At the moment (22-Jan-2019) the port has barely begun but it's far enough along to see that it's going to work.  The Text, Input Text and Button elements are "functional".  You can run simple PySimpleGUI programs and they actually WORK correctly.
+At the moment (Jan 26 2019) these elements are operational:
+* Text
+* Single line text input
+* Multiline Input 
+* Multiline Output 
+* Listbox 
+* Combobox
+* Checkbox
+* Slider
+* Spinner (numbers only...hardcoded to 0 to 100)
 
-## Engineering Pre-Release   Version 0.2.0
+## Engineering Pre-Release   Version 0.4.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -43,14 +54,14 @@ Installation is quite simple:
 
 Should this not work, you can copy and paste the file PySimpleGUIWeb.py into your application folder.
 
-## Using
+## Using PySimpleGUIWeb
 
 There are a lot of examples in the PySimpleGUI Cookbook as well as on the GitHub site.  At the moment very few will work due to the limited number of features of the 0.1.0 release.  It shouldn't be too long before they'll work.
 
 To use PySimpleGUIWeb you need to import it:
 `import PySimpleGUIWeb as sg`
 
-From there follow the code examples in the Coookbook and the Demo Programs.  The only difference in those programs is the import statement.  The remainder of the code should work without modification.
+From there follow the code examples in the Cookbook and the Demo Programs.  The only difference in those programs is the import statement.  The remainder of the code should work without modification.
 
              
 ## Requirements
@@ -63,10 +74,9 @@ You can learn more about Remi on its homepage.
 
 https://github.com/dddomodossola/remi
 
-PySimpleGUIWeb runs only on Python 3. Legacy Python is not supported.
+PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
   
-  
-  
+   
 ## What Works
 
 * Text Element
@@ -115,6 +125,30 @@ Day 2 of development brings fonts, sizes, and colors...
 * Listbox Element
 * Element padding for all elements
 
+## 0.4.0 PySimpleGUIWeb 26-Jan-2019
+
+Functioning Elements
+* Text
+* Single line text input
+* Multiline Input 
+* Multiline Output 
+* Listbox 
+* Combobox
+* Checkbox
+* Slider
+* Spinner (numbers only...hardcoded to 0 to 100)
+
+New features
+* Tooltips for all elements (so cool this works)
+* Input Text events
+* Text clicked event
+* Listbox selected event
+* Combobox selected event
+* Checkbox Update
+* Disable parameter for all elements
+* Window.Close shuts down the server
+* Enabled exceptions during packing operation
+* New test harness exercises all element types
 
 
 
@@ -128,5 +162,6 @@ Day 2 of development brings fonts, sizes, and colors...
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNjA2ODQzMzldfQ==
+eyJoaXN0b3J5IjpbLTEwNTcxMDM2NDMsMTIxMzM1MjYzNiwtMT
+E2MDY4NDMzOV19
 -->

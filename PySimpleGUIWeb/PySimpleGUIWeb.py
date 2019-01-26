@@ -12,6 +12,8 @@ from queue import Queue
 # from remi import start, App
 import remi
 import logging
+import traceback
+
 
 g_time_start = 0
 g_time_end = 0
@@ -229,9 +231,11 @@ ELEM_TYPE_INPUT_COMBO = 'combo'
 ELEM_TYPE_INPUT_OPTION_MENU = 'option menu'
 ELEM_TYPE_INPUT_RADIO = 'radio'
 ELEM_TYPE_INPUT_MULTILINE = 'multiline'
+ELEM_TYPE_MULTILINE_OUTPUT = 'multioutput'
 ELEM_TYPE_INPUT_CHECKBOX = 'checkbox'
-ELEM_TYPE_INPUT_SPIN = 'spind'
+ELEM_TYPE_INPUT_SPIN = 'spin'
 ELEM_TYPE_BUTTON = 'button'
+ELEM_TYPE_BUTTONMENU = 'buttonmenu'
 ELEM_TYPE_IMAGE = 'image'
 ELEM_TYPE_CANVAS = 'canvas'
 ELEM_TYPE_FRAME = 'frame'
@@ -387,6 +391,12 @@ class Element():
                         return rc
         return None
 
+    # -------------------------  REMI CHANGED CALLBACK -----------------------
+    # called when a widget has changed and the element has events enabled
+    def ChangedCallback(self, widget:remi.Widget, *args):
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
+        self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+
     def TextClickedHandler(self, event):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
@@ -521,6 +531,11 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
+    def InputTextCallback(self, widget:remi.Widget, value, keycode):
+        # print(f'text widget value = {widget.get_value()}')
+        self.ParentForm.LastButtonClicked = chr(int(keycode))
+        self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+
     def Update(self, value=None, disabled=None):
         if disabled is True:
             self.TKEntry['state'] = 'disabled'
@@ -578,11 +593,6 @@ class Combo(Element):
         self.Widget = None          # type: remi.gui.DropDown
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
-
-
-    def QtCurrentItemChanged(self, state):
-        if self.ChangeSubmits:
-            element_callback_quit_mainloop(self)
 
 
 
@@ -678,14 +688,14 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
-                 text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
-        '''
-        Listbox Element
+    def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False, bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+        """
+
         :param values:
         :param default_values:
         :param select_mode:
         :param change_submits:
+        :param enable_events:
         :param bind_return_key:
         :param size:
         :param disabled:
@@ -696,7 +706,9 @@ class Listbox(Element):
         :param key:
         :param pad:
         :param tooltip:
-        '''
+        :param visible:
+        :param size_px:
+        """
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
@@ -724,11 +736,6 @@ class Listbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=tsize, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
-
-    def QtCurrentRowChanged(self, state):
-        if self.ChangeSubmits:
-            element_callback_quit_mainloop(self)
-
 
     def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
@@ -849,20 +856,21 @@ class Checkbox(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, size_px=size_px)
 
+    def ChangedCallback(self, widget:remi.Widget, value):
+        # print(f'text widget value = {widget.get_value()}')
+        self.ParentForm.LastButtonClicked = self.Key
+        self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+
     def Get(self):
-        return self.WxCheckbox.GetValue()
+        return self.Widget.get_value()
 
     def Update(self, value=None, disabled=None):
         if value is not None:
-            try:
-                self.WxCheckbox.SetValue(value)
-                self.InitialState = value
-            except:
-                pass
+            self.Widget.set_value(value)
         if disabled == True:
-            self.WxCheckbox.Disable()
+            self.Widget.set_enabled(False)
         elif disabled == False:
-            self.WxCheckbox.Enable()
+            self.Widget.set_enabled(True)
 
     def __del__(self):
         super().__del__()
@@ -882,9 +890,8 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, size=(None, None),
-                 auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
-                 tooltip=None):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,  enable_events=False, size=(None, None), readonly=True, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
+                 tooltip=None, visible=True, size_px=(None,None)):
         '''
         Spinner Element
         :param values:
@@ -901,50 +908,41 @@ class Spin(Element):
         :param tooltip:
         '''
         self.Values = values
-        self.DefaultValue = initial_value
-        self.ChangeSubmits = change_submits
-        self.TKSpinBox = None
+        self.DefaultValue = initial_value or values[0]
+        self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
-
+        self.CurrentValue = self.DefaultValue
+        self.ReadOnly = readonly
+        self.Widget = None      # type: remi.gui.SpinBox
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
-                         key=key, pad=pad, tooltip=tooltip)
+                         key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
-    def Update(self, value=None, values=None, disabled=None):
+
+    def Update(self, value=None, values=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
         if values != None:
-            old_value = self.TKStringVar.get()
             self.Values = values
-            self.TKSpinBox.configure(values=values)
-            self.TKStringVar.set(old_value)
+            self.QT_Spinner.setStrings(values)
+            # self.QT_Spinner.setRange(self.Values[0], self.Values[1])
         if value is not None:
+            # self.QT_Spinner.setValue(value)
             try:
-                self.TKStringVar.set(value)
+                self.QT_Spinner.setValue(self.QT_Spinner.valueFromText(value))
+                self.DefaultValue = value
             except:
                 pass
-        self.DefaultValue = value
         if disabled == True:
-            self.TKSpinBox.configure(state='disabled')
+            self.QT_Spinner.setDisabled(True)
         elif disabled == False:
-            self.TKSpinBox.configure(state='normal')
+            self.QT_Spinner.setDisabled(False)
+        super().Update(self.QT_Spinner, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-    def SpinChangedHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+    def Get(self):
+        return self.Widget.get_value()
 
     def __del__(self):
-        try:
-            self.TKSpinBox.__del__()
-        except:
-            pass
         super().__del__()
 
 
@@ -953,9 +951,8 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, do_not_clear=False,
-                 key=None, focus=False,
-                 font=None, pad=None, tooltip=None):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
+                 key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -981,42 +978,122 @@ class Multiline(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Autoscroll = autoscroll
         self.Disabled = disabled
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
+        tsize = size                # convert tkinter size to pixels
+        if size[0] is not None and size[0] < 100:
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+        self.Widget = None      # type: remi.gui.TextInput
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT)
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None):
-        if value is not None:
-            try:
-                if not append:
-                    self.TKText.delete('1.0', tk.END)
-                self.TKText.insert(tk.END, value)
-            except:
-                pass
-            self.DefaultText = value
-        if self.Autoscroll:
-            self.TKText.see(tk.END)
-        if disabled == True:
-            self.TKText.configure(state='disabled')
-        elif disabled == False:
-            self.TKText.configure(state='normal')
-        if background_color is not None:
-            self.TKText.configure(background=background_color)
-        if text_color is not None:
-            self.TKText.configure(fg=text_color)
-        if font is not None:
-            self.TKText.configure(font=font)
+    def InputTextCallback(self, widget:remi.Widget, value, keycode):
+        # print(f'text widget value = {widget.get_value()}')
+        self.ParentForm.LastButtonClicked = chr(int(keycode))
+        self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+            if value is not None and not append:
+                self.Widget.set_value(value)
+            elif value is not None and append:
+                text = self.Widget.get_value() + str(value)
+                self.Widget.set_value(text)
+            # if background_color is not None:
+            #     self.WxTextCtrl.SetBackgroundColour(background_color)
+            # if text_color is not None:
+            #     self.WxTextCtrl.SetForegroundColour(text_color)
+            # if font is not None:
+            #     self.WxTextCtrl.SetFont(font)
+            # if disabled:
+            #     self.WxTextCtrl.Enable(True)
+            # elif disabled is False:
+            #     self.WxTextCtrl.Enable(False)
+            super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+    #
+    # def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+    #     if value is not None and not append:
+    #         self.DefaultText = value
+    #         self.QT_TextEdit.setText(str(value))
+    #     elif value is not None and append:
+    #         self.DefaultText = value
+    #         self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
+    #     if disabled == True:
+    #         self.QT_TextEdit.setDisabled(True)
+    #     elif disabled == False:
+    #         self.QT_TextEdit.setDisabled(False)
+    #     super().Update(self.QT_TextEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
 
     def Get(self):
-        return self.TKText.get(1.0, tk.END)
+        self.WxTextCtrl.GetValue()
 
     def SetFocus(self):
-        try:
-            self.TKText.focus_set()
-        except:
-            pass
+        self.WxTextCtrl.SetFocus()
+
+
+    def __del__(self):
+        super().__del__()
+
+
+# ---------------------------------------------------------------------- #
+#                           Multiline Output                             #
+# ---------------------------------------------------------------------- #
+class MultilineOutput(Element):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+        '''
+        Multiline Element
+        :param default_text:
+        :param enter_submits:
+        :param disabled:
+        :param autoscroll:
+        :param size:
+        :param auto_size_text:
+        :param background_color:
+        :param text_color:
+        :param do_not_clear:
+        :param key:
+        :param focus:
+        :param pad:
+        :param tooltip:
+        :param font:
+        '''
+        self.DefaultText = default_text
+        self.EnterSubmits = enter_submits
+        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        self.Focus = focus
+        self.do_not_clear = do_not_clear
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.Autoscroll = autoscroll
+        self.Disabled = disabled
+        self.ChangeSubmits = change_submits or enable_events
+        tsize = size                # convert tkinter size to pixels
+        if size[0] is not None and size[0] < 100:
+            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+        self.Widget = None      # type: remi.gui.TextInput
+        self.CurrentValue = ''
+
+        super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=tsize, auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
+        return
+
+
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+            if value is not None and not append:
+                self.Widget.set_value(value)
+            elif value is not None and append:
+                self.CurrentValue = self.CurrentValue + '\n' + value
+                self.Widget.set_value(self.CurrentValue)
+
+            super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
+    def Get(self):
+        self.WxTextCtrl.GetValue()
+
+    def SetFocus(self):
+        self.WxTextCtrl.SetFocus()
 
     def __del__(self):
         super().__del__()
@@ -2101,26 +2178,23 @@ class TabGroup(Element):
 # ---------------------------------------------------------------------- #
 class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None):
-        '''
-        Slider Element
+                 border_width=None, relief=None, change_submits=False, enable_events=False, disabled=False, size=(None, None), font=None,
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+        """
+
         :param range:
         :param default_value:
         :param resolution:
+        :param tick_interval:
         :param orientation:
         :param border_width:
         :param relief:
         :param change_submits:
+        :param enable_events:
         :param disabled:
-        :param size:
-        :param font:
-        :param background_color:
-        :param text_color:
-        :param key:
-        :param pad:
-        :param tooltip:
-        '''
+        :param visible:
+        :param size_px:
+        """
         self.TKScale = None
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
@@ -2128,15 +2202,18 @@ class Slider(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
         self.TickInterval = tick_interval
         temp_size = size
         if temp_size == (None, None):
-            temp_size = (20, 20) if orientation.startswith('h') else (8, 20)
+            temp_size = (200, 20) if self.Orientation.startswith('h') else (200, 20)
+        elif size[0] is not None and size[0] < 100:
+            temp_size = size[0]*10, size[1]*3
+        self.Widget = None      # type: remi.gui.Slider
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
-                         text_color=text_color, key=key, pad=pad, tooltip=tooltip)
+                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
     def Update(self, value=None, range=(None, None), disabled=None):
@@ -2153,19 +2230,13 @@ class Slider(Element):
         elif disabled == False:
             self.TKScale['state'] = 'normal'
 
-    def SliderChangedHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+    def SliderCallback(self, widget:remi.Widget, value):
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
+        self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
     def __del__(self):
         super().__del__()
+
 
 
 #
@@ -2544,6 +2615,7 @@ class Window:
     highest_level_app = None
     stdout_is_rerouted = False
     stdout_location = None
+    port_number = 6900
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None),
@@ -2763,22 +2835,18 @@ class Window:
             #     print("** REALTIME PROBLEM FOUND **", results)
         # print('****************** CALLING MESSAGE QUEUE GET ***********************')
         self.CurrentlyRunningMainloop = True
-        if timeout is not None and timeout != 0:
+        if timeout is not None:
             try:
-                self.LastButtonClicked = self.MessageQueue.get(timeout=timeout/1000)
+                self.LastButtonClicked = self.MessageQueue.get(timeout=(timeout if timeout else .001)/1000)
+                # print(f'Got event {self.LastButtonClicked}')
             except:             # timeout
-                self.LastButtonClicked = timeout_key
-        elif timeout == 0:
-            try:
-                self.LastButtonClicked = self.MessageQueue.get_nowait()
-            except:
                 self.LastButtonClicked = timeout_key
         else:
             self.LastButtonClicked = self.MessageQueue.get()
+            # print(f'Got event {self.LastButtonClicked}')
         # print('--------------------- BACK FROM MESSAGE QUEUE GET ----------------------')
 
         results = BuildResults(self, False, self)
-        # print('Results = ', results)
         return results
         # print(f'In main {self.Title}')
         ################################# CALL GUWxTextCtrlI MAINLOOP ############################
@@ -2815,7 +2883,6 @@ class Window:
         #         print("*** Faking timeout ***")
                 # self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             # return self.ReturnValues
-        return None, None
 
     def _ReadNonBlocking(self):
         if self.TKrootDestroyed:
@@ -3001,7 +3068,8 @@ class Window:
 
     def Close(self):
         self.App.close()
-
+        self.App.server.server_starter_instance._alive = False
+        self.App.server.server_starter_instance._sserver.shutdown()
         if self.TKrootDestroyed:
             return
         # try:
@@ -3112,6 +3180,7 @@ class Window:
 
 
     def remi_thread(self):
+        logging.getLogger('remi').setLevel(logging.WARNING)
         logging.getLogger('remi').disabled = True
         logging.getLogger('remi.server.ws').disabled = True
         logging.getLogger('remi.server').disabled = True
@@ -3122,8 +3191,15 @@ class Window:
         # logging.getLogger('remi').setLevel(level=logging.CRITICAL)
         # logging.getLogger('remi').disabled = True
         # logging.disable(logging.CRITICAL)
-        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0, start_browser=True, userdata=(self,))  # standalone=True)
-        self.MessageQueue.put(None)
+        # s = remi.server.StandaloneServer(self.MyApp, width=1100, height=600)
+        # s.start()
+        Window.port_number += 1
+        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=Window.port_number, start_browser=True, update_interval=.00001, userdata=(self,))
+        # remi.start(self.MyApp, title=self.Title ,debug=False,  userdata=(self,), standalone=True)  # standalone=True)
+        print('Returned from Remi Start command... now sending None event')
+        # self.App.server_starter_instance._alive = False
+        # self.App.server_starter_instance._sserver.shutdown()
+        self.MessageQueue.put(None)     # if returned from start call, then the window has been destroyed and a None event should be generated
 
 
     class MyApp(remi.App):
@@ -3142,33 +3218,29 @@ class Window:
             wid.style['align-items'] = 'baseline'
             if self.window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                 wid.style['background-color'] = self.window.BackgroundColor
-
-            PackFormIntoFrame(self.window, wid, self.window)
-            #
-            # lbl = remi.gui.Label("Close or reload the page, the console thread will stop automatically.")
-            # wid.append(lbl)
-            # self.bt = remi.gui.Button('Close')
-            # self.bt.onclick.connect(self.on_close_button)
-            # wid.append(self.bt)
-
+            try:
+                PackFormIntoFrame(self.window, wid, self.window)
+            except:
+                print('* ERROR PACKING FORM *')
+                print(traceback.format_exc())
 
             # add the following 3 lines to your app and the on_window_close method to make the console close automatically
             tag = remi.gui.Tag(_type='script')
             tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
             str(id(self)), "on_window_close"))
             wid.add_child("onunloadevent", tag)
-            # TODO: Send message that layout is complete
-
-            self.window.MessageQueue.put('Layout complete')
-            # returning the root widget
-            return wid
+            self.window.MessageQueue.put('Layout complete')     # signal the main code that the layout is all done
+            return wid          # returning the root widget
 
 
         def on_window_close(self):
             # here you can handle the unload
             # print("app closing")
-            self.window.MessageQueue.put(None)
             self.close()
+            self.server.server_starter_instance._alive = False
+            self.server.server_starter_instance._sserver.shutdown()
+            self.window.MessageQueue.put(None)
+            print("server stopped")
 
 FlexForm = Window
 
@@ -3184,8 +3256,11 @@ def element_callback_quit_mainloop(element):
         element.ParentForm.LastButtonClicked = element.Key
     else:
         element.ParentForm.LastButtonClicked = ''
-    element.ParentForm.FormRemainedOpen = True
-    element.ParentForm.LastButtonClicked = element.Key if element.Key is not None else element.ButtonText
+    try:
+        element.ParentForm.LastButtonClicked = element.Key if element.Key is not None else element.ButtonText
+    except:
+        element.ParentForm.LastButtonClicked = element.Key
+    # print(f'Putting into message queue {element.ParentForm.LastButtonClicked}')
     element.ParentForm.MessageQueue.put(element.ParentForm.LastButtonClicked)
 
 
@@ -3628,22 +3703,14 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     # items = element.TKListbox.curselection()
                     # value = [element.Values[int(item)] for item in items]
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
-                    try:
-                        value = element.TKStringVar.get()
-                    except:
-                        value = 0
+                    element = element       # type: Spin
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
-                    try:
-                        value = element.TKIntVar.get()
-                    except:
-                        value = 0
+                    element = element       # type: Slider
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
-                    try:
-                        value = element.TKText.get(1.0, tk.END)
-                        if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                            element.TKText.delete('1.0', tk.END)
-                    except:
-                        value = None
+                    element = element  # type: Multiline
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
                         value = element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
@@ -3914,6 +3981,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         widget.style['margin'] = '{}px {}px {}px {}px'.format(*full_element_pad)
         if element.Disabled:
             widget.set_enabled(False)
+        if not element.Visible:
+            widget.attributes['hidden'] = 'true'
+        if element.Tooltip is not None:
+            widget.attributes['title'] = element.Tooltip
         #
         # widget.SetMinSize(element_size)
         # if element.Disabled:
@@ -3982,8 +4053,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             else:
                 full_element_pad[0], full_element_pad[2] = elementpad[1]
 
-
-
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 pass
@@ -4022,55 +4091,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.Widget.style['text-align'] = 'center'
                     elif element.Justification.startswith('r'):
                         element.Widget.style['text-align'] = 'right'
+                if element.ClickSubmits:
+                    element.Widget.onclick.connect(element.ChangedCallback)
                 tk_row_frame.append(element.Widget)
 
-                # auto_size_text = element.AutoSizeText
-                # display_text = element.DisplayText  # text to display
-                # if auto_size_text is False:
-                #     width, height = element_size
-                # else:
-                #     lines = display_text.split('\n')
-                #     max_line_len = max([len(l) for l in lines])
-                #     num_lines = len(lines)
-                #     if max_line_len > element_size[0]:  # if text exceeds element size, the will have to wrap
-                #         width = element_size[0]
-                #     else:
-                #         width = max_line_len
-                #     height = num_lines
-                # ---===--- LABEL widget create and place --- #
-                # stringvar = tk.StringVar()
-                # element.TKStringVar = stringvar
-                # stringvar.set(display_text)
-                # if auto_size_text:
-                #     width = 0
-                # if element.Justification is not None:
-                #     justification = element.Justification
-                # elif toplevel_form.TextJustification is not None:
-                #     justification = toplevel_form.TextJustification
-                # else:
-                #     justification = DEFAULT_TEXT_JUSTIFICATION
-                # justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
-                # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
-                #                         justify=justify, bd=border_depth, font=font)
-                # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                # wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
-                # if not auto_size_text and height == 1:
-                #     wraplen = 0
-                # print("wraplen, width, height", wraplen, width, height)
-                # tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
-                # if element.Relief is not None:
-                #     tktext_label.configure(relief=element.Relief)
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     tktext_label.configure(background=element.BackgroundColor)
-                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                #     tktext_label.configure(fg=element.TextColor)
-                # tktext_label.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True)
-                # element.TKText = tktext_label
-                # if element.ClickSubmits:
-                #     tktext_label.bind('<Button-1>', element.TextClickedHandler)
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
@@ -4153,18 +4178,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #     if element.Tooltip is not None:
             #         element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
-            # # -------------------------  INPUT (Single Line) element  ------------------------- #
+            # # -------------------------  INPUT  element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element = element  # type: InputText
-                element.Widget = remi.gui.TextInput()
-                if element.DefaultText:
-                    element.Widget.set_value(element.DefaultText)
+                element.Widget = remi.gui.TextInput(hint=element.DefaultText)
                 do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onkeydown.connect(element.InputTextCallback)
                 tk_row_frame.append(element.Widget)
 
-                # default_text = element.DefaultText
-                # element.TKStringVar = tk.StringVar()
-                # element.TKStringVar.set(default_text)
                 # show = element.PasswordCharacter if element.PasswordCharacter else ""
                 # if element.Justification is not None:
                 #     justification = element.Justification
@@ -4196,93 +4218,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DefaultValue is not None:
                     element.Widget.select_by_value(element.DefaultValue)
                 do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onchange.connect(element.ChangedCallback)
                 tk_row_frame.append(element.Widget)
-                # max_line_len = max([len(str(l)) for l in element.Values])
-                # if auto_size_text is False:
-                #     width = element_size[0]
-                # else:
-                #     width = max_line_len
-                # element.TKStringVar = tk.StringVar()
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     combostyle = ttk.Style()
-                #     try:
-                #         combostyle.theme_create('combostyle',
-                #                                 settings={'TCombobox':
-                #                                               {'configure':
-                #                                                    {'selectbackground': element.BackgroundColor,
-                #                                                     'fieldbackground': element.BackgroundColor,
-                #                                                     'foreground': text_color,
-                #                                                     'background': element.BackgroundColor}
-                #                                                }})
-                #     except:
-                #         try:
-                #             combostyle.theme_settings('combostyle',
-                #                                       settings={'TCombobox':
-                #                                                     {'configure':
-                #                                                          {'selectbackground': element.BackgroundColor,
-                #                                                           'fieldbackground': element.BackgroundColor,
-                #                                                           'foreground': text_color,
-                #                                                           'background': element.BackgroundColor}
-                #                                                      }})
-                #         except:
-                #             pass
-                #     # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
-                #     combostyle.theme_use('combostyle')
-                # element.TKCombo = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font)
-                # if element.Size[1] != 1 and element.Size[1] is not None:
-                #     element.TKCombo.configure(height=element.Size[1])
-                # # element.TKCombo['state']='readonly'
-                # element.TKCombo['values'] = element.Values
-                #
-                # # if element.InitializeAsDisabled:
-                # #     element.TKCombo['state'] = 'disabled'
-                # # if element.BackgroundColor is not None:
-                # #     element.TKCombo.configure(background=element.BackgroundColor)
-                # element.TKCombo.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-                # if element.DefaultValue:
-                #     for i, v in enumerate(element.Values):
-                #         if v == element.DefaultValue:
-                #             element.TKCombo.current(i)
-                #             break
-                # else:
-                #     element.TKCombo.current(0)
-                # if element.ChangeSubmits:
-                #     element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
-                # if element.Readonly:
-                #     element.TKCombo['state'] = 'readonly'
-                # if element.Disabled is True:  # note overrides readonly if disabled
-                #     element.TKCombo['state'] = 'disabled'
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 pass
-            #     max_line_len = max([len(str(l)) for l in element.Values])
-            #     if auto_size_text is False:
-            #         width = element_size[0]
-            #     else:
-            #         width = max_line_len
-            #     element.TKStringVar = tk.StringVar()
-            #     default = element.DefaultValue if element.DefaultValue else element.Values[0]
-            #     element.TKStringVar.set(default)
-            #     element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar, *element.Values)
-            #     element.TKOptionMenu.config(highlightthickness=0, font=font, width=width)
-            #     element.TKOptionMenu.config(borderwidth=border_depth)
-            #     if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-            #         element.TKOptionMenu.configure(background=element.BackgroundColor)
-            #     if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-            #         element.TKOptionMenu.configure(fg=element.TextColor)
-            #     element.TKOptionMenu.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-            #     if element.Disabled == True:
-            #         element.TKOptionMenu['state'] = 'disabled'
-            #     if element.Tooltip is not None:
-            #         element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip,
-            #                                         timeout=DEFAULT_TOOLTIP_TIME)
-            # # -------------------------  LISTBOX element  ------------------------- #
+            # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 element = element  # type: Listbox
                 element.Widget = remi.gui.ListView.new_from_list(element.Values)
                 do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onselection.connect(element.ChangedCallback)
                 tk_row_frame.append(element.Widget)
             #     max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
             #     if auto_size_text is False:
@@ -4318,7 +4267,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
-                pass
+                element = element  # type: Multiline
+                element.Widget = remi.gui.TextInput(single_line=False, hint=element.DefaultText)
+                do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onkeydown.connect(element.InputTextCallback)
+                tk_row_frame.append(element.Widget)
                 # default_text = element.DefaultText
                 # width, height = element_size
                 # element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
@@ -4341,12 +4295,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKText['state'] = 'disabled'
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+            # -------------------------  OUTPUT MULTI LINE element  ------------------------- #
+            elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
+                element = element  # type: MultilineOutput
+                element.Widget = remi.gui.TextInput(single_line=False)
+                element.Disabled = True
+                if element.DefaultText:
+                    element.Widget.set_value(element.DefaultText)
+                do_font_and_color(element.Widget)
+                tk_row_frame.append(element.Widget)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 element = element  # type: Checkbox
                 element.Widget = remi.gui.CheckBoxLabel(element.Text)
                 if element.InitialState:
                     element.Widget.set_value(element.InitialState)
+                if element.ChangeSubmits:
+                    element.Widget.onchange.connect(element.ChangedCallback)
                 do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
 
@@ -4425,9 +4390,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # element.TKRadio.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  INPUT SPIN Box element  ------------------------- #
+                # -------------------------  INPUT SPIN element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
-                pass
+                element = element  # type: Spin
+                element.Widget = remi.gui.SpinBox(50, 0, 100)
+                if element.DefaultValue is not None:
+                    element.Widget.set_value(element.DefaultValue)
+                do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onchange.connect(element.ChangedCallback)
+                tk_row_frame.append(element.Widget)
                 # width, height = element_size
                 # width = 0 if auto_size_text else element_size[0]
                 # element.TKStringVar = tk.StringVar()
@@ -4640,10 +4612,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                 #                                     timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  SLIDER Box element  ------------------------- #
+                # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
-                pass
-                # slider_length = element_size[0] * CharWidthInPixels()
+                element = element  # type: Slider
+                element.Widget = remi.gui.Slider(layout_orientation = remi.gui.Widget.LAYOUT_HORIZONTAL, default_value=element.DefaultValue, min=element.Range[0], max=element.Range[1],step=element.Resolution)
+                if element.DefaultValue:
+                    element.Widget.set_value(element.DefaultValue)
+                # if element.Orientation.startswith('v'):
+                #     element.Widget.layout_orientation = remi.gui.Widget.LAYOUT_VERTICAL
+                do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onchange.connect(element.SliderCallback)
+                tk_row_frame.append(element.Widget)                # slider_length = element_size[0] * CharWidthInPixels()
                 # slider_width = element_size[1]
                 # element.TKIntVar = tk.IntVar()
                 # element.TKIntVar.set(element.DefaultValue)
@@ -6499,25 +6479,52 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
 def main():
     ChangeLookAndFeel('GreenTan' )
-    # SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
-    layout = [[Text('You are running the PySimpleGUI.py file itself', font='Courier 20')],
-              [Text('You should be importing it rather than running it', size=(60, 1))],
-              [Text('Here is your sample window....')],
-              [Text('Source Folder', justification='right', size=(40,1)), InputText('Source', focus=True, disabled=True),
-               FolderBrowse()],
-              [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
-              [Ok(), Cancel(disabled=True), Exit()]]
 
-    window = Window('Demo window..', font='Arial 18').Layout(layout)
+    # Popup('Popup Test')
+
+    # SetOptions(background_color='blue', text_element_background_color='blue', text_color='white')
+    # layout = [[Text('You are running the PySimpleGUI.py file itself', font='Any 25', size=(60,1), tooltip='My tooltip!')],
+    #           [Text('You should be importing it rather than running it', size=(60, 1))],
+    #           [Text('Here is your sample window....')],
+    #           [Text('Source Folder', justification='right', size=(40,1)), InputText('Source', focus=True, disabled=True),
+    #            FolderBrowse()],
+    #           [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
+    #           [Ok(), Cancel(disabled=True), Exit(tooltip='Exit button'), Button('Hidden Button', visible=False)]]
+
+    layout = [
+        [Text('PySimpleGUIWeb Demo of Working Elements', tooltip='text',  font=('Comic sans ms', 20), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
+        [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1))],
+        [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
+        [Input('Single Line Input', do_not_clear=True, enable_events=True, size=(30, 1))],
+        [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
+        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_')],
+        [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
+        [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
+               readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
+        [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
+        [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True)],
+        [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
+        [OK(), Button('Hidden', visible=False), Button('Exit', button_color=('white', 'red'))]
+    ]
+
+
+    window = Window('PySimpleGUIWeb Window', font='Arial 18', default_element_size=(12,1)).Layout(layout)
+
+    start_time = datetime.datetime.now()
     while True:
-        event, values = window.Read()
-        print(event, values)
+        event, values = window.Read(timeout=0)
+        window.Element('_TEXT_').Update(str(datetime.datetime.now()))
+        window.Element('_TEXT_UPTIME_').Update(str(datetime.datetime.now()-start_time))
+        print(event, values) if event != TIMEOUT_KEY else None
         if event in (None, 'Exit'):
             break
+        elif event == 'OK':
+            window.Element('_MULTIOUT_').Update('You clicked the OK button', append=True)
+        elif event != TIMEOUT_KEY:
+            window.Element('_MULTIOUT_').Update(str(event) + '\n'+str(values), append=True)
     window.Close()
 
 
 if __name__ == '__main__':
     main()
-    print('back from main')
     exit(69)
