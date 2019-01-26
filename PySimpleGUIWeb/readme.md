@@ -74,8 +74,7 @@ https://github.com/dddomodossola/remi
 
 PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
   
-  
-  
+   
 ## What Works
 
 * Text Element
@@ -161,5 +160,5 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA4MjAwNzAwLC0xMTYwNjg0MzM5XX0=
+eyJoaXN0b3J5IjpbMTIxMzM1MjYzNiwtMTE2MDY4NDMzOV19
 -->
