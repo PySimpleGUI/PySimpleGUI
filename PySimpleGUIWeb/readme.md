@@ -1,7 +1,7 @@
  
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
         
-![Downloads](http://pepy.tech/badge/pysimpleguiweb)]  
+![Downloads](http://pepy.tech/badge/pysimpleguiweb)
   
       
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-10,000-yellow.svg)  
@@ -162,6 +162,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTI1OTA2NTM5NCwxMjEzMzUyNjM2LC0xMT
-YwNjg0MzM5XX0=
+eyJoaXN0b3J5IjpbLTEwNTcxMDM2NDMsMTIxMzM1MjYzNiwtMT
+E2MDY4NDMzOV19
 -->
