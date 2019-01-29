@@ -108,7 +108,9 @@ Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in
 
 The programs you write using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is required is to type `import PySimpleGUIWeb` you'll have a Python environment up and running with the latest PyPI release of PySimpleGUIWeb.  
 
-This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be posted about this in the near future.  Educators in particular should be interested.  Students can not inly 
+This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be posted about this in the near future.  
+
+Educators in particular should be interested.  Students can not only post their homework easily for their teacher to access, but teachers can also run the students programs online.  No downloading needed.  Run it and check the results.
 
 
 # Support
@@ -4996,9 +4998,9 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
       
       
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!
+In the hands of a c
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQzODAyMzk3NCwtMTQ2MTQyODEsLTYwNj
+eyJoaXN0b3J5IjpbMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNj
 M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
 Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
 QzLC0xMTQ4NDkwNjIzXX0=
