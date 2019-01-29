@@ -25,7 +25,7 @@
             
 ## Supports both Python 2.7 & 3 when using tkinter
 ## Supports both PySide2 and PyQt5 (limited support)
-## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Remi by changing only the import statement
+## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Web (Remi) by changing only the import statement
 
 
 
@@ -52,6 +52,7 @@
       
 [Docs in PDF Format](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/docs)      
       
+[Run live in a web browser using repl.it!](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos)  
       
 Super-simple GUI to use... Powerfully customizable    
       
@@ -66,7 +67,6 @@ As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 v
       
 # Qt Version
 
-### Github
 
 Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
 
@@ -84,15 +84,34 @@ Your source code is completely portable from one platform to another by simply c
 
 # WxPython Version
 
+ [PySimpleGUIWx GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWx).  **There is a separate Readme file for the WxPython version**.
+
 Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.    The System Tray feature is complete and working very well.
 
 The Windowing code is coming together with Reads now operational which means Popups work.  The elements are getting completed on a regular basis.  3 more were just checked in. At least 1 new element is getting completed a week.  
 
-# Web Version
+# Web Version (Remi)
+
+ [PySimpleGUIWeb GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb).  **There is a separate Readme file for the Web version**.
 
 New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in your Web Browser!
 
 The underlying framework supplying the web capability is the Python package Remi.  https://github.com/dddomodossola/remi  Remi provides the widgets as well as a web server for you to connect to.  It's an exiting new platform to be running on and has temporarily bumped the WxPython port from the highest priority.  PySimpleGUIWeb is the current high priority project.
+
+Read on and you'll understand even more why this is an important project...
+
+# repl.it Version
+
+***Want to really get your mind blown?***  Check out this [PySimpleGUI program](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos) running in your web browser.
+
+Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in a browser window without having Python running on your computer.  
+
+The programs you write using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is required is to type `import PySimpleGUIWeb` you'll have a Python environment up and running with the latest PyPI release of PySimpleGUIWeb.  
+
+This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be posted about this in the near future.  
+
+Educators in particular should be interested.  Students can not only post their homework easily for their teacher to access, but teachers can also run the students programs online.  No downloading needed.  Run it and check the results.
+
 
 # Support
 
@@ -4979,16 +4998,10 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
       
       
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
-      
-The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+In the hands of a c
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
--->
-
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0NjE0MjgxLC02MDYzNzExOCwtNTA5Mz
-U5MTIzLC0yNDg5NzYyOSwxMzA3NjkyNTksLTI5Njc4MzU1LC03
-NzQwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MD
-YyM119
+eyJoaXN0b3J5IjpbMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNj
+M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
+Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
+QzLC0xMTQ4NDkwNjIzXX0=
 -->
