@@ -98,6 +98,11 @@ The underlying framework supplying the web capability is the Python package Remi
 
 Want to really get your mind blown?  Check out this [PySimpleGUI program](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos) running in your web browser.
 
+Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in a browser window without having Python running on your computer.  
+
+The programs you write using repl.it will automatically download and install the la
+
+
 # Support
 
 PySimpleGUI is an active project.  Bugs are fixed, features are added, often.  Should you run into trouble, open an issue on the GitHub site and you'll receive help by someone in the community.  
@@ -4991,8 +4996,8 @@ eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
 -->
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1OTIzMzU1ODIsLTE0NjE0MjgxLC02MD
-YzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwxMzA3NjkyNTks
-LTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMz
-I0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTIwMDA3MzUxMCwtMTQ2MTQyODEsLTYwNj
+M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
+Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
+QzLC0xMTQ4NDkwNjIzXX0=
 -->
