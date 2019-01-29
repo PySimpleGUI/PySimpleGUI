@@ -102,13 +102,13 @@ Read on and you'll understand even more why this is an important project...
 
 # repl.it Version
 
-Want to really get your mind blown?  Check out this [PySimpleGUI program](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos) running in your web browser.
+***Want to really get your mind blown?***  Check out this [PySimpleGUI program](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos) running in your web browser.
 
 Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in a browser window without having Python running on your computer.  
 
 The programs you write using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is required is to type `import PySimpleGUIWeb` you'll have a Python environment up and running with the latest PyPI release of PySimpleGUIWeb.  
 
-This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be posted about this I'm sure.
+This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be posted about this in the near future.  Educators in particular should be interested.  Students can not inly 
 
 
 # Support
@@ -4996,12 +4996,10 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
       
       
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
-      
-The PySimpleGUI win
+In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIxMjkxNjMyNzcsLTE0NjE0MjgxLC02MD
-YzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwxMzA3NjkyNTks
-LTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMz
-I0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTQzODAyMzk3NCwtMTQ2MTQyODEsLTYwNj
+M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
+Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
+QzLC0xMTQ4NDkwNjIzXX0=
 -->
