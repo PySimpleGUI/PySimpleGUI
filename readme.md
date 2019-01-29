@@ -25,7 +25,7 @@
             
 ## Supports both Python 2.7 & 3 when using tkinter
 ## Supports both PySide2 and PyQt5 (limited support)
-## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Remi by changing only the import statement
+## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Web (Remi) by changing only the import statement
 
 
 
@@ -52,6 +52,7 @@
       
 [Docs in PDF Format](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/docs)      
       
+[Run live in a web browser using repl.it!](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos)  
       
 Super-simple GUI to use... Powerfully customizable    
       
@@ -94,6 +95,8 @@ New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in 
 
 The underlying framework supplying the web capability is the Python package Remi.  https://github.com/dddomodossola/remi  Remi provides the widgets as well as a web server for you to connect to.  It's an exiting new platform to be running on and has temporarily bumped the WxPython port from the highest priority.  PySimpleGUIWeb is the current high priority project.
 
+Read on and you'll understand even more why this is an important project.
+
 # repl.it Version
 
 Want to really get your mind blown?  Check out this [PySimpleGUI program](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos) running in your web browser.
@@ -102,7 +105,7 @@ Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in
 
 The programs you write using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is required is to type `import PySimpleGUIWeb` you'll have a Python environment up and running with the latest PyPI release of PySimpleGUIWeb.  
 
-This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be 
+This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be posted about this I'm sure.
 
 
 # Support
@@ -4998,8 +5001,8 @@ eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
 -->
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU4MDM0NDQ1MywtMTQ2MTQyODEsLTYwNj
-M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
-Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
-QzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbNTAwNzAwMCwtMTQ2MTQyODEsLTYwNjM3MT
+E4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2
+NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC
+0xMTQ4NDkwNjIzXX0=
 -->
