@@ -100,7 +100,9 @@ Want to really get your mind blown?  Check out this [PySimpleGUI program](https:
 
 Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in a browser window without having Python running on your computer.  
 
-The programs you write using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is requiresed is to type `import PySimpleGUIWeb` you're 
+The programs you write using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is required is to type `import PySimpleGUIWeb` you'll have a Python environment up and running with the latest PyPI release of PySimpleGUIWeb.  
+
+This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be 
 
 
 # Support
@@ -4996,8 +4998,8 @@ eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
 -->
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzg0MDMyNTQ3LC0xNDYxNDI4MSwtNjA2Mz
-cxMTgsLTUwOTM1OTEyMywtMjQ4OTc2MjksMTMwNzY5MjU5LC0y
-OTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2NDQxNyw0NDk0MzMyND
-MsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbLTU4MDM0NDQ1MywtMTQ2MTQyODEsLTYwNj
+M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
+Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
+QzLC0xMTQ4NDkwNjIzXX0=
 -->
