@@ -67,7 +67,6 @@ As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 v
       
 # Qt Version
 
-### Github
 
 Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
 
@@ -84,6 +83,8 @@ Are there enough things on there to cover your GUI solution?
 Your source code is completely portable from one platform to another by simply changing the import statement.
 
 # WxPython Version
+
+ [PySimpleGUIWx GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
 
 Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.    The System Tray feature is complete and working very well.
 
@@ -4995,14 +4996,10 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
       
-The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+The PySimpleGUI window that the results are shown in is an 'input' field which m
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA4Mzk5NzUyMl19
--->
-
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbNTAwNzAwMCwtMTQ2MTQyODEsLTYwNjM3MT
-E4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2
-NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC
-0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbLTEyNDc1ODUzMjAsLTE0NjE0MjgxLC02MD
+YzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwxMzA3NjkyNTks
+LTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMz
+I0MywtMTE0ODQ5MDYyM119
 -->
