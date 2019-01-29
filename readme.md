@@ -84,19 +84,21 @@ Your source code is completely portable from one platform to another by simply c
 
 # WxPython Version
 
- [PySimpleGUIWx GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
+ [PySimpleGUIWx GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWx).  **There is a separate Readme file for the WxPython version**.
 
 Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.    The System Tray feature is complete and working very well.
 
 The Windowing code is coming together with Reads now operational which means Popups work.  The elements are getting completed on a regular basis.  3 more were just checked in. At least 1 new element is getting completed a week.  
 
-# Web Version
+# Web Version (Remi)
+
+ [PySimpleGUIWeb GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb).  **There is a separate Readme file for the Web version**.
 
 New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in your Web Browser!
 
 The underlying framework supplying the web capability is the Python package Remi.  https://github.com/dddomodossola/remi  Remi provides the widgets as well as a web server for you to connect to.  It's an exiting new platform to be running on and has temporarily bumped the WxPython port from the highest priority.  PySimpleGUIWeb is the current high priority project.
 
-Read on and you'll understand even more why this is an important project.
+Read on and you'll understand even more why this is an important project...
 
 # repl.it Version
 
@@ -4996,9 +4998,9 @@ For Python questions, I simply start my query with 'Python'.  Let's say you forg
       
 In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
       
-The PySimpleGUI window that the results are shown in is an 'input' field which m
+The PySimpleGUI win
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyNDc1ODUzMjAsLTE0NjE0MjgxLC02MD
+eyJoaXN0b3J5IjpbLTIxMjkxNjMyNzcsLTE0NjE0MjgxLC02MD
 YzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwxMzA3NjkyNTks
 LTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0OTQzMz
 I0MywtMTE0ODQ5MDYyM119
