@@ -85,12 +85,7 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 
 # Running online using repl.it
 
-
-<figure class="video_container">
-  <iframe src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
-
-
+This is something truly unique and amazing.   You can run your PySimpleGUI code in a web browser on a computer, phone, tablet without having Python installed on that computer.  Not only that, but you can embed these programs into web pages.
 
 <iframe height="400px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
@@ -175,6 +170,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1MjE4MDU1MjAsLTEwNTcxMDM2NDMsMT
+eyJoaXN0b3J5IjpbLTE2Mzk2MDc1MDksLTEwNTcxMDM2NDMsMT
 IxMzM1MjYzNiwtMTE2MDY4NDMzOV19
 -->
