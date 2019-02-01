@@ -103,7 +103,7 @@ DEFAULT_BUTTON_ELEMENT_SIZE = (80, 25 )  # In PIXELS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (4, 2)  # Padding between elements (row, col) in pixels
 # DEFAULT_ELEMENT_PADDING = (0, 0)  # Padding between elements (row, col) in pixels
-DEFAULT_PIXELS_TO_CHARS_SCALING = (10,25)      # 1 character represents x by y pixels
+DEFAULT_PIXELS_TO_CHARS_SCALING = (10,35)      # 1 character represents x by y pixels
 DEFAULT_PIXEL_TO_CHARS_CUTOFF = 12             # number of chars that triggers using pixels instead of chars
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
@@ -638,8 +638,6 @@ class Combo(Element):
         self.QT_ComboBox.addItems(self.Values)
 
 
-
-
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
             self.Values = values
@@ -830,8 +828,8 @@ class Radio(Element):
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
                  change_submits=False,  enable_events=False, visible=True, size_px=(None,None)):
-        '''
-        Radio Button Element
+        """
+
         :param text:
         :param group_id:
         :param default:
@@ -845,10 +843,12 @@ class Radio(Element):
         :param pad:
         :param tooltip:
         :param change_submits:
-        '''
+        :param enable_events:
+        :param visible:
+        :param size_px:
+        """
         self.InitialState = default
         self.Text = text
-        self.TKRadio = None
         self.GroupID = group_id
         self.Value = None
         self.Disabled = disabled
@@ -2292,7 +2292,7 @@ class Slider(Element):
         super().__del__()
 
 # ---------------------------------------------------------------------- #
-#                           Dial                                       #
+#                           Dial                                         #
 # ---------------------------------------------------------------------- #
 class Dial(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
@@ -3726,7 +3726,7 @@ def create_style_from_font(font):
 
     style = ''
     style += 'font-family: %s;\n' % _font[0]
-    style += 'font-size: %spt;' % _font[1]
+    style += 'font-size: %spt;\n' % _font[1]
     font_items = ''
     for item in _font[2:]:
         if item == 'underline':
@@ -3734,7 +3734,7 @@ def create_style_from_font(font):
         else:
             font_items += item + ' '
     if font_items != '':
-        style += 'font: %s' % font_items
+        style += 'font: %s;\n' % (font_items)
     return style
 
 def set_widget_visiblity(widget, visible):
@@ -4633,7 +4633,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QPushButton.setVisible(False)
 
                 qt_row_layout.addWidget(element.QT_QPushButton)
-            # -------------------------  INPUT (Single Line) element  ------------------------- #
+            # -------------------------  INPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 default_text = element.DefaultText
                 element.QT_QLineEdit = qlineedit = QLineEdit()
@@ -7152,7 +7152,7 @@ def main():
 
     layout = [
         [Menu(menu_def, key='_REALMENU_')],
-        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15')],
+        [Text('You are running the PySimpleGUI.py file itself', font=('ANY', 15, 'Bold'), text_color='red')],
                   [Text('You should be importing it rather than running it', font='ANY 15')],
         # [Image(data_base64=logo, tooltip='Image', click_submits=True, key='_IMAGE_'),
          [Frame('Input Text Group', frame1, title_color='red', tooltip='Text Group'), Stretch()],
