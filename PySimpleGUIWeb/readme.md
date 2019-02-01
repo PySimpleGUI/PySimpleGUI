@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.4.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.5.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -17,6 +17,8 @@
 PySimpleGUI running in your web browser!
 
 Your source code will work on tkinter, Qt, WxPython and now in a browser (thanks to Remi)
+
+Check out [repl.it](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos), the new way to run your PySimpleGUI code in a browser!
 
 ## Primary PySimpleGUI Documentation
 
@@ -28,18 +30,8 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
-At the moment (Jan 26 2019) these elements are operational:
-* Text
-* Single line text input
-* Multiline Input 
-* Multiline Output 
-* Listbox 
-* Combobox
-* Checkbox
-* Slider
-* Spinner (numbers only...hardcoded to 0 to 100)
 
-## Engineering Pre-Release   Version 0.4.0
+## Engineering Pre-Release   Version 0.5.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -85,6 +77,8 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Combobox Element
 * Checkbox Element
 * Listbox Element
+* Spinner Element (sorta... numbers 0 to 100 only now)
+* Column Element
 * Window background color
 * Element padding
 * Read with timeout
@@ -93,12 +87,11 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 
 # Running online using repl.it
 
+This is something truly unique and amazing.   You can run your PySimpleGUI code in a web browser on a computer, phone, tablet without having Python installed on that computer.  Through the magic of repl.it and Remi you can run PySimpleGUI code anywhere you can run a browser.   Not only that, but you can embed these programs into web pages. In fact, this markdown document has one of these programs embedded in it.  
 
-<figure class="video_container">
-  <iframe src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
+Here is where the iframe is inserted.  You may not see the page in some instances (like on GitHub).  
 
-
+Here's your sample program:
 
 <iframe height="400px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
@@ -161,6 +154,16 @@ New features
 * Enabled exceptions during packing operation
 * New test harness exercises all element types
 
+## 0.5.0 PySimpleGUIWeb  1-Feb-2019
+
+* New default font size. Was Helvetica 10, now Helvetica 15
+* InputText Element single character events working! (Finally)
+* Listbox simple Update (values only)
+* Column Element!  New!
+* Column element experimental justification setting doesn't work yet
+* Element background colors now picked up from container, not top level window
+* Autosize Text
+* Autosize Button Text
 
 
 # Design        
@@ -173,6 +176,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwNTcxMDM2NDMsMTIxMzM1MjYzNiwtMT
-E2MDY4NDMzOV19
+eyJoaXN0b3J5IjpbNDc1ODY1Njc2LC0xMDU3MTAzNjQzLDEyMT
+MzNTI2MzYsLTExNjA2ODQzMzldfQ==
 -->
