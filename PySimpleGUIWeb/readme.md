@@ -28,16 +28,6 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
-At the moment (Jan 26 2019) these elements are operational:
-* Text
-* Single line text input
-* Multiline Input 
-* Multiline Output 
-* Listbox 
-* Combobox
-* Checkbox
-* Slider
-* Spinner (numbers only...hardcoded to 0 to 100)
 
 ## Engineering Pre-Release   Version 0.4.0
  
@@ -85,6 +75,8 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Combobox Element
 * Checkbox Element
 * Listbox Element
+* Spinner Element (sorta... numbers 0 to 100 only now)
+* Column Element
 * Window background color
 * Element padding
 * Read with timeout
@@ -161,6 +153,16 @@ New features
 * Enabled exceptions during packing operation
 * New test harness exercises all element types
 
+## 0.5.0 PySimpleGUIWeb  1-Feb-2019
+
+* New default font size. Was Helvetica 10, now Helvetica 15
+* InputText Element single character events working! (Finally)
+* Listbox simple Update (values only)
+* Column Element!  New!
+* Column element experimental justification setting doesn't work yet
+* Element background colors now picked up from container, not top level window
+* Autosize Text
+* Autosize Button Text
 
 
 # Design        
@@ -173,6 +175,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwNTcxMDM2NDMsMTIxMzM1MjYzNiwtMT
-E2MDY4NDMzOV19
+eyJoaXN0b3J5IjpbLTE1MjE4MDU1MjAsLTEwNTcxMDM2NDMsMT
+IxMzM1MjYzNiwtMTE2MDY4NDMzOV19
 -->
