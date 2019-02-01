@@ -56,7 +56,7 @@ DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (5, 3)  # Padding between elements (row, col) in pixels
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
-DEFAULT_FONT = ("Helvetica", 10)
+DEFAULT_FONT = ("Helvetica", 15)
 DEFAULT_TEXT_JUSTIFICATION = 'left'
 DEFAULT_BORDER_WIDTH = 1
 DEFAULT_AUTOCLOSE_TIME = 3  # time in seconds to show an autoclose form
@@ -263,62 +263,6 @@ POPUP_BUTTONS_OK = 0
 POPUP_BUTTONS_NO_BUTTONS = 5
 
 
-# ------------------------------------------------------------------------- #
-#                       ToolTip used by the Elements                        #
-# ------------------------------------------------------------------------- #
-
-class ToolTip:
-    """ Create a tooltip for a given widget
-
-    (inspired by https://stackoverflow.com/a/36221216)
-    """
-
-    def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME):
-        self.widget = widget
-        self.text = text
-        self.timeout = timeout
-        # self.wraplength = wraplength if wraplength else widget.winfo_screenwidth() // 2
-        self.tipwindow = None
-        self.id = None
-        self.x = self.y = 0
-        self.widget.bind("<Enter>", self.enter)
-        self.widget.bind("<Leave>", self.leave)
-        self.widget.bind("<ButtonPress>", self.leave)
-
-    def enter(self, event=None):
-        self.schedule()
-
-    def leave(self, event=None):
-        self.unschedule()
-        self.hidetip()
-
-    def schedule(self):
-        self.unschedule()
-        self.id = self.widget.after(self.timeout, self.showtip)
-
-    def unschedule(self):
-        if self.id:
-            self.widget.after_cancel(self.id)
-        self.id = None
-
-    def showtip(self):
-        if self.tipwindow:
-            return
-        x = self.widget.winfo_rootx() + 20
-        y = self.widget.winfo_rooty() + self.widget.winfo_height() - 20
-        self.tipwindow = tk.Toplevel(self.widget)
-        self.tipwindow.wm_overrideredirect(True)
-        self.tipwindow.wm_geometry("+%d+%d" % (x, y))
-        label = ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT,
-                          background="#ffffe0", relief=tk.SOLID, borderwidth=1)
-        label.pack()
-
-    def hidetip(self):
-        if self.tipwindow:
-            self.tipwindow.destroy()
-        self.tipwindow = None
-
-
 # ---------------------------------------------------------------------- #
 # Cascading structure.... Objects get larger                             #
 #   Button                                                               #
@@ -477,26 +421,28 @@ class Element():
 
 
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None, disabled=None, tooltip=None):
-        return
-        if font:
-            widget.SetFont(font_to_wx_font(font))
-        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
-            widget.SetForegroundColour(text_color)
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            widget.SetBackgroundColour(background_color)
-        if visible is True:
-            widget.Show()
-            self.ParentForm.VisibilityChanged()
-        elif visible is False:
-            widget.Hide()
-            self.ParentForm.VisibilityChanged()
-        if disabled:
-            widget.Enable(False)
-        elif disabled is False:
-            widget.Enable(True)
-        if tooltip is not None:
-            widget.SetToolTip(tooltip)
-
+        # if font:
+        #     widget.SetFont(font_to_wx_font(font))
+        # if text_color not in (None, COLOR_SYSTEM_DEFAULT):
+        #     widget.SetForegroundColour(text_color)
+        # if background_color not in (None, COLOR_SYSTEM_DEFAULT):
+        #     widget.SetBackgroundColour(background_color)
+        # if visible is True:
+        #     widget.Show()
+        #     self.ParentForm.VisibilityChanged()
+        # elif visible is False:
+        #     widget.Hide()
+        #     self.ParentForm.VisibilityChanged()
+        # if disabled:
+        #     widget.Enable(False)
+        # elif disabled is False:
+        #     widget.Enable(True)
+        # if tooltip is not None:
+        #     widget.SetToolTip(tooltip)
+        if visible is False:
+            widget.attributes['hidden'] = 'true'
+        elif visible is True:
+            widget.attributes['hidden'] = 'false'
 
     def __del__(self):
         pass
@@ -531,10 +477,17 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
-    def InputTextCallback(self, widget:remi.Widget, value, keycode):
+    # def InputTextCallback(self, widget:remi.gui.TextInput, value, keycode):
+    def InputTextCallback(self,widget, key, keycode, ctrl, shift, alt):
         # print(f'text widget value = {widget.get_value()}')
-        self.ParentForm.LastButtonClicked = chr(int(keycode))
+        # widget.set_value('')
+        # widget.set_value(value)
+        self.ParentForm.LastButtonClicked = key
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+        widget.set_value(widget.get_value()+key)
+        return (key, keycode, ctrl, shift, alt)
+
+
 
     def Update(self, value=None, disabled=None):
         if disabled is True:
@@ -556,6 +509,31 @@ class InputText(Element):
             self.TKEntry.focus_set()
         except:
             pass
+
+    class TextInput_raw_onkeyup(remi.gui.TextInput):
+        @remi.gui.decorate_set_on_listener("(self, emitter, key, keycode, ctrl, shift, alt)")
+        @remi.gui.decorate_event_js("""var params={};params['key']=event.key;
+                params['keycode']=(event.which||event.keyCode);
+                params['ctrl']=event.ctrlKey;
+                params['shift']=event.shiftKey;
+                params['alt']=event.altKey;
+                sendCallbackParam('%(emitter_identifier)s','%(event_name)s',params);
+                event.stopPropagation();event.preventDefault();return false;""")
+        def onkeyup(self, key, keycode, ctrl, shift, alt):
+            return (key, keycode, ctrl, shift, alt)
+
+        @remi.gui.decorate_set_on_listener("(self, emitter, key, keycode, ctrl, shift, alt)")
+        @remi.gui.decorate_event_js("""var params={};params['key']=event.key;
+                params['keycode']=(event.which||event.keyCode);
+                params['ctrl']=event.ctrlKey;
+                params['shift']=event.shiftKey;
+                params['alt']=event.altKey;
+                sendCallbackParam('%(emitter_identifier)s','%(event_name)s',params);
+                event.stopPropagation();event.preventDefault();return false;""")
+        def onkeydown(self, key, keycode, ctrl, shift, alt):
+            return (key, keycode, ctrl, shift, alt)
+
+
 
     def __del__(self):
         super().__del__()
@@ -740,16 +718,14 @@ class Listbox(Element):
     def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
             self.Values = values
-            for i in range(self.QT_ListWidget.count()):
-                self.QT_ListWidget.takeItem(0)
-            self.QT_ListWidget.addItems(values)
-        if disabled == True:
-            self.QT_ListWidget.setDisabled(True)
-        elif disabled == False:
-            self.QT_ListWidget.setDisabled(False)
-        if set_to_index is not None:
-            self.QT_ListWidget.setCurrentRow(set_to_index)
-        super().Update(self.QT_ListWidget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+            self.Widget.set_value(values)
+        # if disabled == True:
+        #     self.QT_ListWidget.setDisabled(True)
+        # elif disabled == False:
+        #     self.QT_ListWidget.setDisabled(False)
+        # if set_to_index is not None:
+        #     self.QT_ListWidget.setCurrentRow(set_to_index)
+        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
         return
 
@@ -1081,9 +1057,9 @@ class MultilineOutput(Element):
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
             if value is not None and not append:
-                self.Widget.set_value(value)
+                self.Widget.set_value(str(value))
             elif value is not None and append:
-                self.CurrentValue = self.CurrentValue + '\n' + value
+                self.CurrentValue = self.CurrentValue + '\n' + str(value)
                 self.Widget.set_value(self.CurrentValue)
 
             super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
@@ -1097,6 +1073,9 @@ class MultilineOutput(Element):
 
     def __del__(self):
         super().__del__()
+
+
+
 
 
 # ---------------------------------------------------------------------- #
@@ -1146,7 +1125,7 @@ class Text(Element):
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
-            self.Widget.set_text(value)
+            self.Widget.set_text(str(value))
         # if background_color is not None:
         #     self.TKText.configure(background=background_color)
         # if text_color is not None:
@@ -1949,6 +1928,7 @@ class Frame(Element):
         self.TitleLocation = title_location
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.Justification = 'left'
 
         self.Layout(layout)
 
@@ -2244,8 +2224,7 @@ class Slider(Element):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, justification='left', key=None):
         '''
         Column Element
         :param layout:
@@ -2265,11 +2244,12 @@ class Column(Element):
         self.TKFrame = None
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
+        self.Justification = justification
         # self.ImageFilename = image_filename
         # self.ImageData = image_data
         # self.ImageSize = image_size
         # self.ImageSubsample = image_subsample
-        bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        # bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Layout(layout)
 
@@ -2712,8 +2692,7 @@ class Window:
         self.BackgroundImage = background_image
         self.XFound = False
         self.DisableMinimize = disable_minimize
-        self.MasterFrame = None  # type: wx.Frame
-        self.MasterPanel = None  # type wx.Panel
+        self.Justification = 'left'
         self.IgnoreClose = False
         self.thread_id = None
         self.App = None         # type: Window.MyApp
@@ -3194,9 +3173,14 @@ class Window:
         # s = remi.server.StandaloneServer(self.MyApp, width=1100, height=600)
         # s.start()
         Window.port_number += 1
+
         remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=Window.port_number, start_browser=True, update_interval=.00001, userdata=(self,))
+
         # remi.start(self.MyApp, title=self.Title ,debug=False,  userdata=(self,), standalone=True)  # standalone=True)
+
+        # remi.start(self.MyApp, standalone=True, debug=True, userdata=(self,) )            # Can't do this because of a threading problem
         print('Returned from Remi Start command... now sending None event')
+
         # self.App.server_starter_instance._alive = False
         # self.App.server_starter_instance._sserver.shutdown()
         self.MessageQueue.put(None)     # if returned from start call, then the window has been destroyed and a None event should be generated
@@ -3392,7 +3376,6 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
          bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
@@ -3985,17 +3968,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             widget.attributes['hidden'] = 'true'
         if element.Tooltip is not None:
             widget.attributes['title'] = element.Tooltip
-        #
-        # widget.SetMinSize(element_size)
-        # if element.Disabled:
-        #     widget.Enable(False)
-        # if not element.Visible:
-        #     widget.Hide()
-        # if element.Tooltip:
-        #     widget.SetToolTip(element.Tooltip)
-
-
-
 
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
@@ -4009,11 +3981,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         ######################### LOOP THROUGH ELEMENTS ON ROW #########################
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
-        tk_row_frame = remi.gui.HBox()        # TODO Get horizontal ROW widget to put others into
-        tk_row_frame.style['justify-content'] = 'flex-start'
-        tk_row_frame.style['align-items'] = 'baseline'
-        if toplevel_form.BackgroundColor not in(None, COLOR_SYSTEM_DEFAULT):
-            tk_row_frame.style['background-color'] = toplevel_form.BackgroundColor
+        tk_row_frame = remi.gui.HBox()
+        if form.Justification.startswith('c'):
+            print('Centering row')
+            tk_row_frame.style['align-items'] = 'center'
+            tk_row_frame.style['justify-content'] = 'center'
+        else:
+            tk_row_frame.style['align-items'] = 'baseline'
+            tk_row_frame.style['justify-content'] = 'flex-start'
+        if form.BackgroundColor not in(None, COLOR_SYSTEM_DEFAULT):
+            tk_row_frame.style['background-color'] = form.BackgroundColor
 
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
@@ -4055,7 +4032,22 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
-                pass
+                print('adding column')
+                element = element   # type: Column
+                element.Widget = column_widget = remi.gui.VBox()
+
+                if element.Justification.startswith('c'):
+                    print('CENTERING')
+                    column_widget.style['align-items'] = 'center'
+                    column_widget.style['justify-content'] = 'center'
+                else:
+                    column_widget.style['justify-content'] = 'flex-start'
+                    column_widget.style['align-items'] = 'baseline'
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    column_widget.style['background-color'] = element.BackgroundColor
+                PackFormIntoFrame(element, column_widget, toplevel_form)
+                tk_row_frame.append(element.Widget)
+
             #     if element.Scrollable:
             #         col_frame = TkScrollableFrame(tk_row_frame,
             #                                       element.VerticalScrollOnly)  # do not use yet!  not working
@@ -4086,6 +4078,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget = remi.gui.Label(element.DisplayText)
                 element.Widget.set_layout_orientation(True)
                 do_font_and_color(element.Widget)
+                if auto_size_text and element.Size == (None, None):
+                    del(element.Widget.style['width'])
                 if element.Justification:
                     if element.Justification.startswith('c'):
                         element.Widget.style['text-align'] = 'center'
@@ -4103,6 +4097,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget = remi.gui.Button(element.ButtonText, width=size[0], height=size[1], margin='10px')
                 element.Widget.onclick.connect(element.ButtonCallBack)
                 do_font_and_color(element.Widget)
+                if element.AutoSizeButton or (toplevel_form.AutoSizeButtons and element.AutoSizeButton is not False) and element.Size == (None, None):
+                    del (element.Widget.style['width'])
                 tk_row_frame.append(element.Widget)
 
             #     stringvar = tk.StringVar()
@@ -4181,10 +4177,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # # -------------------------  INPUT  element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element = element  # type: InputText
-                element.Widget = remi.gui.TextInput(hint=element.DefaultText)
+                element.Widget = InputText.TextInput_raw_onkeyup(hint=element.DefaultText)
+                # element.Widget = remi.gui.TextInput(hint=element.DefaultText)
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onkeydown.connect(element.InputTextCallback)
+                    element.Widget.onkeyup.connect(element.InputTextCallback)
+                    # element.Widget.onkeydown.connect(element.InputTextCallback)
                 tk_row_frame.append(element.Widget)
 
                 # show = element.PasswordCharacter if element.PasswordCharacter else ""
@@ -4431,7 +4429,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
-                pass
+                element = element  # type: Image
+                element.Widget = remi.gui.Image(filename=element.Filename)
+                do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onchange.connect(element.ChangedCallback)
+                tk_row_frame.append(element.Widget)
                 # if element.Filename is not None:
                 #     photo = tk.PhotoImage(file=element.Filename)
                 # elif element.Data is not None:
@@ -6491,11 +6494,13 @@ def main():
     #           [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
     #           [Ok(), Cancel(disabled=True), Exit(tooltip='Exit button'), Button('Hidden Button', visible=False)]]
 
+    col1 = [[Text('Column 1 line  1', background_color='red')], [Text('Column 1 line 2')]]
+
     layout = [
-        [Text('PySimpleGUIWeb Demo of Working Elements', tooltip='text',  font=('Comic sans ms', 20), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
-        [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1))],
+        [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
+        [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
-        [Input('Single Line Input', do_not_clear=True, enable_events=True, size=(30, 1))],
+        [Input('Single Line Input', do_not_clear=True, enable_events=True, size=(30, 1), text_color='red')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
         [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_')],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
@@ -6504,15 +6509,14 @@ def main():
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
         [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True)],
         [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
-        [OK(), Button('Hidden', visible=False), Button('Exit', button_color=('white', 'red'))]
+        [OK(), Button('Hidden', visible=False), Button('Values'), Button('Exit', button_color=('white', 'red'))]
     ]
 
-
-    window = Window('PySimpleGUIWeb Window', font='Arial 18', default_element_size=(12,1)).Layout(layout)
+    window = Window('PySimpleGUIWeb Window', font='Arial 18',default_element_size=(12,1), auto_size_buttons=False).Layout(layout)
 
     start_time = datetime.datetime.now()
     while True:
-        event, values = window.Read(timeout=0)
+        event, values = window.Read(timeout=5)
         window.Element('_TEXT_').Update(str(datetime.datetime.now()))
         window.Element('_TEXT_UPTIME_').Update(str(datetime.datetime.now()-start_time))
         print(event, values) if event != TIMEOUT_KEY else None
@@ -6520,8 +6524,12 @@ def main():
             break
         elif event == 'OK':
             window.Element('_MULTIOUT_').Update('You clicked the OK button', append=True)
+            window.Element('_PySimpleGUIWeb_').Widget.style['background-image'] = "url('/my_resources:mine.png')"
+
+        elif event == 'Values':
+            window.Element('_MULTIOUT_').Update(str(values), append=True)
         elif event != TIMEOUT_KEY:
-            window.Element('_MULTIOUT_').Update(str(event) + '\n'+str(values), append=True)
+            window.Element('_MULTIOUT_').Update('EVENT: ' + str(event), append=True)
     window.Close()
 
 
