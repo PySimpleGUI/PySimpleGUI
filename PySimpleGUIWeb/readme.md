@@ -87,7 +87,9 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 
 This is something truly unique and amazing.   You can run your PySimpleGUI code in a web browser on a computer, phone, tablet without having Python installed on that computer.  Through the magic of repl.it and Remi you can run PySimpleGUI code anywhere you can run a browser.   Not only that, but you can embed these programs into web pages. In fact, this markdown document has one of these programs embedded in it.  
 
-Here is where the iframe is inserted.  You may not see this code
+Here is where the iframe is inserted.  You may not see the page in some instances (like on GitHub).  
+
+Here's your sample program:
 
 <iframe height="400px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
@@ -172,6 +174,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTMyODM1MTIxMywtMTA1NzEwMzY0MywxMj
+eyJoaXN0b3J5IjpbMTA4NjA2MDIwOCwtMTA1NzEwMzY0MywxMj
 EzMzUyNjM2LC0xMTYwNjg0MzM5XX0=
 -->
