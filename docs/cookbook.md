@@ -41,7 +41,7 @@ This will be the most common pattern you'll follow if you are not using an "even
 import PySimpleGUI as sg      
     
 layout = [[sg.Text('My one-shot window.')],      
-                 [sg.InputText(), sg.FileBrowse()],      
+                 [sg.InputText()],      
                  [sg.Submit(), sg.Cancel()]]      
       
 window = sg.Window('Window Title').Layout(layout)    
@@ -1525,3 +1525,6 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
 (famous last words that screw up just about anything being referenced)      
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMjA3NTYwOTk3M119
+-->
