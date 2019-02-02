@@ -51,8 +51,9 @@ window.Close()
     
 text_input = values[0]    
 print(text_input)
-
 ```    
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-1-One-shot-Window?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
     
     
 ## Pattern 2 A - Persistent window (multiple reads using an event loop)      
@@ -1528,5 +1529,5 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTMzOTM3MTM1Ml19
+eyJoaXN0b3J5IjpbLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
 -->
