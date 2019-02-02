@@ -49,7 +49,9 @@ window = sg.Window('Window Title').Layout(layout)
 event, values = window.Read()    
 window.Close()
     
-source_filename = values[0]    
+text_input = values[0]    
+print(text_input)
+
 ```    
     
     
@@ -1526,5 +1528,5 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA3NTYwOTk3M119
+eyJoaXN0b3J5IjpbLTMzOTM3MTM1Ml19
 -->
