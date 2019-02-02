@@ -82,6 +82,10 @@ while True:
 window.Close()
 ```    
 
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2A-Persistent-Window?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
+
+
 ## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
 
 This is a slightly more complex, but maybe more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
@@ -1529,5 +1533,6 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
+eyJoaXN0b3J5IjpbNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOT
+M3MTM1Ml19
 -->
