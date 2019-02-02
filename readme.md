@@ -112,6 +112,9 @@ This is an exciting new development that's opening up all kinds of possibilities
 
 Educators in particular should be interested.  Students can not only post their homework easily for their teacher to access, but teachers can also run the students programs online.  No downloading needed.  Run it and check the results.
 
+Depending on how you're viewing this document, you may or may not see an embedded browser window below that is running PySimpleGUI code.
+
+<iframe height="400px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 # Support
 
@@ -4991,17 +4994,10 @@ Here are the steps to run that application
       
 The pip command is all there is to the setup.      
       
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.      
-For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.      
-      
-![howdoiwithhistory](https://user-images.githubusercontent.com/13696193/45064009-5fd61180-b07f-11e8-8ead-eb0d1ff3a6be.jpg)      
-      
-      
-      
-In the hands of a c
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the corr
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNj
-M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
-Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
-QzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbNzIwODA4NzMyLDE2Nzk4NTA5OTIsLTE0Nj
+E0MjgxLC02MDYzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwx
+MzA3NjkyNTksLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0ND
+E3LDQ0OTQzMzI0MywtMTE0ODQ5MDYyM119
 -->
