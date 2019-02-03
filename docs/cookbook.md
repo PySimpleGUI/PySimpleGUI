@@ -41,7 +41,7 @@ This will be the most common pattern you'll follow if you are not using an "even
 import PySimpleGUI as sg      
     
 layout = [[sg.Text('My one-shot window.')],      
-                 [sg.InputText(), sg.FileBrowse()],      
+                 [sg.InputText()],      
                  [sg.Submit(), sg.Cancel()]]      
       
 window = sg.Window('Window Title').Layout(layout)    
@@ -49,8 +49,11 @@ window = sg.Window('Window Title').Layout(layout)
 event, values = window.Read()    
 window.Close()
     
-source_filename = values[0]    
+text_input = values[0]    
+print(text_input)
 ```    
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-1-One-shot-Window?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
     
     
 ## Pattern 2 A - Persistent window (multiple reads using an event loop)      
@@ -78,6 +81,10 @@ while True:
 
 window.Close()
 ```    
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2A-Persistent-Window?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
+
 
 ## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
 
@@ -1525,3 +1532,7 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
 (famous last words that screw up just about anything being referenced)      
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOT
+M3MTM1Ml19
+-->
