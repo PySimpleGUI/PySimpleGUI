@@ -119,7 +119,7 @@ while True:                 # Event Loop
 window.Close()
 ```
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2B-Persistent-Window-with-Updates?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2B-Persistent-Window-with-Updates?lite=false" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 
 # Simple Data Entry - Return Values As List      
@@ -1533,6 +1533,6 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNzQ3OTk4OTIsNzE3MDQ5NjYwLC02Nz
-k1NDk2NzUsLTMzOTM3MTM1Ml19
+eyJoaXN0b3J5IjpbNjY4Nzg5NzQ5LC0xMTc0Nzk5ODkyLDcxNz
+A0OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEzNTJdfQ==
 -->
