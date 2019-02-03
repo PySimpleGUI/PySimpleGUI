@@ -152,6 +152,8 @@ Same GUI screen except the return values are in a list instead of a dictionary a
     print(event, values[0], values[1], values[2])      
 ```    
       
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Return-Values-as-List?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
 # Simple data entry - Return Values As Dictionary      
 A simple GUI with default values.  Results returned in a dictionary.    
       
@@ -1539,7 +1541,7 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MDI4NDA5ODYsNjY4Nzg5NzQ5LC0xMT
-c0Nzk5ODkyLDcxNzA0OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEz
-NTJdfQ==
+eyJoaXN0b3J5IjpbLTEwMDAyNzY5NTQsLTE0MDI4NDA5ODYsNj
+Y4Nzg5NzQ5LC0xMTc0Nzk5ODkyLDcxNzA0OTY2MCwtNjc5NTQ5
+Njc1LC0zMzkzNzEzNTJdfQ==
 -->
