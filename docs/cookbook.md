@@ -345,7 +345,8 @@ while True:
         timer_running = not timer_running
     window.FindElement('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 ```          
-           
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Timer?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>           
       
 --------      
       
@@ -1545,7 +1546,8 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5ODMyMDM2MzAsLTEwMDAyNzY5NTQsLT
-E0MDI4NDA5ODYsNjY4Nzg5NzQ5LC0xMTc0Nzk5ODkyLDcxNzA0
-OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEzNTJdfQ==
+eyJoaXN0b3J5IjpbLTM1MDcwNjgxOCwtMTk4MzIwMzYzMCwtMT
+AwMDI3Njk1NCwtMTQwMjg0MDk4Niw2Njg3ODk3NDksLTExNzQ3
+OTk4OTIsNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOTM3MTM1Ml
+19
 -->
