@@ -3174,7 +3174,7 @@ class Window:
         # s.start()
         Window.port_number += 1
 
-        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=Window.port_number, start_browser=True, update_interval=.00001, userdata=(self,))
+        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0,  start_browser=True, update_interval=.00001, userdata=(self,))
 
         # remi.start(self.MyApp, title=self.Title ,debug=False,  userdata=(self,), standalone=True)  # standalone=True)
 
