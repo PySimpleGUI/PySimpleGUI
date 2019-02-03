@@ -19,6 +19,10 @@ with
 There is a short section in the Readme with instruction on installing PySimpleGUI  
   
 If you like this Cookbook, then you'll LOVE the 100+ sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  
+
+# Experimental repl.it Embedded Windows
+
+You'll find a few of these Recipes are running in your browser window using PySimpleGUIWeb.  They are included so that you can immediately play around with the SDK before installing one of the PySimpleGU
       
 # Copy these design patterns!      
       
@@ -1533,6 +1537,7 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjY4Nzg5NzQ5LC0xMTc0Nzk5ODkyLDcxNz
-A0OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEzNTJdfQ==
+eyJoaXN0b3J5IjpbLTIwMjkxMDk4OTgsNjY4Nzg5NzQ5LC0xMT
+c0Nzk5ODkyLDcxNzA0OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEz
+NTJdfQ==
 -->
