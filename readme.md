@@ -114,7 +114,7 @@ Educators in particular should be interested.  Students can not only post their 
 
 Depending on how you're viewing this document, you may or may not see an embedded browser window below that is running PySimpleGUI code.
 
-<iframe height="400px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+<iframe height="1000px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 # Support
 
@@ -4994,10 +4994,10 @@ Here are the steps to run that application
       
 The pip command is all there is to the setup.      
       
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the corr
+The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the cor
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzIwODA4NzMyLDE2Nzk4NTA5OTIsLTE0Nj
-E0MjgxLC02MDYzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwx
-MzA3NjkyNTksLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0ND
-E3LDQ0OTQzMzI0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
+YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
+MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
+QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->
