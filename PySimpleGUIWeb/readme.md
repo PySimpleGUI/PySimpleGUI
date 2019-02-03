@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.5.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.6.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -164,6 +164,11 @@ New features
 * Element background colors now picked up from container, not top level window
 * Autosize Text
 * Autosize Button Text
+
+
+## 0.6.0 PySimpleGUIWeb  3-Feb-2019
+
+* Changed Remi port to 0 so will always get a new free port
 
 
 # Design        
