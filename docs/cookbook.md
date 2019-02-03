@@ -22,7 +22,9 @@ If you like this Cookbook, then you'll LOVE the 100+ sample programs that are ju
 
 # Experimental repl.it Embedded Windows
 
-You'll find a few of these Recipes are running in your browser window using PySimpleGUIWeb.  They are included so that you can immediately play around with the SDK before installing one of the PySimpleGU
+You'll find a few of these Recipes are running in your browser window using PySimpleGUIWeb.  They are included so that you can immediately play around with the SDK before installing one of the PySimpleGUI variants on your computer.
+
+This is a new capability for PySimpleGUI that has only very recently been started
       
 # Copy these design patterns!      
       
@@ -1537,7 +1539,7 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMjkxMDk4OTgsNjY4Nzg5NzQ5LC0xMT
+eyJoaXN0b3J5IjpbLTExOTI0MjgyMDQsNjY4Nzg5NzQ5LC0xMT
 c0Nzk5ODkyLDcxNzA0OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEz
 NTJdfQ==
 -->
