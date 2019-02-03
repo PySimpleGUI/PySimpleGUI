@@ -180,7 +180,11 @@ A simple GUI with default values.  Results returned in a dictionary.
     
     print(event, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])      
 ```      
----------------------      
+
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Return-Values-As-Dictionary?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
+-------      
       
 
 
@@ -1541,7 +1545,7 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwMDAyNzY5NTQsLTE0MDI4NDA5ODYsNj
-Y4Nzg5NzQ5LC0xMTc0Nzk5ODkyLDcxNzA0OTY2MCwtNjc5NTQ5
-Njc1LC0zMzkzNzEzNTJdfQ==
+eyJoaXN0b3J5IjpbLTE5ODMyMDM2MzAsLTEwMDAyNzY5NTQsLT
+E0MDI4NDA5ODYsNjY4Nzg5NzQ5LC0xMTc0Nzk5ODkyLDcxNzA0
+OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEzNTJdfQ==
 -->
