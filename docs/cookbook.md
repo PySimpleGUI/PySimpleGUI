@@ -795,6 +795,8 @@ while True:             # Event Loop
 window.Close()
 ```
 
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Compound-Element?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
 ## Multiple Windows
 
 This recipe is a design pattern for multiple windows where the first window is not active while the second window is showing.  The first window is hidden to discourage continued interaction.
@@ -1546,8 +1548,8 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTM1MDcwNjgxOCwtMTk4MzIwMzYzMCwtMT
-AwMDI3Njk1NCwtMTQwMjg0MDk4Niw2Njg3ODk3NDksLTExNzQ3
-OTk4OTIsNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOTM3MTM1Ml
-19
+eyJoaXN0b3J5IjpbLTk0Mjc2ODgzNywtMzUwNzA2ODE4LC0xOT
+gzMjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAyODQwOTg2LDY2ODc4
+OTc0OSwtMTE3NDc5OTg5Miw3MTcwNDk2NjAsLTY3OTU0OTY3NS
+wtMzM5MzcxMzUyXX0=
 -->
