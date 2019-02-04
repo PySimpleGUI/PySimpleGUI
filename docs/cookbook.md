@@ -971,6 +971,9 @@ There are a number of features used in this Recipe including:
       
         window.FindElement('input').Update(keys_entered)  # change the window to reflect current key string    
 ```
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Keypad-Touchscreen-Entry?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
       
 ## Animated Matplotlib Graph      
       
@@ -1548,8 +1551,8 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTk0Mjc2ODgzNywtMzUwNzA2ODE4LC0xOT
-gzMjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAyODQwOTg2LDY2ODc4
-OTc0OSwtMTE3NDc5OTg5Miw3MTcwNDk2NjAsLTY3OTU0OTY3NS
-wtMzM5MzcxMzUyXX0=
+eyJoaXN0b3J5IjpbLTEzNTc5NjUyNTUsLTk0Mjc2ODgzNywtMz
+UwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAy
+ODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OTg5Miw3MTcwNDk2Nj
+AsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
 -->
