@@ -477,7 +477,6 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
-    # def InputTextCallback(self, widget:remi.gui.TextInput, value, keycode):
     def InputTextCallback(self,widget, key, keycode, ctrl, shift, alt):
         # print(f'text widget value = {widget.get_value()}')
         # widget.set_value('')
@@ -490,23 +489,20 @@ class InputText(Element):
 
 
     def Update(self, value=None, disabled=None):
-        if disabled is True:
-            self.TKEntry['state'] = 'disabled'
-        elif disabled is False:
-            self.TKEntry['state'] = 'normal'
         if value is not None:
-            try:
-                self.TKStringVar.set(value)
-            except:
-                pass
-            self.DefaultText = value
+            self.Widget.set_value(str(value))
+        if disabled is True:
+            self.Widget.set_enabled(False)
+        elif disabled is False:
+            self.Widget.set_enabled(True)
 
     def Get(self):
-        return self.TKStringVar.get()
+        return self.Widget.get_value()
 
     def SetFocus(self):
         try:
-            self.TKEntry.focus_set()
+            # TODO NOT IMPLEMENTED YET
+            pass
         except:
             pass
 
@@ -4032,10 +4028,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
-                print('adding column')
                 element = element   # type: Column
                 element.Widget = column_widget = remi.gui.VBox()
-
                 if element.Justification.startswith('c'):
                     print('CENTERING')
                     column_widget.style['align-items'] = 'center'
@@ -4048,30 +4042,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 PackFormIntoFrame(element, column_widget, toplevel_form)
                 tk_row_frame.append(element.Widget)
 
-            #     if element.Scrollable:
-            #         col_frame = TkScrollableFrame(tk_row_frame,
-            #                                       element.VerticalScrollOnly)  # do not use yet!  not working
-            #         PackFormIntoFrame(element, col_frame.TKFrame, toplevel_form)
-            #         col_frame.TKFrame.update()
-            #         if element.Size == (None, None):  # if no size specified, use column width x column height/2
-            #             col_frame.canvas.config(width=col_frame.TKFrame.winfo_reqwidth(),
-            #                                     height=col_frame.TKFrame.winfo_reqheight() / 2)
-            #         else:
-            #             col_frame.canvas.config(width=element.Size[0], height=element.Size[1])
-            #
-            #         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
-            #             col_frame.canvas.config(background=element.BackgroundColor)
-            #             col_frame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
-            #                                      highlightthickness=0)
-            #             col_frame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
-            #     else:
-            #         col_frame = tk.Frame(tk_row_frame)
-            #         PackFormIntoFrame(element, col_frame, toplevel_form)
-            #
-            #     col_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], expand=True, fill='both')
-            #     if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-            #         col_frame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor,
-            #                             highlightcolor=element.BackgroundColor)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 element = element   # type: Text
@@ -4088,7 +4058,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ClickSubmits:
                     element.Widget.onclick.connect(element.ChangedCallback)
                 tk_row_frame.append(element.Widget)
-
 
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:

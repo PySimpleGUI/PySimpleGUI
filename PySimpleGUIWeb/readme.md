@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.5.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.7.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -31,7 +31,7 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
 
-## Engineering Pre-Release   Version 0.5.0
+## Engineering Pre-Release   Version 0.7.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -164,6 +164,15 @@ New features
 * Element background colors now picked up from container, not top level window
 * Autosize Text
 * Autosize Button Text
+
+
+## 0.6.0 PySimpleGUIWeb  3-Feb-2019
+
+* Changed Remi port to 0 so will always get a new free port
+
+## 0.7.0 PySimpleGUIWeb  3-Feb-2019
+
+* Completed `InputText.Update` method so that more demos can be run
 
 
 # Design        

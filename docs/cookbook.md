@@ -19,6 +19,12 @@ with
 There is a short section in the Readme with instruction on installing PySimpleGUI  
   
 If you like this Cookbook, then you'll LOVE the 100+ sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  
+
+# Experimental repl.it Embedded Windows
+
+You'll find a few of these Recipes are running in your browser window using PySimpleGUIWeb.  They are included so that you can immediately play around with the SDK before installing one of the PySimpleGUI variants on your computer.
+
+This is a new capability for PySimpleGUI that has only very recently been started.  Only a few of the elements are operational using PySimpleGUIWeb.  So, be prepared for some bugs.   It's got a ways to go, but still seemed valuable to include.
       
 # Copy these design patterns!      
       
@@ -119,7 +125,7 @@ while True:                 # Event Loop
 window.Close()
 ```
 
-
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2B-Persistent-Window-with-Updates?lite=false" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 
 # Simple Data Entry - Return Values As List      
@@ -146,6 +152,8 @@ Same GUI screen except the return values are in a list instead of a dictionary a
     print(event, values[0], values[1], values[2])      
 ```    
       
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Return-Values-as-List?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
 # Simple data entry - Return Values As Dictionary      
 A simple GUI with default values.  Results returned in a dictionary.    
       
@@ -172,7 +180,11 @@ A simple GUI with default values.  Results returned in a dictionary.
     
     print(event, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])      
 ```      
----------------------      
+
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Return-Values-As-Dictionary?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
+-------      
       
 
 
@@ -333,7 +345,8 @@ while True:
         timer_running = not timer_running
     window.FindElement('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 ```          
-           
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Timer?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>           
       
 --------      
       
@@ -782,6 +795,8 @@ while True:             # Event Loop
 window.Close()
 ```
 
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Compound-Element?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
 ## Multiple Windows
 
 This recipe is a design pattern for multiple windows where the first window is not active while the second window is showing.  The first window is hidden to discourage continued interaction.
@@ -956,6 +971,9 @@ There are a number of features used in this Recipe including:
       
         window.FindElement('input').Update(keys_entered)  # change the window to reflect current key string    
 ```
+
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Keypad-Touchscreen-Entry?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
       
 ## Animated Matplotlib Graph      
       
@@ -1533,6 +1551,8 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOT
-M3MTM1Ml19
+eyJoaXN0b3J5IjpbLTEzNTc5NjUyNTUsLTk0Mjc2ODgzNywtMz
+UwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAy
+ODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OTg5Miw3MTcwNDk2Nj
+AsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
 -->
