@@ -462,12 +462,6 @@ PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It
 If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this ReadMe      
       
 
-## Qt Version
-
-Please see the Qt specific documentation.  The readme that contains all you need to know about Qt specific matters is here:
-https://pysimplegui.readthedocs.io/readmeqt/
-
-
 ## Using  - Python 3      
       
 To use in your code, simply import....      
@@ -4996,8 +4990,9 @@ The pip command is all there is to the setup.
       
 The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the cor
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
-YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
-MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
-QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbMjYwNTg0ODE0LDExMDIwODgzMzMsMTY3OT
+g1MDk5MiwtMTQ2MTQyODEsLTYwNjM3MTE4LC01MDkzNTkxMjMs
+LTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2NzgzNTUsLTc3NDA3ND
+IzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
+
 -->
