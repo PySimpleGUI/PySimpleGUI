@@ -3038,7 +3038,6 @@ class Window:
             del(Window.active_windows[-1])          # delete current window from active windows
             if len(Window.active_windows) != 0:
                 window = Window.active_windows[-1]      # get prior window to change to
-                print(f'In close, changing to widget {window.master_widget}')
                 Window.App.set_root_widget(window.master_widget)
             else:
                 self.App.close()
@@ -3049,11 +3048,6 @@ class Window:
         self.App.close()
         self.App.server.server_starter_instance._alive = False
         self.App.server.server_starter_instance._sserver.shutdown()
-        # try:
-        #     self.MasterFrame.Close()
-        # except:
-        #     print('error closing window')
-
 
     CloseNonBlockingForm = Close
     CloseNonBlocking = Close
