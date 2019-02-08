@@ -442,7 +442,7 @@ class Element():
         if visible is False:
             widget.attributes['hidden'] = 'true'
         elif visible is True:
-            widget.attributes['hidden'] = 'false'
+            del(widget.attributes['hidden'])
 
     def __del__(self):
         pass
@@ -1482,14 +1482,7 @@ class Button(Element):
             self.ParentForm.FormRemainedOpen = True
             element_callback_quit_mainloop(self)
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = self.ButtonText
-            if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
-                self.ParentForm.App.ExitMainLoop()
-            self.ParentForm.IgnoreClose = True
-            self.ParentForm.MasterFrame.Close()
+            element_callback_quit_mainloop(self)
             self.ParentForm._Close()
             Window.DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
@@ -2592,6 +2585,8 @@ class Window:
     stdout_is_rerouted = False
     stdout_location = None
     port_number = 6900
+    active_windows = [ ]        # type: Window []
+    App = None
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None),
@@ -2693,6 +2688,7 @@ class Window:
         self.thread_id = None
         self.App = None         # type: Window.MyApp
         self.MessageQueue = Queue()
+        self.master_widget = None
 
     @classmethod
     def IncrementOpenCount(self):
@@ -3028,25 +3024,31 @@ class Window:
         self.MasterFrame.Maximize()
 
     def _Close(self):
-        try:
-            self.TKroot.update()
-        except:
-            pass
         if not self.NonBlocking:
             BuildResults(self, False, self)
         if self.TKrootDestroyed:
             return None
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
+        self.Close()
         self.__del__()
-        return None
 
     def Close(self):
+        if len(Window.active_windows) != 0:
+            del(Window.active_windows[-1])          # delete current window from active windows
+            if len(Window.active_windows) != 0:
+                window = Window.active_windows[-1]      # get prior window to change to
+                print(f'In close, changing to widget {window.master_widget}')
+                Window.App.set_root_widget(window.master_widget)
+            else:
+                self.App.close()
+                self.App.server.server_starter_instance._alive = False
+                self.App.server.server_starter_instance._sserver.shutdown()
+            return
+
         self.App.close()
         self.App.server.server_starter_instance._alive = False
         self.App.server.server_starter_instance._sserver.shutdown()
-        if self.TKrootDestroyed:
-            return
         # try:
         #     self.MasterFrame.Close()
         # except:
@@ -3183,23 +3185,28 @@ class Window:
 
 
     class MyApp(remi.App):
-        def __init__(self,*args):
+        def __init__(self,*args, userdata2=None):
             # self.window = window    # type:  Window
             # print(args[-1])
-            userdata = args[-1].userdata
-            self.window = userdata[0]       # type: Window
+            if userdata2 is None:
+                userdata = args[-1].userdata
+                self.window = userdata[0]       # type: Window
+            else:
+                self.window = userdata2
             self.window.App = self
-            super(Window.MyApp, self).__init__(*args)
+            self.master_widget = None
+            if userdata2 is None:
+                super(Window.MyApp, self).__init__(*args)
 
         def main(self, name='world'):
             # margin 0px auto allows to center the app to the screen
-            wid = remi.gui.VBox()
-            wid.style['justify-content'] = 'flex-start'
-            wid.style['align-items'] = 'baseline'
+            self.master_widget = remi.gui.VBox()
+            self.master_widget.style['justify-content'] = 'flex-start'
+            self.master_widget.style['align-items'] = 'baseline'
             if self.window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
-                wid.style['background-color'] = self.window.BackgroundColor
+                self.master_widget.style['background-color'] = self.window.BackgroundColor
             try:
-                PackFormIntoFrame(self.window, wid, self.window)
+                PackFormIntoFrame(self.window, self.master_widget, self.window)
             except:
                 print('* ERROR PACKING FORM *')
                 print(traceback.format_exc())
@@ -3208,14 +3215,15 @@ class Window:
             tag = remi.gui.Tag(_type='script')
             tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
             str(id(self)), "on_window_close"))
-            wid.add_child("onunloadevent", tag)
+            self.master_widget.add_child("onunloadevent", tag)
             self.window.MessageQueue.put('Layout complete')     # signal the main code that the layout is all done
-            return wid          # returning the root widget
+            self.window.master_widget = self.master_widget
+            return self.master_widget          # returning the root widget
 
 
         def on_window_close(self):
             # here you can handle the unload
-            # print("app closing")
+            print("app closing")
             self.close()
             self.server.server_starter_instance._alive = False
             self.server.server_starter_instance._sserver.shutdown()
@@ -4821,79 +4829,27 @@ def StartupTK(window:Window):
     master = 00000
 
     InitializeResults(window)
-    # REMI - this call moved to inside of the REMI thread
-    # PackFormIntoFrame(window, master, window)
-    # ....................................... DONE creating and laying out window ..........................#
-    # if MyFlexForm._Size != (None, None):
-    #     master.geometry("%sx%s" % (MyFlexForm._Size[0], MyFlexForm._Size[1]))
 
-    # Center in middle of screen
-    # screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
-    # screen_height = master.winfo_screenheight()
-    # if window.Location != (None, None):
-    #     x, y = window.Location
-    # elif DEFAULT_WINDOW_LOCATION != (None, None):
-    #     x, y = DEFAULT_WINDOW_LOCATION
-    # else:
-    #     master.update_idletasks()  # don't forget to do updates or values are bad
-    #     win_width = master.winfo_width()
-    #     win_height = master.winfo_height()
-    #     x = screen_width / 2 - win_width / 2
-    #     y = screen_height / 2 - win_height / 2
-    #     if y + win_height > screen_height:
-    #         y = screen_height - win_height
-    #     if x + win_width > screen_width:
-    #         x = screen_width - win_width
-    #
-    # move_string = '+%i+%i' % (int(x), int(y))
-    # master.geometry(move_string)
-    #
-    # master.update_idletasks()  # don't forget
+    if len(Window.active_windows) == 0:
+        window.thread_id = threading.Thread(target=window.remi_thread, daemon=True)
+        window.thread_id.daemon = True
+        window.thread_id.start()
+        item = window.MessageQueue.get()        # Get the layout complete message
+        Window.active_windows.append(window)
+        Window.App = window.App
+    else:
+        # margin 0px auto allows to center the app to the screen
+        master_widget = remi.gui.VBox()
+        master_widget.style['justify-content'] = 'flex-start'
+        master_widget.style['align-items'] = 'baseline'
+        if window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+            master_widget.style['background-color'] = window.BackgroundColor
+        PackFormIntoFrame(window, master_widget, window)
+        window.master_widget = master_widget
+        Window.active_windows.append(window)
+        Window.App.set_root_widget(master_widget)
 
-
-    window.thread_id = threading.Thread(target=window.remi_thread, daemon=True)
-    window.thread_id.daemon = True
-    window.thread_id.start()
-    item = window.MessageQueue.get()        # Get the layout complete message
-
-
-
-    # my_flex_form.SetIcon(my_flex_form.WindowIcon)
-
-    # root.attributes('-alpha', my_flex_form.AlphaChannel)  # Make window visible again
-
-    # if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
-    #     root.bind("<KeyRelease>", my_flex_form._KeyboardCallback)
-    #     root.bind("<MouseWheel>", my_flex_form._MouseWheelCallback)
-    # elif my_flex_form.ReturnKeyboardEvents:
-    #     root.bind("<Key>", my_flex_form._KeyboardCallback)
-    #     root.bind("<MouseWheel>", my_flex_form._MouseWheelCallback)
-
-    # if my_flex_form.AutoClose:
-    #     duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
-    #     my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
-    #
-    # if my_flex_form.Timeout != None:
-    #     my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
-    # if my_flex_form.NonBlocking:
-    #     my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
-    #     my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
-    # else:  # it's a blocking form
-        # print('..... CALLING MainLoop')
-        # my_flex_form.CurrentlyRunningMainloop = True
-        # my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
-        # my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
-        # my_flex_form.TKroot.mainloop()
-        # my_flex_form.CurrentlyRunningMainloop = False
-        # my_flex_form.TimerCancelled = True
-        # print('..... BACK from MainLoop')
-        # if not my_flex_form.FormRemainedOpen:
-        #     _my_windows.Decrement()
-        # if my_flex_form.RootNeedsDestroying:
-        #     my_flex_form.TKroot.destroy()
-        #     my_flex_form.RootNeedsDestroying = False
     return
-
 
 # ==============================_GetNumLinesNeeded ==#
 # Helper function for determining how to wrap text   #
@@ -5937,7 +5893,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
-    window.Close()
+        window.Close()
     return button
 
 
@@ -6469,7 +6425,7 @@ def main():
         [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
-        [Input('Single Line Input', do_not_clear=True, enable_events=True, size=(30, 1), text_color='red')],
+        [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
         [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_')],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
@@ -6478,7 +6434,7 @@ def main():
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
         [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True)],
         [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
-        [OK(), Button('Hidden', visible=False), Button('Values'), Button('Exit', button_color=('white', 'red'))]
+        [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide')]
     ]
 
     window = Window('PySimpleGUIWeb Window', font='Arial 18',default_element_size=(12,1), auto_size_buttons=False).Layout(layout)
@@ -6499,6 +6455,10 @@ def main():
             window.Element('_MULTIOUT_').Update(str(values), append=True)
         elif event != TIMEOUT_KEY:
             window.Element('_MULTIOUT_').Update('EVENT: ' + str(event), append=True)
+        if event == 'UnHide':
+            print('Unhiding...')
+            window.Element('_HIDDEN_').Update(visible=True)
+
     window.Close()
 
 
