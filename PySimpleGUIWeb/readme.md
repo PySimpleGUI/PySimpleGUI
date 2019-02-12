@@ -174,6 +174,11 @@ New features
 
 * Completed `InputText.Update` method so that more demos can be run
 
+## 0.8.0 PySimpleGUIWeb 8-Feb-2019
+
+* Popup support!
+* Support for multiple windows
+
 
 # Design        
 # Author 
