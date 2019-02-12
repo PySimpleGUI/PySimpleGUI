@@ -35,12 +35,32 @@ def TimerStop():
     g_time_delta = g_time_end - g_time_start
     print(g_time_delta)
 
+######           #####                                       #####   #     #  ###  #     #
+#     #  #   #  #     #  #  #    #  #####   #       ######  #     #  #     #   #   #  #  #  ######  #####
+#     #   # #   #        #  ##  ##  #    #  #       #       #        #     #   #   #  #  #  #       #    #
+######     #     #####   #  # ## #  #    #  #       #####   #  ####  #     #   #   #  #  #  #####   #####
+#          #          #  #  #    #  #####   #       #       #     #  #     #   #   #  #  #  #       #    #
+#          #    #     #  #  #    #  #       #       #       #     #  #     #   #   #  #  #  #       #    #
+#          #     #####   #  #    #  #       ######  ######   #####    #####   ###   ## ##   ######  #####
 
 """
-    Welcome to the "core" PySimpleGUI code....
+    Welcome to the "core" PySimpleGUIWeb code....
     
-    This port is special.... it runs in a web browser!
-    It is based on the Remi GUI framework, an SDK that's been a real joy to work with
+    This special port of the PySimpleGUI SDK to the browser is made possible by the magic of Remi 
+    
+    https://github.com/dddomodossola/remi 
+    
+    To be clear, PySimpleGUI would not be able to run in a web browser without this important GUI Framework
+    It may not be as widely known at tkinter or Qt, but it should be.  Just as those are the best of the desktop
+    GUI frameworks, Remi is THE framework for doing Web Page GUIs in Python.  Nothing else like it exists.                                       
+    
+          :::::::::       ::::::::::         :::   :::       ::::::::::: 
+         :+:    :+:      :+:               :+:+: :+:+:          :+:      
+        +:+    +:+      +:+              +:+ +:+:+ +:+         +:+       
+       +#++:++#:       +#++:++#         +#+  +:+  +#+         +#+        
+      +#+    +#+      +#+              +#+       +#+         +#+         
+     #+#    #+#      #+#              #+#       #+#         #+#          
+    ###    ###      ##########       ###       ###     ###########       
 
 """
 
@@ -1057,6 +1077,8 @@ class MultilineOutput(Element):
             elif value is not None and append:
                 self.CurrentValue = self.CurrentValue + '\n' + str(value)
                 self.Widget.set_value(self.CurrentValue)
+            app = self.ParentForm.App
+            app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
 
             super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
@@ -2688,7 +2710,7 @@ class Window:
         self.thread_id = None
         self.App = None         # type: Window.MyApp
         self.MessageQueue = Queue()
-        self.master_widget = None
+        self.master_widget = None       # type: remi.gui.VBox
 
     @classmethod
     def IncrementOpenCount(self):
@@ -3038,7 +3060,6 @@ class Window:
             del(Window.active_windows[-1])          # delete current window from active windows
             if len(Window.active_windows) != 0:
                 window = Window.active_windows[-1]      # get prior window to change to
-                print(f'In close, changing to widget {window.master_widget}')
                 Window.App.set_root_widget(window.master_widget)
             else:
                 self.App.close()
@@ -3049,11 +3070,6 @@ class Window:
         self.App.close()
         self.App.server.server_starter_instance._alive = False
         self.App.server.server_starter_instance._sserver.shutdown()
-        # try:
-        #     self.MasterFrame.Close()
-        # except:
-        #     print('error closing window')
-
 
     CloseNonBlockingForm = Close
     CloseNonBlocking = Close
@@ -3066,12 +3082,13 @@ class Window:
 
     def Hide(self):
         self._Hidden = True
-        self.MasterFrame.Hide()
+        self.master_widget.attributes['hidden'] = 'true'
+        # self.MasterFrame.Hide()
         return
 
     def UnHide(self):
         if self._Hidden:
-            self.MasterFrame.Show()
+            del(self.master_widget.attributes['hidden'])
             self._Hidden = False
 
     def Disappear(self):
@@ -3227,7 +3244,7 @@ class Window:
             self.close()
             self.server.server_starter_instance._alive = False
             self.server.server_starter_instance._sserver.shutdown()
-            self.window.MessageQueue.put(None)
+            # self.window.MessageQueue.put(None)
             print("server stopped")
 
 FlexForm = Window
@@ -3921,12 +3938,18 @@ else:
                     AddMenuItem(top_menu, item, element)
                 i += 1
 
-
-# ------------------------------------------------------------------------------------------------------------------ #
-# ------------------------------------------------------------------------------------------------------------------ #
-# =====================================   TK CODE STARTS HERE ====================================================== #
-# ------------------------------------------------------------------------------------------------------------------ #
-# ------------------------------------------------------------------------------------------------------------------ #
+"""
+          :::::::::       ::::::::::         :::   :::       ::::::::::: 
+         :+:    :+:      :+:               :+:+: :+:+:          :+:      
+        +:+    +:+      +:+              +:+ +:+:+ +:+         +:+       
+       +#++:++#:       +#++:++#         +#+  +:+  +#+         +#+        
+      +#+    +#+      +#+              +#+       +#+         +#+         
+     #+#    #+#      #+#              #+#       #+#         #+#          
+    ###    ###      ##########       ###       ###     ###########    
+"""
+# ------------------------------------------------------------------------------------------------------------ #
+# ===================================== REMI CODE STARTS HERE ================================================ #
+# ------------------------------------------------------------------------------------------------------------ #
 
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
@@ -3987,7 +4010,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** Make TK Row                             ***********#
         tk_row_frame = remi.gui.HBox()
         if form.Justification.startswith('c'):
-            print('Centering row')
+            # print('Centering row')
             tk_row_frame.style['align-items'] = 'center'
             tk_row_frame.style['justify-content'] = 'center'
         else:
@@ -4039,7 +4062,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element   # type: Column
                 element.Widget = column_widget = remi.gui.VBox()
                 if element.Justification.startswith('c'):
-                    print('CENTERING')
+                    # print('CENTERING')
                     column_widget.style['align-items'] = 'center'
                     column_widget.style['justify-content'] = 'center'
                 else:
@@ -4823,10 +4846,10 @@ def StartupTK(window:Window):
 
     # if my_flex_form.KeepOnTop:
     #     root.wm_attributes("-topmost", 1)
-    master = window.TKroot
+    # master = window.TKroot
     # Set Title
     # master.title(MyFlexForm.Title)
-    master = 00000
+    # master = 00000
 
     InitializeResults(window)
 
