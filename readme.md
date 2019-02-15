@@ -4972,27 +4972,10 @@ GNU Lesser General Public License (LGPL 3) +
 * [deajan](https://github.com/deajan) - Custom button text for Popups
 * [GRADESK](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
 
-      
-## How Do I      
-Finally, I must thank the fine folks at How Do I.      
-https://github.com/gleitz/howdoi      
-Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**      
-Here are the steps to run that application      
-      
-    Install howdoi:      
-          pip install howdoi      
-    Test your install:      
-          python -m howdoi howdoi.py      
-    To run it:      
-          Python HowDoI.py      
-      
-The pip command is all there is to the setup.      
-      
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the cor
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjYwNTg0ODE0LDExMDIwODgzMzMsMTY3OT
-g1MDk5MiwtMTQ2MTQyODEsLTYwNjM3MTE4LC01MDkzNTkxMjMs
-LTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2NzgzNTUsLTc3NDA3ND
-IzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
-
+eyJoaXN0b3J5IjpbLTE1Nzg3NDY1ODgsMjYwNTg0ODE0LDExMD
+IwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNjM3MTE4
+LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2Nz
+gzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC0x
+MTQ4NDkwNjIzXX0=
 -->

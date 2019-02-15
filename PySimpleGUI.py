@@ -23,6 +23,18 @@ import pickle
 import calendar
 from random import randint
 
+
+
+#  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
+#  88    `8b          88.    "'                        88          d8'   `88 88     88 88
+# a88aaaa8P' dP    dP `Y88888b. dP 88d8b.d8b. 88d888b. 88 .d8888b. 88        88     88 88
+#  88        88    88       `8b 88 88'`88'`88 88'  `88 88 88ooood8 88   YP88 88     88 88
+#  88        88.  .88 d8'   .8P 88 88  88  88 88.  .88 88 88.  ... Y8.   .88 Y8.   .8P 88
+#  dP        `8888P88  Y88888P  dP dP  dP  dP 88Y888P' dP `88888P'  `88888'  `Y88888P' dP
+#                 .88                         88
+#             d8888P                          dP
+
+
 g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
@@ -1922,7 +1934,10 @@ class Image(Element):
         else:
             self.CurrentFrameNumber  = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber+1< self.TotalAnimatedFrames else 0
         image = self.AnimatedFrames[self.CurrentFrameNumber]
-        self.tktext_label.configure(image=image, width=image.width(), heigh=image.height())
+        try:        # needed in case the window was closed with an "X"
+            self.tktext_label.configure(image=image, width=image.width(), heigh=image.height())
+        except:
+            pass
 
 
 
@@ -2032,7 +2047,12 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+        try:            # in case window was closed with an X
+            id = self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+        except:
+            id = None
+        return id
+
 
     def DrawPoint(self, point, size=2, color='black'):
         if point == (None, None):
@@ -2042,9 +2062,14 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_point[0] - size, converted_point[1] - size,
+        try:            # needed in case window was closed with an X
+            id =  self._TKCanvas2.create_oval(converted_point[0] - size, converted_point[1] - size,
                                            converted_point[0] + size, converted_point[1] + size, fill=color,
                                            outline=color)
+        except:
+            id = None
+        return
+
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         if center_location == (None, None):
@@ -2054,9 +2079,13 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_point[0] - radius, converted_point[1] - radius,
+        try:    # needed in case the window was closed with an X
+            id = self._TKCanvas2.create_oval(converted_point[0] - radius, converted_point[1] - radius,
                                            converted_point[0] + radius, converted_point[1] + radius, fill=fill_color,
                                            outline=line_color)
+        except:
+            id = None
+        return id
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -2065,8 +2094,13 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
+        try:            # in case windows close with X
+            id = self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                            converted_bottom_right[1], fill=fill_color, outline=line_color)
+        except:
+            id = None
+
+        return id
 
     def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -2076,9 +2110,13 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
+        try:            # in case closed with X
+            id = self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                           converted_bottom_right[1], extent=extent, start=start_angle, style=tkstyle,
                                           outline=arc_color)
+        except:
+            id = None
+        return id
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -2087,8 +2125,13 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
+        try:            # in case closed with X
+            id = self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                                 converted_bottom_right[1], fill=fill_color, outline=line_color)
+        except:
+            id = None
+        return id
+
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
         if location == (None, None):
@@ -2098,9 +2141,12 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
+        try:  # in case closed with X
+            id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
                                               angle=angle)
-        return text_id
+        except:
+            id = None
+        return id
 
 
     def DrawImage(self, filename=None, data=None, location=(None, None), color='black', font=None, angle=0):
@@ -2120,8 +2166,11 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self.Images.append(image)
-        text_id = self._TKCanvas2.create_image(converted_point, image=image, anchor=tk.NW)
-        return text_id
+        try:  # in case closed with X
+            id = self._TKCanvas2.create_image(converted_point, image=image, anchor=tk.NW)
+        except:
+            id = None
+        return id
 
 
 
@@ -2130,7 +2179,10 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        self._TKCanvas2.delete('all')
+        try:            # in case window was closed with X
+            self._TKCanvas2.delete('all')
+        except:
+            pass
 
 
     def DeleteFigure(self, id):
@@ -4715,13 +4767,34 @@ else:
                 i += 1
 
 
-# ------------------------------------------------------------------------------------------------------------------ #
-# ------------------------------------------------------------------------------------------------------------------ #
-# =====================================   TK CODE STARTS HERE ====================================================== #
-# ------------------------------------------------------------------------------------------------------------------ #
-# ------------------------------------------------------------------------------------------------------------------ #
+# 888    888      d8b          888
+# 888    888      Y8P          888
+# 888    888                   888
+# 888888 888  888 888 88888b.  888888  .d88b.  888d888
+# 888    888 .88P 888 888 "88b 888    d8P  Y8b 888P"
+# 888    888888K  888 888  888 888    88888888 888
+# Y88b.  888 "88b 888 888  888 Y88b.  Y8b.     888
+#  "Y888 888  888 888 888  888  "Y888  "Y8888  888
 
-def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
+# My crappy tkinter code starts here
+
+# ░░░░░░░░░░░█▀▀░░█░░░░░░
+# ░░░░░░▄▀▀▀▀░░░░░█▄▄░░░░
+# ░░░░░░█░█░░░░░░░░░░▐░░░
+# ░░░░░░▐▐░░░░░░░░░▄░▐░░░
+# ░░░░░░█░░░░░░░░▄▀▀░▐░░░
+# ░░░░▄▀░░░░░░░░▐░▄▄▀░░░░
+# ░░▄▀░░░▐░░░░░█▄▀░▐░░░░░
+# ░░█░░░▐░░░░░░░░▄░█░░░░░
+# ░░░█▄░░▀▄░░░░▄▀▐░█░░░░░
+# ░░░█▐▀▀▀░▀▀▀▀░░▐░█░░░░░
+# ░░▐█▐▄░░▀░░░░░░▐░█▄▄░░░
+# ░░░▀▀▄░░░░░░░░▄▐▄▄▄▀░░░
+# ░░░░░░░░░░░░░░░░░░░░░░░
+
+# ========================   TK CODE STARTS HERE ========================================= #
+
+def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
 
@@ -5193,7 +5266,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
                 listbox_frame = tk.Frame(tk_row_frame)
                 element.TKStringVar = tk.StringVar()
                 element.TKListbox = tk.Listbox(listbox_frame, height=element_size[1], width=width,
-                                               selectmode=element.SelectMode, font=font)
+                                               selectmode=element.SelectMode, font=font, exportselection=False)
                 for index, item in enumerate(element.Values):
                     element.TKListbox.insert(tk.END, item)
                     if element.DefaultValues is not None and item in element.DefaultValues:
@@ -5898,7 +5971,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form:Window):
     return
 
 
-def ConvertFlexToTK(MyFlexForm:Window):
+def ConvertFlexToTK(MyFlexForm):
     master = MyFlexForm.TKroot
     master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
@@ -6831,11 +6904,18 @@ def ObjToString(obj, extra='    '):
          for item in sorted(obj.__dict__)))
 
 
+######
+#     #   ####   #####   #    #  #####    ####
+#     #  #    #  #    #  #    #  #    #  #
+######   #    #  #    #  #    #  #    #   ####
+#        #    #  #####   #    #  #####        #
+#        #    #  #       #    #  #       #    #
+#         ####   #        ####   #        ####
+
+
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   Upper PySimpleGUI ======================================================== #
-#   Pre-built dialog boxes for all your needs    These are the "high level API calls                                 #
 # ------------------------------------------------------------------------------------------------------------------ #
-
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
 def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
@@ -7462,7 +7542,17 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
 
     window.Refresh()        # call refresh instead of Read to save significant CPU time
 
-
+"""
+                       d8b          
+                       Y8P          
+                                    
+88888b.d88b.   8888b.  888 88888b.  
+888 "888 "88b     "88b 888 888 "88b 
+888  888  888 .d888888 888 888  888 
+888  888  888 888  888 888 888  888 
+888  888  888 "Y888888 888 888  888 
+                                    
+"""
 
 def main():
     from random import randint

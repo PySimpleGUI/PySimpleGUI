@@ -8,8 +8,6 @@ import calendar
 import threading
 from collections import deque
 from queue import Queue
-# import remi.gui as gui
-# from remi import start, App
 import remi
 import logging
 import traceback

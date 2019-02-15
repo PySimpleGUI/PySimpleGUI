@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.7.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.9.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -31,7 +31,7 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
 
-## Engineering Pre-Release   Version 0.7.0
+## Engineering Pre-Release   Version 0.9.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -83,6 +83,9 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Element padding
 * Read with timeout
 * Read with timeout = 0
+* Popup Windows
+* Multiple windows
+
 
 
 # Running online using repl.it
@@ -178,6 +181,10 @@ New features
 
 * Popup support!
 * Support for multiple windows
+
+## 0.9.0 PySimpleGUIWeb 14-Feb-2019
+
+* Support for Window.Hide, Window.UnHide (better multi-window support)
 
 
 # Design        
