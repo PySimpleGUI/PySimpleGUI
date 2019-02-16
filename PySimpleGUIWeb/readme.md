@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.9.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0..0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -31,7 +31,7 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
 
-## Engineering Pre-Release   Version 0.9.0
+## Engineering Pre-Release   Version 0..0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -197,6 +197,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDc1ODY1Njc2LC0xMDU3MTAzNjQzLDEyMT
-MzNTI2MzYsLTExNjA2ODQzMzldfQ==
+eyJoaXN0b3J5IjpbMjAxMzEzNTUxOSw0NzU4NjU2NzYsLTEwNT
+cxMDM2NDMsMTIxMzM1MjYzNiwtMTE2MDY4NDMzOV19
 -->
