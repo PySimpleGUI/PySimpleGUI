@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0..0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.10.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -31,7 +31,7 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
 
-## Engineering Pre-Release   Version 0..0
+## Engineering Pre-Release   Version 0.10.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -86,7 +86,7 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Read with timeout = 0
 * Popup Windows
 * Multiple windows
-
+* Update methods for many of the elements (Text is 100% complete), others have some of their parameters working.
 
 
 # Running online using repl.it
@@ -218,6 +218,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI4NTY2MjMsNDc1ODY1Njc2LC0xMDU3MT
-AzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
+eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
+U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
 -->
