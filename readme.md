@@ -1,11 +1,3 @@
-
-
-  
-    
-      
-      
-      
-      
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)      
       
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
@@ -30,7 +22,8 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.24.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.24.0-red.svg?longCache=true&style=for-the-badge) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPySimpleGUI%2FPySimpleGUI.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FPySimpleGUI%2FPySimpleGUI?ref=badge_shield)
+     
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.24.0-blue.svg?longCache=true&style=for-the-badge)      
   
@@ -4950,6 +4943,9 @@ MikeB
       
 GNU Lesser General Public License (LGPL 3) +      
       
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPySimpleGUI%2FPySimpleGUI.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FPySimpleGUI%2FPySimpleGUI?ref=badge_large)
+
 ## Acknowledgments      
       
 *  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence      
