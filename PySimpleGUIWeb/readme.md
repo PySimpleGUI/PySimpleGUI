@@ -79,6 +79,7 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Listbox Element
 * Spinner Element (sorta... numbers 0 to 100 only now)
 * Column Element
+* Image Element
 * Window background color
 * Element padding
 * Read with timeout
@@ -186,6 +187,26 @@ New features
 
 * Support for Window.Hide, Window.UnHide (better multi-window support)
 
+## 0.9.1 PySimpleGUIWeb
+
+* Emergency release due to some code to do scrolling of multiline not being right and sometimes crashed programs
+
+## 0.10.0 PySimpleGUIWeb 16-Feb-2019
+
+* Completed Text.Update method. Can now change:
+	* Text
+	* Font family & size
+	* Background color
+	* Text Color
+	* Visibility
+* Completed Button.Update with exception of images
+* Completed Spin.Update with except of range. This element still pretty crippled
+* Completed Slider.Update - Can update value, visibility, disabled, but not the range
+* Image Element!
+* Events for Image Element
+* Image.Update to change image
+
+
 
 # Design        
 # Author 
@@ -197,6 +218,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjAxMzEzNTUxOSw0NzU4NjU2NzYsLTEwNT
-cxMDM2NDMsMTIxMzM1MjYzNiwtMTE2MDY4NDMzOV19
+eyJoaXN0b3J5IjpbLTI4NTY2MjMsNDc1ODY1Njc2LC0xMDU3MT
+AzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
 -->
