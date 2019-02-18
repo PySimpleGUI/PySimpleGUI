@@ -8,11 +8,11 @@
       
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)      
       
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      
-[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
-[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)  
-[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)  
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)        tkinter
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      tkinter 2.7
+[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)   Qt
+[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)    WxPython
+[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)   Web (Remi)
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
@@ -4973,9 +4973,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [GRADESK](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1Nzg3NDY1ODgsMjYwNTg0ODE0LDExMD
-IwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNjM3MTE4
-LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2Nz
-gzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC0x
-MTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbOTY5ODYxNzIzLC0xNTc4NzQ2NTg4LDI2MD
+U4NDgxNCwxMTAyMDg4MzMzLDE2Nzk4NTA5OTIsLTE0NjE0Mjgx
+LC02MDYzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwxMzA3Nj
+kyNTksLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0
+OTQzMzI0MywtMTE0ODQ5MDYyM119
 -->
