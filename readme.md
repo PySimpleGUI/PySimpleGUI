@@ -26,7 +26,7 @@
 ## Supports both Python 2.7 & 3 when using tkinter
 ## Supports both PySide2 and PyQt5 (limited support)
 ## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Web (Remi) by changing only the import statement
-
+## The only we
 
 
 
@@ -38,7 +38,7 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2.2-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.10.0-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -4973,9 +4973,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [GRADESK](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTY5ODYxNzIzLC0xNTc4NzQ2NTg4LDI2MD
-U4NDgxNCwxMTAyMDg4MzMzLDE2Nzk4NTA5OTIsLTE0NjE0Mjgx
-LC02MDYzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwxMzA3Nj
-kyNTksLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0NDE3LDQ0
-OTQzMzI0MywtMTE0ODQ5MDYyM119
+eyJoaXN0b3J5IjpbLTE5NTIyMzk3MzksLTE1Nzg3NDY1ODgsMj
+YwNTg0ODE0LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQy
+ODEsLTYwNjM3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMD
+c2OTI1OSwtMjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcs
+NDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
 -->
