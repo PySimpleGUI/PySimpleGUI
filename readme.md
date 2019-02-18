@@ -55,9 +55,7 @@
       
 [Docs in PDF Format](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/docs)      
       
-[Run live in a web browser using repl.it!](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos)  
-
-Repl.it Home
+[Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
       
 Super-simple GUI to use... Powerfully customizable    
       
@@ -4978,7 +4976,7 @@ GNU Lesser General Public License (LGPL 3) +
 * [GRADESK](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE2MDExNTg2MiwtMTU3ODc0NjU4OCwyNj
+eyJoaXN0b3J5IjpbMjA1MzEyNTE0OSwtMTU3ODc0NjU4OCwyNj
 A1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xNDYxNDI4
 MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2MjksMTMwNz
 Y5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2NDQxNyw0
