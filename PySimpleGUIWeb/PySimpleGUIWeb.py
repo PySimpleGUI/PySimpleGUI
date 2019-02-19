@@ -11,7 +11,7 @@ from queue import Queue
 import remi
 import logging
 import traceback
-
+import os
 
 g_time_start = 0
 g_time_end = 0
@@ -143,7 +143,7 @@ DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
 PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 DEFAULT_PROGRESS_BAR_STYLE = 'default'
-DEFAULT_METER_ORIENTATION = 'Horizontal'
+DEFAULT_METER_ORIENTATION = 'horizontal'
 DEFAULT_SLIDER_ORIENTATION = 'vertical'
 DEFAULT_SLIDER_BORDER_WIDTH = 1
 DEFAULT_SLIDER_RELIEF = 00000
@@ -439,6 +439,28 @@ class Element():
 
 
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None, disabled=None, tooltip=None):
+        if font is not None:
+            font_info = font_parse_string(font)  # family, point size, other
+            widget.style['font-family'] = font_info[0]
+            widget.style['font-size'] = '{}px'.format(font_info[1])
+
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.style['background-color'] = background_color
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
+            widget.style['color'] = text_color
+
+        if disabled:
+            widget.set_enabled(False)
+        elif disabled is False:
+            widget.set_enabled(True)
+        if visible is False:
+            widget.attributes['hidden'] = 'true'
+        elif visible is True:
+            del(widget.attributes['hidden'])
+        if tooltip is not None:
+            widget.attributes['title'] = tooltip
+
+
         # if font:
         #     widget.SetFont(font_to_wx_font(font))
         # if text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -912,22 +934,9 @@ class Spin(Element):
 
 
     def Update(self, value=None, values=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
-        if values != None:
-            self.Values = values
-            self.QT_Spinner.setStrings(values)
-            # self.QT_Spinner.setRange(self.Values[0], self.Values[1])
         if value is not None:
-            # self.QT_Spinner.setValue(value)
-            try:
-                self.QT_Spinner.setValue(self.QT_Spinner.valueFromText(value))
-                self.DefaultValue = value
-            except:
-                pass
-        if disabled == True:
-            self.QT_Spinner.setDisabled(True)
-        elif disabled == False:
-            self.QT_Spinner.setDisabled(False)
-        super().Update(self.QT_Spinner, background_color=background_color, text_color=text_color, font=font, visible=visible)
+            self.Widget.set_value(value)
+        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font,visible=visible)
 
     def Get(self):
         return self.Widget.get_value()
@@ -1076,7 +1085,7 @@ class MultilineOutput(Element):
                 self.CurrentValue = self.CurrentValue + '\n' + str(value)
                 self.Widget.set_value(self.CurrentValue)
             app = self.ParentForm.App
-            app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+            # app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
 
             super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
@@ -1134,6 +1143,7 @@ class Text(Element):
             pixelsize = size[0]*10, size[1]*20
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.Disabled = False
+        self.Widget = None      #type: remi.gui.Label
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, visible=visible)
@@ -1142,12 +1152,7 @@ class Text(Element):
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
             self.Widget.set_text(str(value))
-        # if background_color is not None:
-        #     self.TKText.configure(background=background_color)
-        # if text_color is not None:
-        #     self.TKText.configure(fg=text_color)
-        # if font is not None:
-        #     self.TKText.configure(font=font)
+        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
     def __del__(self):
         super().__del__()
@@ -1517,28 +1522,8 @@ class Button(Element):
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, font=None, visible=None):
         if text is not None:
             self.Widget.set_text(text)
-        if self.ParentForm.Font and (self.Font == DEFAULT_FONT or not self.Font):
-            font = self.ParentForm.Font
-        elif self.Font is not None:
-            font = self.Font
-        else:
-            font = DEFAULT_FONT
-
-        fg = bg = None
-        if button_color != (None, None):
-            self.ButtonColor = button_color
-            fg, bg = button_color
-        if self.Disabled != disabled and disabled is not None:
-            if not disabled:            # if enabling buttons, set the color
-                fg, bg = self.ButtonColor
-            self.Disabled = disabled
-            if disabled:
-                self.QT_QPushButton.setDisabled(True)
-            else:
-                self.QT_QPushButton.setDisabled(False)
-        # fg, bg = self.ButtonColor
-        # print(f'Button update fg, bg {fg}, {bg}')
-        super().Update(self.Widget, background_color=bg, text_color=fg, font=font, visible=visible)
+        fg, bg = button_color
+        super().Update(self.Widget, background_color=bg, text_color=fg, disabled=disabled, font=font, visible=visible)
 
 
     def GetText(self):
@@ -1615,7 +1600,7 @@ class ProgressBar(Element):
 # ---------------------------------------------------------------------- #
 class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None):
+                 tooltip=None, right_click_menu=None, visible=True, enable_events=False):
         '''
         Image Element
         :param filename:
@@ -1626,32 +1611,27 @@ class Image(Element):
         :param key:
         :param tooltip:
         '''
-        self.Filename = filename
+        self.Filename = '/'+filename if filename else None # note that Remi expects a / at the front of resource files
         self.Data = data
         self.tktext_label = None
         self.BackgroundColor = background_color
+        self.Disabled = False
+        self.EnableEvents = enable_events
+        sz = (0,0) if size == (None, None) else size
+        self.Widget = None          #type: remi.gui.Image
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
-        super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
-                         tooltip=tooltip)
+        super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
+                         tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, filename=None, data=None, size=(None, None)):
+    def Update(self, filename=None, data=None, size=(None,None), visible=None):
         if filename is not None:
-            image = tk.PhotoImage(file=filename)
-        elif data is not None:
-            # if type(data) is bytes:
-            try:
-                image = tk.PhotoImage(data=data)
-            except:
-                return  # an error likely means the window has closed so exit
-            # else:
-            # image = data
-        else:
-            return
-        width, height = size[0] or image.width(), size[1] or image.height()
-        self.tktext_label.configure(image=image, width=width, height=height)
-        self.tktext_label.image = image
+            self.Widget.set_image(filename=filename)
+        if size != (None, None):
+            self.Widget.style['height'] = '{}px'.format(size[1])
+            self.Widget.style['width'] = '{}px'.format(size[0])
+        super().Update(self.Widget,  visible=visible)
 
     def __del__(self):
         super().__del__()
@@ -2205,19 +2185,14 @@ class Slider(Element):
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
-    def Update(self, value=None, range=(None, None), disabled=None):
+    def Update(self, value=None, range=(None, None), disabled=None, visible=None):
         if value is not None:
-            try:
-                self.TKIntVar.set(value)
-                if range != (None, None):
-                    self.TKScale.config(from_=range[0], to_=range[1])
-            except:
-                pass
+            self.Widget.set_value(value)
             self.DefaultValue = value
-        if disabled == True:
-            self.TKScale['state'] = 'disabled'
-        elif disabled == False:
-            self.TKScale['state'] = 'normal'
+        if range != (None, None):
+            self.Widget.style['min'] = '{}'.format(range[0])
+            self.Widget.style['max'] = '{}'.format(range[1])
+        super().Update(self.Widget, disabled=disabled, visible=visible)
 
     def SliderCallback(self, widget:remi.Widget, value):
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
@@ -3207,11 +3182,13 @@ class Window:
                 userdata = args[-1].userdata
                 self.window = userdata[0]       # type: Window
             else:
-                self.window = userdata2
+                self.window = userdata2         # type: Window
             self.window.App = self
             self.master_widget = None
             if userdata2 is None:
-                super(Window.MyApp, self).__init__(*args)
+                res_path = os.path.dirname(os.path.abspath(__file__))
+                # print('res path', res_path)
+                super(Window.MyApp, self).__init__(*args,  static_file_path={'C':'c:','c':'c:','D':'d:', 'd':'d:', 'E':'e:', 'e':'e:', 'dot':'.', '.':'.'})
 
         def main(self, name='world'):
             # margin 0px auto allows to center the app to the screen
@@ -3225,6 +3202,10 @@ class Window:
             except:
                 print('* ERROR PACKING FORM *')
                 print(traceback.format_exc())
+
+            if self.window.BackgroundImage:
+                self.master_widget.attributes['background-image'] = "url('{}')".format(self.window.BackgroundImage)
+                # print(f'background info',self.master_widget.attributes['background-image'] )
 
             # add the following 3 lines to your app and the on_window_close method to make the console close automatically
             tag = remi.gui.Tag(_type='script')
@@ -3982,10 +3963,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
             widget.style['color'] = element.TextColor
         widget.style['font-size'] = '{}px'.format(font_info[1])
-        size = convert_tkinter_size_to_Wx(element_size)
-        # if not auto_size_text:
-        widget.style['height'] = '{}px'.format(size[1])
-        widget.style['width'] = '{}px'.format(size[0])
+        if element_size[0]:     # if size is zero, don't set any sizes
+            size = convert_tkinter_size_to_Wx(element_size)
+            widget.style['height'] = '{}px'.format(size[1])
+            widget.style['width'] = '{}px'.format(size[0])
         widget.style['margin'] = '{}px {}px {}px {}px'.format(*full_element_pad)
         if element.Disabled:
             widget.set_enabled(False)
@@ -4428,10 +4409,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
-                element.Widget = remi.gui.Image(filename=element.Filename)
+                element.Widget = remi.gui.Image(element.Filename)
                 do_font_and_color(element.Widget)
-                if element.ChangeSubmits:
-                    element.Widget.onchange.connect(element.ChangedCallback)
+                if element.EnableEvents:
+                    element.Widget.onclick.connect(element.ChangedCallback)
                 tk_row_frame.append(element.Widget)
                 # if element.Filename is not None:
                 #     photo = tk.PhotoImage(file=element.Filename)
@@ -4616,7 +4597,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element = element  # type: Slider
-                element.Widget = remi.gui.Slider(layout_orientation = remi.gui.Widget.LAYOUT_HORIZONTAL, default_value=element.DefaultValue, min=element.Range[0], max=element.Range[1],step=element.Resolution)
+                orient = remi.gui.Widget.LAYOUT_HORIZONTAL if element.Orientation.lower().startswith('h') else remi.gui.Widget.LAYOUT_VERTICAL
+                element.Widget = remi.gui.Slider(layout_orientation = orient, default_value=element.DefaultValue, min=element.Range[0], max=element.Range[1],step=element.Resolution)
                 if element.DefaultValue:
                     element.Widget.set_value(element.DefaultValue)
                 # if element.Orientation.startswith('v'):
@@ -6453,7 +6435,7 @@ def main():
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
-        [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True)],
+        [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True, orientation='v')],
         [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
         [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide')]
     ]

@@ -8,11 +8,11 @@
       
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)      
       
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      
-[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
-[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)  
-[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)  
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)        tkinter
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      tkinter 2.7
+[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)   Qt
+[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)    WxPython
+[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)   Web (Remi)
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
@@ -24,9 +24,12 @@
    
             
 ## Supports both Python 2.7 & 3 when using tkinter
-## Supports both PySide2 and PyQt5 (limited support)
-## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Web (Remi) by changing only the import statement
 
+## Supports both PySide2 and PyQt5 (limited support)
+
+## Effortlessly move across tkinter, Qt, WxPython, and the Web (Remi) by changing only the import statement
+
+## The *only* way to write both desktop and web based GUIs at the same time
 
 
 
@@ -38,7 +41,7 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2.2-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.10.0-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -52,7 +55,7 @@
       
 [Docs in PDF Format](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/docs)      
       
-[Run live in a web browser using repl.it!](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos)  
+[Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
       
 Super-simple GUI to use... Powerfully customizable    
       
@@ -4973,9 +4976,9 @@ GNU Lesser General Public License (LGPL 3) +
 * [GRADESK](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1Nzg3NDY1ODgsMjYwNTg0ODE0LDExMD
-IwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNjM3MTE4
-LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwtMjk2Nz
-gzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMjQzLC0x
-MTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbMjA1MzEyNTE0OSwtMTU3ODc0NjU4OCwyNj
+A1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xNDYxNDI4
+MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2MjksMTMwNz
+Y5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2NDQxNyw0
+NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->

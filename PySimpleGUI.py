@@ -6170,7 +6170,7 @@ class QuickMeter(object):
         layout = []
         if self.orientation.lower().startswith('h'):
             col = []
-            col += [[T(arg)] for arg in args]
+            col += [[T(''.join(map(lambda x: str(x)+'\n',args)),key='_OPTMSG_')]] ### convert all *args into one string that can be updated
             col += [[T('', size=(30,10), key='_STATS_')],
                     [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size, bar_color=self.bar_color)],
                     [Cancel(button_color=self.button_color), Stretch()]]
@@ -6178,7 +6178,7 @@ class QuickMeter(object):
         else:
             col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size, bar_color=self.bar_color)]]
             col2 = []
-            col2 += [[T(arg)] for arg in args]
+            col2 += [[T(''.join(map(lambda x: str(x)+'\n',args)),key='_OPTMSG_')]] ### convert all *args into one string that can be updated
             col2 += [[T('', size=(30,10), key='_STATS_')],
                      [Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col), Column(col2)]
@@ -6187,11 +6187,12 @@ class QuickMeter(object):
 
         return self.window
 
-    def UpdateMeter(self, current_value, max_value):
+    def UpdateMeter(self, current_value, max_value,*args): ### support for *args when updating
         self.current_value = current_value
         self.max_value = max_value
         self.window.Element('_PROG_').UpdateBar(self.current_value, self.max_value)
         self.window.Element('_STATS_').Update('\n'.join(self.ComputeProgressStats()))
+        self.window.Element('_OPTMSG_').Update(value=''.join(map(lambda x: str(x)+'\n',args))) ###  update the string with the args
         event, values = self.window.Read(timeout=0)
         if event in('Cancel', None) or current_value >= max_value:
             self.window.Close()
@@ -6239,9 +6240,10 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     else:
         meter = QuickMeter.active_meters[key]
 
-    rc = meter.UpdateMeter(current_value, max_value)
+    rc = meter.UpdateMeter(current_value, max_value,*args) ### pass the *args to to UpdateMeter function
     OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter,'exit_reasons', QuickMeter.exit_reasons)
     return rc == METER_OK
+
 
 def OneLineProgressMeterCancel(key):
     try:
