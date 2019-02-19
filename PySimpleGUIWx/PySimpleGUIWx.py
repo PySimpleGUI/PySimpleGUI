@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-#!/usr/bin/python3
-#!/usr/bin/python3
 import sys
 
 import wx
@@ -15,12 +13,30 @@ import pickle
 import os
 import time
 
+######           #####                                       #####   #     #  ###  #     #
+#     #  #   #  #     #  #  #    #  #####   #       ######  #     #  #     #   #   #  #  #  #    #
+#     #   # #   #        #  ##  ##  #    #  #       #       #        #     #   #   #  #  #   #  #
+######     #     #####   #  # ## #  #    #  #       #####   #  ####  #     #   #   #  #  #    ##
+#          #          #  #  #    #  #####   #       #       #     #  #     #   #   #  #  #    ##
+#          #    #     #  #  #    #  #       #       #       #     #  #     #   #   #  #  #   #  #
+#          #     #####   #  #    #  #       ######  ######   #####    #####   ###   ## ##   #    #
+
 """
+
     21-Dec-2018
     Welcome to the "core" PySimpleGUIWx port!
+    
+'##:::::'##:'##::::'##:'########::'##:::'##:'########:'##::::'##::'#######::'##::: ##:
+ ##:'##: ##:. ##::'##:: ##.... ##:. ##:'##::... ##..:: ##:::: ##:'##.... ##: ###:: ##:
+ ##: ##: ##::. ##'##::: ##:::: ##::. ####:::::: ##:::: ##:::: ##: ##:::: ##: ####: ##:
+ ##: ##: ##:::. ###:::: ########::::. ##::::::: ##:::: #########: ##:::: ##: ## ## ##:
+ ##: ##: ##::: ## ##::: ##.....:::::: ##::::::: ##:::: ##.... ##: ##:::: ##: ##. ####:
+ ##: ##: ##:: ##:. ##:: ##::::::::::: ##::::::: ##:::: ##:::: ##: ##:::: ##: ##:. ###:
+. ###. ###:: ##:::. ##: ##::::::::::: ##::::::: ##:::: ##:::: ##:. #######:: ##::. ##:
+:...::...:::..:::::..::..::::::::::::..::::::::..:::::..:::::..:::.......:::..::::..::
 
     This marks the 3rd port of the PySimpleGUI GUI SDK.  Each port gets a little better than
-    the previous.  
+    the previous, in theory.
 
     It will take a while for this Wx port to be completed, but should be running with a fully selection
     of widgets fairly quickly.  The Qt port required 1 week to get to "Alpha" condition
@@ -1186,8 +1202,8 @@ class Text(Element):
         if self.ParentForm.TKrootDestroyed:
             return
         if value is not None:
-            self.WxStaticText.SetLabel(value)
-            self.DisplayText = value
+            self.WxStaticText.SetLabel(str(value))
+            self.DisplayText = str(value)
         if background_color is not None:
             self.WxStaticText.SetBackgroundColour(background_color)
         if text_color is not None:
@@ -4254,9 +4270,18 @@ else:
                 i += 1
 
 
+
+ #     #        ######
+ #  #  # #    # #     # #   # ##### #    #  ####  #    #
+ #  #  #  #  #  #     #  # #    #   #    # #    # ##   #
+ #  #  #   ##   ######    #     #   ###### #    # # #  #
+ #  #  #   ##   #         #     #   #    # #    # #  # #
+ #  #  #  #  #  #         #     #   #    # #    # #   ##
+  ## ##  #    # #         #     #   #    #  ####  #    #
+
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
-# =====================================   TK CODE STARTS HERE ====================================================== #
+# =====================================   WxPython CODE STARTS HERE ================================================ #
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
 
@@ -5479,7 +5504,7 @@ class QuickMeter(object):
         layout = []
         if self.orientation.lower().startswith('h'):
             col = []
-            col += [[T(arg)] for arg in args]
+            col += [[T(''.join(map(lambda x: str(x)+'\n',args)),key='_OPTMSG_')]] ### convert all *args into one string that can be updated
             col += [[T('', size=(25,8), key='_STATS_')],
                     [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size)],
                     [Cancel(button_color=self.button_color), Stretch()]]
@@ -5487,7 +5512,7 @@ class QuickMeter(object):
         else:
             col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size)]]
             col2 = []
-            col2 += [[T(arg)] for arg in args]
+            col2 += [[T(''.join(map(lambda x: str(x)+'\n',args)),key='_OPTMSG_')]] ### convert all *args into one string that can be updated
             col2 += [[T('', size=(25,8), key='_STATS_')],
                      [Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col), Column(col2)]
@@ -5496,11 +5521,12 @@ class QuickMeter(object):
 
         return self.window
 
-    def UpdateMeter(self, current_value, max_value):
+    def UpdateMeter(self, current_value, max_value, *args):
         self.current_value = current_value
         self.max_value = max_value
         self.window.Element('_PROG_').UpdateBar(self.current_value, self.max_value)
         self.window.Element('_STATS_').Update('\n'.join(self.ComputeProgressStats()))
+        self.window.Element('_OPTMSG_').Update(value=''.join(map(lambda x: str(x)+'\n',args))) ###  update the string with the args
         event, values = self.window.Read(timeout=0)
         if event in('Cancel', None) or current_value >= max_value:
             self.window.Close()
@@ -5548,7 +5574,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     else:
         meter = QuickMeter.active_meters[key]
 
-    rc = meter.UpdateMeter(current_value, max_value)
+    rc = meter.UpdateMeter(current_value, max_value, *args)
     OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter,'exit_reasons', QuickMeter.exit_reasons)
     return rc == METER_OK
 
@@ -6219,6 +6245,16 @@ def ObjToString(obj, extra='    '):
 #   Pre-built dialog boxes for all your needs    These are the "high level API calls                                 #
 # ------------------------------------------------------------------------------------------------------------------ #
 
+######
+#     #   ####   #####   #    #  #####    ####
+#     #  #    #  #    #  #    #  #    #  #
+######   #    #  #    #  #    #  #    #   ####
+#        #    #  #####   #    #  #####        #
+#        #    #  #       #    #  #       #    #
+#         ####   #        ####   #        ####
+
+
+
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
 
@@ -6825,6 +6861,19 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
         return None
     else:
         return input_values[0]
+
+
+"""
+                       d8b          
+                       Y8P          
+
+88888b.d88b.   8888b.  888 88888b.  
+888 "888 "88b     "88b 888 888 "88b 
+888  888  888 .d888888 888 888  888 
+888  888  888 888  888 888 888  888 
+888  888  888 "Y888888 888 888  888 
+
+"""
 
 
 def main():
