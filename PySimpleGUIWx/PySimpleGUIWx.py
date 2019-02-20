@@ -25,15 +25,16 @@ import time
 
     21-Dec-2018
     Welcome to the "core" PySimpleGUIWx port!
-    
-'##:::::'##:'##::::'##:'########::'##:::'##:'########:'##::::'##::'#######::'##::: ##:
- ##:'##: ##:. ##::'##:: ##.... ##:. ##:'##::... ##..:: ##:::: ##:'##.... ##: ###:: ##:
- ##: ##: ##::. ##'##::: ##:::: ##::. ####:::::: ##:::: ##:::: ##: ##:::: ##: ####: ##:
- ##: ##: ##:::. ###:::: ########::::. ##::::::: ##:::: #########: ##:::: ##: ## ## ##:
- ##: ##: ##::: ## ##::: ##.....:::::: ##::::::: ##:::: ##.... ##: ##:::: ##: ##. ####:
- ##: ##: ##:: ##:. ##:: ##::::::::::: ##::::::: ##:::: ##:::: ##: ##:::: ##: ##:. ###:
-. ###. ###:: ##:::. ##: ##::::::::::: ##::::::: ##:::: ##:::: ##:. #######:: ##::. ##:
-:...::...:::..:::::..::..::::::::::::..::::::::..:::::..:::::..:::.......:::..::::..::
+
+:::       ::: :::    ::: :::::::::  :::   ::: ::::::::::: :::    :::  ::::::::  ::::    ::: 
+:+:       :+: :+:    :+: :+:    :+: :+:   :+:     :+:     :+:    :+: :+:    :+: :+:+:   :+: 
++:+       +:+  +:+  +:+  +:+    +:+  +:+ +:+      +:+     +:+    +:+ +:+    +:+ :+:+:+  +:+ 
++#+  +:+  +#+   +#++:+   +#++:++#+    +#++:       +#+     +#++:++#++ +#+    +:+ +#+ +:+ +#+ 
++#+ +#+#+ +#+  +#+  +#+  +#+           +#+        +#+     +#+    +#+ +#+    +#+ +#+  +#+#+# 
+ #+#+# #+#+#  #+#    #+# #+#           #+#        #+#     #+#    #+# #+#    #+# #+#   #+#+# 
+  ###   ###   ###    ### ###           ###        ###     ###    ###  ########  ###    #### 
+
+
 
     This marks the 3rd port of the PySimpleGUI GUI SDK.  Each port gets a little better than
     the previous, in theory.
@@ -1042,20 +1043,24 @@ class Multiline(Element):
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-            if value is not None and not append:
-                self.WxTextCtrl.SetLabel(value)
-            elif value is not None and append:
-                self.WxTextCtrl.AppendText(value)
-            if background_color is not None:
-                self.WxTextCtrl.SetBackgroundColour(background_color)
-            if text_color is not None:
-                self.WxTextCtrl.SetForegroundColour(text_color)
-            if font is not None:
-                self.WxTextCtrl.SetFont(font)
-            if disabled:
-                self.WxTextCtrl.Enable(True)
-            elif disabled is False:
-                self.WxTextCtrl.Enable(False)
+            try:        # added in case the widget has already been deleted for some readon.
+                if value is not None and not append:
+                    self.WxTextCtrl.SetLabel(value)
+                elif value is not None and append:
+                    self.WxTextCtrl.AppendText(value)
+                if background_color is not None:
+                    self.WxTextCtrl.SetBackgroundColour(background_color)
+                if text_color is not None:
+                    self.WxTextCtrl.SetForegroundColour(text_color)
+                if font is not None:
+                    self.WxTextCtrl.SetFont(font)
+                if disabled:
+                    self.WxTextCtrl.Enable(True)
+                elif disabled is False:
+                    self.WxTextCtrl.Enable(False)
+            except:
+                pass
+
             super().Update(self.WxTextCtrl, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
     #
@@ -1177,7 +1182,7 @@ class Text(Element):
         :param visible:
         :param size_px:
         """
-        self.DisplayText = text
+        self.DisplayText = str(text)
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
@@ -1411,6 +1416,7 @@ class Button(Element):
         self.QT_QPushButton = None
         self.ColorChosen = None
         self.Relief = None
+        self.WxButton = None        # type: wx.Button
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, size_px=size_px)
@@ -1585,30 +1591,13 @@ class Button(Element):
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, font=None, visible=None):
         if text is not None:
-            self.QT_QPushButton.setText(str(text))
+            self.WxButton.SetLabelText(text)
             self.ButtonText = text
-        if self.ParentForm.Font and (self.Font == DEFAULT_FONT or not self.Font):
-            font = self.ParentForm.Font
-        elif self.Font is not None:
-            font = self.Font
-        else:
-            font = DEFAULT_FONT
-
         fg = bg = None
         if button_color != (None, None):
             self.ButtonColor = button_color
             fg, bg = button_color
-        if self.Disabled != disabled and disabled is not None:
-            if not disabled:            # if enabling buttons, set the color
-                fg, bg = self.ButtonColor
-            self.Disabled = disabled
-            if disabled:
-                self.QT_QPushButton.setDisabled(True)
-            else:
-                self.QT_QPushButton.setDisabled(False)
-        # fg, bg = self.ButtonColor
-        # print(f'Button update fg, bg {fg}, {bg}')
-        super().Update(self.WxButton, background_color=bg, text_color=fg, font=font, visible=visible)
+        super().Update(self.WxButton, background_color=bg, text_color=fg, font=font, visible=visible, disabled=disabled)
 
 
     def GetText(self):
@@ -3992,7 +3981,11 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
-                    value = element.WxTextCtrl.GetValue()
+                    try:
+                        value = element.WxTextCtrl.GetValue()
+                    except:
+                        pass
+
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.WxTextCtrl.SetValue('')
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
@@ -4278,6 +4271,24 @@ else:
  #  #  #   ##   #         #     #   #    # #    # #  # #
  #  #  #  #  #  #         #     #   #    # #    # #   ##
   ## ##  #    # #         #     #   #    #  ####  #    #
+
+# My crappy WxPython code
+
+# ░░░░░░░░░░░█▀▀░░█░░░░░░
+# ░░░░░░▄▀▀▀▀░░░░░█▄▄░░░░
+# ░░░░░░█░█░░░░░░░░░░▐░░░
+# ░░░░░░▐▐░░░░░░░░░▄░▐░░░
+# ░░░░░░█░░░░░░░░▄▀▀░▐░░░
+# ░░░░▄▀░░░░░░░░▐░▄▄▀░░░░
+# ░░▄▀░░░▐░░░░░█▄▀░▐░░░░░
+# ░░█░░░▐░░░░░░░░▄░█░░░░░
+# ░░░█▄░░▀▄░░░░▄▀▐░█░░░░░
+# ░░░█▐▀▀▀░▀▀▀▀░░▐░█░░░░░
+# ░░▐█▐▄░░▀░░░░░░▐░█▄▄░░░
+# ░░░▀▀▄░░░░░░░░▄▐▄▄▄▀░░░
+# ░░░░░░░░░░░░░░░░░░░░░░░
+
+
 
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #

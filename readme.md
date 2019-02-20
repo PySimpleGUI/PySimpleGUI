@@ -4893,6 +4893,15 @@ Emergency patch release... going out same day as previous release
 
 * PopupAnimated - A popup call for showing "loading" type of windows
 
+# 3.25 & 1.25 20-Feb-2019
+
+* Comments :-)
+* Convert Text to string right away
+* Caught exceptions when main program shut down with X
+* Caught exceptions in all of the graphics primitives
+* Added parameter exportselection=False to Listbox so can use multiple listboxes
+* OneLineProgressMeter - Can now change the text on every call if desired
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
@@ -4957,9 +4966,9 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzOTYyOTUyMjMsMjA1MzEyNTE0OSwtMT
-U3ODc0NjU4OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUw
-OTkyLC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMj
-Q4OTc2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMw
-LDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3OD
+c0NjU4OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTky
+LC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OT
+c2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2
+NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->
