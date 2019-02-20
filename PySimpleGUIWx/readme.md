@@ -1,14 +1,13 @@
  
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
         
-![Downloads](http://pepy.tech/badge/pysimpleguiwx)](http://pepy.tech/project/pysimplegui)        
-  
+![Downloads](http://pepy.tech/badge/pysimpleguiwx)
       
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-1000-yellow.svg)  
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.7.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.8.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -337,6 +336,16 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * Popup non_blocking - returns window and button not just button
 * More comprehensive test harness when running PySimpleGUIWx.py
 
+### 0.8.0 20-Feb-2019 PySimpleGUIWx
+
+* Big Try/Except block around Update method for multiline in case window closed
+* Text - convert incoming text to string right away
+* Text.Update - convert incoming value to string
+* Completed Button.Update method.  Can now change text, color, etc.
+* Added Try around reading multiline input value - not sure why needed
+* OneLineProgressMeter - can update text on every call now
+
+
 
 # Design        
 # Author 
@@ -348,5 +357,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODg2MzA1Mjk2XX0=
+eyJoaXN0b3J5IjpbLTIxNDIwNTI0ODQsODg2MzA1Mjk2XX0=
 -->
