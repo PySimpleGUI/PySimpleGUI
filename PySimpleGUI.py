@@ -1173,7 +1173,7 @@ class Text(Element):
         :param tooltip:
         :param visible:
         '''
-        self.DisplayText = text
+        self.DisplayText = str(text)
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
@@ -4915,6 +4915,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
+                element = element           # type: Text
                 display_text = element.DisplayText  # text to display
                 if auto_size_text is False:
                     width, height = element_size
@@ -5298,8 +5299,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKListbox.bind('<Button-3>', element.RightClickMenuCallback)
-            # -------------------------  INPUT MULTI LINE element  ------------------------- #
+            # -------------------------  MULTILINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
+                element = element       # type: Multiline
                 default_text = element.DefaultText
                 width, height = element_size
                 element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',

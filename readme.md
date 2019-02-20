@@ -33,9 +33,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.24.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.25.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.24.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.25.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4954,31 +4954,12 @@ MikeB
 GNU Lesser General Public License (LGPL 3) +      
       
 ## Acknowledgments      
-      
-*  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence      
-* [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`      
-* [Ruud van der Ham](https://forum.pythonistacafe.com/u/Ruud) for all the help he's provided as a Python-mentor. Quite a few tricky bits of logic was supplied by Ruud. The dual-purpose return values scheme is Ruud's for example      
-* **Numerous** users who provided feature suggestions!  Many of the cool features were suggested by others.  If you were one of them and are willing to take more credit, I'll list you here if you give me permission. Most are too modest      
-* [moshekaplan](https://github.com/moshekaplan)/**[tkinter_components](https://github.com/moshekaplan/tkinter_components)** wrote the code for the Calendar Chooser Element. It was lifted straight from GitHub      
-* [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.      
-* [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help      
-* [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it      
-* [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
-* one of the most critical constructs in PySimpleGUI      
-* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
-* [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
-* Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
-* [spectre6000](https://github.com/spectre6000) - Readme updates
-* [jackyOO7](https://github.com/jackyOO7) - Demo programs. OpenCV with realtime image processing, popup keyboard, input Combo read only option.
-* [AltoRetrato](https://github.com/AltoRetrato) - Fonts for multiline and combo
-* [frakman1](https://github.com/frakman1) - Sample code error
-* [deajan](https://github.com/deajan) - Custom button text for Popups
-* [GRADESK](https://github.com/sidbmw/ICS4U) - Created by a couple of young talented programmers, this classroom management software combines SQL and a GUI to provide a much improved interface for Ottawa teachers.
 
+#### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA1MzEyNTE0OSwtMTU3ODc0NjU4OCwyNj
-A1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xNDYxNDI4
-MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2MjksMTMwNz
-Y5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2NDQxNyw0
-NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbLTEzOTYyOTUyMjMsMjA1MzEyNTE0OSwtMT
+U3ODc0NjU4OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUw
+OTkyLC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMj
+Q4OTc2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMw
+LDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->
