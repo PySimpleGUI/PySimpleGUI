@@ -1,4 +1,5 @@
 
+
   
     
       
@@ -7,57 +8,140 @@
       
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)      
       
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)        tkinter
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      tkinter 2.7
+[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)   Qt
+[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)    WxPython
+[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)   Web (Remi)
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
       
-      
-      
-      
-      
+
       
 # PySimpleGUI      
       
+   
+            
+## Supports both Python 2.7 & 3 when using tkinter
+
+## Supports both PySide2 and PyQt5 (limited support)
+
+## Effortlessly move across tkinter, Qt, WxPython, and the Web (Remi) by changing only the import statement
+
+## The *only* way to write both desktop and web based GUIs at the same time
+
+
+
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.25.0-red.svg?longCache=true&style=for-the-badge)      
       
-## Now supports both Python 2.7 & 3      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.25.0-blue.svg?longCache=true&style=for-the-badge)      
+  
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.10.2-red.svg?longCache=true&style=for-the-badge)      
-      
-  ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.2-blue.svg?longCache=true&style=for-the-badge)      
-      
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
+
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.10.0-orange.svg?longCache=true&style=for-the-badge)
+
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
 [ReadTheDocs](http://pysimplegui.readthedocs.io/)      
       
-[COOKBOOK!](https://pysimplegui.readthedocs.io/en/latest/cookbook/)      
+[COOKBOOK!](https://pysimplegui.readthedocs.io/cookbook/)      
       
-[Brief Tutorial](https://pysimplegui.readthedocs.io/en/latest/tutorial/)      
+[Brief Tutorial](https://pysimplegui.readthedocs.io/tutorial/)      
       
 [Latest Demos and Master Branch on GitHub](https://github.com/MikeTheWatchGuy/PySimpleGUI)      
       
 [Docs in PDF Format](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/docs)      
       
+[Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
       
 Super-simple GUI to use... Powerfully customizable    
       
 Home of the 1-line custom GUI & 1-line progress meter      
     
 The native GUI framework for perfectionists with deadlines    
+
+Actively developed and supported (It's 2019 and still going strong)
       
 #### Note regarding Python versions      
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.      
       
+# Qt Version
+
+
+Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
+
+Give it a shot if you're looking for something a bit more "modern".  PySimpleGUIQt is currently in Alpha.  All of the widgets are operational but some may not yet be full-featured.  If one is missing and your project needs it, log an Issue and you'll likely get priority support. 
+
+Here is a summary of the Qt Elements
+
+![scrolling graphics](https://user-images.githubusercontent.com/13696193/48665874-8bfd0e00-ea84-11e8-880d-8e164d9fea34.gif)
+
+Are there enough things on there to cover your GUI solution?
+
+
+## Source code compatibility
+Your source code is completely portable from one platform to another by simply changing the import statement.
+
+# WxPython Version
+
+ [PySimpleGUIWx GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWx).  **There is a separate Readme file for the WxPython version**.
+
+Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.    The System Tray feature is complete and working very well.
+
+The Windowing code is coming together with Reads now operational which means Popups work.  The elements are getting completed on a regular basis.  3 more were just checked in. At least 1 new element is getting completed a week.  
+
+# Web Version (Remi)
+
+ [PySimpleGUIWeb GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb).  **There is a separate Readme file for the Web version**.
+
+New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in your Web Browser!
+
+The underlying framework supplying the web capability is the Python package Remi.  https://github.com/dddomodossola/remi  Remi provides the widgets as well as a web server for you to connect to.  It's an exiting new platform to be running on and has temporarily bumped the WxPython port from the highest priority.  PySimpleGUIWeb is the current high priority project.
+
+Read on and you'll understand even more why this is an important project...
+
+# repl.it Version
+
+***Want to really get your mind blown?***  Check out this [PySimpleGUI program](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos) running in your web browser.
+
+Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in a browser window without having Python running on your computer.  
+
+The programs you write using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is required is to type `import PySimpleGUIWeb` you'll have a Python environment up and running with the latest PyPI release of PySimpleGUIWeb.  
+
+This is an exciting new development that's opening up all kinds of possibilities for new ways to program and learn PySimpleGUI.   Stayed tuned, much more to be posted about this in the near future.  
+
+Educators in particular should be interested.  Students can not only post their homework easily for their teacher to access, but teachers can also run the students programs online.  No downloading needed.  Run it and check the results.
+
+Depending on how you're viewing this document, you may or may not see an embedded browser window below that is running PySimpleGUI code.
+
+<iframe height="1000px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
+# Support
+
+PySimpleGUI is an active project.  Bugs are fixed, features are added, often.  Should you run into trouble, open an issue on the GitHub site and you'll receive help by someone in the community.  
+
+# Platforms
+ 
+  It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
+  
+However, **Macs** suck.  They suck on tkinter in particular.  The "Look and feel" calls are disabled for Macs.  Colored buttons in particular are broken.  Not in the PySimpleGUI code, of course.    It's mostly because Macs suck.  Consider using Qt instead of tkinter on the Mac.  Or, if using tkinter, bring your own button images. 
       
 ------------------------------------------------------------------------      
       
       
-Looking for a GUI package?      
-* Taking your Python code from the world of command lines and into the convenience of a GUI?  *      
-* Have a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?      
-* Into Machine Learning and are sick of the command line?      
-* Would like to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?      
+Looking for a GUI package?     Are you 
+
+* looking to take your Python code from the world of command lines and into the convenience of a GUI?  *      
+* sitting on a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?      
+* into Machine Learning and are sick of the command line?      
+* wanting to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?      
+* would like to run a program in the system tray?
+* a teacher wanting to teach your students how to program using a GUI?
+* a student that wants to put a GUI onto their project?
+* looking for an active project?
       
 Look no further, **you've found your GUI package**.      
       
@@ -79,14 +163,19 @@ Or how about a ***custom GUI*** in 1 line of code?
       
       
   Build beautiful customized windows that fit your specific problem.  Let PySimpleGUI solve your GUI problem while you solve your real problems.   Look through the Cookbook, find a matching recipe, copy, paste, run within minutes.  This is the process PySimpleGUI was designed to facilitate.      
+
+Your windows don't have to look like "boring" old windows.  Add a few custom graphics to your windows to polish things up.
       
+![batterup2](https://user-images.githubusercontent.com/13696193/50378902-6aa2bb00-060a-11e9-8f2f-d746694fa4ee.gif)
+    
+
+![uno_final](https://user-images.githubusercontent.com/13696193/49945232-67952580-feba-11e8-90c8-7dc31c5f7c67.gif)     
       
-![borderless grayed buttons](https://user-images.githubusercontent.com/13696193/45168664-d848e980-b1c9-11e8-886e-63279ae4017f.jpg)      
+
+
+PySimpleGUI wraps tkinter or Qt so that you get all the same widgets as you would tkinter/Qt, but you interact with them in a more friendly way.  It does the layout and boilerplate code for you and presents you with a simple, efficient interface.      
       
-      
-      
-PySimpleGUI wraps tkinter so that you get all the same widgets as you would tkinter, but you interact with them in a more friendly way.  It does the layout and boilerplate code for you and presents you with a simple, efficient interface.      
-      
+           
 ![everything dark theme](https://user-images.githubusercontent.com/13696193/44959854-b1d23800-aec3-11e8-90b6-5af915a86d15.jpg)      
       
 Perhaps you're looking for a way to interact with your **Raspberry Pi** in a more friendly way.  The same for shown as on Pi (roughly the same)      
@@ -94,16 +183,18 @@ Perhaps you're looking for a way to interact with your **Raspberry Pi** in a mor
 ![raspberry pi everything demo](https://user-images.githubusercontent.com/13696193/44279694-5b58ce80-a220-11e8-9ab6-d6021f5a944f.jpg)      
       
       
-      
+ 
+
+ 
 In addition to a primary GUI, you can add a Progress Meter to your code with ONE LINE of code.  Slide this line into any of your `for` loops and get a nice meter:      
       
     OneLineProgressMeter('My meter title', current_value, max value, 'key')      
       
   ![easyprogressmeter](https://user-images.githubusercontent.com/13696193/44960065-83099100-aec6-11e8-8aa8-96e4b100a0e4.jpg)      
       
-You can build an async media player GUI with custom buttons in 30 lines of code.      
+It's simple to show animated GIFs. 
       
-![media player 2](https://user-images.githubusercontent.com/13696193/44960091-eeebf980-aec6-11e8-884e-80d4447a83cd.jpg)      
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)      
       
       
 How about embedding a game inside of a GUI?  This game of Pong is written in tkinter and then dropped into the PySimpleGUI window creating a game that has an accompanying GUI.      
@@ -149,12 +240,16 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
             Close window      
             Realtime      
             Calendar chooser      
-            Color chooser      
+            Color chooser   
+            Button Menu   
         Checkboxes      
         Radio Buttons      
         Listbox      
-        Option Menu      
+        Option Menu 
+        Menubar
+        Button Menu     
         Slider      
+        Dial
         Graph      
         Frame with title      
         Icons      
@@ -165,6 +260,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Trees    
         Progress Bar            Async/Non-Blocking Windows      
         Tabbed windows      
+        Paned windows
         Persistent Windows      
         Redirect Python Output/Errors to scrolling window      
         'Higher level' APIs (e.g. MessageBox, YesNobox, ...)      
@@ -172,6 +268,7 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Complete control of colors, look and feel      
         Selection of pre-defined palettes      
         Button images      
+        Horizontal and Verticle Separators
         Return values as dictionary      
         Set focus      
         Bind return key to buttons      
@@ -186,11 +283,13 @@ While simple to use, PySimpleGUI has significant depth to be explored by more ad
         Save / Load window to/from disk      
         Borderless (no titlebar) windows      
         Always on top windows      
-        Menus with ALT-hotkey      
+        Menus with ALT-hotkey    
+        Right click pop-up menu  
         Tooltips      
         Clickable links    
         Transparent windows
         Movable windows  
+        Animated GIFs
         No async programming required (no callbacks to worry about)      
       
       
@@ -264,8 +363,10 @@ Maybe there's no "there there".  ***Or*** maybe a simple GUI API will enable Pyt
       
       
   -----      
-## Getting Started with PySimpleGUI      
+# Getting Started with PySimpleGUI      
       
+## Installing PySimpleGUI
+
 ### Installing  Python 3      
       
     pip install --upgrade PySimpleGUI      
@@ -292,9 +393,15 @@ If for some reason you are unable to install using `pip`, don't worry, you can s
 ```      
 ImportError: No module named tkinter      
 ```      
-then yosudou need to install `tkinter`.  Be sure and get the Python 3 version.      
-`      
+then you need to install `tkinter`. 
+For python 2.7
+
+```sudo apt-get install python-tk  ```   
+
+For python 3
 ```sudo apt-get install python3-tk  ```      
+
+More information about installing tkinter can be found here: https://www.techinfected.net/2015/09/how-to-install-and-use-tkinter-in-ubuntu-debian-linux-mint.html
       
       
 ### Installing for Python 2.7      
@@ -357,7 +464,7 @@ PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It
       
 If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this ReadMe      
       
-      
+
 ## Using  - Python 3      
       
 To use in your code, simply import....      
@@ -382,7 +489,7 @@ Those using Python 2.7 will import a different module name
 While all of the code examples you will see in this Readme and the  Cookbook assume Python 3 and thus have an `import PySimpleGUI` at the top, you can run ***all*** of this code on Python 2.7 by changing the import statement to `import PySimpleGUI27`      
       
 ---      
-## APIs      
+# APIs      
       
 PySimpleGUI can be broken down into 2 types of API's:      
  * High Level single call functions    (The `Popup` calls)      
@@ -439,7 +546,7 @@ Dictionaries are used by more advanced PySimpleGUI users.  You'll know that dict
       
 ---      
       
-## High Level API Calls  - Popup's      
+# High Level API Calls  - Popup's      
       
 "High level calls" are those that start with "Popup".    They are the most basic form of communications with the user.   They are named after the type of window they create, a pop-up window.  These windows are meant to be short lived while, either delivering information or collecting it, and then quickly disappearing.      
       
@@ -477,7 +584,7 @@ Here is a quick-reference showing how the Popup calls look.
     sg.PopupOk('PopupOk')  - Shows OK button    
     sg.PopupYesNo('PopupYesNo')  - Shows Yes and No buttons    
     sg.PopupCancel('PopupCancel')  - Shows Cancelled button    
-    sg.PopupOkCancel('PopupOkCancel')  - Shows Ok and Cancel buttons    
+    sg.PopupOKCancel('PopupOKCancel')  - Shows OK and Cancel buttons    
     sg.PopupError('PopupError')  - Shows red error button    
     sg.PopupTimed('PopupTimed')  - Automatically closes    
     sg.PopupAutoClose('PopupAutoClose')  - Same as PopupTimed    
@@ -532,8 +639,15 @@ Note that you should not call Popup yourself with different button_types.  Rely 
     
 #### Scrolled Output      
 There is a scrolled version of Popups should you have a lot of information to display.      
-      
-    sg.PopupScrolled(my_text)      
+
+```python
+PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None), title=None, non_blocking=False)
+```      
+Typical usage:
+
+    sg.PopupScrolled(my_text)  
+
+    
       
 ![scrolledtextbox 2](https://user-images.githubusercontent.com/13696193/43667324-712aa0d4-9745-11e8-83a9-a0d0570d0865.jpg)      
       
@@ -544,7 +658,9 @@ This call will create a scrolled box 80 characters wide and a height dependent u
       
 sg.PopupScrolled(my_text, size=(80, None))      
       
-Note that the default max number of lines before scrolling happens is set to 50. At 50 lines the scrolling will begin.      
+Note that the default max number of lines before scrolling happens is set to 50. At 50 lines the scrolling will begin.     
+
+If `non_blocking` parameter is set, then  the call will not blocking waiting for the user to close the window.  Execution will immediately return to the user.  Handy when you want to dump out debug info without disrupting the program flow.
       
 ### PopupNoWait      
       
@@ -558,7 +674,7 @@ This function is very handy for when you're **debugging** and want to display so
       
 There are Popup calls for single-item inputs. These follow the pattern of `Popup` followed by `Get` and then the type of item to get.  There are 3 of these input Popups to choose from, each with settings enabling customization.    
       
- - `PopupGetString` - get a single line of text      
+ - `PopupGetText` - get a single line of text      
  - `PopupGetFile` - get a filename      
  - `PopupGetFolder` - get a folder name      
       
@@ -566,7 +682,7 @@ Use these Popups instead of making  a custom window to get one data value, call 
       
 ### PopupGetText      
     
-Use this Popup to get a ssingle line of text from the user.    
+Use this Popup to get a line of text from the user.    
     
 ```    
 PopupGetText(message,The message you wish to display with the input field    
@@ -665,10 +781,39 @@ This is a typpical call
 ![popupgetfolder](https://user-images.githubusercontent.com/13696193/44957861-45484080-aea5-11e8-926c-cf607a45251c.jpg)      
       
     
+### PopupAnimated
+ 
+ ![ring](https://user-images.githubusercontent.com/13696193/51296743-6ee4ad00-19eb-11e9-91f5-cd8086ad1b50.gif)
+
+The animated Popup enables you to easily display a "loading" style animation specified through a GIF file that is either stored in a file or a base64 variable.
+
+```python
+def PopupAnimated(image_source, 
+			      message=None,
+			      background_color=None, 
+			      text_color=None, 
+			      font=None, 
+			      no_titlebar=True, 
+			      grab_anywhere=True, 
+			      keep_on_top=True, 
+			      location=(None, None), 
+			      alpha_channel=.8,
+			      time_between_frames=0)
+```
+image_source - The GIF file specified as a string filename or a base64 variable
+message - optional text message to be displayed under the animation
+background_color - the background color to use for the window and all of the other parts of the window
+text_color - color to use for optional text
+font - font to use for the optional text
+no_titlebar - no titlebar window setting
+location - location to show the window
+alpha_channel - alpha channel to use for the window
+time_between_frames - amount of time in milliseconds to use between frames
+
+***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
     
-    
-    
-## Progress Meters!      
+
+# Progress Meters!      
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?      
       
       
@@ -697,12 +842,13 @@ With a little trickery you can provide a way to break out of your loop using the
       
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.      
       
-## Debug Output      
+# Debug Output      
 Another call in the 'Easy' families of APIs is `EasyPrint`.  It will output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick a 'print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement      
       
     print = sg.EasyPrint      
       
 at the top of your code.      
+
 There are a number of names for the same EasyPrint function.  `Print` is one of the better ones to use as it's easy to remember.   It is simply `print` with a capital P.      
       
     import PySimpleGUI as sg      
@@ -724,15 +870,16 @@ Just like the standard print call, `EasyPrint` supports the `sep` and `end` keyw
        
 You can change the size of the debug window using the `SetOptions` call with the `debug_win_size` parameter.      
     
-*A word of caution.*  There are known problems when multiple PySimpleGUI windows are opened.  If you open one of these debug windows, if you close it using the Quit button, it can have the side-effect of causing other visible windows to also close.  It's a known architectural issue.    
+There is an option to tell PySimpleGUI to reroute all of your stdout and stderr output to this window.  To do so call EasyPrint with the parameter `do_not_reroute_stdout` set to True.  After calling it once with this parameter set to True, all future calls to a normal`print` will go to the debug window.
     
+If you close the debug window it will re-open the next time you Print to it.
       
 ---      
 # Custom window API Calls  (Your First window)      
       
 This is the FUN part of the programming of this GUI.  In order to really get the most out of the API, you should be using an IDE that supports auto complete or will show you the definition of the function.  This will make customizing go  smoother.      
       
-This first section on custom windows is for your typical, blocking, non-persistant window.  By this I mean, when you "show" the window, the function will not return until the user has clicked a button or closed the window.  When this happens, the window will be automatically closed.      
+This first section on custom windows is for your typical, blocking, non-persistent window.  By this I mean, when you "show" the window, the function will not return until the user has clicked a button or closed the window.  When this happens, the window will be automatically closed.      
       
 Two other types of windows exist.      
 1. Persistent window - rather than closing on button clicks, the show window function returns and the window continues to be visible.  This is good for applications like a chat window.      
@@ -827,9 +974,9 @@ Read on for detailed instructions on the calls that show the window and return y
 All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.      
       
       
-## Pattern 1 - Read into list or dictionary (**The Most Common** Pattern)    
+## Pattern 1 - "One-shot Window" - Read into list or dictionary (**The Most Common** Pattern)    
       
-This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times)    
+This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and closes.
     
 It's unusual to assign the values returned from the read call directly into user variables.  Usually the variables are grouped together into a list or dictionary of multiple return values.    
     
@@ -843,12 +990,13 @@ window_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 window = sg.Window('SHA-1 & 256 Hash').Layout(window_rows)    
     
 event, values = window.Read()    
+window.Close()
     
 source_filename = values[0]    
 ```    
     
     
-## Pattern 2 - Persistent window (multiple reads using an event loop)      
+## Pattern 2 A - Persistent window (multiple reads using an event loop)      
       
 Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.      
     
@@ -858,8 +1006,8 @@ This code will present a window and will print values until the user clicks the 
 import PySimpleGUI as sg      
       
 layout = [[sg.Text('Persistent window')],      
-          [sg.Input()],      
-          [sg.RButton('Read'), sg.Exit()]]      
+          [sg.Input(do_not_clear=True)],      
+          [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open').Layout(layout)      
       
@@ -868,14 +1016,50 @@ while True:
     if event is None or event == 'Exit':      
         break      
     print(event, values)    
+
+window.Close()
 ```    
+
+## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
+
+This is a slightly more complex, but maybe more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
+
+Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
+
+A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False, the default setting (you can remove the parameter completely).
+
+```python
+import sys  
+if sys.version_info[0] >= 3:  
+    import PySimpleGUI as sg  
+else:  
+    import PySimpleGUI27 as sg  
+  
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
+          [sg.Input(do_not_clear=True, key='_IN_')],  
+          [sg.Button('Show'), sg.Button('Exit')]]  
+  
+window = sg.Window('Window Title').Layout(layout)  
+  
+while True:                 # Event Loop  
+  event, values = window.Read()  
+  print(event, values)
+  if event is None or event == 'Exit':  
+      break  
+  if event == 'Show':  
+      # change the "output" element to be the value of "input" element  
+      window.FindElement('_OUTPUT_').Update(values['_IN_'])
+
+window.Close()
+```
+
+     
       
+## How GUI Programming in Python Should Look?  At least for beginners ?    
       
-### How GUI Programming in Python Should Look?  At least for beginners ?    
+While one goal was making it simple to create a GUI another just as important goal was to do it in a Pythonic manner. Whether it achieved these goals is debatable, but it was an attempt just the same.      
       
-While one goal was making it simple to create a GUI another just as important goal was to do it in a Pythonic manner. Whether it achieved this goal is debatable, but it was an attempt just the same.      
-      
-The key to custom windows in PySimpleGUI is to view windows as ROWS of  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.    
+The key to custom windows in PySimpleGUI is to view windows as ROWS of GUI  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.    
       
  Let's dissect this little program     
  ```python    
@@ -930,18 +1114,16 @@ Isn't this what a Python programmer looking for a GUI wants? Something easy to w
   
 ### Two Return Values     
   
-All Window Read and ReadNonBlocking calls return 2 values.  By convention a read statement is written:  
+All Window Read calls return 2 values.  By convention a read statement is written:  
 ```python  
 event, values = window.Read()      
 ```  
-All of the demo programs and the Cookbook recipes have this line of code for windows that are normal reads (not non-blocking).  A similar line of code is used for non-blocking window reads:  
-```python  
-event, values = window.ReadNonBlocking()  
-```  
   
 You don't HAVE to write your reads in this way. You can name your variables however you want.  But if you want to code them in a way that other programmers using PySimpleGUI are used to, then use these statements.  
+
+## Events
   
-The first parameter `event` describes **why** the read completed.  What was the 'event' that caused us to return from reading the window.  Events are one of these:  
+The first parameter `event` describes **why** the read completed.  Events are one of these:  
   
 For all Windows:  
   
@@ -956,18 +1138,94 @@ For Windows that have specifically enabled these.  Please see the appropriate se
 * An Element Changed (slider, spinner, etc)  
 * A list item was clicked  
 * Return key was pressed in input element  
-  
-  
+* Timeout waiting for event
+* Text was clicked
+* Combobox item chosen
+* Table row selected
+* etc
+
 ***Most*** of the time the event will be a button click or the window was closed.  
   
+### Window closed event
+    
 Another convention to follow is the check for windows being closed with an X.  This is an important event to catch.  If you don't check for this and you attempt to use the window, your program will crash.  Please check for closed window and exit your program gracefully.  
   
 To check for a closed window use this line of code:  
   
     if event is None:  
   
+Putting it all together we end up with an "event loop" that looks something like this:
+```python
+while True:
+    event, values = window.Read()
+    if event is None:
+        break
+```
+### Button Click Events
+
+By default buttons will always return a click event, or in the case of realtime buttons, a button down event.  You don't have to do anything to enable button clicks.  To disable the events, disable the button using its Update method.
+
+You can enable an additional "Button Modified" event by setting `enable_events=True` in the Button call.  These events are triggered when something 'writes' to a button, ***usually*** it's because the button is listed as a "target" in another button.
+   
+The button value from a Read call will be one of 2 values:      
+1. The Button's text      - Default
+2. The Button's key      - If a key is specified
   
-### The 'values' Variable - Return values as a list      
+If a button has a key set when it was created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the event value is None.      
+      
+### **None is returned when the user clicks the X to close a window.**      
+      
+If your window has an event loop where it is read over and over, remember to give your user an "out".  You should ***always check for a None value*** and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:      
+      
+    while True:      
+        event, values = window.Read()      
+        if event is None or event == 'Quit':      
+            break      
+      
+
+### Element Events
+
+Some elements are capable of generating events when something happens to them.  For example, when a slider is moved, or list item clicked on or table row clicked on.  These events are not enabled by default.  To enable events for an Element, set the parameter `enable_events=True`.  This is the same as the older `click_submits` parameter.  You will find the `click_submits` parameter still in the function definition.  You can continue to use it. They are the same setting.  An 'or' of the two values is used.  In the future, click_submits will be removed so please migrate your code to using `enable_events`.
+
+InputText - any change
+Combo - item chosen
+Option menu - item chosen
+Listbox - selection changed
+Radio - selection changed
+Checkbox - selection changed
+Spinner - new item selected
+Multiline - any change
+Text - clicked
+Status Bar - clicked
+Graph - clicked
+TabGroup - tab clicked
+Slider - slider moved
+Table - row selected
+Tree - node selected
+ButtonMenu - menu item chosen
+Right click menu - menu item chosen
+
+### Other Events
+
+#### Menubar menu item chosen for MenuBar menus and ButtonMenu menus
+
+You will receive the key for the MenuBar and ButtonMenu.  Use that key to read the value in the return values dictionary.  The value shown will be the full text plus key for the menu item chosen.  Remember that you can put keys onto menu items.  You will get the text and the key together as you defined it in the menu
+ definition.
+
+#### Right Click menu item chosen
+
+Unlike menu bar and button menus, you will directly receive the menu item text and its key value.  You will not do a dictionary lookup to get the value.  It is the event code returned from WindowRead().
+
+
+#### Windows - keyboard, mouse scroll wheel
+
+Windows are capable of returning keyboard events.  These are returned as either a single character or a string if it's a special key.  Experiment is all I can say. The mouse scroll wheel events are also strings.  Put a print in your code to see what's returned.
+
+#### Timeouts
+
+If you set a timeout parameter in your read, then the system TIMEOUT_KEY will be returned.  If you specified your own timeout key in the Read call then that value will be what's returned instead.
+  
+### The `values` Variable - Return values as a list      
       
 The second parameter from a Read call is either a list or a dictionary of the input fields on the Window.  
   
@@ -990,9 +1248,9 @@ However, this method isn't good when you have a lot of input fields.  If you ins
   
 The more common / advanced method is to request your values be returned as a dictionary.  
   
-### Return values as a dictionary      
+### `values` Variable - Return values as a dictionary      
       
-For those of you that have not encountered a Python dictionary, don't freak out!  Just copy and paste this code and modify it. Follow this design pattern and you'll be fine.  And you might learn something along the way.  
+For those of you that have not encountered a Python dictionary, don't freak out!  Just copy and paste the sample code and modify it. Follow this design pattern and you'll be fine.  And you might learn something along the way.  
   
 For windows longer than 3 or 4 fields you will want to use a dictionary to help you organize your return values. In almost all (if not all) of the demo programs you'll find the return values being passed as a dictionary.  It is not a difficult concept to grasp, the syntax is easy to understand, and it makes for very readable code.      
       
@@ -1038,28 +1296,13 @@ The reason for this naming convention is that when you are scanning the code, th
   
   
   
-### Button Event Return Values      
-      
-The button value from a Read call will be one of 3 values:      
-1. The Button's text      
-2. The Button's key      
-  
-If a button has a key set for it when it's created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the button value is None.      
-      
-None is returned when the user clicks the X to close a window.      
-      
-If your window has an event loop where it is read over and over, remember to give your user an "out".  You should always check for a None value and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:      
-      
-    while True:      
-        event, values = window.Read()      
-        if event is None or event == 'Quit':      
-            break      
-      
+
+
 ## The Event Loop / Callback Functions      
       
 All GUIs have one thing in common, an "event loop".  Usually the GUI framework runs the event loop for you, but sometimes you want greater control and will run your own event loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.      
     
-With PySimpleGUI if your window will remain open following button clicks, then your code will have an event loop. If your program shows a single window, collects the data and then has no other GUI interaction, then you don't need an event loop.    
+With PySimpleGUI if your window will remain open following button clicks, then your code will have an event loop. If your program shows a single "one-shot"  window, collects the data and then has no other GUI interaction, then you don't need an event loop.    
       
 There's nothing mysterious about event loops... they are loops where you take care of.... wait for it..... *events*.  Events are things like button clicks, key strokes, mouse scroll-wheel up/down.        
       
@@ -1084,7 +1327,8 @@ while True:
     event, values = window.Read()      
     if event is None or event == 'Exit':      
         break      
-    print(event, values)    
+    print(event, values)   
+window.Close()
 ```    
        
 In the Event Loop we are reading the window and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)      
@@ -1177,49 +1421,60 @@ You will find it ***much easier*** to write code using PySimpleGUI if you use an
       
 ## Synchronous windows      
 The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI window/dialog box.      
-You've already seen a number of examples above that use blocking windows.  The call to look for that will show you non-blocking windows are calls to `ReadNonBlocking()`.  You can read more about Async windows at the end of this document.    
+You've already seen a number of examples above that use blocking windows.  A truly non-blocking Read call looks like this:
+```python
+event, values = window.Read(timeout=0)
+```
     
+You can learn more about these async / non-blocking windows toward the end of this document.    
     
       
 # Window Object - Beginning a window      
 The first step is to create the window object using the desired window customization.      
-      
-    with Window('Everything bagel', auto_size_text=True, default_element_size=(30,1)) as window:      
-      
+        
 This is the definition of the Window object:      
       
-    def Window(title,      
-        default_element_size=(DEFAULT_ELEMENT_SIZE[0], DEFAULT_ELEMENT_SIZE[1]),      
-        default_button_element_size = (None, None),      
-        auto_size_text=None,      
-        auto_size_buttons=None,      
-        location=(None, None),      
-        font=None,      
-        button_color=None,Font=None,      
-        progress_bar_color=(None,None),      
-        background_color=None      
-        border_depth=None,      
-        auto_close=False,      
-        auto_close_duration=DEFAULT_AUTOCLOSE_TIME,      
-        icon=DEFAULT_WINDOW_ICON,      
-        force_toplevel=False,
-        alpha_channel=1, 
-        return_keyboard_events=False,      
-        use_default_focus=True,      
-        text_justification=None,      
-        no_titlebar=False,      
-        grab_anywhere=False      
-        keep_on_top=False):      
-      
-      
-    
+   
+```python
+Window( title, 
+		default_element_size=DEFAULT_ELEMENT_SIZE,
+		default_button_element_size=(None,None),
+		auto_size_text=None,
+		auto_size_buttons=None,
+		location=(None,None),
+		size=(None,None),
+		element_padding=None,
+		button_color=None,
+		font=None,
+		progress_bar_color=(None,None),
+		background_color=None,
+		border_depth=None,
+		auto_close=False,
+		auto_close_duration=DEFAULT_AUTOCLOSE_TIME,
+		icon=DEFAULT_WINDOW_ICON,
+		force_toplevel=False,
+		alpha_channel=1,
+		return_keyboard_events=False,
+		use_default_focus=True,
+		text_justification=None,
+		no_titlebar=False,
+		grab_anywhere=False,
+		keep_on_top=False,
+		resizable=False,
+		disable_close=False,
+		disable_minimize=False,
+		right_click_menu=None):     
+```      
+          
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `window` values.      
       
        default_element_size - Size of elements in window in characters (width, height)      
        default_button_element_size - Size of buttons on this window      
        auto_size_text - Bool. True if elements should size themselves according to contents. Defaults to True      
        auto_size_buttons - Bool. True if button elements should size themselves according to their text label      
-       location - (x,y) Location to place window in pixels      
+       location - (x,y) Location to place window in pixels  
+       size - (w,h) forces a window to be a paricular size
+       element_padding - (w,h) default padding amount for elements
        font - Font name and size for elements of the window      
        button_color - Default color for buttons (foreground, background). Can be text or hex      
        progress_bar_color - Foreground and background colors for progress bars      
@@ -1235,13 +1490,30 @@ Parameter Descriptions.  You will find these same parameters specified for each 
        text_justification - Justification to use for Text Elements in this window      
        no_titlebar - Create window without a titlebar      
        grab_anywhere - Grab any location on the window to move the window      
-       keep_on_top - if True then window will always stop on top of other windows on the screen.  Great for floating toolbars.      
+       keep_on_top - if True then window will always stop on top of other windows on the screen.  Great for floating toolbars.     
+       resizable - if True - user can manually changge the wize of the window.  Defaults to False
+       disable_close - if True user will not be able to close using the X. 
+       disable_minimize - if True user will not be able to minimize the window
+       right_click_menu - menu definition that will be used on wall elements that support right click. If a  definition is specified on an element then it will be used instead.
       
       
 ### Window Location      
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.      
+
+### Window Size
+
+You can get your window's size by access the `Size`property.  The window has to be Read once or Finalized in order for the value to be correct. Note that it's a property, not a call.
+
+`my_windows_size = window.Size`
+
+To finalize your window:
+
+```pytyhon
+window = Window('My Title').Layout(layout).Finalize()
+```
       
-### Sizes      
+
+### Element Sizes      
 Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.      
       
 The default Element size for PySimpleGUI is `(45,1)`.      
@@ -1276,6 +1548,11 @@ Note - there is a warning message printed out if the user closes a non-blocking 
       
 To keep a window on top of all other windows on the screen, set keep_on_top = True when the window is created.  This feature makes for floating toolbars that are very helpful and always visible on your desktop.      
       
+### Focus
+
+PySimpleGUI will set a default focus location for you.  This generally means the first input field.  You can set the focus to a particular element.  If you are going to set the focus yourself, then you should turn off the automatic focus by setting `use_default_focus=False` in your Window call.
+
+
 ### Window Methods (things you can do with a Window object)      
       
 There are a few methods (functions) that you will see in this document that act on Windows.  The ones you will primarily be calling are:      
@@ -1283,18 +1560,24 @@ There are a few methods (functions) that you will see in this document that act 
     window.Layout(layout) - Turns your definition of the Window into Window      
     window.Finalize() - creates the tkinter objects for the Window. Normally you do not call this      
     window.Read() - Read the Windows values and get the button / key that caused the Read to return. Can have an optional timeout      
-    window.ReadNonBlocking() - Same as Read but will return right away      
+    window.ReadNonBlocking() - NO LONGER USED!  
     window.Refresh() - Use if updating elements and want to show the updates prior to the nex Read      
     window.Fill(values_dict) - Fill each Element with entry from the dictionary passed in      
     window.SaveToDisk(filename) - Save the Window's values to disk      
     window.LoadFromDisk(filename) - Load the Window's values from disk      
-    window.CloseNonBlocking() - When done, for good, reading a non-blocking window      
-    window.Disable() - Use to disable the window inpurt when opening another window on top of the primnary  Window      
+    window.Close() - To close your window, if a button hasn't already closed it    
+    window.Disable() - Use to disable the window inputwhen opening another window on top of the primnary  Window      
     window.Enable() - Re-enable a Disabled window      
-    window.FindElement(key) - Returns the element that has a matching key value  
+    window.FindElement(key, silent_on_error=False) - Returns the element that has a matching key value  
     window.Move(x,y) - Moves window to location x,y on screen'
     window.SetAlpha(alpha) - Changes window transparency
-        
+    window.BringToFront() - Brings the window to the top of other windows on the screen
+    window.Disappear(), Reappear() - Uses alpha channel to make window disappear
+    window.Hide(), UnHide() - Hides a window
+    window.CurrentLocation() - Returns current window location
+    window.Size = w,h - Forces a window to be a particular size. Note this is a property not a method
+    window.Size - Tuple (w,h)The size of the current window. Note this is a property
+	window.Minimize() - Minimizes window to taskbar        
       
 ## Window Methods     
     
@@ -1309,16 +1592,26 @@ window = sg.Window('My window title').Layout(layout)
 ```    
 #### Finalize()    
     
-Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    
+Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
+
+If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
+
     
-#### Read(timeout=None, timeout_key='__timeout_ _ ')    
+#### Read(timeout=None, timeout_key='__TIMEOUT_ _ ')    
     
 Read the Window's input values and button clicks in a blocking-fashion    
-Returns event, values.  Adding a timeout can be achieved by setting timeout=number of milliseconds before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event. 
+
+Returns event, values.  Adding a timeout can be achieved by setting timeout=number of milliseconds before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event.   If you do not specify a timeout key, then the value `TIMEOUT_KEY` will be returned.
+
+If you set the timeout = 0, then the Read will immediately return rather than waiting for input or for a timeout. This is the same as the old ReadNonBlocking call.
     
-#### ReadNonBlocking()    
+#### ReadNonBlocking()    (NO LONGER USED)
     
-Read the Window's input values and button clicks but without blocking.  It will immediately return.    **Consider using Read with timeout instead!**
+While this call will technically still work, it is being removed.  If you want to get the same result, call Read with timeout = 0.
+    
+Read the Window's input values and button clicks but without blocking.  It will immediately return.    **Consider using Read with non-zero timeout instead!**
+
+Will consume 100% of your CPU if you do not have other blocking calls in your event loop.
     
 #### Refresh()    
 Cause changes to the window to be displayed on the screen.  Normally not needed unless the changes are immediately required or if it's going to be a while before another call to Read.    
@@ -1329,9 +1622,10 @@ Sets the window's icon that will be shown on the titlebar.    Can either be a fi
 #### Fill(values_dict)    
 Populates the windows fields with the values shown in the dictionary.      
     
-#### FindElement(key)    
+#### Element(key, silent_on_error=False)         (shorthand version)
+#### FindElement(key, silent_on_error=False)    
     
-Rerturns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
+Returns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
     
 #### FindElementWithFocus()    
 
@@ -1349,13 +1643,20 @@ Fills in a window's fields based on previously saved file
     
 Returns the size (w,h) of the screen in pixels    
     
+#### CurrentLocation()
+Returns current screen position (x,y) 
+
 #### Move(x, y)
 Move window to (x,y) position on the screen
 
 #### Minimize()
 Sends the window to the taskbar
 
-#### CloseNonBlocking()    
+#### Close()
+
+Closes a window, blocking or non-blocking
+
+#### CloseNonBlocking()    (NO LONGER USED.. use Close instead)
     
 Closes a non-blocking window    
     
@@ -1407,18 +1708,25 @@ Sets the window's transparency.  0 is completely transparent.  1 is fully visibl
      Radio Buttons      
      Listbox      
      Slider      
-     Multi-line Text Input      
-     Scroll-able Output      
+     Multi-line Text Input/Output
+     Multi-line Text Output (Qt only)   
+     Scroll-able Output  
+     Vertical Separator    
      Progress Bar      
      Option Menu      
-     Menu      
+     Menu
+     ButtonMenu      
      Frame      
      Column      
      Graph      
      Image      
      Table      
      Tree    
-     Tab, TabGroup      
+     Tab, TabGroup    
+     StatusBar
+     Pane
+     Stretch (Qt only)
+       
 
       
 ## Common Element Parameters      
@@ -1430,7 +1738,7 @@ Some parameters that you  will see on almost all Elements are:
  - font - specifies the font family, size, etc    
  - colors - Color name or #RRGGBB string    
  - pad - Amount of padding to put around element    
-    
+ - enable_events - Turns on the element specific events    
       
 #### Tooltip    
 Tooltips are text boxes that popup next to an element if you hold your mouse over the top of it.  If you want to be extra kind to your window's user, then you can create tooltips for them by setting the parameter `tooltip` to some text string.  You will need to supply your own line breaks / text wrapping.  If you don't want to manually add them, then take a look at the standard library package `textwrap`.      
@@ -1471,6 +1779,7 @@ To specify an underlined, Helvetica font with a size of 15 the values:
 'Helvetica 15 underline italics'    
     
 #### Key    
+
 If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.    
 Keys are a way for you to "tag" an Element with a value that will be used to identify that element.  After you put a key in an element's definition, the values returned from Read will use that key to tell you the value.  For example, if you have an input field:    
 Input(key='mykey')    
@@ -1480,6 +1789,15 @@ Then to get the input value from the read it would be:
 values['mykey']    
 You also use the same key if you want to call Update on an element.  Please see the section below on Updates to understand that usage.    
     
+#### Visible
+Beginning in version 3.17 you can create Elements that are initially invisible that you can later make visible.
+
+To create an invisible Element, place the element in the layout like you normally would and add the parameter `visible=False`.  
+
+Later when you want to make that Element visible you simply call the Element's `Update` method and pass in the parameter `visible=True`
+
+This feature works best on Qt, but does work on the tkinter version as well.  The visible parameter can also be used with the Column and Frame "container" Elements.
+
       
 ### Output Elements      
 Building a window is simply making lists of Elements.  Each list is a row in the overall GUI dialog box.  The definition looks something like this:      
@@ -1487,6 +1805,10 @@ Building a window is simply making lists of Elements.  Each list is a row in the
     layout = [ [row 1 element, row 1 element],      
                [row 2 element, row 2 element, row 2 element] ]      
 The code is a crude representation of the GUI, laid out in text.      
+## Shortcut Functions / Multiple Function Names
+
+Many of the main method calls and Element names have shortcuts.  This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  `FindElement` was recently renamed to `Element` because it's a commonly used function.
+
       
 ##  Text Element      
       
@@ -1496,25 +1818,29 @@ The code is a crude representation of the GUI, laid out in text.
       
       
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.      
-      
-    Text(text      
-         size=(None, None)      
-         auto_size_text=None      
-         click_submits=None      
-         relief=None      
-         font=None      
-         text_color=None      
-         background_color=None      
-         justification=None      
-         pad=None      
-         key=None      
-         tooltip=None)      
-      
+```python
+   Text(text,
+		size=(None, None), 
+		auto_size_text=None,
+		click_submits=False, 
+        enable_events=False,
+        relief=None,
+		font=None, 
+		text_color=None, 
+		background_color=None, 
+		justification=None, 
+		pad=None, 
+		key=None, 
+		right_click_menu=None, 
+		tooltip=None, 
+		visible=True)
+```			      
 .      
       
     Text - The text that's displayed      
     size - Element's size      
-    click_submits - if clicked will cause a read call to return they key value as the button      
+    click_submits - if clicked will cause a read call to return the key value of the button      
+    enable_events - same as click_submits
     relief - relief to use around the text      
     auto_size_text - Bool. Change width to match size of text      
     font - Font name and size to use      
@@ -1522,42 +1848,49 @@ The most basic element is the Text element.  It simply displays text.  Many of t
     background_color - background color      
     justification - Justification for the text. String - 'left', 'right', 'center'      
     pad - (x,y) amount of padding in pixels to use around element when packing      
-    key - used to identify element.  This value will return as button if click_submits True      
+    key - used to identify element.  This value will return as button if click_submits True     
+    right_click_menu - menu definition to display if right clicked
     tooltip - string representing tooltip      
       
 Some commonly used elements have 'shorthand' versions of the functions to make the code more compact.  The functions `T` and `Txt` are the same as calling `Text`.      
       
-**Fonts** in PySimpleGUI are always in this format:      
+### Fonts
       
-    (font_name, point_size)      
+	Already discussed in the common parameters section.  Either string or a tuple.  
       
-The default font setting is      
-      
-    ("Helvetica", 10)      
-      
-**Color** in PySimpleGUI are in one of two formats - color name or RGB value.    
+### Color in PySimpleGUI are in one of two formats - color name or RGB value.    
       
  Individual colors are specified using either the color names as defined in tkinter or an RGB string of this format:      
       
-    "#RRGGBB"      
+    "#RRGGBB"        or          "darkblue"
       
-**auto_size_text**      
+### `auto_size_text      `
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.      
       
       
-**Shortcut functions**      
+### Chortcut functions      
 The shorthand functions for `Text` are `Txt` and `T`      
-      
+ 
+### Events `enable_events`
+
+ If you set the parameter `enable_events` or `click_submits` then you will get an event if the user clicks on the Text.  
+
+
 ### Text Methods     
     
 #### Update    
+
+
+If you want to change the text, font, or colors after the element has been created, then use the `Update` method.
+
 ```python    
- Update(value = None, background_color=None, text_color=None, font=None)    
+ Update(value = None, background_color=None, text_color=None, font=None, visible=None)    
 ```    
 value - new value to set text element to    
 background_color - new background color    
 text_color - text color to display    
-font - font to use to display    
+font - font to use to display 
+visible - visibility   
     
     
 ##  Multiline Text Element      
@@ -1568,56 +1901,89 @@ font - font to use to display
       
 This Element doubles as both an input and output Element.      
       
-    Multiline(default_text='',    
-              enter_submits = False,    
-              disabled=False,    
-              autoscroll=False,    
-              size=(None, None),    
-              auto_size_text=None,    
-              background_color=None,    
-              text_color=None,    
-              do_not_clear=False,    
-              key=None,    
-              focus=False,    
-              pad=None,    
-              tooltip=None)    
-.      
+```python
+Multiline(	default_text='',
+			enter_submits=False,
+			disabled=False,
+			autoscroll=False,
+			size=(None, None),
+			auto_size_text=None,
+			background_color=None,
+			text_color=None,
+			change_submits=False,
+			enable_events=False,
+			do_not_clear=False,
+			key=None,
+			focus=False,
+			font=None,
+			pad=None,
+			tooltip=None
+			right_click_menu=None,
+			visible=True)
+'''
+```   
       
     default_text - Text to display in the text box      
-    enter_submits - Bool. If True, pressing Enter key submits window      
-    size - Element's size      
+    change_submits - Bool. If True, pressing Enter key submits window 
+    anable_events - Bool. same as change_submits
+    autoscroll - Bool.  Causes "cursor" to always be at the end of the text   
+    size - Element's size  
+    right_click_menu - menu definition to displat if right clicked    
     auto_size_text - Bool. Change width to match size of text      
       
 ### Multiline Methods    
 ```python    
-Update(value=None, disabled=None, append=False):    
+Update(	value=None,
+		disabled=None,
+		append=False,
+		font=None,
+		text_color=None,
+		background_color=None)
+
+Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None)value=None, disabled=None, append=False):    
 ```    
 value - string to set the text field to    
 disabled - set to True to disable the element    
 append - rather than replacing the current text with new text, add the new text onto the end    
     
 ## Output Element      
-Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.  More on this later.      
-      
-    window.AddRow(gg.Output(size=(100,20)))      
+Output re-routes `Stdout` to a scrolled text box. 
+
+Whatever you print will show up in this window.  
+
+Note that you will NOT see what you print until you call either window.Read or window.Refresh.  If you want to immediately see what was printed, call window.Refresh() immediately after your print statement.
+
+    layout = [[sg.Output(size=(80,10)]]         
       
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)      
-      
-    Output(size=(None, None))      
-.      
-      
-     size - Size of element (width, height) in characters      
+
+```python
+Output(	size=(None, None),
+		background_color=None,
+		text_color=None,
+		pad=None,
+		font=None,
+		tooltip=None,
+		right_click_menu=None,
+		key=None,
+		visible=True)
+```
+
+size - Size of Output Element (width, height) in characters
+You should be quite familiar with these parameters by now.  If not, read able another element or read about common parameters.
+
+  
       
 ##  Input Elements      
   These make up the majority of the window definition.  Optional variables at the Element level override the window level values (e.g. `size` is specified in the Element).  All input Elements create an entry in the list of return values.  A Text Input Element creates a string in the list of items returned.      
       
-## Text Input Element      
+## Text Input Element    Shortcuts (Input, In)  
       
     layout = [[sg.InputText('Default text')]]      
       
 ![inputtext 2](https://user-images.githubusercontent.com/13696193/44959861-b5fe5580-aec3-11e8-8040-53ec241b5079.jpg)      
       
-      
+```python
       def InputText(default_text ='',    
                     size=(None, None),    
                     disabled=False,     
@@ -1628,11 +1994,14 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
                     text_color=None,    
                     font=None,    
                     tooltip=None,    
+                    change_submits=False
                     do_not_clear=False,    
                     key=None,    
-                    focus=False,    
-                    pad=None):      
-    '''    
+                    focus=False,  
+                    right_click_menu=None,  
+                    pad=None,
+                    vitible=True):      
+```
       
 .      
       
@@ -1643,18 +2012,25 @@ Output re-routes `Stdout` to a scrolled text box.  It's used with Async windows.
      password_char - Character that will be used to replace each entered character. Setting to a value indicates this field is a password entry field      
      background_color - color to use for the input field background      
      text_color - color to use for the typed text      
+     font - font used for the element
+     tooltip - what is shown when hovered over element (doesn't appear to work)
+     change_submits - if True, will cause a Window.Read to return if a button fills in the value
      do_not_clear - Bool. Normally windows clear when read, turn off clearing with this flag.      
      key = Dictionary key to use for return values      
      focus = Bool. True if this field should capture the focus (moves cursor to this field)      
+     pad - amount of room in pixels to leave around the element
       
  There are two methods that can be called:      
       
-     InputText.Update(new_Value) - sets the input value      
-     Input.Text(Get() - returns the current value of the field.      
+     Input.Update(new_Value) - sets the input to new_value      
+     Input.Get() - returns the current value of the field.      
       
       
 Shorthand functions that are equivalent to `InputText` are `Input` and `In`      
+
+#### `do_not_clear` Parameter
       
+**Important** - This trips a lot of people up.  If you do not set the `do_not_clear` parameter then the input field will clear when an event takes place.   The behavior is a "forms" style window development.  The assumption is that you want the field to clear.  If you are writing a chat program then you're thankful.  The rest of you, I'm sorry.
     
 ### TextInput Methods    
 ```python    
@@ -1682,11 +2058,13 @@ Also known as a drop-down list.  Only required parameter is the list of choices.
                background_color=None      
                text_color=None      
                change_submits=False 
+               enable_events=False
                readonly=True     
                disabled=False      
                key=None      
                pad=None      
-               tooltip=None      
+               tooltip=None   
+               visible=True)   
 .      
       
      values - Choices to be displayed. List of strings      
@@ -1735,7 +2113,9 @@ The standard listbox like you'll find in most GUIs.  Note that the return values
                  text_color=None      
                  key=None      
                  pad=None      
-                 tooltip=None):      
+		 		 right_click_menu=None                
+                 tooltip=None,
+                 visible=True):      
       
 .      
       
@@ -1807,7 +2187,8 @@ Sliders have a couple of slider-specific settings as well as appearance settings
             text_color=None,     
             key=None,     
             pad=None,    
-            tooltip=None)    
+            tooltip=None,
+            visible=True)    
     
 .      
       
@@ -1832,9 +2213,14 @@ Sliders have a couple of slider-specific settings as well as appearance settings
        key- Dictionary key to use for return values      
        tooltip - Tooltip to display when hovered over wlement    
       
+### Qt Sliders
+
+There is an important difference between Qt and tkinter sliders.  On Qt, the slider values must be integer, not float.  If you want your slider to go from 0.1 to 1.0, then make your slider go from 1 to 10 and divide by 10.  It's an easy math thing to do and not a big deal.  Just deal with it.... you're writing software after all.  Presumably you know how to do these things.  ;-)
+
+
 ### Slider Methods    
 ```python    
-Update(self, value=None, range=(None, None), disabled=None):    
+Update(self, value=None, range=(None, None), disabled=None, visible=None):    
 ```    
 value - set current selection to value    
 range - change range of valid values    
@@ -1860,7 +2246,8 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
            text_color = None,      
            key = None,    
            pad = None,    
-           tooltip = None)      
+           tooltip = None,
+           visible=True)      
       
 .      
       
@@ -1879,7 +2266,7 @@ Creates one radio button that is assigned to a group of radio buttons.  Only 1 o
       
 ### Radio Button Methods    
 ```python    
-Update(value=None, disabled=None)    
+Update(value=None, disabled=None, visible=None)    
 ```    
 value - bool - if True change to selected    
 disabled - if True disables the element    
@@ -1905,7 +2292,8 @@ Checkbox elements are like Radio Button elements.  They return a bool indicating
              disabled = False,    
              key = None,    
              pad = None,    
-             tooltip = None):      
+             tooltip = None,
+             visible=True):      
 .      
       
      text - Text to display next to checkbox      
@@ -1925,7 +2313,7 @@ Shortcut functions -   CBox, CB, Check
     
 ### Checkbox Methods    
 ```python    
-Update(value=None, disabled=None)    
+Update(value=None, disabled=None, visible=None)    
 Get()    
 ```    
 Update - changes the element    
@@ -1954,7 +2342,8 @@ An up/down spinner control.  The valid values are passed in as a list.
          text_color = None,      
          key = None.    
          pad = None,    
-         tooltip = None):      
+         tooltip = None,
+         visible=True):      
     
     
     
@@ -1972,10 +2361,18 @@ Parameter definitions
      key = Dictionary key to use for return values      
      pad - padding around element in the window    
      tooltip - text to show when mouse hovered over element         
+
+
+### Qt Differences - `values` is a range!
+
+Note that Qt does not allow arbitrary spinner values.  With PySimpleGUI-tkinter you can have any values in your list.  In Qt they must be integers.  Yea, it kinda sucks.  I'm working on it.
+
+On Qt values is a tuple representing a range.  On plain PySimpleGUI this value is a list of items.  Make sure on the plain version you specify items as a list using [] and not a generator using ().
+
       
 ### Spin Methods    
 ```python    
-Update(value=None, values=None, disabled=None)    
+Update(value=None, values=None, disabled=None, visible=None)    
 ```    
 value - set the current value    
 values - set available choices    
@@ -1984,36 +2381,68 @@ disabled - if True disables the element
 ## Image Element    
     
 Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format.  JPGs cannot be shown because tkinter does not naively support JPGs.  You can use the Python Imaging Library (PIL) package  to convert your image to PNG prior to calling PySimpleGUI if your images are in JPG format.    
-    
-     Image(filename=None,     
-           data=None,     
-           background_color=None,     
-           size=(None, None),     
-           pad=None,     
-           key=None,    
-           tooltip=None)    
-          
+```python   
+  Image(filename=None,
+		data=None,
+		data_base64=None,
+		background_color=None,
+		size=(None,None),
+		pad=None,
+		key=None,
+		tooltip=None,
+		click_submits=False,
+		enable_events=False,
+		visible=True,
+		right_click_menu=None,		
+		size_px=(None,None)  
+		visible=True)  
+```          
 Parameter definitions    
             
     filename - file name if the image is in a file    
-    data - if image is in RAM (PIL format?)    
+    data - if image is in RAM (PIL format?)  
+    data_base64 - image in base64 format  
     background_color - Color of background    
     size - Size (Width, Height) of image in pixels    
     pad - Padding around Element in the window    
     key - Key used to find the element    
     tooltip - text to show when mouse if hovered over image    
+    click_submits, enable_events - if True returns event when image is clicked
+    visible - if False will create image as hidden
+    size_px - size of image in pixels
     
-### Image Methods    
+### `Update` Method
     
-Like other Elements, the Image Element has an update method.  Call Update if you want to change the image.    
+Like other Elements, the Image Element has an `Update` method.  Call Update if you want to change the image.    
     
-    def Update(self, filename=None, data=None):    
+    def Update(self, filename=None, data=None, visible=None):    
     
     
 Choose **either** a filename or in-ram data image to use to replace current image    
-    
+
+### `UpdateAnimation` Method  for Animated GIFs
+
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)
+
+
+Starting in version 3.23 you can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
+
+```python
+UpdateAnimation(source,
+	         	time_between_frames=0)
+```
+`source` can be a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename parameter and base64 parameter into 2 parameters.
+
+`time_between_frames` is an optional parameter.  It will keep track of the amount of time between frame changes for you to give you a smooth animation.  With this parameter you can call the function as often as you want and it will advance to the next frame only after the correct amount of time has lapsed. 
+
+You can call the method without setting the `time_between_frames` value and it will show a frame and immediately move on to the next frame.  This enables you to do the inter-frame timing.
+
+
+
     
 ## Button Element      
+      
+**MAC USERS** - Macs suck when it comes to tkinter and button colors.  It sucks so badly with colors that the `LookAndFeel` call is disabled.  You cannot change button colors for Macs.  You're stuck with the system default color if you are using the tkinter version of PySimpleGUI.  The Qt version does not have this issue.
       
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a window, whether it be Submit or Cancel, one way or another a button is involved in all windows.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.      
       
@@ -2030,7 +2459,7 @@ The Types of buttons include:
 * Color Chooser      
       
       
- Close window - Normal buttons like Submit, Cancel, Yes, No, etc, are "Close window" buttons.  They cause the input values to be read and then the window is ***closed***, returning the values to the caller.      
+Close window - Normal buttons like Submit, Cancel, Yes, No, do NOT close the window... they used to.  Now to close a window you need to use a CloseButton / CButton.
       
 Folder Browse - When clicked a folder browse dialog box is opened.  The results of the Folder Browse dialog box are written into one of the input fields of the window.      
       
@@ -2044,17 +2473,20 @@ Read window - This is a window button that will read a snapshot of all of the in
       
 Realtime - This is another async window button.  Normal button clicks occur after a button's click is released.  Realtime buttons report a click the entire time the button is held down.      
       
-Most programs will use a combination of shortcut button calls (Submit, Cancel, etc), plain buttons that close the window, and ReadForm buttons that keep the window open but returns control back to the caller.      
+Most programs will use a combination of shortcut button calls (Submit, Cancel, etc), normal Buttons which leave the windows open and CloseButtons that close the window when clicked.
       
-Sometimes there are multiple names for the same function.  This is simply to make the job of the programmer quicker and easier.      
+Sometimes there are multiple names for the same function.  This is simply to make the job of the programmer quicker and easier.  Or they are old names that are no longer used but kept around so that existing programs don't break.   
       
-The 3 primary windows of PySimpleGUI buttons and their names are:      
+The 4 primary windows of PySimpleGUI buttons and their names are:      
       
- 1. `Button` = `SimpleButton`      
- 2. `ReadButton` = `RButton` = `ReadFormButton` (old style... use ReadButton instead)      
+ 1. `Button`= `ReadButton` = `RButton` = `ReadFormButton` (old style... use Button instead)      
+ 2. `CloseButton` = `CButton`
  3. `RealtimeButton`      
+ 4. `DummyButton`
       
-You will find the long-form in the older programs.      
+You will find the long-form names in the older programs. ReadButton for example. 
+
+In Oct 2018, the definition of Button changed.  Previously Button would CLOSE the window when clicked.  It has been changed so the Button calls will leave the window open in exactly the same way as a ReadButton.  They are the same calls now.   To enables windows to be closed using buttons, a new button was added... `CloseButton` or `CButton`.
       
 The most basic Button element call to use is `Button`      
       
@@ -2078,7 +2510,8 @@ The most basic Button element call to use is `Button`
            bind_return_key=False      
            focus=False      
            pad=None      
-           key=None):      
+           key=None,
+           visible=True):      
       
 Parameters      
       
@@ -2104,7 +2537,7 @@ Parameters
     pad - (x,y) padding in pixels for packing the button      
     key - key used for finding the element      
       
-#### Pre-defined Buttons      
+### Shortcut, Pre-defined Buttons      
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, set the button text to match the function name and set the parameters to commonly used values. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:      
       
     OK      
@@ -2122,12 +2555,22 @@ These Pre-made buttons are some of the most important elements of all because th
     FilesBrowse      
     FileSaveAs      
     FolderBrowse      
-.      
+
+**IMPORT NOTE ABOUT SHORTCUT BUTTONS**
+Prior to release 3.11.0, these buttons closed the window.  Starting with 3.11 they will not close the window.  They act like RButtons (return the button text and do not close the window)
+
+If you are having trouble with these buttons closing your window, please check your installed version of PySimpleGUI by typing `pip list` at a command prompt.  Prior to 3.11 these buttons close your window.  
+
+Using older versions, if you want a Submit() button that does not close the window, then you would instead use RButton('Submit').   Using the new version, if you want a Submit button that closes the window like the sold Submit() call did, you would write that as `CloseButton('Submit')` or `CButton('Submit')`
+
+
     layout =  [[sg.OK(), sg.Cancel()]]      
       
 ![ok cancel 3](https://user-images.githubusercontent.com/13696193/44959927-aa5f5e80-aec4-11e8-86e1-5dc0b3a2b803.jpg)      
       
-  #### Button targets      
+
+
+### Button targets      
       
 The `FileBrowse`, `FolderBrowse`, `FileSaveAs` , `FilesSaveAs`, `CalendarButton`, `ColorChooserButton` buttons all fill-in values into another element located on the window.  The target can be a Text Element or an InputText Element.  The location of the element is specified by the `target` variable in the function call.      
       
@@ -2172,7 +2615,7 @@ See how much easier the key method is?
       
 **Save & Open Buttons**      
       
-There are 3 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use. To open several files at once, use the `FilesBrowse` button.  It will create a list of files that are separated by ';'      
+There are 4 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use. To open several files at once, use the `FilesBrowse` button.  It will create a list of files that are separated by ';'      
       
       
 ![open](https://user-images.githubusercontent.com/13696193/45243804-2b529780-b2c3-11e8-90dc-6c9061db2a1e.jpg)      
@@ -2245,7 +2688,7 @@ This is one you'll have to experiment with at this point.  Not up for an exhaust
 ![robot remote](https://user-images.githubusercontent.com/13696193/44959958-ff9b7000-aec4-11e8-99ea-7450926409be.jpg)      
       
       
-This window has 2 button types.  There's the normal "Simple Button" (Quit) and 4 "Realtime Buttons".      
+This window has 2 button types.  There's the normal "Read Button" (Quit) and 4 "Realtime Buttons".      
       
 Here is the code to make, show and get results from this window:      
 
@@ -2264,22 +2707,22 @@ window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(gui_ro
   
 #  
 # Some place later in your code...  
-# You need to perform a ReadNonBlocking on your window every now and then or  
-# else it won't refresh.  
+# You need to perform a Read or Refresh call on your window every now and then or  
+# else it will apprear as if the program has locked up.  
 #  
 # your program's main loop  
 while (True):  
     # This is the code that reads and updates your window  
-  event, values = window.ReadNonBlocking()  
+    event, values = window.Read(timeout=0)  
     if event is not None:  
         print(event)  
     if event == 'Quit'  or values is None:  
-        break  
+        break       
   
-window.CloseNonBlocking()  # Don't forget to close your window!
+window.Close()  # Don't forget to close your window!
 ```
 
-This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `window.ReadNonBlocking` will  return a button name matching the name on the button that was depressed or the key if there was a key assigned to the button.  It will continue to return values as long as the button remains depressed.  Once released, the ReadNonBlocking will return None for buttons until a button is again clicked.      
+This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `window.Read` will  return a button name matching the name on the button that was depressed or the key if there was a key assigned to the button.  It will continue to return values as long as the button remains depressed.  Once released, the Read will return timeout events until a button is again clicked.      
       
 **File Types**      
 The `FileBrowse` & `SaveAs` buttons have an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is      
@@ -2290,6 +2733,8 @@ This code produces a window where the Browse button only shows files of type .TX
       
     layout =  [[sg.In() ,sg.FileBrowse(file_types=(("Text Files", "*.txt"),))]]      
       
+NOTE - Mac users will not be able to use the file_types parameter.  tkinter has a bug on Macs that will crash the program is a file_type is attempted so that feature had to be removed.  Sorry about that!
+
   ***The ENTER key***      
        The ENTER key is an important part of data entry for windows.  There's a long  tradition of the enter key being used to quickly submit windows.  PySimpleGUI implements this by tying the ENTER key to the first button that closes or reads a window.      
       
@@ -2299,18 +2744,77 @@ If there are more than 1 button on a window, the FIRST button that is of type Cl
     
 ### Button Methods    
 ```python    
-Update(value=None, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None)    
+Update(text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, visible=None)
+
 GetText()    
 ```    
 Update - Change the button element    
-value - sets default value    
-text - sets button text    
-button color - (text, background)    
-disabled - if True disables the button    
-image_data - sets button image to in-ram image    
-image_filename - sets button image using a file    
+
+		text - sets button text    
+		button color - (text, background)    
+		disabled - if True disables the button    
+		image_data - sets button image to in-ram image    
+		image_filename - sets button image using a file    
     
- ---      
+GetText - Returns the current text shown on a button
+
+
+## ButtonMenu Element
+
+The ButtonMenu element produces a unique kind of effect.  It's a button, that when clicked, shows you a menu.   It's like clicking one of the top-level menu items on a MenuBar.  As a result, the menu definition take the format of a single  menu entry from  a normal menu definition.  A normal menu definition is  a list of lists.  This definition is one of those lists.
+
+Here is a sample definition:
+```python
+ ['Menu', ['&Pause Graph', 'Menu item::optional_key']]
+```
+The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
+
+
+```python
+ButtonMenu( button_text,
+			menu_def, 
+			tooltip=None,
+			disabled=False, 
+			image_filename=None, 
+			image_data=None, 
+			image_size=(None, None), 
+			image_subsample=None,
+			border_width=None,
+			size=(None, None), 
+			auto_size_button=None, 
+			button_color=None, 
+			font=None, 
+			pad=None, 
+			key=None, 
+			visible=True, 
+			size_px=(None,None)):
+```
+
+One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
+
+This is the effect:
+
+![buttonmenu](https://user-images.githubusercontent.com/13696193/50387000-bc0d8180-06c0-11e9-8d17-3b22ed665e78.gif)
+
+Return values for ButtonMenus are sent via the return values dictionary.  If a selection is made, then an event is generated that will equal the ButtonMenu's key value.  Use that key value to look up the value selected by the user.  This is the same mechanism as the Menu Bar Element, but differs from the pop-up (right click) menu.
+
+
+
+
+
+## Vertical Separator Element    
+This element has limited usefulness and is being included more for completeness than anything else.  It will draw a line between elements.
+```python
+VerticalSeparator(pad=None)
+```
+  
+![snag-0129](https://user-images.githubusercontent.com/13696193/47376041-a92a0100-d6bf-11e8-8f5b-0c0df56cf0f3.jpg)
+      
+It works best when placed between columns or elements that span multiple rows.  If on a "normal" row with elements that are only 1 row high, then it will only span that one row.
+
+
+
+
 ## ProgressBar  Element    
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.      
       
@@ -2341,13 +2845,13 @@ Another way of using a Progress Meter with PySimpleGUI is to build a custom wind
     # loop that would normally do something useful      
     for i in range(10000):      
         # check to see if the cancel button was clicked and exit loop if clicked      
-      event, values = window.ReadNonBlocking()      
-        if event == 'Cancel'  or values == None:      
+      event, values = window.Read(timeout=0)      
+        if event == 'Cancel'  or event is None:      
             break      
       # update bar with loop value +1 so that bar eventually reaches the maximum      
       progress_bar.UpdateBar(i + 1)      
     # done with loop... need to destroy the window as it's still open      
-    window.CloseNonBlocking())      
+    window.Close())      
       
       
 #### Output      
@@ -2391,12 +2895,19 @@ max - changes the max value
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.      
       
 Columns are specified in exactly the same way as a window is, as a list of lists.      
-      
-    def Column(layout - the list of rows that define the layout      
-            background_color - color of background      
-            size - size of visible portion of column      
-            pad - element padding to use when packing      
-            scrollable - bool. True if should add scrollbars      
+   
+```python
+Column(  layout, 
+		 background_color=None,
+		 size=(None, None), 
+		 pad=None, 
+		 scrollable=False, 
+		 vertical_scroll_only=False,
+		 right_click_menu=None, 
+		 key=None,
+		 visible=True)
+```      
+   
       
       
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:      
@@ -2449,7 +2960,23 @@ The default background color for Columns is the same as the default window backg
 ## Frame Element (Labelled Frames, Frames with a title)      
       
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.      
-      
+
+```python
+Frame(  title, 
+		layout, 
+		title_color=None, 
+		background_color=None, 
+		title_location=None,
+		relief=DEFAULT_FRAME_RELIEF, 
+		size=(None, None), 
+		font=None,
+		pad=None, 
+		border_width=None,
+		key=None, 
+		tooltip=None, 
+		right_click_menu=None, 
+		visible=True)
+```      
     def Frame(title - the label / title to put on frame      
                   layout - list of rows of elements the frame contains      
                   title_color - color of the title text      
@@ -2489,6 +3016,17 @@ Notice how the Frame layout looks identical to a window layout.  A window works 
       
 ## Canvas Element      
       
+```python
+Canvas(canvas=None,
+	   background_color=None, 
+	   size=(None, None),
+	   pad=None, 
+	   key=None, 
+	   tooltip=None, 
+	   right_click_menu=None, 
+	   visible=True)
+```
+
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.      
       
 ### Matplotlib, Pyplot Integration      
@@ -2564,13 +3102,20 @@ You can move your figures around on the canvas by supplying the Figure ID the x,
       
 This Element is relatively new and may have some parameter additions or deletions.  It shouldn't break your code however.      
       
-    def Graph( canvas_size - size of canvas in pixels      
-                      graph_bottom_left - the x,y location of your coordinate system's bottom left point      
-                      graph_top_right - the x,y location of your coordinate system's top right point      
-                      background_color - color to use for background      
-                      pad - element padding for pack      
-                      key -  key used to lookup element      
-                      tooltip - tooltip text      
+```python
+  Graph(canvas_size, 
+		graph_bottom_left, 
+		graph_top_right, 
+		background_color=None, 
+		pad=None,
+		change_submits=False,
+		drag_submits=False
+		enable_events=False,
+		key=None,
+		tooltip=None,
+		right_click_menu=None, 
+		visible=True)
+```    
       
 ### Graph Methods    
 ```python    
@@ -2582,12 +3127,13 @@ DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color
 DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None)    
 DrawText(self, text, location, color='black', font=None, angle=0)    
 Erase(background_color)    
+DeleteFigure(figure_id)
 Update()    
 Move(self, x_direction, y_direction)    
 MoveFigure(self, figure, x_direction, y_direction)    
 TKCanvas    
 ```    
-All of the Drawing methods return a "figure" that can be used move the figure    
+All of the Drawing methods return a "***figure***" that can be used move and delete the figure    
     
 DrawLine - draws a line    
 DrawPoint - draws a single point    
@@ -2600,38 +3146,82 @@ Erase - erases entire graph
 Update - changes background color    
 Move - moves everything an x,y direction    
 MoveFigure - moves an individual figure    
+DeleteFigure - delete an individual figure
     
       
 ## Table Element      
       
-Let me say up front that the Table Element has Beta status. The reason is that some of the parameters are not quite right and will change. Be warned one or two parameters may change.  The `size` parameter in particular is gong to change. Currently the number of rows to allocate for the table is set by the height parameter of size.  The problem is that the width is not used.  The plan is to instead have a parameter named `number_of_rows` or something like it.      
-      
-    def Table(values - Your table's array      
-              headings - list of strings representing your headings, if you have any      
-              visible_column_map - list of bools. If True, column in that position is shown.  Defaults to all columns      
-              col_widths - list of column widths      
-              def_col_width - default column width. defaults to 10      
-              auto_size_columns - bool. If True column widths are determined by table contents      
-              max_col_width - maximum width of a column. defaults to 25      
-              select_mode - table rows can be selected, but doesn't currently do anything      
-              display_row_numbers - bool. If True shows numbers next to rows      
-              scrollable - if True table will be scrolled      
-              font - font for table entries      
-              justification - left, right, center      
-              text_color - color of text      
-              background_color - cell background color      
-              size - (None, number of rows).      
-              pad - element padding for packing      
-              key - key used to lookup element      
-              tooltip - tooltip text      
+Out of all of the Elements, it's the Table and the Tree that are the most "problematic" in the tkinter inter and Qt implementations.  They're hard is my only defense.
+
+### Known visualization problem....
+
+If you click on the header, it can go into spasms for some tables. I don't understand what's causing it and it's been there evidently since the first release of Tables.
+   
+```python
+Table(  values,
+		headings=None,
+		visible_column_map=None,
+		col_widths=None,
+		def_col_width=10,
+		auto_size_columns=True,
+		max_col_width=20,
+		select_mode=None,
+		display_row_numbers=False,
+		num_rows=None,
+		row_height=None,
+		font=None,
+		justification='right',
+		text_color=None,
+		background_color=None,
+		alternating_row_color=None,
+		row_colors=None,
+		vertical_scroll_only=True,
+		size=(None,None),
+		change_submits=False,
+		enable_events=False,
+		bind_return_key=False,
+		pad=None,
+		key=None,
+		tooltip=None,
+		right_click_menu=None,
+		visible=True):
+
+```
+
+values - Your table's array      
+headings - list of strings representing your headings, if you have any      
+visible_column_map - list of bools. If True, column in that position is shown.  Defaults to all columns      
+col_widths - list of column widths      
+def_col_width - default column width. defaults to 10      
+auto_size_columns - bool. If True column widths are determined by table contents      
+max_col_width - maximum width of a column. defaults to 25      
+select_mode - table rows can be selected, but doesn't currently do anything      
+display_row_numbers - bool. If True shows numbers next to rows
+num_rows = the number of rows to display at a time (same as size[0])      
+row_height = number of pixels high a row should be. Normally left as default value  
+font - font for table entries      
+justification - left, right, center      
+text_color - color of text      
+alternating row color - if set will change background color for alternating rows
+row_colors - list of tuples representing (row_number, color) e.g. row_colors = ((5, 'white', 'blue'), (0,'red'), (15,'yellow'))
+vertical_scroll_only - if True will not show a horizontal scrollbar.   NOTE - will have to disable to get horizontal scrollbars
+background_color - cell background color      
+size - (None, number of rows) - don't use, use num_rows instead
+enable_events - will return a 'row selected' event when row is selected
+change_submits - the old way of indicating enable_events
+bind_return_key - returns event if a double click or a return key is pressed while row is highlighted
+pad - element padding for packing      
+key - key used to lookup element      
+tooltip - tooltip text      
       
 ### Read return values from Table Element
 
-The values returned from a `Window.Read` or `Window.ReadNonBlocking` call for the Tree Element are a list of row numbers that are currently highlighted.
+The values returned from a `Window.Read` call for the Tree Element are a list of row numbers that are currently highlighted.
 
 ### Update Call
 
-There is an Update method defined in the code for the Tree Element, however it has not been completely tested so the results are not to be trusted.  Use at your own risk...  Removing rows from a table seem to work.      
+The Update method can be used to make changes to a table that's already been displayed.  The call takes a single parameter, values, which is the new table to display.  The entire table is replaced.
+
 ```python
 def Update(self, values=None):
 ```
@@ -2641,6 +3231,31 @@ def Update(self, values=None):
     
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.    
     
+```python
+Tree(   data=None,
+		headings=None, 
+		visible_column_map=None, 
+		col_widths=None, 
+		col0_width=10,
+		def_col_width=10,
+		auto_size_columns=True, 
+		max_col_width=20, 
+		select_mode=None, 
+		show_expanded=False, 
+		change_submits=False, 
+		enable_events=False, 
+		font=None,
+		justification='right', 
+		text_color=None, 
+		background_color=None,
+		num_rows=None,
+		row_height=None,
+		pad=None, 
+		key=None, 
+		tooltip=None,
+		right_click_menu=None, 
+		visible=True)
+```
 ```    
 class Tree(data=None - data in TreeData format    
          headings=None - list of strings representing your headings    
@@ -2651,11 +3266,13 @@ class Tree(data=None - data in TreeData format
          auto_size_columns=True - if true will autosize columns (currenly only sizes to col heading width)    
          max_col_width=20 - max width for columns in characters    
          select_mode=None - not yet used    
+         show_expanded - Bool - if True the tree will be fully expanded when shown
          font=None - the display font    
          justification='right' - justification for data display    
          text_color=None- color of text to display    
          background_color=None - background color    
-         num_rows=None - number of rows to display    
+         num_rows=None - number of rows to display   
+         row_height=None - height of rows in pixels 
          pad=None - element padding    
          key=None - key for element    
          tooltip=None - tooltip    
@@ -2665,7 +3282,13 @@ Unlike Tables there is no standard format for trees.  Thus the data structure pa
 * Get a TreeData Object    
 * "Insert" data into the tree    
 * Pass the filled in TreeData object to Tree Element    
-    
+
+#### TreeData format
+```python
+def TreeData()
+def Insert(self, parent, key, text, values, icon=None)
+```
+
 To "insert" data into the tree the TreeData method Insert is called.    
     
 `Insert(parent_key, key, display_text, values)`    
@@ -2681,9 +3304,18 @@ treedata.Insert("", '_B_', 'B', [4,5,6])
 treedata.Insert("_A_", '_A1_', 'A1', ['can','be','anything'])    
 ```    
     
-Note that you can use the same values for display_text and keys.  The only thing you have to watch for is that you cannot repeat keys.    
+Note that you ***can*** use the same values for display_text and keys.  The only thing you have to watch for is that you cannot repeat keys.    
     
+When Reading a window the Table Element will return a list of rows that are selected by the user.  The list will be empty is no rows are selected.    
     
+#### Icons on Tree Entries
+
+If you wish to show an icon next to a tree item, then you specify the icon in the call to `Insert`.  You pass in a filename or a Base64 bytes string using the optional `icon` parameter.
+
+Here is the result of showing an icon with a tree entry.
+
+![image](https://user-images.githubusercontent.com/13696193/51087270-2b561e80-171f-11e9-8260-6142ea9b1137.png)
+
       
 ## Tab and Tab Group Elements      
       
@@ -2769,11 +3401,32 @@ Tab Groups now return a value when a Read returns.  They return which tab is cur
       
 ### Tab Element Methods    
 ```python    
-Update(disabled = None)    
+Update(disabled = None, visible=None)    
 ```    
-WARNING - This Update method does not yet work!    
+WARNING - This Update method may not be working correctly
     
-    
+## Pane Element
+
+New in version 3.20 is the Pane Element, a super-cool tkinter feature.  You won't find this one in PySimpleGUIQt, only PySimpleGUI.   It's difficult to describe one of these things.  Think of them as "Tabs without labels" that you can slide.
+
+![pane3](https://user-images.githubusercontent.com/13696193/50035040-fcd50e80-ffcd-11e8-939c-df8ab8d64712.gif)
+
+```python
+  
+Pane(pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical', show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
+```    
+
+***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
+
+Calls can get a little hairy looking if you try to declare everything in-line as you can see in this example.
+
+```python
+sg.Pane([col5, sg.Column([[sg.Pane([col1, col2, col4], handle_size=15, orientation='v',  background_color=None, show_handle=True, visible=True, key='_PANE_', border_width=0,  relief=sg.RELIEF_GROOVE),]]),col3 ], orientation='h', background_color=None, size=(160,160), relief=sg.RELIEF_RAISED, border_width=0)
+```
+
+Combing these with *visibility* make for an interesting interface with entire panes being hidden from view until neded by the user.  It's one way of producing "dynamic" windows.
+
+
 ## Colors    
 Starting in version 2.5 you can change the background colors for the window and the Elements.      
       
@@ -2803,6 +3456,196 @@ This call sets all of the different color options.
                progress_meter_color = ('green', 'blue')      
                button_color=('white','#475841'))      
       
+# SystemTray
+
+This is a PySimpleGUIQt and PySimpleGUIWx only feature.  Don't know of a way to do it using tkinter.  Your source code for SystemTray is identical for the Qt and Wx implementations.  You can switch frameworks by simply changing your import statement.
+
+In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then  you perform Reads in order to get events.
+
+Here is the definition of the SystemTray object.
+
+```python
+SystemTray(menu=None, filename=None, data=None, data_base64=None, tooltip=None):  
+        '''  
+ SystemTray - create an icon in the system tray  
+ :param menu: Menu definition 
+ :param filename: filename for icon  
+ :param data: in-ram image for icon  
+ :param data_base64: basee-64 data for icon  
+ :param tooltip: tooltip string '''
+```
+
+You'll notice that there are 3 different ways to specify the icon image.  The base-64 parameter allows you to define a variable in your .py code that is the encoded image so that you do not need any additional files.  Very handy feature.
+
+## System Tray Design Pattern
+
+Here is a design pattern you can use to get a jump-start.
+
+This program will create a system tray icon and perform a blocking Read.  If the item "Open" is chosen from the system tray, then a popup is shown.
+
+```python
+import PySimpleGUIQt as sg  
+  
+menu_def = ['BLANK', ['&Open', '---', '&Save', ['1', '2', ['a', 'b']], '&Properties', 'E&xit']]  
+  
+tray = sg.SystemTray(menu=menu_def, filename=r'default_icon.ico')  
+  
+while True:  # The event loop  
+  menu_item = tray.Read()  
+    print(menu_item)  
+    if menu_item == 'Exit':  
+        break  
+    elif menu_item == 'Open':  
+        sg.Popup('Menu item chosen', menu_item)
+        
+```
+The design pattern creates an icon that will display this menu:
+![snag-0293](https://user-images.githubusercontent.com/13696193/49057441-8bbfe980-f1cd-11e8-93e7-1aeda9ccd173.jpg)
+
+### Icons
+
+When specifying "icons", you can use 3 different formats.  
+* `filename`- filename
+* `data_base64` - base64 byte string
+* '`data` - in-ram bitmap or other "raw" image
+
+You will find 3 parameters used to specify these 3 options on both the initialize statement and on the Update method.
+
+## Menu Definition
+```python
+menu_def = ['BLANK', ['&Open', '&Save', ['1', '2', ['a', 'b']], '!&Properties', 'E&xit']]  
+```
+
+A menu is defined using a list.  A "Menu entry" is a string that specifies:
+* text shown
+* keyboard shortcut
+* key
+
+See section on Menu Keys for more information on using keys with menus.
+
+An entry without a key and keyboard shortcut is a simple string
+`'Menu Item'`
+
+If you want to make the "M" be a keyboard shortcut, place an `&` in front of the letter that is the shortcut.
+`'&Menu Item'`
+
+You can add "keys" to make menu items unique or as another way of identifying a menu item than the text shown.  The key is added to the text portion by placing `::` after the text.
+
+`'Menu Item::key'`
+
+The first entry can be ignored.`'BLANK`' was chosen for this example. It's this way because normally you would specify these menus under some heading on a menu-bar.  But here there is no heading so it's filled in with any value you want.
+
+**Separators**
+If you want a separator between 2 items, add the entry `'---'` and it will add a separator item at that place in your menu.
+
+**Disabled menu entries**
+
+If you want to disable a menu entry, place a `!` before the menu entry
+
+
+## SystemTray Methods
+
+### Read - Read the context menu or check for events
+
+```python
+def Read(timeout=None)
+    '''  
+ Reads the context menu  
+ :param timeout: Optional.  Any value other than None indicates a non-blocking read
+ :return:   String representing meny item chosen. None if nothing read.  
+    '''
+```
+The `timeout` parameter specifies how long to wait for an event to take place.  If nothing happens within the timeout period, then a "timeout event" is returned.  These types of reads make it possible to run asynchronously.  To run non-blocked, specify `timeout=0`on the Read call.
+
+Read returns the menu text, complete with key, for the menu item chosen.  If you specified `Open::key` as the menu entry, and the user clicked on `Open`, then you will receive the string `Open::key` upon completion of the Read.
+
+#### Read special return values
+
+In addition to Menu Items, the Read call can return several special values.    They include:
+
+EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED - Tray icon was double clicked
+EVENT_SYSTEM_TRAY_ICON_ACTIVATED - Tray icon was single clicked
+EVENT_SYSTEM_TRAY_MESSAGE_CLICKED - a message balloon was clicked
+TIMEOUT_KEY is returned if no events are available if the timeout value is set in the Read call
+
+
+### Hide
+
+Hides the icon.  Note that no message balloons are shown while an icon is hidden.
+
+```python
+def Hide() 
+```
+
+### Close
+
+Does the same thing as hide
+```python
+def Close()
+```
+
+
+### UnHide
+
+Shows a previously hidden icon
+
+```python
+def UnHide()
+```
+
+### ShowMessage
+
+Shows a balloon above the icon in the system tray area.  You can specify your own icon to be shown in the balloon, or you can set `messageicon` to one of the preset values.  
+
+This message has a custom icon.
+
+![snag-0286](https://user-images.githubusercontent.com/13696193/49057459-a85c2180-f1cd-11e8-9a66-aa331d7e034c.jpg)
+
+The preset `messageicon` values are:
+
+    SYSTEM_TRAY_MESSAGE_ICON_INFORMATION 
+    SYSTEM_TRAY_MESSAGE_ICON_WARNING
+    SYSTEM_TRAY_MESSAGE_ICON_CRITICAL 
+    SYSTEM_TRAY_MESSAGE_ICON_NOICON
+
+```python
+ShowMessage(title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):  
+    '''  
+ Shows a balloon above icon in system tray  
+ :param title:  Title shown in balloon  
+ :param message: Message to be displayed  
+ :param filename: Optional icon filename  
+ :param data: Optional in-ram icon  
+ :param data_base64: Optional base64 icon  
+ :param time: How long to display message in milliseconds  :return:  
+ '''
+```
+Note, on windows it may be necessary to make a registry change to enable message balloons to be seen.  To fix this, you must create the DWORD you see in this screenshot.
+
+![snag-0285](https://user-images.githubusercontent.com/13696193/49056144-6381bc00-f1c8-11e8-9f44-199394823369.jpg)
+
+
+### Update
+
+You can update any of these items within a SystemTray object
+* Menu definition
+* Icon
+* Tooltip
+
+ Change them all or just 1.
+
+```python
+Update(menu=None, tooltip=None,filename=None, data=None, data_base64=None,)
+    '''  
+ Updates the menu, tooltip or icon  
+ :param menu: menu defintion  
+ :param tooltip: string representing tooltip  
+ :param filename:  icon filename  
+ :param data:  icon raw image  
+ :param data_base64: icon base 64 image  
+ :return:  
+ '''
+```
       
       
 # Global Settings      
@@ -2886,53 +3729,52 @@ Each lower level overrides the settings of the higher level.  Once settings have
       
 # Persistent windows (Window stays open after button click)      
       
+Apologies that the next few pages are perhaps confusing.  There have been a number of changes recently in PySimpleGUI's Read calls that added some really cool stuff, but at the expense of being not so simple.  Part of the issue is an attempt to make sure existing code doesn't break.  These changes are all in the area of non-blocking reads and reads with timeouts.
+
 There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking windows (see the next section).  The other way is to use buttons that 'read' the window instead of 'close' the window when clicked.  The typical buttons you find in windows, including the shortcut buttons, close the window.  These include OK, Cancel, Submit, etc.  The Button Element also closes the window.      
       
-The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The `Read` call will block, the `ReadNonBlocking` will not block.   
+The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The normal `Read` call with no parameters will block, a call with a `timeout` value of zero will not block.
 
-Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `ReadNonBlocking`.  If you do not want your input field to be cleared after a `ReadNonBlocking` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.  
+Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `Read`.  If you do not want your input field to be cleared after a `Read` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.  
 
 The reasoning behind this is that Persistent Windows are often "forms".  When "submitting" a form you want to have all of the fields left blank so the next entry of data will start with a fresh window.  Also, when implementing a "Chat Window" type of interface, after each read / send of the chat data, you want the input field cleared.  Think of it as a Texting application.  Would you want to have to clear your previous text if you want to send a second text?
+
+The design pattern for Persistent Windows was already shown to you earlier in the document... here it is for your convenience.
+
+```python    
+import PySimpleGUI as sg      
       
-           
-## Asynchronous (Non-Blocking) windows      
-Not so fast buddy!!
+layout = [[sg.Text('Persistent window')],      
+          [sg.Input()],      
+          [sg.RButton('Read'), sg.Exit()]]      
+      
+window = sg.Window('Window that stays open').Layout(layout)      
+      
+while True:      
+    event, values = window.Read()      
+    if event is None or event == 'Exit':      
+        break      
+    print(event, values)    
 
-Non-blocking is generally reserved as a "last resort".  Too many times I've seen people use non-blocking reads when a blocking read will do just fine.
-
-
-
-Release 4.0 ushered in a hybrid approach to non-blocking calls.  That compromise came in the form of a read with a timeout.   You'll score much higher points on the impressive meter if you're able to use a lot less CPU time by using this type of read.
-
-So you want to be a wizard do ya?  Well go boldly!   But a good dose of caution is advised.
-
-Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.      It's important to be a good citizen.   Don't chew up CPU cycles needlessly.
-     
-The most legit time to use a non-blocking window is when you're working directly with hardware.  Maybe you're driving a serial bus.  If you look at the Event Loop in the Demo_OpenCV_Webcam.py program, you'll see that the read is a non-blocking read.  The point in the loop where you will block is the call to read frames from the webcam.  When a frame is available you want to quickly deliver it to the output device, so you don't want your GUI blocking on your.
-        
-Another example can be found in the demo for controlling a robot on a Raspberry Pi.  In that application you want to read the direction buttons, forward, backward, etc, and immediately take action.  
-
-However, even in this application it's not good to simply burn 100% of the CPU time in a tight spin loop.   Let's say your call to the GUI takes 10ms.  And your robot can react at a rate of 200ms.  If you do non-blocking reads without some kind of sleep, you'll be taking 100% of the CPU time needlessly. 
-
-Adding a sleep to your event loop will at least give other processes time to execute.  It will, however, starve your GUI. The entire time you're sleeping, your GUI isn't executing.
-
-It's for this reason that a new feature was just added in version 4.0, Read with a Timeout.  You can thing of this as an event loop, with a sleep, except that during the time the processor is sleeping your GUI is very operational, responding to the user for thinks like checkboxes, sliders, even button pushes will be instant feeling.  
-
-
+window.Close()
+```    
+    
+  
 ## Read(timeout = t, timeout_key='timeout')
 
-The new Hybrid-Read!  Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, if you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking).
+Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, if you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
 
 One way of thinking of reads with timeouts:  
 > During the timeout time, you are "yielding" the processor to do other tasks.  
 
 But it gets better than just being a good citizen....**your GUI will be more responsive than if you used a non-blocking read**
 
-Let's say you had a device that you want to "poll" every 100ms.   The "easy way out" and the only way out until release 4.0 was this:
+Let's say you had a device that you want to "poll" every 100ms.   The "easy way out" and the only way out until recently was this:
 
 ```python
+# YOU SHOULD NOT DO THIS....
 while True:             # Event Loop  
-	event, values = window.ReadNonBlocking()  
+	event, values = window.ReadNonBlocking()   # DO NOT USE THIS CALL ANYMORE
 	read_my_hardware() # process my device here  
 	time.sleep(.1)     # sleep 1/10 second
 ```
@@ -2943,6 +3785,7 @@ The new and better way....
 using the Read Timeout mechanism, the sleep goes away.
 
 ```python
+# This is the right way to poll for hardware
 while True:             # Event Loop  
 	event, values = window.Read(timeout = 100) 
 	read_my_hardware() # process my device here
@@ -2951,71 +3794,75 @@ while True:             # Event Loop
 This event loop will run every 100 ms.  You're making a Read call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
 
 
-### Instead of ReadNonBlocking --- Use `change_submits = True` or return_keyboard_events = True      
+## Non-Blocking Windows   (Asynchronous reads)
+
+There are TWO ways to perform a non-blocking read.
+
+The "old way" was:
+```python
+event, values = sg.ReadNonBlocking()
+```
+The new way
+```python
+event, values = sg.Read(timeout=0)
+```
+You should use the new way if you're reading this for the first time.
+
+The difference in the 2 calls is in the value of event.  For ReadNonBlocking, event will be `None` if there are no other events to report.  There is a "problem" with this however.  With normal Read calls, an event value of None signified the window was closed.  For ReadNonBlocking, the way a closed window is returned is via the values variable being set to None.  
+
+
+## sg.TIMEOUT_KEY
+
+If you're using the new, timeout=0 method, then an event value of None signifies that the window was closed, just like a normal Read.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `timeout_key`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
+TIMEOUT_KEY = '__timeout__'
+
+If you wanted to test for "no event" in your loop, it would be written like this:
+```python
+while True:  
+    event, value = window.Read(timeout=0)  
+    if event is None:  
+        break # the use has closed the window  
+    if event == sg.TIMEOUT_KEY:  
+        print("Nothing happened")
+```
+
+
+Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.      It's important to be a good citizen.   Don't chew up CPU cycles needlessly.
+
+Non-blocking is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+
+There is a hybrid approach... a read with a timeout.   You'll score much higher points on the impressive meter if you're able to use a lot less CPU time by using this type of read.
+     
+The most legit time to use a non-blocking window is when you're working directly with hardware.  Maybe you're driving a serial bus.  If you look at the Event Loop in the Demo_OpenCV_Webcam.py program, you'll see that the read is a non-blocking read.  However, there is a place in the event loop where blocking occurs.   The point in the loop where you will block is the call to read frames from the webcam.  When a frame is available you want to quickly deliver it to the output device, so you don't want your GUI blocking.  You want the read from the hardware to block.
+        
+Another example can be found in the demo for controlling a robot on a Raspberry Pi.  In that application you want to read the direction buttons, forward, backward, etc, and immediately take action.  If you are using RealtimeButtons, your only option at the moment is to use non-blocking windows.  You have to set the timeout to zero if you want the buttons to be real-time responsive.
+
+However, with these buttons, adding a sleep to your event loop will at least give other processes time to execute.  It will, however, starve your GUI. The entire time you're sleeping, your GUI isn't executing.
+
       
-Any time you are thinking "I want an X Element to cause a Y Element to do something", then you want to use the `change_submits` option.      
+### Periodically Calling`Read`      
       
-***Instead of polling, try options that cause the window to return to you.***  By using non-blocking windows, you are *polling*.  You can indeed create your application by polling.  It will work.  But you're going to be maxing out your processor and may even take longer to react to an event than if you used another technique.      
-      
-**Examples**      
-      
-One example is you have an input field that changes as you press buttons on an on-screen keypad.      
-      
-![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)      
-      
-      
-      
-      
-### Periodically Calling`ReadNonBlocking`      
-      
-Let's say you do end up using ReadNonBlocking... then you've got some housekeeping to do.  It's up to you to periodically "refresh" the visible GUI.  The longer you wait between updates to your GUI the more sluggish your windows will feel.  It is up to you to make these calls or your GUI will freeze.      
+Let's say you do end up using non-blocking reads... then you've got some housekeeping to do.  It's up to you to periodically "refresh" the visible GUI.  The longer you wait between updates to your GUI the more sluggish your windows will feel.  It is up to you to make these calls or your GUI will freeze.      
       
 There are 2 methods of interacting with non-blocking windows.      
 1. Read the window just as you would a normal window      
 2. "Refresh" the window's values without reading the window. It's a quick operation meant to show the user the latest values      
       
- With asynchronous windows the window is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.ReadNonBlocking` on a periodic basis.  Once a second or more will produce a reasonably snappy GUI.      
+ With asynchronous windows the window is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.Read` on a periodic basis.  Several times a second or more will produce a reasonably snappy GUI.      
       
- #### Exiting a Non-Blocking window      
+ ## Exiting (Closing) a Persistent Window
       
-It's important to always provide a "way out" for your user.  Make sure you have provided a button or some other mechanism to exit.  Also be sure to check for closed windows in your code.  It  is possible for a window to look closed, but continue running your event loop.      
-      
-Typically when reading a window you check `if Button is None` to determine if a window was closed.  With NonBlocking windows, buttons will be None unless a button or a key was returned.  The way you determine if a window was closed in a non-blocking window  is to check **both** the button and the values are None.  Since button is normally None, you only need to test for `value is None` in your code.      
-      
-The proper code to check if the user has exited the window will be a polling-loop that looks something like this:      
-      
-    while True:      
-       event, values = window.ReadNonBlocking()      
-       if values is None or event == 'Quit':      
-          break      
-      
-      
-We're going to build an app that does the latter.  It's going to update our window with a running clock.      
-      
-The basic flow and functions you will be calling are:      
-Setup      
-      
-       window = Window()      
-       window_rows = .....      
-       window.Layout(window_rows, non_blocking=True).Read()      
-      
-      
-Periodic refresh      
-      
-    window.ReadNonBlocking()   or       window.Refresh()      
-      
-If you need to close the window      
-      
-    window.CloseNonBlocking()      
-      
-Rather than the usual `window.Layout().Read()` call, we're manually adding the rows (doing the layout) and then showing the window.  After the window is shown, you simply call `window.ReadNonBlocking()` every now and then.      
-      
-When you are ready to close the window (assuming the window wasn't closed by the user or a button click) you simply call `window.CloseNonBlocking()`      
-      
-**Example - Running timer that updates**      
+If your window has a button that closes the window, then PySimpleGUI will automatically close the window for you.  If all of your buttons are ReadButtons, then it'll be up to you to close the window when done.  
+To close a window, call the `Close` method.
+```python
+window.Close()
+```
+ 
+## Persistent Window Example - Running timer that updates
+   
 See the sample code on the GitHub named Demo Media Player for another example of Async windows.  We're going to make a window and update one of the elements of that window every .01 seconds.    Here's the entire code to do that.      
-      
-          
+
+```python 
     import PySimpleGUI as sg  
     import time  
       
@@ -3040,18 +3887,74 @@ See the sample code on the GitHub named Demo Media Player for another example of
         event, values = window.Read(timeout=10)  
         current_time = int(round(time.time() * 100)) - start_time  
         # --------- Display timer in window --------  
-      window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,  
+        window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,  
                                                                       (current_time // 100) % 60,  
                                                                       current_time % 100))
-      
+```      
   
 
 Previously this program was implemented using a sleep in the loop to control the clock tick.  This version uses the new timeout parameter.  The result is a window that reacts quicker then the one with the sleep and the accuracy is just as good. 
     
-        
+
+## Instead of a Non-blocking Read --- Use `change_submits = True` or return_keyboard_events = True      
+      
+Any time you are thinking "I want an X Element to cause a Y Element to do something", then you want to use the `change_submits` option.      
+      
+***Instead of polling, try options that cause the window to return to you.***  By using non-blocking windows, you are *polling*.  You can indeed create your application by polling.  It will work.  But you're going to be maxing out your processor and may even take longer to react to an event than if you used another technique.      
+      
+**Examples**      
+      
+One example is you have an input field that changes as you press buttons on an on-screen keypad.      
+      
+![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)      
+      
+      
+                         
     
 # Updating Elements (changing elements in active window)      
-      
+
+If you want to change Elements in your window after the window has been created, then you will call the Element's Update method.
+
+**NOTE** a window **must be Read or Finalized** before any Update calls can be made.  
+
+Here is an example of updating a Text Element
+
+```python
+import PySimpleGUI as sg  
+  
+layout = [ [sg.Text('My layout', key='_TEXT_')],  
+           [sg.Button('Read')]]  
+  
+window = sg.Window('My new window').Layout(layout)  
+  
+while True:             # Event Loop  
+  event, values = window.Read()  
+    if event is None:  
+        break  
+  window.Element('_TEXT_').Update('My new text value')
+```
+
+Notice the placement of the Update call.  If you wanted to Update the Text Element *prior* to the Read call, outside of the event loop, then you must call Finalize on the window first.
+
+In this example, the Update is done prior the Read.  Because of this, the Finalize call is added to the Window creation.
+```python
+import PySimpleGUI as sg  
+  
+layout = [ [sg.Text('My layout', key='_TEXT_')],  
+           [sg.Button('Read')]  
+         ]  
+  
+window = sg.Window('My new window').Layout(layout).Finalize()  
+  
+window.Element('_TEXT_').Update('My new text value')  
+  
+while True:             # Event Loop  
+  event, values = window.Read()  
+    if event is None:  
+        break
+```
+
+
 Persistent windows remain open and thus continue to interact with the user after the Read has returned.  Often the program wishes to communicate results (output information) or change an Element's values (such as populating a List Element).      
     
 You can use Update to do things like:      
@@ -3118,17 +4021,21 @@ It works as follows.  The call to `window.FindElement` returns the Element objec
     text_element.Update(font=font)      
       
 The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used as targets in  Button calls.      
-      
-   ### Updating Multiple Elements      
-  If you have a large number of Elements to update, you can call `Window.UpdateElements()`.      
-      
-`    UpdateElements(key_list,      
-                value_list)`      
-      
-`key_list` - list of keys for elements you wish to update      
-`value_list` - list of values, one for each key      
-      
-    window.UpdateElements(('name', 'address', 'phone'), ('Fred Flintstone', '123 Rock Quarry Road', '555#'))      
+
+### Locating Elements
+
+The Window method call that's used to find an element is:
+`FindElement`
+or the shortened version
+`Element`
+
+When you see a call to window.FindElement or window.Element, then you know an element is being addressed.  Normally this is done so you can call the element's Update method.  
+
+
+### ProgressBar / Progress Meters
+
+Note that to change a progress meter's progress, you call UpdateBar, not Update.      It's an old naming convention that's left over from before the Update calls were implemented.
+   
       
       
 # Keyboard & Mouse Capture      
@@ -3144,55 +4051,57 @@ Keyboard keys return 2 types of key events. For "normal" keys (a,b,c, etc), a si
       
 Key Sym is a string such as 'Control_L'.  The Key Code is a numeric representation of that key.  The left control key, when pressed will return the value 'Control_L:17'      
       
-    import PySimpleGUI as sg      
+    import PySimpleGUI as sg  
       
-    # Recipe for getting keys, one at a time as they are released      
-    # If want to use the space bar, then be sure and disable the "default focus"      
+    # Recipe for getting keys, one at a time as they are released  
+    # If want to use the space bar, then be sure and disable the "default focus"  
       
-    with sg.Window("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:      
-        text_elem = sg.Text("", size=(18,1))      
-        layout = [[sg.Text("Press a key or scroll mouse")],      
-                  [text_elem],      
-                  [sg.Button("OK")]]      
+    with sg.Window("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:  
+        text_elem = sg.Text("", size=(18, 1))  
+        layout = [[sg.Text("Press a key or scroll mouse")],  
+                  [text_elem],  
+                  [sg.Button("OK")]]  
       
-        window.Layout(layout)      
-        # ---===--- Loop taking in user input --- #      
-      while True:      
-            event, value = window.ReadNonBlocking()      
+        window.Layout(layout)  
+        # ---===--- Loop taking in user input --- #  
+    while True:  
+        event, value = window.Read()  
       
-            if event == "OK"  or (event is None and value is None):      
-                print(event, "exiting")      
-                break      
-            if eventis not None:      
-                text_elem.Update(event)      
+        if event == "OK"  or event is None:  
+            print(event, "exiting")  
+            break  
+       text_elem.Update(event)
+
+      
       
 You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.      
       
 ### Realtime Keyboard Capture      
 Use realtime keyboard capture by calling      
       
-    import PySimpleGUI as sg      
+    import PySimpleGUI as sg  
       
-    with sg.Window("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:      
-        layout = [[sg.Text("Hold down a key")],      
-                  [sg.Button("OK")]]      
+    with sg.Window("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:  
+        layout = [[sg.Text("Hold down a key")],  
+                  [sg.Button("OK")]]  
       
-        window.Layout(layout)      
+        window.Layout(layout)  
       
-        while True:      
-            event, value = window.ReadNonBlocking()      
-      
-            if event == "OK":      
-                print(event, value, "exiting")      
-                break      
-          if eventis not None:      
-                print(event)      
-            elif value is None:      
-                break      
-      
+        while True:  
+            event, value = window.Read(timeout=0)  
+            if event == "OK"  or event is None:  
+                print(event, value, "exiting")  
+                break  
+            if event != sg.TIMEOUT_KEY:  
+                print(event)
+
+
 # Menus      
+
+## MenuBar
       
-Beginning in version 3.01 you can add a menubar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as button clicks, so be aware of your overall naming conventions.  If you have an Exit button and also an Exit menu option, then you won't be able to tell the difference when your window.Read returns.  Hopefully will not be a problem.      
+Beginning in version 3.01 you can add a MenuBar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as in the values dictionary.  The value returned will be the entire menu entry, including the key if you specified one.
+
       
 This definition:      
       
@@ -3206,7 +4115,31 @@ They menu_def layout produced this window:
       
 ![menu](https://user-images.githubusercontent.com/13696193/45306723-56b7cb00-b4eb-11e8-8cbd-faef0c90f8b4.jpg)      
       
-      
+
+To add a menu to a Window place the `Menu` or `MenuBar` element into your layout.
+
+    layout = [[sg.Menu(menu_def)]]
+
+It doesn't really matter where you place the Menu Element in your layout as it will always be located at the top of the window.
+
+## ButtonMenus
+
+Button menus were introduced in version 3.21, having been previously released in PySimpleGUIQt.  They work exactly the same and are source code compatible between PySimpleGUI and PySimpleGUIQt.  These types of menus take a single menu entry where a Menu Bar takes a list of menu entries.
+
+## Right Click Menus
+
+Right Click Menus were introduced in version 3.21.  Almost every element has a right_click_menu parameter and there is a window-level setting for rich click menu that will attach a right click menu to all elements in the window.
+
+The menu definition is the same a s the button menu definition, a single menu entry.
+
+```python
+right_click_menu = ['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']]
+```
+The first string in a right click menu and a button menu is ***ignored***.  It is not used.  Normally you would put the string that is shown on the menu bar in that location.
+
+**Return values for right click menus are different than menu bars and button menus.**  Instead of the value being returned through the values dictionary, it is instead sent back as an Event.  You will not
+     
+## Menu Shortcut keys      
 You have used ALT-key in other Windows programs to navigate menus.  For example Alt-F+X exits the program.  The Alt-F pulls down the File menu.  The X selects the entry marked Exit.      
       
 The good news is that PySimpleGUI allows you to create the same kind of menus!  Your program can play with the big-boys.  And, it's trivial to do.      
@@ -3225,61 +4158,122 @@ menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit'  ]],
 ```      
   And this is the spiffy menu it produced:      
   ![menus with shortcuts](https://user-images.githubusercontent.com/13696193/46251674-f5b74f00-c427-11e8-95c6-547adc59041b.jpg)      
+
+
+##  Disabled Menu Entries
+
+If you want one of your menu items to be disabled, then place a '!' in front of the menu entry.  To disable the Paste menu entry in the previous examples, the entry would be:
+`['!&Edit', ['Paste', ['Special', 'Normal',], 'Undo'],]`
+
+If your want to change the disabled menu item flag / character from '!' to something else, change the variable `MENU_DISABLED_CHARACTER`
+
+## Keys for Menus
+
+Beginning in version 3.17 you can add a `key` to your menu entries.  The `key` value will be removed prior to be inserted into the menu.  When you receive Menu events, the entire menu entry, including the `key` is returned.  A key is indicated by adding `::` after a menu entry, followed by the key.
+
+To add the `key` `_MY_KEY_` to the Special menu entry, the code would be:
+
+`['&Edit', ['Paste', ['Special::_MY_KEY_', 'Normal',], 'Undo'],]`
       
-      
-    
+ If you want to change the characters that indicate a key follows from '::' to something else, change the variable `MENU_KEY_SEPARATOR`   
+
+
+# Running Multiple Windows
+
+If you wish to run multiple windows in your event loop, then there are 2 methods for doing this.  
+
+1. First window does not remain active while second window is visible
+2. First window remains active while second window is visible
+
+You will find the 2 design matters in 2 demo programs in the Demo Program area of the GitHub (http://www.PySimpleGUI.com)
+
+***Critically important***
+When creating a new window you must use a "fresh" layout every time.  You cannot reuse a layout from a previous window.  As a result you will see the layout for window 2 being defined inside of the larger event loop.
+
+A rule of thumb to follow:
+
+> If you are calling `Window` then you should define your window layout
+> in the statement just prior to the `Window` call.
+
+
+## Multi-Window Design Pattern 1 - both windows active
+
+```python
+import PySimpleGUI as sg  
+  
+# Design pattern 2 - First window remains active  
+  
+layout = [[ sg.Text('Window 1'),],  
+          [sg.Input(do_not_clear=True)],  
+          [sg.Text('', key='_OUTPUT_')],  
+          [sg.Button('Launch 2'), sg.Button('Exit')]]  
+  
+win1 = sg.Window('Window 1').Layout(layout)  
+  
+win2_active = False  
+while True:  
+    ev1, vals1 = win1.Read(timeout=100)  
+    win1.FindElement('_OUTPUT_').Update(vals1[0])  
+    if ev1 is None or ev1 == 'Exit':  
+        break  
+  
+     if not win2_active and ev1 == 'Launch 2':  
+        win2_active = True  
+        layout2 = [[sg.Text('Window 2')],  
+                   [sg.Button('Exit')]]  
+  
+        win2 = sg.Window('Window 2').Layout(layout2)  
+  
+    if win2_active:  
+        ev2, vals2 = win2.Read(timeout=100)  
+        if ev2 is None or ev2 == 'Exit':  
+            win2_active  = False  
+            win2.Close()
+```
+
+
+## Multi-Window Design Pattern 2 - only 1 active window
+
+```python
+import PySimpleGUIQt as sg  
+  
+# Design pattern 1 - First window does not remain active  
+  
+layout = [[ sg.Text('Window 1'),],  
+          [sg.Input(do_not_clear=True)],  
+          [sg.Text('', key='_OUTPUT_')],  
+          [sg.Button('Launch 2')]]  
+  
+win1 = sg.Window('Window 1').Layout(layout)  
+win2_active=False  
+while True:  
+    ev1, vals1 = win1.Read(timeout=100)  
+    if ev1 is None:  
+        break  
+    win1.FindElement('_OUTPUT_').Update(vals1[0])  
+  
+    if ev1 == 'Launch 2'  and not win2_active:  
+        win2_active = True  
+        win1.Hide()  
+        layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse  
+                   [sg.Button('Exit')]]  
+  
+        win2 = sg.Window('Window 2').Layout(layout2)  
+        while True:  
+            ev2, vals2 = win2.Read()  
+            if ev2 is None or ev2 == 'Exit':  
+                win2.Close()  
+                win2_active = False  
+                win1.UnHide()  
+                break
+```
     
 # Sample Applications      
       
-Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:      
-      
-  | Source File| Description |      
-|--|--|      
-|**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single window      
-|**Demo_Borderless_Window.py**| Create clean looking windows with no border      
-|**Demo_Button_States.py**| One way of implementing disabling of buttons      
-|**Demo_Calendar.py** | Demo of the Calendar Chooser button      
-|**Demo_Canvas.py** | window with a Canvas Element that is updated outside of the window      
-|**Demo_Chat.py** | A chat window with scrollable history      
-|**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project      
-|**Demo_Color.py** | How to interact with color using RGB hex values and named colors      
-|**Demo_Columns.py** | Using the Column Element to create more complex windows      
-|**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility      
-|**Demo_Cookbook_Browser.py** | Source code browser for all Recipes in Cookbook      
-|**Demo_Dictionary.py** | Specifying and using return values in dictionary format      
-**Demo_DOC_Viewer_PIL.py** | Display a PDF, HTML, ebook file, etc in your window      
-|**Demo_DisplayHash1and256.py** | Using high level API and custom window to implement a simple display hash code utility      
-|**Demo_DuplicateFileFinder.py** | High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter      
-|**Demo_Fill_Form.py** | How to perform a bulk-fill for a window.  Saving and loading a window from disk      
-|**Demo Font Sizer.py** | Demonstrates Elements updating other Elements      
-|**Demo_Func_Callback_Simulator.py** | For the Raspberry Pi crowd. Event loop that simulates traditional GUI callback functions should you already have an architecture that uses them      
-|**Demo_GoodColors.py** | Using some of the pre-defined PySimpleGUI individual colors      
-|**Demo_HowDoI.py** | This is a utility to be experienced! It will change how you code      
-|**Demo_Img_Viewer.py** | Display jpg, png,tiff, bmp files      
-|**Demo_Keyboard.py** | Using blocking keyboard events      
-|**Demo_Keyboard_Realtime.py** | Using non-blocking / realtime keyboard events      
-|**Demo_Machine_Learning.py** | A sample Machine Learning front end      
-|**Demo_Matplotlib.py** | Integrating with Matplotlib to create a single graph      
-|**Demo_Matplotlib_Animated.py** | Animated Matplotlib line graph      
-|**Demo_Matplotlib_Animated_Scatter.py** | Animated Matplotlib scatter graph      
-|**Demo_Matplotlib_Browser.py** | Browse Matplotlib gallery      
-|**Demo_Media_Player.py** | Non-blocking window with a media player layout.  Demonstrates  button graphics, Update method      
-|**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices      
-|**Demo_NonBlocking_Form.py** | a basic async window      
-|**Demo_OpenCV.py** | Integrated with OpenCV      
-|**Demo_Password_Login** | Password protection using SHA1      
-|**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate      
-|**Demo_Pi_LEDs.py** | Control GPIO using buttons      
-|**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons      
-|**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files      
-| **Demo_Progress_Meters.py** | Demonstrates using 2 progress meters simultaneously      
-|**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook      
-|**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts      
-|**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts      
-|**Demo_Tabbed_Form.py** | Using the Tab feature      
-|**Demo_Table_Simulation.py** | Use input fields to display and edit tables      
-|**Demo_Timer.py** | Simple non-blocking window      
-      
+There are too many to list!!
+
+There are over 130 sample programs to give you a jump start.
+
 ## Packages Used In Demos      
       
       
@@ -3326,8 +4320,19 @@ ValueError: script '.......\src\tkinter' not found
       
 Then try adding **`--hidden-import tkinter`** to your command      
       
-      
-      
+# Creating a Mac App File      
+
+There are reports that PyInstaller can be used to create App files.  It's not been officially tested.
+
+Run this command on your Mac
+
+> pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
+
+
+This info was located on Reddit with the source traced back to:
+https://github.com/pyinstaller/pyinstaller/issues/1350
+
+
 ## Fun Stuff      
 Here are some things to try if you're bored or want to further customize      
       
@@ -3444,8 +4449,14 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 | 3.9.3 & 1.1.3 | Oct 11, 2018   
 | 3.9.4 & 1.1.4 | Oct 16, 2018 
 | 3.10.1 & 1.2.1 | Oct 20, 2018 
-        
-      
+| 3.10.3 & 1.2.3 | Oct 23, 2018     
+| 3.11.0 & 1.11.0 | Oct 28, 2018    
+| 3.12.0 & 1.12.0 | Oct 28, 2018
+| 3.13.0 & 1.13.0 | Oct 29, 2018
+| 3.14.0 & 1.14.0 | Nov 2, 2018
+| 3.15.0 & 1.15.0 | Nov 20, 2018
+| 3.16.0 & 1.16.0 | Nov 26, 2018
+| 3.17.0 & 1.17.0 | Dec 1, 2018
       
 ## Release Notes      
 2.3 - Sliders, Listbox's and Image elements (oh my!)      
@@ -3468,7 +4479,7 @@ Listboxes are still without scrollwheels. The mouse can drag to see more items. 
       
 3.0 We've come a long way baby!  Time for a major revision bump.  One reason is that the numbers started to confuse people  the latest release was 2.30, but some people read it as 2.3 and thought it went backwards.  I kinda messed up the 2.x series of numbers, so why not start with a clean slate.  A lot has happened anyway so it's well earned.      
       
-One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn this off for windows with sliders.  This feature is enabled in the Window call.      
+One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn off for windows with sliders.  This feature is enabled in the Window call.      
       
 Related to the Grab Anywhere feature is the no_titlebar option, again found in the call to Window.  Your window will be a spiffy, borderless window.  It's a really interesting effect.  Slight problem is that you do not have an icon on the taskbar with these types of windows, so if you don't supply a button to close the window, there's no way to close it other than task manager.      
       
@@ -3644,11 +4655,258 @@ Emergency patch release... going out same day as previous release
 * The Image.Update method appears to not have been written correctly.  It didn't handle base64 images like the other elements that deal with images (buttons)
 
 
-    
+### 3.10.3 & 1.2.3
+
+* New element - Vertical Separator
+* New parameter for InputText - change_submits. If True will cause Read to return when a button fills in the InputText element
+* Read with timeout = 0 is same as read non blocking and is the new preferred method
+  * Will return event == None if window closed
+* New Close method will close all window types
+* Scrollbars for Tables automatically added (no need for a Column Element)
+* Table Update method complete
+* Turned off expand when packing row frame... was accidentally turned on (primary reason for this release)
+* Try added to Image Update so won't crash if bad image passed in
+
+### 3.11.0 & 1.11.0
+* Syncing up the second digit of the releases so that they stay in sync better.  the 2.7 release is built literally from the 3.x code so they really are the same
+* Reworked Read call... significantly.
+* Realtime buttons work with timeouts or blocking read
+* Removed default value parm on Buttons and Button Updates
+* New Tree Element parm show_expanded. Causes Tree to be shown as fully expanded
+* Tree Element now returns which rows are selected when Read
+* New Window method BringToFront
+* Shortcut buttons no longer close windows!
+* Added CloseButton, CButton that closes the windows
+
+### 3.12.0 & 1.12.0
+* Changed Button to be the same as ReadButton which means it will no longer close the window
+* All shortcut buttons no longer close the window
+* Updating a table clears selected rows information in return values
+* Progress meter uses new CloseButton
+* Popups use new CloseButton
+
+### 3.13.0 & 1.13.0
+* Improved multiple window handling of Popups when the X is used to close
+* Change submits added for:
+  * Multiline
+  * Input Text
+  * Table
+  * Tree
+ * Option to close calendar chooser when date selected
+ * Update for Tree Element
+ * Scroll bars for Trees
+ 
+
+### 3.14.0 & 1.14.0
+* More windowing changes... 
+	* using a hidden root windowing (Tk())
+	* all children are Toplevel() windows
+* Read only setting for:
+	* Input Text
+	* Multiline
+* Font setting for InputCombo, Multiline
+* change_submits setting for Radio Element
+* SetFocus for multiline, input elements
+* Default mon, day, year for calendar chooser button
+* Tree element update, added ability to change a single key
+* Message parm removed from ReadNonBlocking
+* Fix for closing windows using X
+* CurrentLocation method for Windows
+* Debug Window options
+	* location
+	* font
+	* no_button
+	* no_titlebar
+	* grab_anywhere
+	* keep_on_top
+* New Print / EasyPrint options
+	* location
+	* font
+	* no_button
+	* no_titlebar
+	* grab_anywhere
+	* keep_on_top
+* New popup, PopupQuickMessage
+* PopupGetFolder, PopupGetFile new initial_folder parm
+
+
+### 3.15.0 & 1.15.0
+
+* Error checking for InputText.Get method
+* Text color, background color added to multiline element.Update
+* Update method for Output Element - gives ability to clear the output
+* Graph Element - Read returns values if new flages set
+	* Change submits, drag submits
+	*	Returns x,y coordinates
+* Column element new parm vertical_scroll_only
+* Table element new parm - bind return key - returns if return or double click
+* New Window parms - size, disable_close
+* "Better" multiwindow capabilities
+* Window.Size property
+* Popups - new title parm, custom_text
+	* title sets the window title
+	* custom_text - single string or tuple string sets text on button(s)
+
+### 3.16.0 & 1.16.0
+* Bug fix in PopupScrolled
+* New `Element` shortcut function for `FindElement`
+* Dummy Stretch Element made for backwards compatibility with Qt
+* Timer function prints in milliseconds now, was seconds
+
+### 3.17.0 &1.17.0 2-Dec-2018
+3.17.0 2-Dec-2017
+* Tooltip offset now programmable.  Set variable DEFAULT_TOOLTIP_OFFSET.  Defaults to (20,-20)
+* Tooltips are always on top now
+* Disable menu items
+* Menu items can have keys
+* StatusBar Element (preparing for a real status bar in Qt)
+* enable_events parameter added to ALL Elements capable of generating events
+* InputText.Update select parameter will select the input text
+* Listbox.Update - set_to_index parameter will select a single items
+* Menus can be updated!
+* Menus have an entry in the return values
+* LayoutAndRead depricated
+* Multi-window support continues (X detection)
+* PopupScrolled now has a location parameter
+* row_height parameter to Table Element
+* Stretch Element (DUMMY) so that can be source code compatible with Qt
+* ButtonMenu Element (DUMMY) so can be source code compat with Qt.  Will implement eventually
+
+## 3.18.0  11-Dec-2018
+
+ NOTE - **Menus are broken** on version 2.7.  Don't know how long they've been this way.  Please get off legacy Python if that's what you're running.
+ 
+* Default progress bar length changed to shorter
+* Master window and tracking of num open windows moved from global to Window class variable
+* Element visibility setting (when created and when Updating element)
+* Input text visiblity
+* Combo visiblity
+* Combo replaces InputCombo as the primary class name
+* Option menu visibility
+* Listbox visiblity
+* Listbox new SetFocus method
+* Radio visibility
+* Checkbox visibility
+* Spin visiblity
+* Spin new Get method returns current value
+* Multiline visiblity
+* Text visibility
+* StatusBar visiblity
+* Output visibility
+* Button visibility
+* Button SetFocus
+* ProgressBar - New Update method (used only for visibility)
+* Image - clickable images!  enable_events parameter
+* Image visibility
+* Canvas visibility
+* Graph visibility
+* Graph - new DrawImage capability (finally)
+* Frame visibility
+* Tab visibility (may not be fully functional)
+* TabGroup visibility
+* Slider visibility
+* Slider - new disable_number_display parameter
+* Column visibilty
+* Menu visibility - Not functional
+* Table visibility
+* Table - new num_rows parm for Update - changes number of visible rows
+* Tree visiblity
+* Window - New element_padding parameter will get padding for entire window
+* OneLineProgressMeter - Completely REPLACED the implementation
+* OneLineProgressMeter - can get reason for the cancellation (cancel button versus X)
+* EasyProgressMeter - completely removed. Use OneLineProgressMeter instead
+* Debug window, EasyPrint, Print - debug window will re-open if printed to after being closed
+* SetOptions - can change the error button color
+* Much bigger window created when running PySimpleGUI.py by itself.  Meant to help with regression testing
+
+## 3.19.2  13-Dec-2018
+
+* Warning for Mac's when trying to change button color
+* New parms for Button.Update - image_size and image_subsample
+* Buttons - remove highlight when border depth == 0
+* OneLineProgressMeter - better layout implementation
+
+## 3.20.0 & 1.20.0 18-Dec-2018
+
+* New Pane Element
+* Graph.DeleteFigure method
+* disable_minimize - New parameter for Window
+* Fix for 2.7 menus
+* Debug Window no longer re-routes stdout by default
+* Can re-route by specifying in Print / EasyPrint call
+* New non-blocking for PopupScrolled
+* Can set title for PopupScrolled window
+
+
+## 3.21.0 & 1.21.0 28-Dec-2018
+
+* ButtonMenu Element
+* Embedded base64 default icon
+* Input Text Right click menu
+* Disabled Input Text are now 'readonly' instead of disabled
+* Listbox right click menu
+* Multiline right click menu
+* Text right click menu
+* Output right click menu
+* Image right click menu
+* Canvas right click menu
+* Graph right click menu
+* Frame right click menu
+* Tab, tabgroup right click menu (unsure if works correctly)
+* Column right click menu
+* Table right click menu
+* Tree right click menu
+* Window level right click menu
+* Window icon can be filename or bytes (Base64 string)
+* Window.Maximize method
+* Attempted to use Styles better with Combobox
+* Fixed bug blocking setting bar colors in OneLineProgressMeter
+
+# 3.22.0 PySimpleGUI / 1.22.0 PySimpleGUI27
+
+* Added type hints to some portions of the code
+* Output element can be made invisible
+* Image sizing and subsample for Button images
+* Invisibility for ButtonMenusup
+* Attempt at specifying size of Column elements (limited success)
+* Table Element
+  * New row_colors parameter
+  * New vertical_scroll_only parameter - NOTE - will have to disable to get horizontal scrollbars
+* Tree Element
+  * New row_height parameter
+  * New feature - Icons for tree entries using filename or Base64 images
+* Fix for bug sending back continuous mouse events
+* New parameter silence_on_error for FindElement / Element calls
+* Slider returns float now
+* Fix for Menus when using Python 2.7
+* Combobox Styling (again)
+
+
+# 3.23.0 PySimpleGUI /  1.23.0 PySimpleGUI27 16-Jan-2019
+
+* Animated GIFs!
+* Calendar Chooser stays on top of other windows
+* Fixed bug of no column headings for Tables
+* Tables now use the font parameter
+
+# 3.24.0 1.24.0 16-Jan-2019
+
+* PopupAnimated - A popup call for showing "loading" type of windows
+
+# 3.25 & 1.25 20-Feb-2019
+
+* Comments :-)
+* Convert Text to string right away
+* Caught exceptions when main program shut down with X
+* Caught exceptions in all of the graphics primitives
+* Added parameter exportselection=False to Listbox so can use multiple listboxes
+* OneLineProgressMeter - Can now change the text on every call if desired
+
+
 ### Upcoming      
 Make suggestions people!  Future release features      
       
-Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  WxPython is higher priority.      
+Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  At the moment, Wx and Kivy are being considered for the next GUI framework.  Work has already begun on Wx.  Kivy is likely to be next instead of Wx however.
       
       
       
@@ -3684,10 +4942,16 @@ You can also look up elements using their keys.  This is an excellent way to upd
     
 **Named / Optional Parameters**    
 This is a language feature that is featured **heavily**  in all of the API calls, both functions and classes.  Elements are configured, in-place, by setting one or more optional parameters.  For example, a Text element's color is chosen by setting the optional `text_color` parameter.    
-    
+
+**tkinter**
+tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, and Mac.  It was chosen as the first target GUI framework due to its ***ubiquity***.  Nearly all Python installations, with the exception of Ubuntu Linux, come pre-loaded with tkinter.   It is the "simplest" of the GUI frameworks to get up an running (among Qt, WxPython, Kivy, etc).
+
+From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.
+
+   
       
 ## Author      
-MikeTheWatchGuy      
+MikeB
       
 ## Demo Code Contributors      
       
@@ -3699,43 +4963,12 @@ MikeTheWatchGuy
 GNU Lesser General Public License (LGPL 3) +      
       
 ## Acknowledgments      
-      
-*  [JorjMcKie](https://github.com/JorjMcKie)  was the motivator behind the entire project. His wxsimpleGUI concepts sparked PySimpleGUI into existence      
-* [Fredrik Lundh](https://wiki.python.org/moin/FredrikLundh) for his work on `tkinter`      
-* [Ruud van der Ham](https://forum.pythonistacafe.com/u/Ruud) for all the help he's provided as a Python-mentor. Quite a few tricky bits of logic was supplied by Ruud. The dual-purpose return values scheme is Ruud's for example      
-* **Numerous** users who provided feature suggestions!  Many of the cool features were suggested by others.  If you were one of them and are willing to take more credit, I'll list you here if you give me permission. Most are too modest      
-* [moshekaplan](https://github.com/moshekaplan)/**[tkinter_components](https://github.com/moshekaplan/tkinter_components)** wrote the code for the Calendar Chooser Element. It was lifted straight from GitHub      
-* [Bryan Oakley](https://stackoverflow.com/users/7432/bryan-oakley) for the code that enables the `grab_anywhere` feature.      
-* [Otherion](https://github.com/Otherion) for help with Tables, being a sounding board for new features, naming functions, ..., all around great help      
-* [agjunyent](https://github.com/agjunyent) figured out how to properly make tabs and wrote prototype code that demonstrated how to do it      
-* [jfongattw](https://github.com/jfongattw) huge suggestion... dictionaries. turned out to be      
-* one of the most critical constructs in PySimpleGUI      
-* [venim](https://github.com/venim) code to doing Alt-Selections in menus, updating Combobox using index, request to disable windows (a really good idea), checkbox and tab submits on change, returning keys for elements that have change_submits set, ...      
-* [rtrrtr](https://github.com/rtrrtr) Helped get the 2.7 and 3.x code unified (big damned deal)    
-* Tony Crewe (anthony.crewe@gmail.com) Generously provided his classroom materials that he has written to teach a GUI course. If you're an educator and want to trade materials with Tony, he would like to hear from you.    
-      
-## How Do I      
-Finally, I must thank the fine folks at How Do I.      
-https://github.com/gleitz/howdoi      
-Their utility has forever changed the way and pace in which I can program.  I urge you to try the HowDoI.py application here on GitHub.  Trust me, **it's going to be worth the effort!**      
-Here are the steps to run that application      
-      
-    Install howdoi:      
-          pip install howdoi      
-    Test your install:      
-          python -m howdoi howdoi.py      
-    To run it:      
-          Python HowDoI.py      
-      
-The pip command is all there is to the setup.      
-      
-The way HowDoI works is that it uses your search term to look through stack overflow posts. It finds the best answer, gets the code from the answer, and presents it as a response.  It gives you the correct answer OFTEN.  It's a miracle that it work SO well.      
-For Python questions, I simply start my query with 'Python'.  Let's say you forgot how to reverse a list in Python.  When you run HowDoI and ask this question, this is what you'll see.      
-      
-![howdoiwithhistory](https://user-images.githubusercontent.com/13696193/45064009-5fd61180-b07f-11e8-8ead-eb0d1ff3a6be.jpg)      
-      
-      
-      
-In the hands of a competent programmer, this tool is **amazing**.   It's a must-try kind of program that has completely changed my programming process.  I'm not afraid of asking for help!  You just have to be smart about using what you find.      
-      
-The PySimpleGUI window that the results are shown in is an 'input' field which means you can copy and paste the results right into your code.
+
+#### SORRY!! Will add these back.  Lost due to file length limitation
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3OD
+c0NjU4OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTky
+LC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OT
+c2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2
+NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+-->
