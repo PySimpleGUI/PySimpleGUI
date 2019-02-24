@@ -2190,8 +2190,8 @@ class Slider(Element):
             self.Widget.set_value(value)
             self.DefaultValue = value
         if range != (None, None):
-            self.Widget.style['min'] = '{}'.format(range[0])
-            self.Widget.style['max'] = '{}'.format(range[1])
+            self.Widget.attributes['min'] = '{}'.format(range[0])
+            self.Widget.attributes['max'] = '{}'.format(range[1])
         super().Update(self.Widget, disabled=disabled, visible=visible)
 
     def SliderCallback(self, widget:remi.Widget, value):
@@ -2590,7 +2590,8 @@ class Window:
                  auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
-                 disable_minimize=False, background_image=None):
+                 disable_minimize=False, background_image=None,
+                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_broswer=True, web_update_interval=.00001 ):
         '''
 
         :param title:
@@ -2682,6 +2683,12 @@ class Window:
         self.IgnoreClose = False
         self.thread_id = None
         self.App = None         # type: Window.MyApp
+        self.web_debug = web_debug
+        self.web_ip = web_ip
+        self.web_port = web_port
+        self.web_start_broswer = web_start_broswer
+        self.web_update_interval = web_update_interval
+
         self.MessageQueue = Queue()
         self.master_widget = None       # type: remi.gui.VBox
 
@@ -3162,7 +3169,8 @@ class Window:
         # s.start()
         Window.port_number += 1
 
-        remi.start(self.MyApp, title=self.Title ,debug=False, address='0.0.0.0', port=0,  start_browser=True, update_interval=.00001, userdata=(self,))
+        remi.start(self.MyApp, title=self.Title ,debug=self.web_debug, address=self.web_ip, port=self.web_port,
+                   start_browser=self.web_start_broswer, update_interval=self.web_update_interval, userdata=(self,))
 
         # remi.start(self.MyApp, title=self.Title ,debug=False,  userdata=(self,), standalone=True)  # standalone=True)
 
@@ -3204,7 +3212,7 @@ class Window:
                 print(traceback.format_exc())
 
             if self.window.BackgroundImage:
-                self.master_widget.attributes['background-image'] = "url('{}')".format(self.window.BackgroundImage)
+                self.master_widget.style['background-image'] = "url('{}')".format('/'+self.window.BackgroundImage)
                 # print(f'background info',self.master_widget.attributes['background-image'] )
 
             # add the following 3 lines to your app and the on_window_close method to make the console close automatically
@@ -6440,7 +6448,9 @@ def main():
         [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide')]
     ]
 
-    window = Window('PySimpleGUIWeb Window', font='Arial 18',default_element_size=(12,1), auto_size_buttons=False).Layout(layout)
+    window = Window('PySimpleGUIWeb Window', font='Arial 18',default_element_size=(12,1), auto_size_buttons=False,
+                    ).Layout(layout)
+
 
     start_time = datetime.datetime.now()
     while True:
