@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 import PySimpleGUIWeb as sg
 import time
+import sys
 
 # ----------------  Create Form  ----------------
 layout = [
     [sg.Text('', background_color='black')],
-    [sg.Text('test', size=(20, 1), font=('Helvetica', 30), justification='center', text_color='white', key='text', background_color='black')],
+    [sg.Text('00:00', size=(30, 1), font=('Helvetica', 30), justification='center', text_color='white', key='text', background_color='black')],
     [sg.Text('', background_color='black')],
     [sg.Button('Pause', key='button', button_color=('white', '#001480')),
      sg.Button('Reset', button_color=('white', '#007339'), key='Reset'),
-     sg.Exit(button_color=('white', '#8B1A1A'), key='Exit')]
+     sg.Exit(button_color=('white', '#8B1A1A'), key='Exit', )],
         ]
 
 window = sg.Window('Running Timer', background_color='black', font='Helvetica 18').Layout(layout)
@@ -25,6 +26,7 @@ while (True):
         current_time = int(round(time.time() * 100)) - start_time
     else:
         event, values = window.Read()
+    print(event, values) if event != sg.TIMEOUT_KEY else None
     if event == 'button':
         event = window.FindElement(event).GetText()
     # --------- Do Button Operations --------
@@ -51,3 +53,5 @@ while (True):
                                                                   current_time % 100))
 # --------- After loop --------
 window.Close()
+print('after loop')
+sys.exit()
