@@ -1205,7 +1205,7 @@ class Text(Element):
         :param key:
         :param tooltip:
         '''
-        self.DisplayText = text
+        self.DisplayText = str(text)
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification or 'left'
         self.Relief = relief
@@ -5596,7 +5596,7 @@ def StartupTK(window):
 
     window.QTApplication.setActiveWindow(window.QT_QMainWindow)
 
-    flags = 0
+    flags = QtCore.Qt.WindowFlags()
     if window.NoTitleBar:
         flags |= Qt.FramelessWindowHint
         flags |= QtCore.Qt.Tool
