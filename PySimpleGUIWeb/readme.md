@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.10.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.11.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -205,6 +205,20 @@ New features
 * Image Element!
 * Events for Image Element
 * Image.Update to change image
+
+## 0.11.0 PySimpleGUIWeb  25-Feb-2019
+
+* Slider - Can update range using .Update method
+* NEW Window paramters that allow control over all Remi startup settings
+* New Window paramters and default values:
+  * web_debug=False
+  * web_ip='0.0.0.0'
+  * web_port=0
+  * web_start_broswer=True
+  * web_update_interval=.00001
+* Can set the Window backaground image (sorta works sometimes)
+	* Struggling to get the "resources" settings understood so can work with files
+	* I have a ways to go
 
 
 
