@@ -612,19 +612,18 @@ class Combo(Element):
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
-            self.WxComboBox.Set(values)
+            self.Widget.empty()
+            for i, item in enumerate(values):
+                self.Widget.append(value=item, key=str(i))
         if value:
-            self.WxComboBox.SetSelection(self.WxComboBox.FindString(value))
+            self.Widget.select_by_value(value)
         if set_to_index is not None:
-            self.WxComboBox.SetSelection(set_to_index)
-        if disabled is True:
-            self.WxComboBox.Enable(False)
-        elif disabled is False:
-            self.WxComboBox.Enable(True)
-        if readonly is not None:
-            self.WxComboBox.SetWindowStyle(wx.CB_READONLY)
+            try:            # just in case a bad index is passed in
+                self.Widget.select_by_key(str(set_to_index))
+            except:
+                pass
 
-        super().Update(self.WxComboBox, background_color=background_color, text_color=text_color, font=font, visible=visible)
+        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible, disabled=disabled)
 
 
 

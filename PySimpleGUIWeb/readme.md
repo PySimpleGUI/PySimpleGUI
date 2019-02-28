@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.11.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.12.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -31,11 +31,15 @@ This Readme is for information ***specific to*** the Web port of PySimpleGUI.
 PySimpleGUIWeb enables you to run your PySimpleGUI programs in your web browser.  It utilizes a package called Remi to achieve this amazing package.
 
 
-## Engineering Pre-Release   Version 0.10.0
- 
+## Engineering Pre-Release  
+
+Be aware you are running a "Pre-Rlease" version of PySimpleGUIWeb.  This means sh*t doesn't work in many places.  This also means that you get to have fun with the many things that DO work and that are being added to every week.
+
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
+
 Having trouble? Visit the [GitHub site ](http://www.PySimpleGUI.com) and log an Issue.
+
         
         
 ## Installation
@@ -220,6 +224,9 @@ New features
 	* Struggling to get the "resources" settings understood so can work with files
 	* I have a ways to go
 
+## 0.12.0 PySimpleGUIWeb 28-Feb-2019
+
+* Combo.Update now fully functional
 
 
 # Design        
