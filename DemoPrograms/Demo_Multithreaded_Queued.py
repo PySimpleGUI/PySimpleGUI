@@ -21,7 +21,7 @@ def worker_thread(thread_name, run_freq,  gui_queue):
     :param gui_queue: Queue used to communicate with the GUI
     :return:
     """
-    print('Strarting thread - ', thread_name)
+    print('Starting thread - ', thread_name)
     i = 0
     while True:
         sleep(run_freq/1000)
