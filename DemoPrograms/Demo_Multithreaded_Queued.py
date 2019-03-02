@@ -63,9 +63,7 @@ if __name__ == '__main__':
     #-- Create a Queue to communicate with GUI --
     gui_queue = Queue()             # queue used to communicate between the gui and the worker
     #-- Start worker threads, one runs twice as often as the other
-    thread = Thread(target=worker_thread, args=('Thread 1', 1000, gui_queue,),  daemon=True)
-    thread.start()
-    thread = Thread(target=worker_thread, args=('Thread 2', 500, gui_queue,),  daemon=True)
-    thread.start()
+    Thread(target=worker_thread, args=('Thread 1', 1000, gui_queue,),  daemon=True).start()
+    Thread(target=worker_thread, args=('Thread 2', 500, gui_queue,),  daemon=True).start()
     #-- Start the GUI passing in the Queue --
     the_gui(gui_queue)
