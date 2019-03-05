@@ -893,7 +893,7 @@ class Radio(Element):
         self.Disabled = disabled
         self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
-
+        self.EncodedRadioValue = None
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible)
@@ -4460,7 +4460,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = (value != 0)
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
                     RadVar = element.TKIntVar.get()
-                    this_rowcol = EncodeRadioRowCol(element.ParentForm.ContainerElemementNumber, row_num, col_num)
+                    this_rowcol = EncodeRadioRowCol(form.ContainerElemementNumber, row_num, col_num)
+                    # this_rowcol = element.EncodedRadioValue       # could use the saved one
                     value = RadVar == this_rowcol
                 elif element.Type == ELEM_TYPE_BUTTON:
                     if top_level_form.LastButtonClicked == element.ButtonText:
@@ -5386,11 +5387,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 # -------------------------  RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
+                element = element       # type: Radio
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 ID = element.GroupID
                 # see if ID has already been placed
                 value = EncodeRadioRowCol(form.ContainerElemementNumber, row_num, col_num)  # value to set intvar to if this radio is selected
+                element.EncodedRadioValue = value
                 if ID in toplevel_form.RadioDict:
                     RadVar = toplevel_form.RadioDict[ID]
                 else:
