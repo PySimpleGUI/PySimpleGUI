@@ -2590,7 +2590,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
                  disable_minimize=False, background_image=None,
-                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_broswer=True, web_update_interval=.00001 ):
+                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.00001, web_multiple_instance=True ):
         '''
 
         :param title:
@@ -2685,8 +2685,9 @@ class Window:
         self.web_debug = web_debug
         self.web_ip = web_ip
         self.web_port = web_port
-        self.web_start_broswer = web_start_broswer
+        self.web_start_browser = web_start_browser
         self.web_update_interval = web_update_interval
+        self.web_multiple_instance = web_multiple_instance
 
         self.MessageQueue = Queue()
         self.master_widget = None       # type: remi.gui.VBox
@@ -3168,8 +3169,8 @@ class Window:
         # s.start()
         Window.port_number += 1
 
-        remi.start(self.MyApp, title=self.Title ,debug=self.web_debug, address=self.web_ip, port=self.web_port,
-                   start_browser=self.web_start_broswer, update_interval=self.web_update_interval, userdata=(self,))
+        remi.start(self.MyApp, title=self.Title ,debug=self.web_debug, address=self.web_ip, port=self.web_port, multiple_instance=self.web_multiple_instance,
+                   start_browser=self.web_start_browser, update_interval=self.web_update_interval, userdata=(self,))
 
         # remi.start(self.MyApp, title=self.Title ,debug=False,  userdata=(self,), standalone=True)  # standalone=True)
 
