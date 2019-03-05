@@ -1548,8 +1548,6 @@ class Button(Element):
             folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
             if folder_name != '':
                 try:
-                    if sys.platform == 'win32':
-                        folder_name = folder_name.replace("/", "\\")
                     strvar.set(folder_name)
                     self.TKStringVar.set(folder_name)
                 except:
@@ -1560,8 +1558,6 @@ class Button(Element):
             else:
                 file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
-                if sys.platform == 'win32':
-                    file_name = file_name.replace("/", "\\")
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
@@ -1576,8 +1572,6 @@ class Button(Element):
                 file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
             if file_name != '':
                 file_name = ';'.join(file_name)
-                if sys.platform == 'win32':
-                    file_name = file_name.replace("/", "\\")
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
@@ -1587,8 +1581,6 @@ class Button(Element):
                 file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
                                                         initialdir=self.InitialFolder)  # show the 'get file' dialog box
             if file_name != '':
-                if sys.platform == 'win32':
-                    file_name = file_name.replace("/", "\\")
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
