@@ -1681,7 +1681,7 @@ class ProgressBar(Element):
 # ---------------------------------------------------------------------- #
 class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None):
+                 tooltip=None, enable_events=False):
         '''
         Image Element
         :param filename:
@@ -1691,10 +1691,12 @@ class Image(Element):
         :param pad:
         :param key:
         :param tooltip:
+        :param enable_events:
         '''
         self.Filename = filename
         self.Data = data
         self.tktext_label = None
+        self.EnableEvents = enable_events
         self.BackgroundColor = background_color
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
