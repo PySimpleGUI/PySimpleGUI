@@ -2590,7 +2590,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
                  disable_minimize=False, background_image=None,
-                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.00001, web_multiple_instance=True ):
+                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.00001, web_multiple_instance=False ):
         '''
 
         :param title:

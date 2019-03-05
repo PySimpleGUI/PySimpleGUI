@@ -236,8 +236,9 @@ New features
    * The default value is TRUE (Previously I think default was False by Remi)
    * Was made as a result of comment on repl.it.
 
+## 0.15.0 PySimpleGUIWeb 5-Mar-2019
 
-
+* Made the multiple_instance parameter FALSE by default (was messing up badly with True)
 
 # Design        
 # Author 
