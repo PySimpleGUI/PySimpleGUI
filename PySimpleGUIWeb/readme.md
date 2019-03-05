@@ -229,6 +229,17 @@ New features
 * Combo.Update now fully functional
 
 
+## 0.13.0 PySimpleGUIWeb 5-Mar-2019
+
+* Added new parameter to Window - web_multiple_instance
+   * Like other Window web parameters, this value is passsed Remi upon start
+   * The default value is TRUE (Previously I think default was False by Remi)
+   * Was made as a result of comment on repl.it.
+
+## 0.15.0 PySimpleGUIWeb 5-Mar-2019
+
+* Made the multiple_instance parameter FALSE by default (was messing up badly with True)
+
 # Design        
 # Author 
  Mike B.        
