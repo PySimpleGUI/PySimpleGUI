@@ -1,4 +1,4 @@
-# PySimpleGUI-exemaker
+# PySimpleGUI-HowDoI
 
 ## Introduction
 This package contains a GUI front-end to PyInstaller.  Use this tool to create EXE files from your python programs
