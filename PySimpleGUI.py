@@ -899,7 +899,7 @@ class Radio(Element):
                          tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, visible=None):
-        location = EncodeRadioRowCol(self.Position[0], self.Position[1])
+        location = EncodeRadioRowCol(self.ParentForm.ContainerElemementNumber, self.Position[0], self.Position[1])
         if value is not None:
             try:
                 self.TKIntVar.set(location)
@@ -1884,7 +1884,10 @@ class Image(Element):
         else:
             return
         width, height = size[0] or image.width(), size[1] or image.height()
-        self.tktext_label.configure(image=image, width=width, height=height)
+        try:                # sometimes crashes if user closed with X
+            self.tktext_label.configure(image=image, width=width, height=height)
+        except:
+            pass
         self.tktext_label.image = image
         if visible is False:
             self.tktext_label.pack_forget()
@@ -2308,6 +2311,8 @@ class Frame(Element):
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
+        self.ContainerElemementNumber = Window.GetAContainerNumber()
+
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
@@ -2412,6 +2417,7 @@ class Tab(Element):
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
+        self.ContainerElemementNumber = Window.GetAContainerNumber()
 
         self.Layout(layout)
 
@@ -2575,7 +2581,7 @@ class Slider(Element):
         :param tooltip:
         :param visible:
         '''
-        self.TKScale = None
+        self.TKScale = None         # type: tk.Scale
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
@@ -2757,7 +2763,7 @@ class Column(Element):
         self.VerticalScrollOnly = vertical_scroll_only
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-
+        self.ContainerElemementNumber = Window.GetAContainerNumber()
 
         self.Layout(layout)
 
@@ -3477,7 +3483,7 @@ class Window:
     user_defined_icon = None
     hidden_master_root = None
     animated_popup_dict = {}
-
+    container_element_counter = 0           # used to get a number of Container Elements (Frame, Column, Tab)
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, margins=(None, None), button_color=None, font=None,
@@ -3570,6 +3576,13 @@ class Window:
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.RightClickMenu = right_click_menu
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
+        self.ContainerElemementNumber = Window.GetAContainerNumber()
+
+
+    @classmethod
+    def GetAContainerNumber(cls):
+        cls.container_element_counter += 1
+        return cls.container_element_counter
 
     @classmethod
     def IncrementOpenCount(self):
@@ -4337,13 +4350,14 @@ def InitializeResults(form):
 # =====  Radio Button RadVar encoding and decoding =====#
 # =====  The value is simply the row * 1000 + col  =====#
 def DecodeRadioRowCol(RadValue):
+    container = RadValue // 100000
     row = RadValue // 1000
     col = RadValue % 1000
-    return row, col
+    return container, row, col
 
 
-def EncodeRadioRowCol(row, col):
-    RadValue = row * 1000 + col
+def EncodeRadioRowCol(container, row, col):
+    RadValue = container*100000 + row * 1000 + col
     return RadValue
 
 
@@ -4446,7 +4460,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = (value != 0)
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
                     RadVar = element.TKIntVar.get()
-                    this_rowcol = EncodeRadioRowCol(row_num, col_num)
+                    this_rowcol = EncodeRadioRowCol(element.ParentForm.ContainerElemementNumber, row_num, col_num)
                     value = RadVar == this_rowcol
                 elif element.Type == ELEM_TYPE_BUTTON:
                     if top_level_form.LastButtonClicked == element.ButtonText:
@@ -4942,7 +4956,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
                 if not auto_size_text and height == 1:
                     wraplen = 0
-                # print("wraplen, width, height", wraplen, width, height)
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
                 if element.Relief is not None:
                     tktext_label.configure(relief=element.Relief)
@@ -5377,7 +5390,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 default_value = element.InitialState
                 ID = element.GroupID
                 # see if ID has already been placed
-                value = EncodeRadioRowCol(row_num, col_num)  # value to set intvar to if this radio is selected
+                value = EncodeRadioRowCol(form.ContainerElemementNumber, row_num, col_num)  # value to set intvar to if this radio is selected
                 if ID in toplevel_form.RadioDict:
                     RadVar = toplevel_form.RadioDict[ID]
                 else:
