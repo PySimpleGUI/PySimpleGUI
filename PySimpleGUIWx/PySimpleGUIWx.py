@@ -2985,7 +2985,7 @@ class Window:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = Window.user_defined_icon if Window.user_defined_icon is not None else icon if icon is not None else DEFAULT_WINDOW_ICON
+        self.WindowIcon = icon if icon is not None else Window.user_defined_icon
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
@@ -5803,8 +5803,15 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_ELEMENT_TEXT_COLOR
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
+    global _my_windows
 
-    Window.user_defined_icon = icon
+    if icon:
+        try:
+            with open(icon, 'r') as icon_file:
+                pass
+        except:
+            raise FileNotFoundError
+        _my_windows.user_defined_icon = icon
 
     if button_color != None:
         DEFAULT_BUTTON_COLOR = button_color
