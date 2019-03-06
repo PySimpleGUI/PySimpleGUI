@@ -5746,14 +5746,8 @@ ScrolledTextBox = PopupScrolled
 # Sets the icon to be used by default                #
 # ===================================================#
 def SetGlobalIcon(icon):
-    global _my_windows
-
-    try:
-        with open(icon, 'r') as icon_file:
-            pass
-    except:
-        raise FileNotFoundError
-    _my_windows.user_defined_icon = icon
+    if icon is not None:
+        Window.user_defined_icon = icon
     return True
 
 
@@ -5804,7 +5798,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
 
-    Window.user_defined_icon = icon
+    if icon is not None:
+        Window.user_defined_icon = icon
 
     if button_color != None:
         DEFAULT_BUTTON_COLOR = button_color
@@ -6882,6 +6877,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 def main():
     ChangeLookAndFeel('GreenTan')
+
     layout = [
               [Text('Welcome to PySimpleGUI!', font='Arial 15', text_color='red')],
               [Text('You should be importing this module rather than running it', justification='l', size=(50, 1))],
