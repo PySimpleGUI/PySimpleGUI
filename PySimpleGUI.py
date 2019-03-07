@@ -227,7 +227,6 @@ def RGB(red, green, blue): return '#%02x%02x%02x' % (red, green, blue)
 # -------------------------  Button types  ------------------------- #
 # todo Consider removing the Submit, Cancel types... they are just 'RETURN' type in reality
 # uncomment this line and indent to go back to using Enums
-# class ButtonType(Enum):
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
 BUTTON_TYPE_BROWSE_FILES = 21
@@ -1110,7 +1109,9 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, visible=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, visible=None, autoscroll=None):
+        if autoscroll is not None:
+            self.Autoscroll = autoscroll
         if value is not None:
             try:
                 if not append:
@@ -1135,6 +1136,8 @@ class Multiline(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack()
+
+
 
     def Get(self):
         return self.TKText.get(1.0, tk.END)
