@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.21.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.23.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release     Version 0.21.0
+ ## The Alpha Release     Version 0.23.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -606,6 +606,50 @@ Dial - disable
 ### 0.22.0 - 9-Dec-2018
 
 * Spin.Get method - get the current spinner value
+
+### 0.23.0 PySimpleGUIQt
+
+* Fixed crash that was happening with latest pyside2 release!!!!
+* Huge update to OneLineProgressMeter
+* Debug window got title and do-not-reroute-std-out option
+* Popups get a title option
+* PopupScrolled getr non-blocking option
+* Default logo included in Base64 Format
+* Changed Chars to pixels scaling.  Went from (10,25) to (10,35)
+* Changed pixel to chars cutoff from 10 to 12
+* Change progress bar default size to 200 from 250
+* Reworked the _my_windows global variable / class to use Window class variables
+* Change in how Elements / Widgets are updated. Need to use {} correctly
+* InputText supports drag and drop
+* Support for Checkbox.Get()
+* Support for strings in spinbox
+* Added Update method to Output element
+* Changed Button default file_types from *.* to *
+* Support for Tab enable_events so they now generate events
+* Table.Update can change the number of rows of table
+* Window class now manages the list of active popups, user defined icon, QTApplication, num open windows
+* Window resizable parameter default changed from False to True
+* Window new parameter -  disable_minimize
+* Window.GetScreenDimensions added
+* Window.Move added
+* Window.Minimize added
+* Window.Maximize added
+* Window.Disable added
+* Window.Enable added
+* Window.BringToFront added
+* Window.CurrentLocation added
+* TabGroup now returns which tab is selected in the return values
+* Completely new Style generation class and functions (I hope it works!!!!)
+* Style reworked for Column, Text, Button, Input, Combobox, Listbox, Input Multiline, Output Multiline, Progress Bar, Spinbox, Output, 
+* Progress Bar colors are now correct
+* Events generated when tabs are changed
+* "Better" Table support.   Uses num_rows now and styles the scrollbar
+* Tree element can support multiple types of icons including base64
+* Fixed tree element scroll bar
+* Icon ccan be set using SetOptions
+* main for PySimpleGUIQt.py gets a nice test harness that shows lots of Elements
+
+
 
 
 # Design        
