@@ -81,7 +81,7 @@ def the_gui(gui_queue):
     window = sg.Window('Multithreaded Window').Layout(layout)
     # --------------------- EVENT LOOP ---------------------
     while True:
-        event, values = window.Read(timeout=100)        # wait for up to 100 ms for a GUI event
+        event, values = window.Read(timeout=100)        # wait for up to 100 ms for a GUI event from user
         if event is None or event == 'Exit':
             break
         #--------------- Loop through all messages coming in from threads ---------------
