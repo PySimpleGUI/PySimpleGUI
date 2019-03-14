@@ -1084,7 +1084,9 @@ class MultilineOutput(Element):
                 self.CurrentValue = self.CurrentValue + '\n' + str(value)
                 self.Widget.set_value(self.CurrentValue)
             app = self.ParentForm.App
-            # app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+            if hasattr(app, "websockets"):
+                app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
+                    self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
 
             super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
@@ -2618,7 +2620,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
                  disable_minimize=False, background_image=None,
-                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.00001, web_multiple_instance=False ):
+                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=0, web_multiple_instance=False ):
         '''
 
         :param title:
@@ -3219,12 +3221,12 @@ class Window:
                 self.window = userdata[0]       # type: Window
             else:
                 self.window = userdata2         # type: Window
-            self.window.App = self
             self.master_widget = None
             if userdata2 is None:
                 res_path = os.path.dirname(os.path.abspath(__file__))
                 # print('res path', res_path)
                 super(Window.MyApp, self).__init__(*args,  static_file_path={'C':'c:','c':'c:','D':'d:', 'd':'d:', 'E':'e:', 'e':'e:', 'dot':'.', '.':'.'})
+            self.window.App = self
 
         def main(self, name='world'):
             # margin 0px auto allows to center the app to the screen
