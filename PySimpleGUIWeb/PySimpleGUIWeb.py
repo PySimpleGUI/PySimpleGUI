@@ -1083,10 +1083,11 @@ class MultilineOutput(Element):
             elif value is not None and append:
                 self.CurrentValue = self.CurrentValue + '\n' + str(value)
                 self.Widget.set_value(self.CurrentValue)
-            app = self.ParentForm.App
-            if hasattr(app, "websockets"):
-                app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
-                    self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+            if self.Autoscroll:
+                app = self.ParentForm.App
+                if hasattr(app, "websockets"):
+                    app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
+                        self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
 
             super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
@@ -2396,9 +2397,20 @@ class Table(Element):
             self.Values = values
             self.SelectedRows = []
 
+
     def on_table_row_click(self, table, row, item):
-        self.SelectedRow = row          # type: remi.gui.TableRow
+        # self.SelectedRow = row          # type: remi.gui.TableRow
         self.SelectedItem = item.get_text()
+        index = -1
+        # each widget (and specifically in this case the table) has a _render_children_list attribute that
+        # is an ordered list of the children keys
+        # first, we search for the row in the children dictionary
+        for key, value in table.children.items():
+            if value == row:
+                # if the row is found, we get the index in the ordered list
+                index = table._render_children_list.index(key)
+                break
+        self.SelectedRow = index
         if self.ChangeSubmits:
             self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
             self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
@@ -3742,7 +3754,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         value = None
                 elif element.Type == ELEM_TYPE_TABLE:
                     element = element   # type:Table
-                    value = [element.SelectedItem,]
+                    value = [element.SelectedRow,]
                 elif element.Type == ELEM_TYPE_TREE:
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_GRAPH:
@@ -6588,7 +6600,7 @@ def main():
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
-        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
+        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=False)],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
