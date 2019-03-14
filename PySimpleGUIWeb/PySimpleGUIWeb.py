@@ -2369,6 +2369,8 @@ class Table(Element):
         self.RightClickMenu = right_click_menu
         self.RowColors = row_colors
         self.Disabled = disabled
+        self.SelectedItem = None
+        self.SelectedRow = None
         self.Widget = None                      # type: remi.Table
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
@@ -2391,6 +2393,16 @@ class Table(Element):
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
             self.Values = values
             self.SelectedRows = []
+
+    def on_table_row_click(self, table, row, item):
+        self.SelectedRow = row          # type: remi.gui.TableRow
+        self.SelectedItem = item.get_text()
+        if self.ChangeSubmits:
+            self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
+            self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+        else:
+            self.ParentForm.LastButtonClicked = ''
+
 
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
@@ -2471,6 +2483,8 @@ class Tree(Element):
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
         return
+
+
 
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
@@ -3725,7 +3739,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = None
                 elif element.Type == ELEM_TYPE_TABLE:
-                    value = element.SelectedRows
+                    element = element   # type:Table
+                    value = [element.SelectedItem,]
                 elif element.Type == ELEM_TYPE_TREE:
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_GRAPH:
@@ -4667,7 +4682,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TABLE:
                 element = element       # type: Table
                 new_table = []
-                for row in element.Values:
+                for row in element.Values:             # convert entire table to strings
                     new_row=[str(indiv_value) for indiv_value in row]
                     new_table.append(new_row)
                 element.Widget = remi.gui.Table.new_from_list(new_table)
@@ -4679,6 +4694,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                          ('105', 'Maria', 'Papadopoulos')], width=300, height=200, margin='10px')
                 do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
+                element.Widget.on_table_row_click.connect(element.on_table_row_click)
                 # frame = tk.Frame(tk_row_frame)
                 #
                 # height = element.NumRows
