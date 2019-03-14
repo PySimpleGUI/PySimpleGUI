@@ -2313,11 +2313,10 @@ class Menu(Element):
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
-                 font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
-                 size=(None, None), change_submits=False, bind_return_key=False, pad=None, key=None, tooltip=None):
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True, disabled=False,
+                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True, size_px=(None, None)):
         '''
-        Table Element
+        Table
         :param values:
         :param headings:
         :param visible_column_map:
@@ -2327,14 +2326,22 @@ class Table(Element):
         :param max_col_width:
         :param select_mode:
         :param display_row_numbers:
+        :param num_rows:
+        :param row_height:
         :param font:
         :param justification:
         :param text_color:
         :param background_color:
+        :param alternating_row_color:
         :param size:
+        :param change_submits:
+        :param enable_events:
+        :param bind_return_key:
         :param pad:
         :param key:
         :param tooltip:
+        :param right_click_menu:
+        :param visible:
         '''
         self.Values = values
         self.ColumnHeadings = headings
@@ -2350,15 +2357,22 @@ class Table(Element):
         self.SelectMode = select_mode
         self.DisplayRowNumbers = display_row_numbers
         self.NumRows = num_rows if num_rows is not None else size[1]
+        self.RowHeight = row_height
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
+        self.VerticalScrollOnly = vertical_scroll_only
         self.SelectedRows = []
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
-        self.StartingRowNumber = 0  # When displaying row numbers, where to start
+        self.StartingRowNumber = 0                  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
+        self.RightClickMenu = right_click_menu
+        self.RowColors = row_colors
+        self.Disabled = disabled
+        self.Widget = None                      # type: remi.Table
+
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
-                         size=size, pad=pad, key=key, tooltip=tooltip)
+                         size=size, pad=pad, key=key, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
     def Update(self, values=None):
@@ -4651,6 +4665,123 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
+                element = element       # type: Table
+                new_table = []
+                for row in element.Values:
+                    new_row=[str(indiv_value) for indiv_value in row]
+                    new_table.append(new_row)
+                element.Widget = remi.gui.Table.new_from_list(new_table)
+                # element.Widget = remi.gui.Table.new_from_list([('ID', 'First Name', 'Last Name'),
+                #                          ('101', 'Danny', 'Young'),
+                #                          ('102', 'Christine', 'Holand'),
+                #                          ('103', 'Lars', 'Gordon'),
+                #                          ('104', 'Roberto', 'Robitaille'),
+                #                          ('105', 'Maria', 'Papadopoulos')], width=300, height=200, margin='10px')
+                do_font_and_color(element.Widget)
+                tk_row_frame.append(element.Widget)
+                # frame = tk.Frame(tk_row_frame)
+                #
+                # height = element.NumRows
+                # if element.Justification == 'left':
+                #     anchor = tk.W
+                # elif element.Justification == 'right':
+                #     anchor = tk.E
+                # else:
+                #     anchor = tk.CENTER
+                # column_widths = {}
+                # for row in element.Values:
+                #     for i, col in enumerate(row):
+                #         col_width = min(len(str(col)), element.MaxColumnWidth)
+                #         try:
+                #             if col_width > column_widths[i]:
+                #                 column_widths[i] = col_width
+                #         except:
+                #             column_widths[i] = col_width
+                # if element.ColumnsToDisplay is None:
+                #     displaycolumns = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
+                # else:
+                #     displaycolumns = []
+                #     for i, should_display in enumerate(element.ColumnsToDisplay):
+                #         if should_display:
+                #             displaycolumns.append(element.ColumnHeadings[i])
+                # column_headings = element.ColumnHeadings
+                # if element.DisplayRowNumbers:  # if display row number, tack on the numbers to front of columns
+                #     displaycolumns = [element.RowHeaderText, ] + displaycolumns
+                #     column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
+                # element.TKTreeview = ttk.Treeview(frame, columns=column_headings,
+                #                                   displaycolumns=displaycolumns, show='headings', height=height,
+                #                                   selectmode=element.SelectMode,)
+                # treeview = element.TKTreeview
+                # if element.DisplayRowNumbers:
+                #     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
+                #     treeview.column(element.RowHeaderText, width=50, anchor=anchor)
+                #
+                # headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
+                # for i, heading in enumerate(headings):
+                #     treeview.heading(heading, text=heading)
+                #     if element.AutoSizeColumns:
+                #         width = max(column_widths[i], len(heading))
+                #     else:
+                #         try:
+                #             width = element.ColumnWidths[i]
+                #         except:
+                #             width = element.DefaultColumnWidth
+                #     treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
+                #
+                # # Insert values into the tree
+                # for i, value in enumerate(element.Values):
+                #     if element.DisplayRowNumbers:
+                #         value = [i+element.StartingRowNumber] + value
+                #     id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i)
+                # if element.AlternatingRowColor is not None:         # alternating colors
+                #     for row in range(0, len(element.Values), 2):
+                #         treeview.tag_configure(row, background=element.AlternatingRowColor)
+                # if element.RowColors is not None:                   # individual row colors
+                #     for row_def in element.RowColors:
+                #         if len(row_def) == 2:                       # only background is specified
+                #             treeview.tag_configure(row_def[0], background=row_def[1])
+                #         else:
+                #             treeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
+                #
+                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                #     ttk.Style().configure("Treeview", background=element.BackgroundColor,
+                #                           fieldbackground=element.BackgroundColor)
+                # if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
+                #     ttk.Style().configure("Treeview", foreground=element.TextColor)
+                # if element.RowHeight is not None:
+                #     ttk.Style().configure("Treeview", rowheight=element.RowHeight)
+                # ttk.Style().configure("Treeview", font=font)
+                # # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                # treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
+                # if element.BindReturnKey:
+                #     treeview.bind('<Return>', element.treeview_double_click)
+                #     treeview.bind('<Double-Button-1>', element.treeview_double_click)
+                #
+                # scrollbar = tk.Scrollbar(frame)
+                # scrollbar.pack(side=tk.RIGHT, fill='y')
+                # scrollbar.config(command=treeview.yview)
+                #
+                # if not element.VerticalScrollOnly:
+                #     hscrollbar = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
+                #     hscrollbar.pack(side=tk.BOTTOM, fill='x')
+                #     hscrollbar.config(command=treeview.xview)
+                #     treeview.configure(xscrollcommand=hscrollbar.set)
+                #
+                # treeview.configure(yscrollcommand=scrollbar.set)
+                #
+                # element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                # if element.Visible is False:
+                #     element.TKTreeview.pack_forget()
+                # frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
+                # if element.Tooltip is not None:
+                #     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
+                #                                     timeout=DEFAULT_TOOLTIP_TIME)
+                # if element.RightClickMenu or toplevel_form.RightClickMenu:
+                #     menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                #     top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                #     AddMenuItem(top_menu, menu[1], element)
+                #     element.TKRightClickMenu = top_menu
+                #     element.TKTreeview.bind('<Button-3>', element.RightClickMenuCallback)
                 pass
                 # frame = tk.Frame(tk_row_frame)
                 #
@@ -6295,7 +6426,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
-              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
@@ -6303,7 +6434,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
                     location=location)
 
     (button, input_values) = window.LayoutAndRead(layout)
-
+    window.Close()
     if button != 'Ok':
         return None
     else:
@@ -6363,13 +6494,14 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), browse_button],
-              [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
+              [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
     (button, input_values) = window.Layout(layout).Read()
+    window.Close()
     if button != 'Ok':
         return None
     else:
@@ -6402,14 +6534,14 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, password_char=password_char)],
-              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
     (button, input_values) = window.Layout(layout).Read()
-
+    window.Close()
     if button != 'Ok':
         return None
     else:
