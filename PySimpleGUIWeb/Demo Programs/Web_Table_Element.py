@@ -2,6 +2,27 @@ import PySimpleGUIWeb as sg
 import random
 import string
 
+"""
+ooooooooooooo            .o8       oooo                                      
+8'   888   `8           "888       `888                                      
+     888       .oooo.    888oooo.   888   .ooooo.                            
+     888      `P  )88b   d88' `88b  888  d88' `88b                           
+     888       .oP"888   888   888  888  888ooo888                           
+     888      d8(  888   888   888  888  888    .o                           
+    o888o     `Y888""8o  `Y8bod8P' o888o `Y8bod8P'                           
+                                                                             
+                                                                             
+                                                                             
+oooooooooooo oooo                                                        .   
+`888'     `8 `888                                                      .o8   
+ 888          888   .ooooo.  ooo. .oo.  .oo.    .ooooo.  ooo. .oo.   .o888oo 
+ 888oooo8     888  d88' `88b `888P"Y88bP"Y88b  d88' `88b `888P"Y88b    888   
+ 888    "     888  888ooo888  888   888   888  888ooo888  888   888    888   
+ 888       o  888  888    .o  888   888   888  888    .o  888   888    888 . 
+o888ooooood8 o888o `Y8bod8P' o888o o888o o888o `Y8bod8P' o888o o888o   "888"                                                                          
+"""
+
+
 # ------------------ Create a fake table ------------------
 class Fake():
     @classmethod
@@ -40,6 +61,7 @@ window = sg.Window('Table Element Example').Layout(layout)
 # ------------------ The Event Loop ------------------
 while True:
     event, values = window.Read()
+    print(event, values)
     if event in (None, 'Exit'):
         break
     window.Element('_selected_rows_').Update(values['_table_'])

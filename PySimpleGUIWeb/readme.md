@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.17.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.18.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -263,6 +263,12 @@ New features
   * Font
   * Can get the value of the item clicked using Table.SelectedItem.  Can be coded as window.Element('_table_').SelectedItem
   
+  
+## 0.18.0 15-Mar-2019
+  
+* Hotfix for bug that causes Popups / secondary windows to crash
+* Table gets `starting_row_num` parameter
+
   
 
 # Design        

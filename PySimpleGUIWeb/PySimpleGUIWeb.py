@@ -2316,7 +2316,7 @@ class Menu(Element):
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, row_header_text='Row', num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True, disabled=False,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, row_header_text='Row', starting_row_num=0, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True, disabled=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True, size_px=(None, None)):
         '''
         Table
@@ -2367,7 +2367,7 @@ class Table(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
-        self.StartingRowNumber = 0                  # When displaying row numbers, where to start
+        self.StartingRowNumber = starting_row_num        # When displaying row numbers, where to start
         self.RowHeaderText = row_header_text
         self.RightClickMenu = right_click_menu
         self.RowColors = row_colors
@@ -3234,11 +3234,11 @@ class Window:
             else:
                 self.window = userdata2         # type: Window
             self.master_widget = None
+            self.window.App = self
             if userdata2 is None:
                 res_path = os.path.dirname(os.path.abspath(__file__))
                 # print('res path', res_path)
                 super(Window.MyApp, self).__init__(*args,  static_file_path={'C':'c:','c':'c:','D':'d:', 'd':'d:', 'E':'e:', 'e':'e:', 'dot':'.', '.':'.'})
-            self.window.App = self
 
         def main(self, name='world'):
             # margin 0px auto allows to center the app to the screen
@@ -4699,7 +4699,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for row_num, row in enumerate(element.Values):             # convert entire table to strings
                     new_row= [str(item) for item in row]
                     if element.DisplayRowNumbers:
-                        new_row = [element.RowHeaderText if row_num == 0 else str(row_num) ,] + new_row
+                        new_row = [element.RowHeaderText if row_num == 0 else str(row_num+element.StartingRowNumber) ,] + new_row
                     new_table.append(new_row)
                 element.Widget = remi.gui.Table.new_from_list(new_table)
                 do_font_and_color(element.Widget)
