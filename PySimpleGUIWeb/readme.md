@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.12.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.17.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -239,6 +239,28 @@ New features
 ## 0.15.0 PySimpleGUIWeb 5-Mar-2019
 
 * Made the multiple_instance parameter FALSE by default (was messing up badly with True)
+
+## 0.16.0 13-Mar-2019
+
+* TABLES!
+  * The bare minimum, basic tables are supported
+  * Things like alternating colors are not done
+  * Enabling Events DOES work so that you can get immediate clicks
+  * Value returned is a list of 1ength 1 and contains the value of the cell that was clicked
+* Removed use of CloseButton from Popups
+
+## 0.17.0 14-Mar-2019
+
+* More Table features supported
+  * Option to display row numbers
+  * New parameter `row_header_text`
+  * Can turn on / off displaying row numbers
+  * `enable_events`
+  * `text_color`
+  * Font
+  * Can get the value of the item clicked using Table.SelectedItem.  Can be coded as window.Element('_table_').SelectedItem
+  
+  
 
 # Design        
 # Author 

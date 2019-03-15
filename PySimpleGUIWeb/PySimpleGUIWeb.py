@@ -2316,7 +2316,7 @@ class Menu(Element):
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True, disabled=False,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, row_header_text='Row', num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True, disabled=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True, size_px=(None, None)):
         '''
         Table
@@ -2368,7 +2368,7 @@ class Table(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0                  # When displaying row numbers, where to start
-        self.RowHeaderText = 'Row'
+        self.RowHeaderText = row_header_text
         self.RightClickMenu = right_click_menu
         self.RowColors = row_colors
         self.Disabled = disabled
@@ -4696,16 +4696,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TABLE:
                 element = element       # type: Table
                 new_table = []
-                for row in element.Values:             # convert entire table to strings
-                    new_row=[str(indiv_value) for indiv_value in row]
+                for row_num, row in enumerate(element.Values):             # convert entire table to strings
+                    new_row= [str(item) for item in row]
+                    if element.DisplayRowNumbers:
+                        new_row = [element.RowHeaderText if row_num == 0 else str(row_num) ,] + new_row
                     new_table.append(new_row)
                 element.Widget = remi.gui.Table.new_from_list(new_table)
-                # element.Widget = remi.gui.Table.new_from_list([('ID', 'First Name', 'Last Name'),
-                #                          ('101', 'Danny', 'Young'),
-                #                          ('102', 'Christine', 'Holand'),
-                #                          ('103', 'Lars', 'Gordon'),
-                #                          ('104', 'Roberto', 'Robitaille'),
-                #                          ('105', 'Maria', 'Papadopoulos')], width=300, height=200, margin='10px')
                 do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
                 element.Widget.on_table_row_click.connect(element.on_table_row_click)
@@ -6600,7 +6596,7 @@ def main():
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
-        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=False)],
+        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
