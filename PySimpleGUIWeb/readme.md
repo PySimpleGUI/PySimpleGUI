@@ -84,6 +84,9 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Spinner Element (sorta... numbers 0 to 100 only now)
 * Column Element
 * Image Element
+* Multiline Input Element
+* Multiline Output Element
+* Table Element (yes, tables! even if limited)
 * Window background color
 * Element padding
 * Read with timeout
