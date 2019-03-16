@@ -3479,7 +3479,7 @@ class ErrorElement(Element):
 Stretch = ErrorElement
 
 # ------------------------------------------------------------------------- #
-#                       Window CLASS                                      #
+#                       Window CLASS                                        #
 # ------------------------------------------------------------------------- #
 class Window:
     NumOpenWindows = 0
@@ -7540,7 +7540,10 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         return
 
     if image_source not in Window.animated_popup_dict:
-        layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
+        if type(image_source) is bytes:
+            layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
+        else:
+            layout = [[Image(filename=image_source, background_color=background_color, key='_IMAGE_',)],]
         if message:
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
