@@ -8,40 +8,40 @@
       
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)      
       
-[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)      
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      
-[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)  
-[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)  
-[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)  
+[![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)        tkinter
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      tkinter 2.7
+[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)   Qt
+[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)    WxPython
+[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)   Web (Remi)
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
       
-      
-      
-      
-      
+
       
 # PySimpleGUI      
       
    
             
 ## Supports both Python 2.7 & 3 when using tkinter
+
 ## Supports both PySide2 and PyQt5 (limited support)
-## PySimpleGUI source code can run either on Qt, tkinter, WxPython, Web (Remi) by changing only the import statement
+
+## Effortlessly move across tkinter, Qt, WxPython, and the Web (Remi) by changing only the import statement
+
+## The *only* way to write both desktop and web based GUIs at the same time
 
 
 
-
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.241.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.25.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.241.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.25.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.3.0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWebFor_Python_3.x_Version-0.2.23.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.10.0-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -55,7 +55,7 @@
       
 [Docs in PDF Format](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/docs)      
       
-[Run live in a web browser using repl.it!](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos)  
+[Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
       
 Super-simple GUI to use... Powerfully customizable    
       
@@ -70,7 +70,6 @@ As of 9/25/2018 **both Python 3 and Python 2.7 are supported**!   The Python 3 v
       
 # Qt Version
 
-### Github
 
 Check out the new PySimpleGUI port to the Qt GUI Framework.  You can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  
 
@@ -118,12 +117,11 @@ Educators in particular should be interested.  Students can not only post their 
 
 Depending on how you're viewing this document, you may or may not see an embedded browser window below that is running PySimpleGUI code.
 
-<iframe height="400px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+<iframe height="1000px" width="100%" src="https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 # Support
 
-PySimpleGUI is an active project.  Bugs are fixed, features are added, often.  Should you run into trouble, open an issue on the GitHub site and you'll receive help by someone in the community.  It's very early in the port however with MANY more Elements left to implement.  3 down, 20-something to go.
-
+PySimpleGUI is an active project.  Bugs are fixed, features are added, often.  Should you run into trouble, open an issue on the GitHub site and you'll receive help by someone in the community.  
 
 # Platforms
  
@@ -196,9 +194,7 @@ In addition to a primary GUI, you can add a Progress Meter to your code with ONE
       
 It's simple to show animated GIFs. 
       
-![loading animationYou can build an async media player GUI with custom buttons in 30 lines of code.      
-      
-![media player 2](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae44960091-eeebf980-aec6-11e98-8757-802eb95352ed.gif84e-80d4447a83cd.jpg)      
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)      
       
       
 How about embedding a game inside of a GUI?  This game of Pong is written in tkinter and then dropped into the PySimpleGUI window creating a game that has an accompanying GUI.      
@@ -468,12 +464,6 @@ PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It
       
 If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this ReadMe      
       
-
-## Qt Version
-
-Please see the Qt specific documentation.  The readme that contains all you need to know about Qt specific matters is here:
-https://pysimplegui.readthedocs.io/readmeqt/
-
 
 ## Using  - Python 3      
       
@@ -822,9 +812,7 @@ time_between_frames - amount of time in milliseconds to use between frames
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
     
-    
-    
-    
+
 # Progress Meters!      
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?      
       
@@ -1637,7 +1625,7 @@ Populates the windows fields with the values shown in the dictionary.
 #### Element(key, silent_on_error=False)         (shorthand version)
 #### FindElement(key, silent_on_error=False)    
     
-Rerturns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
+Returns the Element that has a matching key.  If the key is not found, an Error Element is returned so that the program will not crash should the user try to perform an "update".  A Popup message will be shown    
     
 #### FindElementWithFocus()    
 
@@ -2423,9 +2411,9 @@ Parameter definitions
     visible - if False will create image as hidden
     size_px - size of image in pixels
     
-### `Update`Image Methods    
+### `Update` Method
     
-Like other Elements, the Image Element has an `Uupdate` method.  Call Update if you want to change the image.    
+Like other Elements, the Image Element has an `Update` method.  Call Update if you want to change the image.    
     
     def Update(self, filename=None, data=None, visible=None):    
     
@@ -2450,7 +2438,7 @@ UpdateAnimation(source,
 You can call the method without setting the `time_between_frames` value and it will show a frame and immediately move on to the next frame.  This enables you to do the inter-frame timing.
 
 
-    
+
     
 ## Button Element      
       
@@ -3300,7 +3288,7 @@ Unlike Tables there is no standard format for trees.  Thus the data structure pa
 def TreeData()
 def Insert(self, parent, key, text, values, icon=None)
 ```
-    
+
 To "insert" data into the tree the TreeData method Insert is called.    
     
 `Insert(parent_key, key, display_text, values)`    
@@ -4286,55 +4274,6 @@ There are too many to list!!
 
 There are over 130 sample programs to give you a jump start.
 
-Use the example programs as a starting basis for your GUI.  Copy, paste, modify and run!  The demo files are:      
-      
-  | Source File| Description |      
-|--|--|      
-|**Demo_All_Widgets.py**| Nearly all of the Elements shown in a single window      
-|**Demo_Borderless_Window.py**| Create clean looking windows with no border      
-|**Demo_Button_States.py**| One way of implementing disabling of buttons      
-|**Demo_Calendar.py** | Demo of the Calendar Chooser button      
-|**Demo_Canvas.py** | window with a Canvas Element that is updated outside of the window      
-|**Demo_Chat.py** | A chat window with scrollable history      
-|**Demo_Chatterbot.py** | Front-end to Chatterbot Machine Learning project      
-|**Demo_Color.py** | How to interact with color using RGB hex values and named colors      
-|**Demo_Columns.py** | Using the Column Element to create more complex windows      
-|**Demo_Compare_Files.py** | Using a simple GUI front-end to create a compare 2-files utility      
-|**Demo_Cookbook_Browser.py** | Source code browser for all Recipes in Cookbook      
-|**Demo_Dictionary.py** | Specifying and using return values in dictionary format      
-**Demo_DOC_Viewer_PIL.py** | Display a PDF, HTML, ebook file, etc in your window      
-|**Demo_DisplayHash1and256.py** | Using high level API and custom window to implement a simple display hash code utility      
-|**Demo_DuplicateFileFinder.py** | High level API used to get a folder that is used by utility that finds duplicate files. Uses progress meter to show progress. 2 lines of code required to add GUI and meter      
-|**Demo_Fill_Form.py** | How to perform a bulk-fill for a window.  Saving and loading a window from disk      
-|**Demo Font Sizer.py** | Demonstrates Elements updating other Elements      
-|**Demo_Func_Callback_Simulator.py** | For the Raspberry Pi crowd. Event loop that simulates traditional GUI callback functions should you already have an architecture that uses them      
-|**Demo_GoodColors.py** | Using some of the pre-defined PySimpleGUI individual colors      
-|**Demo_HowDoI.py** | This is a utility to be experienced! It will change how you code      
-|**Demo_Img_Viewer.py** | Display jpg, png,tiff, bmp files      
-|**Demo_Keyboard.py** | Using blocking keyboard events      
-|**Demo_Keyboard_Realtime.py** | Using non-blocking / realtime keyboard events      
-|**Demo_Machine_Learning.py** | A sample Machine Learning front end      
-|**Demo_Matplotlib.py** | Integrating with Matplotlib to create a single graph      
-|**Demo_Matplotlib_Animated.py** | Animated Matplotlib line graph      
-|**Demo_Matplotlib_Animated_Scatter.py** | Animated Matplotlib scatter graph      
-|**Demo_Matplotlib_Browser.py** | Browse Matplotlib gallery      
-|**Demo_Media_Player.py** | Non-blocking window with a media player layout.  Demonstrates  button graphics, Update method      
-|**Demo_MIDI_Player.py** | GUI wrapper for Mido MIDI package. Functional MIDI player that controls attached MIDI devices      
-|**Demo_NonBlocking_Form.py** | a basic async window      
-|**Demo_OpenCV.py** | Integrated with OpenCV      
-|**Demo_Password_Login** | Password protection using SHA1      
-|**Demo_PDF_Viewer.py** | Submitted by a user!  Previews PDF documents. Uses keyboard input & mouse scrollwheel to navigate      
-|**Demo_Pi_LEDs.py** | Control GPIO using buttons      
-|**Demo_Pi_Robotics.py** | Simulated robot control using realtime buttons      
-|**Demo_PNG_Vierwer.py** | Uses Image Element to display PNG files      
-| **Demo_Progress_Meters.py** | Demonstrates using 2 progress meters simultaneously      
-|**Demo_Recipes.py** | A collection of various Recipes.  Note these are not the same as the Recipes in the Recipe Cookbook      
-|**Demo_Script_Launcher.py** | Demonstrates one way of adding a front-end onto several command line scripts      
-|**Demo_Script_Parameters.py** | Add a 1-line GUI to the front of your previously command-line only scripts      
-|**Demo_Tabbed_Form.py** | Using the Tab feature      
-|**Demo_Table_Simulation.py** | Use input fields to display and edit tables      
-|**Demo_Timer.py** | Simple non-blocking window      
-      
 ## Packages Used In Demos      
       
       
@@ -4540,7 +4479,7 @@ Listboxes are still without scrollwheels. The mouse can drag to see more items. 
       
 3.0 We've come a long way baby!  Time for a major revision bump.  One reason is that the numbers started to confuse people  the latest release was 2.30, but some people read it as 2.3 and thought it went backwards.  I kinda messed up the 2.x series of numbers, so why not start with a clean slate.  A lot has happened anyway so it's well earned.      
       
-One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn this off for windows with sliders.  This feature is enabled in the Window call.      
+One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn off for windows with sliders.  This feature is enabled in the Window call.      
       
 Related to the Grab Anywhere feature is the no_titlebar option, again found in the call to Window.  Your window will be a spiffy, borderless window.  It's a really interesting effect.  Slight problem is that you do not have an icon on the taskbar with these types of windows, so if you don't supply a button to close the window, there's no way to close it other than task manager.      
       
@@ -4890,7 +4829,7 @@ Emergency patch release... going out same day as previous release
 ## 3.20.0 & 1.20.0 18-Dec-2018
 
 * New Pane Element
-* Graphh.DeleteFigure method
+* Graph.DeleteFigure method
 * disable_minimize - New parameter for Window
 * Fix for 2.7 menus
 * Debug Window no longer re-routes stdout by default
@@ -4954,6 +4893,15 @@ Emergency patch release... going out same day as previous release
 
 * PopupAnimated - A popup call for showing "loading" type of windows
 
+# 3.25 & 1.25 20-Feb-2019
+
+* Comments :-)
+* Convert Text to string right away
+* Caught exceptions when main program shut down with X
+* Caught exceptions in all of the graphics primitives
+* Added parameter exportselection=False to Listbox so can use multiple listboxes
+* OneLineProgressMeter - Can now change the text on every call if desired
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
@@ -4996,11 +4944,31 @@ You can also look up elements using their keys.  This is an excellent way to upd
 This is a language feature that is featured **heavily**  in all of the API calls, both functions and classes.  Elements are configured, in-place, by setting one or more optional parameters.  For example, a Text element's color is chosen by setting the optional `text_color` parameter.    
 
 **tkinter**
-tkinter is the "official" GUI that Python supports.  It runs on Win
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbNjY5NTQ1Njk0LDcyMDgwODczMiwxNjc5OD
-UwOTkyLC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywt
-MjQ4OTc2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0Mj
-MwLDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, and Mac.  It was chosen as the first target GUI framework due to its ***ubiquity***.  Nearly all Python installations, with the exception of Ubuntu Linux, come pre-loaded with tkinter.   It is the "simplest" of the GUI frameworks to get up an running (among Qt, WxPython, Kivy, etc).
 
+From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.
+
+   
+      
+## Author      
+MikeB
+      
+## Demo Code Contributors      
+      
+ [JorjMcKie](https://github.com/JorjMcKie) - PDF and image viewers (plus a number of code suggestions)      
+[Otherion](https://github.com/Otherion) - Table Demos Panda & CSV.  Loads of suggestions to the core APIs      
+      
+## License      
+      
+GNU Lesser General Public License (LGPL 3) +      
+      
+## Acknowledgments      
+
+#### SORRY!! Will add these back.  Lost due to file length limitation
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3OD
+c0NjU4OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTky
+LC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OT
+c2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2
+NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->
