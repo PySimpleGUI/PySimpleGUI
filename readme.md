@@ -2399,7 +2399,7 @@ Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format
 ```          
 Parameter definitions    
             
-    filename - file name if the image is in a file.    
+    filename - file name if the image is in a file    
     data - if image is in RAM (PIL format?)  
     data_base64 - image in base64 format  
     background_color - Color of background    
@@ -2418,7 +2418,7 @@ Like other Elements, the Image Element has an `Update` method.  Call Update if y
     def Update(self, filename=None, data=None, visible=None):    
     
     
-Choose **either** a filename or in-ram data image to use to replace current image. Note you can make an empty image to fill later with Update by doing filename=''.    
+Choose **either** a filename or in-ram data image to use to replace current image. Note you can make an empty image to fill later with Update by doing filename='' in the layout declaration.    
 
 ### `UpdateAnimation` Method  for Animated GIFs
 
