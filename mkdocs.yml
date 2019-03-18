@@ -1,7 +1,4 @@
 mkdocs.yml
 docs/
-    index.md
-    cookbook.md
-    tutorial.md
-    architecture.md
+    index.md 
     
