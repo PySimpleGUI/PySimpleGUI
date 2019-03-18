@@ -1,9 +1,9 @@
+
 version: 2
 
 python:
-   version: 3.6
-   install:
-      - method: pip
-        path: .
-      - method: setuptools
-   system_packages: true
+  version: 3.6
+  install:
+     - method: pip
+       path: .
+       
