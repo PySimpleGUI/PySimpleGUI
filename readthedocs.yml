@@ -3,7 +3,7 @@ version: 2
 python:
    version: 3.6
    install:
-      - requirements: docs/requirements.txt
+      - requirements: 
       - method: pip
         path: .
         extra_requirements: docs
