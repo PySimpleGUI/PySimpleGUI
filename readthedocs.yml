@@ -6,5 +6,4 @@ python:
       - method: pip
         path: .
       - method: setuptools
-        path: another/package
    system_packages: true
