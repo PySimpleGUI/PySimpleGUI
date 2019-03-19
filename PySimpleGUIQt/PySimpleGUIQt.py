@@ -2635,7 +2635,8 @@ class Table(Element):
 
 
     class QTTableWidget(QTableWidget):
-        def __init__(self, window):
+        def __init__(self, enable_key_events, window):
+            self.KeyEventsEnabled = enable_key_events
             self.Window = window
             super().__init__()
 
@@ -5401,7 +5402,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addStretch(1)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
-                element.QT_TableWidget = Table.QTTableWidget(toplevel_win)
+                element.QT_TableWidget = Table.QTTableWidget(toplevel_win.ReturnKeyboardEvents, toplevel_win)
                 if element.NumRows is not None:
                     element.QT_TableWidget.setFixedHeight(element.NumRows*35+25)
                 # element.QT_TableWidget = QTableWidget()
