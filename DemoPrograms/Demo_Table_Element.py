@@ -5,23 +5,28 @@ if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
     import PySimpleGUI27 as sg
-import csv
+import random
+import string
+
+# ------------------ Create a fake table ------------------
+class Fake():
+    @classmethod
+    def word(self):
+        return ''.join(random.choice(string.ascii_lowercase) for i in range(10))
+
+    @classmethod
+    def number(self, max=1000):
+        return random.randint(0,max)
 
 
-filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
-# --- populate table with file contents --- #
-data = []
-if filename is not None:
-    with open(filename, "r") as infile:
-        reader = csv.reader(infile)
-        try:
-            data = list(reader)  # read everything else into a list of rows
-        except:
-            sg.PopupError('Error reading file')
-            sys.exit(69)
-else:
-    sys.exit()
+def make_table(num_rows, num_cols):
+    data = [[j for j in range(num_cols)] for i in range(num_rows)]
+    data[0] = [Fake.word() for _ in range(num_cols)]
+    for i in range(1, num_rows):
+        data[i] = [Fake.word(), *[Fake.number() for i in range(num_cols - 1)]]
+    return data
 
+data = make_table(num_rows=15, num_cols=6)
 # sg.SetOptions(element_padding=(0,0))
 headings = [data[0][x] for x in range(len(data[0]))]
 
@@ -42,5 +47,5 @@ while True:
         window.FindElement('_table_').Update(values = data)
     sg.Popup(event, values)
     # print(event, values)
-
+window.Close()
 sys.exit(69)
