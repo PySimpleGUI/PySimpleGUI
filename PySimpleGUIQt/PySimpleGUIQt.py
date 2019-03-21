@@ -509,7 +509,7 @@ class InputText(Element):
     def __init__(self, default_text='', size=(None,None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False,
-                 do_not_clear=False, key=None, focus=False, pad=None, visible=True, size_px=(None,None)):
+                 do_not_clear=True, key=None, focus=False, pad=None, visible=True, size_px=(None,None)):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -1039,7 +1039,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element, QWidget):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=True,
                  key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
@@ -1128,7 +1128,7 @@ class Multiline(Element, QWidget):
 #                           ScrolledOutput                               #
 # ---------------------------------------------------------------------- #
 class MultilineOutput(Element):
-    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -2662,9 +2662,6 @@ class Table(Element):
                 if self.Window.CurrentlyRunningMainloop:
                     self.Window.QTApplication.exit()
             return QWidget.eventFilter(self, widget, event)
-
-
-
 
 
     def __del__(self):

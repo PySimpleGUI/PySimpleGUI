@@ -534,7 +534,7 @@ class InputText(Element):
     def __init__(self, default_text='', size=(None,None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False,
-                 do_not_clear=False, key=None, focus=False, pad=None, visible=True, size_px=(None,None)):
+                 do_not_clear=True, key=None, focus=False, pad=None, visible=True, size_px=(None,None)):
         '''
         Input a line of text Element
         :param default_text: Default value to display
@@ -1004,7 +1004,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False,
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=True,
                  key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
@@ -1093,7 +1093,7 @@ class Multiline(Element):
 #                           Multiline Output                             #
 # ---------------------------------------------------------------------- #
 class MultilineOutput(Element):
-    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -1557,7 +1557,7 @@ class Button(Element):
             self.ParentForm.MasterFrame.Close()
             if self.ParentForm.NonBlocking:
                 Window.DecrementOpenCount()
-            self.ParentForm._Close()
+            # self.ParentForm._Close()
         elif self.BType == BUTTON_TYPE_READ_FORM:                       # Read Button
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -2695,6 +2695,9 @@ class SystemTray:
         self.DataBase64 = data_base64
         if Window.highest_level_app is None:
             self.App = Window.highest_level_app =  wx.App(False)
+            # This could be a very dangerous thing to add!
+            # It was needed in order for an application to run the Tray in a Thread
+            self.App.SetAssertMode(wx.APP_ASSERT_SUPPRESS)
         else:
             self.App = Window.highest_level_app
         self.Tooltip = tooltip
@@ -2846,9 +2849,12 @@ class SystemTray:
 
         :return:
         '''
-        self.TrayIcon.Hide()
+        self.Hide()
         # Don't close app because windows could be depending on it
         # self.App.quit()
+
+    def DisableAsserts(self):
+        wx.DisableAsserts()
 
 
     def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
@@ -3029,7 +3035,7 @@ class Window:
         self.DisableMinimize = disable_minimize
         self.App = None             # type: wx.App
         self.MasterFrame =  None    # type: wx.Frame
-        self.MasterPanel = None     # type wx.Panel
+        self.MasterPanel = None     # type: wx.Panel
         self.IgnoreClose = False
 
 
@@ -3109,6 +3115,7 @@ class Window:
         # If a button or keyboard event happened but no results have been built, build the results
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
             return BuildResults(self, False, self)
+
         return self.ReturnValues
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
@@ -3164,8 +3171,8 @@ class Window:
         except:
             pass        # if user has already closed the frame will get an error
 
-        if self.CurrentlyRunningMainloop:
-            self.App.ExitMainLoop()
+        # if self.CurrentlyRunningMainloop:
+        #     self.App.ExitMainLoop()
 
     def callback_keyboard_char(self, event:wx.KeyEvent):
         self.LastButtonClicked = None
@@ -3378,7 +3385,7 @@ class Window:
             return None
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
-        self.__del__()
+        # self.__del__()
         return None
 
     def Close(self):
@@ -3453,13 +3460,24 @@ class Window:
         else:
             self.RootNeedsDestroying = True
             self.App.ExitMainLoop()  # kick the users out of the mainloop
+            print('exiting mainloop')
+
         self.MasterFrame.Destroy()
+
+        timer = wx.Timer(self.App)
+        self.App.Bind(wx.EVT_TIMER, self.timer_timeout)
+        timer.Start(milliseconds=100, oneShot=wx.TIMER_ONE_SHOT)
+        # self.CurrentlyRunningMainloop = True
+        # print(f'In main {self.Title}')
+        ################################# CALL GUWxTextCtrlI MAINLOOP ############################
+
+        self.App.MainLoop()
+        # self.CurrentlyRunningMainloop = False
+        timer.Stop()
+        print('after mainloop in close')
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
 
-    # if self.CurrentlyRunningMainloop:
-    #     print("quitting window")
-    #     self.QTApplication.exit()  # kick the users out of the mainloop
 
     @property
     def Size(self):
@@ -6313,7 +6331,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
-        PopupButton = CloseButton
+        PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if custom_text != (None, None):
         if type(custom_text) is not tuple:
@@ -6346,6 +6364,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         return button, window
     else:
         button, values = window.Read()
+        window.Close()
         return button
 
 
@@ -6738,7 +6757,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
-              [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
+              [Button('Ok', size=(60, 20), bind_return_key=True), Button('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
     window = Window(title=_title, icon=icon, auto_size_text=True, button_color=button_color,
@@ -6747,7 +6766,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
                     location=location)
 
     (button, input_values) = window.Layout(layout).Read()
-
+    window.Close()
     if button != 'Ok':
         return None
     else:
@@ -6804,7 +6823,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=(30,1)), browse_button],
-              [CButton('Ok', size=(60, 20), bind_return_key=True), CButton('Cancel', size=(60, 20))]]
+              [Button('Ok', size=(60, 20), bind_return_key=True), Button('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
 
@@ -6813,6 +6832,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
     (button, input_values) = window.Layout(layout).Read()
+    window.Close()
     # window.Close()
     if button != 'Ok':
         return None
@@ -6909,6 +6929,7 @@ def main():
     while True:
         event, values = window.Read()
         print(event, values)
+
         if event in (None, 'Exit'):
             break
     window.Close()
