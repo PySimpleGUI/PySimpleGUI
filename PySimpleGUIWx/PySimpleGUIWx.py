@@ -893,7 +893,7 @@ class Checkbox(Element):
         '''
         self.Text = text
         self.InitialState = default
-        self.WxCheckbox:wx.CheckBox = None
+        self.WxCheckbox = None      # type:wx.CheckBox
         self.Disabled = disabled
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
@@ -967,7 +967,8 @@ class Spin(Element):
         return
 
 
-    def WxSpinCallback(self, event:wx.SpinEvent):
+    def WxSpinCallback(self, event):
+        event = event       # type:wx.SpinEvent
         print(f'spin event {event.GetInt()} {self.WxSpinCtrl.GetValue()}')
         offset = event.GetInt()
         self.WxTextCtrl.SetValue(self.Values[offset])
@@ -1196,7 +1197,7 @@ class Text(Element):
         pixelsize = size
         if size[1] is not None and size[1] < 10:
             pixelsize = size[0]*10, size[1]*20
-        self.WxStaticText:wx.StaticText = None   # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
+        self.WxStaticText = None   # type: wx.StaticText  # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
@@ -3174,7 +3175,8 @@ class Window:
         # if self.CurrentlyRunningMainloop:
         #     self.App.ExitMainLoop()
 
-    def callback_keyboard_char(self, event:wx.KeyEvent):
+    def callback_keyboard_char(self, event):
+        event = event       # type:wx.KeyEvent
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         if event.ClassName == 'wxMouseEvent':
