@@ -533,7 +533,7 @@ class Element():
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, pad=None, right_click_menu=None, visible=True):
+                 change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None, right_click_menu=None, visible=True):
         '''
         InputText
         :param default_text:
@@ -1071,7 +1071,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Multiline
         :param default_text:
