@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.23.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.24.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -649,6 +649,12 @@ Dial - disable
 * Icon ccan be set using SetOptions
 * main for PySimpleGUIQt.py gets a nice test harness that shows lots of Elements
 
+
+## 0.24.0 PySimpleGUIQt
+
+* do_not_clear defaults to TRUE! for Input and MultilineInput/Output
+* Key events for tables (unsure what's actually implemented)
+* Tree icons can now be bytes in addition to filename!  (More Base64 support)
 
 
 

@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.18.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.19.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -268,6 +268,12 @@ New features
   
 * Hotfix for bug that causes Popups / secondary windows to crash
 * Table gets `starting_row_num` parameter
+
+## 0.19.0 23-Mar-2019 PySimpleGUIWeb
+
+* do_not_clear defaults to TRUE! for Input and Multiline Input/output
+* a few type hints
+
 
   
 
