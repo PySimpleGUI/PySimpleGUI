@@ -2622,7 +2622,7 @@ class Window:
     stdout_location = None
     port_number = 6900
     active_windows = [ ]        # type: Window []
-    App = None
+    App = None                  # type: remi.App
 
     def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None),
