@@ -4817,6 +4817,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(containing_frame)
+        # when an expandable element is encountered, expand the frame too
+        expand_frame = False
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
@@ -5316,6 +5318,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.configure(background=element.BackgroundColor)
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                expand_frame = True
                 if element.Visible is False:
                     element.TKText.pack_forget()
                 if element.ChangeSubmits:
@@ -5973,7 +5976,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=False)
+        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], fill='both', expand=expand_frame)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
