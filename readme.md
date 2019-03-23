@@ -37,7 +37,7 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.26.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.23.0-orange.svg?longCache=true&style=for-the-badge)    
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.9.0-orange.svg?longCache=true&style=for-the-badge)
 
@@ -4977,10 +4977,10 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2MTYwNTY3ODYsLTEwNjU5NzgxMjYsNT
-E5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4OCwyNjA1ODQ4
-MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xNDYxNDI4MSwtNj
-A2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2MjksMTMwNzY5MjU5
-LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2NDQxNyw0NDk0Mz
-MyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbODY0OTc4NzY1LC0xMDY1OTc4MTI2LDUxOT
+A1NTk0LDIwNTMxMjUxNDksLTE1Nzg3NDY1ODgsMjYwNTg0ODE0
+LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNj
+M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
+Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
+QzLC0xMTQ4NDkwNjIzXX0=
 -->
