@@ -4903,6 +4903,17 @@ Emergency patch release... going out same day as previous release
 * OneLineProgressMeter - Can now change the text on every call if desired
 
 
+# 3.26.0 PySimpleGUI  23-Mar-2019
+
+* do_not_clear now defaults to TRUE!!!
+  * Input Element
+  * Multiline Element
+* Enable Radio Buttons to be in different containers
+* Ability to modify Autoscroll setting in Multiline.Update call
+* PopupGetFolder, PopupGetFile, PopupGetText - title defaults to message if none provided
+* PopupAnimated - image_source can be a filename or bytes (base64)
+
+
 ### Upcoming      
 Make suggestions people!  Future release features      
       
@@ -4966,9 +4977,10 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3OD
-c0NjU4OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTky
-LC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OT
-c2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2
-NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbLTEwNjU5NzgxMjYsNTE5MDU1OTQsMjA1Mz
+EyNTE0OSwtMTU3ODc0NjU4OCwyNjA1ODQ4MTQsMTEwMjA4ODMz
+MywxNjc5ODUwOTkyLC0xNDYxNDI4MSwtNjA2MzcxMTgsLTUwOT
+M1OTEyMywtMjQ4OTc2MjksMTMwNzY5MjU5LC0yOTY3ODM1NSwt
+Nzc0MDc0MjMwLDI2NjM2NDQxNyw0NDk0MzMyNDMsLTExNDg0OT
+A2MjNdfQ==
 -->
