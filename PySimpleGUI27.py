@@ -546,7 +546,7 @@ class Element(object):
 class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False, enable_events=False, do_not_clear=False, key=None, focus=False, pad=None, right_click_menu=None, visible=True):
+                 change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None, right_click_menu=None, visible=True):
         '''
         InputText
         :param default_text:
@@ -1084,7 +1084,7 @@ class Spin(Element):
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=False, key=None, focus=False, font=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
+                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Multiline
         :param default_text:
@@ -3492,7 +3492,7 @@ class ErrorElement(Element):
 Stretch = ErrorElement
 
 # ------------------------------------------------------------------------- #
-#                       Window CLASS                                      #
+#                       Window CLASS                                        #
 # ------------------------------------------------------------------------- #
 class Window(object):
     NumOpenWindows = 0
@@ -4800,6 +4800,16 @@ else:
 #  "Y888 888  888 888 888  888  "Y888  "Y8888  888
 
 # My crappy tkinter code starts here
+
+"""
+         )
+        (
+          ,
+       ___)\
+      (_____)
+      (_______)
+
+"""
 
 # ========================   TK CODE STARTS HERE ========================================= #
 
@@ -7796,7 +7806,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
               [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
-    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color,
+    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
@@ -7864,7 +7874,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
               [InputText(default_text=default_path, size=size), browse_button],
               [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
 
-    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
@@ -7903,7 +7913,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
               [InputText(default_text=default_text, size=size, password_char=password_char)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
-    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
@@ -7926,7 +7936,10 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         return
 
     if image_source not in Window.animated_popup_dict:
-        layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
+        if type(image_source) is bytes:
+            layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
+        else:
+            layout = [[Image(filename=image_source, background_color=background_color, key='_IMAGE_',)],]
         if message:
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 

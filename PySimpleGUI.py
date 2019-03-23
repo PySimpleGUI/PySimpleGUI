@@ -7478,7 +7478,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
               [InputText(default_text=default_path, size=size), browse_button],
               [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
 
-    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
@@ -7517,7 +7517,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
               [InputText(default_text=default_text, size=size, password_char=password_char)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
-    window = Window(title=title, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
