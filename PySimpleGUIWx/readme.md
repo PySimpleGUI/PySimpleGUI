@@ -7,7 +7,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.8.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.10.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -344,6 +344,21 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * Completed Button.Update method.  Can now change text, color, etc.
 * Added Try around reading multiline input value - not sure why needed
 * OneLineProgressMeter - can update text on every call now
+
+### 0.9.0 06-Mar-2019 PySimpleGUIWx
+
+* Addition of Assert Suppression
+   * This was needed for a  multi-threaded version of PySimpleGUIWx
+   * Complained when exiting a system tray if did not make this change and ran the tray in a thread
+* Tray.Close now correctly Hides the icon
+* SetGlobalIcon functional
+* Can also now set icon using SetOptions call
+
+
+### 0.10.0 23-Mar-2019 PySimpleGUIWx
+
+* `do_not_clear` is now TRUE by default on Input and Multiline elements!!
+
 
 
 
