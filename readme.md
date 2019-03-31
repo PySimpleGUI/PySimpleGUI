@@ -33,9 +33,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.26.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.27.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.26.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.27.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.23.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4903,7 +4903,9 @@ Emergency patch release... going out same day as previous release
 * OneLineProgressMeter - Can now change the text on every call if desired
 
 
-# 3.26.0 PySimpleGUI  23-Mar-2019
+## 3.27.0 PySimpleGUI  31-Mar-2019
+
+Mixup.... 3.26 changes don't appear to have been correctly released so releasing in 3.27 now
 
 * do_not_clear now defaults to TRUE!!!
   * Input Element
@@ -4912,6 +4914,8 @@ Emergency patch release... going out same day as previous release
 * Ability to modify Autoscroll setting in Multiline.Update call
 * PopupGetFolder, PopupGetFile, PopupGetText - title defaults to message if none provided
 * PopupAnimated - image_source can be a filename or bytes (base64)
+* Option Menu can now have values updated
+
 
 
 ### Upcoming      

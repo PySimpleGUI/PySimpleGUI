@@ -731,7 +731,7 @@ class OptionMenu(Element):
         '''
         self.Values = values
         self.DefaultValue = default_value
-        self.TKOptionMenu = None
+        self.TKOptionMenu = None            # type: tk.OptionMenu
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -742,6 +742,13 @@ class OptionMenu(Element):
     def Update(self, value=None, values=None, disabled=None, visible=None):
         if values is not None:
             self.Values = values
+            self.TKOptionMenu['menu'].delete(0, 'end')
+
+            # Insert list of new options (tk._setit hooks them up to var)
+            self.TKStringVar.set(self.Values[0])
+            for new_value in self.Values:
+                self.TKOptionMenu['menu'].add_command(label=new_value, command=tk._setit(self.TKStringVar, new_value))
+
         if self.Values is not None:
             for index, v in enumerate(self.Values):
                 if v == value:

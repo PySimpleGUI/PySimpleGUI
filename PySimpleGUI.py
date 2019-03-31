@@ -40,7 +40,6 @@ g_time_end = 0
 g_time_delta = 0
 
 
-
 def TimerStart():
     global g_time_start
 
