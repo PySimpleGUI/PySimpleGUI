@@ -68,13 +68,12 @@ Some of the more advanced programs operate with the window remaining visible on 
     
 This code will present a window and will print values until the user clicks the exit button or closes window using an X.    
 
-Note the `do_not_clear` parameter that is described in the next design pattern.
       
 ```python    
 import PySimpleGUI as sg      
       
 layout = [[sg.Text('Persistent window')],      
-          [sg.Input(do_not_clear=True)],      
+          [sg.Input()],      
           [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open').Layout(layout)      
@@ -98,7 +97,7 @@ This is a slightly more complex, but maybe more realistic version that reads inp
 
 Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
-A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False, the default setting (you can remove the parameter completely).
+A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  The default is True, which means
 
 ```python
 import sys  
@@ -1551,8 +1550,9 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzNTc5NjUyNTUsLTk0Mjc2ODgzNywtMz
-UwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAy
-ODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OTg5Miw3MTcwNDk2Nj
-AsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
+eyJoaXN0b3J5IjpbMTA4ODMxNDE1NCwtMTM1Nzk2NTI1NSwtOT
+QyNzY4ODM3LC0zNTA3MDY4MTgsLTE5ODMyMDM2MzAsLTEwMDAy
+NzY5NTQsLTE0MDI4NDA5ODYsNjY4Nzg5NzQ5LC0xMTc0Nzk5OD
+kyLDcxNzA0OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEzNTJdfQ==
+
 -->
