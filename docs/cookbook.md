@@ -97,7 +97,7 @@ This is a slightly more complex, but maybe more realistic version that reads inp
 
 Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
-A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  The default is True, which means
+A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  The default is True, which means whatever is input remains visible after buttons are clicked.  If your Window is more of a "form" then you will likely want to set this parameter to False.
 
 ```python
 import sys  
@@ -107,7 +107,7 @@ else:
     import PySimpleGUI27 as sg  
   
 layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
-          [sg.Input(do_not_clear=True, key='_IN_')],  
+          [sg.Input(key='_IN_')],  
           [sg.Button('Show'), sg.Button('Exit')]]  
   
 window = sg.Window('Window Title').Layout(layout)  
@@ -580,7 +580,7 @@ CHROME = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
   
   
 layout = [  [sg.Text('Text area', key='_TEXT_')],  
-            [sg.Input(do_not_clear=True, key='_URL_')],  
+            [sg.Input(key='_URL_')],  
             [sg.Button('Chrome'), sg.Button('Exit')]]  
   
 window = sg.Window('Window Title').Layout(layout)  
@@ -809,7 +809,7 @@ import PySimpleGUI as sg
 # Design pattern 1 - First window does not remain active  
   
 layout = [[ sg.Text('Window 1'),],  
-          [sg.Input(do_not_clear=True)],  
+          [sg.Input(d)],  
           [sg.Text('', key='_OUTPUT_')],  
           [sg.Button('Launch 2')]]  
   
@@ -1550,9 +1550,9 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA4ODMxNDE1NCwtMTM1Nzk2NTI1NSwtOT
-QyNzY4ODM3LC0zNTA3MDY4MTgsLTE5ODMyMDM2MzAsLTEwMDAy
-NzY5NTQsLTE0MDI4NDA5ODYsNjY4Nzg5NzQ5LC0xMTc0Nzk5OD
-kyLDcxNzA0OTY2MCwtNjc5NTQ5Njc1LC0zMzkzNzEzNTJdfQ==
+eyJoaXN0b3J5IjpbLTE4MDM0ODM5MjAsLTEzNTc5NjUyNTUsLT
+k0Mjc2ODgzNywtMzUwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAw
+Mjc2OTU0LC0xNDAyODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OT
+g5Miw3MTcwNDk2NjAsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
 
 -->
