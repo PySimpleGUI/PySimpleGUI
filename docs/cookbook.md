@@ -124,7 +124,7 @@ while True:                 # Event Loop
 window.Close()
 ```
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2B-Persistent-Window-with-Updates?lite=false" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+<iframe height="600px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Design-Pattern-2B-on-tkinter?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 
 # Simple Data Entry - Return Values As List      
@@ -1549,9 +1549,9 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4MDk3MjEyMzEsLTEzNTc5NjUyNTUsLT
-k0Mjc2ODgzNywtMzUwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAw
-Mjc2OTU0LC0xNDAyODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OT
-g5Miw3MTcwNDk2NjAsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
-
+eyJoaXN0b3J5IjpbLTE4MTIwODA1OTksLTE4MDk3MjEyMzEsLT
+EzNTc5NjUyNTUsLTk0Mjc2ODgzNywtMzUwNzA2ODE4LC0xOTgz
+MjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAyODQwOTg2LDY2ODc4OT
+c0OSwtMTE3NDc5OTg5Miw3MTcwNDk2NjAsLTY3OTU0OTY3NSwt
+MzM5MzcxMzUyXX0=
 -->
