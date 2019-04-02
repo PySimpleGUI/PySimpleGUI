@@ -612,7 +612,7 @@ class InputText(Element):
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
 In = InputText
 Input = InputText
-
+I = InputText
 
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
@@ -1396,7 +1396,7 @@ class Button(Element):
         self.FileTypes = file_types
         self.TKButton = None
         self.Target = target
-        self.ButtonText = button_text
+        self.ButtonText = str(button_text)
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.TextColor = self.ButtonColor[0]
         self.BackgroundColor = self.ButtonColor[1]
@@ -1618,6 +1618,12 @@ def convert_tkinter_filetypes_to_wx(filetypes):
         filetype = item[0] + ' (' + item[1] + ')|'+ item[1]
         wx_filetypes += filetype
     return wx_filetypes
+
+
+# -------------------------  Button lazy functions  ------------------------- #
+B = Button
+Btn = Button
+Butt = Button
 
 
 # ---------------------------------------------------------------------- #

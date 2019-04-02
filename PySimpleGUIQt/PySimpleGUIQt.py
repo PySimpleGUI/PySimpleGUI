@@ -603,9 +603,10 @@ class InputText(Element):
         super().__del__()
 
 
-# -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
+# -------------------------  INPUT TEXT lazy functions  ------------------------- #
 In = InputText
 Input = InputText
+I = InputText
 
 
 # ---------------------------------------------------------------------- #
@@ -1334,7 +1335,7 @@ class Button(Element):
         self.FileTypes = file_types
         self.TKButton = None
         self.Target = target
-        self.ButtonText = button_text
+        self.ButtonText = str(button_text)
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.TextColor = self.ButtonColor[0]
         self.BackgroundColor = self.ButtonColor[1]
@@ -1528,6 +1529,13 @@ class Button(Element):
 
     def __del__(self):
         super().__del__()
+
+
+# -------------------------  Button lazy functions  ------------------------- #
+B = Button
+Btn = Button
+Butt = Button
+
 
 
 # ---------------------------------------------------------------------- #

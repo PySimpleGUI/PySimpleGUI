@@ -605,7 +605,7 @@ class InputText(Element):
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
 In = InputText
 Input = InputText
-
+I = InputText
 
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
@@ -1180,6 +1180,7 @@ class Text(Element):
         :param key:
         :param right_click_menu:
         :param tooltip:
+        :param tooltip:
         :param visible:
         '''
         self.DisplayText = str(text)
@@ -1700,6 +1701,10 @@ class Button(Element):
         super().__del__()
 
 
+# -------------------------  Button lazy functions  ------------------------- #
+B = Button
+Btn = Button
+Butt = Button
 
 # ---------------------------------------------------------------------- #
 #                           ButtonMenu Class                             #
@@ -1875,7 +1880,7 @@ class Image(Element):
         self.CurrentFrameNumber = 0
         self.TotalAnimatedFrames = 0
         self.LastFrameTime = 0
-        self.Source = filename or data
+        self.Source = filename if filename is not None else data
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
