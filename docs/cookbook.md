@@ -68,13 +68,12 @@ Some of the more advanced programs operate with the window remaining visible on 
     
 This code will present a window and will print values until the user clicks the exit button or closes window using an X.    
 
-Note the `do_not_clear` parameter that is described in the next design pattern.
       
 ```python    
 import PySimpleGUI as sg      
       
 layout = [[sg.Text('Persistent window')],      
-          [sg.Input(do_not_clear=True)],      
+          [sg.Input()],      
           [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open').Layout(layout)      
@@ -98,7 +97,7 @@ This is a slightly more complex, but maybe more realistic version that reads inp
 
 Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
-A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False, the default setting (you can remove the parameter completely).
+A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  The default is True, which means whatever is input remains visible after buttons are clicked.  If your Window is more of a "form" then you will likely want to set this parameter to False.
 
 ```python
 import sys  
@@ -108,7 +107,7 @@ else:
     import PySimpleGUI27 as sg  
   
 layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
-          [sg.Input(do_not_clear=True, key='_IN_')],  
+          [sg.Input(key='_IN_')],  
           [sg.Button('Show'), sg.Button('Exit')]]  
   
 window = sg.Window('Window Title').Layout(layout)  
@@ -581,7 +580,7 @@ CHROME = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
   
   
 layout = [  [sg.Text('Text area', key='_TEXT_')],  
-            [sg.Input(do_not_clear=True, key='_URL_')],  
+            [sg.Input(key='_URL_')],  
             [sg.Button('Chrome'), sg.Button('Exit')]]  
   
 window = sg.Window('Window Title').Layout(layout)  
@@ -810,7 +809,7 @@ import PySimpleGUI as sg
 # Design pattern 1 - First window does not remain active  
   
 layout = [[ sg.Text('Window 1'),],  
-          [sg.Input(do_not_clear=True)],  
+          [sg.Input()],  
           [sg.Text('', key='_OUTPUT_')],  
           [sg.Button('Launch 2')]]  
   
@@ -941,10 +940,10 @@ There are a number of features used in this Recipe including:
     #   Button      
     #   Dictionary return values      
     #   Update of elements in window (Text, Input)    
-    #   do_not_clear of Input elements      
+  
       
     layout = [[sg.Text('Enter Your Passcode')],      
-              [sg.Input(size=(10, 1), do_not_clear=True, justification='right', key='input')],      
+              [sg.Input(size=(10, 1), justification='right', key='input')],      
               [sg.Button('1'), sg.Button('2'), sg.Button('3')],      
               [sg.Button('4'), sg.Button('5'), sg.Button('6')],      
               [sg.Button('7'), sg.Button('8'), sg.Button('9')],      
@@ -1551,8 +1550,8 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzNTc5NjUyNTUsLTk0Mjc2ODgzNywtMz
-UwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAy
-ODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OTg5Miw3MTcwNDk2Nj
-AsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
+eyJoaXN0b3J5IjpbNDUyMDQ4NzY2LC0xMzU3OTY1MjU1LC05ND
+I3Njg4MzcsLTM1MDcwNjgxOCwtMTk4MzIwMzYzMCwtMTAwMDI3
+Njk1NCwtMTQwMjg0MDk4Niw2Njg3ODk3NDksLTExNzQ3OTk4OT
+IsNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOTM3MTM1Ml19
 -->
