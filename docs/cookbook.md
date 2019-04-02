@@ -925,8 +925,7 @@ There are a number of features used in this Recipe including:
 * Button      
 * Dictionary Return values      
 * Update of Elements in window (Input, Text)    
-* do_not_clear of Input Elements      
-      
+     
       
 ![keypad 2](https://user-images.githubusercontent.com/13696193/44640891-57504d80-a992-11e8-93f4-4e97e586505e.jpg)      
       
@@ -1550,8 +1549,9 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDUyMDQ4NzY2LC0xMzU3OTY1MjU1LC05ND
-I3Njg4MzcsLTM1MDcwNjgxOCwtMTk4MzIwMzYzMCwtMTAwMDI3
-Njk1NCwtMTQwMjg0MDk4Niw2Njg3ODk3NDksLTExNzQ3OTk4OT
-IsNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOTM3MTM1Ml19
+eyJoaXN0b3J5IjpbLTE4MDk3MjEyMzEsLTEzNTc5NjUyNTUsLT
+k0Mjc2ODgzNywtMzUwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAw
+Mjc2OTU0LC0xNDAyODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OT
+g5Miw3MTcwNDk2NjAsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
+
 -->
