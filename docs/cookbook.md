@@ -124,7 +124,7 @@ while True:                 # Event Loop
 window.Close()
 ```
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2B-Persistent-Window-with-Updates?lite=false" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Design-Pattern-2B-on-tkinter?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 
 # Simple Data Entry - Return Values As List      
@@ -925,8 +925,7 @@ There are a number of features used in this Recipe including:
 * Button      
 * Dictionary Return values      
 * Update of Elements in window (Input, Text)    
-* do_not_clear of Input Elements      
-      
+     
       
 ![keypad 2](https://user-images.githubusercontent.com/13696193/44640891-57504d80-a992-11e8-93f4-4e97e586505e.jpg)      
       
@@ -1550,8 +1549,9 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDUyMDQ4NzY2LC0xMzU3OTY1MjU1LC05ND
-I3Njg4MzcsLTM1MDcwNjgxOCwtMTk4MzIwMzYzMCwtMTAwMDI3
-Njk1NCwtMTQwMjg0MDk4Niw2Njg3ODk3NDksLTExNzQ3OTk4OT
-IsNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMzOTM3MTM1Ml19
+eyJoaXN0b3J5IjpbNjIxOTUxNDYzLC0xODA5NzIxMjMxLC0xMz
+U3OTY1MjU1LC05NDI3Njg4MzcsLTM1MDcwNjgxOCwtMTk4MzIw
+MzYzMCwtMTAwMDI3Njk1NCwtMTQwMjg0MDk4Niw2Njg3ODk3ND
+ksLTExNzQ3OTk4OTIsNzE3MDQ5NjYwLC02Nzk1NDk2NzUsLTMz
+OTM3MTM1Ml19
 -->
