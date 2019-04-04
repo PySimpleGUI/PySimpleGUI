@@ -9,7 +9,6 @@ import calendar
 from random import randint
 
 
-
 ######           #####                                       #####   #     #  ###   #####
 #     #  #   #  #     #  #  #    #  #####   #       ######  #     #  #     #   #   #     #  #####
 #     #   # #   #        #  ##  ##  #    #  #       #       #        #     #   #   #     #    #
@@ -66,7 +65,8 @@ else:
     So far can interact with the basic Widgets and get button clicks back.  Can't yet read which button caused the event.
 """
 
-LOGO_BASE64 = b'R0lGODlhIQAgAPcAAAAAADBpmDBqmTFqmjJrmzJsnDNtnTRrmTZtmzZumzRtnTdunDRunTRunjVvnzdwnzhwnjlxnzVwoDZxoTdyojhzozl0ozh0pDp1pjp2pjp2pzx0oj12pD52pTt3qD54pjt4qDx4qDx5qTx5qj16qj57qz57rD58rT98rkB4pkJ7q0J9rEB9rkF+rkB+r0d9qkZ/rEl7o0h8p0x9pk5/p0l+qUB+sEyBrE2Crk2Er0KAsUKAskSCtEeEtUWEtkaGuEiHuEiHukiIu0qKu0mJvEmKvEqLvk2Nv1GErVGFr1SFrVGHslaHsFCItFSIs1COvlaPvFiJsVyRuWCNsWSPsWeQs2SQtGaRtW+Wt2qVuGmZv3GYuHSdv3ievXyfvV2XxGWZwmScx2mfyXafwHikyP9gWP5pYJmdt6GbrqakuamgsayovYClw4Ory4SszI+vyoSv0JGvx5SzzJi0y5m2zp++16C6z6a/05/A2qHC3aXB2K3I3brP4MKxvsLU48LV5c3a5QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAhACAAAAj/AP8JHEiwoMGDCA1uoYIFYZmHZhIe9HIggEUBdgo+3FhGIsEqAiyKXDBnIEeOHgHFEMkyQII4/07KTEijpU01MWWiNDhDgM+fNhHg1Llz4BQCBAYoXar0p4ABaHISJXjnQYMIBbJq1YoUKYQ+UnUOVLJBoBUGaCMoMMB2a4EuYWcKlCBnoAMHMv5lacC3bwMGV+LK5cBEIJ0JKQTWkMC4MeM3gk8KZGPhRpTKApFQoDChs2cOAoluHDjmwoUX//wkMX2hgmvXHUKL7kiQSw6BOFjrvvBBtuiETjQI15ABg/EQvqce5JMjhHPnIEB4UJFcLsIlJEiM2L5dBIzq1gv+p2liwkSJ8+hXgN85mqAUFPBPyJffYj1KyQL12HDB3wWL/yxoEdl9+P1Thw4I6mDDggu2MSBt7eUkUB07VGihhW48GJZJtO3RAw8ggmghGQ/+NhAYPqToQ4g8QFGicgMBoeKMPqTxYoEE/aDjjjuecWOEBMExhBBBFFnkD0Cs8WNCeBRBhBBQRvmEfUAi9IURRWRZxJQciuWRQHmEccQRYhgU3pdofhkQADs='
+DEFAULT_BASE64_ICON = b'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'
+
 
 g_time_start = 0
 g_time_end = 0
@@ -107,7 +107,7 @@ def TimerStop():
 """
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
-DEFAULT_WINDOW_ICON = 'default_icon.ico'
+DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
 DEFAULT_ELEMENT_SIZE = (250, 22)  # In PIXELS
 DEFAULT_BUTTON_ELEMENT_SIZE = (80, 25 )  # In PIXELS
 DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
@@ -1316,7 +1316,7 @@ class Button(Element):
         :param file_types:
         :param initial_folder:
         :param disabled:
-        :param image_filename:
+        :param image_filename:f
         :param image_size:
         :param image_subsample:
         :param border_width:
@@ -5641,7 +5641,14 @@ def StartupTK(window):
     if window.AlphaChannel:
         window.QT_QMainWindow.setWindowOpacity(window.AlphaChannel)
     if window.WindowIcon is not None:
-        window.QT_QMainWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
+        if type(window.WindowIcon) is bytes:
+            ba = QtCore.QByteArray.fromBase64(window.WindowIcon)
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(ba)
+            qicon = QIcon(pixmap)
+            window.QT_QMainWindow.setWindowIcon(qicon)
+        else:
+            window.QT_QMainWindow.setWindowIcon(QtGui.QIcon(window.WindowIcon))
     if window.DisableMinimize:
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMinimizeButtonHint)
         window.QT_QMainWindow.setWindowFlags(window.QT_QMainWindow.windowFlags()&~Qt.WindowMaximizeButtonHint)
