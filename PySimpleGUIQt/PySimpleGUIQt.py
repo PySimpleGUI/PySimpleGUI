@@ -1316,7 +1316,7 @@ class Button(Element):
         :param file_types:
         :param initial_folder:
         :param disabled:
-        :param image_filename:f
+        :param image_filename:
         :param image_size:
         :param image_subsample:
         :param border_width:

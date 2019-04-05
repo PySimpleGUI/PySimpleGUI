@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.2431.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.25.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release     Version 0.231.0
+ ## The Alpha Release     Version 0.25.0
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -657,6 +657,16 @@ Dial - disable
 * Tree icons can now be bytes in addition to filename!  (More Base64 support)
 
 
+## 0.25.0 PySimpleGUIQt 5-Apr-2019
+
+* Uses built-in Default Base64 Logo! (no more .ico file needed)
+* New shortcuts for Elements
+	* I = InputText
+	* B = Butt = Btn = Button
+* Convert user supplied button text to string just in case not a string
+* Parameter `icon` in `Window` call can be Base64 byte string in addition to filename
+
+
 
 # Design        
  ## Author 
@@ -668,6 +678,3 @@ Dial - disable
  GNU Lesser General Public License (LGPL 3) +        
         
 # Acknowledgments
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbNjM0OTMzNDAzXX0=
--->
