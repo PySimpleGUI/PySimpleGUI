@@ -1481,7 +1481,7 @@ class Button(Element):
         self.FileTypes = file_types
         self.TKButton = None
         self.Target = target
-        self.ButtonText = button_text
+        self.ButtonText = str(button_text)
         if sys.platform == 'darwin' and button_color is not None:
             print('Button *** WARNING - Button colors are not supported on the Mac ***')
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
@@ -4690,6 +4690,10 @@ def _FindElementWithFocusInSubForm(form):
                 if element.TKText is not None:
                     if element.TKText is element.TKText.focus_get():
                         return element
+            if element.Type == ELEM_TYPE_BUTTON:
+                if element.TKButton is not None:
+                    if element.TKButton is element.TKButton.focus_get():
+                        return element
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
@@ -5992,6 +5996,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
 def ConvertFlexToTK(MyFlexForm):
+    MyFlexForm      # type: Window
     master = MyFlexForm.TKroot
     master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
