@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.1.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.20.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -86,6 +86,7 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Image Element
 * Multiline Input Element
 * Multiline Output Element
+* Output Element (redirect STDOUT)
 * Table Element (yes, tables! even if limited)
 * Window background color
 * Element padding
@@ -274,6 +275,17 @@ New features
 * do_not_clear defaults to TRUE! for Input and Multiline Input/output
 * a few type hints
 
+## 0.20.0 07-Apr-2019 PySimpleGUIWeb
+
+* Output Element WORKS!!  Can re-route stdout to window
+* Added Idle function to Remi MyApp for stdout re-route (thanks Davide!!)
+* New Shortcuts:
+	* I = InputText
+	* B = Btn = Butt = Button
+* Removed temp size in Multiline setup
+* Button - convert button text passed in into a string
+* Added support for base64 Images in Image.Update but it's not working! Don't use!
+* Changed web_update_interval=.0000001 from 0 (YIKES I HOPE SOMETHING DIDN'T BREAK!)
 
   
 
@@ -287,7 +299,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTg1Njg4MzQ3MiwtMTE2NjcxOTkxNyw0Nz
-U4NjU2NzYsLTEwNTcxMDM2NDMsMTIxMzM1MjYzNiwtMTE2MDY4
-NDMzOV19
+eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
+U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
 -->

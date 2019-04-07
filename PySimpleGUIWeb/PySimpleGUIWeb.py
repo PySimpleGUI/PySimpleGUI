@@ -12,6 +12,11 @@ import remi
 import logging
 import traceback
 import os
+import base64
+try:
+    from io import StringIO
+except:
+    from cStringIO import StringIO
 
 g_time_start = 0
 g_time_end = 0
@@ -79,6 +84,7 @@ DEFAULT_TEXT_JUSTIFICATION = 'left'
 DEFAULT_BORDER_WIDTH = 1
 DEFAULT_AUTOCLOSE_TIME = 3  # time in seconds to show an autoclose form
 DEFAULT_DEBUG_WINDOW_SIZE = (80, 20)
+DEFAULT_OUTPUT_ELEMENT_SIZE = (40, 10)
 DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
@@ -977,12 +983,11 @@ class Multiline(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
-        tsize = size                # convert tkinter size to pixels
         if size[0] is not None and size[0] < 100:
-            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+            size = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
         self.Widget = None      # type: remi.gui.TextInput
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
@@ -1265,7 +1270,7 @@ class TKOutput():
 # ---------------------------------------------------------------------- #
 class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None):
+                 key=None, visible=True, size_px=(None,None), disabled=False):
         '''
         Output Element
         :param size:
@@ -1276,33 +1281,34 @@ class Output(Element):
         :param tooltip:
         :param key:
         '''
-        self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
-
-        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
+        self.Disabled = disabled
+        self.Widget = None      # type: remi.gui.TextInput
+        if size_px == (None, None) and size == (None, None):
+            size = DEFAULT_OUTPUT_ELEMENT_SIZE
+        if size[0] is not None and size[0] < 100:
+            size = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+        super().__init__(ELEM_TYPE_OUTPUT, size=size, size_px=size_px, visible=visible, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key)
 
-    @property
-    def TKOut(self):
-        if self._TKOut is None:
-            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
-        return self._TKOut
 
-    def Update(self, value=None):
-        if value is not None:
-            # try:
-            self._TKOut.output.delete('1.0', tk.END)
-            self._TKOut.output.insert(tk.END, value)
-            # except:
-            #     pass
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+            if value is not None and not append:
+                self.Widget.set_value(str(value))
+            elif value is not None and append:
+                self.CurrentValue = self.CurrentValue + '\n' + str(value)
+                self.Widget.set_value(self.CurrentValue)
+            # do autoscroll
+            app = self.ParentForm.App
+            if hasattr(app, "websockets"):
+                app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
+                    self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+
+            super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
 
     def __del__(self):
-        try:
-            self._TKOut.__del__()
-        except:
-            pass
         super().__del__()
 
 
@@ -1638,6 +1644,11 @@ class Image(Element):
         return
 
     def Update(self, filename=None, data=None, size=(None,None), visible=None):
+        if data is not None:
+            decoded = base64.b64decode(data)
+            with open(r'.\decoded.out', 'wb') as f:
+                f.write(decoded)
+            filename = r'.\decoded.out'
         if filename is not None:
             self.Widget.set_image(filename=filename)
         if size != (None, None):
@@ -2629,6 +2640,7 @@ class Window:
     active_popups = {}
     highest_level_app = None
     stdout_is_rerouted = False
+    stdout_string_io = None
     stdout_location = None
     port_number = 6900
     active_windows = [ ]        # type: Window []
@@ -2642,7 +2654,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
                  disable_minimize=False, background_image=None,
-                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=0, web_multiple_instance=False ):
+                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False ):
         '''
 
         :param title:
@@ -2730,6 +2742,7 @@ class Window:
         self.BackgroundImage = background_image
         self.XFound = False
         self.DisableMinimize = disable_minimize
+        self.OutputElementForStdOut = None      # type: Output
         self.Justification = 'left'
         self.IgnoreClose = False
         self.thread_id = None
@@ -3221,8 +3234,14 @@ class Window:
         # s.start()
         Window.port_number += 1
 
-        remi.start(self.MyApp, title=self.Title ,debug=self.web_debug, address=self.web_ip, port=self.web_port, multiple_instance=self.web_multiple_instance,
-                   start_browser=self.web_start_browser, update_interval=self.web_update_interval, userdata=(self,))
+        remi.start(self.MyApp,
+                   title=self.Title,
+                   debug=self.web_debug,
+                   address=self.web_ip,
+                   port=self.web_port,
+                   multiple_instance=self.web_multiple_instance,
+                   start_browser=self.web_start_browser,
+                   update_interval=self.web_update_interval, userdata=(self,))
 
         # remi.start(self.MyApp, title=self.Title ,debug=False,  userdata=(self,), standalone=True)  # standalone=True)
 
@@ -3249,6 +3268,14 @@ class Window:
                 res_path = os.path.dirname(os.path.abspath(__file__))
                 # print('res path', res_path)
                 super(Window.MyApp, self).__init__(*args,  static_file_path={'C':'c:','c':'c:','D':'d:', 'd':'d:', 'E':'e:', 'e':'e:', 'dot':'.', '.':'.'})
+
+        def idle(self):
+            if Window.stdout_is_rerouted:
+                Window.stdout_string_io.seek(0)
+                lines = Window.stdout_string_io.readlines()
+                # lines.reverse()
+                # self.window.OutputElementForStdOut.Widget.set_text("".join(lines))
+                self.window.OutputElementForStdOut.Update("".join(lines))
 
         def main(self, name='world'):
             # margin 0px auto allows to center the app to the screen
@@ -4303,7 +4330,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #     if element.Tooltip is not None:
             #         element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
             #                                         timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  INPUT MULTI LINE element  ------------------------- #
+            # -------------------------  INPUT MULTILINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 element = element  # type: Multiline
                 element.Widget = remi.gui.TextInput(single_line=False, hint=element.DefaultText)
@@ -4333,7 +4360,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKText['state'] = 'disabled'
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  OUTPUT MULTI LINE element  ------------------------- #
+            # -------------------------  OUTPUT MULTILINE element  ------------------------- #
             elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
                 element = element  # type: MultilineOutput
                 element.Widget = remi.gui.TextInput(single_line=False)
@@ -4459,6 +4486,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                                     timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
+                element  # type: Output
+                element.Widget = remi.gui.TextInput(single_line=False)
+                element.Disabled = False
+                do_font_and_color(element.Widget)
+                tk_row_frame.append(element.Widget)
+                toplevel_form.OutputElementForStdOut = element
+                Window.stdout_is_rerouted = True
+                Window.stdout_string_io = StringIO()
+                sys.stdout = Window.stdout_string_io
                 pass
                 # width, height = element_size
                 # element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
