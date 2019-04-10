@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.20.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.21.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -288,6 +288,9 @@ New features
 * Changed web_update_interval=.0000001 from 0 (YIKES I HOPE SOMETHING DIDN'T BREAK!)
 
   
+## 0.21.0 10-Apr-2019 PySimpleGUIWeb
+
+* If `disable_close` parameter set in Window call, then Remi will not disconnect when browser closed.  Great for reconnecting.
 
 # Design        
 # Author 

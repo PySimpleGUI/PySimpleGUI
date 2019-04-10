@@ -3294,11 +3294,14 @@ class Window:
                 self.master_widget.style['background-image'] = "url('{}')".format('/'+self.window.BackgroundImage)
                 # print(f'background info',self.master_widget.attributes['background-image'] )
 
-            # add the following 3 lines to your app and the on_window_close method to make the console close automatically
-            tag = remi.gui.Tag(_type='script')
-            tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
-            str(id(self)), "on_window_close"))
-            self.master_widget.add_child("onunloadevent", tag)
+            if not self.window.DisableClose:
+                # add the following 3 lines to your app and the on_window_close method to make the console close automatically
+                tag = remi.gui.Tag(_type='script')
+                tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
+                str(id(self)), "on_window_close"))
+                self.master_widget.add_child("onunloadevent", tag)
+
+
             self.window.MessageQueue.put('Layout complete')     # signal the main code that the layout is all done
             self.window.master_widget = self.master_widget
             return self.master_widget          # returning the root widget
