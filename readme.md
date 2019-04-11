@@ -33,15 +33,15 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.27.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.28.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.27.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.28.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.23.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)    
       
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.9.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.18.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -4916,6 +4916,14 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 * PopupAnimated - image_source can be a filename or bytes (base64)
 * Option Menu can now have values updated
 
+## 3.28.0 11-Apr-2019 PySimpleGUI
+
+* NEW Window Parameter - layout - second parameter. Can pass in layout directly now!
+* New shortcuts
+	* I = InputText
+	* B = Btn = Butt = Button
+* Convert button text to string when creating buttons
+* Buttons are returned now as well as input fields when searching for element with focus
 
 
 ### Upcoming      
@@ -4961,18 +4969,14 @@ This is a language feature that is featured **heavily**  in all of the API calls
 **tkinter**
 tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, and Mac.  It was chosen as the first target GUI framework due to its ***ubiquity***.  Nearly all Python installations, with the exception of Ubuntu Linux, come pre-loaded with tkinter.   It is the "simplest" of the GUI frameworks to get up an running (among Qt, WxPython, Kivy, etc).
 
-From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.
+From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
 
    
       
 ## Author      
 MikeB
       
-## Demo Code Contributors      
-      
- [JorjMcKie](https://github.com/JorjMcKie) - PDF and image viewers (plus a number of code suggestions)      
-[Otherion](https://github.com/Otherion) - Table Demos Panda & CSV.  Loads of suggestions to the core APIs      
-      
+
 ## License      
       
 GNU Lesser General Public License (LGPL 3) +      

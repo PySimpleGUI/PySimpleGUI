@@ -53,7 +53,6 @@ g_time_end = 0
 g_time_delta = 0
 
 
-
 def TimerStart():
     global g_time_start
 
@@ -619,7 +618,7 @@ class InputText(Element):
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
 In = InputText
 Input = InputText
-
+I = InputText
 
 # ---------------------------------------------------------------------- #
 #                           Combo                                        #
@@ -1494,7 +1493,7 @@ class Button(Element):
         self.FileTypes = file_types
         self.TKButton = None
         self.Target = target
-        self.ButtonText = button_text
+        self.ButtonText = str(button_text)
         if sys.platform == 'darwin' and button_color is not None:
             print('Button *** WARNING - Button colors are not supported on the Mac ***')
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
@@ -1714,6 +1713,10 @@ class Button(Element):
         super().__del__()
 
 
+# -------------------------  Button lazy functions  ------------------------- #
+B = Button
+Btn = Button
+Butt = Button
 
 # ---------------------------------------------------------------------- #
 #                           ButtonMenu Class                             #
@@ -1889,7 +1892,7 @@ class Image(Element):
         self.CurrentFrameNumber = 0
         self.TotalAnimatedFrames = 0
         self.LastFrameTime = 0
-        self.Source = filename or data
+        self.Source = filename if filename is not None else data
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -3508,7 +3511,7 @@ class Window(object):
     animated_popup_dict = {}
     container_element_counter = 0           # used to get a number of Container Elements (Frame, Column, Tab)
 
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
+    def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
@@ -3600,7 +3603,8 @@ class Window(object):
         self.RightClickMenu = right_click_menu
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window.GetAContainerNumber()
-
+        if layout is not None:
+            self.Layout(layout)
 
     @classmethod
     def GetAContainerNumber(cls):
@@ -4698,6 +4702,10 @@ def _FindElementWithFocusInSubForm(form):
             if element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 if element.TKText is not None:
                     if element.TKText is element.TKText.focus_get():
+                        return element
+            if element.Type == ELEM_TYPE_BUTTON:
+                if element.TKButton is not None:
+                    if element.TKButton is element.TKButton.focus_get():
                         return element
 
 if sys.version_info[0] >= 3:
@@ -6001,6 +6009,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
 def ConvertFlexToTK(MyFlexForm):
+    MyFlexForm      # type: Window
     master = MyFlexForm.TKroot
     master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)

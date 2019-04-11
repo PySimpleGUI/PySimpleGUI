@@ -2646,7 +2646,7 @@ class Window:
     active_windows = [ ]        # type: Window []
     App = None                  # type: remi.App
 
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
+    def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None),
                  element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
@@ -2756,6 +2756,9 @@ class Window:
 
         self.MessageQueue = Queue()
         self.master_widget = None       # type: remi.gui.VBox
+
+        if layout is not None:
+            self.Layout(layout)
 
     @classmethod
     def IncrementOpenCount(self):

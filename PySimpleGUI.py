@@ -1180,7 +1180,6 @@ class Text(Element):
         :param key:
         :param right_click_menu:
         :param tooltip:
-        :param tooltip:
         :param visible:
         '''
         self.DisplayText = str(text)
@@ -3499,7 +3498,7 @@ class Window:
     animated_popup_dict = {}
     container_element_counter = 0           # used to get a number of Container Elements (Frame, Column, Tab)
 
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
+    def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
@@ -3591,7 +3590,8 @@ class Window:
         self.RightClickMenu = right_click_menu
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window.GetAContainerNumber()
-
+        if layout is not None:
+            self.Layout(layout)
 
     @classmethod
     def GetAContainerNumber(cls):
