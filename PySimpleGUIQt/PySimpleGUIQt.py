@@ -3082,7 +3082,7 @@ class Window:
     active_popups = {}
 
 
-    def __init__(self, title, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
+    def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
@@ -3174,7 +3174,8 @@ class Window:
         self.BackgroundImage = background_image
         self.XFound = False
         self.DisableMinimize = disable_minimize
-
+        if layout is not None:
+            self.Layout(layout)
 
     @classmethod
     def IncrementOpenCount(self):
