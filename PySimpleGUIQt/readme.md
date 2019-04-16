@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.25.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.26.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release     Version 0.25.0
+ ## The Alpha Release    
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -665,6 +665,11 @@ Dial - disable
 	* B = Butt = Btn = Button
 * Convert user supplied button text to string just in case not a string
 * Parameter `icon` in `Window` call can be Base64 byte string in addition to filename
+
+  
+## 0.26.0 11-Apr-2019 PySimpleGUIQt
+
+* NEW Window parameter layout so can skip calling Layout
 
 
 
