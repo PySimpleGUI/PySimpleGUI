@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.21.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.22.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -291,6 +291,11 @@ New features
 ## 0.21.0 10-Apr-2019 PySimpleGUIWeb
 
 * If `disable_close` parameter set in Window call, then Remi will not disconnect when browser closed.  Great for reconnecting.
+
+  
+## 0.22.0 11-Apr-2019 PySimpleGUIWeb
+
+* NEW Window parameter layout so can skip calling Layout
 
 # Design        
 # Author 

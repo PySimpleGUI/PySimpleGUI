@@ -7,7 +7,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.10.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.11.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -359,6 +359,10 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 
 * `do_not_clear` is now TRUE by default on Input and Multiline elements!!
 
+  
+## 0.11.0 11-Apr-2019 PySimpleGUIWx
+
+* NEW Window parameter layout so can skip calling Layout
 
 
 
