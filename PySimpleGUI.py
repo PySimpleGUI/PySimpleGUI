@@ -5464,6 +5464,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
                                           background_color=element.BackgroundColor, text_color=text_color, font=font,
                                           pad=elementpad)
+                element._TKOut.output.configure(takefocus=0)            # make it so that Output does not get focus
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Visible is False:
                     element._TKOut.frame.pack_forget()
