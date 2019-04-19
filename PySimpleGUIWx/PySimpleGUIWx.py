@@ -2072,6 +2072,32 @@ VSeperator = VerticalSeparator
 VSep = VerticalSeparator
 
 
+
+# ---------------------------------------------------------------------- #
+#                           Separator                                    #
+# ---------------------------------------------------------------------- #
+class HorizontalSeparator(Element):
+    def __init__(self, pad=None, size=(None, None), size_px=(None,None)):
+        '''
+        VerticalSeperator - A separator that spans only 1 row in a vertical fashion
+        :param pad:
+        '''
+        self.Orientation = 'horizontal'  # for now only vertical works
+        self.Disabled = None
+        self.WxStaticLine = None        # type: wx.StaticLine
+
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, size=size, size_px=size_px)
+
+    def __del__(self):
+        super().__del__()
+
+
+HSeperator = HorizontalSeparator
+HSep = HorizontalSeparator
+
+
+
+
 # ---------------------------------------------------------------------- #
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
@@ -5312,8 +5338,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
-                element       # type: VerticalSeparator
-                element.WxStaticLine = static_line = wx.StaticLine(toplevel_form.MasterPanel, style=wx.LI_VERTICAL)
+                element = element       # type: VerticalSeparator
+                if element.Orientation.lower().startswith('v'):
+                    element.WxStaticLine = static_line = wx.StaticLine(toplevel_form.MasterPanel, style=wx.LI_VERTICAL)
+                else:
+                    print('*** HORIZONTAL LINE ****')
+                    element.WxStaticLine = static_line = wx.StaticLine(toplevel_form.MasterPanel, style=wx.LI_HORIZONTAL)
 
                 do_font_and_color(element.WxStaticLine)
 
