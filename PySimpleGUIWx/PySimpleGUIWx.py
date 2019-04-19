@@ -2054,14 +2054,15 @@ class Frame(Element):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class VerticalSeparator(Element):
-    def __init__(self, pad=None):
+    def __init__(self, size=(None, None), size_px=None, pad=None):
         '''
         VerticalSeperator - A separator that spans only 1 row in a vertical fashion
         :param pad:
         '''
         self.Orientation = 'vertical'  # for now only vertical works
-
-        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
+        self.Disabled = None
+        self.WxStaticLine = None        # type: wx.StaticLine
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, size=size, size_px=size_px)
 
     def __del__(self):
         super().__del__()
@@ -5311,7 +5312,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
-                pass
+                element       # type: VerticalSeparator
+                element.WxStaticLine = static_line = wx.StaticLine(toplevel_form.MasterPanel, style=wx.LI_VERTICAL)
+
+                do_font_and_color(element.WxStaticLine)
+
+                sizer = pad_widget(static_line)
+
+                hsizer.Add(sizer, 0)
         #         separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
         #         separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
         #
