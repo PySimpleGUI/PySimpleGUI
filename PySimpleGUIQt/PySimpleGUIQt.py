@@ -1782,7 +1782,7 @@ class Graph(Element):
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
         self.x  = self.y = 0
-        self.QT_QGraphicsScene = None
+        self.QT_QGraphicsScene = None       # type: QGraphicsScene
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, size_px=size_px)
@@ -1898,11 +1898,11 @@ class Graph(Element):
 
 
     def Erase(self):
-        if self._TKCanvas2 is None:
+        if self.QT_QGraphicsScene is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        self._TKCanvas2.delete('all')
+        self.QT_QGraphicsScene.clear()
 
     def Update(self, background_color, visible=None):
         # TODO
