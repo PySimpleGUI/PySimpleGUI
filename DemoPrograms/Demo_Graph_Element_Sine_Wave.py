@@ -1,40 +1,53 @@
 import sys
 if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
+    import PySimpleGUIWeb as sg
 else:
     import PySimpleGUI27 as sg
 import math
 
-layout = [[sg.T('Example of Using Math with a Graph', justification='center',
-                size=(50,1), relief=sg.RELIEF_SUNKEN)],
-          [sg.Graph(canvas_size=(400, 400),
-                   graph_bottom_left=(-105,-105),
-                   graph_top_right=(105,105),
-                   background_color='white',
-                   key='graph')],]
+SIZE_X = 200
+SIZE_Y = 100
+NUMBER_MARKER_FREQUENCY = 25
 
-window = sg.Window('Graph of Sine Function', grab_anywhere=True).Layout(layout).Finalize()
+def draw_axis():
+    graph.DrawLine((-SIZE_X,0), (SIZE_X, 0))                # axis lines
+    graph.DrawLine((0,-SIZE_Y), (0,SIZE_Y))
 
-graph = window.FindElement('graph')
+    for x in range(-SIZE_X, SIZE_X+1, NUMBER_MARKER_FREQUENCY):
+        graph.DrawLine((x,-3), (x,3))                       # tick marks
+        if x != 0:
+            graph.DrawText( str(x), (x,-10), color='green')      # numeric labels
 
-# Draw axis
-graph.DrawLine((-100,0), (100,0))
-graph.DrawLine((0,-100), (0,100))
+    for y in range(-SIZE_Y, SIZE_Y+1, NUMBER_MARKER_FREQUENCY):
+        graph.DrawLine((-3,y), (3,y))
+        if y != 0:
+            graph.DrawText( str(y), (-10,y), color='blue')
 
-for x in range(-100, 101, 20):
-    graph.DrawLine((x,-3), (x,3))
-    if x != 0:
-        graph.DrawText( x, (x,-10), color='green')
+# Create the graph that will be put into the window
+graph = sg.Graph(canvas_size=(400, 400),
+          graph_bottom_left=(-(SIZE_X+5), -(SIZE_Y+5)),
+          graph_top_right=(SIZE_X+5, SIZE_Y+5),
+          background_color='white',
+          key='graph')
+# Window layout
+layout = [[sg.Text('Example of Using Math with a Graph', justification='center', size=(50,1), relief=sg.RELIEF_SUNKEN)],
+          [graph],
+          [sg.Text('y = sin(x / x2 * x1)', font='COURIER 18')],
+          [sg.Text('x1'),sg.Slider((0,200), orientation='h', enable_events=True,key='_SLIDER_')],
+          [sg.Text('x2'),sg.Slider((1,200), orientation='h', enable_events=True,key='_SLIDER2_')]]
 
-for y in range(-100, 101, 20):
-    graph.DrawLine((-3,y), (3,y))
-    if y != 0:
-        graph.DrawText( y, (-10,y), color='blue')
+window = sg.Window('Graph of Sine Function', grab_anywhere=False).Layout(layout)
 
+while True:
+    event, values = window.Read()
+    if event is None:
+        break
+    graph.Erase()
+    draw_axis()
+    prev_x = prev_y = None
+    for x in range(-SIZE_X,SIZE_X):
+        y = math.sin(x/int(values['_SLIDER2_']))*int(values['_SLIDER_'])
+        if prev_x is not None:
+            graph.DrawLine((prev_x, prev_y), (x,y), color='red')
+        prev_x, prev_y = x, y
 
-# Draw Graph
-for x in range(-100,100):
-    y = math.sin(x/30)*50
-    graph.DrawCircle((x,y), 1, line_color='red', fill_color='red')
-
-event, values = window.Read()
