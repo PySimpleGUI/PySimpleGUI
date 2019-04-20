@@ -13,6 +13,9 @@ import logging
 import traceback
 import os
 import base64
+
+from PySimpleGUI import Radio
+
 try:
     from io import StringIO
 except:
@@ -1134,7 +1137,7 @@ class Text(Element):
         :param visible:
         :param size_px:
         """
-        self.DisplayText = text
+        self.DisplayText = str(text)
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
@@ -1289,8 +1292,7 @@ class Output(Element):
             size = DEFAULT_OUTPUT_ELEMENT_SIZE
         if size[0] is not None and size[0] < 100:
             size = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
-        super().__init__(ELEM_TYPE_OUTPUT, size=size, size_px=size_px, visible=visible, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key)
+        super().__init__(ELEM_TYPE_OUTPUT, size=size, size_px=size_px, visible=visible, background_color=bg, text_color=fg, pad=pad, font=font, tooltip=tooltip, key=key)
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
@@ -1661,44 +1663,11 @@ class Image(Element):
 
 
 # ---------------------------------------------------------------------- #
-#                           Canvas                                       #
-# ---------------------------------------------------------------------- #
-class Canvas(Element):
-    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None):
-        '''
-        Canvas Element
-        :param canvas:
-        :param background_color:
-        :param size:
-        :param pad:
-        :param key:
-        :param tooltip:
-        '''
-        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self._TKCanvas = canvas
-
-        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
-                         tooltip=tooltip)
-        return
-
-    @property
-    def TKCanvas(self):
-        if self._TKCanvas is None:
-            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
-        return self._TKCanvas
-
-    def __del__(self):
-        super().__del__()
-
-
-# ---------------------------------------------------------------------- #
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
-                 change_submits=False, drag_submits=False, key=None,
-                 tooltip=None):
+                 change_submits=False, drag_submits=False, size_px=(None,None), enable_events=False, key=None, visible=True, disabled=False, tooltip=None):
         '''
         Graph Element
         :param canvas_size:
@@ -1714,12 +1683,13 @@ class Graph(Element):
         self.TopRight = graph_top_right
         self._TKCanvas = None
         self._TKCanvas2 = None
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = change_submits or enable_events
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
-        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
-                         tooltip=tooltip)
+        self.Disabled = disabled
+        self.Widget = None                  # Type: remi.gui.Svg
+        super().__init__(ELEM_TYPE_GRAPH, size=canvas_size, size_px=size_px, visible=visible, background_color=background_color, pad=pad,  tooltip=tooltip, key=key)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
@@ -1746,45 +1716,53 @@ class Graph(Element):
             return
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
         converted_point_to = self._convert_xy_to_canvas_xy(point_to[0], point_to[1])
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color)
+        line = remi.gui.SvgLine(converted_point_from[0], converted_point_from[1], converted_point_to[0], converted_point_to[1])
+        line.set_stroke(width, color)
+        self.Widget.append([line,])
 
     def DrawPoint(self, point, size=2, color='black'):
         if point == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_point[0] - size, converted_point[1] - size,
-                                           converted_point[0] + size, converted_point[1] + size, fill=color,
-                                           outline=color)
+        print(f'Draw Point', point, converted_point)
+        rpoint = remi.gui.SvgCircle(converted_point[0], converted_point[1], size)
+        rpoint.set_stroke(size, color)
+        rpoint.set_fill(color)
+        self.Widget.append([rpoint,])
+        return rpoint
+
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         if center_location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_point[0] - radius, converted_point[1] - radius,
-                                           converted_point[0] + radius, converted_point[1] + radius, fill=fill_color,
-                                           outline=line_color)
+        print(f'Draw Circle', center_location, converted_point)
+        rpoint = remi.gui.SvgCircle(converted_point[0], converted_point[1], radius=radius)
+        rpoint.set_fill(fill_color)
+        self.Widget.append([rpoint,])
+        return rpoint
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
-                                           converted_bottom_right[1], fill=fill_color, outline=line_color)
+        return
+
 
     def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -1794,45 +1772,68 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
-                                          converted_bottom_right[1], extent=extent, start=start_angle, style=tkstyle,
-                                          outline=arc_color)
+        return
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
-                                                converted_bottom_right[1], fill=fill_color, outline=line_color)
+
+        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_bottom_right[1], bottom_right[0]-top_left[0], top_left[1]-bottom_right[1])
+        rpoint.set_stroke(color=line_color)
+        rpoint.set_fill(fill_color)
+        self.Widget.append([rpoint,])
+        return rpoint
+
+
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
         if location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
-                                              angle=angle)
-        return text_id
+
+        rpoint = remi.gui.SvgText(converted_point[0], converted_point[1], text)
+        self.Widget.append([rpoint,])
+        return rpoint
+
+
+    def DrawImage(self, image_source=None, location=(None, None), size=(100, 100), color='black', font=None, angle=0):
+        if location == (None, None):
+            return
+        if type(image_source) is bytes:
+            image = base64_to_style_image(image_source)
+        else:
+            image = "url('{}')".format('/'+image_source)
+
+        converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
+        if self.Widget is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
+        rpoint = remi.gui.Svg(size[0], size[1])
+        rpoint.style['background-image'] = image
 
     def Erase(self):
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        self._TKCanvas2.delete('all')
+        self.Widget.empty()
 
     def Update(self, background_color):
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        self._TKCanvas2.configure(background=background_color)
+        if self.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+            self.Widget.style['background-color'] = self.BackgroundColor
 
     def Move(self, x_direction, y_direction):
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
@@ -1842,9 +1843,10 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
+        return  # TODO
 
     def MoveFigure(self, figure, x_direction, y_direction):
+        figure = figure     #type: remi.gui.SvgCircle
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -1852,7 +1854,11 @@ class Graph(Element):
             print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
             print('Call Window.Finalize() prior to all graph operations')
             return None
-        self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
+        figure.empty()
+        cur_x = float(figure.attributes['x'])
+        cur_y = float(figure.attributes['y'])
+        figure.set_position(cur_x - x_direction,cur_y - y_direction)
+        figure.redraw()
 
     @property
     def TKCanvas(self):
@@ -3360,6 +3366,13 @@ def convert_tkinter_size_to_Wx(size):
     return qtsize
 
 
+def base64_to_style_image(base64_image):
+    x ="url('data:image/png;base64,"
+    x += str(base64_image)
+    x += "')"
+    return x
+
+
 def font_parse_string(font):
     """
     Convert from font string/tyuple into a Qt style sheet string
@@ -4562,7 +4575,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
-                pass
+                element = element  # type: Graph
+                element.Widget = remi.gui.Svg(width=element.CanvasSize[0], height=element.CanvasSize[1])
+                do_font_and_color(element.Widget)
+                if element.ChangeSubmits:
+                    element.Widget.onclick.connect(element.ChangedCallback)
+                tk_row_frame.append(element.Widget)
                 # width, height = element_size
                 # if element._TKCanvas is None:
                 #     element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
