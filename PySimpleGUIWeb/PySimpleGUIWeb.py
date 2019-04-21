@@ -13,8 +13,7 @@ import logging
 import traceback
 import os
 import base64
-
-from PySimpleGUI import Radio
+import mimetypes
 
 try:
     from io import StringIO
@@ -1631,7 +1630,7 @@ class Image(Element):
         :param key:
         :param tooltip:
         '''
-        self.Filename = '/'+filename if filename else None # note that Remi expects a / at the front of resource files
+        self.Filename = filename if filename else None # note that Remi expects a / at the front of resource files
         self.Data = data
         self.tktext_label = None
         self.BackgroundColor = background_color
@@ -1660,6 +1659,30 @@ class Image(Element):
 
     def __del__(self):
         super().__del__()
+
+
+class SuperImage(remi.gui.Image):
+    def __init__(self, file_path_name=None, **kwargs):
+        super(SuperImage, self).__init__("/res/logo.png", **kwargs)
+
+        self.imagedata = None
+        self.mimetype = None
+        self.encoding = None
+        self.load(file_path_name)
+
+    def load(self, file_path_name):
+        self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
+        with open(file_path_name, 'rb') as f:
+            self.imagedata = f.read()
+        self.refresh()
+
+    def refresh(self):
+        i = int(time.time() * 1e6)
+        self.attributes['src'] = "/%s/get_image_data?update_index=%d" % (id(self), i)
+
+    def get_image_data(self, update_index):
+        headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
+        return [self.imagedata, headers]
 
 
 # ---------------------------------------------------------------------- #
@@ -1807,18 +1830,20 @@ class Graph(Element):
     def DrawImage(self, image_source=None, location=(None, None), size=(100, 100), color='black', font=None, angle=0):
         if location == (None, None):
             return
-        if type(image_source) is bytes:
-            image = base64_to_style_image(image_source)
-        else:
-            image = "url('{}')".format('/'+image_source)
-
+        # if type(image_source) is bytes:
+        #     image = base64_to_style_image(image_source)
+        # else:
+        # image = "url('{}')".format('/'+image_source)
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
         if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        rpoint = remi.gui.Svg(size[0], size[1])
-        rpoint.style['background-image'] = image
+        image_widget = SuperImage(image_source)
+        image_widget.attributes['x'] = converted_point[0]
+        image_widget.attributes['y'] = converted_point[1]
+        # image_widget.style['background-repeat'] = 'no-repeat'
+        self.Widget.append([image_widget,])
 
     def Erase(self):
         if self.Widget is None:
@@ -4525,7 +4550,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
-                element.Widget = remi.gui.Image(element.Filename)
+                # element.Widget = remi.gui.Image(element.Filename)
+                element.Widget = SuperImage(element.Filename)
                 do_font_and_color(element.Widget)
                 if element.EnableEvents:
                     element.Widget.onclick.connect(element.ChangedCallback)
