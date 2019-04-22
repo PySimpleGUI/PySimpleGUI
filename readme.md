@@ -33,15 +33,15 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.28.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.29.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.28.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.29.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)    
       
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0..0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2218.0-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -3095,6 +3095,7 @@ After you supply those values you can scribble all of over your graph by creatin
 * DrawPoint      
 * DrawRectangle      
 * DrawOval      
+* DrawImage
       
 You can move your figures around on the canvas by supplying the Figure ID the x,y amount to move.      
       
@@ -3130,7 +3131,8 @@ Erase(background_color)
 DeleteFigure(figure_id)
 Update()    
 Move(self, x_direction, y_direction)    
-MoveFigure(self, figure, x_direction, y_direction)    
+MoveFigure(self, figure, x_direction, y_direction)  
+RelocateFigure(self, figure, x, y)  
 TKCanvas    
 ```    
 All of the Drawing methods return a "***figure***" that can be used move and delete the figure    
@@ -3142,10 +3144,12 @@ DrawOval - draws an oval
 DrawArc - draws an arc    
 DrawRectangle - draws a rectangle    
 DrawText - draws text    
+DrawImage - places an image onto the graph
 Erase - erases entire graph    
 Update - changes background color    
 Move - moves everything an x,y direction    
-MoveFigure - moves an individual figure    
+MoveFigure - moves an individual figure by some delta
+RelocateFigure - moves figure to an absolute location    
 DeleteFigure - delete an individual figure
     
       
@@ -4882,7 +4886,7 @@ Emergency patch release... going out same day as previous release
 * Combobox Styling (again)
 
 
-# 3.23.0 PySimpleGUI /  1.23.0 PySimpleGUI27 16-Jan-2019
+# 3.2.0 PySimpleGUI /  1.23.0 PySimpleGUI27 16-Jan-2019
 
 * Animated GIFs!
 * Calendar Chooser stays on top of other windows
@@ -4925,14 +4929,15 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 * Convert button text to string when creating buttons
 * Buttons are returned now as well as input fields when searching for element with focus
 
+## 3.29 22-Apr-2019
+
+* New method for `Graph` - `RelocateFigure`
+* Output Element no longer accepts focus
 
 ### Upcoming      
 Make suggestions people!  Future release features      
-      
-Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  At the moment, Wx and Kivy are being considered for the next GUI framework.  Work has already begun on Wx.  Kivy is likely to be next instead of Wx however.
-      
-      
-      
+         
+         
 ## Code Condition      
       
     Make it run      
@@ -4971,10 +4976,9 @@ tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, 
 
 From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
 
-   
       
 ## Author      
-MikeB
+Mike - who wrote PySimpleGUI is not important. It's the software that's important
       
 
 ## License      
@@ -4985,10 +4989,10 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODY0OTc4NzY1LC0xMDY1OTc4MTI2LDUxOT
-A1NTk0LDIwNTMxMjUxNDksLTE1Nzg3NDY1ODgsMjYwNTg0ODE0
-LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNj
-M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
-Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
-QzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbMTIxNjg5MDM1Niw4NjQ5Nzg3NjUsLTEwNj
+U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
+OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
+YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
+MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
+QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->

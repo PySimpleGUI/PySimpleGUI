@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.22.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.23.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -297,6 +297,26 @@ New features
 
 * NEW Window parameter layout so can skip calling Layout
 
+## 0.23.0 21-Apr-2019 PySimpleGUIWeb
+
+* GRAPH ELEMENT almost done!
+    * DrawLine
+	* DrawRectangle
+	* DrawPoint
+	* DrawCicle
+	* DrawText
+	* Erase
+	* Move
+	* MoveFigure (by a delta amount)
+	* RelocateFigure (draw to a new spot)
+	* Update - for background color change
+	* Enable events works for single clicks (no drags yet)
+* Changed Image element to use SuperImage class
+	* Image element works better?
+	* Base64 not yet working
+	
+  
+
 # Design        
 # Author 
  Mike B.        
@@ -307,6 +327,7 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
-U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
+eyJoaXN0b3J5IjpbNDU1NTc2Mjg4LC0xMTY2NzE5OTE3LDQ3NT
+g2NTY3NiwtMTA1NzEwMzY0MywxMjEzMzUyNjM2LC0xMTYwNjg0
+MzM5XX0=
 -->
