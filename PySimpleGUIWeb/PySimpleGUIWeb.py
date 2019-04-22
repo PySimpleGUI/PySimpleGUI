@@ -6556,7 +6556,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.LayoutAndRead(layout)
+    (button, input_values) = window.Layout(layout).Read()
     window.Close()
     if button != 'Ok':
         return None
