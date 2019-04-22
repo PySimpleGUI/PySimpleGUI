@@ -70,7 +70,7 @@ def TimerStop():
 """
 
 # Because looks matter...
-DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
+DEFAULT_BASE64_ICON = 'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
 
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -1663,17 +1663,21 @@ class Image(Element):
 
 class SuperImage(remi.gui.Image):
     def __init__(self, file_path_name=None, **kwargs):
-        super(SuperImage, self).__init__("/res/logo.png", **kwargs)
+        image = file_path_name
+        super(SuperImage, self).__init__(image, **kwargs)
 
         self.imagedata = None
         self.mimetype = None
         self.encoding = None
-        self.load(file_path_name)
+        self.load(image)
 
     def load(self, file_path_name):
-        self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
-        with open(file_path_name, 'rb') as f:
-            self.imagedata = f.read()
+        if type(file_path_name) is bytes or len(file_path_name) > 200:
+            self.imagedata = base64.b64decode(file_path_name)
+        else:
+            self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
+            with open(file_path_name, 'rb') as f:
+                self.imagedata = f.read()
         self.refresh()
 
     def refresh(self):
@@ -1712,6 +1716,7 @@ class Graph(Element):
         self.MouseButtonDown = False
         self.Disabled = disabled
         self.Widget = None                  # Type: remi.gui.Svg
+        self.SvgGroup = None                # Type: remi.gui.SvgGroup
         super().__init__(ELEM_TYPE_GRAPH, size=canvas_size, size_px=size_px, visible=visible, background_color=background_color, pad=pad,  tooltip=tooltip, key=key)
         return
 
@@ -1745,7 +1750,7 @@ class Graph(Element):
             return None
         line = remi.gui.SvgLine(converted_point_from[0], converted_point_from[1], converted_point_to[0], converted_point_to[1])
         line.set_stroke(width, color)
-        self.Widget.append([line,])
+        self.SvgGroup.append([line,])
 
     def DrawPoint(self, point, size=2, color='black'):
         if point == (None, None):
@@ -1755,11 +1760,10 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        print(f'Draw Point', point, converted_point)
         rpoint = remi.gui.SvgCircle(converted_point[0], converted_point[1], size)
         rpoint.set_stroke(size, color)
         rpoint.set_fill(color)
-        self.Widget.append([rpoint,])
+        self.SvgGroup.append([rpoint,])
         return rpoint
 
 
@@ -1771,11 +1775,11 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        print(f'Draw Circle', center_location, converted_point)
         rpoint = remi.gui.SvgCircle(converted_point[0], converted_point[1], radius=radius)
         rpoint.set_fill(fill_color)
-        self.Widget.append([rpoint,])
+        self.SvgGroup.append([rpoint,])
         return rpoint
+
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -1808,7 +1812,7 @@ class Graph(Element):
         rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_bottom_right[1], bottom_right[0]-top_left[0], top_left[1]-bottom_right[1])
         rpoint.set_stroke(color=line_color)
         rpoint.set_fill(fill_color)
-        self.Widget.append([rpoint,])
+        self.SvgGroup.append([rpoint,])
         return rpoint
 
 
@@ -1823,7 +1827,8 @@ class Graph(Element):
             return None
 
         rpoint = remi.gui.SvgText(converted_point[0], converted_point[1], text)
-        self.Widget.append([rpoint,])
+        self.SvgGroup.append([rpoint,])
+        self.SvgGroup.redraw()
         return rpoint
 
 
@@ -1839,11 +1844,19 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        image_widget = SuperImage(image_source)
-        image_widget.attributes['x'] = converted_point[0]
-        image_widget.attributes['y'] = converted_point[1]
+
+
+        rpoint = remi.gui.SvgImage(image_source, converted_point[0], converted_point[0], size[0], size[1])
+        i = int(time.time() * 1e6)
+        # rpoint.set_image(image_source)
+        self.SvgGroup.append([rpoint,])
+        self.SvgGroup.redraw()
+        # image_widget.attributes['x'] = converted_point[0]
+        # image_widget.attributes['y'] = converted_point[1]
         # image_widget.style['background-repeat'] = 'no-repeat'
-        self.Widget.append([image_widget,])
+        # self.Widget.data = shape
+        # self.Widget.add_child("image", shape)
+        # self.Widget.append([shape,])
 
     def Erase(self):
         if self.Widget is None:
@@ -1851,6 +1864,8 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self.Widget.empty()
+        self.SvgGroup = remi.gui.SvgGroup(0,0)
+        self.Widget.append(self.SvgGroup)
 
     def Update(self, background_color):
         if self.Widget is None:
@@ -1864,11 +1879,26 @@ class Graph(Element):
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
-        if self._TKCanvas2 is None:
+        if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        return  # TODO
+        cur_x = float(self.SvgGroup.attributes['x'])
+        cur_y = float(self.SvgGroup.attributes['y'])
+        self.SvgGroup.set_position(cur_x - x_direction,cur_y - y_direction)
+        self.SvgGroup.redraw()
+
+
+    def Relocate(self, x, y):
+        shift_converted = self._convert_xy_to_canvas_xy(x, y)
+        if self.Widget is None:
+            print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
+            print('Call Window.Finalize() prior to all graph operations')
+            return None
+        # figure.empty()
+        self.SvgGroup.set_position(shift_converted[0], shift_converted[1])
+        self.SvgGroup.redraw()
+
 
     def MoveFigure(self, figure, x_direction, y_direction):
         figure = figure     #type: remi.gui.SvgCircle
@@ -1879,11 +1909,26 @@ class Graph(Element):
             print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
             print('Call Window.Finalize() prior to all graph operations')
             return None
-        figure.empty()
+        # figure.empty()
         cur_x = float(figure.attributes['x'])
         cur_y = float(figure.attributes['y'])
         figure.set_position(cur_x - x_direction,cur_y - y_direction)
         figure.redraw()
+
+    def RelocateFigure(self, figure, x, y):
+        figure = figure     #type: remi.gui.SvgCircle
+        zero_converted = self._convert_xy_to_canvas_xy(0, 0)
+        shift_converted = self._convert_xy_to_canvas_xy(x, y)
+        shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
+        if figure is None:
+            print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
+            print('Call Window.Finalize() prior to all graph operations')
+            return None
+        # figure.empty()
+        figure.set_position(shift_converted[0], shift_converted[1])
+        figure.redraw()
+
+
 
     @property
     def TKCanvas(self):
@@ -3299,7 +3344,7 @@ class Window:
             self.master_widget = None
             self.window.App = self
             if userdata2 is None:
-                res_path = os.path.dirname(os.path.abspath(__file__))
+                # res_path = os.path.dirname(os.path.abspath(__file__))
                 # print('res path', res_path)
                 super(Window.MyApp, self).__init__(*args,  static_file_path={'C':'c:','c':'c:','D':'d:', 'd':'d:', 'E':'e:', 'e':'e:', 'dot':'.', '.':'.'})
 
@@ -3395,6 +3440,7 @@ def base64_to_style_image(base64_image):
     x ="url('data:image/png;base64,"
     x += str(base64_image)
     x += "')"
+    print(x)
     return x
 
 
@@ -4551,7 +4597,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
                 # element.Widget = remi.gui.Image(element.Filename)
-                element.Widget = SuperImage(element.Filename)
+                element.Widget = SuperImage(element.Filename if element.Filename is not None else element.Data)
                 do_font_and_color(element.Widget)
                 if element.EnableEvents:
                     element.Widget.onclick.connect(element.ChangedCallback)
@@ -4603,6 +4649,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element  # type: Graph
                 element.Widget = remi.gui.Svg(width=element.CanvasSize[0], height=element.CanvasSize[1])
+                element.SvgGroup = remi.gui.SvgGroup(0,0)
+                element.Widget.append([element.SvgGroup,])
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
                     element.Widget.onclick.connect(element.ChangedCallback)
@@ -6698,6 +6746,8 @@ def main():
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
+        [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo200.png', enable_events=True)],
+        [Image(data=DEFAULT_BASE64_ICON)],
         [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True, orientation='v')],
         [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
         [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide')]
