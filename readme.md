@@ -33,9 +33,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.2.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.29.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.29.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -3095,6 +3095,7 @@ After you supply those values you can scribble all of over your graph by creatin
 * DrawPoint      
 * DrawRectangle      
 * DrawOval      
+* DrawImage
       
 You can move your figures around on the canvas by supplying the Figure ID the x,y amount to move.      
       
@@ -4932,9 +4933,7 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 
 ### Upcoming      
 Make suggestions people!  Future release features      
-      
-Port to other graphic engines.  Hook up the front-end interface to a backend other than tkinter.  Qt, WxPython, etc.  At the moment, Wx and Kivy are being considered for the next GUI framework.  Work has already begun on Wx.  Kivy is likely to be next instead of Wx however.
-      
+         
       
       
 ## Code Condition      
@@ -4989,7 +4988,7 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzMzc2NzQ4ODMsODY0OTc4NzY1LC0xMD
+eyJoaXN0b3J5IjpbLTE5NjQyNjA2NDAsODY0OTc4NzY1LC0xMD
 Y1OTc4MTI2LDUxOTA1NTk0LDIwNTMxMjUxNDksLTE1Nzg3NDY1
 ODgsMjYwNTg0ODE0LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMT
 Q2MTQyODEsLTYwNjM3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5
