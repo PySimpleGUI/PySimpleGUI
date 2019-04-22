@@ -7,7 +7,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.11.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0..0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -376,5 +376,6 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIxNDIwNTI0ODQsODg2MzA1Mjk2XX0=
+eyJoaXN0b3J5IjpbLTEyMzExNjg0MDAsLTIxNDIwNTI0ODQsOD
+g2MzA1Mjk2XX0=
 -->
