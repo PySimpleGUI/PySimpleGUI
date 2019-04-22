@@ -4937,8 +4937,7 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 ### Upcoming      
 Make suggestions people!  Future release features      
          
-      
-      
+         
 ## Code Condition      
       
     Make it run      
@@ -4977,10 +4976,9 @@ tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, 
 
 From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
 
-   
       
 ## Author      
-MikeB
+Mike - who wrote PySimpleGUI is not important. It's the software that's import
       
 
 ## License      
@@ -4991,7 +4989,7 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTUzODM2MTE2MSw4NjQ5Nzg3NjUsLTEwNj
+eyJoaXN0b3J5IjpbLTM4NzgxODAyMSw4NjQ5Nzg3NjUsLTEwNj
 U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
 OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
 YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
