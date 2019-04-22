@@ -315,6 +315,7 @@ New features
 	* Image element works better?
 	* Base64 not yet working
 	
+  
 
 # Design        
 # Author 
@@ -326,6 +327,7 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
-U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
+eyJoaXN0b3J5IjpbNDU1NTc2Mjg4LC0xMTY2NzE5OTE3LDQ3NT
+g2NTY3NiwtMTA1NzEwMzY0MywxMjEzMzUyNjM2LC0xMTYwNjg0
+MzM5XX0=
 -->
