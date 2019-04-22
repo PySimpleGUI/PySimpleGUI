@@ -3131,7 +3131,8 @@ Erase(background_color)
 DeleteFigure(figure_id)
 Update()    
 Move(self, x_direction, y_direction)    
-MoveFigure(self, figure, x_direction, y_direction)    
+MoveFigure(self, figure, x_direction, y_direction)  
+RelocateFigure(self, figure, x, y)  
 TKCanvas    
 ```    
 All of the Drawing methods return a "***figure***" that can be used move and delete the figure    
@@ -3143,10 +3144,12 @@ DrawOval - draws an oval
 DrawArc - draws an arc    
 DrawRectangle - draws a rectangle    
 DrawText - draws text    
+DrawImage - places an image onto the graph
 Erase - erases entire graph    
 Update - changes background color    
 Move - moves everything an x,y direction    
-MoveFigure - moves an individual figure    
+MoveFigure - moves an individual figure by some delta
+RelocateFigure - moves figure to an absolute location    
 DeleteFigure - delete an individual figure
     
       
@@ -4988,10 +4991,10 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5NjQyNjA2NDAsODY0OTc4NzY1LC0xMD
-Y1OTc4MTI2LDUxOTA1NTk0LDIwNTMxMjUxNDksLTE1Nzg3NDY1
-ODgsMjYwNTg0ODE0LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMT
-Q2MTQyODEsLTYwNjM3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5
-LDEzMDc2OTI1OSwtMjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNj
-Q0MTcsNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbLTUzODM2MTE2MSw4NjQ5Nzg3NjUsLTEwNj
+U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
+OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
+YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
+MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
+QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->
