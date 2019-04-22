@@ -4978,7 +4978,7 @@ From the start of the PSG project, tkinter was not meant to be the only underlyi
 
       
 ## Author      
-Mike - who wrote PySimpleGUI is not important. It's the software that's import
+Mike - who wrote PySimpleGUI is not important. It's the software that's important
       
 
 ## License      
@@ -4989,7 +4989,7 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTM4NzgxODAyMSw4NjQ5Nzg3NjUsLTEwNj
+eyJoaXN0b3J5IjpbMTIxNjg5MDM1Niw4NjQ5Nzg3NjUsLTEwNj
 U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
 OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
 YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
