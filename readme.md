@@ -33,15 +33,15 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.28.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.2.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.28.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)    
       
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0..0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2218.0-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -4882,7 +4882,7 @@ Emergency patch release... going out same day as previous release
 * Combobox Styling (again)
 
 
-# 3.23.0 PySimpleGUI /  1.23.0 PySimpleGUI27 16-Jan-2019
+# 3.2.0 PySimpleGUI /  1.23.0 PySimpleGUI27 16-Jan-2019
 
 * Animated GIFs!
 * Calendar Chooser stays on top of other windows
@@ -4985,10 +4985,10 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODY0OTc4NzY1LC0xMDY1OTc4MTI2LDUxOT
-A1NTk0LDIwNTMxMjUxNDksLTE1Nzg3NDY1ODgsMjYwNTg0ODE0
-LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNj
-M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
-Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
-QzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbMjA1MDUwNjk1MCw4NjQ5Nzg3NjUsLTEwNj
+U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
+OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
+YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
+MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
+QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
 -->
