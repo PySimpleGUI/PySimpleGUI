@@ -33,15 +33,15 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.28.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.2.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.28.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.2.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0..0-orange.svg?longCache=true&style=for-the-badge)    
       
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0..0-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.22.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2218.0-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -4985,10 +4985,10 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODY0OTc4NzY1LC0xMDY1OTc4MTI2LDUxOT
-A1NTk0LDIwNTMxMjUxNDksLTE1Nzg3NDY1ODgsMjYwNTg0ODE0
-LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMTQ2MTQyODEsLTYwNj
-M3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5LDEzMDc2OTI1OSwt
-Mjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNjQ0MTcsNDQ5NDMzMj
-QzLC0xMTQ4NDkwNjIzXX0=
+eyJoaXN0b3J5IjpbODAxMDU0ODkzLDg2NDk3ODc2NSwtMTA2NT
+k3ODEyNiw1MTkwNTU5NCwyMDUzMTI1MTQ5LC0xNTc4NzQ2NTg4
+LDI2MDU4NDgxNCwxMTAyMDg4MzMzLDE2Nzk4NTA5OTIsLTE0Nj
+E0MjgxLC02MDYzNzExOCwtNTA5MzU5MTIzLC0yNDg5NzYyOSwx
+MzA3NjkyNTksLTI5Njc4MzU1LC03NzQwNzQyMzAsMjY2MzY0ND
+E3LDQ0OTQzMzI0MywtMTE0ODQ5MDYyM119
 -->
