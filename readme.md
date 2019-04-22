@@ -4925,6 +4925,10 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 * Convert button text to string when creating buttons
 * Buttons are returned now as well as input fields when searching for element with focus
 
+## 3.29 22-Apr-2019
+
+* New method for `Graph` - `RelocateFigure`
+* Output Element no longer accepts focus
 
 ### Upcoming      
 Make suggestions people!  Future release features      
@@ -4985,10 +4989,10 @@ GNU Lesser General Public License (LGPL 3) +
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA1MDUwNjk1MCw4NjQ5Nzg3NjUsLTEwNj
-U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
-OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
-YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
-MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
-QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbLTEzMzc2NzQ4ODMsODY0OTc4NzY1LC0xMD
+Y1OTc4MTI2LDUxOTA1NTk0LDIwNTMxMjUxNDksLTE1Nzg3NDY1
+ODgsMjYwNTg0ODE0LDExMDIwODgzMzMsMTY3OTg1MDk5MiwtMT
+Q2MTQyODEsLTYwNjM3MTE4LC01MDkzNTkxMjMsLTI0ODk3NjI5
+LDEzMDc2OTI1OSwtMjk2NzgzNTUsLTc3NDA3NDIzMCwyNjYzNj
+Q0MTcsNDQ5NDMzMjQzLC0xMTQ4NDkwNjIzXX0=
 -->
