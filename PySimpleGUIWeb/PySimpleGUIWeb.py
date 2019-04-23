@@ -1777,6 +1777,7 @@ class Graph(Element):
             return None
         rpoint = remi.gui.SvgCircle(converted_point[0], converted_point[1], radius=radius)
         rpoint.set_fill(fill_color)
+        rpoint.set_stroke(color=line_color)
         self.SvgGroup.append([rpoint,])
         return rpoint
 
@@ -1809,7 +1810,7 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
 
-        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_bottom_right[1], bottom_right[0]-top_left[0], top_left[1]-bottom_right[1])
+        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], bottom_right[0]-top_left[0], top_left[1]-bottom_right[1])
         rpoint.set_stroke(color=line_color)
         rpoint.set_fill(fill_color)
         self.SvgGroup.append([rpoint,])
@@ -1828,7 +1829,7 @@ class Graph(Element):
 
         rpoint = remi.gui.SvgText(converted_point[0], converted_point[1], text)
         self.SvgGroup.append([rpoint,])
-        self.SvgGroup.redraw()
+        # self.SvgGroup.redraw()
         return rpoint
 
 
@@ -1845,12 +1846,17 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
 
-
         rpoint = remi.gui.SvgImage(image_source, converted_point[0], converted_point[0], size[0], size[1])
-        i = int(time.time() * 1e6)
+        if type(image_source) is bytes or len(image_source) > 200:
+            rpoint.set_image("data:image/svg+xml;base64,%s"%image_source)
+        else:
+            with open(image_source, 'rb') as f:
+                data = f.read()
+            print(data)
+            rpoint.set_image("data:image/svg+xml;base64,%s"% base64.b64encode(data))
         # rpoint.set_image(image_source)
         self.SvgGroup.append([rpoint,])
-        self.SvgGroup.redraw()
+        # self.SvgGroup.redraw()
         # image_widget.attributes['x'] = converted_point[0]
         # image_widget.attributes['y'] = converted_point[1]
         # image_widget.style['background-repeat'] = 'no-repeat'
@@ -1876,6 +1882,8 @@ class Graph(Element):
             self.Widget.style['background-color'] = self.BackgroundColor
 
     def Move(self, x_direction, y_direction):
+        self.MoveFigure(self.SvgGroup, x_direction,y_direction)
+        return
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -3599,6 +3607,38 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
+
+# -------------------------  Up arrow BUTTON Element lazy function  ------------------------- #
+def Up(button_text='▲', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+# -------------------------  Down arrow BUTTON Element lazy function  ------------------------- #
+def Down(button_text='▼', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+# -------------------------  Left arrow BUTTON Element lazy function  ------------------------- #
+def Left(button_text='◄', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
+# -------------------------  Right arrow BUTTON Element lazy function  ------------------------- #
+def Right(button_text='►', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
