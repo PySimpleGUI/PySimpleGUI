@@ -4247,6 +4247,36 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
+# -------------------------  Up arrow BUTTON Element lazy function  ------------------------- #
+def Up(button_text='▲', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+# -------------------------  Down arrow BUTTON Element lazy function  ------------------------- #
+def Down(button_text='▼', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+# -------------------------  Left arrow BUTTON Element lazy function  ------------------------- #
+def Left(button_text='◄', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
+# -------------------------  Right arrow BUTTON Element lazy function  ------------------------- #
+def Right(button_text='►', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+
+
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
         font=None, bind_return_key=True, focus=False, pad=None, key=None):
