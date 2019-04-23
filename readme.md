@@ -1067,7 +1067,7 @@ The key to custom windows in PySimpleGUI is to view windows as ROWS of GUI  Elem
       
     layout = [[sg.Text('Rename files or folders')],      
               [sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],      
-              [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],      
+              [sg.Text('Source for Files', size=(15, 1)), sg.InputText(), sg.FileBrowse()],      
               [sg.Submit(), sg.Cancel()]]      
       
     window = sg.Window('Rename Files or Folders')      
