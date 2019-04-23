@@ -1491,7 +1491,7 @@ class Button(Element):
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
         self.FileTypes = file_types
-        self.TKButton = None
+        self.TKButton = None                # type: tk.Button
         self.Target = target
         self.ButtonText = str(button_text)
         if sys.platform == 'darwin' and button_color is not None:
@@ -2026,7 +2026,7 @@ class Graph(Element):
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
         self._TKCanvas = None
-        self._TKCanvas2 = None
+        self._TKCanvas2 = None              # Type: tk.Canvas
         self.ChangeSubmits = change_submits or enable_events
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
@@ -2242,6 +2242,19 @@ class Graph(Element):
             print('Call Window.Finalize() prior to all graph operations')
             return None
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
+
+
+    def RelocateFigure(self, figure, x, y):
+        zero_converted = self._convert_xy_to_canvas_xy(0, 0)
+        shift_converted = self._convert_xy_to_canvas_xy(x, y)
+        shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
+        if figure is None:
+            print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
+            print('Call Window.Finalize() prior to all graph operations')
+            return None
+        xy = self._TKCanvas2.coords(figure)
+        self._TKCanvas2.move(figure, shift_converted[0]-xy[0], shift_converted[1]-xy[1])
+
 
     @property
     def TKCanvas(self):
@@ -5007,6 +5020,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
+                element = element      # type: Button
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 element.Location = (row_num, col_num)
@@ -5477,6 +5491,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
                                           background_color=element.BackgroundColor, text_color=text_color, font=font,
                                           pad=elementpad)
+                element._TKOut.output.configure(takefocus=0)            # make it so that Output does not get focus
                 element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 if element.Visible is False:
                     element._TKOut.frame.pack_forget()
