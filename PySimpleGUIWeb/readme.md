@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.23.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.24.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -314,8 +314,23 @@ New features
 * Changed Image element to use SuperImage class
 	* Image element works better?
 	* Base64 not yet working
-	
-  
+
+## 0.23.1 21-Apr-2019
+One-time patch to remove a debug print	
+
+# 0.24.0  PySimpleGUIWeb 23-Apr-2019
+
+* Enabled SuperImage class to accept base64 imagees
+* Now use an SvgGroup to hold all of the drawing items
+* Circle can now set outline color
+* DrawImage still isn't working
+* Move isn't working
+* Added Relocate for group
+* Lazy buttons - Up, Down, Left, Right(()
+	* Creates buttons with arrows on them as text
+* Base64 support for Image Element
+
+
 
 # Design        
 # Author 
@@ -327,7 +342,6 @@ New features
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDU1NTc2Mjg4LC0xMTY2NzE5OTE3LDQ3NT
-g2NTY3NiwtMTA1NzEwMzY0MywxMjEzMzUyNjM2LC0xMTYwNjg0
-MzM5XX0=
+eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
+U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
 -->
