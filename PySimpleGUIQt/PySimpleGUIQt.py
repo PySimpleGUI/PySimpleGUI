@@ -3026,7 +3026,7 @@ class SystemTray:
 
         :return:
         '''
-        self.TrayIcon.Hide()
+        self.Hide()
         # Don't close app because windows could be depending on it
         # self.App.quit()
 
