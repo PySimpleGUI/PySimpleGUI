@@ -1214,6 +1214,9 @@ class Text(Element):
         elif visible is True:
             self.TKText.pack()
 
+    def GetText(self):
+        return self.DisplayText
+
     def __del__(self):
         super().__del__()
 
