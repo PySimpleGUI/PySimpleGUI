@@ -1,10 +1,12 @@
+# import PySimpleGUIWeb as sg
 import PySimpleGUI as sg
 import pymunk
 import random
+import socket
 
 """
     Demo that shows integrating PySimpleGUI with the pymunk library.  This combination
-    of PySimpleGUI and pymynk could be used to build games.
+    of PySimpleGUI and pymunk could be used to build games.
     Note this exact same demo runs with PySimpleGUIWeb by changing the import statement
 """
 
@@ -15,46 +17,60 @@ class Ball():
                                 pymunk.moment_for_circle(mass, 0, r, (0, 0)))  # Create a Body with mass and moment
         self.body.position = x, y
         self.shape = pymunk.Circle(self.body, r, offset=(0, 0))  # Create a box shape and attach to body
-        self.shape.elasticity = 0.95
-        self.shape.friction = 0.9
+        self.shape.elasticity = 0.99999
+        self.shape.friction = 0.8
         self.gui_circle_figure = None
 
+class Playfield():
+    def __init__(self):
+        self.space = pymunk.Space()
+        self.space.gravity = 0, 200
+        self.add_wall(self.space, (0, 400), (600, 400))  # ground
+        self.add_wall(self.space, (0, 0), (0, 600))  # Left side
+        self.add_wall(self.space, (600, 0), (600, 400))  # right side
 
-graph_elem = sg.Graph((400, 400), (0, 400), (400, 0), enable_events=True, key='_GRAPH_', background_color='lightblue')
+    def add_wall(self, space, pt_from, pt_to):
+        body =  pymunk.Body(body_type=pymunk.Body.STATIC)
+        ground_shape = pymunk.Segment(body, pt_from, pt_to, 0.0)
+        ground_shape.friction = 0.8
+        ground_shape.elasticity = .99
+        self.space.add(ground_shape)
 
-layout = [[sg.Text('Ball Test', tooltip='Tips')],
+    def add_balls(self):
+        self.arena_balls = []
+        for i in range(1, 200):
+            x = random.randint(0, 600)
+            y = random.randint(0, 400)
+            r = random.randint(1, 10)
+            ball = Ball(x, y, r)
+            self.arena_balls.append(ball)
+            area.space.add(ball.body, ball.shape)
+            ball.gui_circle_figure = graph_elem.DrawCircle((x, y), r, fill_color='black', line_color='red')
+
+
+# -------------------  Build and show the GUI Window -------------------
+graph_elem = sg.Graph((600, 400), (0, 400), (600, 0), enable_events=True, key='_GRAPH_', background_color='lightblue')
+
+layout = [[sg.Text('Ball Test'), sg.T('My IP {}'.format(socket.gethostbyname(socket.gethostname())))],
           [graph_elem],
-          [sg.Button('Exit')]]
+          [sg.B('Kick'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout, ).Finalize()
 
-space = pymunk.Space()
-space.gravity = 0, 1000
+area = Playfield()
+area.add_balls()
 
-# ground
-ground_body = pymunk.Body(body_type=pymunk.Body.STATIC)
-ground_shape = pymunk.Segment(ground_body, (0, 400), (400, 400), 0.0)
-ground_shape.friction = 0.9
-ground_shape.elasticity = 0.95
-space.add(ground_shape)
-
-arena_balls = []
-for i in range(1, 300):
-    x = random.randint(100, 300)
-    y = random.randint(100, 300)
-    r = random.randint(5, 10)
-    ball = Ball(x, y, r)
-    ball.gui_circle_figure = graph_elem.DrawCircle((x, y), r, fill_color='black', line_color='red')
-    arena_balls.append(ball)
-    space.add(ball.body, ball.shape)
-
+# ------------------- GUI Event Loop -------------------
 while True:  # Event Loop
     event, values = window.Read(timeout=0)
     # print(event, values)
     if event in (None, 'Exit'):
         break
-    space.step(0.01)
-    for ball in arena_balls:
+    area.space.step(0.02)
+
+    for ball in area.arena_balls:
+        if event == 'Kick':
+            ball.body.position = ball.body.position[0], ball.body.position[1]-random.randint(1,200)
         graph_elem.RelocateFigure(ball.gui_circle_figure, ball.body.position[0], ball.body.position[1])
 
 window.Close()
