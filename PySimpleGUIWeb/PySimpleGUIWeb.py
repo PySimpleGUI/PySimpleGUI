@@ -364,6 +364,7 @@ class Element():
     # -------------------------  REMI CHANGED CALLBACK -----------------------
     # called when a widget has changed and the element has events enabled
     def ChangedCallback(self, widget:remi.Widget, *args):
+        print(f'Callback {args}')
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
@@ -1810,8 +1811,8 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
 
-        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], bottom_right[0]-top_left[0], top_left[1]-bottom_right[1])
-        rpoint.set_stroke(color=line_color)
+        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], bottom_right[0]-top_left[0], bottom_right[1]-top_left[1])
+        rpoint.set_stroke(width=1, color=line_color)
         rpoint.set_fill(fill_color)
         self.SvgGroup.append([rpoint,])
         return rpoint
@@ -1846,16 +1847,25 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
 
-        rpoint = remi.gui.SvgImage(image_source, converted_point[0], converted_point[0], size[0], size[1])
+        rpoint = remi.gui.SvgImage('', converted_point[0], converted_point[0], size[0], size[1])
+
         if type(image_source) is bytes or len(image_source) > 200:
-            rpoint.set_image("data:image/svg+xml;base64,%s"%image_source)
+            rpoint.set_image("data:image/svg;base64,%s"%image_source)
+            # img_string = "data:image/svg+xml;base64,%s"%image_source
         else:
+            mimetype, encoding = mimetypes.guess_type(image_source)
             with open(image_source, 'rb') as f:
                 data = f.read()
-            print(data)
-            rpoint.set_image("data:image/svg+xml;base64,%s"% base64.b64encode(data))
-        # rpoint.set_image(image_source)
+                # rpoint.set_image("data:%s;base64,%s" % (mimetype, base64.b64encode(data)))
+            b64 = base64.b64encode(data)
+            b64_str = b64.decode("utf-8")
+            image_string = "data:image/svg;base64,%s"%b64_str
+            rpoint.set_image(image_string)
+            # rpoint.set_image("data:image/svg;base64,%s"% base64.b64encode(data))
+            # rpoint.set_image(image_source)
+            # img_string = "data:image/svg+xml;base64,%s"% base64.b64encode(data)
         self.SvgGroup.append([rpoint,])
+        # rpoint.set_image(image_source)
         # self.SvgGroup.redraw()
         # image_widget.attributes['x'] = converted_point[0]
         # image_widget.attributes['y'] = converted_point[1]
@@ -1891,8 +1901,8 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        cur_x = float(self.SvgGroup.attributes['x'])
-        cur_y = float(self.SvgGroup.attributes['y'])
+        cur_x = float(self.SvgGroup.attributes['cx'])
+        cur_y = float(self.SvgGroup.attributes['cy'])
         self.SvgGroup.set_position(cur_x - x_direction,cur_y - y_direction)
         self.SvgGroup.redraw()
 
@@ -1920,6 +1930,8 @@ class Graph(Element):
         # figure.empty()
         cur_x = float(figure.attributes['x'])
         cur_y = float(figure.attributes['y'])
+        print(f'cur_x cur_y = {cur_x}, {cur_y}')
+
         figure.set_position(cur_x - x_direction,cur_y - y_direction)
         figure.redraw()
 
