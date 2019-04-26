@@ -2741,6 +2741,7 @@ class Window:
     port_number = 6900
     active_windows = [ ]        # type: Window []
     App = None                  # type: remi.App
+    persistent_server = False
 
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None),
@@ -2750,7 +2751,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
                  disable_minimize=False, background_image=None,
-                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False ):
+                 web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False, persistent_server=False ):
         '''
 
         :param title:
@@ -2849,6 +2850,7 @@ class Window:
         self.web_start_browser = web_start_browser
         self.web_update_interval = web_update_interval
         self.web_multiple_instance = web_multiple_instance
+        self.persistent_server = persistent_server
 
         self.MessageQueue = Queue()
         self.master_widget = None       # type: remi.gui.VBox
@@ -3409,11 +3411,15 @@ class Window:
         def on_window_close(self):
             # here you can handle the unload
             print("app closing")
-            self.close()
-            self.server.server_starter_instance._alive = False
-            self.server.server_starter_instance._sserver.shutdown()
-            # self.window.MessageQueue.put(None)
-            print("server stopped")
+            if self.window.persistent_server == True:
+                self.server.server_starter_instance._alive = True
+                print("server running")
+            if self.window.persistent_server == False:
+                self.close()
+                self.server.server_starter_instance._alive = False
+                self.server.server_starter_instance._sserver.shutdown()
+                # self.window.MessageQueue.put(None)
+                print("server stopping")
 
 FlexForm = Window
 
