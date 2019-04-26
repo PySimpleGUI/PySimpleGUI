@@ -3409,11 +3409,15 @@ class Window:
         def on_window_close(self):
             # here you can handle the unload
             print("app closing")
-            self.close()
-            self.server.server_starter_instance._alive = False
-            self.server.server_starter_instance._sserver.shutdown()
-            # self.window.MessageQueue.put(None)
-            print("server stopped")
+            if self.window.persistent_server == True:
+                self.server.server_starter_instance._alive = True
+                print("server running")
+            if self.window.persistent_server == False:
+                self.close()
+                self.server.server_starter_instance._alive = False
+                self.server.server_starter_instance._sserver.shutdown()
+                # self.window.MessageQueue.put(None)
+                print("server stopping")
 
 FlexForm = Window
 
