@@ -364,7 +364,7 @@ class Element():
     # -------------------------  REMI CHANGED CALLBACK -----------------------
     # called when a widget has changed and the element has events enabled
     def ChangedCallback(self, widget:remi.Widget, *args):
-        print(f'Callback {args}')
+        # print(f'Callback {args}')
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
@@ -1834,13 +1834,9 @@ class Graph(Element):
         return rpoint
 
 
-    def DrawImage(self, image_source=None, location=(None, None), size=(100, 100), color='black', font=None, angle=0):
+    def DrawImage(self, image_source=None, location=(None, None), size=(100, 100)):
         if location == (None, None):
             return
-        # if type(image_source) is bytes:
-        #     image = base64_to_style_image(image_source)
-        # else:
-        # image = "url('{}')".format('/'+image_source)
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
         if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1851,28 +1847,15 @@ class Graph(Element):
 
         if type(image_source) is bytes or len(image_source) > 200:
             rpoint.set_image("data:image/svg;base64,%s"%image_source)
-            # img_string = "data:image/svg+xml;base64,%s"%image_source
         else:
             mimetype, encoding = mimetypes.guess_type(image_source)
             with open(image_source, 'rb') as f:
                 data = f.read()
-                # rpoint.set_image("data:%s;base64,%s" % (mimetype, base64.b64encode(data)))
             b64 = base64.b64encode(data)
             b64_str = b64.decode("utf-8")
             image_string = "data:image/svg;base64,%s"%b64_str
             rpoint.set_image(image_string)
-            # rpoint.set_image("data:image/svg;base64,%s"% base64.b64encode(data))
-            # rpoint.set_image(image_source)
-            # img_string = "data:image/svg+xml;base64,%s"% base64.b64encode(data)
         self.SvgGroup.append([rpoint,])
-        # rpoint.set_image(image_source)
-        # self.SvgGroup.redraw()
-        # image_widget.attributes['x'] = converted_point[0]
-        # image_widget.attributes['y'] = converted_point[1]
-        # image_widget.style['background-repeat'] = 'no-repeat'
-        # self.Widget.data = shape
-        # self.Widget.add_child("image", shape)
-        # self.Widget.append([shape,])
 
     def Erase(self):
         if self.Widget is None:
@@ -1892,6 +1875,8 @@ class Graph(Element):
             self.Widget.style['background-color'] = self.BackgroundColor
 
     def Move(self, x_direction, y_direction):
+        # TODO - IT's still not working yet!  I'm trying!!
+
         self.MoveFigure(self.SvgGroup, x_direction,y_direction)
         return
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
@@ -1919,7 +1904,7 @@ class Graph(Element):
 
 
     def MoveFigure(self, figure, x_direction, y_direction):
-        figure = figure     #type: remi.gui.SvgCircle
+        figure = figure     # type: remi.gui.SvgCircle
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -1927,11 +1912,8 @@ class Graph(Element):
             print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
             print('Call Window.Finalize() prior to all graph operations')
             return None
-        # figure.empty()
         cur_x = float(figure.attributes['x'])
         cur_y = float(figure.attributes['y'])
-        print(f'cur_x cur_y = {cur_x}, {cur_y}')
-
         figure.set_position(cur_x - x_direction,cur_y - y_direction)
         figure.redraw()
 
