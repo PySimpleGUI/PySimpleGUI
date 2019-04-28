@@ -55,7 +55,7 @@ def worker_thread(thread_name, run_freq,  gui_queue):
     for i in itertools.count():                             # loop forever, keeping count in i as it loops
         time.sleep(run_freq/1000)                           # sleep for a while
         gui_queue.put('{} - {}'.format(thread_name, i))     # put a message into queue for GUI
-
+        print('..')
 
  ######   ##     ## ####
 ##    ##  ##     ##  ##
@@ -76,12 +76,13 @@ def the_gui(gui_queue):
     """
     layout = [ [sg.Text('Multithreaded Window Example')],
                [sg.Text('', size=(15,1), key='_OUTPUT_')],
+               [sg.Output(size=(40,6))],
                [sg.Button('Exit')],]
 
     window = sg.Window('Multithreaded Window').Layout(layout)
     # --------------------- EVENT LOOP ---------------------
     while True:
-        event, values = window.Read(timeout=100)        # wait for up to 100 ms for a GUI event from user
+        event, values = window.Read(timeout=100)        # wait for up to 100 ms for a GUI event
         if event is None or event == 'Exit':
             break
         #--------------- Loop through all messages coming in from threads ---------------
