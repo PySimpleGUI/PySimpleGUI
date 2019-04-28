@@ -53,7 +53,7 @@ graph_elem = sg.Graph((600, 400), (0, 400), (600, 0), enable_events=True, key='_
 
 layout = [[sg.Text('Ball Test'), sg.T('My IP {}'.format(socket.gethostbyname(socket.gethostname())))],
           [graph_elem],
-          [sg.Up(), sg.Down()],
+          # [sg.Up(), sg.Down()],
           [sg.B('Kick'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout, ).Finalize()
