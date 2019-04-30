@@ -1,6 +1,9 @@
 import sys
 if sys.version_info[0] >= 3:
     import PySimpleGUIWeb as sg
+    # import PySimpleGUIQt as sg
+    # import PySimpleGUI as sg
+
 else:
     import PySimpleGUI27 as sg
 import math
@@ -36,7 +39,7 @@ layout = [[sg.Text('Example of Using Math with a Graph', justification='center',
           [sg.Text('x1'),sg.Slider((0,200), orientation='h', enable_events=True,key='_SLIDER_')],
           [sg.Text('x2'),sg.Slider((1,200), orientation='h', enable_events=True,key='_SLIDER2_')]]
 
-window = sg.Window('Graph of Sine Function', grab_anywhere=False).Layout(layout)
+window = sg.Window('Graph of Sine Function', layout)
 
 while True:
     event, values = window.Read()
