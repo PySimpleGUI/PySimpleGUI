@@ -920,6 +920,10 @@ class Radio(Element):
         elif visible is True:
             self.TKRadio.pack()
 
+    def ResetGroup(self):
+        self.TKIntVar.set(0)
+
+
     def __del__(self):
         try:
             self.TKRadio.__del__()
@@ -2012,8 +2016,8 @@ class Graph(Element):
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
-        self._TKCanvas = None
-        self._TKCanvas2 = None              # Type: tk.Canvas
+        # self._TKCanvas = None               # type: tk.Canvas
+        self._TKCanvas2 = None                  # type: tk.Canvas
         self.ChangeSubmits = change_submits or enable_events
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
@@ -2292,7 +2296,9 @@ class Graph(Element):
             self.ParentForm.TKroot.quit()           # kick out of loop if read was called
 
 
-
+    def SetFocus(self):
+        self._TKCanvas2.focus_set()
+        # self._TKCanvas2.focus_force()
 
     def __del__(self):
         super().__del__()
@@ -5583,23 +5589,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas.bind('<Button-3>', element.RightClickMenuCallback)
                 # -------------------------  Graph element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
+                element = element               # type: Graph
                 width, height = element_size
-                if element._TKCanvas is None:
-                    element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
-                else:
-                    element._TKCanvas.master = tk_row_frame
-                element._TKCanvas2 = tk.Canvas(element._TKCanvas, width=width, height=height, bd=border_depth)
+                # I don't know why TWO canvases were being defined, on inside the other.  Was it so entire canvas can move?
+                # if element._TKCanvas is None:
+                #     element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                # else:
+                #     element._TKCanvas.master = tk_row_frame
+                element._TKCanvas2 = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
                 element._TKCanvas2.pack(side=tk.LEFT)
                 element._TKCanvas2.addtag_all('mytag')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element._TKCanvas2.configure(background=element.BackgroundColor, highlightthickness=0)
-                    element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
-                element._TKCanvas.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                    # element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
+                element._TKCanvas2.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
-                    element._TKCanvas.pack_forget()
+                    # element._TKCanvas.pack_forget()
                     element._TKCanvas2.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
+                    element.TooltipObject = ToolTip(element._TKCanvas2, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 if element.ChangeSubmits:
                     element._TKCanvas2.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
