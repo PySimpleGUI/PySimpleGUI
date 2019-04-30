@@ -603,7 +603,7 @@ class Combo(Element):
         :param auto_size_text: True if should shrink field to fit the default text
         :param background_color: Color for Element. Text or RGB Hex
         '''
-        self.Values = values
+        self.Values = [str(v) for v in values]
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits or enable_events
         # self.InitializeAsDisabled = disabled
@@ -1638,7 +1638,7 @@ class Image(Element):
         self.Disabled = False
         self.EnableEvents = enable_events
         sz = (0,0) if size == (None, None) else size
-        self.Widget = None          #type: remi.gui.Image
+        self.Widget = None          #type: SuperImage
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
@@ -1647,15 +1647,17 @@ class Image(Element):
 
     def Update(self, filename=None, data=None, size=(None,None), visible=None):
         if data is not None:
-            decoded = base64.b64decode(data)
-            with open(r'.\decoded.out', 'wb') as f:
-                f.write(decoded)
-            filename = r'.\decoded.out'
+            self.Widget.load(data)
+            # decoded = base64.b64decode(data)
+            # with open(r'.\decoded.out', 'wb') as f:
+            #     f.write(decoded)
+            # filename = r'.\decoded.out'
         if filename is not None:
-            self.Widget.set_image(filename=filename)
-        if size != (None, None):
-            self.Widget.style['height'] = '{}px'.format(size[1])
-            self.Widget.style['width'] = '{}px'.format(size[0])
+            self.Widget.load(filename)
+            # self.Widget.set_image(filename=filename)
+        # if size != (None, None):
+        #     self.Widget.style['height'] = '{}px'.format(size[1])
+        #     self.Widget.style['width'] = '{}px'.format(size[0])
         super().Update(self.Widget,  visible=visible)
 
     def __del__(self):
@@ -2729,7 +2731,7 @@ class Window:
                  element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
-                 alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
+                 alpha_channel=1, return_keyboard_events=False, return_key_down_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
                  disable_minimize=False, background_image=None,
                  web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False ):
@@ -2799,6 +2801,8 @@ class Window:
         self.UseDictionary = False
         self.UseDefaultFocus = use_default_focus
         self.ReturnKeyboardEvents = return_keyboard_events
+        self.ReturnKeyDownEvents = return_key_down_events
+        self.KeyInfoDict = {}
         self.LastKeyboardEvent = None
         self.TextJustification = text_justification
         self.NoTitleBar = no_titlebar
@@ -2831,7 +2835,6 @@ class Window:
         self.web_start_browser = web_start_browser
         self.web_update_interval = web_update_interval
         self.web_multiple_instance = web_multiple_instance
-
         self.MessageQueue = Queue()
         self.master_widget = None       # type: remi.gui.VBox
 
@@ -3082,6 +3085,17 @@ class Window:
         if self.CurrentlyRunningMainloop:
             self.App.ExitMainLoop()
 
+    def on_key_down(self, emitter, key, keycode, ctrl, shift, alt):
+        self.LastButtonClicked = 'DOWN'+key
+        self.MessageQueue.put(self.LastButtonClicked)
+        self.KeyInfoDict =  { 'key':key, 'keycode':keycode, 'ctrl': ctrl, 'shift':shift, 'alt':alt }
+
+    def on_key_up(self, emitter, key, keycode, ctrl, shift, alt):
+        self.LastButtonClicked = key
+        self.MessageQueue.put(self.LastButtonClicked)
+        self.KeyInfoDict =  { 'key':key, 'keycode':keycode, 'ctrl': ctrl, 'shift':shift, 'alt':alt }
+
+
     def callback_keyboard_char(self, event):
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
@@ -3300,7 +3314,7 @@ class Window:
 
 
     def remi_thread(self):
-        logging.getLogger('remi').setLevel(logging.WARNING)
+        logging.getLogger('remi').setLevel(logging.CRITICAL)
         logging.getLogger('remi').disabled = True
         logging.getLogger('remi.server.ws').disabled = True
         logging.getLogger('remi.server').disabled = True
@@ -3350,6 +3364,9 @@ class Window:
                 # print('res path', res_path)
                 super(Window.MyApp, self).__init__(*args,  static_file_path={'C':'c:','c':'c:','D':'d:', 'd':'d:', 'E':'e:', 'e':'e:', 'dot':'.', '.':'.'})
 
+        def log_message(self, *args, **kwargs):
+            pass
+
         def idle(self):
             if Window.stdout_is_rerouted:
                 Window.stdout_string_io.seek(0)
@@ -3360,29 +3377,29 @@ class Window:
 
         def main(self, name='world'):
             # margin 0px auto allows to center the app to the screen
-            self.master_widget = remi.gui.VBox()
-            self.master_widget.style['justify-content'] = 'flex-start'
-            self.master_widget.style['align-items'] = 'baseline'
-            if self.window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
-                self.master_widget.style['background-color'] = self.window.BackgroundColor
-            try:
-                PackFormIntoFrame(self.window, self.master_widget, self.window)
-            except:
-                print('* ERROR PACKING FORM *')
-                print(traceback.format_exc())
+            # self.master_widget = remi.gui.VBox()
+            # self.master_widget.style['justify-content'] = 'flex-start'
+            # self.master_widget.style['align-items'] = 'baseline'
+            # if self.window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+            #     self.master_widget.style['background-color'] = self.window.BackgroundColor
+            # try:
+            #     PackFormIntoFrame(self.window, self.master_widget, self.window)
+            # except:
+            #     print('* ERROR PACKING FORM *')
+            #     print(traceback.format_exc())
+            #
+            # if self.window.BackgroundImage:
+            #     self.master_widget.style['background-image'] = "url('{}')".format('/'+self.window.BackgroundImage)
+            #     # print(f'background info',self.master_widget.attributes['background-image'] )
+            #
+            # if not self.window.DisableClose:
+            #     # add the following 3 lines to your app and the on_window_close method to make the console close automatically
+            #     tag = remi.gui.Tag(_type='script')
+            #     tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
+            #     str(id(self)), "on_window_close"))
+            #     self.master_widget.add_child("onunloadevent", tag)
 
-            if self.window.BackgroundImage:
-                self.master_widget.style['background-image'] = "url('{}')".format('/'+self.window.BackgroundImage)
-                # print(f'background info',self.master_widget.attributes['background-image'] )
-
-            if not self.window.DisableClose:
-                # add the following 3 lines to your app and the on_window_close method to make the console close automatically
-                tag = remi.gui.Tag(_type='script')
-                tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
-                str(id(self)), "on_window_close"))
-                self.master_widget.add_child("onunloadevent", tag)
-
-
+            self.master_widget = setup_remi_window(self, self.window)
             self.window.MessageQueue.put('Layout complete')     # signal the main code that the layout is all done
             self.window.master_widget = self.master_widget
             return self.master_widget          # returning the root widget
@@ -5142,6 +5159,36 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     return
 
 
+def setup_remi_window(app:Window.MyApp, window:Window):
+    master_widget = remi.gui.VBox()
+    master_widget.style['justify-content'] = 'flex-start'
+    master_widget.style['align-items'] = 'baseline'
+    if window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+        master_widget.style['background-color'] = window.BackgroundColor
+    try:
+        PackFormIntoFrame(window, master_widget, window)
+    except:
+        print('* ERROR PACKING FORM *')
+        print(traceback.format_exc())
+
+    if window.BackgroundImage:
+        master_widget.style['background-image'] = "url('{}')".format('/' + window.BackgroundImage)
+        # print(f'background info',self.master_widget.attributes['background-image'] )
+
+    if not window.DisableClose:
+        # add the following 3 lines to your app and the on_window_close method to make the console close automatically
+        tag = remi.gui.Tag(_type='script')
+        tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
+            str(id(app)), "on_window_close"))
+        master_widget.add_child("onunloadevent", tag)
+
+    if window.ReturnKeyboardEvents:
+        app.page.children['body'].onkeyup.connect(window.on_key_up)
+    if window.ReturnKeyDownEvents:
+        app.page.children['body'].onkeydown.connect(window.on_key_down)
+
+    return master_widget
+
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(window:Window):
     global _my_windows
@@ -5150,19 +5197,7 @@ def StartupTK(window:Window):
 
     # print('Starting TK open Windows = {}'.format(ow))
 
-    # root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-    # root.wm_overrideredirect(True)
-    # if my_flex_form.BackgroundColor is not None and my_flex_form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-    #     root.configure(background=my_flex_form.BackgroundColor)
     _my_windows.Increment()
-
-    # my_flex_form.TKroot = root
-    # Make moveable window
-    # if (my_flex_form.GrabAnywhere is not False and not (
-    #         my_flex_form.NonBlocking and my_flex_form.GrabAnywhere is not True)):
-    #     root.bind("<ButtonPress-1>", my_flex_form.StartMove)
-    #     root.bind("<ButtonRelease-1>", my_flex_form.StopMove)
-    #     root.bind("<B1-Motion>", my_flex_form.OnMotion)
 
     # if not my_flex_form.Resizable:
     #     root.resizable(False, False)
@@ -5176,6 +5211,8 @@ def StartupTK(window:Window):
 
     InitializeResults(window)
 
+    # Does all of the window setup, starting up Remi
+    # if no windows exist, start Remi thread which will call same setup_remi_window call as shown below
     if len(Window.active_windows) == 0:
         window.thread_id = threading.Thread(target=window.remi_thread, daemon=True)
         window.thread_id.daemon = True
@@ -5185,12 +5222,13 @@ def StartupTK(window:Window):
         Window.App = window.App
     else:
         # margin 0px auto allows to center the app to the screen
-        master_widget = remi.gui.VBox()
-        master_widget.style['justify-content'] = 'flex-start'
-        master_widget.style['align-items'] = 'baseline'
-        if window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
-            master_widget.style['background-color'] = window.BackgroundColor
-        PackFormIntoFrame(window, master_widget, window)
+        # master_widget = remi.gui.VBox()
+        # master_widget.style['justify-content'] = 'flex-start'
+        # master_widget.style['align-items'] = 'baseline'
+        # if window.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+        #     master_widget.style['background-color'] = window.BackgroundColor
+        # PackFormIntoFrame(window, master_widget, window)
+        master_widget = setup_remi_window(Window.App, window)
         window.master_widget = master_widget
         Window.active_windows.append(window)
         Window.App.set_root_widget(master_widget)
@@ -6770,6 +6808,7 @@ def main():
     col1 = [[Text('Column 1 line  1', background_color='red')], [Text('Column 1 line 2')]]
 
     layout = [
+        [Image(data=DEFAULT_BASE64_ICON)],
         [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
@@ -6781,15 +6820,12 @@ def main():
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
         # [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo200.png', enable_events=True)],
-        [Image(data=DEFAULT_BASE64_ICON)],
         [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True, orientation='v')],
         [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
-        [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide')]
+        [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide'), B('Popup')]
     ]
 
-    window = Window('PySimpleGUIWeb Window', font='Arial 18',default_element_size=(12,1), auto_size_buttons=False, background_image=''
-                    ).Layout(layout)
-
+    window = Window('PySimpleGUIWeb Test Harness Window', layout, font='Arial 18',default_element_size=(12,1), auto_size_buttons=False)
 
     start_time = datetime.datetime.now()
     while True:
@@ -6807,6 +6843,8 @@ def main():
             window.Element('_MULTIOUT_').Update(str(values), append=True)
         elif event != TIMEOUT_KEY:
             window.Element('_MULTIOUT_').Update('EVENT: ' + str(event), append=True)
+        if event == 'Popup':
+            Popup('This is a popup!')
         if event == 'UnHide':
             print('Unhiding...')
             window.Element('_HIDDEN_').Update(visible=True)
