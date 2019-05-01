@@ -860,8 +860,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
         [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue')]      
         ]      
       
-    window = sg.Window('Canvas test')      
-    window.Layout(layout)      
+    window = sg.Window('Canvas test', layout)      
     window.Finalize()      
       
     canvas = window.FindElement('canvas')      
@@ -891,8 +890,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
                [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue'), sg.Button('Move')]      
                ]      
       
-    window = sg.Window('Graph test')      
-    window.Layout(layout)      
+    window = sg.Window('Graph test', layout)      
     window.Finalize()      
       
     graph = window.FindElement('graph')      
@@ -952,7 +950,7 @@ There are a number of features used in this Recipe including:
               [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],      
               ]      
       
-    window = sg.Window('Keypad', default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False).Layout(layout)      
+    window = sg.Window('Keypad', layout, default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False)
       
     # Loop forever reading the window's values, updating the Input field    
     keys_entered = ''      
@@ -1005,7 +1003,7 @@ layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', 
 # create the window and show it without the plot    
 
 
-window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout)
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout)
 window.Finalize()  # needed to access the canvas element prior to reading the window
 
 canvas_elem = window.FindElement('canvas')
@@ -1069,9 +1067,8 @@ In other GUI frameworks this program would be most likely "event driven" with ca
                sg.Button('Submit', button_color=('white', 'springgreen4'), key='Submit')]      
               ]      
       
-    window = sg.Window("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,      
+    window = sg.Window("Time Tracker", layout, default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,      
                        default_button_element_size=(12,1))      
-    window.Layout(layout)      
     window.Finalize()      
     window.FindElement('Stop').Update(disabled=True)      
     window.FindElement('Reset').Update(disabled=True)      
@@ -1139,8 +1136,8 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
                   [sg.T('SHA Hash'), sg.In('', size=(40,1), key='hash')],      
                   ]      
       
-        window = sg.Window('SHA Generator', auto_size_text=False, default_element_size=(10,1),      
-                           text_justification='r', return_keyboard_events=True, grab_anywhere=False).Layout(layout)      
+        window = sg.Window('SHA Generator', layout, auto_size_text=False, default_element_size=(10,1),      
+                           text_justification='r', return_keyboard_events=True, grab_anywhere=False)  
       
       
         while True:      
@@ -1236,7 +1233,7 @@ You can easily change colors to match your background by changing a couple of pa
                     sg.Button('EXIT', button_color=('white','firebrick3'))],      
                     [sg.T('', text_color='white', size=(50,1), key='output')]]      
       
-        window = sg.Window('Floating Toolbar', no_titlebar=True, keep_on_top=True).Layout(layout)      
+        window = sg.Window('Floating Toolbar', layout, no_titlebar=True, keep_on_top=True)
       
         # ---===--- Loop taking in user input (events) --- #      
         while True:      
@@ -1320,7 +1317,7 @@ layout = [[sg.Text('')],
           sg.Button('Reset', button_color=('white', '#007339'), key='Reset'),
           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
-window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
+window = sg.Window('Running Timer', layout, no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
 
 # ----------------  main loop  ----------------
 current_time = 0
@@ -1382,8 +1379,8 @@ layout = [[sg.Text('')],
           [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0)),
            sg.Spin([x + 1 for x in range(10)], 1, key='spin')]]
 
-window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True,
-                   grab_anywhere=True).Layout(layout)
+window = sg.Window('Running Timer', layout, no_titlebar=True, auto_size_buttons=False, keep_on_top=True,
+                   grab_anywhere=True)
 
 # ----------------  main loop  ----------------
 while (True):
@@ -1437,8 +1434,8 @@ If you double click the dashed line at the top of the list of choices, that menu
         [sg.Output(size=(60, 20))]      
              ]      
       
-    window = sg.Window("Windows-like program", default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,      
-                       default_button_element_size=(12, 1)).Layout(layout)      
+    window = sg.Window("Windows-like program", layout, default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,      
+                       default_button_element_size=(12, 1))      
       
     # ------ Loop & Process button menu choices ------ #      
     while True:      
@@ -1470,7 +1467,7 @@ import PySimpleGUI as sg
     
 layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]    
     
-window = sg.Window('Graph of Sine Function', grab_anywhere=True).Layout(layout).Finalize()    
+window = sg.Window('Graph of Sine Function', layout, grab_anywhere=True).Finalize()    
 graph = window.FindElement('graph')    
     
 # Draw axis    
@@ -1517,7 +1514,7 @@ tab2_layout = [[sg.T('This is inside tab 2')],
 layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, tooltip='tip'), sg.Tab('Tab 2', tab2_layout)]], tooltip='TIP2')],    
           [sg.Button('Read')]]    
     
-window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout)    
+window = sg.Window('My window with tabs', layout, default_element_size=(12,1))    
     
 while True:    
     event, values = window.Read()    
