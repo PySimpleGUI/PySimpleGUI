@@ -50,7 +50,7 @@ layout = [[sg.Text('My one-shot window.')],
                  [sg.InputText()],      
                  [sg.Submit(), sg.Cancel()]]      
       
-window = sg.Window('Window Title').Layout(layout)    
+window = sg.Window('Window Title', layout)    
     
 event, values = window.Read()    
 window.Close()
@@ -77,7 +77,7 @@ layout = [[sg.Text('Persistent window')],
           [sg.Input(do_not_clear=True)],      
           [sg.Button('Read'), sg.Exit()]]      
       
-window = sg.Window('Window that stays open').Layout(layout)      
+window = sg.Window('Window that stays open', layout)      
       
 while True:      
     event, values = window.Read()      
@@ -111,7 +111,7 @@ layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')
           [sg.Input(do_not_clear=True, key='_IN_')],  
           [sg.Button('Show'), sg.Button('Exit')]]  
   
-window = sg.Window('Window Title').Layout(layout)  
+window = sg.Window('Window Title', layout)  
   
 while True:                 # Event Loop  
   event, values = window.Read()  
@@ -146,7 +146,7 @@ Same GUI screen except the return values are in a list instead of a dictionary a
               [sg.Submit(), sg.Cancel()]      
              ]      
       
-    window = sg.Window('Simple data entry window').Layout(layout)   
+    window = sg.Window('Simple data entry window', layout)  
     event, values = window.Read()   
 	window.Close()
     print(event, values[0], values[1], values[2])      
@@ -172,7 +172,7 @@ A simple GUI with default values.  Results returned in a dictionary.
               [sg.Submit(), sg.Cancel()]      
              ]      
     
-    window = sg.Window('Simple data entry GUI').Layout(layout)  
+    window = sg.Window('Simple data entry GUI', layout)
       
     event, values = window.Read()  
     
@@ -200,7 +200,7 @@ Browse for a filename that is populated directly into the user's variable
                  [sg.InputText(), sg.FileBrowse()],      
                  [sg.Submit(), sg.Cancel()]]      
       
-    (event, (source_filename,)) = sg.Window('SHA-1 & 256 Hash').Layout(layout ).Read()  
+    (event, (source_filename,)) = sg.Window('SHA-1 & 256 Hash', layout).Read()  
       
     print(event, source_filename)      
 ```      
@@ -216,8 +216,8 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
       
     if len(sys.argv) == 1:      
         event, (fname,) = sg.Window('My Script').Layout([[sg.Text('Document to open')],      
-                                                                   [sg.In(), sg.FileBrowse()],      
-                                                                   [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()  
+                                                         [sg.In(), sg.FileBrowse()],      
+                                                         [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()  
     else:      
         fname = sys.argv[1]      
       
@@ -244,7 +244,7 @@ Browse to get 2 file names that can be then compared.
                  [sg.Text('File 2', size=(8, 1)), sg.InputText(), sg.FileBrowse()],      
                  [sg.Submit(), sg.Cancel()]]      
       
-    window = sg.Window('File Compare').Layout(layout)  
+    window = sg.Window('File Compare', layout)  
       
     event, values = window.Read()  
     window.Close()
@@ -301,7 +301,7 @@ Example of nearly all of the widgets in a single window.  Uses a customized colo
     ]      
       
       
-    window = sg.Window('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)      
+    window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)      
       
     event, values = window.Read()      
       
@@ -331,7 +331,7 @@ layout = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],
             [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='_OUTPUT_')],
             [sg.T(' ' * 5), sg.Button('Start/Stop', focus=True), sg.Quit()]]
 
-window = sg.Window('Running Timer').Layout(layout)
+window = sg.Window('Running Timer', layout)
 
 timer_running = True
 i = 0
@@ -376,7 +376,7 @@ The architecture of some programs works better with button callbacks instead of 
               [sg.Button('1'), sg.Button('2'), sg.Quit()]]      
       
     # Show the Window to the user    
-    window = sg.Window('Button callback example').Layout(layout)      
+    window = sg.Window('Button callback example', layout)      
       
     # Event loop. Read buttons, make callbacks      
     while True:      
@@ -413,7 +413,7 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
                  [sg.Quit(button_color=('black', 'orange'))]      
                  ]      
       
-    window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(layout )    
+    window = sg.Window('Robotics Remote Control', layout, auto_size_text=True)    
       
     #      
     # Some place later in your code...      
@@ -508,8 +508,8 @@ def MediaPlayerGUI():
              ]
 
     # Open a form, note that context manager can't be used generally speaking for async forms
-    window = sg.Window('Media File Player', auto_size_text=True, default_element_size=(20, 1),
-                       font=("Helvetica", 25)).Layout(layout)
+    window = sg.Window('Media File Player', layout, auto_size_text=True, default_element_size=(20, 1),
+                       font=("Helvetica", 25))
     # Our event loop
     while(True):
         event, values = window.Read(timeout=100)        # Poll every 100 ms
@@ -552,7 +552,7 @@ This Window doesn't close after button clicks.  To achieve this the buttons are 
             ]      
       
       
-    window = sg.Window('Script launcher').Layout(layout)      
+    window = sg.Window('Script launcher', layout)      
       
     # ---===--- Loop taking in user input and using it to call scripts --- #      
       
@@ -584,7 +584,7 @@ layout = [  [sg.Text('Text area', key='_TEXT_')],
             [sg.Input(do_not_clear=True, key='_URL_')],  
             [sg.Button('Chrome'), sg.Button('Exit')]]  
   
-window = sg.Window('Window Title').Layout(layout)  
+window = sg.Window('Window Title', layuout)  
   
 while True:             # Event Loop  
   event, values = window.Read()  
@@ -631,7 +631,7 @@ A standard non-blocking GUI with lots of inputs.
               [sg.Radio('MSE(L2)', 'loss', size=(12, 1)), sg.Radio('MB(L0)', 'loss', size=(12, 1))],      
               [sg.Submit(), sg.Cancel()]]      
       
-    window = sg.Window('Machine Learning Front End', font=("Helvetica", 12)).Layout(layout)      
+    window = sg.Window('Machine Learning Front End', layout, font=("Helvetica", 12))      
       
     event, values = window.Read()      
 ```
@@ -652,7 +652,7 @@ layout = [[sg.Text('A custom progress meter')],
           [sg.Cancel()]]
 
 # create the Window
-window = sg.Window('Custom Progress Meter').Layout(layout)
+window = sg.Window('Custom Progress Meter', layout)
 # loop that would normally do something useful
 for i in range(1000):
     # check to see if the cancel button was clicked and exit loop if clicked
@@ -684,7 +684,7 @@ Instead of
               [sg.Input(), sg.FileBrowse()],      
               [sg.OK(), sg.Cancel()]]      
       
-    event, (number,) = sg.Window('Get filename example').Layout(layout).Read()  
+    event, (number,) = sg.Window('Get filename example', layout).Read()  
 ```      
 you can write this line of code for the exact same result (OK, two lines with the import):      
 ```python      
@@ -727,7 +727,7 @@ To make it easier to see the Column in the window, the Column background has bee
       
     # Display the Window and get values    
       
-    event, values = sg.Window('Compact 1-line Window with column').Layout(layout).Read()  
+    event, values = sg.Window('Compact 1-line Window with column', layout).Read()  
       
     sg.Popup(event, values, line_width=200)      
 ```      
@@ -749,7 +749,7 @@ This simple program keep a window open, taking input values until the user termi
                [sg.Txt('', size=(8,1), key='output')  ],      
                [sg.Button('Calculate', bind_return_key=True)]]      
       
-    window = sg.Window('Math').Layout(layout)      
+    window = sg.Window('Math', layout)      
       
     while True:      
         event, values = window.Read()      
@@ -782,7 +782,7 @@ layout = [[sg.Text('Slider Demonstration'), sg.Text('', key='_OUTPUT_')],
              sg.T('0', key='_RIGHT_')],  
             [sg.Button('Show'), sg.Button('Exit')]]  
   
-window = sg.Window('Window Title').Layout(layout)  
+window = sg.Window('Window Title', layout)  
   
 while True:             # Event Loop  
   event, values = window.Read()  
@@ -814,7 +814,7 @@ layout = [[ sg.Text('Window 1'),],
           [sg.Text('', key='_OUTPUT_')],  
           [sg.Button('Launch 2')]]  
   
-win1 = sg.Window('Window 1').Layout(layout)  
+win1 = sg.Window('Window 1', layout)  
 win2_active=False  
 while True:  
     ev1, vals1 = win1.Read(timeout=100)  
@@ -828,7 +828,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse  
   [sg.Button('Exit')]]  
   
-        win2 = sg.Window('Window 2').Layout(layout2)  
+        win2 = sg.Window('Window 2', layout2)  
         while True:  
             ev2, vals2 = win2.Read()  
             if ev2 is None or ev2 == 'Exit':  
