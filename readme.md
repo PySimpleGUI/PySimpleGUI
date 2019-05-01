@@ -324,7 +324,7 @@ An example of many widgets used on a single window.  A little further down you'l
      sg.FolderBrowse()],      
     [sg.Submit(), sg.Cancel(), sg.Button('Customized', button_color=('white', 'green'))]]      
       
-    event, values  = sg.Window('Everything bagel', auto_size_text=True, default_element_size=(40, 1)).Layout(layout).Read()    
+    event, values  = sg.Window('Everything bagel', layout, auto_size_text=True, default_element_size=(40, 1)).Read()    
       
       
       
@@ -942,7 +942,7 @@ Finally we can put it all together into a program that will display our window.
               [sg.Input()],      
               [sg.OK()] ]      
       
-    event, (number,) = sg.Window('Enter a number example').Layout(layout).Read()    
+    event, (number,) = sg.Window('Enter a number example', layout).Read()    
       
     sg.Popup(event, number)      
       
@@ -960,7 +960,7 @@ Writing the code for this one is just as straightforward.  There is one tricky t
               [sg.Input(), sg.FileBrowse()],      
               [sg.OK(), sg.Cancel()] ]      
       
-    event, (number,) = sg.Window('Get filename example').Layout(layout).Read()    
+    event, (number,) = sg.Window('Get filename example', layout).Read()    
       
     sg.Popup(event, number)      
       
@@ -987,7 +987,7 @@ window_rows = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
                  [sg.InputText(), sg.FileBrowse()],      
                  [sg.Submit(), sg.Cancel()]]      
       
-window = sg.Window('SHA-1 & 256 Hash').Layout(window_rows)    
+window = sg.Window('SHA-1 & 256 Hash', window_rows)    
     
 event, values = window.Read()    
 window.Close()
@@ -1009,7 +1009,7 @@ layout = [[sg.Text('Persistent window')],
           [sg.Input(do_not_clear=True)],      
           [sg.Button('Read'), sg.Exit()]]      
       
-window = sg.Window('Window that stays open').Layout(layout)      
+window = sg.Window('Window that stays open', layout)
       
 while True:      
     event, values = window.Read()      
@@ -1039,7 +1039,7 @@ layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')
           [sg.Input(do_not_clear=True, key='_IN_')],  
           [sg.Button('Show'), sg.Button('Exit')]]  
   
-window = sg.Window('Window Title').Layout(layout)  
+window = sg.Window('Window Title', layout)  
   
 while True:                 # Event Loop  
   event, values = window.Read()  
@@ -1070,9 +1070,9 @@ The key to custom windows in PySimpleGUI is to view windows as ROWS of GUI  Elem
               [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],      
               [sg.Submit(), sg.Cancel()]]      
       
-    window = sg.Window('Rename Files or Folders')      
+    window = sg.Window('Rename Files or Folders', layout)      
       
-    event, values = window.Layout(layout).Read()    
+    event, values = window.Read()    
    ```    
       
       
@@ -1233,13 +1233,13 @@ The second parameter from a Read call is either a list or a dictionary of the in
         
 Each of the Elements that are Input Elements will have a value in the list of return values.  You can unpack your GUI directly into the variables you want to use.      
       
-    event, (filename, folder1, folder2, should_overwrite) = sg.Window('My title').Layout(window_rows).Read()    
+    event, (filename, folder1, folder2, should_overwrite) = sg.Window('My title', window_rows).Read()    
       
   Or, more commonly, you can unpack the return results separately.      
       
 ```python    
-event, values = sg.Window('My title').Layout(window_rows).Read()    
-event, value_list = window.Layout(window_rows).Read()      
+event, values = sg.Window('My title', window_rows).Read()    
+event, value_list = window.Read()      
 value1 = value_list[0]      
 value2 = value_list[1]      
      ...     
@@ -1256,7 +1256,7 @@ For windows longer than 3 or 4 fields you will want to use a dictionary to help 
       
 The most common window read statement you'll encounter looks something like this:      
       
-window = sg.Window("My title").Layout(layout).Read()    
+window = sg.Window("My title", layout).Read()    
   
       
   To use a dictionary, you will need to:      
@@ -1267,7 +1267,7 @@ If **any** element in the window has a `key`, then **all** of the return values 
 Let's take a look at your first dictionary-based window.      
       
     import PySimpleGUI as sg      
-    window = sg.Window('Simple data entry window')      
+          
     layout = [      
               [sg.Text('Please enter your Name, Address, Phone')],      
               [sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_name_')],      
@@ -1275,8 +1275,9 @@ Let's take a look at your first dictionary-based window.
               [sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='_phone_')],      
               [sg.Submit(), sg.Cancel()]      
              ]      
-      
-    event, values = window.Layout(layout).Read()    
+             
+    window = sg.Window('Simple data entry window', layout)  
+    event, values = window.Read()    
       
     sg.Popup(event, values, values['_name_'], values['_address_'], values['_phone_'])      
       
@@ -1295,8 +1296,6 @@ The reason for this naming convention is that when you are scanning the code, th
 `key = '_name_'`  
   
   
-  
-
 
 ## The Event Loop / Callback Functions      
       
@@ -1321,7 +1320,7 @@ layout = [[sg.Text('Click read to read the input value')],
           [sg.Input()],      
           [sg.RButton('Read'), sg.Exit()]]      
       
-window = sg.Window('Persistent GUI Window').Layout(layout)      
+window = sg.Window('Persistent GUI Window', layout)      
       
 while True:      
     event, values = window.Read()      
@@ -1389,7 +1388,7 @@ This code utilizes many of the common Elements.  It does not include Tabs/Tab Gr
     ]      
       
       
-    window = sg.Window('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)      
+    window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)      
       
     event, values = window.Read()      
       
@@ -1509,7 +1508,7 @@ You can get your window's size by access the `Size`property.  The window has to 
 To finalize your window:
 
 ```pytyhon
-window = Window('My Title').Layout(layout).Finalize()
+window = Window('My Title', layout).Finalize()
 ```
       
 
@@ -1557,7 +1556,7 @@ PySimpleGUI will set a default focus location for you.  This generally means the
       
 There are a few methods (functions) that you will see in this document that act on Windows.  The ones you will primarily be calling are:      
       
-    window.Layout(layout) - Turns your definition of the Window into Window      
+    window.Layout(layout) - Recommend moving away from this nethod and using layout parameter instead. Turns your definition of the Window into Window      
     window.Finalize() - creates the tkinter objects for the Window. Normally you do not call this      
     window.Read() - Read the Windows values and get the button / key that caused the Read to return. Can have an optional timeout      
     window.ReadNonBlocking() - NO LONGER USED!  
@@ -1588,8 +1587,9 @@ There are a number of operations you can do on a window after you've created the
 Call to set the window layout.  Must be called prior to Read.  Most likely "chained" in line with the Window creation.    
     
 ```python    
-window = sg.Window('My window title').Layout(layout)    
+window = sg.Window('My window title', layout)    
 ```    
+
 #### Finalize()    
     
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
@@ -2700,10 +2700,9 @@ gui_rows = [[sg.Text('Robotics Remote Control')],
             [sg.RealtimeButton('Left'), sg.T(' '  * 15), sg.RealtimeButton('Right')],  
             [sg.T(' '  * 10), sg.RealtimeButton('Reverse')],  
             [sg.T('')],  
-            [sg.Quit(button_color=('black', 'orange'))]  
-            ]  
+            [sg.Quit(button_color=('black', 'orange'))]]  
   
-window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(gui_rows)  
+window = sg.Window('Robotics Remote Control', gui_rows, auto_size_text=True)  
   
 #  
 # Some place later in your code...  
@@ -2840,7 +2839,7 @@ Another way of using a Progress Meter with PySimpleGUI is to build a custom wind
               [sg.Cancel()]]      
       
     # create the window`      
-    window = sg.Window('Custom Progress Meter').Layout(layout)      
+    window = sg.Window('Custom Progress Meter', layout)      
     progress_bar = window.FindElement('progressbar')      
     # loop that would normally do something useful      
     for i in range(10000):      
@@ -2871,7 +2870,7 @@ Here's a complete solution for a chat-window using an Async window with an Outpu
                    sg.RButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])),      
                    sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]      
       
-      window = sg.Window('Chat Window', default_element_size=(30, 2)).Layout(layout)      
+      window = sg.Window('Chat Window', layout, default_element_size=(30, 2))      
       
         # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #      
       while True:      
@@ -2944,7 +2943,7 @@ This code produced the above window.
     # Display the window and get values      
     # If you're willing to not use the "context manager" design pattern, then it's possible      
     # to collapse the window display and read down to a single line of code.      
-    event, values = sg.Window('Compact 1-line window with column').Layout(layout).Read()      
+    event, values = sg.Window('Compact 1-line window with column', layout).Read()      
       
     sg.Popup(event, values, line_width=200)      
       
@@ -3003,7 +3002,7 @@ This code creates a window with a Frame and 2 buttons.
               [sg.Submit(), sg.Cancel()]      
              ]      
       
-    window = sg.Window('Frame with buttons', font=("Helvetica", 12)).Layout(layout)      
+    window = sg.Window('Frame with buttons', layout, font=("Helvetica", 12))      
       
       
 ![frame element](https://user-images.githubusercontent.com/13696193/45889173-c2245700-bd8d-11e8-8f73-1e5f1be3ddb1.jpg)      
@@ -3049,9 +3048,9 @@ The order of operations to obtain a tkinter Canvas Widget is:
               [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]      
       
     # create the window and show it without the plot      
-    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()      
+    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout).Finalize()      
       
-      
+    
     # add the plot to the window      
     fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)      
       
@@ -3752,7 +3751,7 @@ layout = [[sg.Text('Persistent window')],
           [sg.Input()],      
           [sg.RButton('Read'), sg.Exit()]]      
       
-window = sg.Window('Window that stays open').Layout(layout)      
+window = sg.Window('Window that stays open', layout)      
       
 while True:      
     event, values = window.Read()      
@@ -3880,7 +3879,7 @@ See the sample code on the GitHub named Demo Media Player for another example of
               sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),  
               sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]  
       
-    window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)  
+    window = sg.Window('Running Timer', layout, no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
       
     # ----------------  main loop  ----------------  
     current_time = 0  
@@ -3929,7 +3928,7 @@ import PySimpleGUI as sg
 layout = [ [sg.Text('My layout', key='_TEXT_')],  
            [sg.Button('Read')]]  
   
-window = sg.Window('My new window').Layout(layout)  
+window = sg.Window('My new window', layout)  
   
 while True:             # Event Loop  
   event, values = window.Read()  
@@ -3948,7 +3947,7 @@ layout = [ [sg.Text('My layout', key='_TEXT_')],
            [sg.Button('Read')]  
          ]  
   
-window = sg.Window('My new window').Layout(layout).Finalize()  
+window = sg.Window('My new window', layout).Finalize()  
   
 window.Element('_TEXT_').Update('My new text value')  
   
@@ -3989,7 +3988,7 @@ In some programs these updates happen in response to another Element.  This prog
                sg.Text("Aa", size=(2, 1), font="Helvetica "  + str(fontSize), key='text')]]      
       
     sz = fontSize      
-    window = sg.Window("Font size selector", grab_anywhere=False).Layout(layout)      
+    window = sg.Window("Font size selector", layout, grab_anywhere=False)      
     # Event Loop      
     while True:      
         event, values= window.Read()      
@@ -4054,28 +4053,28 @@ Keyboard keys return 2 types of key events. For "normal" keys (a,b,c, etc), a si
     Key Sym:Key Code      
       
 Key Sym is a string such as 'Control_L'.  The Key Code is a numeric representation of that key.  The left control key, when pressed will return the value 'Control_L:17'      
-      
-    import PySimpleGUI as sg  
-      
-    # Recipe for getting keys, one at a time as they are released  
-    # If want to use the space bar, then be sure and disable the "default focus"  
-      
-    with sg.Window("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:  
-        text_elem = sg.Text("", size=(18, 1))  
-        layout = [[sg.Text("Press a key or scroll mouse")],  
-                  [text_elem],  
-                  [sg.Button("OK")]]  
-      
-        window.Layout(layout)  
-        # ---===--- Loop taking in user input --- #  
-    while True:  
-        event, value = window.Read()  
-      
-        if event == "OK"  or event is None:  
-            print(event, "exiting")  
-            break  
-       text_elem.Update(event)
 
+```python      
+import PySimpleGUI as sg
+
+# Recipe for getting keys, one at a time as they are released
+# If want to use the space bar, then be sure and disable the "default focus"
+
+text_elem = sg.Text("", size=(18, 1))
+layout = [[sg.Text("Press a key or scroll mouse")],
+          [text_elem],
+          [sg.Button("OK")]]
+
+window = sg.Window("Keyboard Test", layout, return_keyboard_events=True, use_default_focus=False)
+    # ---===--- Loop taking in user input --- #
+while True:
+    event, value = window.Read()
+
+    if event == "OK" or event is None:
+        print(event, "exiting")
+        break
+    text_elem.Update(event)
+```
       
       
 You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.      
@@ -4083,21 +4082,20 @@ You want to turn off the default focus so that there no buttons that will be sel
 ### Realtime Keyboard Capture      
 Use realtime keyboard capture by calling      
       
-    import PySimpleGUI as sg  
-      
-    with sg.Window("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:  
-        layout = [[sg.Text("Hold down a key")],  
-                  [sg.Button("OK")]]  
-      
-        window.Layout(layout)  
-      
-        while True:  
-            event, value = window.Read(timeout=0)  
-            if event == "OK"  or event is None:  
-                print(event, value, "exiting")  
-                break  
-            if event != sg.TIMEOUT_KEY:  
-                print(event)
+import PySimpleGUI as sg
+
+layout = [[sg.Text("Hold down a key")],
+          [sg.Button("OK")]]
+
+window = sg.Window("Realtime Keyboard Test", layout, return_keyboard_events=True, use_default_focus=False)
+
+while True:
+    event, value = window.Read(timeout=0)
+    if event == "OK" or event is None:
+        print(event, value, "exiting")
+        break
+    if event != sg.TIMEOUT_KEY:
+        print(event)
 
 
 # Menus      
@@ -4212,7 +4210,7 @@ layout = [[ sg.Text('Window 1'),],
           [sg.Text('', key='_OUTPUT_')],  
           [sg.Button('Launch 2'), sg.Button('Exit')]]  
   
-win1 = sg.Window('Window 1').Layout(layout)  
+win1 = sg.Window('Window 1', layout)  
   
 win2_active = False  
 while True:  
@@ -4226,7 +4224,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],  
                    [sg.Button('Exit')]]  
   
-        win2 = sg.Window('Window 2').Layout(layout2)  
+        win2 = sg.Window('Window 2', layout2)  
   
     if win2_active:  
         ev2, vals2 = win2.Read(timeout=100)  
@@ -4248,7 +4246,7 @@ layout = [[ sg.Text('Window 1'),],
           [sg.Text('', key='_OUTPUT_')],  
           [sg.Button('Launch 2')]]  
   
-win1 = sg.Window('Window 1').Layout(layout)  
+win1 = sg.Window('Window 1', layout)  
 win2_active=False  
 while True:  
     ev1, vals1 = win1.Read(timeout=100)  
@@ -4262,7 +4260,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse  
                    [sg.Button('Exit')]]  
   
-        win2 = sg.Window('Window 2').Layout(layout2)  
+        win2 = sg.Window('Window 2', layout2)  
         while True:  
             ev2, vals2 = win2.Read()  
             if ev2 is None or ev2 == 'Exit':  
