@@ -1048,7 +1048,7 @@ while True:                 # Event Loop
       break  
   if event == 'Show':  
       # change the "output" element to be the value of "input" element  
-      window.FindElement('_OUTPUT_').Update(values['_IN_'])
+      window.Element('_OUTPUT_').Update(values['_IN_'])
 
 window.Close()
 ```
@@ -1567,7 +1567,8 @@ There are a few methods (functions) that you will see in this document that act 
     window.Close() - To close your window, if a button hasn't already closed it    
     window.Disable() - Use to disable the window inputwhen opening another window on top of the primnary  Window      
     window.Enable() - Re-enable a Disabled window      
-    window.FindElement(key, silent_on_error=False) - Returns the element that has a matching key value  
+    window.FindElement(key, silent_on_error=False) - Returns the element that has a matching key value
+    window.Element(key, silent_on_error=False) - EXACTLY the same as calling FindElement
     window.Move(x,y) - Moves window to location x,y on screen'
     window.SetAlpha(alpha) - Changes window transparency
     window.BringToFront() - Brings the window to the top of other windows on the screen
@@ -1820,24 +1821,24 @@ Many of the main method calls and Element names have shortcuts.  This enables yo
 The most basic element is the Text element.  It simply displays text.  Many of the 'options' that can be set for a Text element are shared by other elements.      
 ```python
    Text(text,
-		size=(None, None), 
-		auto_size_text=None,
-		click_submits=False, 
+        size=(None, None), 
+        auto_size_text=None,
+        click_submits=False, 
         enable_events=False,
         relief=None,
-		font=None, 
-		text_color=None, 
-		background_color=None, 
-		justification=None, 
-		pad=None, 
-		key=None, 
-		right_click_menu=None, 
-		tooltip=None, 
-		visible=True)
-```			      
-.      
-      
-    Text - The text that's displayed      
+        font=None, 
+        text_color=None, 
+        background_color=None, 
+        justification=None, 
+        pad=None, 
+        key=None, 
+        right_click_menu=None, 
+        tooltip=None, 
+        visible=True)
+```
+.
+		
+	Text - The text that's displayed      
     size - Element's size      
     click_submits - if clicked will cause a read call to return the key value of the button      
     enable_events - same as click_submits
@@ -1920,8 +1921,8 @@ Multiline(	default_text='',
 			tooltip=None
 			right_click_menu=None,
 			visible=True)
-'''
-```   
+```
+
       
     default_text - Text to display in the text box      
     change_submits - Bool. If True, pressing Enter key submits window 
@@ -2840,7 +2841,7 @@ Another way of using a Progress Meter with PySimpleGUI is to build a custom wind
       
     # create the window`      
     window = sg.Window('Custom Progress Meter', layout)      
-    progress_bar = window.FindElement('progressbar')      
+    progress_bar = window.Element('progressbar')      
     # loop that would normally do something useful      
     for i in range(10000):      
         # check to see if the cancel button was clicked and exit loop if clicked      
@@ -3052,7 +3053,7 @@ The order of operations to obtain a tkinter Canvas Widget is:
       
     
     # add the plot to the window      
-    fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)      
+    fig_photo = draw_figure(window.Element('canvas').TKCanvas, fig)      
       
     # show it all again and get buttons      
     event, values = window.Read()      
@@ -3890,7 +3891,7 @@ See the sample code on the GitHub named Demo Media Player for another example of
         event, values = window.Read(timeout=10)  
         current_time = int(round(time.time() * 100)) - start_time  
         # --------- Display timer in window --------  
-        window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,  
+        window.Element('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,  
                                                                       (current_time // 100) % 60,  
                                                                       current_time % 100))
 ```      
@@ -4000,9 +4001,9 @@ In some programs these updates happen in response to another Element.  This prog
         if sz != fontSize:      
             fontSize = sz      
             font = "Helvetica "  + str(fontSize)      
-            window.FindElement('text').Update(font=font)      
-            window.FindElement('slider').Update(sz)      
-            window.FindElement('spin').Update(sz)      
+            window.Element('text').Update(font=font)      
+            window.Element('slider').Update(sz)      
+            window.Element('spin').Update(sz)      
       
     print("Done.")      
       
@@ -4012,15 +4013,15 @@ For example, `values['slider']` is the value of the Slider Element.
       
 This program changes all 3 elements if either the Slider or the Spinner changes.  This is done with these statements:      
       
-        window.FindElement('text').Update(font=font)      
-        window.FindElement('slider').Update(sz)      
-        window.FindElement('spin').Update(sz)      
+        window.Element('text').Update(font=font)      
+        window.Element('slider').Update(sz)      
+        window.Element('spin').Update(sz)      
       
 Remember this design pattern because you will use it OFTEN if you use persistent windows.      
       
 It works as follows.  The call to `window.FindElement` returns the Element object represented by they provided `key`.  This element is then updated by calling it's `Update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:      
       
-    text_element = window.FindElement('text')      
+    text_element = window.Element('text')      
     text_element.Update(font=font)      
       
 The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used as targets in  Button calls.      
@@ -4215,7 +4216,7 @@ win1 = sg.Window('Window 1', layout)
 win2_active = False  
 while True:  
     ev1, vals1 = win1.Read(timeout=100)  
-    win1.FindElement('_OUTPUT_').Update(vals1[0])  
+    win1.Element('_OUTPUT_').Update(vals1[0])  
     if ev1 is None or ev1 == 'Exit':  
         break  
   
@@ -4252,7 +4253,7 @@ while True:
     ev1, vals1 = win1.Read(timeout=100)  
     if ev1 is None:  
         break  
-    win1.FindElement('_OUTPUT_').Update(vals1[0])  
+    win1.Element('_OUTPUT_').Update(vals1[0])  
   
     if ev1 == 'Launch 2'  and not win2_active:  
         win2_active = True  
@@ -4964,7 +4965,7 @@ It seemed quite natural to use Python's powerful list constructs when possible. 
 **Dictionaries**      
 Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.      
       
-You can also look up elements using their keys.  This is an excellent way to update elements in reaction to another element.  Call `form.FindElement(key)` to get the Element.      
+You can also look up elements using their keys.  This is an excellent way to update elements in reaction to another element.  Call `form.Element(key)` to get the Element.      
     
 **Named / Optional Parameters**    
 This is a language feature that is featured **heavily**  in all of the API calls, both functions and classes.  Elements are configured, in-place, by setting one or more optional parameters.  For example, a Text element's color is chosen by setting the optional `text_color` parameter.    

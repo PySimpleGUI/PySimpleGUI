@@ -120,7 +120,7 @@ while True:                 # Event Loop
       break  
   if event == 'Show':  
       # change the "output" element to be the value of "input" element  
-      window.FindElement('_OUTPUT_').Update(values['_IN_'])
+      window.Element('_OUTPUT_').Update(values['_IN_'])
 
 window.Close()
 ```
@@ -148,7 +148,7 @@ Same GUI screen except the return values are in a list instead of a dictionary a
       
     window = sg.Window('Simple data entry window', layout)  
     event, values = window.Read()   
-	window.Close()
+    window.Close()
     print(event, values[0], values[1], values[2])      
 ```    
       
@@ -343,7 +343,7 @@ while True:
         break
     elif event == 'Start/Stop':
         timer_running = not timer_running
-    window.FindElement('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+    window.Element('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 ```          
 
 <iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Timer?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>           
@@ -517,7 +517,7 @@ def MediaPlayerGUI():
             break
         # If a button was pressed, display it on the GUI by updating the text element
         if event != sg.TIMEOUT_KEY:
-            window.FindElement('output').Update(event)
+            window.Element('output').Update(event)
 
 MediaPlayerGUI()
 ```
@@ -660,7 +660,7 @@ for i in range(1000):
     if event == 'Cancel' or event is None:
         break
         # update bar with loop value +1 so that bar eventually reaches the maximum
-    window.FindElement('progbar').UpdateBar(i + 1)
+    window.Element('progbar').UpdateBar(i + 1)
 # done with loop... need to destroy the window as it's still open
 window.Close()
 ``` 
@@ -762,7 +762,7 @@ This simple program keep a window open, taking input values until the user termi
             except:      
                 calc = 'Invalid'      
       
-            window.FindElement('output').Update(calc)      
+            window.Element('output').Update(calc)      
         else:      
             break      
 ```      
@@ -820,7 +820,7 @@ while True:
     ev1, vals1 = win1.Read(timeout=100)  
     if ev1 is None:  
         break  
-  win1.FindElement('_OUTPUT_').Update(vals1[0])  
+  win1.Element('_OUTPUT_').Update(vals1[0])  
   
     if ev1 == 'Launch 2'  and not win2_active:  
         win2_active = True  
@@ -863,7 +863,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
     window = sg.Window('Canvas test', layout)      
     window.Finalize()      
       
-    canvas = window.FindElement('canvas')      
+    canvas = window.Element('canvas')      
     cir = canvas.TKCanvas.create_oval(50, 50, 100, 100)      
       
     while True:      
@@ -893,7 +893,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
     window = sg.Window('Graph test', layout)      
     window.Finalize()      
       
-    graph = window.FindElement('graph')      
+    graph = window.Element('graph')      
     circle = graph.DrawCircle((75,75), 25, fill_color='black',line_color='white')      
     point = graph.DrawPoint((75,75), 10, color='green')      
     oval = graph.DrawOval((25,300), (100,280), fill_color='purple', line_color='purple'  )      
@@ -965,9 +965,9 @@ There are a number of features used in this Recipe including:
            keys_entered += event  # add the new digit      
         elif event == 'Submit':      
            keys_entered = values['input']      
-           window.FindElement('out').Update(keys_entered)  # output the final string      
+           window.Element('out').Update(keys_entered)  # output the final string      
       
-        window.FindElement('input').Update(keys_entered)  # change the window to reflect current key string    
+        window.Element('input').Update(keys_entered)  # change the window to reflect current key string    
 ```
 
 <iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Keypad-Touchscreen-Entry?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
@@ -1006,7 +1006,7 @@ layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', 
 window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout)
 window.Finalize()  # needed to access the canvas element prior to reading the window
 
-canvas_elem = window.FindElement('canvas')
+canvas_elem = window.Element('canvas')
 
 graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
 canvas = canvas_elem.TKCanvas
@@ -1070,9 +1070,9 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     window = sg.Window("Time Tracker", layout, default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,      
                        default_button_element_size=(12,1))      
     window.Finalize()      
-    window.FindElement('Stop').Update(disabled=True)      
-    window.FindElement('Reset').Update(disabled=True)      
-    window.FindElement('Submit').Update(disabled=True)      
+    window.Element('Stop').Update(disabled=True)      
+    window.Element('Reset').Update(disabled=True)      
+    window.Element('Submit').Update(disabled=True)      
     recording = have_data = False      
     while True:      
         event, values = window.Read()      
@@ -1080,29 +1080,29 @@ In other GUI frameworks this program would be most likely "event driven" with ca
         if event is None:      
             exit(69)      
         if event is 'Start':      
-            window.FindElement('Start').Update(disabled=True)      
-            window.FindElement('Stop').Update(disabled=False)      
-            window.FindElement('Reset').Update(disabled=False)      
-            window.FindElement('Submit').Update(disabled=True)      
+            window.Element('Start').Update(disabled=True)      
+            window.Element('Stop').Update(disabled=False)      
+            window.Element('Reset').Update(disabled=False)      
+            window.Element('Submit').Update(disabled=True)      
             recording = True      
          elif event is 'Stop'  and recording:      
-            window.FindElement('Stop').Update(disabled=True)      
-            window.FindElement('Start').Update(disabled=False)      
-            window.FindElement('Submit').Update(disabled=False)      
+            window.Element('Stop').Update(disabled=True)      
+            window.Element('Start').Update(disabled=False)      
+            window.Element('Submit').Update(disabled=False)      
             recording = False      
             have_data = True      
          elif event is 'Reset':      
-            window.FindElement('Stop').Update(disabled=True)      
-            window.FindElement('Start').Update(disabled=False)      
-            window.FindElement('Submit').Update(disabled=True)      
-            window.FindElement('Reset').Update(disabled=False)      
+            window.Element('Stop').Update(disabled=True)      
+            window.Element('Start').Update(disabled=False)      
+            window.Element('Submit').Update(disabled=True)      
+            window.Element('Reset').Update(disabled=False)      
             recording = False      
             have_data = False      
          elif event is 'Submit'  and have_data:      
-            window.FindElement('Stop').Update(disabled=True)      
-            window.FindElement('Start').Update(disabled=False)      
-            window.FindElement('Submit').Update(disabled=True)      
-            window.FindElement('Reset').Update(disabled=False)      
+            window.Element('Stop').Update(disabled=True)      
+            window.Element('Start').Update(disabled=False)      
+            window.Element('Submit').Update(disabled=True)      
+            window.Element('Reset').Update(disabled=False)      
             recording = False      
 ```      
       
@@ -1151,7 +1151,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
                 sha1hash = hashlib.sha1()      
                 sha1hash.update(password_utf)      
                 password_hash = sha1hash.hexdigest()      
-                window.FindElement('hash').Update(password_hash)      
+                window.Element('hash').Update(password_hash)      
             except:      
                 pass      
       
@@ -1218,7 +1218,7 @@ You can easily change colors to match your background by changing a couple of pa
     def Launcher():      
       
         def print(line):      
-            window.FindElement('output').Update(line)      
+            window.Element('output').Update(line)      
       
         sg.ChangeLookAndFeel('Dark')      
       
@@ -1331,7 +1331,7 @@ while (True):
     else:
         event, values = window.Read()
     if event == 'button':
-        event = window.FindElement(event).GetText()
+        event = window.Element(event).GetText()
     # --------- Do Button Operations --------
     if event is None or event == 'Exit':        # ALWAYS give a way out of program
         break
@@ -1342,16 +1342,16 @@ while (True):
     elif event == 'Pause':
         paused = True
         paused_time = int(round(time.time() * 100))
-        element = window.FindElement('button')
+        element = window.Element('button')
         element.Update(text='Run')
     elif event == 'Run':
         paused = False
         start_time = start_time + int(round(time.time() * 100)) - paused_time
-        element = window.FindElement('button')
+        element = window.Element('button')
         element.Update(text='Pause')
 
     # --------- Display timer in window --------
-    window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+    window.Element('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
                                                                   (current_time // 100) % 60,
                                                                   current_time % 100))
 ```
@@ -1399,7 +1399,7 @@ while (True):
 
     # --------- Display timer in window --------
 
-    window.FindElement('text').Update(f'CPU {cpu_percent:02.0f}%')
+    window.Element('text').Update(f'CPU {cpu_percent:02.0f}%')
 
 # Broke out of main loop. Close the window.
 window.Close()
@@ -1468,7 +1468,7 @@ import PySimpleGUI as sg
 layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]    
     
 window = sg.Window('Graph of Sine Function', layout, grab_anywhere=True).Finalize()    
-graph = window.FindElement('graph')    
+graph = window.Element('graph')    
     
 # Draw axis    
 graph.DrawLine((-100,0), (100,0))    

@@ -101,7 +101,7 @@ DEFAULT_DEBUG_WINDOW_SIZE = (80, 20)
 DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
-DEFAULT_TOOLTIP_OFFSET = (20,-20)
+DEFAULT_TOOLTIP_OFFSET = (0,-20)
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -303,6 +303,8 @@ class ToolTip:
         self.widget.bind("<ButtonPress>", self.leave)
 
     def enter(self, event=None):
+        self.x = event.x
+        self.y = event.y
         self.schedule()
 
     def leave(self, event=None):
@@ -321,8 +323,8 @@ class ToolTip:
     def showtip(self):
         if self.tipwindow:
             return
-        x = self.widget.winfo_rootx() + DEFAULT_TOOLTIP_OFFSET[0]
-        y = self.widget.winfo_rooty() + self.widget.winfo_height() + DEFAULT_TOOLTIP_OFFSET[1]
+        x = self.widget.winfo_rootx() + self.x + DEFAULT_TOOLTIP_OFFSET[0]
+        y = self.widget.winfo_rooty() + self.y  + DEFAULT_TOOLTIP_OFFSET[1]
         self.tipwindow = tk.Toplevel(self.widget)
         self.tipwindow.wm_overrideredirect(True)
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
@@ -5196,6 +5198,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  INPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
+                element = element               # type: InputText
                 default_text = element.DefaultText
                 element.TKStringVar = tk.StringVar()
                 element.TKStringVar.set(default_text)
@@ -7674,7 +7677,7 @@ def main():
 
     frame3 = [
         [Checkbox('Checkbox1', True), Checkbox('Checkbox1')],
-        [Radio('Radio Button1', 1), Radio('Radio Button2', 1, default=True)],
+        [Radio('Radio Button1', 1), Radio('Radio Button2', 1, default=True, tooltip='Radio 2')],
         [T('', size=(1, 4))],
     ]
 
@@ -7699,12 +7702,12 @@ def main():
         [graph_elem],
     ]
 
-    tab1 = Tab('Graph Number 1', frame6)
+    tab1 = Tab('Graph Number 1', frame6, tooltip='tab 1')
     tab2 = Tab('Graph Number 2', [[]])
 
     layout1 = [
         [Menu(menu_def)],
-        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15')],
+        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15', tooltip='My tooltip')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
         [Frame('Input Text Group', frame1, title_color='red'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_')],
@@ -7714,15 +7717,15 @@ def main():
         [Frame('Structured Data Group', frame5, title_color='red'), ],
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]])],
-        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), Button('Exit')],
+        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), Button('Exit', tooltip='Exit button')],
     ]
 
     layout=[[Column(layout1)]]
 
-    window = Window('Window Title',
+    window = Window('Window Title', layout,
                     font=('Helvetica', 13),
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
-                    ).Layout(layout).Finalize()
+                    ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
