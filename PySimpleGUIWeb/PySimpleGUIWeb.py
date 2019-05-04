@@ -535,9 +535,7 @@ class InputText(Element):
         widget.set_value(widget.get_value()+key)
         return (key, keycode, ctrl, shift, alt)
 
-
-
-    def Update(self, value=None, disabled=None):
+    def Update(self, value=None, disabled=None, select=None, background_color=None, text_color=None, font=None, visible=None):
         if value is not None:
             self.Widget.set_value(str(value))
         if disabled is True:
@@ -1529,7 +1527,8 @@ class Button(Element):
             self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
         return
 
-    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, font=None, visible=None):
+
+    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None, font=None, visible=None, image_subsample=None, image_size=None):
         if text is not None:
             self.Widget.set_text(text)
         fg, bg = button_color
@@ -1718,8 +1717,8 @@ class Graph(Element):
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
         self.Disabled = disabled
-        self.Widget = None                  # Type: remi.gui.Svg
-        self.SvgGroup = None                # Type: remi.gui.SvgGroup
+        self.Widget = None                  # type: remi.gui.Svg
+        self.SvgGroup = None                # type: remi.gui.SvgGroup
         super().__init__(ELEM_TYPE_GRAPH, size=canvas_size, size_px=size_px, visible=visible, background_color=background_color, pad=pad,  tooltip=tooltip, key=key)
         return
 
@@ -1735,9 +1734,9 @@ class Graph(Element):
     def _convert_canvas_xy_to_xy(self, x_in, y_in):
         if None in (x_in, y_in):
             return None, None
+        x_in, y_in = int(x_in), int(y_in)
         scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
         scale_y = (0 - self.CanvasSize[1]) / (self.TopRight[1] - self.BottomLeft[1])
-
         new_x = x_in / scale_x + self.BottomLeft[0]
         new_y = (y_in - self.CanvasSize[1]) / scale_y + self.BottomLeft[1]
         return int(new_x), int(new_y)
@@ -1836,9 +1835,11 @@ class Graph(Element):
         return rpoint
 
 
-    def DrawImage(self, image_source=None, location=(None, None), size=(100, 100)):
+    def DrawImage(self, data=None, image_source=None, location=(None, None), size=(100, 100)):
         if location == (None, None):
             return
+        if data is not None:
+            image_source = data
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
         if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1931,6 +1932,40 @@ class Graph(Element):
         # figure.empty()
         figure.set_position(shift_converted[0], shift_converted[1])
         figure.redraw()
+
+
+    def MouseDownCallback(self, *args):
+        self.MouseButtonDown = True
+
+    def MouseUpCallback(self, *args):
+        self.MouseButtonDown = False
+
+    # def ClickCallback(self, emitter, x, y):
+    def ClickCallback(self, widget:remi.gui.Svg, *args):
+        self.ClickPosition = (None, None)
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
+        self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+
+    def DragCallback(self, emitter, x, y):
+        if not self.MouseButtonDown:        # only return drag events when mouse is down
+            return
+        # print(f'In Drag Callback')
+        self.ClickPosition = self._convert_canvas_xy_to_xy(x, y)
+        # print(f'Position {self.ClickPosition}')
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
+        self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+
+    def MotionCallBack(self, event):
+        if not self.MouseButtonDown:
+            return
+        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
+        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
 
 
 
@@ -4704,7 +4739,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget.append([element.SvgGroup,])
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onclick.connect(element.ChangedCallback)
+                    element.Widget.onclick.connect(element.ClickCallback)
+                if element.DragSubmits:
+                    element.Widget.onmousedown.connect(element.MouseDownCallback)
+                    element.Widget.onmouseup.connect(element.MouseUpCallback)
+                    element.Widget.onmousemove.connect(element.DragCallback)
+
                 tk_row_frame.append(element.Widget)
                 # width, height = element_size
                 # if element._TKCanvas is None:
