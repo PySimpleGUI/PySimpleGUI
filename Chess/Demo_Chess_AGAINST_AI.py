@@ -3,11 +3,11 @@ import os
 import sys
 import copy
 try:
-  import chess
-  import chess.pgn
-  import chess.uci
+    import chess
+    import chess.pgn
+    import chess.uci
 except ImportError:
-  raise ImportError("Please pip install python-chess")
+    raise ImportError("Please pip install python-chess")
 
 CHESS_PATH = '.'  # path to the chess pieces
 
