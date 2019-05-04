@@ -7,9 +7,9 @@ import time
 
 button_names = ('close', 'cookbook', 'cpu', 'github', 'pysimplegui', 'run', 'storage', 'timer')
 
-CHESS_PATH = '.'        # path to the chess pieces
+CHESS_PATH = os.path.dirname(os.path.abspath(__file__))  # path to the chess pieces
 
-BLANK = 0               # piece names
+BLANK = 0  # piece names
 PAWNB = 1
 KNIGHTB = 2
 BISHOPB = 3
