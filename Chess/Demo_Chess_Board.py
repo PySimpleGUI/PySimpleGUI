@@ -1,9 +1,13 @@
 import PySimpleGUI as sg
 import os
-import chess
-import chess.pgn
 import copy
 import time
+
+try:
+    import chess
+    import chess.pgn
+except ImportError:
+    raise ImportError("Please pip install python-chess")
 
 button_names = ('close', 'cookbook', 'cpu', 'github', 'pysimplegui', 'run', 'storage', 'timer')
 
