@@ -3909,7 +3909,11 @@ class Window:
         return self
 
     def FindElement(self, key, silent_on_error=False):
-        element = _FindElementFromKeyInSubForm(self, key)
+        try:
+            element = self.AllKeysDict[key]
+        except KeyError:
+            element = None
+        # element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             if not silent_on_error:
                 print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
@@ -4420,7 +4424,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 def AddToReturnDictionary(form, element, value):
     if element.Key is None:
         form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
-        # element.Key = form.DictionaryKeyCounter
+        element.Key = form.DictionaryKeyCounter
         form.DictionaryKeyCounter += 1
     else:
         form.ReturnValuesDictionary[element.Key] = value
