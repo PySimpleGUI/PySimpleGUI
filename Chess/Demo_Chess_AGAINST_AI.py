@@ -1,10 +1,13 @@
 import PySimpleGUI as sg
 import os
 import sys
-import chess
-import chess.pgn
 import copy
-import chess.uci
+try:
+  import chess
+  import chess.pgn
+  import chess.uci
+except ImportError:
+  raise ImportError("Please pip install python-chess")
 
 CHESS_PATH = '.'  # path to the chess pieces
 
