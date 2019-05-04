@@ -2372,6 +2372,7 @@ class Frame(Element):
         for row in rows:
             self.AddRow(*row)
 
+
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
@@ -3611,6 +3612,7 @@ class Window:
         self.RightClickMenu = right_click_menu
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window.GetAContainerNumber()
+        self.AllKeysDict = {}
         if layout is not None:
             self.Layout(layout)
 
@@ -3650,7 +3652,9 @@ class Window:
 
     def Layout(self, rows):
         self.AddRows(rows)
+        self.BuildKeyDict()
         return self
+
 
     def LayoutAndRead(self, rows, non_blocking=False):
         raise DeprecationWarning('LayoutAndRead is no longer supported... change your call window.Layout(layout).Read()')
@@ -3924,6 +3928,27 @@ class Window:
     def FindElementWithFocus(self):
         element = _FindElementWithFocusInSubForm(self)
         return element
+
+    def BuildKeyDict(self):
+        dict = {}
+        self.AllKeysDict = self._BuildKeyDictForWindow(self, dict)
+
+    def _BuildKeyDictForWindow(self, window, key_dict):
+        for row_num, row in enumerate(window.Rows):
+            for col_num, element in enumerate(row):
+                if element.Type == ELEM_TYPE_COLUMN:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Type == ELEM_TYPE_FRAME:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Type == ELEM_TYPE_TAB_GROUP:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Type == ELEM_TYPE_PANE:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Type == ELEM_TYPE_TAB:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Key is not None:
+                    key_dict[element.Key] = element
+        return key_dict
 
     def SaveToDisk(self, filename):
         try:
@@ -4395,7 +4420,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 def AddToReturnDictionary(form, element, value):
     if element.Key is None:
         form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
-        element.Key = form.DictionaryKeyCounter
+        # element.Key = form.DictionaryKeyCounter
         form.DictionaryKeyCounter += 1
     else:
         form.ReturnValuesDictionary[element.Key] = value
@@ -7744,6 +7769,8 @@ def main():
         window.FindElement('+PROGRESS+').UpdateBar(i % 800)
         window.Element('_IMAGE_').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
         i += 1
+        if event == 'Button':
+            print(window.AllKeysDict)
         # TimerStop()
     window.Close()
 
