@@ -35,6 +35,8 @@ from random import randint
 #             d8888P                          dP
 
 
+__version__ = '3.29.0'
+
 g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
