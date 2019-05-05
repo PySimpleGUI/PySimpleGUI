@@ -6,13 +6,12 @@ import textwrap
 import pickle
 import calendar
 import threading
-from collections import deque
 from queue import Queue
 import remi
 import logging
 import traceback
 import os
-import base64
+import base64, binascii
 import mimetypes
 
 try:
@@ -70,7 +69,7 @@ def TimerStop():
 """
 
 # Because looks matter...
-DEFAULT_BASE64_ICON = 'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
+DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
 
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -1084,18 +1083,18 @@ class MultilineOutput(Element):
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-            if value is not None and not append:
-                self.Widget.set_value(str(value))
-            elif value is not None and append:
-                self.CurrentValue = self.CurrentValue + '\n' + str(value)
-                self.Widget.set_value(self.CurrentValue)
-            if self.Autoscroll:
-                app = self.ParentForm.App
-                if hasattr(app, "websockets"):
-                    app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
-                        self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+        if value is not None and not append:
+            self.Widget.set_value(str(value))
+        elif value is not None and append:
+            self.CurrentValue = self.CurrentValue + '\n' + str(value)
+            self.Widget.set_value(self.CurrentValue)
+        if self.Autoscroll:
+            app = self.ParentForm.App
+            if hasattr(app, "websockets"):
+                app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
+                    self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
 
-            super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
     def Get(self):
@@ -1294,18 +1293,18 @@ class Output(Element):
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-            if value is not None and not append:
-                self.Widget.set_value(str(value))
-            elif value is not None and append:
-                self.CurrentValue = self.CurrentValue + '\n' + str(value)
-                self.Widget.set_value(self.CurrentValue)
-            # do autoscroll
-            app = self.ParentForm.App
-            if hasattr(app, "websockets"):
-                app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
-                    self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+        if value is not None and not append:
+            self.Widget.set_value(str(value))
+        elif value is not None and append:
+            self.CurrentValue = self.CurrentValue + '\n' + str(value)
+            self.Widget.set_value(self.CurrentValue)
+        # do autoscroll
+        app = self.ParentForm.App
+        if hasattr(app, "websockets"):
+            app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
+                self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
 
-            super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
     def __del__(self):
@@ -1671,11 +1670,16 @@ class SuperImage(remi.gui.Image):
         self.imagedata = None
         self.mimetype = None
         self.encoding = None
+        if image is None:
+            return
         self.load(image)
 
     def load(self, file_path_name):
         if type(file_path_name) is bytes or len(file_path_name) > 200:
-            self.imagedata = base64.b64decode(file_path_name)
+            try:
+                self.imagedata = base64.b64decode(file_path_name, validate=True)
+            except binascii.Error:
+                self.imagedata = file_path_name
         else:
             self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
             with open(file_path_name, 'rb') as f:
@@ -1812,7 +1816,7 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
 
-        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], bottom_right[0]-top_left[0], bottom_right[1]-top_left[1])
+        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], bottom_right[0]-top_left[0], top_left[1] - bottom_right[1])
         rpoint.set_stroke(width=1, color=line_color)
         rpoint.set_fill(fill_color)
         self.SvgGroup.append([rpoint,])
@@ -1934,14 +1938,20 @@ class Graph(Element):
         figure.redraw()
 
 
-    def MouseDownCallback(self, *args):
+    def MouseDownCallback(self, widget, x,y, *args):
+        # print(f'Mouse down {x,y}')
         self.MouseButtonDown = True
 
-    def MouseUpCallback(self, *args):
+    def MouseUpCallback(self, widget, x,y, *args):
+        self.ClickPosition = self._convert_canvas_xy_to_xy(int(x), int(y))
         self.MouseButtonDown = False
+        if self.ChangeSubmits:
+            self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
+            self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
     # def ClickCallback(self, emitter, x, y):
     def ClickCallback(self, widget:remi.gui.Svg, *args):
+        return
         self.ClickPosition = (None, None)
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
@@ -2758,7 +2768,7 @@ class Window:
     stdout_string_io = None
     stdout_location = None
     port_number = 6900
-    active_windows = [ ]        # type: Window []
+    active_windows = [ ]        # type:  [Window]
     App = None                  # type: remi.App
 
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
@@ -2831,6 +2841,7 @@ class Window:
         self.ReturnValuesList = []
         self.ReturnValuesDictionary = {}
         self.DictionaryKeyCounter = 0
+        self.AllKeysDict = {}
         self.LastButtonClicked = None
         self.LastButtonClickedWasRealtime = False
         self.UseDictionary = False
@@ -2907,6 +2918,7 @@ class Window:
 
     def Layout(self, rows):
         self.AddRows(rows)
+        self.BuildKeyDict()
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
@@ -3174,18 +3186,44 @@ class Window:
         FillFormWithValues(self, values_dict)
         return self
 
-    def FindElement(self, key):
-        element = _FindElementFromKeyInSubForm(self, key)
+    def FindElement(self, key, silent_on_error=False):
+        try:
+            element = self.AllKeysDict[key]
+        except KeyError:
+            element = None
         if element is None:
-            print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-            PopupError('Keyword error in FindElement Call',
-                       'Bad key = {}'.format(key),
-                       'Your bad line of code may resemble this:',
-                       'window.FindElement("{}")'.format(key))
-            return ErrorElement(key=key)
+            if not silent_on_error:
+                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+                PopupError('Keyword error in FindElement Call',
+                           'Bad key = {}'.format(key),
+                           'Your bad line of code may resemble this:',
+                           'window.FindElement("{}")'.format(key))
+                return ErrorElement(key=key)
+            else:
+                return False
         return element
 
     Element = FindElement  # shortcut function definition
+
+    def BuildKeyDict(self):
+        dict = {}
+        self.AllKeysDict = self._BuildKeyDictForWindow(self, dict)
+
+    def _BuildKeyDictForWindow(self, window, key_dict):
+        for row_num, row in enumerate(window.Rows):
+            for col_num, element in enumerate(row):
+                if element.Type == ELEM_TYPE_COLUMN:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Type == ELEM_TYPE_FRAME:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Type == ELEM_TYPE_TAB_GROUP:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Type == ELEM_TYPE_TAB:
+                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Key is not None:
+                    key_dict[element.Key] = element
+        return key_dict
+
 
     def FindElementWithFocus(self):
         return self.FocusElement
@@ -3364,15 +3402,19 @@ class Window:
         # s.start()
         Window.port_number += 1
 
-        remi.start(self.MyApp,
-                   title=self.Title,
-                   debug=self.web_debug,
-                   address=self.web_ip,
-                   port=self.web_port,
-                   multiple_instance=self.web_multiple_instance,
-                   start_browser=self.web_start_browser,
-                   update_interval=self.web_update_interval, userdata=(self,))
+        try:
+            remi.start(self.MyApp,
+                       title=self.Title,
+                       debug=self.web_debug,
+                       address=self.web_ip,
+                       port=self.web_port,
+                       multiple_instance=self.web_multiple_instance,
+                       start_browser=self.web_start_browser,
+                       update_interval=self.web_update_interval, userdata=(self,))
 
+        except:
+            print('*** ERROR Caught inside Remi ***')
+            print(traceback.format_exc())
         # remi.start(self.MyApp, title=self.Title ,debug=False,  userdata=(self,), standalone=True)  # standalone=True)
 
         # remi.start(self.MyApp, standalone=True, debug=True, userdata=(self,) )            # Can't do this because of a threading problem
@@ -4536,15 +4578,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKText['state'] = 'disabled'
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  OUTPUT MULTILINE element  ------------------------- #
-            elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
-                element = element  # type: MultilineOutput
-                element.Widget = remi.gui.TextInput(single_line=False)
-                element.Disabled = True
-                if element.DefaultText:
-                    element.Widget.set_value(element.DefaultText)
-                do_font_and_color(element.Widget)
-                tk_row_frame.append(element.Widget)
+
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 element = element  # type: Checkbox
@@ -4662,16 +4696,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                                     timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
-                element  # type: Output
+                element=element  # type: Output
                 element.Widget = remi.gui.TextInput(single_line=False)
-                element.Disabled = False
+                element.Disabled = True
                 do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
                 toplevel_form.OutputElementForStdOut = element
                 Window.stdout_is_rerouted = True
                 Window.stdout_string_io = StringIO()
                 sys.stdout = Window.stdout_string_io
-                pass
+
                 # width, height = element_size
                 # element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
                 #                           background_color=element.BackgroundColor, text_color=text_color, font=font,
@@ -4679,6 +4713,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
                 # if element.Tooltip is not None:
                 #     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                # -------------------------  OUTPUT MULTILINE element  ------------------------- #
+            elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
+                element = element  # type: MultilineOutput
+                element.Widget = remi.gui.TextInput(single_line=False)
+                element.Disabled = True
+                do_font_and_color(element.Widget)
+                tk_row_frame.append(element.Widget)
+                if element.DefaultText:
+                    element.Widget.set_value(element.DefaultText)
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
@@ -4739,7 +4782,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget.append([element.SvgGroup,])
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onclick.connect(element.ClickCallback)
+                    element.Widget.onmouseup.connect(element.MouseUpCallback)
+                    # element.Widget.onclick.connect(element.ClickCallback)
                 if element.DragSubmits:
                     element.Widget.onmousedown.connect(element.MouseDownCallback)
                     element.Widget.onmouseup.connect(element.MouseUpCallback)
@@ -6854,6 +6898,7 @@ def main():
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
+        [Output(size=(60,10))],
         [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
