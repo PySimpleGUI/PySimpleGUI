@@ -1746,7 +1746,7 @@ class Graph(Element):
         return int(new_x), int(new_y)
 
     def DrawLine(self, point_from, point_to, color='black', width=1):
-        if point_from == (None, None):
+        if point_from == (None, None) or color is None:
             return
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
         converted_point_to = self._convert_xy_to_canvas_xy(point_to[0], point_to[1])
@@ -1808,7 +1808,7 @@ class Graph(Element):
             return None
         return
 
-    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
+    def DrawRectangle(self, top_left, bottom_right, fill_color='black', line_color=None):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self.Widget is None:
@@ -1938,6 +1938,19 @@ class Graph(Element):
         figure.redraw()
 
 
+    def DeleteFigure(self, figure):
+        figure = figure     # type: remi.gui.SvgCircle
+        if figure is None:
+            print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
+            print('Call Window.Finalize() prior to all graph operations')
+            return None
+        try: figure.empty()
+        except: pass
+        del figure
+
+
+
+
     def MouseDownCallback(self, widget, x,y, *args):
         # print(f'Mouse down {x,y}')
         self.MouseButtonDown = True
@@ -1946,6 +1959,7 @@ class Graph(Element):
         self.ClickPosition = self._convert_canvas_xy_to_xy(int(x), int(y))
         self.MouseButtonDown = False
         if self.ChangeSubmits:
+            # self.ClickPosition = (None, None)
             self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
             self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
@@ -4299,7 +4313,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             tk_row_frame.style['align-items'] = 'center'
             tk_row_frame.style['justify-content'] = 'center'
         else:
-            tk_row_frame.style['align-items'] = 'baseline'
+            tk_row_frame.style['align-items'] = 'flex-start'
             tk_row_frame.style['justify-content'] = 'flex-start'
         if form.BackgroundColor not in(None, COLOR_SYSTEM_DEFAULT):
             tk_row_frame.style['background-color'] = form.BackgroundColor
@@ -5270,6 +5284,21 @@ def setup_remi_window(app:Window.MyApp, window:Window):
         app.page.children['body'].onkeyup.connect(window.on_key_up)
     if window.ReturnKeyDownEvents:
         app.page.children['body'].onkeydown.connect(window.on_key_down)
+
+    # if window.WindowIcon:
+    #     if type(window.WindowIcon) is bytes or len(window.WindowIcon) > 200:
+    #         app.page.children['head'].set_icon_data( base64_data=str(window.WindowIcon), mimetype="image/gif" )
+    #     else:
+    #         app.page.children['head'].set_icon_file("/res:{}".format(window.WindowIcon))
+    #         pass
+            # mimetype, encoding = mimetypes.guess_type(image_source)
+            # with open(image_source, 'rb') as f:
+            #     data = f.read()
+            # b64 = base64.b64encode(data)
+            # b64_str = b64.decode("utf-8")
+            # image_string = "data:image/svg;base64,%s"%b64_str
+            # rpoint.set_image(image_string)
+
 
     return master_widget
 
@@ -6910,7 +6939,8 @@ def main():
         [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide'), B('Popup')]
     ]
 
-    window = Window('PySimpleGUIWeb Test Harness Window', layout, font='Arial 18',default_element_size=(12,1), auto_size_buttons=False)
+    window = Window('PySimpleGUIWeb Test Harness Window', layout, font='Arial 18',default_element_size=(12,1),
+                     auto_size_buttons=False)
 
     start_time = datetime.datetime.now()
     while True:
