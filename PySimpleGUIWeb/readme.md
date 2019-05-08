@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.24.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.27.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -87,6 +87,7 @@ PySimpleGUIWeb runs only on Python 3. Legacy Python (2.7) is not supported.
 * Multiline Input Element
 * Multiline Output Element
 * Output Element (redirect STDOUT)
+* Graph Element (your canvas to paint on)
 * Table Element (yes, tables! even if limited)
 * Window background color
 * Element padding
@@ -329,6 +330,44 @@ One-time patch to remove a debug print
 * Lazy buttons - Up, Down, Left, Right(()
 	* Creates buttons with arrows on them as text
 * Base64 support for Image Element
+
+
+## 0.25.0 PySimpleGUIWeb 25-Apr-19
+
+* DrawImage method WORKS! DrawImage now takes BOTH filenames and base64 variables
+* Fix for DrawRectangle (wasn't passing the right parms)
+
+## 0.26.0 PySimpleGUIWeb 1-May-2019
+
+* Combo - converts values into a list of strings
+* Image.Update is working with both filename and base64 (but no size controls yet)
+* Window - new parameter - return_key_down_events. Normally it's key up events that are returned from Read calls
+* Returning keyboard input works!  
+* Turned off Remi Logging completely (may be a bad idea. can change it back)
+* Rearranged code so that same code is used for first window and following windows
+* Window disable_close parameter controls wether or not server keeps running after user disconnects
+
+## 0.27.0 PySimpleGUIWeb 8-May-2019
+
+* Changed default icon from string to bytes
+* New Text Update to match newer call parameters
+* Added image_subsample, image_size parms to be backward compat. Note - not enabled
+* SuperImage changes - load both base64 images and files
+* Fix for DrawRectangle
+* Added data parm to DrawImage
+* Added DeleteFigure
+* Tab Support
+	* Just barely beginning
+	* May or may not work
+* Window new class variable - AllKeysDict
+	* Contains dictionary of all elements and keys
+	* Now used by FindElement / Element calls for quick lookup
+* Fix for Column elements and rows that didn't line up. Changed tk_row_frame style
+* Graph Element
+	* enable_events works
+	* drag events works
+	* click events works
+	
 
 
 

@@ -1808,7 +1808,7 @@ class Graph(Element):
             return None
         return
 
-    def DrawRectangle(self, top_left, bottom_right, fill_color='black', line_color=None):
+    def DrawRectangle(self, top_left, bottom_right, fill_color='black', line_color='black'):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self.Widget is None:
