@@ -1816,7 +1816,7 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
 
-        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], bottom_right[0]-top_left[0], top_left[1] - bottom_right[1])
+        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0]-converted_top_left[0], converted_top_left[1] - converted_bottom_right[1])
         rpoint.set_stroke(width=1, color=line_color)
         rpoint.set_fill(fill_color)
         self.SvgGroup.append([rpoint,])
