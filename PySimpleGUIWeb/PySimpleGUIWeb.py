@@ -1944,8 +1944,7 @@ class Graph(Element):
             print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
             print('Call Window.Finalize() prior to all graph operations')
             return None
-        try: figure.empty()
-        except: pass
+        self.SvgGroup.remove_child(figure)
         del figure
 
 
@@ -2172,9 +2171,10 @@ class Tab(Element):
         self.BorderWidth = border_width
         self.Disabled = disabled
         self.ParentNotebook = None
+        self.Justification = 'left'
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-
+        self.Widget = None          # type: remi.gui.HBox
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
@@ -2252,6 +2252,8 @@ class TabGroup(Element):
         self.SelectedTitleColor = selected_title_color
         self.Rows = []
         self.TKNotebook = None
+        self.Widget = None      # type: remi.gui.TabBox
+        self.Justification = 'left'
         self.TabCount = 0
         self.BorderWidth = border_width
         self.Theme = theme
@@ -4864,7 +4866,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
-                pass
+                element = element           # type: Tab
+                element.Widget = remi.gui.VBox()
+                if element.Justification.startswith('c'):
+                    # print('CENTERING')
+                    element.Widget.style['align-items'] = 'center'
+                    element.Widget.style['justify-content'] = 'center'
+                else:
+                    element.Widget.style['justify-content'] = 'flex-start'
+                    element.Widget.style['align-items'] = 'baseline'
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.Widget.style['background-color'] = element.BackgroundColor
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.Widget.style['background-color'] = element.BackgroundColor
+                PackFormIntoFrame(element, element.Widget, toplevel_form)
+                # tk_row_frame.append(element.Widget)
+                containing_frame.add_tab(element.Widget, element.Title, None)
+
                 # element.TKFrame = tk.Frame(form.TKNotebook)
                 # PackFormIntoFrame(element, element.TKFrame, toplevel_form)
                 # if element.Disabled:
@@ -4894,7 +4912,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
-                pass
+                element = element           # type: TabGroup
+                element.Widget = remi.gui.TabBox()
+                PackFormIntoFrame(element ,element.Widget, toplevel_form)
+                tk_row_frame.append(element.Widget)
 
                 # custom_style = str(element.Key) + 'customtab.TNotebook'
                 # style = ttk.Style(tk_row_frame)
