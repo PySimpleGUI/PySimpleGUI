@@ -757,6 +757,7 @@ class Listbox(Element):
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
 
     def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None, visible=None):
+        return
         if values is not None:
             self.Values = values
             self.Widget.set_value(values)
@@ -1808,7 +1809,7 @@ class Graph(Element):
             return None
         return
 
-    def DrawRectangle(self, top_left, bottom_right, fill_color='black', line_color='black'):
+    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color='black'):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self.Widget is None:
@@ -1816,9 +1817,12 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
 
-        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0]-converted_top_left[0], converted_top_left[1] - converted_bottom_right[1])
+        rpoint = remi.gui.SvgRectangle(converted_top_left[0], converted_top_left[1], abs(converted_bottom_right[0]-converted_top_left[0]), abs(converted_top_left[1] - converted_bottom_right[1]))
         rpoint.set_stroke(width=1, color=line_color)
-        rpoint.set_fill(fill_color)
+        if fill_color is not None:
+            rpoint.set_fill(fill_color)
+        else:
+            rpoint.set_fill('transparent')
         self.SvgGroup.append([rpoint,])
         return rpoint
 
@@ -4963,7 +4967,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element = element  # type: Slider
                 orient = remi.gui.Widget.LAYOUT_HORIZONTAL if element.Orientation.lower().startswith('h') else remi.gui.Widget.LAYOUT_VERTICAL
-                element.Widget = remi.gui.Slider(layout_orientation = orient, default_value=element.DefaultValue, min=element.Range[0], max=element.Range[1],step=element.Resolution)
+                element.Widget = remi.gui.Slider(layout_orientation=orient, default_value=element.DefaultValue, min=element.Range[0], max=element.Range[1],step=element.Resolution)
                 if element.DefaultValue:
                     element.Widget.set_value(element.DefaultValue)
                 # if element.Orientation.startswith('v'):
