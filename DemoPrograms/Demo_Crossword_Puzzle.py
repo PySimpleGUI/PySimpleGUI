@@ -1,6 +1,7 @@
 import sys
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+    # import PySimpleGUIWeb as sg       # take your pick of ports. Runs on both
 else:
     import PySimpleGUI27 as sg
 import random
