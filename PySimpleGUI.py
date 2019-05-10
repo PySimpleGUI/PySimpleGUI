@@ -3192,7 +3192,7 @@ MenuBar = Menu          # another name for Menu to make it clear it's the Menu B
 # ---------------------------------------------------------------------- #
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None, row_height=None, font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Table
@@ -3240,6 +3240,7 @@ class Table(Element):
         self.TKTreeview = None
         self.AlternatingRowColor = alternating_row_color
         self.VerticalScrollOnly = vertical_scroll_only
+        self.HideVerticalScroll = hide_vertical_scroll
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
@@ -3755,6 +3756,7 @@ class Window:
         self.TKroot.quit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+        timeout = int(timeout) if timeout is not None else None
         if timeout == 0:                            # timeout of zero runs the old readnonblocking
             event, values =  self.ReadNonBlocking()
             if event is None:
@@ -3950,6 +3952,12 @@ class Window:
                     key_dict = self._BuildKeyDictForWindow(element, key_dict)
                 if element.Type == ELEM_TYPE_TAB:
                     key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                if element.Key is None:
+                    if element.Type != ELEM_TYPE_BUTTON:
+                        element.Key = window.DictionaryKeyCounter
+                        window.DictionaryKeyCounter += 1
+                    else:
+                        element.Key = element.ButtonText
                 if element.Key is not None:
                     key_dict[element.Key] = element
         return key_dict
@@ -5904,9 +5912,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     treeview.bind('<Return>', element.treeview_double_click)
                     treeview.bind('<Double-Button-1>', element.treeview_double_click)
 
-                scrollbar = tk.Scrollbar(frame)
-                scrollbar.pack(side=tk.RIGHT, fill='y')
-                scrollbar.config(command=treeview.yview)
+                if not element.HideVerticalScroll:
+                    scrollbar = tk.Scrollbar(frame)
+                    scrollbar.pack(side=tk.RIGHT, fill='y')
+                    scrollbar.config(command=treeview.yview)
+                    treeview.configure(yscrollcommand=scrollbar.set)
 
                 if not element.VerticalScrollOnly:
                     hscrollbar = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
@@ -5914,7 +5924,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     hscrollbar.config(command=treeview.xview)
                     treeview.configure(xscrollcommand=hscrollbar.set)
 
-                treeview.configure(yscrollcommand=scrollbar.set)
 
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 if element.Visible is False:
@@ -7508,21 +7517,23 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
         return folder_name
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
+              [InputText(default_text=default_path, size=size, key='_INPUT_'), FolderBrowse(initial_folder=initial_folder)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
-    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color,
+    window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
 
+    button, values = window.Read()
+    window.Close()
     if button != 'Ok':
         return None
     else:
-        path = input_values[0]
+        path = values['_INPUT_']
         return path
+
 
 
 # --------------------------- PopupGetFile ---------------------------
@@ -7576,18 +7587,19 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder) if save_as else FileBrowse(file_types=file_types, initial_folder=initial_folder)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), browse_button],
+              [InputText(default_text=default_path, size=size, key='_INPUT_'), browse_button],
               [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
 
-    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+    window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
+    button, values = window.Read()
+    window.Close()
     if button != 'Ok':
         return None
     else:
-        path = input_values[0]
+        path = values['_INPUT_']
         return path
 
 
@@ -7615,19 +7627,22 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     """
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
-              [InputText(default_text=default_text, size=size, password_char=password_char)],
+              [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
               [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
 
-    window = Window(title=title or message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
-
+    button, values = window.Read()
+    window.Close()
     if button != 'Ok':
         return None
     else:
-        return input_values[0]
+        path = values['_INPUT_']
+        return path
+
+
 
 # --------------------------- PopupAnimated ---------------------------
 
