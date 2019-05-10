@@ -69,7 +69,9 @@ def TimerStop():
 """
 
 # Because looks matter...
-DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
+DEFAULT_BASE64_ICON_OLD = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
+
+DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw4AABcOAfX8Te8AAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNWRHWFIAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
 
 
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
@@ -203,6 +205,12 @@ MESSAGE_BOX_LINE_WIDTH = 60
 TIMEOUT_KEY = '__TIMEOUT__'
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
+
+# MENU Constants, can be changed by user if desired
+MENU_DISABLED_CHARACTER = '!'
+MENU_KEY_SEPARATOR = '::'
+
+
 
 
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
@@ -757,17 +765,18 @@ class Listbox(Element):
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
 
     def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None, visible=None):
-        return
         if values is not None:
             self.Values = values
-            self.Widget.set_value(values)
+            self.Widget.empty()
+            for item in values:
+                self.Widget.append(remi.gui.ListItem(item))
         # if disabled == True:
         #     self.QT_ListWidget.setDisabled(True)
         # elif disabled == False:
         #     self.QT_ListWidget.setDisabled(False)
         # if set_to_index is not None:
         #     self.QT_ListWidget.setCurrentRow(set_to_index)
-        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+        super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible, disabled=disabled)
 
         return
 
@@ -2231,7 +2240,7 @@ class Tab(Element):
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
-                 font=None, change_submits=False, pad=None, border_width=None, theme=None, key=None, tooltip=None):
+                 font=None, change_submits=False, enable_events=False,pad=None, border_width=None, theme=None, key=None, tooltip=None, visible=True):
         '''
         TabGroup Element
         :param layout:
@@ -2262,9 +2271,10 @@ class TabGroup(Element):
         self.BorderWidth = border_width
         self.Theme = theme
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.ChangeSubmits = change_submits
+        self.ChangeSubmits = enable_events or change_submits
         self.TabLocation = tab_location
-
+        self.Visible = visible
+        self.Disabled = False
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
@@ -2462,6 +2472,7 @@ class Menu(Element):
         self.MenuDefinition = menu_definition
         self.TKMenu = None
         self.Tearoff = tearoff
+        self.Widget = None          # type: remi.gui.MenuBar
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
@@ -2788,6 +2799,7 @@ class Window:
     stdout_string_io = None
     stdout_location = None
     port_number = 6900
+    menu_element = None
     active_windows = [ ]        # type:  [Window]
     App = None                  # type: remi.App
 
@@ -3440,8 +3452,6 @@ class Window:
         # remi.start(self.MyApp, standalone=True, debug=True, userdata=(self,) )            # Can't do this because of a threading problem
         print('Returned from Remi Start command... now sending None event')
 
-        # self.App.server_starter_instance._alive = False
-        # self.App.server_starter_instance._sserver.shutdown()
         self.MessageQueue.put(None)     # if returned from start call, then the window has been destroyed and a None event should be generated
 
 
@@ -3456,6 +3466,7 @@ class Window:
                 self.window = userdata2         # type: Window
             self.master_widget = None
             self.window.App = self
+
             if userdata2 is None:
                 # res_path = os.path.dirname(os.path.abspath(__file__))
                 # print('res path', res_path)
@@ -3497,8 +3508,13 @@ class Window:
             #     self.master_widget.add_child("onunloadevent", tag)
 
             self.master_widget = setup_remi_window(self, self.window)
-            self.window.MessageQueue.put('Layout complete')     # signal the main code that the layout is all done
             self.window.master_widget = self.master_widget
+            # if self.window.WindowIcon:
+            #     print('placing icon')
+                # self.page.children['head'].set_icon_file("/res:logo.png")
+                # self.page.children['head'].set_icon_data( base64_data=self.window.WindowIcon, mimetype="image/png" )
+
+            self.window.MessageQueue.put('Layout complete')     # signal the main code that the layout is all done
             return self.master_widget          # returning the root widget
 
 
@@ -4176,72 +4192,66 @@ def _FindElementWithFocusInSubForm(form):
                         return element
 
 
-if sys.version_info[0] >= 3:
-    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        if type(sub_menu_info) is str:
-            if not is_sub_menu and not skip:
-                # print(f'Adding command {sub_menu_info}')
-                pos = sub_menu_info.find('&')
-                if pos != -1:
-                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
-                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
-                if sub_menu_info == '---':
-                    top_menu.add('separator')
+def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+    # m3 = gui.MenuItem('Dialog', width=100, height=30)
+    # m3.onclick.connect(self.menu_dialog_clicked)
+    # menu.append([m1, m2, m3])
+
+    return_val = None
+    if type(sub_menu_info) is str:
+        if not is_sub_menu and not skip:
+            # print(f'Adding command {sub_menu_info}')
+            pos = sub_menu_info.find('&')
+            if pos != -1:
+                if pos == 0 or sub_menu_info[pos - 1] != "\\":
+                    sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
+            if sub_menu_info == '---':
+                # top_menu.add('separator')
+                pass
+            else:
+                try:
+                    item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+                except:
+                    item_without_key = sub_menu_info
+                if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                    menu_item =  remi.gui.MenuItem(item_without_key[1:], width=100, height=30)
+                    menu_item.set_enabled(False)
+                    top_menu.append([menu_item,])
+
+                    # TODO add callback here!
+                    # TODO disable entry
                 else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
-        else:
-            i = 0
-            while i < (len(sub_menu_info)):
-                item = sub_menu_info[i]
-                if i != len(sub_menu_info) - 1:
-                    if type(sub_menu_info[i + 1]) == list:
-                        new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                        pos = sub_menu_info[i].find('&')
-                        if pos != -1:
-                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
-                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
-                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
-                        i += 1  # skip the next one
+                    menu_item =  remi.gui.MenuItem(item_without_key, width=100, height=30)
+                    top_menu.append([menu_item,])
+
+    else:
+        i = 0
+        while i < (len(sub_menu_info)):
+            item = sub_menu_info[i]
+            if i != len(sub_menu_info) - 1:
+                if type(sub_menu_info[i + 1]) == list:
+                    pos = sub_menu_info[i].find('&')
+                    if pos != -1:
+                        if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
+                            sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
+                    if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
+                        new_menu = remi.gui.MenuItem(sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], width=100, height=30)
+                        new_menu.set_enabled(False)
+
+                        # TODO Disable Entry
                     else:
-                        AddMenuItem(top_menu, item, element)
+                        new_menu = remi.gui.MenuItem(sub_menu_info[i], width=100, height=30)
+
+                    top_menu.append([new_menu,])
+                    return_val = new_menu
+                    AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                    i += 1  # skip the next one
                 else:
                     AddMenuItem(top_menu, item, element)
-                i += 1
-else:
-    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        if isinstance(sub_menu_info, types.StringType):
-            if not is_sub_menu and not skip:
-                # print(f'Adding command {sub_menu_info}')
-                pos = sub_menu_info.find('&')
-                if pos != -1:
-                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
-                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
-                if sub_menu_info == '---':
-                    top_menu.add('separator')
-                else:
-                    top_menu.add_command(label=sub_menu_info, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
-        else:
-            i = 0
-            while i < (len(sub_menu_info)):
-                item = sub_menu_info[i]
-                if i != len(sub_menu_info) - 1:
-                    if not isinstance(sub_menu_info[i + 1], types.StringType):
-                        new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                        pos = sub_menu_info[i].find('&')
-                        if pos != -1:
-                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
-                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
-                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
-                        i += 1  # skip the next one
-                    else:
-                        AddMenuItem(top_menu, item, element)
-                else:
-                    AddMenuItem(top_menu, item, element)
-                i += 1
+            else:
+                AddMenuItem(top_menu, item, element)
+            i += 1
+    return return_val
 
 """
           :::::::::       ::::::::::         :::   :::       ::::::::::: 
@@ -4832,25 +4842,48 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element._TKCanvas2.bind('<Motion>', element.MotionCallBack)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
-                pass
-                # menu_def = element.MenuDefinition
-                # element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)  # create the menubar
-                # menubar = element.TKMenu
-                # for menu_entry in menu_def:
-                #     # print(f'Adding a Menubar ENTRY {menu_entry}')
-                #     baritem = tk.Menu(menubar, tearoff=element.Tearoff)
-                #     pos = menu_entry[0].find('&')
-                #     # print(pos)
-                #     if pos != -1:
-                #         if pos == 0 or menu_entry[0][pos - 1] != "\\":
-                #             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
-                #     menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
-                #     if len(menu_entry) > 1:
-                #         AddMenuItem(baritem, menu_entry[1], element)
-                # toplevel_form.TKroot.configure(menu=element.TKMenu)
+                element = element       # type: Menu
+                menu = remi.gui.Menu(width='100%', height='30px')
+                menu_def = element.MenuDefinition
+                for menu_entry in menu_def:
+                    # print(f'Adding a Menubar ENTRY {menu_entry}')
+                    pos = menu_entry[0].find('&')
+                    # print(pos)
+                    if pos != -1:
+                        if pos == 0 or menu_entry[0][pos - 1] != "\\":
+                            menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
+                    if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
+                        item = remi.gui.MenuItem(menu_entry[0][1:], width=100, height=30)
+                        item.set_enabled(False)
+                    else:
+                        item = remi.gui.MenuItem(menu_entry[0], width=100, height=30)
+
+                    menu.append([item,])
+                    if len(menu_entry) > 1:
+                        AddMenuItem(item, menu_entry[1], element)
+
+                element.Widget = menubar = remi.gui.MenuBar(width='100%', height='30px')
+                element.Widget.style['z-index'] = '11'
+                element.Widget.style['order'] = '11'
+                menubar.append(menu)
+                tk_row_frame.append(element.Widget)
+
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
-                pass
+                element = element  # type: Frame
+                element.Widget = column_widget = remi.gui.VBox()
+                if element.Justification.startswith('c'):
+                    # print('CENTERING')
+                    column_widget.style['align-items'] = 'center'
+                    column_widget.style['justify-content'] = 'center'
+                else:
+                    column_widget.style['justify-content'] = 'flex-start'
+                    column_widget.style['align-items'] = 'baseline'
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    column_widget.style['background-color'] = element.BackgroundColor
+                PackFormIntoFrame(element, column_widget, toplevel_form)
+                tk_row_frame.append(element.Widget)
+
                 # labeled_frame = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 # PackFormIntoFrame(element, labeled_frame, toplevel_form)
                 # labeled_frame.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
@@ -4918,6 +4951,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element = element           # type: TabGroup
                 element.Widget = remi.gui.TabBox()
+                # do_font_and_color(element.Widget)
                 PackFormIntoFrame(element ,element.Widget, toplevel_form)
                 tk_row_frame.append(element.Widget)
 
@@ -4975,41 +5009,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
                     element.Widget.onchange.connect(element.SliderCallback)
+                element.Widget.style['orientation'] = 'vertical'
+                element.Widget.attributes['orientation'] = 'vertical'
+                # print(f'slider = {element.Widget.style, element.Widget.attributes}')
                 tk_row_frame.append(element.Widget)                # slider_length = element_size[0] * CharWidthInPixels()
-                # slider_width = element_size[1]
-                # element.TKIntVar = tk.IntVar()
-                # element.TKIntVar.set(element.DefaultValue)
-                # if element.Orientation[0] == 'v':
-                #     range_from = element.Range[1]
-                #     range_to = element.Range[0]
-                #     slider_length += DEFAULT_MARGINS[1] * (element_size[0] * 2)  # add in the padding
-                # else:
-                #     range_from = element.Range[0]
-                #     range_to = element.Range[1]
-                # if element.ChangeSubmits:
-                #     tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
-                #                        from_=range_from, to_=range_to, resolution=element.Resolution,
-                #                        length=slider_length, width=slider_width, bd=element.BorderWidth,
-                #                        relief=element.Relief, font=font, tickinterval=element.TickInterval,
-                #                        command=element.SliderChangedHandler)
-                # else:
-                #     tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
-                #                        from_=range_from, to_=range_to, resolution=element.Resolution,
-                #                        length=slider_length, width=slider_width, bd=element.BorderWidth,
-                #                        relief=element.Relief, font=font, tickinterval=element.TickInterval)
-                # tkscale.config(highlightthickness=0)
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     tkscale.configure(background=element.BackgroundColor)
-                #     if DEFAULT_SCROLLBAR_COLOR != COLOR_SYSTEM_DEFAULT:
-                #         tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                # if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                #     tkscale.configure(fg=text_color)
-                # tkscale.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
-                # element.TKScale = tkscale
-                # if element.Disabled == True:
-                #     element.TKScale['state'] = 'disabled'
-                # if element.Tooltip is not None:
-                #     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
                 element = element       # type: Table
@@ -5294,6 +5298,7 @@ def setup_remi_window(app:Window.MyApp, window:Window):
         print('* ERROR PACKING FORM *')
         print(traceback.format_exc())
 
+
     if window.BackgroundImage:
         master_widget.style['background-image'] = "url('{}')".format('/' + window.BackgroundImage)
         # print(f'background info',self.master_widget.attributes['background-image'] )
@@ -5309,6 +5314,7 @@ def setup_remi_window(app:Window.MyApp, window:Window):
         app.page.children['body'].onkeyup.connect(window.on_key_up)
     if window.ReturnKeyDownEvents:
         app.page.children['body'].onkeydown.connect(window.on_key_down)
+
 
     # if window.WindowIcon:
     #     if type(window.WindowIcon) is bytes or len(window.WindowIcon) > 200:
@@ -5359,6 +5365,7 @@ def StartupTK(window:Window):
         Window.active_windows.append(window)
         Window.App = window.App
     else:
+        # print('Starting second page')
         # margin 0px auto allows to center the app to the screen
         # master_widget = remi.gui.VBox()
         # master_widget.style['justify-content'] = 'flex-start'
@@ -6806,7 +6813,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
         return folder_name
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
+              [InputText(default_text=default_path, size=size, key='_INPUT_'), FolderBrowse(initial_folder=initial_folder)],
               [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
 
     window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
@@ -6874,20 +6881,21 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
         file_types=file_types, initial_folder=initial_folder)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), browse_button],
+              [InputText(default_text=default_path, size=size, key='_INPUT_'), browse_button],
               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+    window = Window(title=message, layout = layout, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
+    button, values = window.Read()
     window.Close()
     if button != 'Ok':
         return None
     else:
-        path = input_values[0]
+        path = values['_INPUT_']
         return path
+
 
 
 # --------------------------- PopupGetText ---------------------------
@@ -6914,19 +6922,22 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
     """
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
-              [InputText(default_text=default_text, size=size, password_char=password_char)],
+              [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
               [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    window = Window(title=message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
+    button, values = window.Read()
     window.Close()
     if button != 'Ok':
         return None
     else:
-        return input_values[0]
+        path = values['_INPUT_']
+        return path
+
+
 
 
 def main():
@@ -6943,9 +6954,26 @@ def main():
     #           [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
     #           [Ok(), Cancel(disabled=True), Exit(tooltip='Exit button'), Button('Hidden Button', visible=False)]]
 
+    menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
+                ['&Edit', ['Paste', ['Special', 'Normal', ], '!Undo'], ],
+                ['!&Disabled', ['Paste', ['Special', 'Normal', ], '!Undo'], ],
+                ['&Help', '&About...'], ]
+
+
+    menu_def = [['File',  ['&Open', '&Save', 'E&xit', 'Properties']],
+                ['Edit', ['!Paste', ['Special', 'Normal', ], '!Undo'], ],
+                ['!Disabled', ['Has Sub', ['Item1', 'Item2', ], 'No Sub'], ],
+                ['Help', 'About...'], ]
+
     col1 = [[Text('Column 1 line  1', background_color='red')], [Text('Column 1 line 2')]]
 
     layout = [
+        [Menu(menu_def)],
+        # [T('123435', size=(1,8))],
+        [Image(data=DEFAULT_BASE64_ICON)],
+        [Image(data=DEFAULT_BASE64_ICON)],
+        [Image(data=DEFAULT_BASE64_ICON)],
+        [Image(data=DEFAULT_BASE64_ICON)],
         [Image(data=DEFAULT_BASE64_ICON)],
         [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
@@ -6964,7 +6992,10 @@ def main():
         [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide'), B('Popup')]
     ]
 
-    window = Window('PySimpleGUIWeb Test Harness Window', layout, font='Arial 18',default_element_size=(12,1),
+    window = Window('PySimpleGUIWeb Test Harness Window', layout,
+                    font='Arial 18',
+                    icon=DEFAULT_BASE64_ICON_OLD,
+                    default_element_size=(12,1),
                      auto_size_buttons=False)
 
     start_time = datetime.datetime.now()
