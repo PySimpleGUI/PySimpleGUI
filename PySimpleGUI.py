@@ -1698,6 +1698,17 @@ class Button(Element):
             pass
 
 
+    def Click(self):
+        """
+            Generates a click of the button as if the user clicked the button
+        :return:
+        """
+        try:
+            self.TKButton.invoke()
+        except:
+            print('Exception clicking button')
+
+
     def __del__(self):
         try:
             self.TKButton.__del__()
