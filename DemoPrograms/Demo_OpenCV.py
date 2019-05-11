@@ -48,7 +48,7 @@ def main():
         window.FindElement('slider').Update(i)
         i += 1
 
-        imgbytes = cv2.imencode('.png', frame)[1].tobytes()  # ditto
+        imgbytes = cv.imencode('.png', frame)[1].tobytes()  # ditto
         window.FindElement('image').Update(data=imgbytes)
 
 
