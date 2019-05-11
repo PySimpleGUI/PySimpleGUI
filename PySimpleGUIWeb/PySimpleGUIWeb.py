@@ -2473,16 +2473,20 @@ class Menu(Element):
         self.TKMenu = None
         self.Tearoff = tearoff
         self.Widget = None          # type: remi.gui.MenuBar
+        self.MenuItemChosen = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
 
-    def MenuItemChosenCallback(self, item_chosen):
-        # print('IN MENU ITEM CALLBACK', item_chosen)
-        self.ParentForm.LastButtonClicked = item_chosen
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
+
+    def ChangedCallbackMenu(self,  widget, *user_data):
+        widget = widget     # type: remi.gui.MenuItem
+        chosen = user_data[0]
+        self.MenuItemChosen = chosen
+        self.ParentForm.LastButtonClicked = chosen
+        self.ParentForm.MessageQueue.put(chosen)
+
 
     def __del__(self):
         super().__del__()
@@ -2568,6 +2572,7 @@ class Table(Element):
             for i, value in enumerate(values):
                 if self.DisplayRowNumbers:
                     value = [i + self.StartingRowNumber] + value
+                id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
                 id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
             if self.AlternatingRowColor is not None:
                 self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
@@ -4050,6 +4055,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_GRAPH:
                     value = element.ClickPosition
+                elif element.Type == ELEM_TYPE_MENUBAR:
+                    value = element.MenuItemChosen
             else:
                 value = None
 
@@ -4223,7 +4230,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                 else:
                     menu_item =  remi.gui.MenuItem(item_without_key, width=100, height=30)
                     top_menu.append([menu_item,])
-
+                menu_item.set_on_click_listener(element.ChangedCallbackMenu, sub_menu_info)
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -4857,16 +4864,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         item.set_enabled(False)
                     else:
                         item = remi.gui.MenuItem(menu_entry[0], width=100, height=30)
-
                     menu.append([item,])
                     if len(menu_entry) > 1:
                         AddMenuItem(item, menu_entry[1], element)
 
                 element.Widget = menubar = remi.gui.MenuBar(width='100%', height='30px')
-                element.Widget.style['z-index'] = '11'
-                element.Widget.style['order'] = '11'
+                element.Widget.style['z-index'] = '1'
                 menubar.append(menu)
-                tk_row_frame.append(element.Widget)
+                # tk_row_frame.append(element.Widget)
+                containing_frame.append(element.Widget)
 
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
@@ -6960,7 +6966,7 @@ def main():
                 ['&Help', '&About...'], ]
 
 
-    menu_def = [['File',  ['&Open', '&Save', 'E&xit', 'Properties']],
+    menu_def = [['File',  ['&Open::mykey', '&Save', 'E&xit', 'Properties']],
                 ['Edit', ['!Paste', ['Special', 'Normal', ], '!Undo'], ],
                 ['!Disabled', ['Has Sub', ['Item1', 'Item2', ], 'No Sub'], ],
                 ['Help', 'About...'], ]
@@ -6968,12 +6974,8 @@ def main():
     col1 = [[Text('Column 1 line  1', background_color='red')], [Text('Column 1 line 2')]]
 
     layout = [
-        [Menu(menu_def)],
+        [Menu(menu_def, key='_MENU_')],
         # [T('123435', size=(1,8))],
-        [Image(data=DEFAULT_BASE64_ICON)],
-        [Image(data=DEFAULT_BASE64_ICON)],
-        [Image(data=DEFAULT_BASE64_ICON)],
-        [Image(data=DEFAULT_BASE64_ICON)],
         [Image(data=DEFAULT_BASE64_ICON)],
         [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
