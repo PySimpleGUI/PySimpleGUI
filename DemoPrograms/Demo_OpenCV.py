@@ -5,8 +5,6 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 import cv2 as cv
-from PIL import Image
-import io
 from sys import exit as exit
 
 """
@@ -50,11 +48,7 @@ def main():
         window.FindElement('slider').Update(i)
         i += 1
 
-        # let img be the PIL image
-        img = Image.fromarray(frame)  # create PIL image from frame
-        bio = io.BytesIO()  # a binary memory resident stream
-        img.save(bio, format= 'PNG')  # save image as png to it
-        imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
+        imgbytes = cv2.imencode('.png', frame)[1].tobytes()  # ditto
         window.FindElement('image').Update(data=imgbytes)
 
 
