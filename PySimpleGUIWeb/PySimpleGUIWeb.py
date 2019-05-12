@@ -1767,6 +1767,7 @@ class Graph(Element):
         line = remi.gui.SvgLine(converted_point_from[0], converted_point_from[1], converted_point_to[0], converted_point_to[1])
         line.set_stroke(width, color)
         self.SvgGroup.append([line,])
+        return line
 
     def DrawPoint(self, point, size=2, color='black'):
         if point == (None, None):
@@ -1876,6 +1877,7 @@ class Graph(Element):
             image_string = "data:image/svg;base64,%s"%b64_str
             rpoint.set_image(image_string)
         self.SvgGroup.append([rpoint,])
+        return rpoint
 
     def Erase(self):
         if self.Widget is None:
@@ -1934,6 +1936,7 @@ class Graph(Element):
             return None
         cur_x = float(figure.attributes['x'])
         cur_y = float(figure.attributes['y'])
+        print(f'Moving figure from {cur_x, cur_y} in direction {x_direction, y_direction}')
         figure.set_position(cur_x - x_direction,cur_y - y_direction)
         figure.redraw()
 
@@ -2458,7 +2461,7 @@ class Column(Element):
 #                           Menu                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None):
+    def __init__(self, menu_definition, background_color=COLOR_SYSTEM_DEFAULT, text_color=None, size=(None, None), tearoff=False, pad=None, key=None, disabled=False, font=None):
         '''
         Menu Element
         :param menu_definition:
@@ -2468,14 +2471,15 @@ class Menu(Element):
         :param pad:
         :param key:
         '''
-        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        back_color = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
         self.TKMenu = None
         self.Tearoff = tearoff
         self.Widget = None          # type: remi.gui.MenuBar
         self.MenuItemChosen = None
+        self.Disabled = disabled
 
-        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
+        super().__init__(ELEM_TYPE_MENUBAR, background_color=back_color, text_color=text_color, size=size, pad=pad, key=key, font=font)
         return
 
 
@@ -4029,6 +4033,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                     element = element  # type: Listbox
                     value = element.Widget.get_value()
+                    value = [value,]
                     # items = element.TKListbox.curselection()
                     # value = [element.Values[int(item)] for item in items]
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
@@ -4850,7 +4855,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element       # type: Menu
-                menu = remi.gui.Menu(width='100%', height='30px')
+                menu = remi.gui.Menu(width='100%', height=str(element_size[1]))
+                element_size = (0,0)    # makes the menu span across the top
+                do_font_and_color(menu)
+
                 menu_def = element.MenuDefinition
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY {menu_entry}')
@@ -4860,10 +4868,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if pos == 0 or menu_entry[0][pos - 1] != "\\":
                             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
                     if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
-                        item = remi.gui.MenuItem(menu_entry[0][1:], width=100, height=30)
+                        item = remi.gui.MenuItem(menu_entry[0][1:], width=100, height=element_size[1])
                         item.set_enabled(False)
                     else:
-                        item = remi.gui.MenuItem(menu_entry[0], width=100, height=30)
+                        item = remi.gui.MenuItem(menu_entry[0], width=100, height=element_size[1])
+                    do_font_and_color(item)
                     menu.append([item,])
                     if len(menu_entry) > 1:
                         AddMenuItem(item, menu_entry[1], element)
@@ -6822,17 +6831,17 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
               [InputText(default_text=default_path, size=size, key='_INPUT_'), FolderBrowse(initial_folder=initial_folder)],
               [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
 
-    window = Window(title=message, icon=icon, auto_size_text=True, button_color=button_color,
+    window = Window(title=message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.LayoutAndRead(layout)
-    window.Close()
+    button, values = window.Read()
+    # window.Close()
     if button != 'Ok':
         return None
     else:
-        path = input_values[0]
+        path = values['_INPUT_']
         return path
 
 
@@ -6974,7 +6983,7 @@ def main():
     col1 = [[Text('Column 1 line  1', background_color='red')], [Text('Column 1 line 2')]]
 
     layout = [
-        [Menu(menu_def, key='_MENU_')],
+        [Menu(menu_def, key='_MENU_', text_color='yellow', background_color='#475841',  font='Courier 14')],
         # [T('123435', size=(1,8))],
         [Image(data=DEFAULT_BASE64_ICON)],
         [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
