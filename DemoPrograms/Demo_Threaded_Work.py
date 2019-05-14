@@ -33,15 +33,16 @@ def the_gui(gui_queue):
     window = sg.Window('Multithreaded Window').Layout(layout)
     # --------------------- EVENT LOOP ---------------------
     message = None
+    count = 0
     while True:
         event, values = window.Read(timeout=100)  # wait for up to 100 ms for a GUI event
         if event is None or event == 'Exit':
             break
         if event == 'Go':
-            window.Element('_OUTPUT_').Update('Starting long work....')
+            window.Element('_OUTPUT_').Update('Starting long work %s'%count)
             # simulate STARTING long run by starting a thread
-            threading.Thread(target=worker_thread, args=('Thread 1', gui_queue,), daemon=True).start()
-
+            threading.Thread(target=worker_thread, args=('Thread %s'%count, gui_queue,), daemon=True).start()
+            count += 1
         # --------------- Loop through all messages coming in from threads ---------------
         try:  # see if something has been posted to Queue
             message = gui_queue.get_nowait()
@@ -49,7 +50,7 @@ def the_gui(gui_queue):
             pass             # nothing in queue so do nothing
 
         # if message received from queue, display the message in the Window
-        if message is not None and message.startswith('Thread 1'):
+        if message is not None:
             # this is the place you would execute code at ENDING of long running task
             window.Element('_OUTPUT_').Update(message)
             window.Refresh()  # do a refresh because could be showing multiple messages before next Read
