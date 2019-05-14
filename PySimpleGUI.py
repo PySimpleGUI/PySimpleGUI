@@ -6206,7 +6206,7 @@ def StartupTK(my_flex_form:Window):
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
 
     try:
-        root.attributes('-alpha', my_flex_form.AlphaChannel)  # Make window visible again
+        root.attributes('-alpha', 1 if my_flex_form.AlphaChannel is None else my_flex_form.AlphaChannel)  # Make window visible again
     except:
         pass
 
@@ -7666,7 +7666,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=.8, time_between_frames=0):
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None):
 
     if image_source is None:
         for image in Window.animated_popup_dict:
@@ -7676,15 +7676,15 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         return
 
     if image_source not in Window.animated_popup_dict:
-        if type(image_source) is bytes:
+        if type(image_source) is bytes or len(image_source)>200:
+            print('Animating data')
             layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
         else:
             layout = [[Image(filename=image_source, background_color=background_color, key='_IMAGE_',)],]
         if message:
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
-        window = Window('Animated GIF', no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                           background_color=background_color, location=location, alpha_channel=alpha_channel, element_padding=(0,0), margins=(0,0)).Layout(layout).Finalize()
+        window = Window('Animated GIF', layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, background_color=background_color, location=location, alpha_channel=alpha_channel, element_padding=(0,0), margins=(0,0), transparent_color=transparent_color).Finalize()
         Window.animated_popup_dict[image_source] = window
     else:
         window = Window.animated_popup_dict[image_source]
