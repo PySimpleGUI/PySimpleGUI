@@ -3535,7 +3535,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None, transparent_color=None):
         '''
         Window
         :param title:
@@ -3623,6 +3623,8 @@ class Window:
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window.GetAContainerNumber()
         self.AllKeysDict = {}
+        self.TransparentColor = transparent_color
+
         if layout is not None:
             self.Layout(layout)
 
@@ -4163,6 +4165,9 @@ class Window:
     def VisibilityChanged(self):
         # A dummy function.  Needed in Qt but not tkinter
         return
+
+    def SetTransparentColor(self, color):
+        self.TKroot.attributes('-transparentcolor', color)
 
     def __enter__(self):
         return self
@@ -6164,6 +6169,7 @@ def StartupTK(my_flex_form:Window):
     else:
         root = tk.Toplevel()
 
+
     try:
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except:
@@ -6190,6 +6196,9 @@ def StartupTK(my_flex_form:Window):
     if my_flex_form.KeepOnTop:
         root.wm_attributes("-topmost", 1)
 
+    if my_flex_form.TransparentColor is not None:
+        my_flex_form.SetTransparentColor(my_flex_form.TransparentColor)
+
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
@@ -6197,7 +6206,7 @@ def StartupTK(my_flex_form:Window):
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
 
     try:
-        root.attributes('-alpha', my_flex_form.AlphaChannel)  # Make window visible again
+        root.attributes('-alpha', 1 if my_flex_form.AlphaChannel is None else my_flex_form.AlphaChannel)  # Make window visible again
     except:
         pass
 
@@ -7657,7 +7666,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=.8, time_between_frames=0):
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None):
 
     if image_source is None:
         for image in Window.animated_popup_dict:
@@ -7667,15 +7676,15 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         return
 
     if image_source not in Window.animated_popup_dict:
-        if type(image_source) is bytes:
+        if type(image_source) is bytes or len(image_source)>200:
+            print('Animating data')
             layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
         else:
             layout = [[Image(filename=image_source, background_color=background_color, key='_IMAGE_',)],]
         if message:
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
-        window = Window('Animated GIF', no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                           background_color=background_color, location=location, alpha_channel=alpha_channel, element_padding=(0,0), margins=(0,0)).Layout(layout).Finalize()
+        window = Window('Animated GIF', layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, background_color=background_color, location=location, alpha_channel=alpha_channel, element_padding=(0,0), margins=(0,0), transparent_color=transparent_color).Finalize()
         Window.animated_popup_dict[image_source] = window
     else:
         window = Window.animated_popup_dict[image_source]
@@ -7779,7 +7788,9 @@ def main():
 
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
+                    background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
+                    # transparent_color= '#9FB8AD',
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
@@ -7802,6 +7813,10 @@ def main():
         if event == 'Button':
             print(window.AllKeysDict)
             window.Element('_TEXT1_').SetTooltip('NEW TEXT')
+            window.SetTransparentColor( '#9FB8AD')
+            # window.TKroot.wm_attributes("-transparent", '#9FB8AD')
+            # window.TKroot.wm_attributes("-transparentcolor", '#9FB8AD')
+
         # TimerStop()
     window.Close()
 
