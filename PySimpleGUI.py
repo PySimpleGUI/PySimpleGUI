@@ -3535,7 +3535,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None, transparent_color=None):
         '''
         Window
         :param title:
@@ -3623,6 +3623,8 @@ class Window:
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window.GetAContainerNumber()
         self.AllKeysDict = {}
+        self.TransparentColor = transparent_color
+
         if layout is not None:
             self.Layout(layout)
 
@@ -4163,6 +4165,9 @@ class Window:
     def VisibilityChanged(self):
         # A dummy function.  Needed in Qt but not tkinter
         return
+
+    def SetTransparentColor(self, color):
+        self.TKroot.attributes('-transparentcolor', color)
 
     def __enter__(self):
         return self
@@ -6164,6 +6169,7 @@ def StartupTK(my_flex_form:Window):
     else:
         root = tk.Toplevel()
 
+
     try:
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except:
@@ -6189,6 +6195,9 @@ def StartupTK(my_flex_form:Window):
 
     if my_flex_form.KeepOnTop:
         root.wm_attributes("-topmost", 1)
+
+    if my_flex_form.TransparentColor is not None:
+        my_flex_form.SetTransparentColor(my_flex_form.TransparentColor)
 
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
@@ -7779,7 +7788,9 @@ def main():
 
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
+                    background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
+                    # transparent_color= '#9FB8AD',
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
@@ -7802,6 +7813,10 @@ def main():
         if event == 'Button':
             print(window.AllKeysDict)
             window.Element('_TEXT1_').SetTooltip('NEW TEXT')
+            window.SetTransparentColor( '#9FB8AD')
+            # window.TKroot.wm_attributes("-transparent", '#9FB8AD')
+            # window.TKroot.wm_attributes("-transparentcolor", '#9FB8AD')
+
         # TimerStop()
     window.Close()
 
