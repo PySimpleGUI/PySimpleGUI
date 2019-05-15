@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.27.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.28.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -368,6 +368,28 @@ One-time patch to remove a debug print
 	* drag events works
 	* click events works
 	
+
+## 0.28.0 PySimpleGUIWeb 15-May-2019
+
+* Menus
+	* Yes, the full Menu Bar across the top of the window!
+	* PLUS, you get more controls to set the colors and fonts
+	* Works with menu keys too
+	* Disabled items are not working however
+	* Correctly returns menu events
+* Listbox
+	* Correctly handling Update calls that change the list
+	* Correctly returns a LIST of items (even if only 1)
+* Button Graphics!
+	* Can specify either a filename or image data as the source 
+	* Update parameters image_data and image_filename work!
+* Fix in DrawLine. Wasn't returning the id
+* DrawRectangle fixes - transparent fill color is default. Correctly draws coordinates now
+* DrawImage seems to work with both data and files
+* enable_events parameter for TabGroups
+* Frame Element
+	* Behaves like a Column element for now since no official Remi Frame
+* Fix for popups that get data - New dictionary return values messed up popups. Needed to use keys internally
 
 
 
