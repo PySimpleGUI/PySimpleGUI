@@ -19,6 +19,11 @@ import PySimpleGUI as sg
     
     If you have multiple long tasks to run, then you'll want a more sophisticated
     format to your messages going back to the GUI so you'll know which task finished
+    
+    You want to look for 3 points in this code. 
+    1. Where you put your call that takes a long time
+    2. Where the trigger to make the call takes place in the event loop
+    3. Where the completion of the call is indicated in the event loop
 """
 
 # Put your....
@@ -29,7 +34,7 @@ import PySimpleGUI as sg
 ##       ########  ##     ##
 ##       ##        ##     ##
 ##    ## ##        ##     ##
-#######  ##         #######
+ ######  ##         #######
 
 #### ##    ## ######## ######## ##    ##  ######  #### ##     ## ########
  ##  ###   ##    ##    ##       ###   ## ##    ##  ##  ##     ## ##
@@ -45,12 +50,13 @@ import PySimpleGUI as sg
 ##       ##     ## ##     ## ######
 ##       ##     ## ##     ## ##
 ##    ## ##     ## ##     ## ##
-#######   #######  ########  ########
+ ######   #######  ########  ########
 
 # Here in this thread
 
 def worker_thread(thread_name, gui_queue):
     print('Starting thread - {} '.format(thread_name))
+    # LOCATION 1
     # this is our "long running function call"
     time.sleep(5)  # sleep for a while
     print('Ending thread - {} '.format(thread_name))
@@ -68,12 +74,13 @@ def worker_thread(thread_name, gui_queue):
 ##    ##  ##     ##  ##
 ########  ######### ####
 
-def the_gui(gui_queue):
+def the_gui():
+    gui_queue = queue.Queue()  # queue used to communicate between the gui and the threads
 
     layout = [[sg.Text('Multithreaded Work Example')],
               [sg.Text('', size=(25, 1), key='_OUTPUT_')],
               # [sg.Output(size=(40,6))],
-              [sg.Button('Go'), sg.Button('Exit')], ]
+              [sg.Button('Go'), sg.Button('Popup'), sg.Button('Exit')], ]
 
     window = sg.Window('Multithreaded Window').Layout(layout)
     # --------------------- EVENT LOOP ---------------------
@@ -84,6 +91,7 @@ def the_gui(gui_queue):
             break
         if event == 'Go':           # clicking "Go" starts a long running work item by starting thread
             window.Element('_OUTPUT_').Update('Starting long work %s'%count)
+            # LOCATION 2
             # STARTING long run by starting a thread
             threading.Thread(target=worker_thread, args=('Thread %s'%count, gui_queue,), daemon=True).start()
             count += 1
@@ -95,10 +103,12 @@ def the_gui(gui_queue):
 
         # if message received from queue, display the message in the Window
         if message is not None:
+            # LOCATION 3
             # this is the place you would execute code at ENDING of long running task
             window.Element('_OUTPUT_').Update(message)
-            window.Refresh()  # do a refresh because could be showing multiple messages before next Read
 
+        if event == 'Popup':
+            sg.Popup('This is a popup showing that the GUI is running')
     # if user exits the window, then close the window and exit the GUI func
     window.Close()
 
@@ -112,7 +122,5 @@ def the_gui(gui_queue):
 ##     ## ##     ## #### ##    ##
 
 if __name__ == '__main__':
-    # -- Create a Queue to communicate with GUI --
-    gui_queue = queue.Queue()  # queue used to communicate between the gui and the threads
-    the_gui(gui_queue)
+    the_gui()
     print('Exiting Program')
