@@ -2187,7 +2187,6 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        self.Images.append(image)
         try:  # in case closed with X
             id = self._TKCanvas2.create_image(converted_point, image=image, anchor=tk.NW)
             self.Images[id] = image
