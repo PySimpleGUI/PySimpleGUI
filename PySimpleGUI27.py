@@ -914,10 +914,10 @@ class Radio(Element):
                          tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, visible=None):
-        location = EncodeRadioRowCol(self.ParentForm.ContainerElemementNumber, self.Position[0], self.Position[1])
         if value is not None:
             try:
-                self.TKIntVar.set(location)
+                self.TKIntVar.set(self.EncodedRadioValue)
+                self.InitialState = value
             except:
                 pass
             self.InitialState = value
