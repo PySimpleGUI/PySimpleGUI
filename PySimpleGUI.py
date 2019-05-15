@@ -904,10 +904,10 @@ class Radio(Element):
                          tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, visible=None):
-        location = EncodeRadioRowCol(self.ParentForm.ContainerElemementNumber, self.Position[0], self.Position[1])
         if value is not None:
             try:
-                self.TKIntVar.set(location)
+                self.TKIntVar.set(self.EncodedRadioValue)
+                self.InitialState = value
             except:
                 pass
             self.InitialState = value
@@ -4167,7 +4167,10 @@ class Window:
         return
 
     def SetTransparentColor(self, color):
-        self.TKroot.attributes('-transparentcolor', color)
+        try:
+            self.TKroot.attributes('-transparentcolor', color)
+        except:
+            print('Transparent color not supported on this platform (windows only)')
 
     def __enter__(self):
         return self
@@ -7676,8 +7679,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         return
 
     if image_source not in Window.animated_popup_dict:
-        if type(image_source) is bytes or len(image_source)>200:
-            print('Animating data')
+        if type(image_source) is bytes or len(image_source)>300:
             layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
         else:
             layout = [[Image(filename=image_source, background_color=background_color, key='_IMAGE_',)],]
@@ -7788,7 +7790,7 @@ def main():
 
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
-                    background_color='black',
+                    # background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     ).Finalize()
