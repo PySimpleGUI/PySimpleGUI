@@ -40,15 +40,15 @@ import PySimpleGUI as sg
 # NEVER make calls to PySimpleGUI from this thread (or any thread)!
 # Create one of these functions for EVERY long-running call you want to make
 def long_function_wrapper(work_id, gui_queue):
-    print('Thread starting - {} '.format(work_id))
     # LOCATION 1
     # this is our "long running function call"
-    time.sleep(5)  # sleep for a while
-    print('Thread Ending - {} '.format(work_id))
+    time.sleep(5)  # sleep for a while as a simulation of a long-running computation
     # at the end of the work, before exiting, send a message back to the GUI indicating end
     gui_queue.put('{} ::: done'.format(work_id))
+    # at this point, the thread exits
+    return
 
-
+  
 ############################# Begin GUI code #############################
 def the_gui():
     gui_queue = queue.Queue()  # queue used to communicate between the gui and long-running code
