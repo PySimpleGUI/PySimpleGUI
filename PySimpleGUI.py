@@ -907,7 +907,6 @@ class Radio(Element):
         if value is not None:
             try:
                 self.TKIntVar.set(self.EncodedRadioValue)
-                self.InitialState = value
             except:
                 pass
             self.InitialState = value
