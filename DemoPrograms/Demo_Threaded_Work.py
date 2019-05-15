@@ -48,7 +48,7 @@ def long_function_wrapper(work_id, gui_queue):
     # at this point, the thread exits
     return
 
-
+  
 ############################# Begin GUI code #############################
 def the_gui():
     gui_queue = queue.Queue()  # queue used to communicate between the gui and long-running code
