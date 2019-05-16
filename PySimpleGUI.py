@@ -3949,28 +3949,34 @@ class Window:
 
     def BuildKeyDict(self):
         dict = {}
-        self.AllKeysDict = self._BuildKeyDictForWindow(self, dict)
+        self.AllKeysDict = self._BuildKeyDictForWindow(self,self, dict)
 
-    def _BuildKeyDictForWindow(self, window, key_dict):
+    def _BuildKeyDictForWindow(self, top_window, window, key_dict):
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
                 if element.Type == ELEM_TYPE_COLUMN:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_FRAME:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_TAB_GROUP:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_PANE:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_TAB:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
-                if element.Key is None and element.Type not in (ELEM_TYPE_TEXT,):   # don't assign keys to some things
-                    if element.Type != ELEM_TYPE_BUTTON:
-                        element.Key = window.DictionaryKeyCounter
-                        window.DictionaryKeyCounter += 1
-                    else:
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                if element.Key is None:   # if no key has been assigned.... create one for input elements
+                    if element.Type == ELEM_TYPE_BUTTON:
                         element.Key = element.ButtonText
+                    if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU, ELEM_TYPE_CANVAS,
+                                        ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
+                                        ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
+                                        ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
+                                        ELEM_TYPE_INPUT_TEXT):
+                        element.Key = top_window.DictionaryKeyCounter
+                        top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
+                    if element.Key in key_dict.keys():
+                        print('*** Duplicate key found in your layout {} ***'.format(element.Key))
                     key_dict[element.Key] = element
         return key_dict
 
@@ -4006,7 +4012,13 @@ class Window:
         self.TKroot.iconify()
 
     def Maximize(self):
-        self.TKroot.attributes('-fullscreen', True)
+        self.TKroot.state('zoomed')
+        # this method removes the titlebar too
+        # self.TKroot.attributes('-fullscreen', True)
+
+    def Normal(self):
+        self.TKroot.state('normal')
+
 
     def StartMove(self, event):
         try:
