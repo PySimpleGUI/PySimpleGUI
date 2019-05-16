@@ -5317,7 +5317,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     combostyle = ttk.Style()
 
                     # Creates a unique name for each field element(Sure there is a better way to do this)
-                    unique_field = str(time.time()).replace('.', '') + str(randint(1, 99999)) + '.TCombobox.field'
+
+                    unique_field = str(element.Key) + '.TCombobox.field'
+
+                    # unique_field = str(time.time()).replace('.', '') + str(element.Key) + '.TCombobox.field'
+
                     # unique_field = str(time.time()).replace('.','') + '.TCombobox.field'
                     # unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
                     # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
@@ -7750,6 +7754,11 @@ def main():
 
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Spin([1, 2, 3], size=(4, 3))],
     ]
