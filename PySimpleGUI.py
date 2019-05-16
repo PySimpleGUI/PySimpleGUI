@@ -6136,7 +6136,10 @@ def ConvertFlexToTK(MyFlexForm):
     InitializeResults(MyFlexForm)
     try:
         if MyFlexForm.NoTitleBar:
-            MyFlexForm.TKroot.wm_overrideredirect(True)
+            if sys.platform == 'linux':
+                MyFlexForm.TKroot.wm_attributes("-type","splash")
+            else:
+                MyFlexForm.TKroot.wm_overrideredirect(True)
     except:
         pass
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
