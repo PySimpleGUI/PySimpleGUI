@@ -10,9 +10,8 @@ from builtins import map
 from builtins import int
 from builtins import str
 from builtins import object
-
 from future import standard_library
-# standard_library.install_aliases()
+standard_library.install_aliases()
 import sys
 if sys.version_info[0] >= 3:
     import tkinter as tk
@@ -396,6 +395,7 @@ class Element(object):
         self.TooltipObject = None
         self.Visible = visible
         self.TKRightClickMenu = None
+        self.Widget = None              # Set when creating window. Has the main tkinter widget for element
 
     def RightClickMenuCallback(self, event):
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
@@ -515,6 +515,9 @@ class Element(object):
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
+
+    def SetTooltip(self,tooltip_text):
+        self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
 
 
     def __del__(self):
@@ -914,10 +917,9 @@ class Radio(Element):
                          tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, visible=None):
-        location = EncodeRadioRowCol(self.ParentForm.ContainerElemementNumber, self.Position[0], self.Position[1])
         if value is not None:
             try:
-                self.TKIntVar.set(location)
+                self.TKIntVar.set(self.EncodedRadioValue)
             except:
                 pass
             self.InitialState = value
@@ -2043,7 +2045,7 @@ class Graph(Element):
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
-        self.Images = []
+        self.Images = {}
         self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
@@ -2198,9 +2200,9 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        self.Images.append(image)
         try:  # in case closed with X
             id = self._TKCanvas2.create_image(converted_point, image=image, anchor=tk.NW)
+            self.Images[id] = image
         except:
             id = None
         return id
@@ -2212,6 +2214,7 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
+        self.Images = {}
         try:            # in case window was closed with X
             self._TKCanvas2.delete('all')
         except:
@@ -2220,6 +2223,7 @@ class Graph(Element):
 
     def DeleteFigure(self, id):
         try:
+            del self.Images[id]
             self._TKCanvas2.delete(id)
         except:
             print('DeleteFigure - bad ID {}'.format(id))
@@ -3545,7 +3549,7 @@ class Window(object):
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None, transparent_color=None):
         '''
         Window
         :param title:
@@ -3633,6 +3637,8 @@ class Window(object):
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window.GetAContainerNumber()
         self.AllKeysDict = {}
+        self.TransparentColor = transparent_color
+
         if layout is not None:
             self.Layout(layout)
 
@@ -3956,28 +3962,35 @@ class Window(object):
 
     def BuildKeyDict(self):
         dict = {}
-        self.AllKeysDict = self._BuildKeyDictForWindow(self, dict)
+        self.AllKeysDict = self._BuildKeyDictForWindow(self,self, dict)
+        # print(f'keys built = {self.AllKeysDict}')
 
-    def _BuildKeyDictForWindow(self, window, key_dict):
+    def _BuildKeyDictForWindow(self, top_window, window, key_dict):
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
                 if element.Type == ELEM_TYPE_COLUMN:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_FRAME:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_TAB_GROUP:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_PANE:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_TAB:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
-                if element.Key is None and element.Type != ELEM_TYPE_TEXT:
-                    if element.Type != ELEM_TYPE_BUTTON:
-                        element.Key = window.DictionaryKeyCounter
-                        window.DictionaryKeyCounter += 1
-                    else:
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                if element.Key is None:   # if no key has been assigned.... create one for input elements
+                    if element.Type == ELEM_TYPE_BUTTON:
                         element.Key = element.ButtonText
+                    if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU, ELEM_TYPE_CANVAS,
+                                        ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
+                                        ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
+                                        ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
+                                        ELEM_TYPE_INPUT_RADIO, ELEM_TYPE_INPUT_TEXT):
+                        element.Key = top_window.DictionaryKeyCounter
+                        top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
+                    if element.Key in key_dict.keys():
+                        print('*** Duplicate key found in your layout {} ***'.format(element.Key))
                     key_dict[element.Key] = element
         return key_dict
 
@@ -4013,7 +4026,13 @@ class Window(object):
         self.TKroot.iconify()
 
     def Maximize(self):
-        self.TKroot.attributes('-fullscreen', True)
+        self.TKroot.state('zoomed')
+        # this method removes the titlebar too
+        # self.TKroot.attributes('-fullscreen', True)
+
+    def Normal(self):
+        self.TKroot.state('normal')
+
 
     def StartMove(self, event):
         try:
@@ -4174,6 +4193,12 @@ class Window(object):
         # A dummy function.  Needed in Qt but not tkinter
         return
 
+    def SetTransparentColor(self, color):
+        try:
+            self.TKroot.attributes('-transparentcolor', color)
+        except:
+            print('Transparent color not supported on this platform (windows only)')
+
     def __enter__(self):
         return self
 
@@ -4311,6 +4336,7 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
+
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
         font=None, bind_return_key=True, focus=False, pad=None, key=None):
@@ -4419,6 +4445,8 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
+    form.ReturnValuesDictionary[element.Key] = value
+    return
     if element.Key is None:
         form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
         element.Key = form.DictionaryKeyCounter
@@ -4939,7 +4967,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 if element.Scrollable:
-                    element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
+                    element.TKColFrame = element.Widget = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
@@ -4983,7 +5011,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Pane element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
                 bd = element.BorderDepth if element.BorderDepth is not None else border_depth
-                element.PanedWindow = tk.PanedWindow(tk_row_frame,
+                element.PanedWindow = element.Widget = tk.PanedWindow(tk_row_frame,
                                                      orient=tk.VERTICAL if element.Orientation.startswith('v') else tk.HORIZONTAL,
                                                      borderwidth=bd,
                                                      bd=bd,
@@ -5042,7 +5070,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                 #                         justify=justify, bd=border_depth, font=font)
-                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                                         justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
@@ -5094,10 +5122,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = DEFAULT_BUTTON_COLOR
                 border_depth = element.BorderWidth
                 if btype != BUTTON_TYPE_REALTIME:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height,
+                    tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
                                          command=element.ButtonCallBack, justify=tk.LEFT, bd=border_depth, font=font)
                 else:
-                    tkbutton = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT,
+                    tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT,
                                          bd=border_depth, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
@@ -5169,7 +5197,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     bc = DEFAULT_BUTTON_COLOR
                 border_depth = element.BorderWidth
-                tkbutton = tk.Menubutton(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth, font=font)
+                tkbutton = element.Widget = tk.Menubutton(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=border_depth, font=font)
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
@@ -5235,7 +5263,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                element.TKEntry = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar,
+                element.TKEntry = element.Widget = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar,
                                            bd=border_depth, font=font, show=show, justify=justify)
                 if element.ChangeSubmits:
                     element.TKEntry.bind('<Key>', element.KeyboardHandler)
@@ -5275,8 +5303,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # print(style_name)
                     combostyle = tkinter.ttk.Style()
 
-                    unique_field = str(time.time()).replace('.','') + '.TCombobox.field'
                     # Creates a unique name for each field element(Sure there is a better way to do this)
+
+                    unique_field = str(element.Key) + '.TCombobox.field'
+
+                    # unique_field = str(time.time()).replace('.', '') + str(element.Key) + '.TCombobox.field'
+
+                    # unique_field = str(time.time()).replace('.','') + '.TCombobox.field'
                     # unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
                     # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
 
@@ -5308,7 +5341,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
                     combostyle.configure(style_name, selectforeground=element.TextColor)
 
-                element.TKCombo = tkinter.ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
+                element.TKCombo = element.Widget = tkinter.ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
                 element.TKCombo['values'] = element.Values
@@ -5341,7 +5374,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 default = element.DefaultValue if element.DefaultValue else element.Values[0]
                 element.TKStringVar.set(default)
-                element.TKOptionMenu = tk.OptionMenu(tk_row_frame, element.TKStringVar, *element.Values)
+                element.TKOptionMenu = element.Widget = tk.OptionMenu(tk_row_frame, element.TKStringVar, *element.Values)
                 element.TKOptionMenu.config(highlightthickness=0, font=font, width=width)
                 element.TKOptionMenu.config(borderwidth=border_depth)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -5365,7 +5398,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     width = max_line_len
                 listbox_frame = tk.Frame(tk_row_frame)
                 element.TKStringVar = tk.StringVar()
-                element.TKListbox = tk.Listbox(listbox_frame, height=element_size[1], width=width,
+                element.TKListbox = element.Widget = tk.Listbox(listbox_frame, height=element_size[1], width=width,
                                                selectmode=element.SelectMode, font=font, exportselection=False)
                 for index, item in enumerate(element.Values):
                     element.TKListbox.insert(tk.END, item)
@@ -5403,7 +5436,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element       # type: Multiline
                 default_text = element.DefaultText
                 width, height = element_size
-                element.TKText = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
+                element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
                                                               bd=border_depth, font=font, relief=tk.FLAT)
                 element.TKText.insert(1.0, default_text)  # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -5438,11 +5471,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKIntVar = tk.IntVar()
                 element.TKIntVar.set(default_value if default_value is not None else 0)
                 if element.ChangeSubmits:
-                    element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                    element.TKCheckbutton = element.Widget = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                            variable=element.TKIntVar, bd=border_depth, font=font,
                                                            command=element.CheckboxHandler)
                 else:
-                    element.TKCheckbutton = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                    element.TKCheckbutton = element.Widget = tk.Checkbutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                            variable=element.TKIntVar, bd=border_depth, font=font)
                 if default_value is None or element.Disabled:
                     element.TKCheckbutton.configure(state='disable')
@@ -5478,6 +5511,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
+                element.Widget = element.TKProgressBar.TKProgressBarForReal
                 # -------------------------  RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 element = element       # type: Radio
@@ -5496,11 +5530,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if default_value:  # if this radio is the one selected, set RadVar to match
                     element.TKIntVar.set(value)
                 if element.ChangeSubmits:
-                    element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                    element.TKRadio = element.Widget = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                      variable=element.TKIntVar, value=value, bd=border_depth, font=font,
                                                      command=element.RadioHandler)
                 else:
-                    element.TKRadio = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
+                    element.TKRadio = element.Widget = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text, width=width,
                                                      variable=element.TKIntVar, value=value, bd=border_depth, font=font)
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
@@ -5519,7 +5553,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.TKStringVar = tk.StringVar()
-                element.TKSpinBox = tk.Spinbox(tk_row_frame, values=element.Values, textvariable=element.TKStringVar,
+                element.TKSpinBox = element.Widget = tk.Spinbox(tk_row_frame, values=element.Values, textvariable=element.TKStringVar,
                                                width=width, bd=border_depth)
                 element.TKStringVar.set(element.DefaultValue)
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
@@ -5540,7 +5574,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  OUTPUT element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
-                element._TKOut = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
+                element._TKOut = element.Widget = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
                                           background_color=element.BackgroundColor, text_color=text_color, font=font,
                                           pad=elementpad)
                 element._TKOut.output.configure(takefocus=0)            # make it so that Output does not get focus
@@ -5572,10 +5606,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         width, height = element_size
                     if photo is not None:
-                        element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height,
+                        element.tktext_label = element.Widget = tk.Label(tk_row_frame, image=photo, width=width, height=height,
                                                         bd=border_depth)
                     else:
-                        element.tktext_label = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
+                        element.tktext_label = element.Widget = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
                     if element.BackgroundColor is not None:
                         element.tktext_label.config(background=element.BackgroundColor)
 
@@ -5599,7 +5633,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
                 if element._TKCanvas is None:
-                    element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                    element._TKCanvas = element.Widget = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
                 else:
                     element._TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -5625,7 +5659,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
                 # else:
                 #     element._TKCanvas.master = tk_row_frame
-                element._TKCanvas2 = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
+                element._TKCanvas2 = element.Widget = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
                 element._TKCanvas2.pack(side=tk.LEFT)
                 element._TKCanvas2.addtag_all('mytag')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -5651,8 +5685,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas2.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
+                element = element           # type: MenuBar
                 menu_def = element.MenuDefinition
-                element.TKMenu = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)  # create the menubar
+                element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)  # create the menubar
                 menubar = element.TKMenu
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY {menu_entry}')
@@ -5673,7 +5708,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
-                labeled_frame = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
+                labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
                 labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
@@ -5701,7 +5736,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
-                element.TKFrame = tk.Frame(form.TKNotebook)
+                element.TKFrame = element.Widget = tk.Frame(form.TKNotebook)
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
                 if element.Disabled:
                     form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
@@ -5768,7 +5803,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style + '.Tab', foreground=element.TextColor)
                 # style.configure(custom_style, background='blue', foreground='yellow')
 
-                element.TKNotebook = tkinter.ttk.Notebook(tk_row_frame, style=custom_style)
+                element.TKNotebook = element.Widget = tkinter.ttk.Notebook(tk_row_frame, style=custom_style)
 
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
@@ -5793,13 +5828,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     range_from = element.Range[0]
                     range_to = element.Range[1]
                 if element.ChangeSubmits:
-                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
+                    tkscale = element.Widget = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
                                        from_=range_from, to_=range_to, resolution=element.Resolution,
                                        length=slider_length, width=slider_width, bd=element.BorderWidth,
                                        relief=element.Relief, font=font, tickinterval=element.TickInterval,
                                        command=element.SliderChangedHandler)
                 else:
-                    tkscale = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
+                    tkscale = element.Widget = tk.Scale(tk_row_frame, orient=element.Orientation, variable=element.TKIntVar,
                                        from_=range_from, to_=range_to, resolution=element.Resolution,
                                        length=slider_length, width=slider_width, bd=element.BorderWidth,
                                        relief=element.Relief, font=font, tickinterval=element.TickInterval)
@@ -5852,7 +5887,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DisplayRowNumbers:  # if display row number, tack on the numbers to front of columns
                     displaycolumns = [element.RowHeaderText, ] + displaycolumns
                     column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
-                element.TKTreeview = tkinter.ttk.Treeview(frame, columns=column_headings,
+                element.TKTreeview = element.Widget = tkinter.ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='headings', height=height,
                                                   selectmode=element.SelectMode,)
                 treeview = element.TKTreeview
@@ -5949,7 +5984,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             displaycolumns.append(element.ColumnHeadings[i])
                 column_headings = element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
-                element.TKTreeview = tkinter.ttk.Treeview(frame, columns=column_headings,
+                element.TKTreeview = element.Widget = tkinter.ttk.Treeview(frame, columns=column_headings,
                                                   displaycolumns=displaycolumns, show='tree headings', height=height,
                                                   selectmode=element.SelectMode)
                 treeview = element.TKTreeview
@@ -6012,7 +6047,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Separator element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element       # type: VerticalSeparator
-                separator = tkinter.ttk.Separator(tk_row_frame, orient=element.Orientation, )
+                separator = element.Widget = tkinter.ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
             # -------------------------  StatusBar element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
@@ -6045,7 +6080,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                 #                         justify=justify, bd=border_depth, font=font)
-                tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
+                tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                                         justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
@@ -6142,6 +6177,7 @@ def StartupTK(my_flex_form):
     else:
         root = tk.Toplevel()
 
+
     try:
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except:
@@ -6168,6 +6204,9 @@ def StartupTK(my_flex_form):
     if my_flex_form.KeepOnTop:
         root.wm_attributes("-topmost", 1)
 
+    if my_flex_form.TransparentColor is not None:
+        my_flex_form.SetTransparentColor(my_flex_form.TransparentColor)
+
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     ConvertFlexToTK(my_flex_form)
@@ -6175,7 +6214,7 @@ def StartupTK(my_flex_form):
     my_flex_form.SetIcon(my_flex_form.WindowIcon)
 
     try:
-        root.attributes('-alpha', my_flex_form.AlphaChannel)  # Make window visible again
+        root.attributes('-alpha', 1 if my_flex_form.AlphaChannel is None else my_flex_form.AlphaChannel)  # Make window visible again
     except:
         pass
 
@@ -8018,7 +8057,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=.8, time_between_frames=0):
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None):
 
     if image_source is None:
         for image in Window.animated_popup_dict:
@@ -8028,15 +8067,14 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         return
 
     if image_source not in Window.animated_popup_dict:
-        if type(image_source) is bytes:
+        if type(image_source) is bytes or len(image_source)>300:
             layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_',)],]
         else:
             layout = [[Image(filename=image_source, background_color=background_color, key='_IMAGE_',)],]
         if message:
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
-        window = Window('Animated GIF', no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                           background_color=background_color, location=location, alpha_channel=alpha_channel, element_padding=(0,0), margins=(0,0)).Layout(layout).Finalize()
+        window = Window('Animated GIF', layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, background_color=background_color, location=location, alpha_channel=alpha_channel, element_padding=(0,0), margins=(0,0), transparent_color=transparent_color).Finalize()
         Window.animated_popup_dict[image_source] = window
     else:
         window = Window.animated_popup_dict[image_source]
@@ -8088,6 +8126,11 @@ def main():
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
         [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
+        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Spin([1, 2, 3], size=(4, 3))],
     ]
 
@@ -8123,12 +8166,13 @@ def main():
 
     layout1 = [
         [Menu(menu_def)],
-        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15', tooltip='My tooltip')],
+        [Image(data=DEFAULT_BASE64_ICON)],
+        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
         [Frame('Input Text Group', frame1, title_color='red'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_')],
         [Frame('Multiple Choice Group', frame2, title_color='green'),
-         Frame('Binary Choice Group', frame3, title_color='purple'),
+         Frame('Binary Choice Group', frame3, title_color='purple', tooltip='Binary Choice'),
          Frame('Variable Choice Group', frame4, title_color='blue')],
         [Frame('Structured Data Group', frame5, title_color='red'), ],
         # [Frame('Graphing Group', frame6)],
@@ -8140,7 +8184,9 @@ def main():
 
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
+                    # background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
+                    # transparent_color= '#9FB8AD',
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
@@ -8162,6 +8208,11 @@ def main():
         i += 1
         if event == 'Button':
             print(window.AllKeysDict)
+            window.Element('_TEXT1_').SetTooltip('NEW TEXT')
+            window.SetTransparentColor( '#9FB8AD')
+            # window.TKroot.wm_attributes("-transparent", '#9FB8AD')
+            # window.TKroot.wm_attributes("-transparentcolor", '#9FB8AD')
+
         # TimerStop()
     window.Close()
 

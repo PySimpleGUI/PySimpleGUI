@@ -3950,6 +3950,7 @@ class Window:
     def BuildKeyDict(self):
         dict = {}
         self.AllKeysDict = self._BuildKeyDictForWindow(self,self, dict)
+        # print(f'keys built = {self.AllKeysDict}')
 
     def _BuildKeyDictForWindow(self, top_window, window, key_dict):
         for row_num, row in enumerate(window.Rows):
@@ -3971,7 +3972,7 @@ class Window:
                                         ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
                                         ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
                                         ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
-                                        ELEM_TYPE_INPUT_TEXT):
+                                        ELEM_TYPE_INPUT_RADIO, ELEM_TYPE_INPUT_TEXT):
                         element.Key = top_window.DictionaryKeyCounter
                         top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
@@ -4460,6 +4461,8 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
+    form.ReturnValuesDictionary[element.Key] = value
+    return
     if element.Key is None:
         form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
         element.Key = form.DictionaryKeyCounter
@@ -5698,6 +5701,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas2.bind('<Button-3>', element.RightClickMenuCallback)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
+                element = element           # type: MenuBar
                 menu_def = element.MenuDefinition
                 element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff)  # create the menubar
                 menubar = element.TKMenu
@@ -7795,6 +7799,7 @@ def main():
 
     layout1 = [
         [Menu(menu_def)],
+        [Image(data=DEFAULT_BASE64_ICON)],
         [Text('You are running the PySimpleGUI.py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
         [Frame('Input Text Group', frame1, title_color='red'),
