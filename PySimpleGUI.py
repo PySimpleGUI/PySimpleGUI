@@ -1632,7 +1632,7 @@ class Button(Element):
             root = tk.Toplevel()
             root.title('Calendar Chooser')
             root.wm_attributes("-topmost", 1)
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y, locale=self.CalendarLocale)
             self.TKCal.pack(expand=1, fill='both')
             root.update()
 
@@ -4425,9 +4425,10 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, locale=None)
     button.CalendarCloseWhenChosen = close_when_date_chosen
     button.DefaultDate_M_D_Y = default_date_m_d_y
+    button.CalendarLocale = locale
     return button
 
 
