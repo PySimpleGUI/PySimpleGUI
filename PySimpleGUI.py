@@ -1636,7 +1636,7 @@ class Button(Element):
             self.TKCal.pack(expand=1, fill='both')
             root.update()
             
-             if type(Window.user_defined_icon) is bytes:
+            if type(Window.user_defined_icon) is bytes:
                 calendar_icon = tkinter.PhotoImage(data=Window.user_defined_icon)
             else:
                 calendar_icon = DEFAULT_BASE64_ICON
