@@ -61,6 +61,14 @@ def TimerStop():
     are not a mess.  The Elements and the methods for them are well-designed.
     PEP8 - this code is far far from PEP8 compliant. 
     It was written PRIOR to learning that PEP8 existed. 
+    
+    I'll be honest.... started learning Python in Nov 2017, started writing PySimpleGUI in Feb 2018.
+    Released PySimpleGUI in July 2018.  I knew so little about Python that my parameters were all named
+    using CamelCase.  DOH!  Someone on Reddit set me straight on that.  So overnight I renamed all of the
+    parameters to lower case.  Unfortunately, the internal naming conventions have been set.  Mixing them
+    with PEP8 at this moment would be even MORE confusing.
+    
+    Code I write now, outside PySimpleGUI, IS PEP8 compliant.  
      
     The variable and function naming in particular are not compliant.  There is
     liberal use of CamelVariableAndFunctionNames.  If you've got a serious enough problem with this
@@ -3937,7 +3945,7 @@ class Window:
                            'window.FindElement("{}")'.format(key))
                 return ErrorElement(key=key)
             else:
-                return False
+                return None
         return element
 
     Element =  FindElement          # Shortcut function
@@ -4494,6 +4502,15 @@ def DecodeRadioRowCol(RadValue):
 def EncodeRadioRowCol(container, row, col):
     RadValue = container*100000 + row * 1000 + col
     return RadValue
+
+
+# --------------------------------------------------------------#
+# Closes the hidden master window so PySimpleGUI can be closed  #
+# --------------------------------------------------------------#
+
+def ClosePySimpleGUI():
+    Window.hidden_master_root.destroy()
+    Window.DecrementOpenCount()
 
 
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
