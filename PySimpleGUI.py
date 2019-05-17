@@ -1632,7 +1632,7 @@ class Button(Element):
             root = tk.Toplevel()
             root.title('Calendar Chooser')
             root.wm_attributes("-topmost", 1)
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y, locale=self.CalendarLocale)
+            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y, locale=self.CalendarLocale, format=self.CalendarFormat)
             self.TKCal.pack(expand=1, fill='both')
             root.update()
 
@@ -2944,6 +2944,9 @@ class TKCalendar(ttk.Frame):
         locale = kw.pop('locale', None)
         sel_bg = kw.pop('selectbackground', '#ecffc4')
         sel_fg = kw.pop('selectforeground', '#05640e')
+        self.format = kw.pop('format')
+        if self.format is None:
+            self.format = '%Y-%m-%d %H:%M:%S'
 
         self._date = self.datetime(year, month, default_day or 1)
         self._selection = None  # no date selected
@@ -3097,8 +3100,9 @@ class TKCalendar(ttk.Frame):
         self._selection = (text, item, column)
         self._show_selection(text, bbox)
         year, month = self._date.year, self._date.month
+        now = self.datetime.now()
         try:
-            self._TargetElement.Update(self.datetime(year, month, int(self._selection[0])))
+            self._TargetElement.Update(self.datetime(year, month, int(self._selection[0]), now.hour, now.minute, now.second).strftime(self.format))
             if self._TargetElement.ChangeSubmits:
                 self._TargetElement.ParentForm.LastButtonClicked = self._TargetElement.Key
                 self._TargetElement.ParentForm.FormRemainedOpen = True
@@ -4420,15 +4424,16 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, default_date_m_d_y=(None,None,None), image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                   key=None):
+                   key=None, locale=None, format=None):
     button =  Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, locale=None)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
     button.CalendarCloseWhenChosen = close_when_date_chosen
     button.DefaultDate_M_D_Y = default_date_m_d_y
     button.CalendarLocale = locale
+    button.CalendarFormat = format
     return button
 
 
