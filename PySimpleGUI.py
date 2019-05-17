@@ -4097,6 +4097,13 @@ class Window:
             # _my_windows.Decrement()
         except:
             pass
+        # if down to 1 window, try and destroy the hidden window, if there is one
+        if Window.NumOpenWindows == 1:
+            try:
+                Window.hidden_master_root.destroy()
+                Window.NumOpenWindows = 0           # if no hidden window, then this won't execute
+            except:
+                pass
 
     CloseNonBlockingForm = Close
     CloseNonBlocking = Close
@@ -4502,16 +4509,6 @@ def DecodeRadioRowCol(RadValue):
 def EncodeRadioRowCol(container, row, col):
     RadValue = container*100000 + row * 1000 + col
     return RadValue
-
-
-# --------------------------------------------------------------#
-# Closes the hidden master window so PySimpleGUI can be closed  #
-# --------------------------------------------------------------#
-
-def ClosePySimpleGUI():
-    Window.hidden_master_root.destroy()
-    Window.DecrementOpenCount()
-
 
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
 # format of return values is
