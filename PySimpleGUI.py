@@ -1635,6 +1635,15 @@ class Button(Element):
             self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
+            
+            if type(Window.user_defined_icon) is bytes:
+                calendar_icon = tkinter.PhotoImage(data=Window.user_defined_icon)
+            else:
+                calendar_icon = DEFAULT_BASE64_ICON
+            try:
+                root.tk.call('wm', 'iconphoto', root._w, calendar_icon)
+            except:
+                pass
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
