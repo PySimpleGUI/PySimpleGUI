@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 import PySimpleGUIWeb as sg
+# import PySimpleGUI as sg
 
 
 """
    
-    Shows a big chart of colors... give it a few seconds to create it
+    Shows a big chart of colors... 
     Once large window is shown, you can click on any color and another window will popup 
     showing both white and black text on that color
     Uses TOOLTIPS to show the hex values for the colors.  Hover over a color and a tooltip will show you the RGB
     You will find the list of tkinter colors here:
          http://www.tcl.tk/man/tcl8.5/TkCmd/colors.htm
-    
+    Really shows off the PySimpleGUIWeb capabilities
 """
 
 color_map = {
@@ -667,11 +668,19 @@ color_map = {
 }
 
 
+def detailed_view(window):
+    layout2 = [[sg.Button(event, button_color=('white', color_map[event]), key=event, tooltip=color_map[color]),
+                sg.Button(event, button_color=('black', color_map[event]), key=event+'1', tooltip=color_map[color])],
+               [sg.Txt('Hover over button to see color value. Click to clocse and return to main interface.')], ]
+    sg.Window('Buttons with white and black text', layout2, keep_on_top=True).Read()
+    window.Close()
+    return
+
 
 sg.SetOptions(button_element_size=(16,1), auto_size_buttons=False, border_width=0, tooltip_time=100)
 
 #start layout with the tittle
-layout = [[sg.Text('Hover mouse to see RGB value',
+layout = [[sg.Text('Hover mouse to see RGB value. Click to see Button with White or Black text.',
                    text_color='blue',
                    font=('Hevletica', 20),
                    relief=sg.RELIEF_SUNKEN,
@@ -692,12 +701,9 @@ for rows in range(40):
             pass
     layout.append(row)
 
-window = sg.Window('Color Viewer', font=('any 12'), default_button_element_size=(12,1), element_padding=(0,0)).Layout(layout)
-
-# -- Event loop --
 while True:
+    window = sg.Window('Color Viewer', layout, font=('any 12'), default_button_element_size=(12,1), element_padding=(0,0))
     event, values = window.Read()
     if event is None:
         break
-
-window.Close()
+    detailed_view(window)
