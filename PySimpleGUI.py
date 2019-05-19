@@ -1639,7 +1639,7 @@ class Button(Element):
             if type(Window.user_defined_icon) is bytes:
                 calendar_icon = tkinter.PhotoImage(data=Window.user_defined_icon)
             else:
-                calendar_icon = DEFAULT_BASE64_ICON
+                calendar_icon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
             try:
                 root.tk.call('wm', 'iconphoto', root._w, calendar_icon)
             except:
