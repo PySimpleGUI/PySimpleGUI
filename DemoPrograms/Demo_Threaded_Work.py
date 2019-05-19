@@ -48,7 +48,7 @@ def long_function_wrapper(work_id, gui_queue):
     # at this point, the thread exits
     return
 
-  
+
 ############################# Begin GUI code #############################
 def the_gui():
     gui_queue = queue.Queue()  # queue used to communicate between the gui and long-running code
@@ -57,7 +57,8 @@ def the_gui():
               [sg.Text('Click Go to start a long-running function call')],
               [sg.Text('', size=(25, 1), key='_OUTPUT_')],
               [sg.Text('', size=(25, 1), key='_OUTPUT2_')],
-              [sg.Button('Go'), sg.Button('Popup'), sg.Button('Exit')], ]
+              [sg.Graph((10,10),(0,0),(10,10),background_color='black',key=i) for i in range(20)],
+              [sg.Button('Go'), sg.Button('Stop'), sg.Button('Popup'), sg.Button('Exit')], ]
 
     window = sg.Window('Multithreaded Window').Layout(layout)
     # --------------------- EVENT LOOP ---------------------
@@ -68,10 +69,14 @@ def the_gui():
             break
         if event == 'Go':           # clicking "Go" starts a long running work item by starting thread
             window.Element('_OUTPUT_').Update('Starting long work %s'%work_id)
+            window.Element(work_id).Update(background_color='red')
             # LOCATION 2
             # STARTING long run by starting a thread
-            threading.Thread(target=long_function_wrapper, args=(work_id, gui_queue,), daemon=True).start()
-            work_id += 1
+            thread_id = threading.Thread(target=long_function_wrapper, args=(work_id, gui_queue,), daemon=True)
+            thread_id.start()
+            work_id = work_id+1 if work_id < 19 else 0
+        elif event == 'Stop':
+            thread_id.exit
         # --------------- Read next message coming in from threads ---------------
         try:
             message = gui_queue.get_nowait()    # see if something has been posted to Queue
@@ -83,8 +88,10 @@ def the_gui():
             # LOCATION 3
             # this is the place you would execute code at ENDING of long running task
             # You can check the completed_work_id variable to see exactly which long-running function completed
-            completed_work_id = message[:message.index(' :::')]
+            completed_work_id = int(message[:message.index(' :::')])
             window.Element('_OUTPUT2_').Update('Complete Work ID "{}"'.format(completed_work_id))
+            window.Element(completed_work_id).Update(background_color='green')
+
         if event == 'Popup':
             sg.Popup('This is a popup showing that the GUI is running')
     # if user exits the window, then close the window and exit the GUI func
