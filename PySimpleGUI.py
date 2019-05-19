@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+#!/usr/bin/python3
 import sys
 if sys.version_info[0] >= 3:
     import tkinter as tk
@@ -1087,8 +1088,7 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
-                 auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False,do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None, right_click_menu=None, visible=True):
         '''
         Multiline
         :param default_text:
@@ -1121,6 +1121,7 @@ class Multiline(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
@@ -3538,7 +3539,6 @@ class Window:
     hidden_master_root = None
     animated_popup_dict = {}
     container_element_counter = 0           # used to get a number of Container Elements (Frame, Column, Tab)
-
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
@@ -3633,7 +3633,7 @@ class Window:
         self.ContainerElemementNumber = Window.GetAContainerNumber()
         self.AllKeysDict = {}
         self.TransparentColor = transparent_color
-
+        self.UniqueKeyCounter = 0
         if layout is not None:
             self.Layout(layout)
 
@@ -3931,6 +3931,8 @@ class Window:
         return self
 
     def FindElement(self, key, silent_on_error=False):
+        # print(f'In find elem key={key}', self.AllKeysDict)
+
         try:
             element = self.AllKeysDict[key]
         except KeyError:
@@ -3985,7 +3987,10 @@ class Window:
                         top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
                     if element.Key in key_dict.keys():
-                        print('*** Duplicate key found in your layout {} ***'.format(element.Key))
+                        print('*** Duplicate key found in your layout {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
+                        element.Key = element.Key + str(self.UniqueKeyCounter)
+                        self.UniqueKeyCounter += 1
+                        print('*** Replaced new key with {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
                     key_dict[element.Key] = element
         return key_dict
 
@@ -5293,8 +5298,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                element.TKEntry = element.Widget = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar,
-                                           bd=border_depth, font=font, show=show, justify=justify)
+                element.TKEntry = element.Widget = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=border_depth, font=font, show=show, justify=justify)
                 if element.ChangeSubmits:
                     element.TKEntry.bind('<Key>', element.KeyboardHandler)
                 element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
@@ -5466,8 +5470,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element       # type: Multiline
                 default_text = element.DefaultText
                 width, height = element_size
-                element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word',
-                                                              bd=border_depth, font=font, relief=tk.FLAT)
+                border_depth = element.BorderWidth
+                element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=border_depth, font=font, relief=RELIEF_SUNKEN)
                 element.TKText.insert(1.0, default_text)  # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
@@ -7837,6 +7841,7 @@ def main():
                     # background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
+                    resizable=False,
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
@@ -7857,12 +7862,9 @@ def main():
         window.Element('_IMAGE_').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
         i += 1
         if event == 'Button':
-            print(window.AllKeysDict)
             window.Element('_TEXT1_').SetTooltip('NEW TEXT')
-            window.SetTransparentColor( '#9FB8AD')
-            # window.TKroot.wm_attributes("-transparent", '#9FB8AD')
-            # window.TKroot.wm_attributes("-transparentcolor", '#9FB8AD')
-
+            # window.SetTransparentColor( '#9FB8AD')
+            window.Maximize()
         # TimerStop()
     window.Close()
 
