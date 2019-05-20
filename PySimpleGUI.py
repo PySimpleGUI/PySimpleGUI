@@ -1617,7 +1617,6 @@ class Button(Element):
                 self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
-                # _my_windows.Decrement()
                 Window.DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_READ_FORM:  # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
@@ -1634,7 +1633,6 @@ class Button(Element):
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
                 Window.DecrementOpenCount()
-                # _my_windows.Decrement()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             should_submit_window = False
             root = tk.Toplevel()
@@ -5425,7 +5423,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
-                max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
+                max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) else 0
                 if auto_size_text is False:
                     width = element_size[0]
                 else:
@@ -6564,7 +6562,7 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
     window.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
-    button = DummyButton if non_blocking else Button
+    button = DummyButton if non_blocking else CloseButton
     if yes_no:
         window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('Yes'), button('No'))
     else:
@@ -6574,6 +6572,7 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
+        # window.Close()
     return button
 
 
