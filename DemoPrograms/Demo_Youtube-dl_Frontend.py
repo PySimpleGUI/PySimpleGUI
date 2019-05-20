@@ -37,21 +37,21 @@ def DownloadSubtitlesGUI():
         if event == 'Get List':
             print('Getting list of subtitles....')
             window.Refresh()
-            command = [f'C:/Python/PycharmProjects/GooeyGUI/youtube-dl --list-subs {link}',]
+            command = [f'C:\\Python\\Anaconda3\\Scripts\\youtube-dl.exe --list-subs {link}',]
             output = ExecuteCommandSubprocess(command, wait=True, quiet=True)
             lang_list = [o[:5].rstrip() for o in output.split('\n') if 'vtt' in o]
             lang_list = sorted(lang_list)
             combobox.Update(values=lang_list)
             print('Done')
 
-        elif event is 'Download':
+        elif event == 'Download':
             lang = values['lang']
             if lang is '':
                 lang = 'en'
             print(f'Downloading subtitle for {lang}...')
             window.Refresh()
-            command = (f'C:/Python/PycharmProjects/GooeyGUI/youtube-dl --sub-lang {lang} --write-sub {link}',)
-            ExecuteCommandSubprocess(command, wait=True)
+            command = [f'C:\\Python\\Anaconda3\\Scripts\\youtube-dl.exe --sub-lang {lang} --write-sub {link}',]
+            print(ExecuteCommandSubprocess(command, wait=True, quiet=False))
             print('Done')
 
 
@@ -65,7 +65,9 @@ def ExecuteCommandSubprocess(command, wait=False, quiet=True, *args):
                     print(out.decode("utf-8"))
                 if err:
                     print(err.decode("utf-8"))
-    except: return ''
+    except Exception as e:
+        print('Exception encountered running command ', e)
+        return ''
 
     return (out.decode('utf-8'))
 
