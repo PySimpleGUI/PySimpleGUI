@@ -13,6 +13,8 @@ import PySimpleGUI as sg
     At the moment, the event loop runs once a second.  It could easily be shortened if that's too slow
 """
 
+WIDTH_VARIABLES = 12
+WIDTH_RESULTS = 16
 
 def convertExpr2Expression(Expr):
         Expr.lineno = 0
@@ -41,10 +43,12 @@ def func(x=''):
     return f'return value from func()={x}'
 
 
-def main():
+def init():
     def InVar(key1, key2):
-        row1 = [sg.T(''), sg.I(key=key1, size=(18,1)), sg.I(key=key1+'CHANGED_', size=(18,1)),                sg.T('  '),
-                sg.T(''), sg.I(key=key2, size=(18, 1)), sg.I(key=key2 + 'CHANGED_', size=(18, 1))]
+        row1 = [sg.T('    '),
+                sg.I(key=key1, size=(WIDTH_VARIABLES,1)),
+                sg.I(key=key1+'CHANGED_', size=(WIDTH_RESULTS,1)),sg.B('Detail', key=key1+'DETAIL_'), sg.T(' '),
+                sg.T(' '), sg.I(key=key2, size=(WIDTH_VARIABLES, 1)), sg.I(key=key2 + 'CHANGED_', size=(WIDTH_RESULTS, 1)), sg.B('Detail', key=key2+'DETAIL_'),]
         return row1
 
     variables_frame = [ InVar('_VAR1_', '_VAR2_'),
@@ -54,46 +58,49 @@ def main():
     interactive_frame = [[sg.T('>>> '), sg.In(size=(70,1), key='_INTERACTIVE_'), sg.B('Go', bind_return_key=True, visible=False)],
                 [sg.Output(size=(70,8))],]
 
-    layout = [
-                [sg.Frame('Variables or Expressions to Watch', variables_frame)],
+    layout = [  [sg.Frame('Variables or Expressions to Watch', variables_frame)],
                 [sg.Frame('Interactive REPL', interactive_frame)],
                 [sg.Button('Exit')]]
 
     window = sg.Window('Realtime REPL Command Output + Watches', layout).Finalize()
     window.Element('_INTERACTIVE_').SetFocus()
-    event_loop(window)
+    return window
+    # event_loop(window)
 
+event_once = lambda window, var=0 : exec("""
 
-def event_loop(window):
-    var = 0
-    while True:             # Event Loop
-        event, values = window.Read(timeout=1000)
-        if event in (None, 'Exit'):
-            break
-        cmd = values['_INTERACTIVE_']
-        if event == 'Run':
-            runCommand(cmd=cmd, window=window)
-        elif event == 'Go':
-            window.Element('_INTERACTIVE_').Update('')
-            out=''
-            print(">>> ", cmd)
+# while True:             # Event Loop
+event, values = window.Read(timeout=100)
+print(event, values) if event != sg.TIMEOUT_KEY else None
+if event in (None, 'Exit'):
+    False
+cmd = values['_INTERACTIVE_']
+if event == 'Run':
+    runCommand(cmd=cmd, window=window)
+elif event == 'Go':
+    window.Element('_INTERACTIVE_').Update('')
+    out=''
+    print(">>> ", cmd)
+    try:
+        print(exec_with_return(cmd))
+    except Exception as e:
+        print(f'Exception on output {e}')
+elif event.endswith('_DETAIL_'):
+    try: sg.PopupScrolled(eval(values[f'_VAR{event[4]}_']))
+    except: pass
+# -------------------- Process the "watch list" ------------------
+for i in range(1, 6):
+    key = f'_VAR{i}_'
+    out_key = f'_VAR{i}_CHANGED_'
+    if window.Element(key):
+        if values[key]:
             try:
-                print(exec_with_return(cmd))
-            except Exception as e:
-                print(f'Exception on output {e}')
-        # -------------------- Process the "watch list" ------------------
-        for i in range(1, 6):
-            key = f'_VAR{i}_'
-            out_key = f'_VAR{i}_CHANGED_'
-            if window.Element(key):
-                if values[key]:
-                    try:
-                        window.Element(out_key).Update(eval(values[key]))
-                    except:
-                        window.Element(out_key).Update('')
-        var += 1
-    window.Close()
-
+                window.Element(out_key).Update(eval(values[key]))
+            except:
+                window.Element(out_key).Update('')
+var += 1
+True
+""")
 
 def runCommand(cmd, timeout=None, window=None):
     """ run shell command
@@ -113,5 +120,12 @@ def runCommand(cmd, timeout=None, window=None):
     retval = p.wait(timeout)
     return (retval, output)
 
-main()
-print('Exited program....')
+if __name__ == '__main__':
+    window = init()
+    my_variable=1000
+    while True:
+        event_once(window)
+        # if not event_once(window):
+        #     break
+    window.Close()
+
