@@ -286,7 +286,7 @@ Now that you know the basics, let's put together a window that contains as many 
     button, values = window.Read()
     sg.Popup(button, values)    
     
-That may seem like a lot of code, but try coding this same GUI layout using any other GUI framework and it will be lengthier and what you see here.... by a WIDE margin.  10's of times longer.    
+That may seem like a lot of code, but try coding this same GUI layout using any other GUI framework and it will be lengthier than what you see here.... by a WIDE margin.  10's of times longer.    
     
 ![everything for tutorial](https://user-images.githubusercontent.com/13696193/44302997-38531b00-a303-11e8-8c45-698ea62590a8.jpg)    
     
