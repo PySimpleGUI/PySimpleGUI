@@ -49,13 +49,13 @@ def non_user_init():
 def _event_once(mylocals, myglobals):
     global myrc, watcher_window
     if not watcher_window:
-        return
+        return False
     _window = watcher_window
     _event, _values = _window.Read(timeout=1)
     if _event in (None, 'Exit'):
         _window.Close()
         watcher_window = None
-        return
+        return False
     cmd = _values['_INTERACTIVE_']
     if _event == 'Run':
         _runCommand(cmd=cmd, window=_window)
@@ -99,7 +99,7 @@ PySimpleGUIdebugger.PySimpleGUIdebugger.myrc = {} """.format(_values[key])
                 _window.Element(out_key).Update(myrc)
             else:
                 _window.Element(out_key).Update('')
-    return
+    return True
 
 
 def _runCommand(cmd, timeout=None, window=None):
@@ -121,7 +121,7 @@ def _runCommand(cmd, timeout=None, window=None):
     return (retval, output)
 
 def refresh(locals, globals):
-    _event_once(locals, globals)
+    return _event_once(locals, globals)
 
 def initialize():
     global watcher_window
