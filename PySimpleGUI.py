@@ -4024,12 +4024,18 @@ class Window:
         self.TKroot.iconify()
 
     def Maximize(self):
-        self.TKroot.state('zoomed')
+        if sys.platform != 'linux':
+            self.TKroot.state('zoomed')
+        else:
+            self.TKroot.attributes('-fullscreen', True)
         # this method removes the titlebar too
         # self.TKroot.attributes('-fullscreen', True)
 
     def Normal(self):
-        self.TKroot.state('normal')
+        if sys.platform != 'linux':
+            self.TKroot.state('normal')
+        else:
+            self.TKroot.attributes('-fullscreen', False)
 
 
     def StartMove(self, event):
@@ -5445,6 +5451,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKText.insert(1.0, default_text)  # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
+                if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
@@ -7799,7 +7806,7 @@ def main():
         [Frame('Structured Data Group', frame5, title_color='red'), ],
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]])],
-        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), Button('Exit', tooltip='Exit button')],
+        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'),B('Normal'), Button('Exit', tooltip='Exit button')],
     ]
 
     layout=[[Column(layout1)]]
@@ -7809,7 +7816,7 @@ def main():
                     # background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
-                    resizable=False,
+                    resizable=True,
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
@@ -7833,6 +7840,10 @@ def main():
             window.Element('_TEXT1_').SetTooltip('NEW TEXT')
             window.SetTransparentColor( '#9FB8AD')
             window.Maximize()
+        elif event == 'Normal':
+            window.Normal()
+
+
         # TimerStop()
     window.Close()
 
