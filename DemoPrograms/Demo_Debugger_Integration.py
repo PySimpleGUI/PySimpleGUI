@@ -11,6 +11,7 @@ import PySimpleGUIdebugger
             PySimpleGUIdebugger.refresh(locals(), globals())
 """
 
+PySimpleGUIdebugger.initialize()
 
 layout = [
             [sg.T('A typical PSG application')],
@@ -36,3 +37,5 @@ while True:             # Event Loop
         break
     counter += 1
     window.Element('_OUT_').Update(values['_IN_'])
+
+window.Close()
