@@ -33,9 +33,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.32.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.33.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.32.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.33.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4934,14 +4934,13 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 * New method for `Graph` - `RelocateFigure`
 * Output Element no longer accepts focus
 
-## 3.30.0 PySimpleGUI 24-May-2019
+## 3.32.0 PySimpleGUI 24-May-2019
 
 * Rework of ALLL Tooltips. Was always displaying at uttuper left part of element. Not displays closer to where mouse entered or edited
 * New Element.Widget base class variable. Brings tkinter into the newer architecture of user accessibility to underlying GUI Frameworks' widgets
 * New SetTooltip Element method. Means all Elements gain this method. Can set the tooltip on the fly now for all elements
 * Include scroll bar when making visible / invisible Listbox Elements
-* New Radio Element method - `Radio.ResetGroup()` sets all elements in the Radio Group to False
-* Added borderwidth to Multiline Element
+* New Radio Element method - `Radio.ResetGroup()` sets all elements in the Radio Group to False* Added borderwidth to Multiline Element
 * `Button.Click()` - new method - Generates a button click even as if a user clicked a button (at the tkinter level)
 * Made a Graph.Images dictionary to keep track of images being used in a graph.  When graph is deleted, all of the accociated images should be deleted too.'
 * Added `Graph.SetFocus()` to give a Graph Element the focus just as you can input elements 
@@ -4963,7 +4962,9 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 * PopupAnimated finally gets a completely transparent background
 
 
+## 3.33.0 and 1.33 PySimpleGUI 25-May-2019
 
+* Emergency fix due to debugger.  Old bug was that Image Element was not testing for COLOR_SYSTEM_DEFAULT correctly.
 
 ### Upcoming      
 Make suggestions people!  Future release features      
