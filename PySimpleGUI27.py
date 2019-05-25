@@ -5627,7 +5627,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                         bd=border_depth)
                     else:
                         element.tktext_label = element.Widget = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
-                    if element.BackgroundColor is not None:
+
+                    if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                         element.tktext_label.config(background=element.BackgroundColor)
 
                     element.tktext_label.image = photo
@@ -8146,10 +8147,6 @@ def main():
 
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Spin([1, 2, 3], size=(4, 3))],
