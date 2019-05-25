@@ -5068,7 +5068,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 elif toplevel_form.TextJustification is not None:
                     justification = toplevel_form.TextJustification
                 else:
-                    justification = DEFAULT_TEXT_JUSTIFICAION
+                    justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
@@ -5614,7 +5614,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                         bd=border_depth)
                     else:
                         element.tktext_label = element.Widget = tk.Label(tk_row_frame, width=width, height=height, bd=border_depth)
-                    if element.BackgroundColor is not None:
+
+                    if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                         element.tktext_label.config(background=element.BackgroundColor)
 
                     element.tktext_label.image = photo
@@ -7750,10 +7751,6 @@ def main():
 
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
         [Spin([1, 2, 3], size=(4, 3))],
