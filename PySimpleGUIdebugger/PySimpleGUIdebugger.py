@@ -16,10 +16,10 @@ WIDTH_RESULTS = 36
 
 # done purely for testing / show
 def func(x=''):
-    return f'return value from func()={x}'
+    return 'return value from func()={}'.format(x)
 
 
-def _init():
+def non_user_init():
     global watcher_window
     sg.ChangeLookAndFeel(COLOR_SCHEME)
     def InVar(key1, key2):
@@ -44,15 +44,18 @@ def _init():
     window.Element('_INTERACTIVE_').SetFocus()
     watcher_window = window
     sg.ChangeLookAndFeel('SystemDefault')
-
     return window
 
-def _event_once(_window, mylocals, myglobals):
+def _event_once(mylocals, myglobals):
+    global myrc, watcher_window
+    if not watcher_window:
+        return
     _window = watcher_window
-    global myrc
-    _event, _values = _window.Read(timeout=100)
+    _event, _values = _window.Read(timeout=1)
     if _event in (None, 'Exit'):
-        return False
+        _window.Close()
+        watcher_window = None
+        return
     cmd = _values['_INTERACTIVE_']
     if _event == 'Run':
         _runCommand(cmd=cmd, window=_window)
@@ -61,7 +64,7 @@ def _event_once(_window, mylocals, myglobals):
         _window.Element('_OUTPUT_').Update(">>> {}\n".format(cmd), append=True, autoscroll=True)
         expression = """
 global myrc
-PSGdebugger.myrc = {} """.format(cmd)
+PySimpleGUIdebugger.PySimpleGUIdebugger.myrc = {} """.format(cmd)
         try:
             exec(expression, myglobals, mylocals)
             _window.Element('_OUTPUT_').Update('{}\n'.format(myrc),append=True, autoscroll=True)
@@ -72,23 +75,23 @@ PSGdebugger.myrc = {} """.format(cmd)
     elif _event.endswith('_DETAIL_'):
         expression = """
 global myrc
-PSGdebugger.myrc = {} """.format(_values[f'_VAR{_event[4]}_'])
+PySimpleGUIdebugger.PySimpleGUIdebugger.myrc = {} """.format(_values['_VAR{}_'.format(_event[4])])
         try:
             exec(expression, myglobals, mylocals)
-            sg.PopupScrolled(myrc)
+            sg.PopupScrolled(str(_values['_VAR{}_'.format(_event[4])]) + '\n' + str(myrc))
         except:
             print('Detail failed')
 
     # -------------------- Process the "watch list" ------------------
     for i in range(1, 7):
-        key = f'_VAR{i}_'
-        out_key = f'_VAR{i}_CHANGED_'
+        key = '_VAR{}_'.format(i)
+        out_key = '_VAR{}_CHANGED_'.format(i)
         myrc =''
         if _window.Element(key):
             if _values[key]:
                 expression = """
 global myrc
-PSGdebugger.myrc = {} """.format(_values[key])
+PySimpleGUIdebugger.PySimpleGUIdebugger.myrc = {} """.format(_values[key])
                 try:
                     exec(expression, myglobals, mylocals)
                 except Exception as e:
@@ -96,7 +99,7 @@ PSGdebugger.myrc = {} """.format(_values[key])
                 _window.Element(out_key).Update(myrc)
             else:
                 _window.Element(out_key).Update('')
-
+    return
 
 
 def _runCommand(cmd, timeout=None, window=None):
@@ -118,8 +121,11 @@ def _runCommand(cmd, timeout=None, window=None):
     return (retval, output)
 
 def refresh(locals, globals):
+    _event_once(locals, globals)
+
+def initialize():
     global watcher_window
-    _event_once(watcher_window, locals, globals)
+    watcher_window = non_user_init()
 
 myrc = ''
-watcher_window = _init()
+watcher_window = None
