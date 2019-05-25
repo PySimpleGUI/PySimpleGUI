@@ -29,7 +29,7 @@ window = sg.Window('This is your Application Window', layout)
 counter = 0
 timeout = 100
 
-while True:             # Event Loop
+while True:             # Your Event Loop
     PySimpleGUIdebugger.refresh(locals(), globals())   # STEP 3 - refresh debugger
     event, values = window.Read(timeout=timeout)
     if event in (None, 'Exit'):
@@ -38,3 +38,4 @@ while True:             # Event Loop
         print('You clicked Ok.... this is where print output goes')
     counter += 1
     window.Element('_OUT_').Update(values['_IN_'])
+window.Close()
