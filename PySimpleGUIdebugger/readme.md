@@ -7,16 +7,16 @@
         
 # PySimpleGUIdebugger     
 
-PySimpleGUI now has it's own built-in, sorta, debugger.
+A "debugger" that's based on PySimpleGUI.  It was developed to help debug PySimpleGUI based programs, but it can be used to debug any program.  The only requirement is that a `refresh()` function be called on a "periodic basis".
 
 What you can do with this "debugger" is:
 * Set "watch points" that update in realtime
-* Write expressions that update in realtime
+* Write expressions / code that update in realtime
 * Use a REPL style prompt to type in "code" / modify variables
 
 All of this is done using a window secondary and separate from your primary application window.  
 
-Check out this video as a guide.  The user's window is the smaller one one top.  The PySimpleGUIdebugger is the green window on the buttom.  You can watch variables, evaluate expressions, even xecute code. 
+Check out this video as a guide.  The user's window is the smaller one one top.  The PySimpleGUIdebugger is the green window on the buttom.  You can watch variables, evaluate expressions, even execute code. 
 
 ![PSG Debugger2](https://user-images.githubusercontent.com/13696193/58362085-3ead8f00-7e61-11e9-9439-e77e9a059dbc.gif)
         
@@ -98,14 +98,73 @@ This "refresh" call that must be added to your event loop.  Your `window.Read` c
 Add this line to the top of your event loop.
 `PySimpleGUIdebugger.refresh(locals(), globals())`
 
+### Using in "when needed"
+
+The Demo Program was recently updated so that instead of launching with the Debugger window immediately shown, the program launches with the Debugger not started.  With this new code, you can open and close the Debugger as many times as you wish.  
+
+Here is the code, based on the code shown previously in this readme, that has a "Debug" button
+
+```python
+import PySimpleGUI as sg
+import PySimpleGUIdebugger            # STEP 1
+
+"""
+    Demo program that shows you how to integrate the PySimpleGUI Debugger
+    into your program.
+    In this example, the debugger is not started initiallly. You click the "Debug" button to launch it
+    There are THREE steps, and they are copy and pastes.
+    1. At the top of your app to debug add
+            import PySimpleGUIdebugger
+    2. Initialize the debugger at the start of your program by calling:
+            PySimpleGUIdebugger.initialize()
+    3. At the top of your app's Event Loop add:
+            PySimpleGUIdebugger.refresh(locals(), globals())
+"""
+
+layout = [
+            [sg.T('A typical PSG application')],
+            [sg.In(key='_IN_')],
+            [sg.T('        ', key='_OUT_')],
+            [sg.Radio('a',1, key='_R1_'), sg.Radio('b',1, key='_R2_'), sg.Radio('c',1, key='_R3_')],
+            [sg.Combo(['c1', 'c2', 'c3'], size=(6,3), key='_COMBO_')],
+            [sg.Output(size=(50,6))],
+            [sg.Ok(), sg.Exit(), sg.B('Debug')],
+        ]
+
+window = sg.Window('This is your Application Window', layout)
+
+counter = 0
+timeout = 100
+debug_started = False
+
+while True:             # Your Event Loop
+    if debug_started:
+        debug_started = PySimpleGUIdebugger.refresh(locals(), globals())   # STEP 3 - refresh debugger
+    event, values = window.Read(timeout=timeout)
+    if event in (None, 'Exit'):
+        break
+    elif event == 'Ok':
+        print('You clicked Ok.... this is where print output goes')
+    elif event == 'Debug' and not debug_started:
+        PySimpleGUIdebugger.initialize()  # STEP 2
+        debug_started = True
+    counter += 1
+    window.Element('_OUT_').Update(values['_IN_'])
+window.Close()
+```
+
+This puts the launching of the debugger firmly into the control of the program being debugged.  Want debugger help?  Then press the debug button.
+
+In the future I want to add a "hotkey" or some other trivial way of launching a debugger from any program that has is running PySimpleGUI.  The only one with real trouble wit this will be the PySimpleGUIWeb one as multiple web windows gets a bit cluttered.
 
              
 ## Requirements
 
-You'll need to have PySimpleGUI installed.
+**You'll need to have PySimpleGUI installed.**
 
-The debugger itself is written using PySimpleGUI, the tkinter version.  It could be changed to use Qt for example.
+The newest PyPI installation should automatically install PySimpleGUI for you now.
 
+The debugger itself is written using PySimpleGUI, the tkinter version.  It could be changed to use Qt for example by modifying the pip installed version.  
 
 ## What's it good for, when should it be used??
 
