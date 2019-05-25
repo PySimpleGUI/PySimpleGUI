@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-#!/usr/bin/python3
 import sys
 if sys.version_info[0] >= 3:
     import tkinter as tk
@@ -817,7 +816,7 @@ class Listbox(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.RightClickMenu = right_click_menu
-
+        self.vsb = None         # type: tk.Scrollbar
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
@@ -840,9 +839,10 @@ class Listbox(Element):
                 pass
         if visible is False:
             self.TKListbox.pack_forget()
+            self.vsb.pack_forget()
         elif visible is True:
             self.TKListbox.pack()
-
+            self.vsb.pack()
 
     def SetValue(self, values):
         for index, item in enumerate(self.Values):
@@ -3949,7 +3949,7 @@ class Window:
         return element
 
     Element =  FindElement          # Shortcut function
-
+    Find = FindElement
 
     def FindElementWithFocus(self):
         element = _FindElementWithFocusInSubForm(self)
@@ -4341,36 +4341,6 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
 
 
-# -------------------------  Up arrow BUTTON Element lazy function  ------------------------- #
-def Up(button_text='▲', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
-                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-
-# -------------------------  Down arrow BUTTON Element lazy function  ------------------------- #
-def Down(button_text='▼', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
-                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-
-# -------------------------  Left arrow BUTTON Element lazy function  ------------------------- #
-def Left(button_text='◄', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
-                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-
-
-# -------------------------  Right arrow BUTTON Element lazy function  ------------------------- #
-def Right(button_text='►', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
-                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
-
-
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
         font=None, bind_return_key=True, focus=False, pad=None, key=None):
@@ -4481,12 +4451,12 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 def AddToReturnDictionary(form, element, value):
     form.ReturnValuesDictionary[element.Key] = value
     return
-    if element.Key is None:
-        form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
-        element.Key = form.DictionaryKeyCounter
-        form.DictionaryKeyCounter += 1
-    else:
-        form.ReturnValuesDictionary[element.Key] = value
+    # if element.Key is None:
+    #     form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
+    #     element.Key = form.DictionaryKeyCounter
+    #     form.DictionaryKeyCounter += 1
+    # else:
+    #     form.ReturnValuesDictionary[element.Key] = value
 
 
 def AddToReturnList(form, value):
@@ -5098,7 +5068,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 elif toplevel_form.TextJustification is not None:
                     justification = toplevel_form.TextJustification
                 else:
-                    justification = DEFAULT_TEXT_JUSTIFICATION
+                    justification = DEFAULT_TEXT_JUSTIFICAION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
@@ -5423,6 +5393,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
+                element = element            # type: Listbox
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) else 0
                 if auto_size_text is False:
                     width = element_size[0]
@@ -5442,13 +5413,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.configure(fg=text_color)
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element.ListboxSelectHandler)
-                vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
-                element.TKListbox.configure(yscrollcommand=vsb.set)
+                element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
+                element.TKListbox.configure(yscrollcommand=element.vsb.set)
                 element.TKListbox.pack(side=tk.LEFT)
-                vsb.pack(side=tk.LEFT, fill='y')
+                element.vsb.pack(side=tk.LEFT, fill='y')
                 listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     listbox_frame.pack_forget()
+                    element.vsb.pack_forget()
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element.ListboxSelectHandler)
                     element.TKListbox.bind('<Double-Button-1>', element.ListboxSelectHandler)
@@ -6211,7 +6183,6 @@ def StartupTK(my_flex_form:Window):
         root = tk.Toplevel()
     else:
         root = tk.Toplevel()
-
 
     try:
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
@@ -7595,8 +7566,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     if button != 'Ok':
         return None
     else:
-        path = values['_INPUT_']
-        return path
+        return values['_INPUT_']
 
 
 
@@ -7735,6 +7705,8 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
 
     window.Refresh()        # call refresh instead of Read to save significant CPU time
 
+
+
 """
                        d8b          
                        Y8P          
@@ -7862,7 +7834,7 @@ def main():
         i += 1
         if event == 'Button':
             window.Element('_TEXT1_').SetTooltip('NEW TEXT')
-            # window.SetTransparentColor( '#9FB8AD')
+            window.SetTransparentColor( '#9FB8AD')
             window.Maximize()
         # TimerStop()
     window.Close()
