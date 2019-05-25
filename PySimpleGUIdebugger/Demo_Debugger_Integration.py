@@ -12,7 +12,6 @@ import PySimpleGUIdebugger
             PySimpleGUIdebugger.refresh(locals(), globals())
 """
 
-PySimpleGUIdebugger.initialize()
 
 layout = [
             [sg.T('A typical PSG application')],
@@ -29,6 +28,7 @@ window = sg.Window('This is your Application Window', layout)
 # Variables that we'll use to demonstrate the debugger's features
 counter = 0
 timeout = 100
+PySimpleGUIdebugger.initialize()
 
 while True:             # Event Loop
     PySimpleGUIdebugger.refresh(locals(), globals())            # call the debugger to refresh the items being shown
