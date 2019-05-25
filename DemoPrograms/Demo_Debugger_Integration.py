@@ -1,8 +1,10 @@
 import PySimpleGUI as sg
 import PySimpleGUIdebugger            # STEP 1
+
 """
     Demo program that shows you how to integrate the PySimpleGUI Debugger
     into your program.
+    In this example, the debugger is not started initiallly. You click the "Debug" button to launch it
     There are THREE steps, and they are copy and pastes.
     1. At the top of your app to debug add
             import PySimpleGUIdebugger
@@ -12,8 +14,6 @@ import PySimpleGUIdebugger            # STEP 1
             PySimpleGUIdebugger.refresh(locals(), globals())
 """
 
-PySimpleGUIdebugger.initialize()            # STEP 2
-
 layout = [
             [sg.T('A typical PSG application')],
             [sg.In(key='_IN_')],
@@ -21,21 +21,26 @@ layout = [
             [sg.Radio('a',1, key='_R1_'), sg.Radio('b',1, key='_R2_'), sg.Radio('c',1, key='_R3_')],
             [sg.Combo(['c1', 'c2', 'c3'], size=(6,3), key='_COMBO_')],
             [sg.Output(size=(50,6))],
-            [sg.Ok(), sg.Exit()],
+            [sg.Ok(), sg.Exit(), sg.B('Debug')],
         ]
 
 window = sg.Window('This is your Application Window', layout)
-# Variables that we'll use to demonstrate the debugger's features
+
 counter = 0
 timeout = 100
+debug_started = False
 
 while True:             # Your Event Loop
-    PySimpleGUIdebugger.refresh(locals(), globals())   # STEP 3 - refresh debugger
+    if debug_started:
+        debug_started = PySimpleGUIdebugger.refresh(locals(), globals())   # STEP 3 - refresh debugger
     event, values = window.Read(timeout=timeout)
     if event in (None, 'Exit'):
         break
     elif event == 'Ok':
         print('You clicked Ok.... this is where print output goes')
+    elif event == 'Debug' and not debug_started:
+        PySimpleGUIdebugger.initialize()  # STEP 2
+        debug_started = True
     counter += 1
     window.Element('_OUT_').Update(values['_IN_'])
 window.Close()
