@@ -1,18 +1,18 @@
 import PySimpleGUI as sg
-import PySimpleGUIdebugger
+import PySimpleGUIdebugger            # STEP 1
 """
     Demo program that shows you how to integrate the PySimpleGUI Debugger
     into your program.
     There are THREE steps, and they are copy and pastes.
     1. At the top of your app to debug add
             import PySimpleGUIdebugger
-    2. Initialize the debugger by calling:
+    2. Initialize the debugger at the start of your program by calling:
             PySimpleGUIdebugger.initialize()
-    2. At the top of your app's event loop add
+    3. At the top of your app's Event Loop add:
             PySimpleGUIdebugger.refresh(locals(), globals())
 """
 
-PySimpleGUIdebugger.initialize()
+PySimpleGUIdebugger.initialize()            # STEP 2
 
 layout = [
             [sg.T('A typical PSG application')],
@@ -24,14 +24,13 @@ layout = [
             [sg.Ok(), sg.Exit()],
         ]
 
-
 window = sg.Window('This is your Application Window', layout)
 # Variables that we'll use to demonstrate the debugger's features
 counter = 0
 timeout = 100
 
-while True:             # Event Loop
-    PySimpleGUIdebugger.refresh(locals(), globals())            # call the debugger to refresh the items being shown
+while True:             # Your Event Loop
+    PySimpleGUIdebugger.refresh(locals(), globals())   # STEP 3 - refresh debugger
     event, values = window.Read(timeout=timeout)
     if event in (None, 'Exit'):
         break
@@ -39,3 +38,4 @@ while True:             # Event Loop
         print('You clicked Ok.... this is where print output goes')
     counter += 1
     window.Element('_OUT_').Update(values['_IN_'])
+window.Close()
