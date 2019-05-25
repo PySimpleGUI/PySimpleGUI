@@ -26,7 +26,6 @@ layout = [
 
 
 window = sg.Window('This is your Application Window', layout)
-window.Element('_OUT_').Update(background_color='red')
 # Variables that we'll use to demonstrate the debugger's features
 counter = 0
 timeout = 100
