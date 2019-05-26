@@ -33,9 +33,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.33.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.34.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.33.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.34.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4965,6 +4965,15 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 ## 3.33.0 and 1.33 PySimpleGUI 25-May-2019
 
 * Emergency fix due to debugger.  Old bug was that Image Element was not testing for COLOR_SYSTEM_DEFAULT correctly.
+
+
+## 3.34.0 PySimpleGUI & 1.34.0 PySimpleGUI27 25-May-2019
+
+Trying to get the fixes rolled out as quickly as possible that the Debugger has uncovered.  Most have to do with setting the look and feel to the "system default"
+
+* Fixed Window.Maximize and Window.Normal - needed special code for Linux
+* Check for DEFAULT_SCROLLBAR_COLOR not being the COLOR_SYSTEM_DEFAULT (crashed)
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
