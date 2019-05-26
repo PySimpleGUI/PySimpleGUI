@@ -25,8 +25,8 @@ def non_user_init():
     def InVar(key1, key2):
         row1 = [sg.T('    '),
                 sg.I(key=key1, size=(WIDTH_VARIABLES,1)),
-                sg.T('',key=key1+'CHANGED_', size=(WIDTH_RESULTS,1)),sg.B('Detail', key=key1+'DETAIL_'), sg.T(' '),
-                sg.T(' '), sg.I(key=key2, size=(WIDTH_VARIABLES, 1)), sg.T('',key=key2 + 'CHANGED_', size=(WIDTH_RESULTS, 1)), sg.B('Detail', key=key2+'DETAIL_'),]
+                sg.T('',key=key1+'CHANGED_', size=(WIDTH_RESULTS,1)),sg.B('Detail', key=key1+'DETAIL_'),sg.B('Obj', key=key1+'OBJ_'), sg.T(' '),
+                sg.T(' '), sg.I(key=key2, size=(WIDTH_VARIABLES, 1)), sg.T('',key=key2 + 'CHANGED_', size=(WIDTH_RESULTS, 1)), sg.B('Detail', key=key2+'DETAIL_'),sg.B('Obj', key=key1+'OBJ_')]
         return row1
 
     variables_frame = [ InVar('_VAR1_', '_VAR2_'),
@@ -41,7 +41,7 @@ def non_user_init():
                 [sg.Button('Exit')]]
 
     window = sg.Window('PySimpleGUI Debugger', layout, icon=PSGDebugLogo).Finalize()
-    window.Element('_INTERACTIVE_').SetFocus()
+    window.Element('_VAR1_').SetFocus()
     watcher_window = window
     sg.ChangeLookAndFeel('SystemDefault')
     return window
@@ -81,7 +81,16 @@ PySimpleGUIdebugger.PySimpleGUIdebugger.myrc = {} """.format(_values['_VAR{}_'.f
             sg.PopupScrolled(str(_values['_VAR{}_'.format(_event[4])]) + '\n' + str(myrc))
         except:
             print('Detail failed')
-
+    elif _event.endswith('_OBJ_'):
+        var = _values['_VAR{}_'.format(_event[4])]
+        expression = """
+global myrc
+PySimpleGUIdebugger.PySimpleGUIdebugger.myrc = {} """.format(var)
+        try:
+            exec(expression, myglobals, mylocals)
+            sg.PopupScrolled(sg.ObjToStringSingleObj(myrc))
+        except:
+            print('Detail failed')
     # -------------------- Process the "watch list" ------------------
     for i in range(1, 7):
         key = '_VAR{}_'.format(i)
@@ -129,3 +138,4 @@ def initialize():
 
 myrc = ''
 watcher_window = None
+

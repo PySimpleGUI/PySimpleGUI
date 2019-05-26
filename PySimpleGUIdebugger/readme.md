@@ -1,5 +1,6 @@
  
-![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
+![PySimpleGUI_Debugger_Logo](https://user-images.githubusercontent.com/13696193/58375496-38cbb280-7f22-11e9-99b8-286fe1fa41b5.png)
+
         
 ![Downloads](http://pepy.tech/badge/pysimpleguidebugger)
   
@@ -30,11 +31,18 @@ or if you need to upgrade later:
 
 `pip install --upgrade --no-cache-dir PySimpleGUIdebugger`
 
-Should this not work, you can copy and paste the file PySimpleGUIdebugger.py into your application folder.
+
+Note that you need to install the debugger using pip rather than downloading.  There are some detailed technical reasons for this.  
+
+So, don't forget: __You must pip install PySimpleGUIdebugger in order to use it.__
+
+
 
 ## Integrating PySimpleGUIdebugger Into Your Application
 
-There are 3 lines of code to add to a PySimpleGUI program in order to make it debugger ready - The import, an initialization, once each time through the even loop.
+There are 3 lines of code to add to a PySimpleGUI program in order to make it debugger ready - The import, an initialization, once each time through the even loop.  
+
+Copy and paste these lines of code into your code just as you see them written.  Don't get clever and rename anything.  Don't do an "import as".  Just copy the lines of code.
 
 Here is an entire program including this integration code:
 
@@ -98,7 +106,7 @@ This "refresh" call that must be added to your event loop.  Your `window.Read` c
 Add this line to the top of your event loop.
 `PySimpleGUIdebugger.refresh(locals(), globals())`
 
-### Using in "when needed"
+### Using in "when needed" mode
 
 The Demo Program was recently updated so that instead of launching with the Debugger window immediately shown, the program launches with the Debugger not started.  With this new code, you can open and close the Debugger as many times as you wish.  
 
@@ -160,15 +168,25 @@ In the future I want to add a "hotkey" or some other trivial way of launching a 
              
 ## Requirements
 
-**You'll need to have PySimpleGUI installed.**
-
-The newest PyPI installation should automatically install PySimpleGUI for you now.
+** You'll need to have PySimpleGUI installed.  It will automatically be installed if it is not already installed. **
 
 The debugger itself is written using PySimpleGUI, the tkinter version.  It could be changed to use Qt for example by modifying the pip installed version.  
 
+You MUST run the debugger from the pip installed version.  You cannot download the debugger from the GitHub at this point and use it.
+
 ## What's it good for, when should it be used??
 
-Hell if I know.  Maybe it's a terrible idea!  Or, maybe it'll be really helpful, particularly in situations where you don't have many resources on the target system and perhaps you can't fit a debugger onto that system. PySimpleGUIdebugger provides another tool for your PySimpleGUI GUI Toolbox.     
+Hell if I know.  Maybe it's a terrible idea!  Or, maybe it'll be really helpful, particularly in situations where you don't have many resources on the target system and perhaps you can't fit a debugger onto that system. PySimpleGUIdebugger provides another tool for your PySimpleGUI GUI Toolbox.   
+
+## The Future
+
+LOTS of plans for this debugger in the future.  One of the immediate things I want to do is to integrate this into the PySimpleGUI.py file itself.  To include the debugger with the SDK so that it doesn't have to be installed.
+
+This will enable the use of a "hotkey" or other mechanism to "magically launch" your very own PySimpleGUI Debugger.  
+
+I'll be adding a "Launch debugger" button for sure so that it's trivial for you to add this capability to your code.  
+
+Watch this space in the future!  COOL SHIT COMING SOON! 
 
 
 # Design        
