@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import PySimpleGUIdebugger            # STEP 1
+import imwatchingyou            # STEP 1
 
 """
     Demo program that shows you how to integrate the PySimpleGUI Debugger
@@ -7,11 +7,11 @@ import PySimpleGUIdebugger            # STEP 1
     In this example, the debugger is not started initiallly. You click the "Debug" button to launch it
     There are THREE steps, and they are copy and pastes.
     1. At the top of your app to debug add
-            import PySimpleGUIdebugger
+            import imwatchingyou
     2. Initialize the debugger at the start of your program by calling:
-            PySimpleGUIdebugger.initialize()
+            imwatchingyou.initialize()
     3. At the top of your app's Event Loop add:
-            PySimpleGUIdebugger.refresh(locals(), globals())
+            imwatchingyou.refresh(locals(), globals())
 """
 
 layout = [
@@ -32,14 +32,14 @@ debug_started = False
 
 while True:             # Your Event Loop
     if debug_started:
-        debug_started = PySimpleGUIdebugger.refresh(locals(), globals())   # STEP 3 - refresh debugger
+        debug_started = imwatchingyou.refresh(locals(), globals())   # STEP 3 - refresh debugger
     event, values = window.Read(timeout=timeout)
     if event in (None, 'Exit'):
         break
     elif event == 'Ok':
         print('You clicked Ok.... this is where print output goes')
     elif event == 'Debug' and not debug_started:
-        PySimpleGUIdebugger.initialize()  # STEP 2
+        imwatchingyou.initialize()  # STEP 2
         debug_started = True
     counter += 1
     window.Element('_OUT_').Update(values['_IN_'])

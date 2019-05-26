@@ -1,12 +1,11 @@
  
-![PySimpleGUI_Debugger_Logo](https://user-images.githubusercontent.com/13696193/58375496-38cbb280-7f22-11e9-99b8-286fe1fa41b5.png)
 
         
 ![Downloads](http://pepy.tech/badge/pysimpleguidebugger)
   
                
         
-# PySimpleGUIdebugger     
+# imwatchingyou     
 
 A "debugger" that's based on PySimpleGUI.  It was developed to help debug PySimpleGUI based programs, but it can be used to debug any program.  The only requirement is that a `refresh()` function be called on a "periodic basis".
 
@@ -25,22 +24,22 @@ Check out this video as a guide.  The user's window is the smaller one one top. 
 
 Installation is via pip:
 
-`pip install PySimpleGUIdebugger`
+`pip install imwatchingyou`
 
 or if you need to upgrade later:
 
-`pip install --upgrade --no-cache-dir PySimpleGUIdebugger`
+`pip install --upgrade --no-cache-dir imwatchingyou`
 
 
 Note that you need to install the debugger using pip rather than downloading.  There are some detailed technical reasons for this.  
 
-So, don't forget: __You must pip install PySimpleGUIdebugger in order to use it.__
+So, don't forget: __You must pip install imwatchingyou in order to use it.__
 
 
 
-## Integrating PySimpleGUIdebugger Into Your Application
+## Integrating imwatchingyou Into Your Application
 
-There are 3 lines of code to add to a PySimpleGUI program in order to make it debugger ready - The import, an initialization, once each time through the even loop.  
+There are 3 lines of code to add to a program in order to make it debugger ready - The import, an initialization, a refresh function called periodically.  
 
 Copy and paste these lines of code into your code just as you see them written.  Don't get clever and rename anything.  Don't do an "import as".  Just copy the lines of code.
 
@@ -48,20 +47,20 @@ Here is an entire program including this integration code:
 
 ```python
 import PySimpleGUI as sg
-import PySimpleGUIdebugger
+import imwatchingyou
 """
     Demo program that shows you how to integrate the PySimpleGUI Debugger
     into your program.
     There are THREE steps, and they are copy and pastes.
     1. At the top of your app to debug add
-            import PySimpleGUIdebugger
+            import imwatchingyou
     2. Initialize the debugger by calling:
-            PySimpleGUIdebugger.initialize()
+            imwatchingyou.initialize()
     2. At the top of your app's event loop add
-            PySimpleGUIdebugger.refresh(locals(), globals())
+            imwatchingyou.refresh(locals(), globals())
 """
 
-PySimpleGUIdebugger.initialize()
+imwatchingyou.initialize()
 
 layout = [
             [sg.T('A typical PSG application')],
@@ -81,7 +80,7 @@ counter = 0
 timeout = 100
 
 while True:             # Event Loop
-    PySimpleGUIdebugger.refresh(locals(), globals())            # call the debugger to refresh the items being shown
+    imwatchingyou.refresh(locals(), globals())            # call the debugger to refresh the items being shown
     event, values = window.Read(timeout=timeout)
     if event in (None, 'Exit'):
         break
@@ -92,19 +91,19 @@ while True:             # Event Loop
 ```
 
 
-## Using PySimpleGUIdebugger
+## Using imwatchingyou
 
 To use the debugger in your code you will need to add TWO lines of code:
 The import at the top of your code:
-`import PySimpleGUIdebugger`
+`import imwatchingyou`
 
-You need to "initialize" the PySimpleGUIdebugger package by calling near the top of your code.  This is what creates the debugger window:
-`PySimpleGUIdebugger.initialize()`
+You need to "initialize" the imwatchingyou package by calling near the top of your code.  This is what creates the debugger window:
+`imwatchingyou.initialize()`
 
 This "refresh" call that must be added to your event loop.  Your `window.Read` call should have a timeout value so that it does not block.  If you do not have a timeout value, the debugger will not update in realtime.
 
 Add this line to the top of your event loop.
-`PySimpleGUIdebugger.refresh(locals(), globals())`
+`imwatchingyou.refresh(locals(), globals())`
 
 ### Using in "when needed" mode
 
@@ -114,7 +113,7 @@ Here is the code, based on the code shown previously in this readme, that has a 
 
 ```python
 import PySimpleGUI as sg
-import PySimpleGUIdebugger            # STEP 1
+import imwatchingyou            # STEP 1
 
 """
     Demo program that shows you how to integrate the PySimpleGUI Debugger
@@ -122,11 +121,11 @@ import PySimpleGUIdebugger            # STEP 1
     In this example, the debugger is not started initiallly. You click the "Debug" button to launch it
     There are THREE steps, and they are copy and pastes.
     1. At the top of your app to debug add
-            import PySimpleGUIdebugger
+            import imwatchingyou
     2. Initialize the debugger at the start of your program by calling:
-            PySimpleGUIdebugger.initialize()
+            imwatchingyou.initialize()
     3. At the top of your app's Event Loop add:
-            PySimpleGUIdebugger.refresh(locals(), globals())
+            imwatchingyou.refresh(locals(), globals())
 """
 
 layout = [
@@ -147,14 +146,14 @@ debug_started = False
 
 while True:             # Your Event Loop
     if debug_started:
-        debug_started = PySimpleGUIdebugger.refresh(locals(), globals())   # STEP 3 - refresh debugger
+        debug_started = imwatchingyou.refresh(locals(), globals())   # STEP 3 - refresh debugger
     event, values = window.Read(timeout=timeout)
     if event in (None, 'Exit'):
         break
     elif event == 'Ok':
         print('You clicked Ok.... this is where print output goes')
     elif event == 'Debug' and not debug_started:
-        PySimpleGUIdebugger.initialize()  # STEP 2
+        imwatchingyou.initialize()  # STEP 2
         debug_started = True
     counter += 1
     window.Element('_OUT_').Update(values['_IN_'])
@@ -176,13 +175,13 @@ You MUST run the debugger from the pip installed version.  You cannot download t
 
 ## What's it good for, when should it be used??
 
-Hell if I know.  Maybe it's a terrible idea!  Or, maybe it'll be really helpful, particularly in situations where you don't have many resources on the target system and perhaps you can't fit a debugger onto that system. PySimpleGUIdebugger provides another tool for your PySimpleGUI GUI Toolbox.   
+Hell if I know.  Maybe it's a terrible idea!  Or, maybe it'll be really helpful, particularly in situations where you don't have many resources on the target system and perhaps you can't fit a debugger onto that system. imwatchingyou provides another tool for your Python toolbox.   
 
 ## The Future
 
 LOTS of plans for this debugger in the future.  One of the immediate things I want to do is to integrate this into the PySimpleGUI.py file itself.  To include the debugger with the SDK so that it doesn't have to be installed.
 
-This will enable the use of a "hotkey" or other mechanism to "magically launch" your very own PySimpleGUI Debugger.  
+This will enable the use of a "hotkey" or other mechanism to "magically launch" the debugger.  
 
 I'll be adding a "Launch debugger" button for sure so that it's trivial for you to add this capability to your code.  
 
