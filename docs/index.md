@@ -37,11 +37,11 @@
       
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.34.0-blue.svg?longCache=true&style=for-the-badge)      
   
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)    
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0..0-orange.svg?longCache=true&style=for-the-badge)    
       
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0..-orange.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.28.1-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.2218.10-orange.svg?longCache=true&style=for-the-badge)
 
 [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)      
       
@@ -4929,6 +4929,7 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 * Convert button text to string when creating buttons
 * Buttons are returned now as well as input fields when searching for element with focus
 
+
 ## 3.29 22-Apr-2019
 
 * New method for `Graph` - `RelocateFigure`
@@ -4975,10 +4976,12 @@ Trying to get the fixes rolled out as quickly as possible that the Debugger has 
 * Check for DEFAULT_SCROLLBAR_COLOR not being the COLOR_SYSTEM_DEFAULT (crashed)
 
 
-### Upcoming      
+## i    ageson peoe  re release eatres      
+         
+   # Upcoming      
 Make suggestions people!  Future release features      
-         
-         
+      ot to e i enines  oo utroen inteat a ed ote t tite t to e  At  moen  a i re bein cn o he et  rme  Wo areayu on .   i liely o e next nte o x hoeer            
+      
 ## Code Condition      
       
     Make it run      
@@ -5013,27 +5016,13 @@ You can also look up elements using their keys.  This is an excellent way to upd
 This is a language feature that is featured **heavily**  in all of the API calls, both functions and classes.  Elements are configured, in-place, by setting one or more optional parameters.  For example, a Text element's color is chosen by setting the optional `text_color` parameter.    
 
 **tkinter**
-tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, and Mac.  It was chosen as the first target GUI framework due to its ***ubiquity***.  Nearly all Python installations, with the exception of Ubuntu Linux, come pre-loaded with tkinter.   It is the "simplest" of the GUI frameworks to get up an running (among Qt, WxPython, Kivy, etc).
-
-From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
-
-      
-## Author      
-Mike - who wrote PySimpleGUI is not important. It's the software that's important
-      
-
-## License      
-      
-GNU Lesser General Public License (LGPL 3) +      
-      
-## Acknowledgments      
-
-#### SORRY!! Will add these back.  Lost due to file length limitation
+tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, and Mac.  It was chosen as the first target GUI framework due to its ***ubiquity***.  Nearly all Python installations, with the exception of Ubuntu Linux,
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIxNjg5MDM1Niw4NjQ5Nzg3NjUsLTEwNj
-U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
-OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
-YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
-MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
-QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+eyJoaXN0b3J5IjpbLTY3ODk0MzI2NCwxMjE2ODkwMzU2LDg2ND
+k3ODc2NSwtMTA2NTk3ODEyNiw1MTkwNTU5NCwyMDUzMTI1MTQ5
+LC0xNTc4NzQ2NTg4LDI2MDU4NDgxNCwxMTAyMDg4MzMzLDE2Nz
+k4NTA5OTIsLTE0NjE0MjgxLC02MDYzNzExOCwtNTA5MzU5MTIz
+LC0yNDg5NzYyOSwxMzA3NjkyNTksLTI5Njc4MzU1LC03NzQwNz
+QyMzAsMjY2MzY0NDE3LDQ0OTQzMzI0MywtMTE0ODQ5MDYyM119
+
 -->
