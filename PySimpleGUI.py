@@ -430,6 +430,10 @@ class Element():
                     rc = self.FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
+                if element.Type == ELEM_TYPE_PANE:
+                    rc = self.FindReturnKeyBoundButton(element)
+                    if rc is not None:
+                        return rc
         return None
 
     def TextClickedHandler(self, event):
@@ -5103,7 +5107,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                                         justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
+                wraplen = tktext_label.winfo_reqwidth() + 10  # width of widget in Pixels
                 if not auto_size_text and height == 1:
                     wraplen = 0
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget

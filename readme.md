@@ -26,9 +26,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.35.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.36.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.35.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.36.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4970,6 +4970,22 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 ## 3.35 PySimpleGUI & 1.35 PySimpleGUI27 27-May-2019
 
 * Bug fix - when setting default for Checkbox it was also disabling the element!
+
+
+## 3.36 PySimpleGUI & 1.36 PySimpleGUI27 29-May-2019
+
+A combination of user requests, and needs of new `imwatchingyou` debugger
+
+* New Debugger Icon for future built-in debugger
+* Fixed bug in FindBoundReturnKey - needed to also check Panes
+* NEW Window functions to turn on/off the Grab Anywhere feature
+	* `Window.GrabAnyWhereOn()`
+	* `Window.GrabAnyWhereOff()`
+* New "Debugger" button that's built-in like other buttons.  It's a TINY button with a logo. For future use when a debugger is built into PySimpleGUI itself (SOON!)
+* Change Text Element Wrap Length calculation.  Went fromn +40 pixels to +10 pixels in formula
+* PopupGetFile has new parameter - `multiple_files`. If True then allows selection of multiple files
+
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
