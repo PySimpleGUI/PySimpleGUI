@@ -4213,6 +4213,16 @@ class Window:
         except:
             print('Transparent color not supported on this platform (windows only)')
 
+    def GrabAnyWhereOn(self):
+        self.TKroot.bind("<ButtonPress-1>", self.StartMove)
+        self.TKroot.bind("<ButtonRelease-1>", self.StopMove)
+        self.TKroot.bind("<B1-Motion>", self.OnMotion)
+
+    def GrabAnyWhereOff(self):
+        self.TKroot.unbind("<ButtonPress-1>")
+        self.TKroot.unbind("<ButtonRelease-1>")
+        self.TKroot.unbind("<B1-Motion>")
+
     def __enter__(self):
         return self
 
