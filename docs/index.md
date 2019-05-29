@@ -1,11 +1,4 @@
 
-
-  
-    
-      
-      
-      
-      
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)      
       
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)        tkinter
@@ -33,9 +26,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.34.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.35.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.34.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.35.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4969,11 +4962,14 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 
 ## 3.34.0 PySimpleGUI & 1.34.0 PySimpleGUI27 25-May-2019
 
-Trying to get the fixes rolled out as quickly as possible that the Debugger has uncovered.  Most have to do with setting the look and feel to the "system default"
-
+  pip rhw  w cenf
 * Fixed Window.Maximize and Window.Normal - needed special code for Linux
 * Check for DEFAULT_SCROLLBAR_COLOR not being the COLOR_SYSTEM_DEFAULT (crashed)
 
+
+## 3.35 PySimpleGUI & 1.35 PySimpleGUI27 27-May-2019
+
+* Bug fix - when setting default for Checkbox it was also disabling the element!
 
 ### Upcoming      
 Make suggestions people!  Future release features      

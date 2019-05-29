@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.28.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0..0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -391,7 +391,8 @@ One-time patch to remove a debug print
 	* Behaves like a Column element for now since no official Remi Frame
 * Fix for popups that get data - New dictionary return values messed up popups. Needed to use keys internally
 
-
+	
+  
 
 # Design        
 # Author 
@@ -403,6 +404,7 @@ One-time patch to remove a debug print
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
-U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
+eyJoaXN0b3J5IjpbMjA1OTc2NTUwMywtMTE2NjcxOTkxNyw0Nz
+U4NjU2NzYsLTEwNTcxMDM2NDMsMTIxMzM1MjYzNiwtMTE2MDY4
+NDMzOV19
 -->
