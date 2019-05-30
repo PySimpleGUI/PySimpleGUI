@@ -243,7 +243,7 @@ BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
 BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
-BUTTON_TYPE_SHOW_DEBUGGER = 'show debugger'
+BUTTON_TYPE_SHOW_DEBUGGER = 50
 
 
 # -------------------------  Element types  ------------------------- #
@@ -3570,7 +3570,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None, transparent_color=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False, disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True):
         '''
         Window
         :param title:
@@ -3660,7 +3660,7 @@ class Window:
         self.AllKeysDict = {}
         self.TransparentColor = transparent_color
         self.UniqueKeyCounter = 0
-
+        self.DebuggerEnabled = debugger_enabled
         if layout is not None:
             self.Layout(layout)
 
@@ -4252,6 +4252,17 @@ class Window:
         self.TKroot.unbind("<ButtonPress-1>")
         self.TKroot.unbind("<ButtonRelease-1>")
         self.TKroot.unbind("<B1-Motion>")
+
+    def EnableDebugger(self):
+        self.TKroot.bind('<Cancel>', show_debugger_window)
+        # root.bind('<Pause>', show_debugger_popout_window)
+        self.TKroot.bind('<Pause>', Debugger._build_floating_window)
+
+
+    def DisableDebugger(self):
+        self.TKroot.unbind("<Cancel>")
+        self.TKroot.unbind("<Pause>")
+
 
     def __enter__(self):
         return self
@@ -6245,9 +6256,10 @@ def StartupTK(my_flex_form:Window):
     else:
         root = tk.Toplevel()
 
-    root.bind('<Cancel>', show_debugger_window)
-    # root.bind('<Pause>', show_debugger_popout_window)
-    root.bind('<Pause>', Debugger._build_floating_window)
+    if my_flex_form.DebuggerEnabled:
+        root.bind('<Cancel>', show_debugger_window)
+        # root.bind('<Pause>', show_debugger_popout_window)
+        root.bind('<Pause>', Debugger._build_floating_window)
 
     try:
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
@@ -7967,7 +7979,11 @@ class Debugger():
         for key in Debugger.local_choices:
             if Debugger.local_choices[key] is True:
                 Debugger.watcher_window.Element('_WATCH{}_'.format(slot)).Update(key)
-                Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(Debugger.locals[key])
+                try:
+                    Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(mylocals[key])
+                except:
+                    Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(''
+                                                                                            )
                 slot += 1
 
                 if slot + int(not Debugger.custom_watch in (None, '')) >= NUM_AUTO_WATCH:
