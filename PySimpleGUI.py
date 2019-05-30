@@ -3660,8 +3660,10 @@ class Window:
         self.AllKeysDict = {}
         self.TransparentColor = transparent_color
         self.UniqueKeyCounter = 0
+
         if layout is not None:
             self.Layout(layout)
+
 
     @classmethod
     def GetAContainerNumber(cls):
@@ -6243,6 +6245,7 @@ def StartupTK(my_flex_form:Window):
     else:
         root = tk.Toplevel()
 
+    root.bind('<Cancel>', show_debugger_window)
     try:
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except:
@@ -8207,7 +8210,7 @@ class Debugger():
 # 888         "Y88888 888  888  "Y8888P  "Y888 888  "Y88P"  888  888  88888P'
 
 
-def show_debugger_window():
+def show_debugger_window(*args):
     frame, *others = inspect.stack()[1]
     try:
         Debugger.locals = frame.f_back.f_locals
@@ -8220,7 +8223,7 @@ def show_debugger_window():
     return True
 
 
-def show_debugger_popout_window():
+def show_debugger_popout_window(*args):
 
     # frame = inspect.currentframe()
     # prev_frame = inspect.currentframe().f_back
