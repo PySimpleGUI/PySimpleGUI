@@ -7984,8 +7984,8 @@ class Debugger():
                 try:
                     Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(mylocals[key])
                 except:
-                    Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(''
-                                                                                            )
+                    pass
+                    # Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update('')
                 slot += 1
 
                 if slot + int(not Debugger.custom_watch in (None, '')) >= NUM_AUTO_WATCH:
@@ -8231,6 +8231,9 @@ class Debugger():
 # 888         "Y88888 888  888  "Y8888P  "Y888 888  "Y88P"  888  888  88888P'
 
 
+# The *args are needed because sometimes this is called by tkinter and it sends in some parms of something
+# Due to the BIND that happens to the key
+''
 def show_debugger_window(*args):
     frame, *others = inspect.stack()[1]
     try:
@@ -8243,13 +8246,26 @@ def show_debugger_window(*args):
         Debugger.watcher_window = debugger._build_main_debugger_window()
     return True
 
+#
+#
+# def show_debugger_window(*args):
+#     frame, *others = inspect.stack()[1]
+#     try:
+#         Debugger.locals = frame.f_back.f_locals
+#         Debugger.globals = frame.f_back.f_globals
+#     finally:
+#         del frame
+#
+#     if not Debugger.watcher_window:
+#         Debugger.watcher_window = debugger._build_main_debugger_window()
+#     return True
+#
 
 def show_debugger_popout_window(*args):
-
-    # frame = inspect.currentframe()
-    # prev_frame = inspect.currentframe().f_back
+    frame = inspect.currentframe()
+    prev_frame = inspect.currentframe().f_back
     # frame = inspect.getframeinfo(prev_frame)
-    frame, *others = inspect.stack()[1]
+    # frame, *others = inspect.stack()[1]
     try:
         Debugger.locals = frame.f_back.f_locals
         Debugger.globals = frame.f_back.f_globals
@@ -8257,15 +8273,32 @@ def show_debugger_popout_window(*args):
         del frame
     if Debugger.popout_window:
         return
-    if not Debugger.popout_window:
-        Debugger.popout_window = debugger._build_floating_window()
+    debugger._build_floating_window()
+
+
+#
+# def show_debugger_popout_window(*args):
+#
+#     frame = inspect.currentframe()
+#     prev_frame = inspect.currentframe().f_back
+#     frame = inspect.getframeinfo(prev_frame)
+#     # frame, *others = inspect.stack()[1]
+#     try:
+#         Debugger.locals = frame.f_back.f_locals
+#         Debugger.globals = frame.f_back.f_globals
+#     finally:
+#         del frame
+#     if Debugger.popout_window:
+#         return
+#     if not Debugger.popout_window:
+#         Debugger.popout_window = debugger._build_floating_window()
 
 
 def refresh_debugger():
     Window.read_call_from_debugger = True
-    # frame = inspect.currentframe()
-    # prev_frame = inspect.currentframe().f_back
-    frame, *others = inspect.stack()[1]
+    frame = inspect.currentframe()
+    frame = inspect.currentframe().f_back
+    # frame, *others = inspect.stack()[1]
     try:
         Debugger.locals = frame.f_back.f_locals
         Debugger.globals = frame.f_back.f_globals
@@ -8275,6 +8308,21 @@ def refresh_debugger():
     rc = debugger._refresh_main_debugger_window(Debugger.locals, Debugger.globals) if Debugger.watcher_window else False
     Window.read_call_from_debugger = False
     return rc
+#
+# def refresh_debugger():
+#     Window.read_call_from_debugger = True
+#     frame = inspect.currentframe()
+#     prev_frame = inspect.currentframe().f_back
+#     # frame, *others = inspect.stack()[1]
+#     try:
+#         Debugger.locals = frame.f_back.f_locals
+#         Debugger.globals = frame.f_back.f_globals
+#     finally:
+#         del frame
+#     Debugger._refresh_floating_window() if Debugger.popout_window else None
+#     rc = debugger._refresh_main_debugger_window(Debugger.locals, Debugger.globals) if Debugger.watcher_window else False
+#     Window.read_call_from_debugger = False
+#     return rc
 
 
 def fullname(o):
