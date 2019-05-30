@@ -1662,7 +1662,8 @@ class Button(Element):
             except:
                 pass
         elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
-            show_debugger_window()
+            if self.ParentForm.DebuggerEnabled:
+                show_debugger_window()
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
@@ -4257,11 +4258,12 @@ class Window:
         self.TKroot.bind('<Cancel>', show_debugger_window)
         # root.bind('<Pause>', show_debugger_popout_window)
         self.TKroot.bind('<Pause>', Debugger._build_floating_window)
-
+        self.DebuggerEnabled = True
 
     def DisableDebugger(self):
         self.TKroot.unbind("<Cancel>")
         self.TKroot.unbind("<Pause>")
+        self.DebuggerEnabled = False
 
 
     def __enter__(self):
