@@ -1661,6 +1661,8 @@ class Button(Element):
                 root.tk.call('wm', 'iconphoto', root._w, calendar_icon)
             except:
                 pass
+        elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
+            show_debugger_window()
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
@@ -8174,7 +8176,7 @@ class Debugger():
     #  #  # # #   ## #    # #    # ##  ##
     ## ##  # #    # #####   ####  #    #
 
-    def _refresh_floating_window(self):
+    def _refresh_floating_window():
         if not Debugger.popout_window:
             return
         for key in Debugger.popout_choices:
@@ -8245,7 +8247,7 @@ def refresh_debugger():
         Debugger.globals = frame.f_back.f_globals
     finally:
         del frame
-    debugger._refresh_floating_window() if Debugger.popout_window else None
+    Debugger._refresh_floating_window() if Debugger.popout_window else None
     rc = debugger._refresh_main_debugger_window(Debugger.locals, Debugger.globals) if Debugger.watcher_window else False
     Window.read_call_from_debugger = False
     return rc
