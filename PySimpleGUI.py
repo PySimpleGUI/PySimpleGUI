@@ -22,7 +22,9 @@ import textwrap
 import pickle
 import calendar
 from random import randint
-
+import textwrap
+import operator
+import inspect
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -241,6 +243,8 @@ BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
 BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
+BUTTON_TYPE_SHOW_DEBUGGER = 'show debugger'
+
 
 # -------------------------  Element types  ------------------------- #
 # class ElementType(Enum):
@@ -1648,6 +1652,8 @@ class Button(Element):
             self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element, close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y )
             self.TKCal.pack(expand=1, fill='both')
             root.update()
+        elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:  # this is a return type button so GET RESULTS and destroy window
+            show_debugger_window()
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
@@ -3544,6 +3550,8 @@ class Window:
     hidden_master_root = None
     animated_popup_dict = {}
     container_element_counter = 0           # used to get a number of Container Elements (Frame, Column, Tab)
+    read_call_from_debugger = False
+
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
@@ -3781,6 +3789,9 @@ class Window:
         self.TKroot.quit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+        # ensure called only 1 time through a single read cycle
+        if not Window.read_call_from_debugger:
+            refresh_debugger()
         timeout = int(timeout) if timeout is not None else None
         if timeout == 0:                            # timeout of zero runs the old readnonblocking
             event, values =  self.ReadNonBlocking()
@@ -4389,9 +4400,9 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def Debugger(button_text='', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
+def Debug(button_text='', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=COLOR_SYSTEM_DEFAULT, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, image_data=PSG_DEBUGGER_LOGO,image_subsample=4,border_width=0)
 
@@ -7745,6 +7756,507 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
 
 
 
+#####################################################################################################
+# Debugger
+#####################################################################################################
+
+
+PSGDebugLogo = b'R0lGODlhMgAtAPcAAAAAADD/2akK/4yz0pSxyZWyy5u3zZ24zpW30pG52J250J+60aC60KS90aDC3a3E163F2K3F2bPI2bvO3rzP3qvJ4LHN4rnR5P/zuf/zuv/0vP/0vsDS38XZ6cnb6f/xw//zwv/yxf/1w//zyP/1yf/2zP/3z//30wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAyAC0AAAj/AP8JHEiwoMGDCBMqXMiwoUOFAiJGXBigYoAPDxlK3CigwUGLIAOEyIiQI8cCBUOqJFnQpEkGA1XKZPlPgkuXBATK3JmRws2bB3TuXNmQw8+jQoeCbHj0qIGkSgNobNoUqlKIVJs++BfV4oiEWalaHVpyosCwJidw7Sr1YMQFBDn+y4qSbUW3AiDElXiWqoK1bPEKGLixr1jAXQ9GuGn4sN22Bl02roo4Kla+c8OOJbsQM9rNPJlORlr5asbPpTk/RP2YJGu7rjWnDm2RIQLZrSt3zgp6ZmqwmkHAng3ccWDEMe8Kpnw8JEHlkXnPdh6SxHPILaU/dp60LFUP07dfRq5aYntohAO0m+c+nvT6pVMPZ3jv8AJu8xktyNbw+ATJDtKFBx9NlA20gWU0DVQBYwZhsJMICRrkwEYJJGRCSBtEqGGCAQEAOw=='
+
+red_x = b"R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
+
+COLOR_SCHEME = 'LightGreen'
+
+WIDTH_VARIABLES = 23
+WIDTH_RESULTS = 46
+
+WIDTH_WATCHER_VARIABLES = 20
+WIDTH_WATCHER_RESULTS = 58
+
+WIDTH_LOCALS = 80
+NUM_AUTO_WATCH = 13
+
+
+class Debugger():
+    watcher_window = None  # type: Window
+    popout_window = None  # type: Window
+    local_choices = {}
+    myrc = ''
+    custom_watch = ''
+    locals = {}
+    globals = {}
+    popout_choices = {}
+
+    #     #                    ######
+    ##   ##   ##   # #    #    #     # ###### #####  #    #  ####   ####  ###### #####
+    # # # #  #  #  # ##   #    #     # #      #    # #    # #    # #    # #      #    #
+    #  #  # #    # # # #  #    #     # #####  #####  #    # #      #      #####  #    #
+    #     # ###### # #  # #    #     # #      #    # #    # #  ### #  ### #      #####
+    #     # #    # # #   ##    #     # #      #    # #    # #    # #    # #      #   #
+    #     # #    # # #    #    ######  ###### #####   ####   ####   ####  ###### #    #
+
+    # Includes the DUAL PANE!  Don't forget REPL is there too!
+    def _build_main_debugger_window(self):
+        ChangeLookAndFeel(COLOR_SCHEME)
+
+        def InVar(key1):
+            row1 = [T('    '),
+                    I(key=key1, size=(WIDTH_VARIABLES, 1)),
+                    T('', key=key1 + 'CHANGED_', size=(WIDTH_RESULTS, 1)), B('Detail', key=key1 + 'DETAIL_'),
+                    B('Obj', key=key1 + 'OBJ_'), ]
+            return row1
+
+        variables_frame = [InVar('_VAR1_'),
+                           InVar('_VAR2_'),
+                           InVar('_VAR3_'), ]
+
+        interactive_frame = [[T('>>> ', size=(9, 1), justification='r'), In(size=(83, 1), key='_INTERACTIVE_'),
+                              B('Go', bind_return_key=True, visible=False)],
+                             [T('CODE >>> ', justification='r', size=(9, 1)), In(size=(83, 1), key='_CODE_')],
+                             [Multiline(size=(93, 26), key='_OUTPUT_', autoscroll=True, do_not_clear=True)], ]
+
+        autowatch_frame = [[Button('Choose Variables To Auto Watch', key='_LOCALS_'),
+                            Button('Clear All Auto Watches'),
+                            Button('Show All Variables', key='_SHOW_ALL_'),
+                            Button('Locals', key='_ALL_LOCALS_'),
+                            Button('Globals', key='_GLOBALS_'),
+                            Button('Popout', key='_POPOUT_')]] + \
+                          [
+                              [T('', size=(WIDTH_WATCHER_VARIABLES, 1), key='_WATCH%s_' % i),
+                               T('', size=(WIDTH_WATCHER_RESULTS, 2), key='_WATCH%s_RESULT_' % i,
+                                    auto_size_text=True)] for i in range(1, NUM_AUTO_WATCH + 1)]
+
+        col1 = [
+            [Frame('Auto Watches', autowatch_frame, title_color='blue')]
+        ]
+
+        col2 = [
+            [Frame('Variables or Expressions to Watch', variables_frame, title_color='blue'), ],
+            [Frame('REPL-Light - Press Enter To Execute Commands', interactive_frame, title_color='blue'), ]
+        ]
+
+        layout = [[Pane([Column(col1), Column(col2)], size=(700, 640), orientation='h', background_color='red',
+                           show_handle=True, ), ],
+                  [Button('', image_data=red_x, key='_EXIT_', button_color=None),
+                   Text('Pull Red Line For REPL & Object Display Screen ---> ', size=(80, 1), justification='r')]]
+
+        window = Window("I'm Watching You Debugger", layout, icon=PSGDebugLogo, margins=(0, 0)).Finalize()
+        window.Element('_VAR1_').SetFocus()
+        Debugger.watcher_window = window
+        ChangeLookAndFeel('SystemDefault')
+        return window
+
+    #     #                    #######                               #
+    ##   ##   ##   # #    #    #       #    # ###### #    # #####    #        ####   ####  #####
+    # # # #  #  #  # ##   #    #       #    # #      ##   #   #      #       #    # #    # #    #
+    #  #  # #    # # # #  #    #####   #    # #####  # #  #   #      #       #    # #    # #    #
+    #     # ###### # #  # #    #       #    # #      #  # #   #      #       #    # #    # #####
+    #     # #    # # #   ##    #        #  #  #      #   ##   #      #       #    # #    # #
+    #     # #    # # #    #    #######   ##   ###### #    #   #      #######  ####   ####  #
+
+    def _refresh_main_debugger_window(self, mylocals, myglobals):
+        if not Debugger.watcher_window:
+            return False
+        event, values = Debugger.watcher_window.Read(timeout=1)
+        if event in (None, 'Exit', '_EXIT_'):  # EXIT BUTTON / X BUTTON
+            try:
+                Debugger.watcher_window.Close()
+            except: pass
+            Debugger.watcher_window = None
+            return False
+
+        cmd_interactive = values['_INTERACTIVE_']
+        cmd_code = values['_CODE_']
+        cmd = cmd_interactive or cmd_code
+
+        if event == 'Go':  # GO BUTTON
+            Debugger.watcher_window.Element('_INTERACTIVE_').Update('')
+            Debugger.watcher_window.Element('_CODE_').Update('')
+            Debugger.watcher_window.Element('_OUTPUT_').Update(">>> {}\n".format(cmd), append=True, autoscroll=True)
+            if cmd_interactive:
+                expression = """ {} = {} """.format(fullname(Debugger.myrc), cmd)
+                try:
+                    exec(expression, myglobals, mylocals)
+                    Debugger.watcher_window.Element('_OUTPUT_').Update('{}\n'.format(Debugger.myrc), append=True,
+                                                                       autoscroll=True)
+
+                except Exception as e:
+                    Debugger.watcher_window.Element('_OUTPUT_').Update('Exception {}\n'.format(e), append=True,
+                                                                       autoscroll=True)
+            else:
+                Debugger.watcher_window.Element('_CODE_').Update('')
+                Debugger.watcher_window.Element('_OUTPUT_').Update(">>> {}\n".format(cmd), append=True, autoscroll=True)
+                expression = """{}""".format(cmd)
+                try:
+                    exec(expression, myglobals, mylocals)
+                    Debugger.watcher_window.Element('_OUTPUT_').Update('{}\n'.format(cmd), append=True, autoscroll=True)
+
+                except Exception as e:
+                    Debugger.watcher_window.Element('_OUTPUT_').Update('Exception {}\n'.format(e), append=True,
+                                                                       autoscroll=True)
+
+        elif event.endswith('_DETAIL_'):  # DETAIL BUTTON
+            var = values['_VAR{}_'.format(event[4])]
+            expression = """ {} = {} """.format(fullname(Debugger.myrc), var)
+            try:
+                exec(expression, myglobals, mylocals)
+                PopupScrolled(str(values['_VAR{}_'.format(event[4])]) + '\n' + str(Debugger.myrc), title=var,
+                                 non_blocking=True)
+            except:
+                pass
+        elif event.endswith('_OBJ_'):  # OBJECT BUTTON
+            var = values['_VAR{}_'.format(event[4])]
+            expression = """ {} = {} """.format(fullname(Debugger.myrc), cmd)
+            try:
+                exec(expression, myglobals, mylocals)
+                PopupScrolled(ObjToStringSingleObj(Debugger.myrc), title=var, non_blocking=True)
+            except:
+                pass
+        elif event == '_LOCALS_':  # Show all locals BUTTON
+            self._choose_auto_watches(mylocals)
+        elif event == '_ALL_LOCALS_':
+            self._display_all_vars(mylocals)
+        elif event == '_GLOBALS_':
+            self._display_all_vars(myglobals)
+        elif event == 'Clear All Auto Watches':
+            if PopupYesNo('Do you really want to clear all Auto-Watches?', 'Really Clear??') == 'Yes':
+                Debugger.local_choices = {}
+                Debugger.custom_watch = ''
+                # Debugger.watcher_window.Element('_CUSTOM_WATCH_').Update('')
+        elif event == '_POPOUT_':
+            if not Debugger.popout_window:
+                self._build_floating_window()
+        elif event == '_SHOW_ALL_':
+            for key in Debugger.locals:
+                Debugger.local_choices[key] = True if not key.startswith('_') else False
+
+        # -------------------- Process the manual "watch list" ------------------
+        for i in range(1, 4):
+            key = '_VAR{}_'.format(i)
+            out_key = '_VAR{}_CHANGED_'.format(i)
+            Debugger.myrc = ''
+            if Debugger.watcher_window.Element(key):
+                if values[key]:
+                    Debugger.watcher_window.Element(out_key).Update(values[key])
+                else:
+                    Debugger.watcher_window.Element(out_key).Update('')
+
+        # -------------------- Process the automatic "watch list" ------------------
+        slot = 1
+        for key in Debugger.local_choices:
+            if Debugger.local_choices[key] is True:
+                Debugger.watcher_window.Element('_WATCH{}_'.format(slot)).Update(key)
+                Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(Debugger.locals[key])
+                slot += 1
+
+                if slot + int(not Debugger.custom_watch in (None, '')) >= NUM_AUTO_WATCH:
+                    break
+
+        if Debugger.custom_watch:
+            Debugger.watcher_window.Element('_WATCH{}_'.format(slot)).Update(Debugger.custom_watch)
+            try:
+                Debugger.myrc = eval(Debugger.custom_watch, myglobals, mylocals)
+            except:
+                Debugger.myrc = ''
+            Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(Debugger.myrc)
+            slot += 1
+
+        for i in range(slot, NUM_AUTO_WATCH + 1):
+            Debugger.watcher_window.Element('_WATCH{}_'.format(i)).Update('')
+            Debugger.watcher_window.Element('_WATCH{}_RESULT_'.format(i)).Update('')
+
+        return True
+
+    ######                                 #     #
+    #     #  ####  #####  #    # #####     #  #  # # #    # #####   ####  #    #
+    #     # #    # #    # #    # #    #    #  #  # # ##   # #    # #    # #    #
+    ######  #    # #    # #    # #    #    #  #  # # # #  # #    # #    # #    #
+    #       #    # #####  #    # #####     #  #  # # #  # # #    # #    # # ## #
+    #       #    # #      #    # #         #  #  # # #   ## #    # #    # ##  ##
+    #        ####  #       ####  #          ## ##  # #    # #####   ####  #    #
+
+    ######                                    #                     #     #
+    #     # #    # #    # #####   ####       # #   #      #         #     #   ##   #####   ####
+    #     # #    # ##  ## #    # #          #   #  #      #         #     #  #  #  #    # #
+    #     # #    # # ## # #    #  ####     #     # #      #         #     # #    # #    #  ####
+    #     # #    # #    # #####       #    ####### #      #          #   #  ###### #####       #
+    #     # #    # #    # #      #    #    #     # #      #           # #   #    # #   #  #    #
+    ######   ####  #    # #       ####     #     # ###### ######       #    #    # #    #  ####
+
+    def _display_all_vars(self, dict):
+        num_cols = 3
+        output_text = ''
+        num_lines = 2
+        cur_col = 0
+        out_text = 'All of your Vars'
+        longest_line = max([len(key) for key in dict])
+        line = []
+        sorted_dict = {}
+        for key in sorted(dict.keys()):
+            sorted_dict[key] = dict[key]
+        for key in sorted_dict:
+            value = dict[key]
+            wrapped_list = textwrap.wrap(str(value), 60)
+            wrapped_text = '\n'.join(wrapped_list)
+            out_text += '{} - {}\n'.format(key, wrapped_text)
+            if cur_col + 1 == num_cols:
+                cur_col = 0
+                num_lines += len(wrapped_list)
+            else:
+                cur_col += 1
+        ScrolledTextBox(out_text, non_blocking=True)
+
+    #####                                        #     #
+    #     # #    #  ####   ####   ####  ######    #  #  #   ##   #####  ####  #    #
+    #       #    # #    # #    # #      #         #  #  #  #  #    #   #    # #    #
+    #       ###### #    # #    #  ####  #####     #  #  # #    #   #   #      ######
+    #       #    # #    # #    #      # #         #  #  # ######   #   #      #    #
+    #     # #    # #    # #    # #    # #         #  #  # #    #   #   #    # #    #
+    #####  #    #  ####   ####   ####  ######     ## ##  #    #   #    ####  #    #
+
+    #     #                                                       #     #
+    #     #   ##   #####  #   ##   #####  #      ######  ####     #  #  # # #    #
+    #     #  #  #  #    # #  #  #  #    # #      #      #         #  #  # # ##   #
+    #     # #    # #    # # #    # #####  #      #####   ####     #  #  # # # #  #
+    #   #  ###### #####  # ###### #    # #      #           #    #  #  # # #  # #
+    # #   #    # #   #  # #    # #    # #      #      #    #    #  #  # # #   ##
+    #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
+
+    def _choose_auto_watches(self, my_locals):
+        ChangeLookAndFeel(COLOR_SCHEME)
+        num_cols = 3
+        output_text = ''
+        num_lines = 2
+        cur_col = 0
+        layout = [[Text('Choose your "Auto Watch" variables', font='ANY 14', text_color='red')]]
+        longest_line = max([len(key) for key in my_locals])
+        line = []
+        sorted_dict = {}
+        for key in sorted(my_locals.keys()):
+            sorted_dict[key] = my_locals[key]
+        for key in sorted_dict:
+            line.append(CB(key, key=key, size=(longest_line, 1),
+                              default=Debugger.local_choices[key] if key in Debugger.local_choices else False))
+            if cur_col + 1 == num_cols:
+                cur_col = 0
+                layout.append(line)
+                line = []
+            else:
+                cur_col += 1
+        if cur_col:
+            layout.append(line)
+
+        layout += [
+            [Text('Custom Watch'), Input(default_text=Debugger.custom_watch, size=(60, 1), key='_CUSTOM_WATCH_')]]
+        layout += [
+            [Ok(), Cancel(), Button('Clear All'), Button('Select [almost] All', key='_AUTO_SELECT_')]]
+
+        window = Window('All Locals', layout, icon=PSGDebugLogo).Finalize()
+
+        while True:  # event loop
+            event, values = window.Read()
+            if event in (None, 'Cancel'):
+                break
+            elif event == 'Ok':
+                Debugger.local_choices = values
+                Debugger.custom_watch = values['_CUSTOM_WATCH_']
+                break
+            elif event == 'Clear All':
+                PopupQuickMessage('Cleared Auto Watches', auto_close=True, auto_close_duration=3, non_blocking=True,
+                                     text_color='red', font='ANY 18')
+                for key in sorted_dict:
+                    window.Element(key).Update(False)
+                window.Element('_CUSTOM_WATCH_').Update('')
+            elif event == 'Select All':
+                for key in sorted_dict:
+                    window.Element(key).Update(False)
+            elif event == '_AUTO_SELECT_':
+                for key in sorted_dict:
+                    window.Element(key).Update(not key.startswith('_'))
+
+        # exited event loop
+        window.Close()
+        ChangeLookAndFeel('SystemDefault')
+
+    ######                            #######
+    #     # #    # # #      #####     #       #       ####    ##   ##### # #    #  ####
+    #     # #    # # #      #    #    #       #      #    #  #  #    #   # ##   # #    #
+    ######  #    # # #      #    #    #####   #      #    # #    #   #   # # #  # #
+    #     # #    # # #      #    #    #       #      #    # ######   #   # #  # # #  ###
+    #     # #    # # #      #    #    #       #      #    # #    #   #   # #   ## #    #
+    ######   ####  # ###### #####     #       ######  ####  #    #   #   # #    #  ####
+
+    #     #
+    #  #  # # #    # #####   ####  #    #
+    #  #  # # ##   # #    # #    # #    #
+    #  #  # # # #  # #    # #    # #    #
+    #  #  # # #  # # #    # #    # # ## #
+    #  #  # # #   ## #    # #    # ##  ##
+    ## ##  # #    # #####   ####  #    #
+
+    def _build_floating_window(self):
+        if Debugger.popout_window:
+            Debugger.popout_window.Close()
+        ChangeLookAndFeel('Topanga')
+        num_cols = 2
+        width_var = 15
+        width_value = 30
+        layout = []
+        line = []
+        col = 0
+        Debugger.popout_choices = Debugger.local_choices if Debugger.local_choices != {} else {}
+        if Debugger.popout_choices == {}:
+            for key in sorted(Debugger.locals.keys()):
+                if not key.startswith('_'):
+                    Debugger.popout_choices[key] = True
+
+        width_var = max([len(key) for key in Debugger.popout_choices])
+        for key in Debugger.popout_choices:
+            if Debugger.popout_choices[key] is True:
+                value = str(Debugger.locals.get(key))
+                line += [Text(key, size=(width_var, 1), font='Sans 8'), Text(' = ', font='Sans 8'),
+                         Text(value, key=key, size=(width_value, 1 if len(value) < width_value else 2),
+                                 font='Sans 8')]
+                if col + 1 < num_cols:
+                    line += [VerticalSeparator(), T(' ')]
+                col += 1
+            if col >= num_cols:
+                layout.append(line)
+                line = []
+                col = 0
+        if col != 0:
+            layout.append(line)
+        layout = [[Column(layout), Column(
+            [[Button('', key='_EXIT_', image_data=red_x, button_color=('#282923', '#282923'), border_width=0)]])]]
+
+        Debugger.popout_window = Window('Floating', layout, alpha_channel=0, no_titlebar=True, grab_anywhere=True,
+                                           element_padding=(0, 0), margins=(0, 0), keep_on_top=True, ).Finalize()
+        screen_size = Debugger.popout_window.GetScreenDimensions()
+        Debugger.popout_window.Move(screen_size[0] - Debugger.popout_window.Size[0], 0)
+        Debugger.popout_window.SetAlpha(1)
+
+        ChangeLookAndFeel('SystemDefault')
+
+    ######
+    #     # ###### ###### #####  ######  ####  #    #
+    #     # #      #      #    # #      #      #    #
+    ######  #####  #####  #    # #####   ####  ######
+    #   #   #      #      #####  #           # #    #
+    #    #  #      #      #   #  #      #    # #    #
+    #     # ###### #      #    # ######  ####  #    #
+
+    #######
+    #       #       ####    ##   ##### # #    #  ####
+    #       #      #    #  #  #    #   # ##   # #    #
+    #####   #      #    # #    #   #   # # #  # #
+    #       #      #    # ######   #   # #  # # #  ###
+    #       #      #    # #    #   #   # #   ## #    #
+    #       ######  ####  #    #   #   # #    #  ####
+
+    #     #
+    #  #  # # #    # #####   ####  #    #
+    #  #  # # ##   # #    # #    # #    #
+    #  #  # # # #  # #    # #    # #    #
+    #  #  # # #  # # #    # #    # # ## #
+    #  #  # # #   ## #    # #    # ##  ##
+    ## ##  # #    # #####   ####  #    #
+
+    def _refresh_floating_window(self):
+        if not Debugger.popout_window:
+            return
+        for key in Debugger.popout_choices:
+            if Debugger.popout_choices[key] is True:
+                Debugger.popout_window.Element(key).Update(Debugger.locals.get(key))
+        event, values = Debugger.popout_window.Read(timeout=1)
+        if event in (None, '_EXIT_'):
+            Debugger.popout_window.Close()
+            Debugger.popout_window = None
+
+
+# 888     888                                .d8888b.         d8888 888 888          888      888
+# 888     888                               d88P  Y88b       d88888 888 888          888      888
+# 888     888                               888    888      d88P888 888 888          888      888
+# 888     888 .d8888b   .d88b.  888d888     888            d88P 888 888 888  8888b.  88888b.  888  .d88b.
+# 888     888 88K      d8P  Y8b 888P"       888           d88P  888 888 888     "88b 888 "88b 888 d8P  Y8b
+# 888     888 "Y8888b. 88888888 888         888    888   d88P   888 888 888 .d888888 888  888 888 88888888
+# Y88b. .d88P      X88 Y8b.     888         Y88b  d88P  d8888888888 888 888 888  888 888 d88P 888 Y8b.
+#  "Y88888P"   88888P'  "Y8888  888          "Y8888P"  d88P     888 888 888 "Y888888 88888P"  888  "Y8888
+
+# 8888888888                            888    d8b
+# 888                                   888    Y8P
+# 888                                   888
+# 8888888    888  888 88888b.   .d8888b 888888 888  .d88b.  88888b.  .d8888b
+# 888        888  888 888 "88b d88P"    888    888 d88""88b 888 "88b 88K
+# 888        888  888 888  888 888      888    888 888  888 888  888 "Y8888b.
+# 888        Y88b 888 888  888 Y88b.    Y88b.  888 Y88..88P 888  888      X88
+# 888         "Y88888 888  888  "Y8888P  "Y888 888  "Y88P"  888  888  88888P'
+
+
+def show_debugger_window():
+    frame, *others = inspect.stack()[1]
+    try:
+        Debugger.locals = frame.f_back.f_locals
+        Debugger.globals = frame.f_back.f_globals
+    finally:
+        del frame
+
+    if not Debugger.watcher_window:
+        Debugger.watcher_window = debugger._build_main_debugger_window()
+    return True
+
+
+def show_debugger_popout_window():
+
+    # frame = inspect.currentframe()
+    # prev_frame = inspect.currentframe().f_back
+    # frame = inspect.getframeinfo(prev_frame)
+    frame, *others = inspect.stack()[1]
+    try:
+        Debugger.locals = frame.f_back.f_locals
+        Debugger.globals = frame.f_back.f_globals
+    finally:
+        del frame
+    if Debugger.popout_window:
+        return
+    if not Debugger.popout_window:
+        Debugger.popout_window = debugger._build_floating_window()
+
+
+def refresh_debugger():
+    Window.read_call_from_debugger = True
+    # frame = inspect.currentframe()
+    # prev_frame = inspect.currentframe().f_back
+    frame, *others = inspect.stack()[1]
+    try:
+        Debugger.locals = frame.f_back.f_locals
+        Debugger.globals = frame.f_back.f_globals
+    finally:
+        del frame
+    debugger._refresh_floating_window() if Debugger.popout_window else None
+    rc = debugger._refresh_main_debugger_window(Debugger.locals, Debugger.globals) if Debugger.watcher_window else False
+    Window.read_call_from_debugger = False
+    return rc
+
+
+def fullname(o):
+    # o.__module__ + "." + o.__class__.__qualname__ is an example in
+    # this context of H.L. Mencken's "neat, plausible, and wrong."
+    # Python makes no guarantees as to whether the __module__ special
+    # attribute is defined, so we take a more circumspect approach.
+    # Alas, the module name is explicitly excluded from __qualname__
+    # in Python 3.
+
+    module = o.__class__.__module__
+    if module is None or module == str.__class__.__module__:
+        return o.__class__.__name__  # Avoid reporting __builtin__
+    else:
+        return module + '.' + o.__class__.__name__
+
+
+
+debugger = Debugger()
+
+
 """
                        d8b          
                        Y8P          
@@ -7826,7 +8338,7 @@ def main():
     layout1 = [
         [Menu(menu_def)],
         [Image(data=DEFAULT_BASE64_ICON)],
-        [Text('You are running the PySimpleGUI.py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
+        [Text('You are running the py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
         [Frame('Input Text Group', frame1, title_color='red'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_')],
