@@ -6246,6 +6246,9 @@ def StartupTK(my_flex_form:Window):
         root = tk.Toplevel()
 
     root.bind('<Cancel>', show_debugger_window)
+    # root.bind('<Pause>', show_debugger_popout_window)
+    root.bind('<Pause>', Debugger._build_floating_window)
+
     try:
         root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except:
