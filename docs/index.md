@@ -26,9 +26,9 @@
 
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.35.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.37.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.35.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.37.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -4970,6 +4970,44 @@ Mixup.... 3.26 changes don't appear to have been correctly released so releasing
 ## 3.35 PySimpleGUI & 1.35 PySimpleGUI27 27-May-2019
 
 * Bug fix - when setting default for Checkbox it was also disabling the element!
+
+
+## 3.36 PySimpleGUI & 1.36 PySimpleGUI27 29-May-2019
+
+A combination of user requests, and needs of new `imwatchingyou` debugger
+
+* New Debugger Icon for future built-in debugger
+* Fixed bug in FindBoundReturnKey - needed to also check Panes
+* NEW Window functions to turn on/off the Grab Anywhere feature
+	* `Window.GrabAnyWhereOn()`
+	* `Window.GrabAnyWhereOff()`
+* New "Debugger" button that's built-in like other buttons.  It's a TINY button with a logo. For future use when a debugger is built into PySimpleGUI itself (SOON!)
+* Change Text Element Wrap Length calculation.  Went fromn +40 pixels to +10 pixels in formula
+* PopupGetFile has new parameter - `multiple_files`. If True then allows selection of multiple files
+
+
+## 3.37 PySimpleGUI & 1.37 PySimpleGUI27 1-June-2019
+
+* The built-in debugger is HERE - might not WORK exactly yet, but a lot of code went into te PySimpleGUI.py file for this.  At the moment, the `imwatchingyou` package is THE way to use a PySimpleGUI debugger. But soon enough you won't need that project in order to debug your program.
+* Some strange code reformatting snuck in.  There are 351 differences between this and previous release.  I'm not sure what happened but am looking at every change by hand.
+* New Calendar Button features
+    * locale, format - new parameters to TKCalendar call
+    * Use custom icon for window if one has been set
+    * New parameters to CalendarButton - `locale`, `format`
+* The bulk of the built-in PySimpleGUI debugger has been added but is not yet "officially supported".  Try pressing "break" or "ctrl+break" on your keyboard.
+    * New bindings for break / pause button and debugger
+    * New Debug button will launch debugger.     
+    * New parameter `debugger_enabled` added to Window call.  Default is __enabled__.
+    * Your progam's call to Read is all that's needed to refresh debugger
+    * New `Window` methods to control debugger access
+        * `EnableDebugger` - turns on HOTKEYS to debugger
+        * `DisableDebugger` - turns off HOTKEYS to debugger
+* Restored wrap len for Text elements back from +10 to +40 pixels
+* `PopupGetFolder`, `PopupGetFile` - fixed so that the "hidden" master window stays hidden (a Linux problem)
+* Added support for Multiple Files to `PopupGetFiles` when no_window option has been set.
+
+
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
