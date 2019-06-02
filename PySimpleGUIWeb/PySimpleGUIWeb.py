@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#usr/bin/python3
 import sys
 import types
 import datetime
@@ -1291,7 +1291,8 @@ class Output(Element):
         :param key:
         '''
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        # fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        fg = text_color if text_color is not None else 'black' if DEFAULT_INPUT_TEXT_COLOR == COLOR_SYSTEM_DEFAULT else DEFAULT_INPUT_TEXT_COLOR
         self.Disabled = disabled
         self.Widget = None      # type: remi.gui.TextInput
         if size_px == (None, None) and size == (None, None):
@@ -1711,6 +1712,55 @@ class SuperImage(remi.gui.Image):
     def refresh(self):
         i = int(time.time() * 1e6)
         self.attributes['src'] = "/%s/get_image_data?update_index=%d" % (id(self), i)
+
+    def get_image_data(self, update_index):
+        headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
+        return [self.imagedata, headers]
+
+class SuperImagenew(remi.gui.Image):
+    def __init__(self, file_path_name=None, **kwargs):
+        """
+        This new app_instance variable is causing lots of problems.  I do not know the value of the App
+        when I create this image.
+        :param app_instance:
+        :param file_path_name:
+        :param kwargs:
+        """
+        # self.app_instance = app_instance
+        image = file_path_name
+        super(SuperImage, self).__init__(image, **kwargs)
+
+        self.imagedata = None
+        self.mimetype = None
+        self.encoding = None
+        if not image: return
+        self.load(image)
+
+    def load(self, file_path_name):
+        if type(file_path_name) is bytes or len(file_path_name) > 200:
+            self.imagedata = base64.b64decode(file_path_name)
+        else:
+            self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
+            with open(file_path_name, 'rb') as f:
+                self.imagedata = f.read()
+        self.refresh()
+
+    def refresh(self):
+        i = int(time.time() * 1e6)
+        # self.app_instance.execute_javascript("""
+        if Window.App is not None:
+            Window.App.execute_javascript("""
+                var url = '/%(id)s/get_image_data?update_index=%(frame_index)s';
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'blob'
+                xhr.onload = function(e){
+                    var urlCreator = window.URL || window.webkitURL;
+                    var imageUrl = urlCreator.createObjectURL(this.response);
+                    document.getElementById('%(id)s').src = imageUrl;
+                }
+                xhr.send();
+                """ % {'id': id(self), 'frame_index':i})
 
     def get_image_data(self, update_index):
         headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
@@ -2935,6 +2985,7 @@ class Window:
         self.web_multiple_instance = web_multiple_instance
         self.MessageQueue = Queue()
         self.master_widget = None       # type: remi.gui.VBox
+        self.UniqueKeyCounter = 0
 
         if layout is not None:
             self.Layout(layout)
@@ -3259,23 +3310,38 @@ class Window:
 
     def BuildKeyDict(self):
         dict = {}
-        self.AllKeysDict = self._BuildKeyDictForWindow(self, dict)
+        self.AllKeysDict = self._BuildKeyDictForWindow(self,self, dict)
+        # print(f'keys built = {self.AllKeysDict}')
 
-    def _BuildKeyDictForWindow(self, window, key_dict):
+    def _BuildKeyDictForWindow(self, top_window, window, key_dict):
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
                 if element.Type == ELEM_TYPE_COLUMN:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_FRAME:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_TAB_GROUP:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
                 if element.Type == ELEM_TYPE_TAB:
-                    key_dict = self._BuildKeyDictForWindow(element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                if element.Key is None:   # if no key has been assigned.... create one for input elements
+                    if element.Type == ELEM_TYPE_BUTTON:
+                        element.Key = element.ButtonText
+                    if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU, ELEM_TYPE_CANVAS,
+                                        ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
+                                        ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
+                                        ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
+                                        ELEM_TYPE_INPUT_TEXT):
+                        element.Key = top_window.DictionaryKeyCounter
+                        top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
+                    if element.Key in key_dict.keys():
+                        print('*** Duplicate key found in your layout {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
+                        element.Key = element.Key + str(self.UniqueKeyCounter)
+                        self.UniqueKeyCounter += 1
+                        print('*** Replaced new key with {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
                     key_dict[element.Key] = element
         return key_dict
-
 
     def FindElementWithFocus(self):
         return self.FocusElement
@@ -3453,7 +3519,6 @@ class Window:
         # s = remi.server.StandaloneServer(self.MyApp, width=1100, height=600)
         # s.start()
         Window.port_number += 1
-
         try:
             remi.start(self.MyApp,
                        title=self.Title,
@@ -3474,7 +3539,6 @@ class Window:
 
         self.MessageQueue.put(None)     # if returned from start call, then the window has been destroyed and a None event should be generated
 
-
     class MyApp(remi.App):
         def __init__(self,*args, userdata2=None):
             # self.window = window    # type:  Window
@@ -3486,6 +3550,8 @@ class Window:
                 self.window = userdata2         # type: Window
             self.master_widget = None
             self.window.App = self
+            Window.App = self
+            self.lines_shown = []
 
             if userdata2 is None:
                 # res_path = os.path.dirname(os.path.abspath(__file__))
@@ -3501,7 +3567,10 @@ class Window:
                 lines = Window.stdout_string_io.readlines()
                 # lines.reverse()
                 # self.window.OutputElementForStdOut.Widget.set_text("".join(lines))
-                self.window.OutputElementForStdOut.Update("".join(lines))
+                # self.window.OutputElementForStdOut.Update("".join(lines))
+                if lines != self.lines_shown:
+                    self.window.OutputElementForStdOut.Update("".join(lines))
+                self.lines_shown = lines
 
         def main(self, name='world'):
             # margin 0px auto allows to center the app to the screen
@@ -3902,6 +3971,8 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
+    form.ReturnValuesDictionary[element.Key] = value
+    return
     if element.Key is None:
         form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
         element.Key = form.DictionaryKeyCounter
@@ -4563,6 +4634,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
+                element.Widget = remi.gui.FileUploader('./', width=200, height=30, margin='10px')
+
+                # element.Widget = remi.gui.FileFolderNavigator(False, r'a:\TEMP', True, False)
+                tk_row_frame.append(element.Widget)
                 pass
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
@@ -5837,6 +5912,7 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
     else:
         form.AddRow(Text('', size=(pad, 1), auto_size_text=False), Button('OK', size=(5, 1), button_color=button_color))
     button, values = form.Read()
+    form.Close()
     return button
 
 
@@ -6999,11 +7075,13 @@ def main():
     layout = [
         [Menu(menu_def, key='_MENU_', text_color='yellow', background_color='#475841',  font='Courier 14')],
         # [T('123435', size=(1,8))],
-        [Image(data=DEFAULT_BASE64_ICON)],
+        # [OptionMenu([])],
+        [T('System platform = %s'%sys.platform)],
+        [Image(data=DEFAULT_BASE64_ICON, enable_events=True)],
         [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
-        [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red')],
+        [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
         [Output(size=(60,10))],
         [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
@@ -7037,6 +7115,10 @@ def main():
 
         elif event == 'Values':
             window.Element('_MULTIOUT_').Update(str(values), append=True)
+            nav = remi.gui.FileFolderNavigator(False,r'a:\TEMP', True, False)
+            # here is returned the Input Dialog widget, and it will be shown
+            # fileselectionDialog.show(window.Element('_IN_').Widget)
+
         elif event != TIMEOUT_KEY:
             window.Element('_MULTIOUT_').Update('EVENT: ' + str(event), append=True)
         if event == 'Popup':
