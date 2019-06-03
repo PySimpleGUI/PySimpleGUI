@@ -1305,6 +1305,7 @@ class Output(Element):
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
         if value is not None and not append:
             self.Widget.set_value(str(value))
+            self.CurrentValue = str(value)
         elif value is not None and append:
             self.CurrentValue = self.CurrentValue + '\n' + str(value)
             self.Widget.set_value(self.CurrentValue)
