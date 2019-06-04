@@ -28,7 +28,7 @@ layout = [
      sg.Radio('c', 1, key='_R3_')],
     [sg.Combo(['c1', 'c2', 'c3'], size=(6, 3), key='_COMBO_')],
     [sg.Output(size=(50, 6))],
-    [sg.Ok(), sg.Exit(), sg.Button('Debugg'), sg.Button('Popout')],
+    [sg.Ok(), sg.Exit(), sg.Button('Debug'), sg.Button('Popout')],
 ]
 
 window = sg.Window('This is your Application Window', layout)
@@ -46,7 +46,7 @@ while True:  # Your Event Loop
     elif event == 'Ok':
         print('You clicked Ok.... this is where print output goes')
         imwatchingyou.show_debugger_popout_window()  # STEP 2 also
-    elif event == 'Debugg':
+    elif event == 'Debug':
         imwatchingyou.show_debugger_window()  # STEP 2
     elif event == 'Popout':
         imwatchingyou.show_debugger_popout_window()  # STEP 2
