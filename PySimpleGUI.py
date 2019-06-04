@@ -5186,6 +5186,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 wraplen = tktext_label.winfo_reqwidth() - 10   # width of widget in Pixels
                 if not auto_size_text and height == 1:
                     wraplen = 0
+                else:
+                    wraplen = width
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
                 if element.Relief is not None:
                     tktext_label.configure(relief=element.Relief)
