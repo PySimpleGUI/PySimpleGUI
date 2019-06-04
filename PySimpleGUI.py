@@ -3536,12 +3536,13 @@ class ErrorElement(Element):
         super().__init__(ELEM_TYPE_ERROR, key=key)
         return
 
-    def Update(self, *args, **kwargs):
-        PopupError('Keyword error in Update',
-                   'You need to stop this madness and check your spelling',
-                   'Bad key = {}'.format(self.Key),
-                   'Your bad line of code may resemble this:',
-                   'window.FindElement("{}")'.format(self.Key))
+    def Update(self, silent_on_error=True, *args, **kwargs):
+        if not silent_on_error:
+            PopupError('Keyword error in Update',
+                       'You need to stop this madness and check your spelling',
+                       'Bad key = {}'.format(self.Key),
+                       'Your bad line of code may resemble this:',
+                       'window.FindElement("{}")'.format(self.Key))
         return self
 
     def Get(self):
@@ -3980,14 +3981,13 @@ class Window:
         # element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             if not silent_on_error:
-                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+                print(
+                    '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key)
                 PopupError('Keyword error in FindElement Call',
                            'Bad key = {}'.format(key),
                            'Your bad line of code may resemble this:',
                            'window.FindElement("{}")'.format(key))
-                return ErrorElement(key=key)
-            else:
-                return None
+            return ErrorElement(key=key)
         return element
 
     Element = FindElement  # Shortcut function
@@ -5064,7 +5064,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # Determine Element size
             element_size = element.Size
             if (element_size == (None, None) and element_type not in (
-            ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):  # user did not specify a size
+                    ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):  # user did not specify a size
                 element_size = toplevel_form.DefaultElementSize
             elif (element_size == (None, None) and element_type in (ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):
                 element_size = toplevel_form.DefaultButtonElementSize
@@ -5168,7 +5168,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ---===--- LABEL widget create and place --- #
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
-                stringvar.set(display_text)
+                stringvar.set(str(display_text))
                 if auto_size_text:
                     width = 0
                 if element.Justification is not None:
@@ -5179,13 +5179,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
-                #                         justify=justify, bd=border_depth, font=font)
+
                 tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width,
-                                                         height=height,
-                                                         justify=justify, bd=border_depth, font=font)
+                                                         height=height, justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
+                wraplen = tktext_label.winfo_reqwidth() - 10   # width of widget in Pixels
                 if not auto_size_text and height == 1:
                     wraplen = 0
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
@@ -7806,9 +7804,11 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
-            filename = tk.filedialog.askopenfilenames(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
+            filename = tk.filedialog.askopenfilenames(filetypes=file_types,
+                                                      defaultextension=default_extension)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get files' dialog box
+            filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                     defaultextension=default_extension)  # show the 'get files' dialog box
 
         root.destroy()
         if Window.NumOpenWindows == 1:
