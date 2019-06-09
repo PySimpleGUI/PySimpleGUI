@@ -5046,6 +5046,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(containing_frame)
+        row_should_expand = False
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
@@ -5593,6 +5594,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKText.bind('<Button-3>', element.RightClickMenuCallback)
+                row_should_expand = True
             # -------------------------  CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
@@ -5718,7 +5720,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                            text_color=text_color, font=font,
                                                            pad=elementpad)
                 element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
-                element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
+                element._TKOut.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
                 if element.Visible is False:
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
@@ -5729,6 +5731,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element._TKOut.bind('<Button-3>', element.RightClickMenuCallback)
+                row_should_expand = True
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
@@ -6264,7 +6267,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=False)
+        if row_should_expand:
+            tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=True, fill=tk.BOTH)
+        else:
+            tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=False)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
@@ -6675,7 +6681,7 @@ def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
     window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                    auto_close_duration=auto_close_duration, location=location)
+                    auto_close_duration=auto_close_duration, location=location, resizable=True)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
