@@ -6267,10 +6267,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        if row_should_expand:
-            tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=True, fill=tk.BOTH)
-        else:
-            tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=False)
+        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0],
+                          expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
