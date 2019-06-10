@@ -8509,6 +8509,7 @@ def main():
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
 
@@ -8618,7 +8619,10 @@ def main():
             window.Maximize()
         elif event == 'Normal':
             window.Normal()
-
+        elif event == 'Popout':
+            show_debugger_popout_window()
+        elif event == 'Launch Debugger':
+            show_debugger_window()
         # TimerStop()
     window.Close()
 

@@ -1162,12 +1162,16 @@ class Multiline(Element):
         if autoscroll is not None:
             self.Autoscroll = autoscroll
         if value is not None:
+            if self.Disabled:
+                self.TKText.configure(state='normal')
             try:
                 if not append:
                     self.TKText.delete('1.0', tk.END)
                 self.TKText.insert(tk.END, value)
             except:
                 pass
+            if self.Disabled:
+                self.TKText.configure(state='disabled')
             self.DefaultText = value
         if self.Autoscroll:
             self.TKText.see(tk.END)
@@ -3549,12 +3553,13 @@ class ErrorElement(Element):
         super().__init__(ELEM_TYPE_ERROR, key=key)
         return
 
-    def Update(self, *args, **kwargs):
-        PopupError('Keyword error in Update',
-                   'You need to stop this madness and check your spelling',
-                   'Bad key = {}'.format(self.Key),
-                   'Your bad line of code may resemble this:',
-                   'window.FindElement("{}")'.format(self.Key))
+    def Update(self, silent_on_error=True, *args, **kwargs):
+        if not silent_on_error:
+            PopupError('Keyword error in Update',
+                       'You need to stop this madness and check your spelling',
+                       'Bad key = {}'.format(self.Key),
+                       'Your bad line of code may resemble this:',
+                       'window.FindElement("{}")'.format(self.Key))
         return self
 
     def Get(self):
@@ -3993,14 +3998,13 @@ class Window(object):
         # element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
             if not silent_on_error:
-                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+                print(
+                    '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key)
                 PopupError('Keyword error in FindElement Call',
                            'Bad key = {}'.format(key),
                            'Your bad line of code may resemble this:',
                            'window.FindElement("{}")'.format(key))
-                return ErrorElement(key=key)
-            else:
-                return None
+            return ErrorElement(key=key)
         return element
 
     Element = FindElement  # Shortcut function
@@ -5055,6 +5059,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(containing_frame)
+        row_should_expand = False
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
@@ -5077,7 +5082,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # Determine Element size
             element_size = element.Size
             if (element_size == (None, None) and element_type not in (
-            ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):  # user did not specify a size
+                    ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):  # user did not specify a size
                 element_size = toplevel_form.DefaultElementSize
             elif (element_size == (None, None) and element_type in (ELEM_TYPE_BUTTON, ELEM_TYPE_BUTTONMENU)):
                 element_size = toplevel_form.DefaultButtonElementSize
@@ -5181,7 +5186,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ---===--- LABEL widget create and place --- #
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
-                stringvar.set(display_text)
+                stringvar.set(str(display_text))
                 if auto_size_text:
                     width = 0
                 if element.Justification is not None:
@@ -5192,15 +5197,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
-                #                         justify=justify, bd=border_depth, font=font)
+
                 tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width,
-                                                         height=height,
-                                                         justify=justify, bd=border_depth, font=font)
+                                                         height=height, justify=justify, bd=border_depth, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
-                wraplen = tktext_label.winfo_reqwidth() + 40  # width of widget in Pixels
-                if not auto_size_text and height == 1:
+                wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
+                if not auto_size_text and height == 1:   # if just 1 line high, ensure no wrap happens
                     wraplen = 0
+                # print(f'Text wraplen = {wraplen} wxh = {width} x {height}')
+                # print(f'Len = {len(display_text)} Text = {str(display_text)}')
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
                 if element.Relief is not None:
                     tktext_label.configure(relief=element.Relief)
@@ -5602,6 +5607,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKText.bind('<Button-3>', element.RightClickMenuCallback)
+                row_should_expand = True
             # -------------------------  CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
@@ -5727,7 +5733,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                            text_color=text_color, font=font,
                                                            pad=elementpad)
                 element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
-                element._TKOut.pack(side=tk.LEFT, expand=True, fill='both')
+                element._TKOut.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
                 if element.Visible is False:
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
@@ -5738,6 +5744,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element._TKOut.bind('<Button-3>', element.RightClickMenuCallback)
+                row_should_expand = True
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 if element.Filename is not None:
@@ -6273,7 +6280,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0], expand=False)
+        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0],
+                          expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
@@ -6744,7 +6752,7 @@ def PopupScrolled(*args, **_3to2kwargs):
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
     window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                    auto_close_duration=auto_close_duration, location=location)
+                    auto_close_duration=auto_close_duration, location=location, resizable=True)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
@@ -8194,9 +8202,11 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
-            filename = tk.filedialog.askopenfilenames(filetypes=file_types, defaultextension=default_extension)  # show the 'get file' dialog box
+            filename = tk.filedialog.askopenfilenames(filetypes=file_types,
+                                                      defaultextension=default_extension)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types, defaultextension=default_extension)  # show the 'get files' dialog box
+            filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                     defaultextension=default_extension)  # show the 'get files' dialog box
 
         root.destroy()
         if Window.NumOpenWindows == 1:
@@ -8887,6 +8897,7 @@ def main():
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
 
@@ -8996,7 +9007,10 @@ def main():
             window.Maximize()
         elif event == 'Normal':
             window.Normal()
-
+        elif event == 'Popout':
+            show_debugger_popout_window()
+        elif event == 'Launch Debugger':
+            show_debugger_window()
         # TimerStop()
     window.Close()
 

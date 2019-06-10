@@ -23,9 +23,7 @@ layout = [
     [sg.T('A typical PSG application')],
     [sg.In(key='_IN_')],
     [sg.T('        ', key='_OUT_', size=(30, 1))],
-    [sg.Radio('a', 1, key='_R1_'),
-     sg.Radio('b', 1, key='_R2_'),
-     sg.Radio('c', 1, key='_R3_')],
+    [sg.Radio('a', 1, key='_R1_'), sg.Radio('b', 1, key='_R2_'), sg.Radio('c', 1, key='_R3_')],
     [sg.Combo(['c1', 'c2', 'c3'], size=(6, 3), key='_COMBO_')],
     [sg.Output(size=(50, 6))],
     [sg.Ok(), sg.Exit(), sg.Button('Debug'), sg.Button('Popout')],
@@ -36,16 +34,12 @@ window = sg.Window('This is your Application Window', layout)
 counter = 0
 timeout = 100
 
-# Start the program with the popout window showing so you can immediately start debugging!
-imwatchingyou.show_debugger_popout_window()
-
 while True:  # Your Event Loop
     event, values = window.Read(timeout=timeout)
     if event in (None, 'Exit'):
         break
     elif event == 'Ok':
         print('You clicked Ok.... this is where print output goes')
-        imwatchingyou.show_debugger_popout_window()  # STEP 2 also
     elif event == 'Debug':
         imwatchingyou.show_debugger_window()  # STEP 2
     elif event == 'Popout':
