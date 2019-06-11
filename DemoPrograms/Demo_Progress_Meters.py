@@ -5,23 +5,28 @@ if sys.version_info[0] >= 3:
 else:
     import PySimpleGUI27 as sg
 from time import sleep
-from sys import exit as exit
 
 
 """
-    Demonstration of simple and multiple OneLineProgressMeter's
+    Demonstration of simple and multiple OneLineProgressMeter's as well as the Progress Meter Element
     
-    Shows how 2 progress meters can be running at the same time.
-    Note -- If the user wants to cancel a meter, it's important to use the "Cancel" button, not the X
+    There are 3 demos
+    1. Manually updated progress bar
+    2. Custom progress bar built into your window, updated in a loop
+    3. OneLineProgressMeters, nested meters showing how 2 can be run at the same time.
+    
     If the software determined that a meter should be cancelled early, 
         calling OneLineProgresMeterCancel(key) will cancel the meter with the matching key
 """
 
-# sg.ChangeLookAndFeel('Dark')
 
 
 """
-    The simple case is that you want to add a single meter to your code.  The one-line solution
+    The simple case is that you want to add a single meter to your code.  The one-line solution.
+    This demo function shows 3 different OneLineProgressMeter tests
+        1. A horizontal with red and white bar colors
+        2. A vertical bar with default colors
+        3. A test showing 2 running at the same time 
 """
 
 def demo_one_line_progress_meter():
@@ -78,11 +83,12 @@ def demo_one_line_progress_meter():
 def manually_updated_meter_test():
     # layout the form
     layout = [[sg.Text('This meter is manually updated 4 times')],
-              [sg.ProgressBar(10, orientation='h', size=(20,20), key='progress')]]
+              [sg.ProgressBar(max_value=10, orientation='h', size=(20,20), key='progress')]]
 
     # create the form`
-    window = sg.Window('Custom Progress Meter', layout).Finalize()
-    progress_bar = window.FindElement('progress')
+    window = sg.Window('Custom Progress Meter', layout).Finalize()  # must finalize since not running an event loop
+
+    progress_bar = window.FindElement('progress')                   # Get the element to make updating easier
 
     # -------------------- Your Program Code --------------------
     # Spot #1 to indicate progress
