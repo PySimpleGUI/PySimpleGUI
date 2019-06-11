@@ -24,12 +24,16 @@ from sys import exit as exit
     The simple case is that you want to add a single meter to your code.  The one-line solution
 """
 
-def DemoOneLineProgressMeter():
+def demo_one_line_progress_meter():
     # Display a progress meter. Allow user to break out of loop using cancel button
-    for i in range(1000):
-        if not sg.OneLineProgressMeter('My 1-line progress meter', i+1, 1000, 'meter key' ):
+    for i in range(10000):
+        if not sg.OneLineProgressMeter('My 1-line progress meter', i+1, 10000, 'meter key','MY MESSAGE1', 'MY MESSAGE 2', orientation='h', bar_color=('white', 'red')):
+            print('Hit the break')
             break
-
+    for i in range(10000):
+        if not sg.OneLineProgressMeter('My 1-line progress meter', i+1, 10000, 'meter key', 'MY MESSAGE1', 'MY MESSAGE 2',orientation='v' ):
+            print('Hit the break')
+            break
 
     layout = [
                 [sg.T('One-Line Progress Meter Demo', font=('Any 18'))],
@@ -60,30 +64,74 @@ def DemoOneLineProgressMeter():
                         break
                     sleep(delay_inner/1000)
 
+
 '''
-    Make your own progress meter!  
-    Embed the meter right into your window
+    Manually Updated Test
+    Here is an example for when you want to "sprinkle" progress bar updates in multiple
+    places within your source code and you're not running an event loop.
+    Note that UpdateBar is special compared to other Update methods. It also refreshes
+    the containing window and checks for window closure events
+    The sleep calls are here only for demonstration purposes.  You should NOT be adding
+    these kinds of sleeps to a GUI based program normally.
 '''
 
-def CustomMeter():
+def manually_updated_meter_test():
     # layout the form
-    layout = [[sg.Text('A custom progress meter')],
-              [sg.ProgressBar(1000, orientation='h', size=(20,20), key='progress')],
+    layout = [[sg.Text('This meter is manually updated 4 times')],
+              [sg.ProgressBar(10, orientation='h', size=(20,20), key='progress')]]
+
+    # create the form`
+    window = sg.Window('Custom Progress Meter', layout).Finalize()
+    progress_bar = window.FindElement('progress')
+
+    # -------------------- Your Program Code --------------------
+    # Spot #1 to indicate progress
+    progress_bar.UpdateBar(1)         # show 10% complete
+    sleep(2)
+
+    # more of your code.... perhaps pages and pages of code.
+    # Spot #2 to indicate progress
+    progress_bar.UpdateBar(2)         # show 20% complete
+    sleep(2)
+
+    # more of your code.... perhaps pages and pages of code.
+    # Spot #3 to indicate progress
+    progress_bar.UpdateBar(6)         # show 60% complete
+    sleep(2)
+
+    # more of your code.... perhaps pages and pages of code.
+    # Spot #4 to indicate progress
+    progress_bar.UpdateBar(9)         # show 90% complete
+    sleep(2)
+    window.Close()
+
+
+'''
+    This function shows how to create a custom window with a custom progress bar and then
+    how to update the bar to indicate progress is being made
+'''
+
+def custom_meter_example():
+    # layout the form
+    layout = [[sg.Text('A typical custom progress meter')],
+              [sg.ProgressBar(1, orientation='h', size=(20,20), key='progress')],
               [sg.Cancel()]]
 
     # create the form`
     window = sg.Window('Custom Progress Meter').Layout(layout)
     progress_bar = window.FindElement('progress')
     # loop that would normally do something useful
-    for i in range(1000):
+    for i in range(10000):
         # check to see if the cancel button was clicked and exit loop if clicked
         event, values = window.Read(timeout=0)
         if event == 'Cancel' or event == None:
             break
         # update bar with loop value +1 so that bar eventually reaches the maximum
-        progress_bar.UpdateBar(i+1)
+        progress_bar.UpdateBar(i+1, 10000)
     # done with loop... need to destroy the window as it's still open
     window.Close()
 
-CustomMeter()
-DemoOneLineProgressMeter()
+
+manually_updated_meter_test()
+custom_meter_example()
+demo_one_line_progress_meter()
