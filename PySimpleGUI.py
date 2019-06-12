@@ -2247,10 +2247,12 @@ class Graph(Element):
 
     def DeleteFigure(self, id):
         try:
-            del self.Images[id]
             self._TKCanvas2.delete(id)
         except:
             print('DeleteFigure - bad ID {}'.format(id))
+        try:
+            del self.Images[id]         # in case was an image. If wasn't an image, then will get exception
+        except: pass
 
     def Update(self, background_color, visible=None):
         if self._TKCanvas2 is None:
