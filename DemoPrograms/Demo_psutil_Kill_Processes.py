@@ -10,6 +10,7 @@ import signal
 import psutil
 import operator
 
+CONFIRM_KILLS = False
 
 """
     Utility to show running processes, CPU usage and provides way to kill processes.
@@ -36,6 +37,17 @@ def kill_proc_tree(pid, sig=signal.SIGTERM, include_parent=True,
     return (gone, alive)
 
 
+def show_list_by_name(window):
+    psutil.cpu_percent(interval=.1)
+    procs = psutil.process_iter()
+    all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
+    sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(1), reverse=False)
+    display_list = []
+    for process in sorted_by_cpu_procs:
+        display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0] / 10, process[1]))
+    window.FindElement('_processes_').Update(display_list)
+    return display_list
+
 def main():
 
     # ----------------  Create Form  ----------------
@@ -56,9 +68,10 @@ def main():
                        auto_size_buttons=False,
                        default_button_element_size=(12,1),
                        return_keyboard_events=True,
-                       ).Layout(layout)
+                       ).Layout(layout).Finalize()
 
-    display_list = None
+
+    display_list = show_list_by_name(window)
     # ----------------  main loop  ----------------
     while (True):
         # --------- Read and update window --------
@@ -72,25 +85,26 @@ def main():
 
         # --------- Do Button Operations --------
         if event == 'Sort by Name':
-            psutil.cpu_percent(interval=1)
-            procs = psutil.process_iter()
-            all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
-            sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(1), reverse=False)
-            display_list = []
-            for process in sorted_by_cpu_procs:
-                display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
-            window.FindElement('_processes_').Update(display_list)
+            display_list = show_list_by_name(window)
+            # psutil.cpu_percent(interval=.1)
+            # procs = psutil.process_iter()
+            # all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
+            # sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(1), reverse=False)
+            # display_list = []
+            # for process in sorted_by_cpu_procs:
+            #     display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
+            # window.FindElement('_processes_').Update(display_list)
         elif event == 'Kill':
             processes_to_kill = values['_processes_']
             for proc in processes_to_kill:
                 pid = int(proc[0:5])
-                if sg.PopupYesNo('About to kill {} {}'.format(pid, proc[12:]), keep_on_top=True) == 'Yes':
-                    try:
-                        kill_proc_tree(pid=pid)
-                    except:
-                        sg.PopupAutoClose('Error killing process', auto_close_duration=1)
+                # if sg.PopupYesNo('About to kill {} {}'.format(pid, proc[12:]), keep_on_top=True) == 'Yes':
+                try:
+                    kill_proc_tree(pid=pid)
+                except:
+                    sg.PopupNoWait('Error killing process', auto_close_duration=1, auto_close=True)
         elif event == 'Sort by % CPU':
-            psutil.cpu_percent(interval=1)
+            psutil.cpu_percent(interval=.1)
             procs = psutil.process_iter()
             all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
             sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(0), reverse=True)
