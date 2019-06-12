@@ -53,7 +53,7 @@ def TimerStop():
 
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
-    print(int(g_time_delta * 1000))
+    print((g_time_delta * 1000))
 
 
 """
@@ -632,7 +632,7 @@ class Combo(Element):
                  tooltip=None, readonly=False, font=None, visible=True):
         '''
         Combo
-        :param values:
+        :param values: list of values
         :param default_value:
         :param size:
         :param auto_size_text:
@@ -8025,7 +8025,6 @@ class Debugger():
         interactive_frame = [[T('>>> '), In(size=(83, 1), key='_REPL_',
                                 tooltip='Type in any "expression" or "statement"\n and it will be disaplayed below.\nPress RETURN KEY instead of "Go"\nbutton for faster use'),
                               B('Go', bind_return_key=True, visible=True)],
-                             # [T('CODE >>> ', justification='r', size=(9, 1)), In(size=(83, 1), key='_CODE_', tooltip='Use for things like import or other statements / lines of code')],
                              [Multiline(size=(93, 26), key='_OUTPUT_', autoscroll=True, do_not_clear=True)], ]
 
         autowatch_frame = [[Button('Choose Variables To Auto Watch', key='_LOCALS_'),
@@ -8034,10 +8033,6 @@ class Debugger():
                             Button('Locals', key='_ALL_LOCALS_'),
                             Button('Globals', key='_GLOBALS_'),
                             Button('Popout', key='_POPOUT_')]]
-
-        variable_values =  [[T('', size=(WIDTH_WATCHER_VARIABLES, 1), key='_WATCH%s_' % i),
-                               T('', size=(WIDTH_WATCHER_RESULTS, MAX_LINES_PER_RESULT_MAIN), key='_WATCH%s_RESULT_' % i,
-                                    )] for i in range(NUM_AUTO_WATCH)]
 
         var_layout = []
         for i in range(NUM_AUTO_WATCH):
@@ -8060,7 +8055,7 @@ class Debugger():
                   [Button('', image_data=red_x, key='_EXIT_', button_color=None),]]
 
         # ------------------------------- Create main window -------------------------------
-        window = Window("I'm Watching You Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location).Finalize()
+        window = Window("PySimpleGUI Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location).Finalize()
         window.Element('_VAR1_').SetFocus()
         self.watcher_window = window
         ChangeLookAndFeel('SystemDefault')           # set look and feel to default before exiting
@@ -8112,11 +8107,10 @@ class Debugger():
         elif event.endswith('_OBJ_'):  # OBJECT BUTTON
             var = values['_VAR{}_'.format(event[4])]
             try:
-                result = mylocals[var]
+                result = ObjToStringSingleObj(mylocals[var])
             except Exception as e:
-                result = '{} Error showing object {}'.format(e, var)
-            PopupScrolled(str(var) + '\n' + ObjToStringSingleObj(result), title=var, non_blocking=True)
-            # PopupScrolled(str(var) + '\n' + result, title=var, non_blocking=True)
+                result = '{}\nError showing object {}'.format(e, var)
+            PopupScrolled(str(var) + '\n' + str(result), title=var, non_blocking=True)
         # ------------------------------- Process Watch Tab -------------------------------
         # BUTTON - Choose Locals to see
         elif event == '_LOCALS_':  # Show all locals BUTTON
