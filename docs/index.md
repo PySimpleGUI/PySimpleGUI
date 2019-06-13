@@ -2,10 +2,16 @@
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)      
       
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui)        tkinter
+
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27)      tkinter 2.7
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt)   Qt
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx)    WxPython
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb)   Web (Remi)
+
+
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)      
  ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)      
  ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)      
@@ -14,7 +20,11 @@
       
 # PySimpleGUI      
       
-   
+* Create windows that look and operate _identically_ to those created directly with tkinter, Qt, WxPython, and Remi.  
+* Requires 1/2 to 1/5th the amount of code as underlying frameworks.  
+* For exampl, develop a working Qt application in 1/2 to 1/5th the number lines of code.  
+* The savings can be even greater depending on your application.
+* One afternoon is all that is required to learn the PySimpleGUI concepts and APIs.
             
 ## Supports both Python 2.7 & 3 when using tkinter
 
@@ -25,9 +35,9 @@
 ## The *only* way to write both desktop and web based GUIs at the same time
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.38.0-red.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-3.39.0-red.svg?longCache=true&style=for-the-badge)      
       
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.37.0-blue.svg?longCache=true&style=for-the-badge)      
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-1.39.0-blue.svg?longCache=true&style=for-the-badge)      
   
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)    
       
@@ -5010,6 +5020,33 @@ A combination of user requests, and needs of new `imwatchingyou` debugger
 * PopupScrolled - Windows are now resizable
 * Option to "launch built-in debugger" from the test harness
 * Rememeber that the Debugger is still in this code!  It may or may not be operational as it's one version back from the latest release of the `imwatchingyou` debugger code. This code needs to be integrated back in
+
+## 3.39 PySimpleGUI & 1.39 PySimpleGUI27 13-June-2019
+
+* Ported the imwatchingyou debugger code into PySimpleGUI code
+	* Replaced old debugger built-in code with the newer imwatchingyou version
+	* Required removing all of the 'sg.' before PySimpleGUI calls since not importing
+	* Dynamically create the debugger object when first call to `refresh` or `show` is made
+* Started the procecss of renaming Class Methods that are private to start with _
+* Needed for the automatic documentation generation that's being worked on
+* Fixed crash when clicking the Debug button
+* Fixed bug in DeleteFigure. Needed to delete image separately
+* Added more type hints
+* New `TabGroup` method `SelectTab(index)` selects a `Tab` within a `TabGroup`
+* New `Table.Update` parameter - `select_rows`. List of rows to select (0 is first)
+* Error checking in `Window.Layout` provides error "hints" to the user
+	* Looks for badly placed ']'
+	* Looks for functions missing '()'
+	* Pops up a window warning user instead of crashing
+	* May have to revisit if the popups start getting in the way
+* New implementations of `Window.Disable()` and `Window.Enable()`
+	* Previously did not work correctly at all
+	* Now using the "-disabled" attribute
+* Allow Comboboxes to have empty starting values
+	* Was crashing
+	* Enables application to fill these in later
+
+
 
 ### Upcoming      
 Make suggestions people!  Future release features      
