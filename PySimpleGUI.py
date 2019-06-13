@@ -4213,10 +4213,12 @@ class Window:
         return
 
     def Disable(self):
-        self.TKroot.grab_set_global()
+        self.TKroot.attributes('-disabled', 1)
+        # self.TKroot.grab_set_global()
 
     def Enable(self):
-        self.TKroot.grab_release()
+        self.TKroot.attributes('-disabled', 0)
+        # self.TKroot.grab_release()
 
     def Hide(self):
         self._Hidden = True
