@@ -2577,7 +2577,8 @@ class TabGroup(Element):
         self.ParentWindow = None
         self.SelectedTitleColor = selected_title_color
         self.Rows = []
-        self.TKNotebook = None
+        self.TKNotebook = None              # type: ttk.Notebook
+        self.Widget = None                  # type: ttk.Notebook
         self.TabCount = 0
         self.BorderWidth = border_width
         self.Theme = theme
@@ -2622,6 +2623,12 @@ class TabGroup(Element):
                 if element.Title == tab_name:
                     return element.Key
         return None
+
+    def SelectTab(self, index):
+        try:
+            self.TKNotebook.select(index)
+        except Exception as e:
+            print('Exception Selecting Tab {}'.format(e))
 
     def __del__(self):
         for row in self.Rows:
@@ -5950,7 +5957,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKFrame.bind('<Button-3>', element._RightClickMenuCallback)
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
-
+                element=element     # type: TabGroup
                 custom_style = str(element.Key) + 'customtab.TNotebook'
                 style = ttk.Style(tk_row_frame)
                 if element.Theme is not None:
