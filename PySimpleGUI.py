@@ -631,7 +631,7 @@ class Combo(Element):
                  tooltip=None, readonly=False, font=None, visible=True):
         '''
         Combo
-        :param values: list of values
+        :param values:
         :param default_value:
         :param size:
         :param auto_size_text:
@@ -1682,7 +1682,7 @@ class Button(Element):
                 pass
         elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
             if self.ParentForm.DebuggerEnabled:
-                Debugger._build_floating_window('self normally goes here')
+                Debugger.debugger._build_floating_window()
                 # show_debugger_window()
 
         if should_submit_window:
