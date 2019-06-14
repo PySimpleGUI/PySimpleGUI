@@ -1703,6 +1703,7 @@ class Button(Element):
                 print('Button.Update *** WARNING - Button colors are not supported on the Mac***')
             if button_color != (None, None):
                 self.TKButton.config(foreground=button_color[0], background=button_color[1])
+                self.ButtonColor = button_color
         except:
             return
         if disabled == True:
@@ -4121,6 +4122,7 @@ class Window:
             self.TKroot.y = event.y
         except:
             pass
+        # print('Start move {},{}'.format(event.x,event.y))
 
     def StopMove(self, event):
         try:
@@ -4128,6 +4130,7 @@ class Window:
             self.TKroot.y = None
         except:
             pass
+        # print('-Stop- move {},{}'.format(event.x,event.y))
 
     def OnMotion(self, event):
         try:
@@ -4136,6 +4139,7 @@ class Window:
             x = self.TKroot.winfo_x() + deltax
             y = self.TKroot.winfo_y() + deltay
             self.TKroot.geometry("+%s+%s" % (x, y))
+            # print('{},{}'.format(x,y))
         except:
             pass
 
