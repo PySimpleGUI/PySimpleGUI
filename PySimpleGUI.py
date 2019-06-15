@@ -403,7 +403,7 @@ class Element():
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
         self.TKRightClickMenu.grab_release()
 
-    def MenuItemChosenCallback(self, item_chosen):  # TEXT Menu item callback
+    def _MenuItemChosenCallback(self, item_chosen):  # TEXT Menu item callback
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&', '')
         self.ParentForm.LastButtonClicked = self.MenuItemChosen
@@ -411,35 +411,35 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def FindReturnKeyBoundButton(self, form):
+    def _FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
             for element in row:
                 if element.Type == ELEM_TYPE_BUTTON:
                     if element.BindReturnKey:
                         return element
                 if element.Type == ELEM_TYPE_COLUMN:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
                 if element.Type == ELEM_TYPE_FRAME:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
                 if element.Type == ELEM_TYPE_TAB_GROUP:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
                 if element.Type == ELEM_TYPE_TAB:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
                 if element.Type == ELEM_TYPE_PANE:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
         return None
 
-    def TextClickedHandler(self, event):
+    def _TextClickedHandler(self, event):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -448,13 +448,13 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def ReturnKeyHandler(self, event):
+    def _ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
-        button_element = self.FindReturnKeyBoundButton(MyForm)
+        button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
             button_element.ButtonCallBack()
 
-    def ListboxSelectHandler(self, event):
+    def _ListboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -465,7 +465,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def ComboboxSelectHandler(self, event):
+    def _ComboboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -476,7 +476,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def RadioHandler(self):
+    def _RadioHandler(self):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -485,7 +485,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
-    def CheckboxHandler(self):
+    def _CheckboxHandler(self):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -494,7 +494,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
-    def TabGroupSelectHandler(self, event):
+    def _TabGroupSelectHandler(self, event):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -556,7 +556,6 @@ class InputText(Element):
                  right_click_menu=None, visible=True):
         '''
         InputText Element - A single line of input
-        Also known as: I, In, Input
         :param default_text:
         :param size:
         :param disabled:
@@ -887,7 +886,7 @@ class Listbox(Element):
 
     def Update(self, values=None, disabled=None, set_to_index=None, visible=None):
         '''
-        Listbox Element Update
+
         :param values:
         :param disabled:
         :param set_to_index:
@@ -957,7 +956,7 @@ class Radio(Element):
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
                  change_submits=False, enable_events=False, visible=True):
         '''
-        Radio Element
+
         :param text:
         :param group_id:
         :param default:
@@ -989,7 +988,7 @@ class Radio(Element):
 
     def Update(self, value=None, disabled=None, visible=None):
         '''
-        Radio Element Update
+
         :param value:
         :param disabled:
         :param visible:
@@ -1030,14 +1029,13 @@ class Radio(Element):
 # Note - The renaming of the member function to have _ if internal only has NOT yet been done!
 class Checkbox(Element):
     '''
-    Checkbox Element
+
     '''
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, visible=True):
         '''
-        Checkbox
-        Also known as: CB, CBox, Check
+
         :param text:
         :param default:
         :param size:
@@ -1106,13 +1104,14 @@ Check = Checkbox
 # ---------------------------------------------------------------------- #
 
 class Spin(Element):
-    # Values = None
-    # TKSpinBox = None
+    '''
+
+    '''
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False,
                  size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None,
                  pad=None, tooltip=None, visible=True):
         '''
-        Spin
+
         :param values:
         :param initial_value:
         :param disabled:
@@ -1141,6 +1140,14 @@ class Spin(Element):
         return
 
     def Update(self, value=None, values=None, disabled=None, visible=None):
+        '''
+
+        :param value:
+        :param values:
+        :param disabled:
+        :param visible:
+        :return:
+        '''
         if values != None:
             old_value = self.TKStringVar.get()
             self.Values = values
@@ -1187,16 +1194,20 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
+    '''
+
+    '''
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
                  right_click_menu=None, visible=True):
         '''
-        Multiline
+
         :param default_text:
         :param enter_submits:
         :param disabled:
         :param autoscroll:
+        :param border_width:
         :param size:
         :param auto_size_text:
         :param background_color:
@@ -1231,6 +1242,18 @@ class Multiline(Element):
 
     def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None,
                visible=None, autoscroll=None):
+        '''
+
+        :param value:
+        :param disabled:
+        :param append:
+        :param font:
+        :param text_color:
+        :param background_color:
+        :param visible:
+        :param autoscroll:
+        :return:
+        '''
         if autoscroll is not None:
             self.Autoscroll = autoscroll
         if value is not None:
@@ -1279,11 +1302,14 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
+    '''
+
+    '''
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True):
         '''
-        Text
+
         :param text:
         :param size:
         :param auto_size_text:
@@ -1317,6 +1343,15 @@ class Text(Element):
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
+        '''
+
+        :param value:
+        :param background_color:
+        :param text_color:
+        :param font:
+        :param visible:
+        :return:
+        '''
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1345,11 +1380,14 @@ T = Text
 #                                       StatusBar                        #
 # ---------------------------------------------------------------------- #
 class StatusBar(Element):
+    '''
+
+    '''
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
                  key=None, tooltip=None, visible=True):
         '''
-        StatusBar
+
         :param text:
         :param size:
         :param auto_size_text:
@@ -1380,6 +1418,15 @@ class StatusBar(Element):
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
+        '''
+
+        :param value:
+        :param background_color:
+        :param text_color:
+        :param font:
+        :param visible:
+        :return:
+        '''
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1517,10 +1564,13 @@ class TKOutput(tk.Frame):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class Output(Element):
+    '''
+
+    '''
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
                  key=None, right_click_menu=None, visible=True):
         '''
-        Output
+
         :param size:
         :param background_color:
         :param text_color:
@@ -1547,6 +1597,12 @@ class Output(Element):
         return self._TKOut
 
     def Update(self, value=None, visible=None):
+        '''
+
+        :param value:
+        :param visible:
+        :return:
+        '''
         if value is not None:
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
@@ -1567,13 +1623,16 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
+    '''
+
+    '''
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True):
         '''
-        Button
+
         :param button_text:
         :param button_type:
         :param target:
@@ -1781,6 +1840,18 @@ class Button(Element):
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None,
                visible=None, image_subsample=None, image_size=None):
+        '''
+
+        :param text:
+        :param button_color:
+        :param disabled:
+        :param image_data:
+        :param image_filename:
+        :param visible:
+        :param image_subsample:
+        :param image_size:
+        :return:
+        '''
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1859,12 +1930,15 @@ Butt = Button
 #                           ButtonMenu Class                             #
 # ---------------------------------------------------------------------- #
 class ButtonMenu(Element):
+    '''
+
+    '''
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None,
                  tearoff=False, visible=True):
         '''
-        ButtonMenu
+
         :param button_text:
         :param menu_def:
         :param tooltip:
@@ -1906,7 +1980,7 @@ class ButtonMenu(Element):
                          text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
         return
 
-    def MenuItemChosenCallback(self, item_chosen):  # ButtonMenu Menu Item Chosen Callback
+    def _MenuItemChosenCallback(self, item_chosen):  # ButtonMenu Menu Item Chosen Callback
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&', '')
         self.ParentForm.LastButtonClicked = self.Key
@@ -1915,6 +1989,12 @@ class ButtonMenu(Element):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def Update(self, menu_definition, visible=None):
+        '''
+
+        :param menu_definition:
+        :param visible:
+        :return:
+        '''
         self.MenuDefinition = menu_definition
         if menu_definition is not None:
             self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
@@ -1940,7 +2020,7 @@ class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
                  style=None, border_width=None, relief=None, key=None, pad=None, visible=True):
         '''
-        ProgressBar
+
         :param max_value:
         :param orientation:
         :param size:
@@ -1968,6 +2048,12 @@ class ProgressBar(Element):
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
+        '''
+
+        :param current_count:
+        :param max:
+        :return:
+        '''
         if self.ParentForm.TKrootDestroyed:
             return False
         self.TKProgressBar.Update(current_count, max=max)
@@ -1980,6 +2066,11 @@ class ProgressBar(Element):
         return True
 
     def Update(self, visible=None):
+        '''
+
+        :param visible:
+        :return:
+        '''
         if visible is False:
             self.TKProgressBar.TKProgressBarForReal.pack_forget()
         elif visible is True:
@@ -1997,10 +2088,13 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
+    '''
+
+    '''
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True, enable_events=False):
         '''
-        Image
+
         :param filename:
         :param data:
         :param background_color:
@@ -2031,6 +2125,14 @@ class Image(Element):
         return
 
     def Update(self, filename=None, data=None, size=(None, None), visible=None):
+        '''
+
+        :param filename:
+        :param data:
+        :param size:
+        :param visible:
+        :return:
+        '''
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
@@ -2053,6 +2155,12 @@ class Image(Element):
             self.tktext_label.pack()
 
     def UpdateAnimation(self, source, time_between_frames=0):
+        '''
+
+        :param source:
+        :param time_between_frames:
+        :return:
+        '''
         if self.Source != source:
             self.AnimatedFrames = None
             self.Source = source
@@ -2100,10 +2208,13 @@ class Image(Element):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
+    '''
+
+    '''
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True):
         '''
-        Canvas
+
         :param canvas:
         :param background_color:
         :param size:
@@ -2136,11 +2247,14 @@ class Canvas(Element):
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
+    '''
+
+    '''
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None,
                  right_click_menu=None, visible=True):
         '''
-        Graph
+
         :param canvas_size:
         :param graph_bottom_left:
         :param graph_top_right:
@@ -2440,11 +2554,14 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
+    '''
+
+    '''
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True):
         '''
-        Frame
+
         :param title:
         :param layout:
         :param title_color:
@@ -2509,6 +2626,11 @@ class Frame(Element):
         return element
 
     def Update(self, visible=None):
+        '''
+
+        :param visible:
+        :return:
+        '''
         if visible is False:
             self.TKFrame.pack_forget()
         elif visible is True:
@@ -2526,9 +2648,12 @@ class Frame(Element):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class VerticalSeparator(Element):
+    '''
+
+    '''
     def __init__(self, pad=None):
         '''
-        VerticalSeperator - A separator that spans only 1 row in a vertical fashion
+
         :param pad:
         '''
         self.Orientation = 'vertical'  # for now only vertical works
@@ -2547,10 +2672,13 @@ VSep = VerticalSeparator
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
+    '''
+
+    '''
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
                  border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Tab
+
         :param title:
         :param layout:
         :param title_color:
@@ -2608,6 +2736,12 @@ class Tab(Element):
         return self
 
     def Update(self, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
+        '''
+
+        :param disabled:
+        :param visible:
+        :return:
+        '''
         if disabled is None:
             return
         self.Disabled = disabled
@@ -2636,11 +2770,14 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
+    '''
+
+    '''
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
                  font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
                  key=None, tooltip=None, visible=True):
         '''
-        TabGroup
+
         :param layout:
         :param tab_location:
         :param title_color:
@@ -2728,12 +2865,15 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
+    '''
+
+    '''
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
                  enable_events=False, disabled=False, size=(None, None), font=None, background_color=None,
                  text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
-        Slider
+
         :param range:
         :param default_value:
         :param resolution:
@@ -2774,6 +2914,14 @@ class Slider(Element):
         return
 
     def Update(self, value=None, range=(None, None), disabled=None, visible=None):
+        '''
+
+        :param value:
+        :param range:
+        :param disabled:
+        :param visible:
+        :return:
+        '''
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -2791,7 +2939,7 @@ class Slider(Element):
         elif visible is True:
             self.TKScale.pack()
 
-    def SliderChangedHandler(self, event):
+    def _SliderChangedHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -2908,10 +3056,13 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
+    '''
+
+    '''
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
         '''
-        Column
+
         :param layout:
         :param background_color:
         :param size:
@@ -2969,6 +3120,11 @@ class Column(Element):
         return element
 
     def Update(self, visible=None):
+        '''
+
+        :param visible:
+        :return:
+        '''
         if visible is False:
             if self.TKColFrame:
                 self.TKColFrame.pack_forget()
@@ -2995,10 +3151,13 @@ class Column(Element):
 #                           Pane                                       #
 # ---------------------------------------------------------------------- #
 class Pane(Element):
+    '''
+
+    '''
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
         '''
-        Pane
+
         :param pane_list:
         :param background_color:
         :param size:
@@ -3034,6 +3193,11 @@ class Pane(Element):
         return
 
     def Update(self, visible=None):
+        '''
+
+        :param visible:
+        :return:
+        '''
         if visible is False:
             self.PanedWindow.pack_forget()
         elif visible is True:
@@ -3272,10 +3436,13 @@ class TKCalendar(ttk.Frame):
 #                           Menu                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
+    '''
+
+    '''
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None,
                  visible=True):
         '''
-        Menu Element - A Menubar that goes across the top of the window
+
         :param menu_definition:
         :param background_color:
         :param size:
@@ -3294,7 +3461,7 @@ class Menu(Element):
                          visible=visible)
         return
 
-    def MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
+    def _MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = item_chosen
@@ -3303,6 +3470,12 @@ class Menu(Element):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def Update(self, menu_definition, visible=None):
+        '''
+
+        :param menu_definition:
+        :param visible:
+        :return:
+        '''
         self.MenuDefinition = menu_definition
         self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
         menubar = self.TKMenu
@@ -3336,6 +3509,9 @@ MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
+    '''
+
+    '''
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
@@ -3343,7 +3519,7 @@ class Table(Element):
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, tooltip=None, right_click_menu=None, visible=True):
         '''
-        Table
+
         :param values:
         :param headings:
         :param visible_column_map:
@@ -3360,6 +3536,9 @@ class Table(Element):
         :param text_color:
         :param background_color:
         :param alternating_row_color:
+        :param row_colors:
+        :param vertical_scroll_only:
+        :param hide_vertical_scroll:
         :param size:
         :param change_submits:
         :param enable_events:
@@ -3402,6 +3581,14 @@ class Table(Element):
         return
 
     def Update(self, values=None, num_rows=None, visible=None, select_rows=None):
+        '''
+
+        :param values:
+        :param num_rows:
+        :param visible:
+        :param select_rows:
+        :return:
+        '''
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -3461,13 +3648,16 @@ class Table(Element):
 #                           Tree                                         #
 # ---------------------------------------------------------------------- #
 class Tree(Element):
+    '''
+
+    '''
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
                  background_color=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True):
         '''
-        Tree
+
         :param data:
         :param headings:
         :param visible_column_map:
@@ -3485,6 +3675,7 @@ class Tree(Element):
         :param text_color:
         :param background_color:
         :param num_rows:
+        :param row_height:
         :param pad:
         :param key:
         :param tooltip:
@@ -3552,6 +3743,16 @@ class Tree(Element):
             self.add_treeview_data(node)
 
     def Update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
+        '''
+
+        :param values:
+        :param key:
+        :param value:
+        :param text:
+        :param icon:
+        :param visible:
+        :return:
+        '''
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -3665,6 +3866,9 @@ Stretch = ErrorElement
 #                       Window CLASS                                        #
 # ------------------------------------------------------------------------- #
 class Window:
+    '''
+
+    '''
     NumOpenWindows = 0
     user_defined_icon = None
     hidden_master_root = None
@@ -3682,8 +3886,9 @@ class Window:
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True):
         '''
-        Window
+
         :param title:
+        :param layout:
         :param default_element_size:
         :param default_button_element_size:
         :param auto_size_text:
@@ -3691,6 +3896,7 @@ class Window:
         :param location:
         :param size:
         :param element_padding:
+        :param margins:
         :param button_color:
         :param font:
         :param progress_bar_color:
@@ -3711,6 +3917,8 @@ class Window:
         :param disable_close:
         :param disable_minimize:
         :param right_click_menu:
+        :param transparent_color:
+        :param debugger_enabled:
         '''
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
@@ -4436,6 +4644,23 @@ FlexForm = Window
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
                  font=None, pad=None, key=None):
+    '''
+    
+    :param button_text:
+    :param target:
+    :param initial_folder:
+    :param tooltip:
+    :param size:
+    :param auto_size_button:
+    :param button_color:
+    :param disabled:
+    :param change_submits:
+    :param enable_events:
+    :param font:
+    :param pad:
+    :param key:
+    :return:
+    '''
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
@@ -5055,11 +5280,11 @@ if sys.version_info[0] >= 3:
 
                     if item_without_key[0] == MENU_DISABLED_CHARACTER:
                         top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
                         top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                     else:
                         top_menu.add_command(label=item_without_key, underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
@@ -5104,11 +5329,11 @@ else:
 
                     if item_without_key[0] == MENU_DISABLED_CHARACTER:
                         top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
                         top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                     else:
                         top_menu.add_command(label=item_without_key, underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
@@ -5333,7 +5558,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
                 if element.ClickSubmits:
-                    tktext_label.bind('<Button-1>', element.TextClickedHandler)
+                    tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.RightClickMenu or toplevel_form.RightClickMenu:
@@ -5413,10 +5638,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Visible is False:
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
-                    element.TKButton.bind('<Return>', element.ReturnKeyHandler)
+                    element.TKButton.bind('<Return>', element._ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
-                    element.TKButton.bind('<Return>', element.ReturnKeyHandler)
+                    element.TKButton.bind('<Return>', element._ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
                 if element.Disabled == True:
@@ -5516,7 +5741,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                             font=font, show=show, justify=justify)
                 if element.ChangeSubmits:
                     element.TKEntry.bind('<Key>', element._KeyboardHandler)
-                element.TKEntry.bind('<Return>', element.ReturnKeyHandler)
+                element.TKEntry.bind('<Return>', element._ReturnKeyHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -5608,7 +5833,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 elif element.Values:
                     element.TKCombo.current(0)
                 if element.ChangeSubmits:
-                    element.TKCombo.bind('<<ComboboxSelected>>', element.ComboboxSelectHandler)
+                    element.TKCombo.bind('<<ComboboxSelected>>', element._ComboboxSelectHandler)
                 if element.Readonly:
                     element.TKCombo['state'] = 'readonly'
                 if element.Disabled is True:  # note overrides readonly if disabled
@@ -5663,7 +5888,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(fg=text_color)
                 if element.ChangeSubmits:
-                    element.TKListbox.bind('<<ListboxSelect>>', element.ListboxSelectHandler)
+                    element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
                 element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
                 element.TKListbox.configure(yscrollcommand=element.vsb.set)
                 element.TKListbox.pack(side=tk.LEFT)
@@ -5673,8 +5898,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     listbox_frame.pack_forget()
                     element.vsb.pack_forget()
                 if element.BindReturnKey:
-                    element.TKListbox.bind('<Return>', element.ListboxSelectHandler)
-                    element.TKListbox.bind('<Double-Button-1>', element.ListboxSelectHandler)
+                    element.TKListbox.bind('<Return>', element._ListboxSelectHandler)
+                    element.TKListbox.bind('<Double-Button-1>', element._ListboxSelectHandler)
                 if element.Disabled == True:
                     element.TKListbox['state'] = 'disabled'
                 if element.Tooltip is not None:
@@ -5706,7 +5931,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ChangeSubmits:
                     element.TKText.bind('<Key>', element._KeyboardHandler)
                 if element.EnterSubmits:
-                    element.TKText.bind('<Return>', element.ReturnKeyHandler)
+                    element.TKText.bind('<Return>', element._ReturnKeyHandler)
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
                     focus_set = True
                     element.TKText.focus_set()
@@ -5734,7 +5959,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                                             text=element.Text, width=width,
                                                                             variable=element.TKIntVar, bd=border_depth,
                                                                             font=font,
-                                                                            command=element.CheckboxHandler)
+                                                                            command=element._CheckboxHandler)
                 else:
                     element.TKCheckbutton = element.Widget = tk.Checkbutton(tk_row_frame, anchor=tk.NW,
                                                                             text=element.Text, width=width,
@@ -5798,7 +6023,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                                       width=width,
                                                                       variable=element.TKIntVar, value=value,
                                                                       bd=border_depth, font=font,
-                                                                      command=element.RadioHandler)
+                                                                      command=element._RadioHandler)
                 else:
                     element.TKRadio = element.Widget = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text,
                                                                       width=width,
@@ -6086,7 +6311,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
                 if element.ChangeSubmits:
-                    element.TKNotebook.bind('<<NotebookTabChanged>>', element.TabGroupSelectHandler)
+                    element.TKNotebook.bind('<<NotebookTabChanged>>', element._TabGroupSelectHandler)
                 if element.BorderWidth is not None:
                     element.TKNotebook.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
@@ -6113,7 +6338,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                         bd=element.BorderWidth,
                                                         relief=element.Relief, font=font,
                                                         tickinterval=element.TickInterval,
-                                                        command=element.SliderChangedHandler)
+                                                        command=element._SliderChangedHandler)
                 else:
                     tkscale = element.Widget = tk.Scale(tk_row_frame, orient=element.Orientation,
                                                         variable=element.TKIntVar,
@@ -6388,7 +6613,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
                 if element.ClickSubmits:
-                    tktext_label.bind('<Button-1>', element.TextClickedHandler)
+                    tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
 
