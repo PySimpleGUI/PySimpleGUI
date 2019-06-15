@@ -356,8 +356,11 @@ class ToolTip:
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
-                 key=None, pad=None, tooltip=None, visible=True):
+    '''
+    The base class for all Elements.
+    Holds the basic description of an Element like size and colors
+    '''
+    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
         Element
         :param type:
@@ -544,12 +547,16 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
+    '''
+    Shows a single line of input.
+    '''
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
                  right_click_menu=None, visible=True):
         '''
-        InputText
+        InputText Element - A single line of input
+        Also known as: I, In, Input
         :param default_text:
         :param size:
         :param disabled:
@@ -559,8 +566,8 @@ class InputText(Element):
         :param text_color:
         :param font:
         :param tooltip:
-        :param change_submits:
-        :param enable_events:
+        :param change_submits: - DEPRICATED DO NOT USE!
+        :param enable_events: - Use this instead of change_submits
         :param do_not_clear:
         :param key:
         :param focus:
@@ -578,10 +585,20 @@ class InputText(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
+        self.TKEntry = self.Widget = None          # type: tk.Entry
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, select=None, visible=None):
+        '''
+        InputText Element Update
+        NOTE - Read or Finalize must be called on Window prior to Update call
+        :param value:
+        :param disabled:
+        :param select:
+        :param visible:
+        :return: None
+        '''
         if disabled is True:
             self.TKEntry['state'] = 'readonly'
         elif disabled is False:
@@ -626,11 +643,14 @@ I = InputText
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class Combo(Element):
+    '''
+    ComboBox Element
+    '''
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, readonly=False, font=None, visible=True):
         '''
-        Combo
+        Combo Element - Combo Box, Drop Down Menu, ...
         :param values:
         :param default_value:
         :param size:
@@ -661,6 +681,18 @@ class Combo(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
+        '''
+        Update for Combo Element
+        Also known as: InputCombo, DropDown, Drop
+        :param value:
+        :param values:
+        :param set_to_index:
+        :param disabled:
+        :param readonly:
+        :param font:
+        :param visible:
+        :return: None
+        '''
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -716,10 +748,17 @@ Drop = InputCombo
 #                           Option Menu                                  #
 # ---------------------------------------------------------------------- #
 class OptionMenu(Element):
+    '''
+    Option Menu is an Element available ONLY on the tkinter port of PySimpleGUI.  It's is a widget that is unique
+    to tkinter.  However, it looks much like a ComboBox.  Instead of an arrow to click to pull down the list of
+    choices, another little graphic is shown on the widget to indicate where you click.  After clicking to activate,
+    it looks like a Combo Box that you scroll to select a choice.
+    '''
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         '''
-        OptionMenu
+        Option Menu Element
+        Also known as: InputOptionMenu
         :param values:
         :param default_value:
         :param size:
@@ -743,6 +782,14 @@ class OptionMenu(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, values=None, disabled=None, visible=None):
+        '''
+        OptionMenu Element Update
+        :param value:
+        :param values:
+        :param disabled:
+        :param visible:
+        :return: None
+        '''
         if values is not None:
             self.Values = values
             self.TKOptionMenu['menu'].delete(0, 'end')
@@ -786,12 +833,16 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
+    '''
+    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
+    when a window.Read() is executed.
+    '''
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
                  visible=True):
         '''
-        Listbox
+        Listbox Element
         :param values:
         :param default_values:
         :param select_mode:
@@ -830,10 +881,19 @@ class Listbox(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.RightClickMenu = right_click_menu
         self.vsb = None  # type: tk.Scrollbar
+        self.TKListbox = self.Widget = None         # type: tk.Listbox
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
     def Update(self, values=None, disabled=None, set_to_index=None, visible=None):
+        '''
+        Listbox Element Update
+        :param values:
+        :param disabled:
+        :param set_to_index:
+        :param visible:
+        :return: None
+        '''
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -889,11 +949,15 @@ class Listbox(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
+    '''
+    Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
+    1 choice in a list of choices.
+    '''
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
                  change_submits=False, enable_events=False, visible=True):
         '''
-        Radio
+        Radio Element
         :param text:
         :param group_id:
         :param default:
@@ -924,6 +988,13 @@ class Radio(Element):
                          tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, visible=None):
+        '''
+        Radio Element Update
+        :param value:
+        :param disabled:
+        :param visible:
+        :return:
+        '''
         if value is not None:
             try:
                 self.TKIntVar.set(self.EncodedRadioValue)
@@ -953,12 +1024,20 @@ class Radio(Element):
 # ---------------------------------------------------------------------- #
 #                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
+##########################################################################
+# June 15, 2019 - This is the last element that has been converted to use the new
+# Doc strings
+# Note - The renaming of the member function to have _ if internal only has NOT yet been done!
 class Checkbox(Element):
+    '''
+    Checkbox Element
+    '''
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, visible=True):
         '''
         Checkbox
+        Also known as: CB, CBox, Check
         :param text:
         :param default:
         :param size:
@@ -990,6 +1069,13 @@ class Checkbox(Element):
         return self.TKIntVar.get()
 
     def Update(self, value=None, disabled=None, visible=None):
+        '''
+
+        :param value:
+        :param disabled:
+        :param visible:
+        :return:
+        '''
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -3189,7 +3275,7 @@ class Menu(Element):
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None,
                  visible=True):
         '''
-        Menu
+        Menu Element - A Menubar that goes across the top of the window
         :param menu_definition:
         :param background_color:
         :param size:
@@ -3200,7 +3286,7 @@ class Menu(Element):
         '''
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
-        self.TKMenu = None
+        self.TKMenu = None                  # type: tk.Menu
         self.Tearoff = tearoff
         self.MenuItemChosen = None
 
