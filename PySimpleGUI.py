@@ -4645,7 +4645,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
                  font=None, pad=None, key=None):
     '''
-    
+
     :param button_text:
     :param target:
     :param initial_folder:
@@ -7008,7 +7008,7 @@ def PrintClose():
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=False):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
     if DebugWin.debug_window is None:
         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                          no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,

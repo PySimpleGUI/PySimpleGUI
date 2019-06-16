@@ -4978,11 +4978,11 @@ if sys.version_info[0] >= 3:
 
                     if item_without_key[0] == MENU_DISABLED_CHARACTER:
                         top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
                         top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                     else:
                         top_menu.add_command(label=item_without_key, underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
@@ -5027,11 +5027,11 @@ else:
 
                     if item_without_key[0] == MENU_DISABLED_CHARACTER:
                         top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
                         top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                     else:
                         top_menu.add_command(label=item_without_key, underline=pos,
-                                             command=lambda: element.MenuItemChosenCallback(sub_menu_info))
+                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
