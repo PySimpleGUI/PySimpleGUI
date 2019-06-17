@@ -2009,7 +2009,7 @@ class Button(Element):
                 pass
         elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
             if self.ParentForm.DebuggerEnabled:
-                _Debugger.debugger._build_floating_window()
+                Debugger.debugger._build_floating_window()
                 # show_debugger_window()
 
         if should_submit_window:
@@ -5347,7 +5347,7 @@ class Window:
         :param event: 
 
         """
-        _Debugger.debugger._build_main_debugger_window()
+        Debugger.debugger._build_main_debugger_window()
 
     def _callback_popout_window_create_keystroke(self, event):
         """
@@ -5355,7 +5355,7 @@ class Window:
         :param event: 
 
         """
-        _Debugger.debugger._build_floating_window()
+        Debugger.debugger._build_floating_window()
 
     def EnableDebugger(self):
         """ """
@@ -9738,8 +9738,6 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
         return path
 
 
-# --------------------------- PopupAnimated ---------------------------
-
 def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True,
                   grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None,
                   time_between_frames=0, transparent_color=None):
@@ -9811,7 +9809,7 @@ MAX_LINES_PER_RESULT_MAIN      = 3
 
 POPOUT_WINDOW_FONT = 'Sans 8'
 
-class _Debugger():
+class Debugger():
     """ """
 
     debugger = None
@@ -10292,9 +10290,9 @@ def show_debugger_window(location=(None, None), *args):
     :param *args: 
 
     """
-    if _Debugger.debugger is None:
-        _Debugger.debugger = _Debugger()
-    debugger = _Debugger.debugger
+    if Debugger.debugger is None:
+        Debugger.debugger = Debugger()
+    debugger = Debugger.debugger
     frame = inspect.currentframe()
     prev_frame = inspect.currentframe().f_back
     # frame, *others = inspect.stack()[1]
@@ -10316,9 +10314,9 @@ def show_debugger_popout_window(location=(None, None), *args):
     :param *args: 
 
     """
-    if _Debugger.debugger is None:
-        _Debugger.debugger = _Debugger()
-    debugger = _Debugger.debugger
+    if Debugger.debugger is None:
+        Debugger.debugger = Debugger()
+    debugger = Debugger.debugger
     frame = inspect.currentframe()
     prev_frame = inspect.currentframe().f_back
     # frame = inspect.getframeinfo(prev_frame)
@@ -10336,9 +10334,9 @@ def show_debugger_popout_window(location=(None, None), *args):
 
 def refresh_debugger():
     """ """
-    if _Debugger.debugger is None:
-        _Debugger.debugger = _Debugger()
-    debugger = _Debugger.debugger
+    if Debugger.debugger is None:
+        Debugger.debugger = Debugger()
+    debugger = Debugger.debugger
     Window.read_call_from_debugger = True
     frame = inspect.currentframe()
     frame = inspect.currentframe().f_back
