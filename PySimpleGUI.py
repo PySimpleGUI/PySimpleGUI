@@ -42,12 +42,14 @@ g_time_delta = 0
 
 
 def TimerStart():
+    """ """
     global g_time_start
 
     g_time_start = time.time()
 
 
 def TimerStop():
+    """ """
     global g_time_delta, g_time_end
 
     g_time_end = time.time()
@@ -243,7 +245,7 @@ BUTTON_TYPE_COLOR_CHOOSER = 40
 BUTTON_TYPE_SHOW_DEBUGGER = 50
 
 # -------------------------  Element types  ------------------------- #
-# class ElementType(Enum):
+
 ELEM_TYPE_TEXT = 'text'
 ELEM_TYPE_INPUT_TEXT = 'input'
 ELEM_TYPE_INPUT_COMBO = 'combo'
@@ -290,12 +292,17 @@ POPUP_BUTTONS_NO_BUTTONS = 5
 # ------------------------------------------------------------------------- #
 
 class ToolTip:
-    """ Create a tooltip for a given widget
-
+    """Create a tooltip for a given widget
     (inspired by https://stackoverflow.com/a/36221216)
     """
-
     def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME):
+        """
+
+        :param widget: 
+        :param text: 
+        :param timeout:  (Default value = DEFAULT_TOOLTIP_TIME)
+
+        """
         self.widget = widget
         self.text = text
         self.timeout = timeout
@@ -308,24 +315,37 @@ class ToolTip:
         self.widget.bind("<ButtonPress>", self.leave)
 
     def enter(self, event=None):
+        """
+
+        :param event:  (Default value = None)
+
+        """
         self.x = event.x
         self.y = event.y
         self.schedule()
 
     def leave(self, event=None):
+        """
+
+        :param event:  (Default value = None)
+
+        """
         self.unschedule()
         self.hidetip()
 
     def schedule(self):
+        """ """
         self.unschedule()
         self.id = self.widget.after(self.timeout, self.showtip)
 
     def unschedule(self):
+        """ """
         if self.id:
             self.widget.after_cancel(self.id)
         self.id = None
 
     def showtip(self):
+        """ """
         if self.tipwindow:
             return
         x = self.widget.winfo_rootx() + self.x + DEFAULT_TOOLTIP_OFFSET[0]
@@ -340,6 +360,7 @@ class ToolTip:
         label.pack()
 
     def hidetip(self):
+        """ """
         if self.tipwindow:
             self.tipwindow.destroy()
         self.tipwindow = None
@@ -356,24 +377,26 @@ class ToolTip:
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    '''
-    The base class for all Elements.
+    """The base class for all Elements.
     Holds the basic description of an Element like size and colors
-    '''
+
+
+    """
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
-        '''
-        Element
-        :param type:
-        :param size:
-        :param auto_size_text:
-        :param font:
-        :param background_color:
-        :param text_color:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param visible:
-        '''
+        """
+
+        :param type: 
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: element's text color (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -400,10 +423,20 @@ class Element():
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
 
     def _RightClickMenuCallback(self, event):
+        """
+
+        :param event: 
+
+        """
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
         self.TKRightClickMenu.grab_release()
 
     def _MenuItemChosenCallback(self, item_chosen):  # TEXT Menu item callback
+        """
+
+        :param item_chosen: 
+
+        """
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&', '')
         self.ParentForm.LastButtonClicked = self.MenuItemChosen
@@ -412,6 +445,11 @@ class Element():
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def _FindReturnKeyBoundButton(self, form):
+        """
+
+        :param form: 
+
+        """
         for row in form.Rows:
             for element in row:
                 if element.Type == ELEM_TYPE_BUTTON:
@@ -440,6 +478,11 @@ class Element():
         return None
 
     def _TextClickedHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -449,12 +492,22 @@ class Element():
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def _ReturnKeyHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         MyForm = self.ParentForm
         button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
             button_element.ButtonCallBack()
 
     def _ListboxSelectHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -466,6 +519,11 @@ class Element():
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def _ComboboxSelectHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -477,6 +535,7 @@ class Element():
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def _RadioHandler(self):
+        """ """
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -486,6 +545,7 @@ class Element():
             self.ParentForm.TKroot.quit()
 
     def _CheckboxHandler(self):
+        """ """
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -495,6 +555,11 @@ class Element():
             self.ParentForm.TKroot.quit()
 
     def _TabGroupSelectHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -504,6 +569,11 @@ class Element():
             self.ParentForm.TKroot.quit()
 
     def _KeyboardHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -513,6 +583,11 @@ class Element():
             self.ParentForm.TKroot.quit()
 
     def _ClickHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -522,9 +597,15 @@ class Element():
             self.ParentForm.TKroot.quit()
 
     def SetTooltip(self, tooltip_text):
+        """
+
+        :param tooltip_text: 
+
+        """
         self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
 
     def __del__(self):
+        """ """
         try:
             self.TKStringVar.__del__()
         except:
@@ -547,33 +628,31 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    '''
-    Shows a single line of input.
-    '''
+    """Shows a single line of input."""
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
-                 justification=None, background_color=None, text_color=None, font=None, tooltip=None,
+                 justification=None, background_color=None,   text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
                  right_click_menu=None, visible=True):
-        '''
-        InputText Element - A single line of input
-        :param default_text:
-        :param size:
-        :param disabled:
-        :param password_char:
-        :param justification:
-        :param background_color:
-        :param text_color:
-        :param font:
-        :param tooltip:
-        :param change_submits: - DEPRICATED DO NOT USE!
-        :param enable_events: - Use this instead of change_submits
-        :param do_not_clear:
-        :param key:
-        :param focus:
-        :param pad:
-        :param right_click_menu:
-        :param visible:
-        '''
+        """
+
+        :param default_text:  (Default value = '')
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param disabled: set disable state for element (Default value = False)
+        :param password_char: Passwork character if this is a password field (Default value = '')
+        :param justification: justification for data display (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window- DEPRICATED DO NOT USE! (Default value = False)
+        :param enable_events: Turns on the element specific events. Use this instead of change_submits (Default value = False)
+        :param do_not_clear: see docx (Default value = True)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param focus: if focus should be set to this (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+        """
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
         bg = background_color if background_color is not None else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -589,15 +668,15 @@ class InputText(Element):
                          font=font, tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, select=None, visible=None):
-        '''
-        InputText Element Update
-        NOTE - Read or Finalize must be called on Window prior to Update call
-        :param value:
-        :param disabled:
-        :param select:
-        :param visible:
-        :return: None
-        '''
+        """
+
+        :param value:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param select:  (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        #NOTE - Read or Finalize must be called on Window prior to Update call
         if disabled is True:
             self.TKEntry['state'] = 'readonly'
         elif disabled is False:
@@ -616,6 +695,7 @@ class InputText(Element):
             self.TKEntry.pack()
 
     def Get(self):
+        """ """
         try:
             text = self.TKStringVar.get()
         except:
@@ -623,12 +703,14 @@ class InputText(Element):
         return text
 
     def SetFocus(self):
+        """ """
         try:
             self.TKEntry.focus_set()
         except:
             pass
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -642,30 +724,29 @@ I = InputText
 #                           Combo                                        #
 # ---------------------------------------------------------------------- #
 class Combo(Element):
-    '''
-    ComboBox Element
-    '''
+    """ComboBox Element"""
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, readonly=False, font=None, visible=True):
-        '''
-        Combo Element - Combo Box, Drop Down Menu, ...
-        :param values:
-        :param default_value:
-        :param size:
-        :param auto_size_text:
-        :param background_color:
-        :param text_color:
-        :param change_submits:
-        :param enable_events:
-        :param disabled:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param readonly:
-        :param font:
-        :param visible:
-        '''
+        """Combo Element - Combo Box, Drop Down Menu, ...
+
+        :param values: 
+        :param default_value:  (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param disabled: set disable state for element (Default value = False)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param readonly:  make element readonly (Default value = False)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
         self.Values = values
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits or enable_events
@@ -680,18 +761,16 @@ class Combo(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
-        '''
-        Update for Combo Element
-        Also known as: InputCombo, DropDown, Drop
-        :param value:
-        :param values:
-        :param set_to_index:
-        :param disabled:
-        :param readonly:
-        :param font:
-        :param visible:
-        :return: None
-        '''
+        """
+        :param value:  (Default value = None)
+        :param values:  (Default value = None)
+        :param set_to_index:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param readonly:  make element readonly (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -730,6 +809,7 @@ class Combo(Element):
             self.TKCombo.pack()
 
     def __del__(self):
+        """ """
         try:
             self.TKCombo.__del__()
         except:
@@ -747,29 +827,30 @@ Drop = InputCombo
 #                           Option Menu                                  #
 # ---------------------------------------------------------------------- #
 class OptionMenu(Element):
-    '''
-    Option Menu is an Element available ONLY on the tkinter port of PySimpleGUI.  It's is a widget that is unique
+    """Option Menu is an Element available ONLY on the tkinter port of PySimpleGUI.  It's is a widget that is unique
     to tkinter.  However, it looks much like a ComboBox.  Instead of an arrow to click to pull down the list of
     choices, another little graphic is shown on the widget to indicate where you click.  After clicking to activate,
     it looks like a Combo Box that you scroll to select a choice.
-    '''
+
+
+    """
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
-        '''
-        Option Menu Element
-        Also known as: InputOptionMenu
-        :param values:
-        :param default_value:
-        :param size:
-        :param disabled:
-        :param auto_size_text:
-        :param background_color:
-        :param text_color:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param visible:
-        '''
+        """Option Menu Element
+
+        :param values: 
+        :param default_value:  (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param disabled: set disable state for element (Default value = False)
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
         self.Values = values
         self.DefaultValue = default_value
         self.TKOptionMenu = None  # type: tk.OptionMenu
@@ -781,14 +862,14 @@ class OptionMenu(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, values=None, disabled=None, visible=None):
-        '''
-        OptionMenu Element Update
-        :param value:
-        :param values:
-        :param disabled:
-        :param visible:
-        :return: None
-        '''
+        """OptionMenu Element Update
+
+        :param value:  (Default value = None)
+        :param values:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
         if values is not None:
             self.Values = values
             self.TKOptionMenu['menu'].delete(0, 'end')
@@ -817,6 +898,7 @@ class OptionMenu(Element):
             self.TKOptionMenu.pack()
 
     def __del__(self):
+        """ """
         try:
             self.TKOptionMenu.__del__()
         except:
@@ -832,34 +914,36 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    '''
-    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
+    """A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
     when a window.Read() is executed.
-    '''
+
+
+    """
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
                  visible=True):
-        '''
-        Listbox Element
-        :param values:
-        :param default_values:
-        :param select_mode:
-        :param change_submits:
-        :param enable_events:
-        :param bind_return_key:
-        :param size:
-        :param disabled:
-        :param auto_size_text:
-        :param font:
-        :param background_color:
-        :param text_color:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        """Listbox Element
+
+        :param values: 
+        :param default_values:  (Default value = None)
+        :param select_mode:  (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param bind_return_key:  (Default value = False)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param disabled: set disable state for element (Default value = False)
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
@@ -885,14 +969,15 @@ class Listbox(Element):
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
     def Update(self, values=None, disabled=None, set_to_index=None, visible=None):
-        '''
+        """
 
-        :param values:
-        :param disabled:
-        :param set_to_index:
-        :param visible:
-        :return: None
-        '''
+        :param values:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param set_to_index:  (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -917,6 +1002,11 @@ class Listbox(Element):
             self.vsb.pack()
 
     def SetValue(self, values):
+        """
+
+        :param values: 
+
+        """
         for index, item in enumerate(self.Values):
             try:
                 if item in values:
@@ -928,15 +1018,18 @@ class Listbox(Element):
         self.DefaultValues = values
 
     def GetListValues(self):
+        """ """
         return self.Values
 
     def SetFocus(self):
+        """ """
         try:
             self.TKListbox.focus_set()
         except:
             pass
 
     def __del__(self):
+        """ """
         try:
             self.TKListBox.__del__()
         except:
@@ -948,31 +1041,34 @@ class Listbox(Element):
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
 class Radio(Element):
-    '''
-    Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
+    """Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
     1 choice in a list of choices.
-    '''
+
+
+    """
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
                  change_submits=False, enable_events=False, visible=True):
-        '''
+        """
 
-        :param text:
-        :param group_id:
-        :param default:
-        :param disabled:
-        :param size:
-        :param auto_size_text:
-        :param background_color:
-        :param text_color:
-        :param font:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param change_submits:
-        :param enable_events:
-        :param visible:
-        '''
+        :param text: 
+        :param group_id: 
+        :param default:  (Default value = False)
+        :param disabled: set disable state for element (Default value = False)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.InitialState = default
         self.Text = text
         self.TKRadio = None
@@ -987,13 +1083,14 @@ class Radio(Element):
                          tooltip=tooltip, visible=visible)
 
     def Update(self, value=None, disabled=None, visible=None):
-        '''
+        """
 
-        :param value:
-        :param disabled:
-        :param visible:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if value is not None:
             try:
                 self.TKIntVar.set(self.EncodedRadioValue)
@@ -1010,9 +1107,11 @@ class Radio(Element):
             self.TKRadio.pack()
 
     def ResetGroup(self):
+        """ """
         self.TKIntVar.set(0)
 
     def __del__(self):
+        """ """
         try:
             self.TKRadio.__del__()
         except:
@@ -1028,29 +1127,30 @@ class Radio(Element):
 # Doc strings
 # Note - The renaming of the member function to have _ if internal only has NOT yet been done!
 class Checkbox(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, visible=True):
-        '''
+        """
 
-        :param text:
-        :param default:
-        :param size:
-        :param auto_size_text:
-        :param font:
-        :param background_color:
-        :param text_color:
-        :param change_submits:
-        :param enable_events:
-        :param disabled:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param visible:
-        '''
+        :param text: 
+        :param default:  (Default value = False)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param disabled: set disable state for element (Default value = False)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.Text = text
         self.InitialState = default
         self.Value = None
@@ -1064,16 +1164,18 @@ class Checkbox(Element):
                          tooltip=tooltip, visible=visible)
 
     def Get(self):
+        """ """
         return self.TKIntVar.get()
 
     def Update(self, value=None, disabled=None, visible=None):
-        '''
+        """
 
-        :param value:
-        :param disabled:
-        :param visible:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -1090,6 +1192,7 @@ class Checkbox(Element):
             self.TKCheckbutton.pack()
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -1104,29 +1207,30 @@ Check = Checkbox
 # ---------------------------------------------------------------------- #
 
 class Spin(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False,
                  size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None,
                  pad=None, tooltip=None, visible=True):
-        '''
+        """
 
-        :param values:
-        :param initial_value:
-        :param disabled:
-        :param change_submits:
-        :param enable_events:
-        :param size:
-        :param auto_size_text:
-        :param font:
-        :param background_color:
-        :param text_color:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param visible:
-        '''
+        :param values: 
+        :param initial_value:  (Default value = None)
+        :param disabled: set disable state for element (Default value = False)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.Values = values
         self.DefaultValue = initial_value
         self.ChangeSubmits = change_submits or enable_events
@@ -1140,14 +1244,15 @@ class Spin(Element):
         return
 
     def Update(self, value=None, values=None, disabled=None, visible=None):
-        '''
+        """
 
-        :param value:
-        :param values:
-        :param disabled:
-        :param visible:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param values:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if values != None:
             old_value = self.TKStringVar.get()
             self.Values = values
@@ -1169,6 +1274,11 @@ class Spin(Element):
             self.TKSpinBox.pack()
 
     def SpinChangedHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -1180,9 +1290,11 @@ class Spin(Element):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def Get(self):
+        """ """
         return self.TKStringVar.get()
 
     def __del__(self):
+        """ """
         try:
             self.TKSpinBox.__del__()
         except:
@@ -1194,35 +1306,36 @@ class Spin(Element):
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
                  right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param default_text:
-        :param enter_submits:
-        :param disabled:
-        :param autoscroll:
-        :param border_width:
-        :param size:
-        :param auto_size_text:
-        :param background_color:
-        :param text_color:
-        :param change_submits:
-        :param enable_events:
-        :param do_not_clear:
-        :param key:
-        :param focus:
-        :param font:
-        :param pad:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param default_text:  (Default value = '')
+        :param enter_submits:  (Default value = False)
+        :param disabled: set disable state for element (Default value = False)
+        :param autoscroll:  (Default value = False)
+        :param border_width:  (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param do_not_clear: see docx (Default value = True)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param focus: if focus should be set to this (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
 
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
@@ -1242,18 +1355,19 @@ class Multiline(Element):
 
     def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None,
                visible=None, autoscroll=None):
-        '''
+        """
 
-        :param value:
-        :param disabled:
-        :param append:
-        :param font:
-        :param text_color:
-        :param background_color:
-        :param visible:
-        :param autoscroll:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param append:  (Default value = False)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+        :param autoscroll:  (Default value = None)
+
+        """
+        
         if autoscroll is not None:
             self.Autoscroll = autoscroll
         if value is not None:
@@ -1286,15 +1400,18 @@ class Multiline(Element):
             self.TKText.pack()
 
     def Get(self):
+        """ """
         return self.TKText.get(1.0, tk.END)
 
     def SetFocus(self):
+        """ """
         try:
             self.TKText.focus_set()
         except:
             pass
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -1302,30 +1419,31 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True):
-        '''
+        """
 
-        :param text:
-        :param size:
-        :param auto_size_text:
-        :param click_submits:
-        :param enable_events:
-        :param relief:
-        :param font:
-        :param text_color:
-        :param background_color:
-        :param justification:
-        :param pad:
-        :param key:
-        :param right_click_menu:
-        :param tooltip:
-        :param visible:
-        '''
+        :param text: 
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param click_submits:  (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param relief:  (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param justification: justification for data display (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.DisplayText = str(text)
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
@@ -1343,15 +1461,16 @@ class Text(Element):
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
-        '''
+        """
 
-        :param value:
-        :param background_color:
-        :param text_color:
-        :param font:
-        :param visible:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1368,6 +1487,7 @@ class Text(Element):
             self.TKText.pack()
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -1380,29 +1500,30 @@ T = Text
 #                                       StatusBar                        #
 # ---------------------------------------------------------------------- #
 class StatusBar(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
                  key=None, tooltip=None, visible=True):
-        '''
+        """
 
-        :param text:
-        :param size:
-        :param auto_size_text:
-        :param click_submits:
-        :param enable_events:
-        :param relief:
-        :param font:
-        :param text_color:
-        :param background_color:
-        :param justification:
-        :param pad:
-        :param key:
-        :param tooltip:
-        :param visible:
-        '''
+        :param text: 
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param click_submits:  (Default value = None)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param relief:  (Default value = RELIEF_SUNKEN)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param justification: justification for data display (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification
@@ -1418,15 +1539,16 @@ class StatusBar(Element):
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
-        '''
+        """
 
-        :param value:
-        :param background_color:
-        :param text_color:
-        :param font:
-        :param visible:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1443,6 +1565,7 @@ class StatusBar(Element):
             self.TKText.pack()
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -1452,9 +1575,24 @@ class StatusBar(Element):
 # ---------------------------------------------------------------------- #
 
 class TKProgressBar():
+    """ """
     def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
                  orientation='horizontal', BarColor=(None, None), key=None):
+        """
+
+        :param root: 
+        :param max: 
+        :param length:  (Default value = 400)
+        :param width:  (Default value = DEFAULT_PROGRESS_BAR_SIZE[1])
+        :param style:  (Default value = DEFAULT_PROGRESS_BAR_STYLE)
+        :param relief:  (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
+        :param border_width:  (Default value = DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
+        :param orientation:  (Default value = 'horizontal')
+        :param BarColor:  (Default value = (None, None))
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+        """
 
         self.Length = length
         self.Width = width
@@ -1490,6 +1628,12 @@ class TKProgressBar():
                                                         length=length, orient=tk.VERTICAL, mode='determinate')
 
     def Update(self, count=None, max=None):
+        """
+
+        :param count:  (Default value = None)
+        :param max:  (Default value = None)
+
+        """
         if max is not None:
             self.Max = max
             try:
@@ -1505,6 +1649,7 @@ class TKProgressBar():
         return True
 
     def __del__(self):
+        """ """
         try:
             self.TKProgressBarForReal.__del__()
         except:
@@ -1518,7 +1663,20 @@ class TKProgressBar():
 #       Scroll bar will span the length of the frame                     #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
+    """ """
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
+        """
+
+        :param parent: 
+        :param width: 
+        :param height: 
+        :param bd: 
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+
+        """
         self.frame = tk.Frame(parent)
         tk.Frame.__init__(self, self.frame)
         self.output = tk.Text(self.frame, width=width, height=height, bd=bd, font=font)
@@ -1540,6 +1698,11 @@ class TKOutput(tk.Frame):
         self.pack()
 
     def write(self, txt):
+        """
+
+        :param txt: 
+
+        """
         try:
             self.output.insert(tk.END, str(txt))
             self.output.see(tk.END)
@@ -1547,14 +1710,17 @@ class TKOutput(tk.Frame):
             pass
 
     def Close(self):
+        """ """
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
     def flush(self):
+        """ """
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
     def __del__(self):
+        """ """
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
@@ -1564,23 +1730,24 @@ class TKOutput(tk.Frame):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class Output(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
                  key=None, right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param size:
-        :param background_color:
-        :param text_color:
-        :param pad:
-        :param font:
-        :param tooltip:
-        :param key:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -1591,18 +1758,20 @@ class Output(Element):
 
     @property
     def TKOut(self):
+        """ """
         if self._TKOut is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKOut
 
     def Update(self, value=None, visible=None):
-        '''
+        """
 
-        :param value:
-        :param visible:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if value is not None:
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
@@ -1612,6 +1781,7 @@ class Output(Element):
             self._TKOut.frame.pack()
 
     def __del__(self):
+        """ """
         try:
             self._TKOut.__del__()
         except:
@@ -1623,40 +1793,41 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True):
-        '''
+        """
 
-        :param button_text:
-        :param button_type:
-        :param target:
-        :param tooltip:
-        :param file_types:
-        :param initial_folder:
-        :param disabled:
-        :param change_submits:
-        :param enable_events:
-        :param image_filename:
-        :param image_data:
-        :param image_size:
-        :param image_subsample:
-        :param border_width:
-        :param size:
-        :param auto_size_button:
-        :param button_color:
-        :param font:
-        :param bind_return_key:
-        :param focus:
-        :param pad:
-        :param key:
-        :param visible:
-        '''
+        :param button_text:  (Default value = '')
+        :param button_type:  (Default value = BUTTON_TYPE_READ_FORM)
+        :param target: 
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param file_types:  (Default value = (("ALL Files", "*.*"),))
+        :param initial_folder:  (Default value = None)
+        :param disabled: set disable state for element (Default value = False)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param image_filename:  (Default value = None)
+        :param image_data:  (Default value = None)
+        :param image_size:  (Default value = (None)
+        :param image_subsample:  (Default value = None)
+        :param border_width:  (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+        :param auto_size_button:  (Default value = None)
+        :param button_color:  (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param bind_return_key:  (Default value = False)
+        :param focus: if focus should be set to this (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
         self.FileTypes = file_types
@@ -1686,11 +1857,21 @@ class Button(Element):
 
     # Realtime button release callback
     def ButtonReleaseCallBack(self, parm):
+        """
+
+        :param parm: 
+
+        """
         self.LastButtonClickedWasRealtime = False
         self.ParentForm.LastButtonClicked = None
 
     # Realtime button callback
     def ButtonPressCallBack(self, parm):
+        """
+
+        :param parm: 
+
+        """
         self.ParentForm.LastButtonClickedWasRealtime = True
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
@@ -1701,6 +1882,7 @@ class Button(Element):
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
+        """ """
         # global _my_windows
 
         # print('Button callback')
@@ -1840,18 +2022,19 @@ class Button(Element):
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None,
                visible=None, image_subsample=None, image_size=None):
-        '''
+        """
 
-        :param text:
-        :param button_color:
-        :param disabled:
-        :param image_data:
-        :param image_filename:
-        :param visible:
-        :param image_subsample:
-        :param image_size:
-        :return:
-        '''
+        :param text:  (Default value = None)
+        :param button_color:  (Default value = (None)
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param image_data:  (Default value = None)
+        :param image_filename:  (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+        :param image_subsample:  (Default value = None)
+        :param image_size:  (Default value = None)
+
+        """
+        
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -1894,18 +2077,21 @@ class Button(Element):
             self.TKButton.pack()
 
     def GetText(self):
+        """ """
         return self.ButtonText
 
     def SetFocus(self):
+        """ """
         try:
             self.TKButton.focus_set()
         except:
             pass
 
     def Click(self):
-        """
-            Generates a click of the button as if the user clicked the button
+        """Generates a click of the button as if the user clicked the button
         :return:
+
+
         """
         try:
             self.TKButton.invoke()
@@ -1913,6 +2099,7 @@ class Button(Element):
             print('Exception clicking button')
 
     def __del__(self):
+        """ """
         try:
             self.TKButton.__del__()
         except:
@@ -1930,33 +2117,34 @@ Butt = Button
 #                           ButtonMenu Class                             #
 # ---------------------------------------------------------------------- #
 class ButtonMenu(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None,
                  tearoff=False, visible=True):
-        '''
+        """
 
-        :param button_text:
-        :param menu_def:
-        :param tooltip:
-        :param disabled:
-        :param image_filename:
-        :param image_data:
-        :param image_size:
-        :param image_subsample:
-        :param border_width:
-        :param size:
-        :param auto_size_button:
-        :param button_color:
-        :param font:
-        :param pad:
-        :param key:
-        :param tearoff:
-        :param visible:
-        '''
+        :param button_text: 
+        :param menu_def: 
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param disabled: set disable state for element (Default value = False)
+        :param image_filename:  (Default value = None)
+        :param image_data:  (Default value = None)
+        :param image_size:  (Default value = (None, None))
+        :param image_subsample:  (Default value = None)
+        :param border_width:  (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+        :param auto_size_button:  (Default value = None)
+        :param button_color:  (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tearoff:  (Default value = False)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.MenuDefinition = menu_def
         self.AutoSizeButton = auto_size_button
         self.ButtonText = button_text
@@ -1981,6 +2169,11 @@ class ButtonMenu(Element):
         return
 
     def _MenuItemChosenCallback(self, item_chosen):  # ButtonMenu Menu Item Chosen Callback
+        """
+
+        :param item_chosen: 
+
+        """
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&', '')
         self.ParentForm.LastButtonClicked = self.Key
@@ -1989,12 +2182,13 @@ class ButtonMenu(Element):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def Update(self, menu_definition, visible=None):
-        '''
+        """
 
-        :param menu_definition:
-        :param visible:
-        :return:
-        '''
+        :param menu_definition: 
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         self.MenuDefinition = menu_definition
         if menu_definition is not None:
             self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
@@ -2006,6 +2200,7 @@ class ButtonMenu(Element):
             self.TKButtonMenu.pack()
 
     def __del__(self):
+        """ """
         try:
             self.TKButton.__del__()
         except:
@@ -2017,22 +2212,25 @@ class ButtonMenu(Element):
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
+    """ """
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
                  style=None, border_width=None, relief=None, key=None, pad=None, visible=True):
-        '''
+        """
 
-        :param max_value:
-        :param orientation:
-        :param size:
-        :param auto_size_text:
-        :param bar_color:
-        :param style:
-        :param border_width:
-        :param relief:
-        :param key:
-        :param pad:
-        :param visible:
-        '''
+        :param max_value: 
+        :param orientation:  (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param bar_color:  (Default value = (None)
+        :param style:  (Default value = None)
+        :param border_width:  (Default value = None)
+        :param relief:  (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.MaxValue = max_value
         self.TKProgressBar = None
         self.Cancelled = False
@@ -2048,12 +2246,13 @@ class ProgressBar(Element):
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
-        '''
+        """
 
-        :param current_count:
-        :param max:
-        :return:
-        '''
+        :param current_count: 
+        :param max:  (Default value = None)
+
+        """
+        
         if self.ParentForm.TKrootDestroyed:
             return False
         self.TKProgressBar.Update(current_count, max=max)
@@ -2066,17 +2265,19 @@ class ProgressBar(Element):
         return True
 
     def Update(self, visible=None):
-        '''
+        """
 
-        :param visible:
-        :return:
-        '''
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if visible is False:
             self.TKProgressBar.TKProgressBarForReal.pack_forget()
         elif visible is True:
             self.TKProgressBar.TKProgressBarForReal.pack()
 
     def __del__(self):
+        """ """
         try:
             self.TKProgressBar.__del__()
         except:
@@ -2088,24 +2289,25 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True, enable_events=False):
-        '''
+        """
 
-        :param filename:
-        :param data:
-        :param background_color:
-        :param size:
-        :param pad:
-        :param key:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        :param enable_events:
-        '''
+        :param filename:  (Default value = None)
+        :param data:  (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+
+        """
+        
         self.Filename = filename
         self.Data = data
         self.tktext_label = None
@@ -2125,14 +2327,15 @@ class Image(Element):
         return
 
     def Update(self, filename=None, data=None, size=(None, None), visible=None):
-        '''
+        """
 
-        :param filename:
-        :param data:
-        :param size:
-        :param visible:
-        :return:
-        '''
+        :param filename:  (Default value = None)
+        :param data:  (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
@@ -2155,12 +2358,13 @@ class Image(Element):
             self.tktext_label.pack()
 
     def UpdateAnimation(self, source, time_between_frames=0):
-        '''
+        """
 
-        :param source:
-        :param time_between_frames:
-        :return:
-        '''
+        :param source: 
+        :param time_between_frames:  (Default value = 0)
+
+        """
+        
         if self.Source != source:
             self.AnimatedFrames = None
             self.Source = source
@@ -2201,6 +2405,7 @@ class Image(Element):
             pass
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -2208,22 +2413,23 @@ class Image(Element):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param canvas:
-        :param background_color:
-        :param size:
-        :param pad:
-        :param key:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param canvas:  (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
         self.RightClickMenu = right_click_menu
@@ -2234,12 +2440,14 @@ class Canvas(Element):
 
     @property
     def TKCanvas(self):
+        """ """
         if self._TKCanvas is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -2247,27 +2455,28 @@ class Canvas(Element):
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None,
                  right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param canvas_size:
-        :param graph_bottom_left:
-        :param graph_top_right:
-        :param background_color:
-        :param pad:
-        :param change_submits:
-        :param drag_submits:
-        :param enable_events:
-        :param key:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param canvas_size: 
+        :param graph_bottom_left: 
+        :param graph_top_right: 
+        :param background_color: color of background (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param drag_submits:  (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
@@ -2285,6 +2494,12 @@ class Graph(Element):
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
+        """
+
+        :param x_in: 
+        :param y_in: 
+
+        """
         if None in (x_in, y_in):
             return None, None
         scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
@@ -2294,6 +2509,12 @@ class Graph(Element):
         return new_x, new_y
 
     def _convert_canvas_xy_to_xy(self, x_in, y_in):
+        """
+
+        :param x_in: 
+        :param y_in: 
+
+        """
         if None in (x_in, y_in):
             return None, None
         scale_x = (self.CanvasSize[0] - 0) / (self.TopRight[0] - self.BottomLeft[0])
@@ -2304,6 +2525,14 @@ class Graph(Element):
         return int(new_x), int(new_y)
 
     def DrawLine(self, point_from, point_to, color='black', width=1):
+        """
+
+        :param point_from: 
+        :param point_to: 
+        :param color:  (Default value = 'black')
+        :param width:  (Default value = 1)
+
+        """
         if point_from == (None, None):
             return
         converted_point_from = self._convert_xy_to_canvas_xy(point_from[0], point_from[1])
@@ -2319,6 +2548,13 @@ class Graph(Element):
         return id
 
     def DrawPoint(self, point, size=2, color='black'):
+        """
+
+        :param point: 
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = 2)
+        :param color:  (Default value = 'black')
+
+        """
         if point == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
@@ -2335,6 +2571,14 @@ class Graph(Element):
         return
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
+        """
+
+        :param center_location: 
+        :param radius: 
+        :param fill_color:  (Default value = None)
+        :param line_color:  (Default value = 'black')
+
+        """
         if center_location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
@@ -2351,6 +2595,14 @@ class Graph(Element):
         return id
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
+        """
+
+        :param top_left: 
+        :param bottom_right: 
+        :param fill_color:  (Default value = None)
+        :param line_color:  (Default value = None)
+
+        """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self._TKCanvas2 is None:
@@ -2366,6 +2618,16 @@ class Graph(Element):
         return id
 
     def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
+        """
+
+        :param top_left: 
+        :param bottom_right: 
+        :param extent: 
+        :param start_angle: 
+        :param style:  (Default value = None)
+        :param arc_color:  (Default value = 'black')
+
+        """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         tkstyle = tk.PIESLICE if style is None else style
@@ -2382,6 +2644,14 @@ class Graph(Element):
         return id
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
+        """
+
+        :param top_left: 
+        :param bottom_right: 
+        :param fill_color:  (Default value = None)
+        :param line_color:  (Default value = None)
+
+        """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self._TKCanvas2 is None:
@@ -2397,6 +2667,15 @@ class Graph(Element):
         return id
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
+        """
+
+        :param text: 
+        :param location: 
+        :param color:  (Default value = 'black')
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param angle:  (Default value = 0)
+
+        """
         if location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
@@ -2412,6 +2691,16 @@ class Graph(Element):
         return id
 
     def DrawImage(self, filename=None, data=None, location=(None, None), color='black', font=None, angle=0):
+        """
+
+        :param filename:  (Default value = None)
+        :param data:  (Default value = None)
+        :param location:  (Default value = (None, None))
+        :param color:  (Default value = 'black')
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param angle:  (Default value = 0)
+
+        """
         if location == (None, None):
             return
         if filename is not None:
@@ -2435,6 +2724,7 @@ class Graph(Element):
         return id
 
     def Erase(self):
+        """ """
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
@@ -2446,6 +2736,11 @@ class Graph(Element):
             pass
 
     def DeleteFigure(self, id):
+        """
+
+        :param id: 
+
+        """
         try:
             self._TKCanvas2.delete(id)
         except:
@@ -2455,6 +2750,12 @@ class Graph(Element):
         except: pass
 
     def Update(self, background_color, visible=None):
+        """
+
+        :param background_color: color of background
+        :param visible:  change visibility of element (Default value = None)
+
+        """
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
@@ -2466,6 +2767,12 @@ class Graph(Element):
             self._TKCanvas2.pack()
 
     def Move(self, x_direction, y_direction):
+        """
+
+        :param x_direction: 
+        :param y_direction: 
+
+        """
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -2476,6 +2783,13 @@ class Graph(Element):
         self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
 
     def MoveFigure(self, figure, x_direction, y_direction):
+        """
+
+        :param figure: 
+        :param x_direction: 
+        :param y_direction: 
+
+        """
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -2486,6 +2800,13 @@ class Graph(Element):
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
 
     def RelocateFigure(self, figure, x, y):
+        """
+
+        :param figure: 
+        :param x: 
+        :param y: 
+
+        """
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x, y)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -2498,6 +2819,7 @@ class Graph(Element):
 
     @property
     def TKCanvas(self):
+        """ """
         if self._TKCanvas2 is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
@@ -2505,6 +2827,11 @@ class Graph(Element):
 
     # Realtime button release callback
     def ButtonReleaseCallBack(self, event):
+        """
+
+        :param event: 
+
+        """
         self.ClickPosition = (None, None)
         self.LastButtonClickedWasRealtime = not self.DragSubmits
         if self.Key is not None:
@@ -2519,6 +2846,11 @@ class Graph(Element):
 
     # Realtime button callback
     def ButtonPressCallBack(self, event):
+        """
+
+        :param event: 
+
+        """
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
         self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
         if self.Key is not None:
@@ -2531,6 +2863,11 @@ class Graph(Element):
 
     # Realtime button callback
     def MotionCallBack(self, event):
+        """
+
+        :param event: 
+
+        """
         if not self.MouseButtonDown:
             return
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
@@ -2543,10 +2880,12 @@ class Graph(Element):
             self.ParentForm.TKroot.quit()  # kick out of loop if read was called
 
     def SetFocus(self):
+        """ """
         self._TKCanvas2.focus_set()
         # self._TKCanvas2.focus_force()
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -2554,29 +2893,30 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param title:
-        :param layout:
-        :param title_color:
-        :param background_color:
-        :param title_location:
-        :param relief:
-        :param size:
-        :param font:
-        :param pad:
-        :param border_width:
-        :param key:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param title: 
+        :param layout: 
+        :param title_color:  (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param title_location:  (Default value = None)
+        :param relief:  (Default value = DEFAULT_FRAME_RELIEF)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param border_width:  (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -2601,7 +2941,11 @@ class Frame(Element):
         return
 
     def AddRow(self, *args):
-        ''' Parms are a variable number of Elements '''
+        """Parms are a variable number of Elements
+
+        :param *args: 
+
+        """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
         CurrentRow = []  # start with a blank row and build up
@@ -2616,27 +2960,39 @@ class Frame(Element):
         self.Rows.append(CurrentRow)
 
     def Layout(self, rows):
+        """
+
+        :param rows: 
+
+        """
         for row in rows:
             self.AddRow(*row)
 
     def _GetElementAtLocation(self, location):
+        """
+
+        :param location: 
+
+        """
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
 
     def Update(self, visible=None):
-        '''
+        """
 
-        :param visible:
-        :return:
-        '''
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if visible is False:
             self.TKFrame.pack_forget()
         elif visible is True:
             self.TKFrame.pack()
 
     def __del__(self):
+        """ """
         for row in self.Rows:
             for element in row:
                 element.__del__()
@@ -2648,19 +3004,21 @@ class Frame(Element):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class VerticalSeparator(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, pad=None):
-        '''
+        """
 
-        :param pad:
-        '''
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+
+        """
+        
         self.Orientation = 'vertical'  # for now only vertical works
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -2672,26 +3030,27 @@ VSep = VerticalSeparator
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
                  border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param title:
-        :param layout:
-        :param title_color:
-        :param background_color:
-        :param font:
-        :param pad:
-        :param disabled:
-        :param border_width:
-        :param key:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param title: 
+        :param layout: 
+        :param title_color:  (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param disabled: set disable state for element (Default value = False)
+        :param border_width:  (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -2716,7 +3075,11 @@ class Tab(Element):
         return
 
     def AddRow(self, *args):
-        ''' Parms are a variable number of Elements '''
+        """Parms are a variable number of Elements
+
+        :param *args: 
+
+        """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
         CurrentRow = []  # start with a blank row and build up
@@ -2731,17 +3094,23 @@ class Tab(Element):
         self.Rows.append(CurrentRow)
 
     def Layout(self, rows):
+        """
+
+        :param rows: 
+
+        """
         for row in rows:
             self.AddRow(*row)
         return self
 
     def Update(self, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
-        '''
+        """
 
-        :param disabled:
-        :param visible:
-        :return:
-        '''
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if disabled is None:
             return
         self.Disabled = disabled
@@ -2754,12 +3123,18 @@ class Tab(Element):
         return self
 
     def _GetElementAtLocation(self, location):
+        """
+
+        :param location: 
+
+        """
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
 
     def __del__(self):
+        """ """
         for row in self.Rows:
             for element in row:
                 element.__del__()
@@ -2770,29 +3145,30 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
                  font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
                  key=None, tooltip=None, visible=True):
-        '''
+        """
 
-        :param layout:
-        :param tab_location:
-        :param title_color:
-        :param selected_title_color:
-        :param background_color:
-        :param font:
-        :param change_submits:
-        :param enable_events:
-        :param pad:
-        :param border_width:
-        :param theme:
-        :param key:
-        :param tooltip:
-        :param visible:
-        '''
+        :param layout: 
+        :param tab_location:  (Default value = None)
+        :param title_color:  (Default value = None)
+        :param selected_title_color:  (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param border_width:  (Default value = None)
+        :param theme:  (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -2817,7 +3193,11 @@ class TabGroup(Element):
         return
 
     def AddRow(self, *args):
-        ''' Parms are a variable number of Elements '''
+        """Parms are a variable number of Elements
+
+        :param *args: 
+
+        """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
         CurrentRow = []  # start with a blank row and build up
@@ -2832,16 +3212,31 @@ class TabGroup(Element):
         self.Rows.append(CurrentRow)
 
     def Layout(self, rows):
+        """
+
+        :param rows: 
+
+        """
         for row in rows:
             self.AddRow(*row)
 
     def _GetElementAtLocation(self, location):
+        """
+
+        :param location: 
+
+        """
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
 
     def FindKeyFromTabName(self, tab_name):
+        """
+
+        :param tab_name: 
+
+        """
         for row in self.Rows:
             for element in row:
                 if element.Title == tab_name:
@@ -2849,12 +3244,18 @@ class TabGroup(Element):
         return None
 
     def SelectTab(self, index):
+        """
+
+        :param index: 
+
+        """
         try:
             self.TKNotebook.select(index)
         except Exception as e:
             print('Exception Selecting Tab {}'.format(e))
 
     def __del__(self):
+        """ """
         for row in self.Rows:
             for element in row:
                 element.__del__()
@@ -2865,35 +3266,36 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
                  enable_events=False, disabled=False, size=(None, None), font=None, background_color=None,
                  text_color=None, key=None, pad=None, tooltip=None, visible=True):
-        '''
+        """
 
-        :param range:
-        :param default_value:
-        :param resolution:
-        :param tick_interval:
-        :param orientation:
-        :param disable_number_display:
-        :param border_width:
-        :param relief:
-        :param change_submits:
-        :param enable_events:
-        :param disabled:
-        :param size:
-        :param font:
-        :param background_color:
-        :param text_color:
-        :param key:
-        :param pad:
-        :param tooltip:
-        :param visible:
-        '''
+        :param range:  (Default value = (None, None))
+        :param default_value:  (Default value = None)
+        :param resolution:  (Default value = None)
+        :param tick_interval:  (Default value = None)
+        :param orientation:  (Default value = None)
+        :param disable_number_display:  (Default value = False)
+        :param border_width:  (Default value = None)
+        :param relief:  (Default value = None)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param disabled: set disable state for element (Default value = False)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param text_color: color of the text (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.TKScale = None  # type: tk.Scale
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
@@ -2914,14 +3316,15 @@ class Slider(Element):
         return
 
     def Update(self, value=None, range=(None, None), disabled=None, visible=None):
-        '''
+        """
 
-        :param value:
-        :param range:
-        :param disabled:
-        :param visible:
-        :return:
-        '''
+        :param value:  (Default value = None)
+        :param range:  (Default value = (None, None))
+        :param disabled: disable or enable state of the element (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -2940,6 +3343,11 @@ class Slider(Element):
             self.TKScale.pack()
 
     def _SliderChangedHandler(self, event):
+        """
+
+        :param event: 
+
+        """
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -2951,6 +3359,7 @@ class Slider(Element):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -2958,7 +3367,14 @@ class Slider(Element):
 #                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
 class TkFixedFrame(tk.Frame):
+    """ """
     def __init__(self, master, **kwargs):
+        """
+
+        :param master: 
+        :param **kwargs: 
+
+        """
         tk.Frame.__init__(self, master, **kwargs)
 
         self.canvas = tk.Canvas(self)
@@ -2981,7 +3397,15 @@ class TkFixedFrame(tk.Frame):
 #                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
 class TkScrollableFrame(tk.Frame):
+    """ """
     def __init__(self, master, vertical_only, **kwargs):
+        """
+
+        :param master: 
+        :param vertical_only: 
+        :param **kwargs: 
+
+        """
         tk.Frame.__init__(self, master, **kwargs)
 
         # create a canvas object and a vertical scrollbar for scrolling it
@@ -3026,21 +3450,42 @@ class TkScrollableFrame(tk.Frame):
         self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
 
     def resize_frame(self, e):
+        """
+
+        :param e: 
+
+        """
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
 
     def yscroll(self, event):
+        """
+
+        :param event: 
+
+        """
         if event.num == 5 or event.delta < 0:
             self.canvas.yview_scroll(1, "unit")
         elif event.num == 4 or event.delta > 0:
             self.canvas.yview_scroll(-1, "unit")
 
     def xscroll(self, event):
+        """
+
+        :param event: 
+
+        """
         if event.num == 5 or event.delta < 0:
             self.canvas.xview_scroll(1, "unit")
         elif event.num == 4 or event.delta > 0:
             self.canvas.xview_scroll(-1, "unit")
 
     def bind_mouse_scroll(self, parent, mode):
+        """
+
+        :param parent: 
+        :param mode: 
+
+        """
         # ~~ Windows only
         parent.bind("<MouseWheel>", mode)
         # ~~ Unix only
@@ -3048,7 +3493,11 @@ class TkScrollableFrame(tk.Frame):
         parent.bind("<Button-5>", mode)
 
     def set_scrollregion(self, event=None):
-        """ Set the scroll region on the canvas"""
+        """Set the scroll region on the canvas
+
+        :param event:  (Default value = None)
+
+        """
         self.canvas.configure(scrollregion=self.canvas.bbox('all'))
 
 
@@ -3056,23 +3505,24 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
-        '''
+        """
 
-        :param layout:
-        :param background_color:
-        :param size:
-        :param pad:
-        :param scrollable:
-        :param vertical_scroll_only:
-        :param right_click_menu:
-        :param key:
-        :param visible:
-        '''
+        :param layout: 
+        :param background_color: color of background (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param scrollable:  (Default value = False)
+        :param vertical_scroll_only:  (Default value = False)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -3095,7 +3545,11 @@ class Column(Element):
         return
 
     def AddRow(self, *args):
-        ''' Parms are a variable number of Elements '''
+        """Parms are a variable number of Elements
+
+        :param *args: 
+
+        """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
         CurrentRow = []  # start with a blank row and build up
@@ -3110,21 +3564,32 @@ class Column(Element):
         self.Rows.append(CurrentRow)
 
     def Layout(self, rows):
+        """
+
+        :param rows: 
+
+        """
         for row in rows:
             self.AddRow(*row)
 
     def _GetElementAtLocation(self, location):
+        """
+
+        :param location: 
+
+        """
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
 
     def Update(self, visible=None):
-        '''
+        """
 
-        :param visible:
-        :return:
-        '''
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if visible is False:
             if self.TKColFrame:
                 self.TKColFrame.pack_forget()
@@ -3137,6 +3602,7 @@ class Column(Element):
                 self.ParentPanedWindow.add(self.TKColFrame)
 
     def __del__(self):
+        """ """
         for row in self.Rows:
             for element in row:
                 element.__del__()
@@ -3151,25 +3617,26 @@ class Column(Element):
 #                           Pane                                       #
 # ---------------------------------------------------------------------- #
 class Pane(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
-        '''
+        """
 
-        :param pane_list:
-        :param background_color:
-        :param size:
-        :param pad:
-        :param orientation:
-        :param show_handle:
-        :param relief:
-        :param handle_size:
-        :param border_width:
-        :param key:
-        :param visible:
-        '''
+        :param pane_list: 
+        :param background_color: color of background (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param orientation:  (Default value = 'vertical')
+        :param show_handle:  (Default value = True)
+        :param relief:  (Default value = RELIEF_RAISED)
+        :param handle_size:  (Default value = None)
+        :param border_width:  (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -3193,11 +3660,12 @@ class Pane(Element):
         return
 
     def Update(self, visible=None):
-        '''
+        """
 
-        :param visible:
-        :return:
-        '''
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if visible is False:
             self.PanedWindow.pack_forget()
         elif visible is True:
@@ -3208,20 +3676,25 @@ class Pane(Element):
 #                           Calendar                                     #
 # ---------------------------------------------------------------------- #
 class TKCalendar(ttk.Frame):
-    """
-    This code was shamelessly lifted from moshekaplan's repository - moshekaplan/tkinter_components
-    """
+    """This code was shamelessly lifted from moshekaplan's repository - moshekaplan/tkinter_components"""
     # XXX ToDo: cget and configure
 
     datetime = calendar.datetime.datetime
     timedelta = calendar.datetime.timedelta
 
     def __init__(self, master=None, target_element=None, close_when_chosen=True, default_date=(None, None, None), **kw):
-        """
-        WIDGET-SPECIFIC OPTIONS
-
+        """WIDGET-SPECIFIC OPTIONS
+        
             locale, firstweekday, year, month, selectbackground,
             selectforeground
+
+        :param master:  (Default value = None)
+        :param target_element:  (Default value = None)
+        :param close_when_chosen:  (Default value = True)
+        :param default_date:  (Default value = (None)
+        :param None:, None))
+        :param **kw: 
+
         """
         self._TargetElement = target_element
         default_mon, default_day, default_year = default_date
@@ -3261,6 +3734,12 @@ class TKCalendar(ttk.Frame):
         self._build_calendar()
 
     def __setitem__(self, item, value):
+        """
+
+        :param item: 
+        :param value: 
+
+        """
         if item in ('year', 'month'):
             raise AttributeError("attribute '%s' is not writeable" % item)
         elif item == 'selectbackground':
@@ -3271,6 +3750,11 @@ class TKCalendar(ttk.Frame):
             ttk.Frame.__setitem__(self, item, value)
 
     def __getitem__(self, item):
+        """
+
+        :param item: 
+
+        """
         if item in ('year', 'month'):
             return getattr(self._date, item)
         elif item == 'selectbackground':
@@ -3282,6 +3766,7 @@ class TKCalendar(ttk.Frame):
             return r[item]
 
     def __setup_styles(self):
+        """ """
         # custom ttk styles
         style = ttk.Style(self.master)
         arrow_layout = lambda dir: (
@@ -3291,6 +3776,7 @@ class TKCalendar(ttk.Frame):
         style.layout('R.TButton', arrow_layout('right'))
 
     def __place_widgets(self):
+        """ """
         # header frame and its widgets
         hframe = ttk.Frame(self)
         lbtn = ttk.Button(hframe, style='L.TButton', command=self._prev_month)
@@ -3307,6 +3793,7 @@ class TKCalendar(ttk.Frame):
         self._calendar.pack(in_=self, expand=1, fill='both', side='bottom')
 
     def __config_calendar(self):
+        """ """
         cols = self._cal.formatweekheader(3).split()
         self._calendar['columns'] = cols
         self._calendar.tag_configure('header', background='grey90')
@@ -3319,6 +3806,12 @@ class TKCalendar(ttk.Frame):
                                   anchor='e')
 
     def __setup_selection(self, sel_bg, sel_fg):
+        """
+
+        :param sel_bg: 
+        :param sel_fg: 
+
+        """
         self._font = tkinter.font.Font()
         self._canvas = canvas = tk.Canvas(self._calendar,
                                           background=sel_bg, borderwidth=0, highlightthickness=0)
@@ -3329,11 +3822,17 @@ class TKCalendar(ttk.Frame):
         self._calendar.bind('<ButtonPress-1>', self._pressed)
 
     def __minsize(self, evt):
+        """
+
+        :param evt: 
+
+        """
         width, height = self._calendar.master.geometry().split('x')
         height = height[:height.index('+')]
         self._calendar.master.minsize(width, height)
 
     def _build_calendar(self):
+        """ """
         year, month = self._date.year, self._date.month
 
         # update header text (Month, YEAR)
@@ -3348,7 +3847,12 @@ class TKCalendar(ttk.Frame):
             self._calendar.item(item, values=fmt_week)
 
     def _show_selection(self, text, bbox):
-        """Configure canvas for a new selection."""
+        """Configure canvas for a new selection.
+
+        :param text: 
+        :param bbox: 
+
+        """
         x, y, width, height = bbox
 
         textw = self._font.measure(text)
@@ -3362,7 +3866,11 @@ class TKCalendar(ttk.Frame):
     # Callbacks
 
     def _pressed(self, evt):
-        """Clicked somewhere in the calendar."""
+        """Clicked somewhere in the calendar.
+
+        :param evt: 
+
+        """
         x, y, widget = evt.x, evt.y, evt.widget
         item = widget.identify_row(y)
         column = widget.identify_column(x)
@@ -3424,7 +3932,7 @@ class TKCalendar(ttk.Frame):
 
     @property
     def selection(self):
-        """Return a datetime representing the current selected date."""
+        """ """
         if not self._selection:
             return None
 
@@ -3436,21 +3944,22 @@ class TKCalendar(ttk.Frame):
 #                           Menu                                       #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None,
                  visible=True):
-        '''
+        """
 
-        :param menu_definition:
-        :param background_color:
-        :param size:
-        :param tearoff:
-        :param pad:
-        :param key:
-        :param visible:
-        '''
+        :param menu_definition: 
+        :param background_color: color of background (Default value = None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param tearoff:  (Default value = False)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
         self.TKMenu = None                  # type: tk.Menu
@@ -3462,6 +3971,11 @@ class Menu(Element):
         return
 
     def _MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
+        """
+
+        :param item_chosen: 
+
+        """
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = item_chosen
@@ -3470,12 +3984,13 @@ class Menu(Element):
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def Update(self, menu_definition, visible=None):
-        '''
+        """
 
-        :param menu_definition:
-        :param visible:
-        :return:
-        '''
+        :param menu_definition: 
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         self.MenuDefinition = menu_definition
         self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
         menubar = self.TKMenu
@@ -3499,6 +4014,7 @@ class Menu(Element):
         # TODO add visible code for menus
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -3509,46 +4025,47 @@ MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, tooltip=None, right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param values:
-        :param headings:
-        :param visible_column_map:
-        :param col_widths:
-        :param def_col_width:
-        :param auto_size_columns:
-        :param max_col_width:
-        :param select_mode:
-        :param display_row_numbers:
-        :param num_rows:
-        :param row_height:
-        :param font:
-        :param justification:
-        :param text_color:
-        :param background_color:
-        :param alternating_row_color:
-        :param row_colors:
-        :param vertical_scroll_only:
-        :param hide_vertical_scroll:
-        :param size:
-        :param change_submits:
-        :param enable_events:
-        :param bind_return_key:
-        :param pad:
-        :param key:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param values: 
+        :param headings:  (Default value = None)
+        :param visible_column_map:  (Default value = None)
+        :param col_widths:  (Default value = None)
+        :param def_col_width:  (Default value = 10)
+        :param auto_size_columns:  (Default value = True)
+        :param max_col_width:  (Default value = 20)
+        :param select_mode:  (Default value = None)
+        :param display_row_numbers:  (Default value = False)
+        :param num_rows:  (Default value = None)
+        :param row_height:  (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param justification:  (Default value = 'right')
+        :param text_color: color of the text (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param alternating_row_color:  (Default value = None)
+        :param row_colors:  (Default value = None)
+        :param vertical_scroll_only:  (Default value = True)
+        :param hide_vertical_scroll:  (Default value = False)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param bind_return_key:  (Default value = False)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.Values = values
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
@@ -3581,14 +4098,15 @@ class Table(Element):
         return
 
     def Update(self, values=None, num_rows=None, visible=None, select_rows=None):
-        '''
+        """
 
-        :param values:
-        :param num_rows:
-        :param visible:
-        :param select_rows:
-        :return:
-        '''
+        :param values:  (Default value = None)
+        :param num_rows:  (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+        :param select_rows:  (Default value = None)
+
+        """
+        
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -3615,6 +4133,11 @@ class Table(Element):
             self.TKTreeview.selection_set(rows_to_select)
 
     def treeview_selected(self, event):
+        """
+
+        :param event: 
+
+        """
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
@@ -3628,6 +4151,11 @@ class Table(Element):
                 self.ParentForm.TKroot.quit()
 
     def treeview_double_click(self, event):
+        """
+
+        :param event: 
+
+        """
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.BindReturnKey:
@@ -3641,6 +4169,7 @@ class Table(Element):
                 self.ParentForm.TKroot.quit()
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -3648,40 +4177,41 @@ class Table(Element):
 #                           Tree                                         #
 # ---------------------------------------------------------------------- #
 class Tree(Element):
-    '''
-
-    '''
+    """ """
+    
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
                  background_color=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True):
-        '''
+        """
 
-        :param data:
-        :param headings:
-        :param visible_column_map:
-        :param col_widths:
-        :param col0_width:
-        :param def_col_width:
-        :param auto_size_columns:
-        :param max_col_width:
-        :param select_mode:
-        :param show_expanded:
-        :param change_submits:
-        :param enable_events:
-        :param font:
-        :param justification:
-        :param text_color:
-        :param background_color:
-        :param num_rows:
-        :param row_height:
-        :param pad:
-        :param key:
-        :param tooltip:
-        :param right_click_menu:
-        :param visible:
-        '''
+        :param data:  (Default value = None)
+        :param headings:  (Default value = None)
+        :param visible_column_map:  (Default value = None)
+        :param col_widths:  (Default value = None)
+        :param col0_width:  (Default value = 10)
+        :param def_col_width:  (Default value = 10)
+        :param auto_size_columns:  (Default value = True)
+        :param max_col_width:  (Default value = 20)
+        :param select_mode:  (Default value = None)
+        :param show_expanded:  (Default value = False)
+        :param change_submits: If True, pressing Enter key submits window (Default value = False)
+        :param enable_events: Turns on the element specific events.(Default value = False)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param justification:  (Default value = 'right')
+        :param text_color: color of the text (Default value = None)
+        :param background_color: color of background (Default value = None)
+        :param num_rows:  (Default value = None)
+        :param row_height:  (Default value = None)
+        :param pad: (common_key) Amount of padding to put around element (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param tooltip: text, that will appear the you hover on (Default value = None)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param visible: set visibility state of the element (Default value = True)
+
+        """
+        
         self.TreeData = data
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
@@ -3709,6 +4239,11 @@ class Tree(Element):
         return
 
     def treeview_selected(self, event):
+        """
+
+        :param event: 
+
+        """
         selections = self.TKTreeview.selection()
         self.SelectedRows = [x for x in selections]
         if self.ChangeSubmits:
@@ -3722,6 +4257,11 @@ class Tree(Element):
                 self.ParentForm.TKroot.quit()
 
     def add_treeview_data(self, node):
+        """
+
+        :param node: 
+
+        """
         # print(f'Inserting {node.key} under parent {node.parent}')
         if node.key != '':
             if node.icon:
@@ -3743,16 +4283,17 @@ class Tree(Element):
             self.add_treeview_data(node)
 
     def Update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
-        '''
+        """
 
-        :param values:
-        :param key:
-        :param value:
-        :param text:
-        :param icon:
-        :param visible:
-        :return:
-        '''
+        :param values:  (Default value = None)
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+        :param value:  (Default value = None)
+        :param text:  (Default value = None)
+        :param icon:  (Default value = None)
+        :param visible:  change visibility of element (Default value = None)
+
+        """
+        
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -3786,12 +4327,24 @@ class Tree(Element):
         return self
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
 class TreeData(object):
+    """ """
     class Node(object):
+        """ """
         def __init__(self, parent, key, text, values, icon=None):
+            """
+
+            :param parent: 
+            :param key: (common_key) Used with window.FindElement and with return values
+            :param text: 
+            :param values: 
+            :param icon:  (Default value = None)
+
+            """
             self.parent = parent
             self.children = []
             self.key = key
@@ -3800,26 +4353,54 @@ class TreeData(object):
             self.icon = icon
 
         def _Add(self, node):
+            """
+
+            :param node: 
+
+            """
             self.children.append(node)
 
     def __init__(self):
+        """ """
         self.tree_dict = {}
         self.root_node = self.Node("", "", 'root', [], None)
         self.tree_dict[""] = self.root_node
 
     def _AddNode(self, key, node):
+        """
+
+        :param key: (common_key) Used with window.FindElement and with return values
+        :param node: 
+
+        """
         self.tree_dict[key] = node
 
     def Insert(self, parent, key, text, values, icon=None):
+        """
+
+        :param parent: 
+        :param key: (common_key) Used with window.FindElement and with return values
+        :param text: 
+        :param values: 
+        :param icon:  (Default value = None)
+
+        """
         node = self.Node(parent, key, text, values, icon)
         self.tree_dict[key] = node
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
 
     def __repr__(self):
+        """ """
         return self._NodeStr(self.root_node, 1)
 
     def _NodeStr(self, node, level):
+        """
+
+        :param node: 
+        :param level: 
+
+        """
         return '\n'.join(
             [str(node.key) + ' : ' + str(node.text)] +
             [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
@@ -3829,17 +4410,26 @@ class TreeData(object):
 #                           Error Element                                #
 # ---------------------------------------------------------------------- #
 class ErrorElement(Element):
+    """ """
     def __init__(self, key=None):
-        '''
-        Error Element
-        :param key:
-        '''
+        """Error Element
+
+        :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+        """
         self.Key = key
 
         super().__init__(ELEM_TYPE_ERROR, key=key)
         return
 
     def Update(self, silent_on_error=True, *args, **kwargs):
+        """
+
+        :param silent_on_error:  (Default value = True)
+        :param *args: 
+        :param **kwargs: 
+
+        """
         if not silent_on_error:
             PopupError('Keyword error in Update',
                        'You need to stop this madness and check your spelling',
@@ -3849,9 +4439,11 @@ class ErrorElement(Element):
         return self
 
     def Get(self):
+        """ """
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
     def __del__(self):
+        """ """
         super().__del__()
 
 
@@ -3866,9 +4458,8 @@ Stretch = ErrorElement
 #                       Window CLASS                                        #
 # ------------------------------------------------------------------------- #
 class Window:
-    '''
-
-    '''
+    """ """
+    
     NumOpenWindows = 0
     user_defined_icon = None
     hidden_master_root = None
@@ -3885,41 +4476,43 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True):
-        '''
+        """
 
-        :param title:
-        :param layout:
-        :param default_element_size:
-        :param default_button_element_size:
-        :param auto_size_text:
-        :param auto_size_buttons:
-        :param location:
-        :param size:
-        :param element_padding:
-        :param margins:
-        :param button_color:
-        :param font:
-        :param progress_bar_color:
-        :param background_color:
-        :param border_depth:
-        :param auto_close:
-        :param auto_close_duration:
-        :param icon:
-        :param force_toplevel:
-        :param alpha_channel:
-        :param return_keyboard_events:
-        :param use_default_focus:
-        :param text_justification:
-        :param no_titlebar:
-        :param grab_anywhere:
-        :param keep_on_top:
-        :param resizable:
-        :param disable_close:
-        :param disable_minimize:
-        :param right_click_menu:
-        :param transparent_color:
-        :param debugger_enabled:
-        '''
+        :param title: 
+        :param layout:  (Default value = None)
+        :param default_element_size:  (Default value = DEFAULT_ELEMENT_SIZE)
+        :param default_button_element_size:  (Default value = (None, None))
+        :param auto_size_text: True if size should fit the text length (Default value = None)
+        :param auto_size_buttons:  (Default value = None)
+        :param location:  (Default value = (None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+        :param element_padding:  (Default value = None)
+        :param margins:  (Default value = (None)
+        :param button_color:  (Default value = None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param progress_bar_color:  (Default value = (None)
+        :param background_color: color of background (Default value = None)
+        :param border_depth:  (Default value = None)
+        :param auto_close:  (Default value = False)
+        :param auto_close_duration:  (Default value = DEFAULT_AUTOCLOSE_TIME)
+        :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+        :param force_toplevel:  (Default value = False)
+        :param alpha_channel:  (Default value = 1)
+        :param return_keyboard_events:  (Default value = False)
+        :param use_default_focus:  (Default value = True)
+        :param text_justification:  (Default value = None)
+        :param no_titlebar:  (Default value = False)
+        :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+        :param location: Location on screen to display (Default value = (None, None))
+        :param resizable:  (Default value = False)
+        :param disable_close:  (Default value = False)
+        :param disable_minimize:  (Default value = False)
+        :param right_click_menu: see "Right Click Menus" (Default value = None)
+        :param transparent_color:  (Default value = None)
+        :param debugger_enabled:  (Default value = True)
+
+        """
+        
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
@@ -3984,22 +4577,29 @@ class Window:
 
     @classmethod
     def GetAContainerNumber(cls):
+        """ """
         cls.container_element_counter += 1
         return cls.container_element_counter
 
     @classmethod
     def IncrementOpenCount(self):
+        """ """
         self.NumOpenWindows += 1
         # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
     @classmethod
     def DecrementOpenCount(self):
+        """ """
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
         # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
-        ''' Parms are a variable number of Elements '''
+        """Parms are a variable number of Elements
+
+        :param *args: 
+
+        """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
         CurrentRow = []  # start with a blank row and build up
@@ -4032,15 +4632,31 @@ class Window:
 
     # ------------------------- Add Multiple Rows to Form ------------------------- #
     def AddRows(self, rows):
+        """
+
+        :param rows: 
+
+        """
         for row in rows:
             self.AddRow(*row)
 
     def Layout(self, rows):
+        """
+
+        :param rows: 
+
+        """
         self.AddRows(rows)
         self.BuildKeyDict()
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
+        """
+
+        :param rows: 
+        :param non_blocking:  (Default value = False)
+
+        """
         raise DeprecationWarning(
             'LayoutAndRead is no longer supported... change your call window.Layout(layout).Read()')
         # self.AddRows(rows)
@@ -4048,10 +4664,20 @@ class Window:
         # return self.ReturnValues
 
     def LayoutAndShow(self, rows):
+        """
+
+        :param rows: 
+
+        """
         raise DeprecationWarning('LayoutAndShow is no longer supported... ')
 
     # ------------------------- ShowForm   THIS IS IT! ------------------------- #
     def Show(self, non_blocking=False):
+        """
+
+        :param non_blocking:  (Default value = False)
+
+        """
         self.Shown = True
         # Compute num rows & num cols (it'll come in handy debugging)
         self.NumRows = len(self.Rows)
@@ -4087,6 +4713,12 @@ class Window:
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
     def SetIcon(self, icon=None, pngbase64=None):
+        """
+
+        :param icon:  (Default value = None)
+        :param pngbase64:  (Default value = None)
+
+        """
         if type(icon) is bytes:
             wicon = tkinter.PhotoImage(data=icon)
             try:
@@ -4109,15 +4741,22 @@ class Window:
             pass
 
     def _GetElementAtLocation(self, location):
+        """
+
+        :param location: 
+
+        """
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
 
     def _GetDefaultElementSize(self):
+        """ """
         return self.DefaultElementSize
 
     def _AutoCloseAlarmCallback(self):
+        """ """
         try:
             window = self
             if window:
@@ -4131,6 +4770,7 @@ class Window:
             pass
 
     def _TimeoutAlarmCallback(self):
+        """ """
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         # print('TIMEOUT CALLBACK')
@@ -4142,6 +4782,12 @@ class Window:
         self.TKroot.quit()  # kick the users out of the mainloop
 
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+        """
+
+        :param timeout:  (Default value = None)
+        :param timeout_key:  (Default value = TIMEOUT_KEY)
+
+        """
         # ensure called only 1 time through a single read cycle
         if not Window.read_call_from_debugger:
             refresh_debugger()
@@ -4245,6 +4891,7 @@ class Window:
             return self.ReturnValues
 
     def ReadNonBlocking(self):
+        """ """
         if self.TKrootDestroyed:
             try:
                 self.TKroot.quit()
@@ -4274,6 +4921,7 @@ class Window:
         return BuildResults(self, False, self)
 
     def Finalize(self):
+        """ """
         if self.TKrootDestroyed:
             return self
         if not self.Shown:
@@ -4288,6 +4936,7 @@ class Window:
         return self
 
     def Refresh(self):
+        """ """
         if self.TKrootDestroyed:
             return self
         try:
@@ -4297,10 +4946,21 @@ class Window:
         return self
 
     def Fill(self, values_dict):
+        """
+
+        :param values_dict: 
+
+        """
         FillFormWithValues(self, values_dict)
         return self
 
     def FindElement(self, key, silent_on_error=False):
+        """
+
+        :param key: (common_key) Used with window.FindElement and with return values
+        :param silent_on_error:  (Default value = False)
+
+        """
         # print(f'In find elem key={key}', self.AllKeysDict)
 
         try:
@@ -4323,15 +4983,24 @@ class Window:
     Find = FindElement
 
     def FindElementWithFocus(self):
+        """ """
         element = _FindElementWithFocusInSubForm(self)
         return element
 
     def BuildKeyDict(self):
+        """ """
         dict = {}
         self.AllKeysDict = self._BuildKeyDictForWindow(self, self, dict)
         # print(f'keys built = {self.AllKeysDict}')
 
     def _BuildKeyDictForWindow(self, top_window, window, key_dict):
+        """
+
+        :param top_window: 
+        :param window: 
+        :param key_dict: 
+
+        """
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
                 if element.Type == ELEM_TYPE_COLUMN:
@@ -4366,6 +5035,11 @@ class Window:
         return key_dict
 
     def SaveToDisk(self, filename):
+        """
+
+        :param filename: 
+
+        """
         try:
             results = BuildResults(self, False, self)
             with open(filename, 'wb') as sf:
@@ -4374,6 +5048,11 @@ class Window:
             print('*** Error saving form to disk ***')
 
     def LoadFromDisk(self, filename):
+        """
+
+        :param filename: 
+
+        """
         try:
             with open(filename, 'rb') as df:
                 self.Fill(pickle.load(df))
@@ -4381,6 +5060,7 @@ class Window:
             print('*** Error loading form to disk ***')
 
     def GetScreenDimensions(self):
+        """ """
         if self.TKrootDestroyed:
             return None, None
         screen_width = self.TKroot.winfo_screenwidth()  # get window info to move to middle of screen
@@ -4388,15 +5068,23 @@ class Window:
         return screen_width, screen_height
 
     def Move(self, x, y):
+        """
+
+        :param x: 
+        :param y: 
+
+        """
         try:
             self.TKroot.geometry("+%s+%s" % (x, y))
         except:
             pass
 
     def Minimize(self):
+        """ """
         self.TKroot.iconify()
 
     def Maximize(self):
+        """ """
         if sys.platform != 'linux':
             self.TKroot.state('zoomed')
         else:
@@ -4405,12 +5093,18 @@ class Window:
         # self.TKroot.attributes('-fullscreen', True)
 
     def Normal(self):
+        """ """
         if sys.platform != 'linux':
             self.TKroot.state('normal')
         else:
             self.TKroot.attributes('-fullscreen', False)
 
     def StartMove(self, event):
+        """
+
+        :param event: 
+
+        """
         try:
             self.TKroot.x = event.x
             self.TKroot.y = event.y
@@ -4419,6 +5113,11 @@ class Window:
         # print('Start move {},{}'.format(event.x,event.y))
 
     def StopMove(self, event):
+        """
+
+        :param event: 
+
+        """
         try:
             self.TKroot.x = None
             self.TKroot.y = None
@@ -4427,6 +5126,11 @@ class Window:
         # print('-Stop- move {},{}'.format(event.x,event.y))
 
     def OnMotion(self, event):
+        """
+
+        :param event: 
+
+        """
         try:
             deltax = event.x - self.TKroot.x
             deltay = event.y - self.TKroot.y
@@ -4438,6 +5142,11 @@ class Window:
             pass
 
     def _KeyboardCallback(self, event):
+        """
+
+        :param event: 
+
+        """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         if event.char != '':
@@ -4450,6 +5159,11 @@ class Window:
             self.TKroot.quit()
 
     def _MouseWheelCallback(self, event):
+        """
+
+        :param event: 
+
+        """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
@@ -4459,6 +5173,7 @@ class Window:
             self.TKroot.quit()
 
     def _Close(self):
+        """ """
         try:
             self.TKroot.update()
         except:
@@ -4472,6 +5187,7 @@ class Window:
         return None
 
     def Close(self):
+        """ """
         if self.TKrootDestroyed:
             return
         try:
@@ -4493,6 +5209,7 @@ class Window:
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def OnClosingCallback(self):
+        """ """
         # global _my_windows
         # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
@@ -4511,63 +5228,85 @@ class Window:
         return
 
     def Disable(self):
+        """ """
         self.TKroot.attributes('-disabled', 1)
         # self.TKroot.grab_set_global()
 
     def Enable(self):
+        """ """
         self.TKroot.attributes('-disabled', 0)
         # self.TKroot.grab_release()
 
     def Hide(self):
+        """ """
         self._Hidden = True
         self.TKroot.withdraw()
 
     def UnHide(self):
+        """ """
         if self._Hidden:
             self.TKroot.deiconify()
             self._Hidden = False
 
     def Disappear(self):
+        """ """
         self.TKroot.attributes('-alpha', 0)
 
     def Reappear(self):
+        """ """
         self.TKroot.attributes('-alpha', 255)
 
     def SetAlpha(self, alpha):
-        '''
-        Change the window's transparency
-        :param alpha: From 0 to 1 with 0 being completely transparent
-        :return:
-        '''
+        """
+
+        :param alpha: 
+
+        """
+        # Change the window's transparency
+        # :param alpha: From 0 to 1 with 0 being completely transparent
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
 
     @property
     def AlphaChannel(self):
+        """ """
         return self._AlphaChannel
 
     @AlphaChannel.setter
     def AlphaChannel(self, alpha):
+        """
+
+        :param alpha: 
+
+        """
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
 
     def BringToFront(self):
+        """ """
         try:
             self.TKroot.lift()
         except:
             pass
 
     def CurrentLocation(self):
+        """ """
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
     @property
     def Size(self):
+        """ """
         win_width = self.TKroot.winfo_width()
         win_height = self.TKroot.winfo_height()
         return win_width, win_height
 
     @Size.setter
     def Size(self, size):
+        """
+
+        :param size: (common_key) 
+
+        """
         try:
             self.TKroot.geometry("%sx%s" % (size[0], size[1]))
             self.TKroot.update_idletasks()
@@ -4575,50 +5314,77 @@ class Window:
             pass
 
     def VisibilityChanged(self):
+        """ """
         # A dummy function.  Needed in Qt but not tkinter
         return
 
     def SetTransparentColor(self, color):
+        """
+
+        :param color: 
+
+        """
         try:
             self.TKroot.attributes('-transparentcolor', color)
         except:
             print('Transparent color not supported on this platform (windows only)')
 
     def GrabAnyWhereOn(self):
+        """ """
         self.TKroot.bind("<ButtonPress-1>", self.StartMove)
         self.TKroot.bind("<ButtonRelease-1>", self.StopMove)
         self.TKroot.bind("<B1-Motion>", self.OnMotion)
 
     def GrabAnyWhereOff(self):
+        """ """
         self.TKroot.unbind("<ButtonPress-1>")
         self.TKroot.unbind("<ButtonRelease-1>")
         self.TKroot.unbind("<B1-Motion>")
 
     def _callback_main_debugger_window_create_keystroke(self, event):
+        """
+
+        :param event: 
+
+        """
         Debugger.debugger._build_main_debugger_window()
 
     def _callback_popout_window_create_keystroke(self, event):
+        """
+
+        :param event: 
+
+        """
         Debugger.debugger._build_floating_window()
 
     def EnableDebugger(self):
+        """ """
         self.TKroot.bind('<Cancel>', self._callback_main_debugger_window_create_keystroke)
         self.TKroot.bind('<Pause>', self._callback_popout_window_create_keystroke)
         self.DebuggerEnabled = True
 
 
     def DisableDebugger(self):
+        """ """
         self.TKroot.unbind("<Cancel>")
         self.TKroot.unbind("<Pause>")
         self.DebuggerEnabled = False
 
     def __enter__(self):
+        """ """
         return self
 
     def __exit__(self, *a):
+        """
+
+        :param *a: 
+
+        """
         self.__del__()
         return False
 
     def __del__(self):
+        """ """
         # print('DELETING WINDOW')
         for row in self.Rows:
             for element in row:
@@ -4644,23 +5410,24 @@ FlexForm = Window
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
                  font=None, pad=None, key=None):
-    '''
+    """
 
-    :param button_text:
-    :param target:
-    :param initial_folder:
-    :param tooltip:
-    :param size:
-    :param auto_size_button:
-    :param button_color:
-    :param disabled:
-    :param change_submits:
-    :param enable_events:
-    :param font:
-    :param pad:
-    :param key:
-    :return:
-    '''
+    :param button_text:  (Default value = 'Browse')
+    :param target:  (Default value = (ThisRow, -1))
+    :param initial_folder:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param change_submits: If True, pressing Enter key submits window (Default value = False)
+    :param enable_events: Turns on the element specific events.(Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
+    
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
@@ -4672,6 +5439,24 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
                tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                enable_events=False, font=None, disabled=False,
                pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Browse')
+    :param target:  (Default value = (ThisRow, -1))
+    :param file_types:  (Default value = (("ALL Files", "*.*")))
+    :param initial_folder:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param change_submits: If True, pressing Enter key submits window (Default value = False)
+    :param enable_events: Turns on the element specific events.(Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   change_submits=change_submits, enable_events=enable_events, disabled=disabled,
@@ -4683,6 +5468,24 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
                 initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
                 font=None, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Browse')
+    :param target:  (Default value = (ThisRow, -1))
+    :param file_types:  (Default value = (("ALL Files", "*.*")))
+    :param disabled: set disable state for element (Default value = False)
+    :param initial_folder:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param change_submits: If True, pressing Enter key submits window (Default value = False)
+    :param enable_events: Turns on the element specific events.(Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                   initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
                   tooltip=tooltip, size=size, auto_size_button=auto_size_button,
@@ -4694,6 +5497,24 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
                disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
                pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Save As...')
+    :param target:  (Default value = (ThisRow, -1))
+    :param file_types:  (Default value = (("ALL Files", "*.*")))
+    :param initial_folder:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param change_submits: If True, pressing Enter key submits window (Default value = False)
+    :param enable_events: Turns on the element specific events.(Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
@@ -4705,6 +5526,24 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
            disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
            pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Save As...')
+    :param target:  (Default value = (ThisRow, -1))
+    :param file_types:  (Default value = (("ALL Files", "*.*")))
+    :param initial_folder:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param change_submits: If True, pressing Enter key submits window (Default value = False)
+    :param enable_events: Turns on the element specific events.(Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
@@ -4714,6 +5553,21 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
          disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Save')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param bind_return_key:  (Default value = True)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4722,6 +5576,21 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
            bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Submit')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param bind_return_key:  (Default value = True)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4731,6 +5600,21 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
          bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Open')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param bind_return_key:  (Default value = True)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4739,6 +5623,21 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
        bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'OK')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param bind_return_key:  (Default value = True)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4747,6 +5646,21 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
        bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Ok')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param bind_return_key:  (Default value = True)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4755,6 +5669,21 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
            tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Cancel')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4763,6 +5692,21 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
          font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Quit')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4771,6 +5715,21 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
 def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
          font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Exit')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4779,6 +5738,21 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
         font=None, bind_return_key=True, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Yes')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = True)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4787,6 +5761,21 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
        font=None, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'No')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4795,6 +5784,21 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = 'Help')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
@@ -4803,6 +5807,21 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Debug(button_text='', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
           tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text:  (Default value = '')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=COLOR_SYSTEM_DEFAULT, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, image_data=PSG_DEBUGGER_LOGO,
@@ -4813,6 +5832,26 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
 def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                  border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text: 
+    :param image_filename:  (Default value = None)
+    :param image_data:  (Default value = None)
+    :param image_size:  (Default value = (None, None))
+    :param image_subsample:  (Default value = None)
+    :param border_width:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param disabled: set disable state for element (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
@@ -4824,6 +5863,26 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
 def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
                 bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text: 
+    :param image_filename:  (Default value = None)
+    :param image_data:  (Default value = None)
+    :param image_size:  (Default value = (None, None))
+    :param image_subsample:  (Default value = None)
+    :param border_width:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param disabled: set disable state for element (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
@@ -4838,6 +5897,26 @@ CButton = CloseButton
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
                bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text: 
+    :param image_filename:  (Default value = None)
+    :param image_data:  (Default value = None)
+    :param image_size:  (Default value = (None, None))
+    :param image_subsample:  (Default value = None)
+    :param border_width:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param disabled: set disable state for element (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, disabled=disabled,
@@ -4853,6 +5932,26 @@ RButton = ReadFormButton
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                    border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                    font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text: 
+    :param image_filename:  (Default value = None)
+    :param image_data:  (Default value = None)
+    :param image_size:  (Default value = (None, None))
+    :param image_subsample:  (Default value = None)
+    :param border_width:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
@@ -4864,6 +5963,26 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
                 disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+    """
+
+    :param button_text: 
+    :param image_filename:  (Default value = None)
+    :param image_data:  (Default value = None)
+    :param image_size:  (Default value = (None, None))
+    :param image_subsample:  (Default value = None)
+    :param border_width:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
@@ -4877,6 +5996,32 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                    key=None, locale=None, format=None):
+    """
+
+    :param button_text: 
+    :param target:  (Default value = (None, None))
+    :param close_when_date_chosen:  (Default value = True)
+    :param default_date_m_d_y:  (Default value = (None)
+    :param None: 
+    :param image_filename:  (Default value = None)
+    :param image_data:  (Default value = None)
+    :param image_size:  (Default value = (None)
+    :param image_subsample:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param border_width:  (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+    :param locale:  (Default value = None)
+    :param format:  (Default value = None)
+
+    """
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
@@ -4894,6 +6039,27 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                        key=None):
+    """
+
+    :param button_text: 
+    :param target:  (Default value = (None, None))
+    :param image_filename:  (Default value = None)
+    :param image_data:  (Default value = None)
+    :param image_size:  (Default value = (None)
+    :param image_subsample:  (Default value = None)
+    :param tooltip: text, that will appear the you hover on (Default value = None)
+    :param border_width:  (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)
+    :param auto_size_button:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param disabled: set disable state for element (Default value = False)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param bind_return_key:  (Default value = False)
+    :param focus: if focus should be set to this (Default value = None)
+    :param pad: (common_key) Amount of padding to put around element (Default value = None)
+    :param key: (common_key) Used with window.FindElement and with return values (Default value = None)
+
+    """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
@@ -4904,6 +6070,13 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
+    """
+
+    :param form: 
+    :param element: 
+    :param value: 
+
+    """
     form.ReturnValuesDictionary[element.Key] = value
     return
     # if element.Key is None:
@@ -4915,12 +6088,23 @@ def AddToReturnDictionary(form, element, value):
 
 
 def AddToReturnList(form, value):
+    """
+
+    :param form: 
+    :param value: 
+
+    """
     form.ReturnValuesList.append(value)
 
 
 # ----------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  --------#
 def InitializeResults(form):
+    """
+
+    :param form: 
+
+    """
     BuildResults(form, True, form)
     return
 
@@ -4928,6 +6112,11 @@ def InitializeResults(form):
 # =====  Radio Button RadVar encoding and decoding =====#
 # =====  The value is simply the row * 1000 + col  =====#
 def DecodeRadioRowCol(RadValue):
+    """
+
+    :param RadValue: 
+
+    """
     container = RadValue // 100000
     row = RadValue // 1000
     col = RadValue % 1000
@@ -4935,6 +6124,13 @@ def DecodeRadioRowCol(RadValue):
 
 
 def EncodeRadioRowCol(container, row, col):
+    """
+
+    :param container: 
+    :param row: 
+    :param col: 
+
+    """
     RadValue = container * 100000 + row * 1000 + col
     return RadValue
 
@@ -4943,6 +6139,13 @@ def EncodeRadioRowCol(container, row, col):
 # format of return values is
 # (Button Pressed, input_values)
 def BuildResults(form, initialize_only, top_level_form):
+    """
+
+    :param form: 
+    :param initialize_only: 
+    :param top_level_form: 
+
+    """
     # Results for elements are:
     #   TEXT - Nothing
     #   INPUT - Read value from TK
@@ -4959,6 +6162,13 @@ def BuildResults(form, initialize_only, top_level_form):
 
 
 def BuildResultsForSubform(form, initialize_only, top_level_form):
+    """
+
+    :param form: 
+    :param initialize_only: 
+    :param top_level_form: 
+
+    """
     button_pressed_text = top_level_form.LastButtonClicked
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
@@ -5159,10 +6369,22 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
 
 
 def FillFormWithValues(form, values_dict):
+    """
+
+    :param form: 
+    :param values_dict: 
+
+    """
     FillSubformWithValues(form, values_dict)
 
 
 def FillSubformWithValues(form, values_dict):
+    """
+
+    :param form: 
+    :param values_dict: 
+
+    """
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             value = None
@@ -5201,6 +6423,12 @@ def FillSubformWithValues(form, values_dict):
 
 
 def _FindElementFromKeyInSubForm(form, key):
+    """
+
+    :param form: 
+    :param key: (common_key) Used with window.FindElement and with return values
+
+    """
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             if element.Type == ELEM_TYPE_COLUMN:
@@ -5228,6 +6456,11 @@ def _FindElementFromKeyInSubForm(form, key):
 
 
 def _FindElementWithFocusInSubForm(form):
+    """
+
+    :param form: 
+
+    """
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             if element.Type == ELEM_TYPE_COLUMN:
@@ -5262,6 +6495,15 @@ def _FindElementWithFocusInSubForm(form):
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+        """
+
+        :param top_menu: 
+        :param sub_menu_info: 
+        :param element: 
+        :param is_sub_menu:  (Default value = False)
+        :param skip:  (Default value = False)
+
+        """
         return_val = None
         if type(sub_menu_info) is str:
             if not is_sub_menu and not skip:
@@ -5312,6 +6554,15 @@ if sys.version_info[0] >= 3:
         return return_val
 else:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+        """
+
+        :param top_menu: 
+        :param sub_menu_info: 
+        :param element: 
+        :param is_sub_menu:  (Default value = False)
+        :param skip:  (Default value = False)
+
+        """
         if not isinstance(sub_menu_info, list):
             if not is_sub_menu and not skip:
                 # print(f'Adding command {sub_menu_info}')
@@ -5383,7 +6634,15 @@ else:
 # ========================   TK CODE STARTS HERE ========================================= #
 
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
+    """
+
+    :param form: 
+    :param containing_frame: 
+    :param toplevel_form: 
+
+    """
     def CharWidthInPixels():
+        """ """
         return tkinter.font.Font().measure('A')  # single character width
 
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
@@ -6510,6 +7769,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
 
                 def add_treeview_data(node):
+                    """
+
+                    :param node: 
+
+                    """
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
                         if node.icon:
@@ -6629,6 +7893,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
 def ConvertFlexToTK(MyFlexForm):
+    """
+
+    :param MyFlexForm: 
+
+    """
     MyFlexForm  # type: Window
     master = MyFlexForm.TKroot
     master.title(MyFlexForm.Title)
@@ -6672,6 +7941,11 @@ def ConvertFlexToTK(MyFlexForm):
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(my_flex_form: Window):
+    """
+
+    :param my_flex_form: Window: 
+
+    """
     # global _my_windows
     # ow = _my_windows.NumOpenWindows
     ow = Window.NumOpenWindows
@@ -6773,6 +8047,12 @@ def StartupTK(my_flex_form: Window):
 # Helper function for determining how to wrap text   #
 # ===================================================#
 def _GetNumLinesNeeded(text, max_line_width):
+    """
+
+    :param text: 
+    :param max_line_width: 
+
+    """
     if max_line_width == 0:
         return 1
     lines = text.split('\n')
@@ -6788,6 +8068,11 @@ def _GetNumLinesNeeded(text, max_line_width):
 # ==============================  PROGRESS METER ========================================== #
 
 def ConvertArgsToSingleString(*args):
+    """
+
+    :param *args: 
+
+    """
     max_line_total, width_used, total_lines, = 0, 0, 0
     single_line_message = ''
     # loop through args and built a SINGLE string from them
@@ -6812,11 +8097,27 @@ METER_STOPPED = False
 
 
 class QuickMeter(object):
+    """ """
     active_meters = {}
     exit_reasons = {}
 
     def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
                  button_color=(None, None), size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
+        """
+
+        :param title: 
+        :param current_value: 
+        :param max_value: 
+        :param key: (common_key) Used with window.FindElement and with return values
+        :param *args: 
+        :param orientation:  (Default value = 'v')
+        :param bar_color:  (Default value = (None, None))
+        :param button_color:  (Default value = (None)
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+        :param border_width:  (Default value = None)
+        :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+
+        """
         self.start_time = datetime.datetime.utcnow()
         self.key = key
         self.orientation = orientation
@@ -6832,6 +8133,11 @@ class QuickMeter(object):
         self.window = self.BuildWindow(*args)
 
     def BuildWindow(self, *args):
+        """
+
+        :param *args: 
+
+        """
         layout = []
         if self.orientation.lower().startswith('h'):
             col = []
@@ -6857,6 +8163,13 @@ class QuickMeter(object):
         return self.window
 
     def UpdateMeter(self, current_value, max_value, *args):  ### support for *args when updating
+        """
+
+        :param current_value: 
+        :param max_value: 
+        :param *args: 
+
+        """
         self.current_value = current_value
         self.max_value = max_value
         self.window.Element('_PROG_').UpdateBar(self.current_value, self.max_value)
@@ -6873,6 +8186,7 @@ class QuickMeter(object):
         return METER_OK
 
     def ComputeProgressStats(self):
+        """ """
         utc = datetime.datetime.utcnow()
         time_delta = utc - self.start_time
         total_seconds = time_delta.total_seconds()
@@ -6903,6 +8217,21 @@ class QuickMeter(object):
 
 def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
+    """
+
+    :param title: 
+    :param current_value: 
+    :param max_value: 
+    :param key: (common_key) Used with window.FindElement and with return values
+    :param *args: 
+    :param orientation:  (Default value = 'v')
+    :param bar_color:  (Default value = (None, None))
+    :param button_color:  (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+    :param border_width:  (Default value = None)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+
+    """
     if key not in QuickMeter.active_meters:
         meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color,
                            button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere)
@@ -6916,6 +8245,11 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
 
 
 def OneLineProgressMeterCancel(key):
+    """
+
+    :param key: (common_key) Used with window.FindElement and with return values
+
+    """
     try:
         meter = QuickMeter.active_meters[key]
         meter.window.Close()
@@ -6928,6 +8262,11 @@ def OneLineProgressMeterCancel(key):
 # input is #RRGGBB
 # output is #RRGGBB
 def GetComplimentaryHex(color):
+    """
+
+    :param color: 
+
+    """
     # strip the # from the beginning
     color = color[1:]
     # convert the string into hex
@@ -6943,10 +8282,23 @@ def GetComplimentaryHex(color):
 # ========================  EasyPrint           =====#
 # ===================================================#
 class DebugWin():
+    """ """
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
+        """
+
+        :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+        :param location:  (Default value = (None)
+        :param font: (common_key) specifies the font family, size, etc (Default value = None)
+        :param no_titlebar:  (Default value = False)
+        :param no_button:  (Default value = False)
+        :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+        :param location: Location on screen to display (Default value = (None, None))
+        :param do_not_reroute_stdout:  (Default value = True)
+
+        """
         # Show a form that's a running counter
         self.size = size
         self.location = location
@@ -6975,6 +8327,13 @@ class DebugWin():
         return
 
     def Print(self, *args, end=None, sep=None):
+        """
+
+        :param *args: 
+        :param end:  (Default value = None)
+        :param sep:  (Default value = None)
+
+        """
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
@@ -6998,17 +8357,34 @@ class DebugWin():
             print(*args, sep=sepchar, end=endchar)
 
     def Close(self):
+        """ """
         self.window.Close()
         self.window.__del__()
         self.window = None
 
 
 def PrintClose():
+    """ """
     EasyPrintClose()
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
               no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
+    """
+
+    :param *args: 
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param end:  (Default value = None)
+    :param sep:  (Default value = None)
+    :param location:  (Default value = (None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param no_button:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param do_not_reroute_stdout:  (Default value = True)
+
+    """
     if DebugWin.debug_window is None:
         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                          no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
@@ -7021,6 +8397,7 @@ eprint = EasyPrint
 
 
 def EasyPrintClose():
+    """ """
     if DebugWin.debug_window is not None:
         DebugWin.debug_window.Close()
         DebugWin.debug_window = None
@@ -7030,6 +8407,19 @@ def EasyPrintClose():
 # ===================================================#
 def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None),
                   location=(None, None), title=None, non_blocking=False):
+    """
+
+    :param *args: 
+    :param button_color:  (Default value = None)
+    :param yes_no:  (Default value = False)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param location:  (Default value = (None)
+    :param title:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+
+    """
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
@@ -7077,6 +8467,11 @@ ScrolledTextBox = PopupScrolled
 # Sets the icon to be used by default                #
 # ===================================================#
 def SetGlobalIcon(icon):
+    """
+
+    :param icon: 
+
+    """
     # global _my_windows
 
     try:
@@ -7103,6 +8498,43 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
                window_location=(None, None), error_button_color=(None, None), tooltip_time=None):
+    """
+
+    :param icon:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param element_size:  (Default value = (None, None))
+    :param button_element_size:  (Default value = (None)
+    :param margins:  (Default value = (None)
+    :param element_padding:  (Default value = (None)
+    :param auto_size_text: True if size should fit the text length (Default value = None)
+    :param auto_size_buttons:  (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param border_width:  (Default value = None)
+    :param slider_border_width:  (Default value = None)
+    :param slider_relief:  (Default value = None)
+    :param slider_orientation:  (Default value = None)
+    :param autoclose_time:  (Default value = None)
+    :param message_box_line_width:  (Default value = None)
+    :param progress_meter_border_depth:  (Default value = None)
+    :param progress_meter_style:  (Default value = None)
+    :param progress_meter_relief:  (Default value = None)
+    :param progress_meter_color:  (Default value = None)
+    :param progress_meter_size:  (Default value = None)
+    :param text_justification:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param element_background_color:  (Default value = None)
+    :param text_element_background_color:  (Default value = None)
+    :param input_elements_background_color:  (Default value = None)
+    :param input_text_color:  (Default value = None)
+    :param scrollbar_color:  (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param element_text_color:  (Default value = None)
+    :param debug_win_size:  (Default value = (None)
+    :param window_location:  (Default value = (None)
+    :param error_button_color:  (Default value = (None)
+    :param tooltip_time:  (Default value = None)
+
+    """
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_BUTTON_ELEMENT_SIZE
     global DEFAULT_MARGINS  # Margins for each LEFT/RIGHT margin is first term
@@ -7524,10 +8956,16 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
 
 
 def ListOfLookAndFeelValues():
+    """ """
     return list(LOOK_AND_FEEL_TABLE.keys())
 
 
 def ChangeLookAndFeel(index):
+    """
+
+    :param index: 
+
+    """
     # global LOOK_AND_FEEL_TABLE
 
     if sys.platform == 'darwin':
@@ -7566,6 +9004,11 @@ sprint = ScrolledTextBox
 
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
 def ObjToStringSingleObj(obj):
+    """
+
+    :param obj: 
+
+    """
     if obj is None:
         return 'None'
     return str(obj.__class__) + '\n' + '\n'.join(
@@ -7573,6 +9016,12 @@ def ObjToStringSingleObj(obj):
 
 
 def ObjToString(obj, extra='    '):
+    """
+
+    :param obj: 
+    :param extra:  (Default value = '    ')
+
+    """
     if obj is None:
         return 'None'
     return str(obj.__class__) + '\n' + '\n'.join(
@@ -7600,24 +9049,27 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
           auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False,
           icon=DEFAULT_WINDOW_ICON, line_width=None,
           font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Popup - Display a popup box with as many parms as you wish to include
-    :param args:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param button_type:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Popup - Display a popup box with as many parms as you wish to include
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param custom_text:  (Default value = (None, None))
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None)
+
     """
     if not args:
         args_to_print = ['']
@@ -7699,6 +9151,11 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
 # ==================================================#
 # MsgBox is the legacy call and should not be used any longer
 def MsgBox(*args):
+    """
+
+    :param *args: 
+
+    """
     raise DeprecationWarning('MsgBox is no longer supported... change your call to Popup')
 
 
@@ -7706,23 +9163,25 @@ def MsgBox(*args):
 def PopupNoButtons(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                    auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                    no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Show a Popup but without any buttons
-    :param args:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Show a Popup but without any buttons
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=POPUP_BUTTONS_NO_BUTTONS,
@@ -7737,24 +9196,26 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
                      auto_close=False, auto_close_duration=None, non_blocking=True, icon=DEFAULT_WINDOW_ICON,
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                      location=(None, None)):
-    """
-    Show Popup box and immediately return (does not block)
-    :param args:
-    :param button_type:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Show Popup box and immediately return (does not block)
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = True)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -7771,24 +9232,26 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
                text_color=None,
                auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON, line_width=None,
                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Show Popup box that doesn't block and closes itself
-    :param args:
-    :param button_type:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Show Popup box that doesn't block and closes itself
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = True)
+    :param auto_close_duration:  (Default value = 2)
+    :param non_blocking:  (Default value = True)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -7803,24 +9266,26 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
                       auto_close=True, auto_close_duration=2, non_blocking=True, icon=DEFAULT_WINDOW_ICON,
                       line_width=None,
                       font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Show Popup box that doesn't block and closes itself
-    :param args:
-    :param button_type:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Show Popup box that doesn't block and closes itself
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_type:  (Default value = POPUP_BUTTONS_NO_BUTTONS)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = True)
+    :param auto_close_duration:  (Default value = 2)
+    :param non_blocking:  (Default value = True)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = True)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -7834,23 +9299,25 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
                     text_color=None,
                     auto_close=False, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
                     line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None)):
-    """
-    Display a Popup without a titlebar.   Enables grab anywhere so you can move it
-    :param args:
-    :param button_type:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display a Popup without a titlebar.   Enables grab anywhere so you can move it
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param grab_anywhere:  (Default value = True)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -7870,24 +9337,26 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
                    auto_close=True, auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON,
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                    location=(None, None)):
-    """
-    Popup that closes itself after some time period
-    :param args:
-    :param button_type:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Popup that closes itself after some time period
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = True)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -7903,23 +9372,25 @@ PopupTimed = PopupAutoClose
 def PopupError(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Popup with colored button and 'Error' as button text
-    :param args:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Popup with colored button and 'Error' as button text
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_color:  (Default value = (None, None))
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None)
+
     """
     tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
     Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
@@ -7933,23 +9404,25 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
 def PopupCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Display Popup with "cancelled" button text
-    :param args:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display Popup with "cancelled" button text
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
           text_color=text_color,
@@ -7962,23 +9435,25 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
 def PopupOK(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
             auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
             no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Display Popup with OK button only
-    :param args:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display Popup with OK button only
     :return:
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
           non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
@@ -7990,23 +9465,25 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
 def PopupOKCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                   auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                   no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Display popup with OK and Cancel buttons
-    :param args:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display popup with OK and Cancel buttons
     :return: OK, Cancel or None
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color,
                  text_color=text_color,
@@ -8019,23 +9496,25 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
 def PopupYesNo(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Display Popup with Yes and No buttons
-    :param args:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
-    :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display Popup with Yes and No buttons
     :return: Yes, No or None
+
+    :param *args: 
+    :param title:  (Default value = None)
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param auto_close:  (Default value = False)
+    :param auto_close_duration:  (Default value = None)
+    :param non_blocking:  (Default value = False)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param line_width: Width of lines in characters (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None, None))
+
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color,
                  text_color=text_color,
@@ -8054,22 +9533,25 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
 def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                    grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
-    """
-    Display popup with text entry field and browse button. Browse for folder
-    :param message:
-    :param default_path:
-    :param no_window:
-    :param size:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param icon:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display popup with text entry field and browse button. Browse for folder
     :return: Contents of text field. None if closed using X or cancelled
+
+    :param message: 
+    :param title:  (Default value = None)
+    :param default_path:  (Default value = '')
+    :param no_window:  (Default value = False)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None)
+    :param initial_folder:  (Default value = None)
+
     """
 
     # global _my_windows
@@ -8126,25 +9608,29 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                  location=(None, None), initial_folder=None):
-    """
-        Display popup with text entry field and browse button. Browse for file
-    :param message:
-    :param default_path:
-    :param default_extension:
-    :param save_as:
-    :param file_types:
-    :param no_window:
-    :param size:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param icon:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display popup with text entry field and browse button. Browse for file
     :return:  string representing the path chosen, None if cancelled or window closed with X
+
+    :param message: 
+    :param title:  (Default value = None)
+    :param default_path:  (Default value = '')
+    :param default_extension:  (Default value = '')
+    :param save_as:  (Default value = False)
+    :param multiple_files:  (Default value = False)
+    :param file_types:  (Default value = (("ALL Files", "*.*")))
+    :param no_window:  (Default value = False)
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None)
+    :param initial_folder:  (Default value = None)
+
     """
 
     if no_window:
@@ -8214,22 +9700,24 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
 def PopupGetText(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                  background_color=None, text_color=None, icon=DEFAULT_WINDOW_ICON, font=None, no_titlebar=False,
                  grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """
-    Display Popup with text entry field
-    :param message:
-    :param default_text:
-    :param password_char:
-    :param size:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param icon:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
+    """Display Popup with text entry field
     :return: Text entered or None if window was closed
+
+    :param message: 
+    :param title:  (Default value = None)
+    :param default_text:  (Default value = '')
+    :param password_char: Passwork character if this is a password field (Default value = '')
+    :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
+    :param button_color:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param icon: Icon to display (Default value = DEFAULT_WINDOW_ICON)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default value = False)
+    :param location: Location on screen to display (Default value = (None, None))
+    :param location:  (Default value = (None)
+
     """
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
@@ -8250,11 +9738,25 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
         return path
 
 
-# --------------------------- PopupAnimated ---------------------------
-
 def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True,
                   grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None,
                   time_between_frames=0, transparent_color=None):
+    """
+
+    :param image_source: 
+    :param message:  (Default value = None)
+    :param background_color: color of background (Default value = None)
+    :param text_color: color of the text (Default value = None)
+    :param font: (common_key) specifies the font family, size, etc (Default value = None)
+    :param no_titlebar:  (Default value = True)
+    :param grab_anywhere:  (Default value = True)
+    :param keep_on_top:  (Default value = True)
+    :param location:  (Default value = (None, None))
+    :param alpha_channel:  (Default value = None)
+    :param time_between_frames:  (Default value = 0)
+    :param transparent_color:  (Default value = None)
+
+    """
     if image_source is None:
         for image in Window.animated_popup_dict:
             window = Window.animated_popup_dict[image]
@@ -8308,6 +9810,7 @@ MAX_LINES_PER_RESULT_MAIN      = 3
 POPOUT_WINDOW_FONT = 'Sans 8'
 
 class Debugger():
+    """ """
 
     debugger = None
 
@@ -8320,6 +9823,7 @@ class Debugger():
     #     # #    # # #    #    ######  ###### #####   ####   ####   ####  ###### #    #
 
     def __init__(self):
+        """ """
         self.watcher_window = None  # type: Window
         self.popout_window = None   # type: Window
         self.local_choices = {}
@@ -8332,13 +9836,28 @@ class Debugger():
 
 
     def _build_main_debugger_window_callback(self, events):
+        """
+
+        :param events: 
+
+        """
         self._build_main_debugger_window()
 
     # Includes the DUAL PANE (now 2 tabs)!  Don't forget REPL is there too!
     def _build_main_debugger_window(self, location=(None, None)):
+        """
+
+        :param location:  (Default value = (None, None))
+
+        """
         ChangeLookAndFeel(COLOR_SCHEME)
 
         def InVar(key1):
+            """
+
+            :param key1: 
+
+            """
             row1 = [T('    '),
                     I(key=key1, size=(WIDTH_VARIABLES, 1)),
                     T('', key=key1 + 'CHANGED_', size=(WIDTH_RESULTS, 1)), B('Detail', key=key1 + 'DETAIL_'),
@@ -8397,6 +9916,12 @@ class Debugger():
     #     # #    # # #    #    #######   ##   ###### #    #   #      #######  ####   ####  #
 
     def _refresh_main_debugger_window(self, mylocals, myglobals):
+        """
+
+        :param mylocals: 
+        :param myglobals: 
+
+        """
         if not self.watcher_window:     # if there is no window setup, nothing to do
             return False
         event, values = self.watcher_window.Read(timeout=1)
@@ -8526,6 +10051,11 @@ class Debugger():
     # displays them into a single text box
 
     def _display_all_vars(self, dict):
+        """
+
+        :param dict: 
+
+        """
         num_cols = 3
         output_text = ''
         num_lines = 2
@@ -8565,6 +10095,11 @@ class Debugger():
    #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
 
     def _choose_auto_watches(self, my_locals):
+        """
+
+        :param my_locals: 
+
+        """
         ChangeLookAndFeel(COLOR_SCHEME)
         num_cols = 3
         output_text = ''
@@ -8637,6 +10172,11 @@ class Debugger():
      ## ##  # #    # #####   ####  #    #
 
     def _build_floating_window(self, location=(None, None)):
+        """
+
+        :param location:  (Default value = (None, None))
+
+        """
         if self.popout_window:              # if floating window already exists, close it first
             self.popout_window.Close()
         ChangeLookAndFeel('Topanga')
@@ -8707,6 +10247,7 @@ class Debugger():
      ## ##  # #    # #####   ####  #    #
 
     def _refresh_floating_window(self):
+        """ """
         if not self.popout_window:
             return
         for key in self.popout_choices:
@@ -8743,6 +10284,12 @@ class Debugger():
 
 
 def show_debugger_window(location=(None, None), *args):
+    """
+
+    :param location:  (Default value = (None, None))
+    :param *args: 
+
+    """
     if Debugger.debugger is None:
         Debugger.debugger = Debugger()
     debugger = Debugger.debugger
@@ -8761,6 +10308,12 @@ def show_debugger_window(location=(None, None), *args):
 
 
 def show_debugger_popout_window(location=(None, None), *args):
+    """
+
+    :param location:  (Default value = (None, None))
+    :param *args: 
+
+    """
     if Debugger.debugger is None:
         Debugger.debugger = Debugger()
     debugger = Debugger.debugger
@@ -8780,6 +10333,7 @@ def show_debugger_popout_window(location=(None, None), *args):
 
 
 def refresh_debugger():
+    """ """
     if Debugger.debugger is None:
         Debugger.debugger = Debugger()
     debugger = Debugger.debugger
@@ -8817,6 +10371,7 @@ def refresh_debugger():
 
 
 def main():
+    """ """
     from random import randint
 
     ChangeLookAndFeel('GreenTan')
