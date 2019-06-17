@@ -10497,18 +10497,6 @@ def main():
         # TimerStop()
     window.Close()
 
-    # layout = [[Text('You are running the PySimpleGUI.py file itself')],
-    #           [Text('You should be importing it rather than running it', size=(50, 2))],
-    #           [Text('Here is your sample input window....')],
-    #           [Text('Source Folder', size=(15, 1), justification='right'), InputText('Source', focus=True),
-    #            FolderBrowse(tooltip='Browse for a folder')],
-    #           [Text('Destination Folder', size=(15, 1), justification='right'), InputText('Dest'), FolderBrowse()],
-    #           [Ok(bind_return_key=True), Cancel()]]
-    #
-    # window = Window('Demo window..').Layout(layout)
-    # event, values = window.Read()
-    # window.Close()
-
 
 if __name__ == '__main__':
     main()
