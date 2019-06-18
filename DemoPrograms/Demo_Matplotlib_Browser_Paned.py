@@ -2,13 +2,14 @@
 import sys
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
+    import tkinter as Tk
 else:
     import PySimpleGUI27 as sg
+    import Tkinter as Tk
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
 import matplotlib.backends.tkagg as tkagg
-import tkinter as Tk
 import inspect
 
 """
