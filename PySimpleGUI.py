@@ -704,10 +704,13 @@ class InputText(Element):
             text = ''
         return text
 
-    def SetFocus(self):
+    def SetFocus(self, force=False):
         """ """
         try:
-            self.TKEntry.focus_set()
+            if force:
+                self.TKEntry.focus_force()
+            else:
+                self.TKEntry.focus_set()
         except:
             pass
 
@@ -1023,10 +1026,13 @@ class Listbox(Element):
         """ """
         return self.Values
 
-    def SetFocus(self):
+    def SetFocus(self, force=False):
         """ """
         try:
-            self.TKListbox.focus_set()
+            if force:
+                self.TKListbox.focus_force()
+            else:
+                self.TKListbox.focus_set()
         except:
             pass
 
@@ -1405,12 +1411,16 @@ class Multiline(Element):
         """ """
         return self.TKText.get(1.0, tk.END)
 
-    def SetFocus(self):
+    def SetFocus(self, force=False):
         """ """
         try:
-            self.TKText.focus_set()
+            if force:
+                self.TKText.focus_force()
+            else:
+                self.TKText.focus_set()
         except:
             pass
+
 
     def __del__(self):
         """ """
@@ -2082,12 +2092,16 @@ class Button(Element):
         """ """
         return self.ButtonText
 
-    def SetFocus(self):
+    def SetFocus(self, force=False):
         """ """
         try:
-            self.TKButton.focus_set()
+            if force:
+                self.TKButton.focus_force()
+            else:
+                self.TKButton.focus_set()
         except:
             pass
+
 
     def Click(self):
         """Generates a click of the button as if the user clicked the button
@@ -2881,10 +2895,16 @@ class Graph(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick out of loop if read was called
 
-    def SetFocus(self):
+    def SetFocus(self, force=False):
         """ """
-        self._TKCanvas2.focus_set()
-        # self._TKCanvas2.focus_force()
+        try:
+            if force:
+                self._TKCanvas2.focus_force()
+            else:
+                self._TKCanvas2.focus_set()
+        except:
+            pass
+
 
     def __del__(self):
         """ """
@@ -4852,8 +4872,8 @@ class Window:
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title} {self.TKroot}')
-            self.TKroot.protocol("WM_DESTROY_WINDOW", self.OnClosingCallback)
-            self.TKroot.protocol("WM_DELETE_WINDOW", self.OnClosingCallback)
+            # self.TKroot.protocol("WM_DESTROY_WINDOW", self.OnClosingCallback)
+            # self.TKroot.protocol("WM_DELETE_WINDOW", self.OnClosingCallback)
             self.TKroot.mainloop()
             # print('Out main')
             self.CurrentlyRunningMainloop = False
