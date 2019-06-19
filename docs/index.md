@@ -4743,8 +4743,6 @@ If you click on the header, it can go into spasms for some tables. I don't under
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.
 
 
-
-
 ```python
 Tree(data=None,
 	headings=None,
@@ -4957,9 +4955,6 @@ TabGroup(layout,
 <!-- The definition of a Tab Element is -->
 
 
-
-
-
 ```python
 Tab(title,
 	layout,
@@ -5038,12 +5033,9 @@ Update(values=None,
 |||
 
 
-
-<!-- %!% -->
 ## Pane Element
 
 New in version 3.20 is the Pane Element, a super-cool tkinter feature.  You won't find this one in PySimpleGUIQt, only PySimpleGUI.   It's difficult to describe one of these things.  Think of them as "Tabs without labels" that you can slide.
-
 
 
 ![pane3](https://user-images.githubusercontent.com/13696193/50035040-fcd50e80-ffcd-11e8-939c-df8ab8d64712.gif)
