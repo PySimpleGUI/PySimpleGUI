@@ -9838,15 +9838,6 @@ class _Debugger():
         self.popout_choices = {}
 
 
-
-    def _build_main_debugger_window_callback(self, events):
-        """
-
-        :param events: 
-
-        """
-        self._build_main_debugger_window()
-
     # Includes the DUAL PANE (now 2 tabs)!  Don't forget REPL is there too!
     def _build_main_debugger_window(self, location=(None, None)):
         """
