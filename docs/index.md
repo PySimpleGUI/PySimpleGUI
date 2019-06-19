@@ -4566,8 +4566,6 @@ Move(x_direction,
 
 
 
-
-
 ```python
 MoveFigure(figure,
 	x_direction,
@@ -4606,9 +4604,6 @@ RelocateFigure(figure,
 
 
 
-
-
-
 <!--
 # DrawLine(self, point_from, point_to, color='black', width=1)
 # DrawPoint(self, point, size=2, color='black')
@@ -4625,13 +4620,6 @@ RelocateFigure(figure,
 # RelocateFigure(self, figure, x, y)
 # TKCanvas
  -->
-
-
-
-
-
-
-
 
 
 
@@ -4881,8 +4869,6 @@ View of second tab:
 First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
 
 
-
-
 ```python
 tab1_layout =  [[sg.T('This is inside tab 1')]]
 
@@ -4956,8 +4942,6 @@ TabGroup(layout,
 
 
 
-
-
 <!-- The definition of a TabGroup is -->
 <!--      TabGroup(layout,
                title_color=None
@@ -5011,8 +4995,6 @@ Tab(title,
 |||
 
 
-
-
 <!-- 
     Tab(title,
         layout,
@@ -5043,7 +5025,6 @@ Update(values=None,
 	visible=None)
 ```
 
-
  Parameters explained:
 
 |Name|Meaning|
@@ -5055,25 +5036,6 @@ Update(values=None,
 |icon|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
-
-
-
-<!-- ```python
-Update(disabled = None, visible=None)
-```
-WARNING - This Update method may not be working correctly -->
-
-
-
-
-
-
-
-
-
-
-
 
 
 
