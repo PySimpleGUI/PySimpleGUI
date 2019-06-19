@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-__version__ = "4.0.0 Unreleased"
+__version__ = "4.0.0"
 
 import sys
 
@@ -1122,7 +1122,10 @@ class Radio(Element):
         self.TKIntVar.set(0)
 
     def Get(self):
-        """ """
+        """
+        A snapshot of the value of Radio Button (True/False)
+        :return: Bool - True is radio button is chosen
+        """
         return self.TKIntVar.get() == self.EncodedRadioValue
 
 
