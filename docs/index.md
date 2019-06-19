@@ -1,4 +1,4 @@
-<!-- CREATED: 2019-06-19 13.07.44 -->
+<!-- CREATED: 2019-06-19 15.08.12 -->
 <!--
 HOW DO I INSERT IMAGES ???
 	easy.
@@ -690,8 +690,11 @@ There are Popup calls for single-item inputs. These follow the pattern of `Popup
 - `PopupGetFolder` - get a folder name
 
 Use these Popups instead of making  a custom window to get one data value, call the Popup input function to get the item from the user.  If you find the parameters are unable to create the kind of window you are looking for, then it's time for you to create your own window.
+
 ### PopupGetText
+
 Use this Popup to get a line of text from the user.<br>
+
 ```
 PopupGetText(message,The message you wish to display with the input field
 		default_text='', Text to initially fill into the input field
@@ -808,6 +811,7 @@ def PopupAnimated(image_source,
 		alpha_channel=.8,
 		time_between_frames=0)
 ```
+
 | name | meaning |
 |-|-|
 |image_source           | The GIF file specified as a string filename or a base64 variable |
@@ -1835,6 +1839,7 @@ Text(text,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | text |  |
@@ -1870,6 +1875,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -1952,6 +1958,7 @@ Multiline(default_text="",
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | default_text | (Default value = '') |
@@ -1994,6 +2001,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -2049,6 +2057,7 @@ InputText(default_text="",
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | default_text | (Default value = '') |
@@ -2140,6 +2149,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -2213,6 +2223,7 @@ Combo(values,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values |  |
@@ -2285,6 +2296,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -2352,6 +2364,7 @@ Listbox(values,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values |  |
@@ -2393,6 +2406,7 @@ Update(values=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values | (Default value = None) |
@@ -2412,6 +2426,7 @@ SetValue(values)
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values |  |
@@ -2497,6 +2512,7 @@ Slider(range=(None, None),
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | range | (Default value = (None, None)) |
@@ -2584,6 +2600,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -2655,6 +2672,7 @@ Radio(text,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | text |  |
@@ -2719,6 +2737,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -2772,6 +2791,7 @@ Checkbox(text,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | text |  |
@@ -2872,6 +2892,7 @@ Spin(values,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values |  |
@@ -2945,6 +2966,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -3009,6 +3031,7 @@ Image(filename=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | filename | (Default value = None) |
@@ -3070,6 +3093,7 @@ Update(filename=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | filename | (Default value = None) |
@@ -3098,6 +3122,7 @@ UpdateAnimation(source,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | source |  |
@@ -3216,6 +3241,7 @@ Button(button_text="",
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | button_text | (Default value = '') |
@@ -3513,6 +3539,7 @@ Update(text=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | text | (Default value = None) |
@@ -3602,6 +3629,7 @@ ButtonMenu(button_text,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | button_text |  |
@@ -3698,6 +3726,7 @@ VerticalSeparator(pad=None)
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | pad | (common_key) Amount of padding to put around element (Default value = None) |
@@ -3776,6 +3805,7 @@ ProgressBar(max_value,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | max_value |  |
@@ -3850,6 +3880,7 @@ Output(size=(None, None),
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
@@ -3876,6 +3907,7 @@ Update(value=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | value | (Default value = None) |
@@ -3996,6 +4028,7 @@ Column(layout,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | layout |  |
@@ -4084,6 +4117,7 @@ Frame(title,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | title |  |
@@ -4156,6 +4190,7 @@ Canvas(canvas=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | canvas | (Default value = None) |
@@ -4279,6 +4314,7 @@ Graph(canvas_size,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | canvas_size |  |
@@ -4324,6 +4360,7 @@ DrawLine(point_from,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | point_from |  |
@@ -4344,6 +4381,7 @@ DrawPoint(point,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | point |  |
@@ -4364,6 +4402,7 @@ DrawCircle(center_location,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | center_location |  |
@@ -4385,6 +4424,7 @@ DrawOval(top_left,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | top_left |  |
@@ -4408,6 +4448,7 @@ DrawArc(top_left,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | top_left |  |
@@ -4431,6 +4472,7 @@ DrawRectangle(top_left,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | top_left |  |
@@ -4453,6 +4495,7 @@ DrawText(text,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | text |  |
@@ -4478,6 +4521,7 @@ DeleteFigure(id)
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | id |  |
@@ -4494,6 +4538,7 @@ Update(background_color,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | background_color | color of background |
@@ -4511,6 +4556,7 @@ Move(x_direction,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | x_direction |  |
@@ -4529,6 +4575,7 @@ MoveFigure(figure,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | figure |  |
@@ -4548,6 +4595,7 @@ RelocateFigure(figure,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | figure |  |
@@ -4627,6 +4675,7 @@ Table(values,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values |  |
@@ -4681,6 +4730,7 @@ Update(values=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values | (Default value = None) |
@@ -4734,6 +4784,7 @@ Tree(data=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | data | (Default value = None) |
@@ -4883,6 +4934,7 @@ TabGroup(layout,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | layout |  |
@@ -4940,6 +4992,7 @@ Tab(title,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | title |  |
@@ -4991,6 +5044,7 @@ Update(values=None,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | values | (Default value = None) |
@@ -5048,6 +5102,7 @@ Pane(pane_list,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | pane_list |  |
@@ -5800,6 +5855,7 @@ Update(menu_definition,
 
 
  Parameters explained:
+
 | Name | Meaning |
 |-|-|
 | menu_definition |  |
