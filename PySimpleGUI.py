@@ -973,12 +973,13 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
-    def Update(self, values=None, disabled=None, set_to_index=None, visible=None):
+    def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, visible=None):
         """
 
         :param values:  (Default value = None)
         :param disabled: disable or enable state of the element (Default value = None)
-        :param set_to_index:  (Default value = None)
+        :param set_to_index:  highlights the item at this index as if user clicked (Default value = None)
+        :param scroll_to_index: scroll the listbox so that this index is the first shown (Default value = None)
         :param visible:  change visibility of element (Default value = None)
 
         """
@@ -1005,6 +1006,8 @@ class Listbox(Element):
         elif visible is True:
             self.TKListbox.pack()
             self.vsb.pack()
+        if scroll_to_index is not None and len(self.Values):
+            self.TKListbox.yview_moveto(scroll_to_index/len(self.Values))
 
     def SetValue(self, values):
         """
@@ -10482,8 +10485,7 @@ def main():
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
-        # TimerStart()
-        event, values = window.Read(timeout=0)
+        event, values = window.Read(timeout=1)
         if event != TIMEOUT_KEY:
             print(event, values)
         if event is None or event == 'Exit':
