@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.26431.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.26.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,7 +26,7 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release     Version 0.231.0
+ ## The Alpha Release    
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
@@ -38,6 +38,8 @@ Welcome to the Alpha Release of PySimpleGUI for Qt!
 You can use the exact same code that you are running on the older, tkinter, version of PySimpleGUI.    
   
 PySimpleGUIQt uses **PySide2** OR **PyQt5** for access to Qt.  **PyQt5 has been having  a number of problems recently however so tread lightly.**
+
+## To minimize potential problems and broken features, if at all possible, use pyside2 instead of PyQt5.
   
 ## Porting your PySimpleGUI code to PySimpleGUIQt  
   
@@ -65,15 +67,25 @@ Fonts should be in the format (font family, size).  You can use the older string
     pip install --upgrade PySimpleGUIQt  
   On Linux systems you need to run pip3.        
         
- pip3 install --upgrade PySimpleGUIQt   
+ pip3 install --upgrade --no-cache-dir PySimpleGUIQt   
+ 
 ### Installing PySide2 for Python 3  
   
-It is recommended that you use PySide2, however, if that cannot be found, then PyQt5 will be attempted.  To install either of these:  
+It is _highly_ recommended that you use PySide2.  The code will attempt to use PyQt5 is pyside2 isn't found.  PyQt5 is **not** recommended.  
+ 
+To install Pyside2:  
   
 ```pip install PySide2```  
 
       
-**Nov 26th - There has been a number of problems found using PyQt5 recently.  Unclear how if it can be supported after all.**
+**Nov 26th - There has been a number of problems found using PyQt5 recently.  Unclear how if it can be supported longer term**
+
+A couple of specific examples:
+    
+- the Keep on Top feature does not work
+- the no_titlebar feature does not work
+    
+    
 
  ## Testing your installation        
  Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.        
@@ -683,6 +695,3 @@ Dial - disable
  GNU Lesser General Public License (LGPL 3) +        
         
 # Acknowledgments
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQwNDYzOTE3Nl19
--->
