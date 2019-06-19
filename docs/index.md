@@ -1835,6 +1835,7 @@ Text(text,
 
 
  Parameters explained:
+ 
 | Name | Meaning |
 |-|-|
 | text |  |
