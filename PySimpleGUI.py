@@ -1121,6 +1121,11 @@ class Radio(Element):
         """ """
         self.TKIntVar.set(0)
 
+    def Get(self):
+        """ """
+        return self.TKIntVar.get() == self.EncodedRadioValue
+
+
     def __del__(self):
         """ """
         try:
