@@ -1,4 +1,4 @@
-<!-- CREATED: 2019-06-19 15.24.02 -->
+<!-- CREATED: 2019-06-19 16.12.46 -->
 <!--
 HOW DO I INSERT IMAGES ???
 	easy.
@@ -254,6 +254,7 @@ was the second.
 While simple to use, PySimpleGUI has significant depth to be explored by more advanced programmers.  The feature set goes way beyond the requirements of a beginner programmer, and into the  required features needed for complex GUIs.
 
 Features of PySimpleGUI include:
+
 - Support for Python versions 2.7 and 3
 - Text
 - Single Line Input
@@ -1842,21 +1843,21 @@ Text(text,
 
 |Name|Meaning|
 |-|-|
-| text |  |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| click_submits | (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| relief | (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| background_color | color of background (Default value = None) |
-| justification | justification for data display (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|text||
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|click_submits|(Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|relief|(Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|background_color|color of background (Default value = None)|
+|justification|justification for data display (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -1878,11 +1879,11 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|value|(Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -1961,25 +1962,25 @@ Multiline(default_text="",
 
 |Name|Meaning|
 |-|-|
-| default_text | (Default value = '') |
-| enter_submits | (Default value = False) |
-| disabled | set disable state for element (Default value = False) |
-| autoscroll | (Default value = False) |
-| border_width | (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| do_not_clear | see docx (Default value = True) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| focus | if focus should be set to this (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|default_text|(Default value = '')|
+|enter_submits|(Default value = False)|
+|disabled|set disable state for element (Default value = False)|
+|autoscroll|(Default value = False)|
+|border_width|(Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|do_not_clear|see docx (Default value = True)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|focus|if focus should be set to this (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2004,14 +2005,14 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| disabled | disable or enable state of the element (Default value = None) |
-| append | (Default value = False) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| background_color | color of background (Default value = None) |
-| visible | change visibility of element (Default value = None) |
-| autoscroll | (Default value = None) |
+|value|(Default value = None)|
+|disabled|disable or enable state of the element (Default value = None)|
+|append|(Default value = False)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|background_color|color of background (Default value = None)|
+|visible|change visibility of element (Default value = None)|
+|autoscroll|(Default value = None)|
 |||
 
 
@@ -2060,23 +2061,23 @@ InputText(default_text="",
 
 |Name|Meaning|
 |-|-|
-| default_text | (Default value = '') |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| disabled | set disable state for element (Default value = False) |
-| password_char | Passwork character if this is a password field (Default value = '') |
-| justification | justification for data display (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| change_submits | If True, pressing Enter key submits window- DEPRICATED DO NOT USE! (Default value = False) |
-| enable_events | Turns on the element specific events. Use this instead of change_submits (Default value = False) |
-| do_not_clear | see docx (Default value = True) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| focus | if focus should be set to this (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|default_text|(Default value = '')|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|disabled|set disable state for element (Default value = False)|
+|password_char|Passwork character if this is a password field (Default value = '')|
+|justification|justification for data display (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|change_submits|If True, pressing Enter key submits window- DEPRICATED DO NOT USE! (Default value = False)|
+|enable_events|Turns on the element specific events. Use this instead of change_submits (Default value = False)|
+|do_not_clear|see docx (Default value = True)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|focus|if focus should be set to this (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2152,10 +2153,10 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| disabled | disable or enable state of the element (Default value = None) |
-| select | (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|value|(Default value = None)|
+|disabled|disable or enable state of the element (Default value = None)|
+|select|(Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -2226,21 +2227,21 @@ Combo(values,
 
 |Name|Meaning|
 |-|-|
-| values |  |
-| default_value | (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| disabled | set disable state for element (Default value = False) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| readonly | make element readonly (Default value = False) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|values||
+|default_value|(Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|disabled|set disable state for element (Default value = False)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|readonly|make element readonly (Default value = False)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2299,13 +2300,13 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| values | (Default value = None) |
-| set_to_index | (Default value = None) |
-| disabled | disable or enable state of the element (Default value = None) |
-| readonly | make element readonly (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|value|(Default value = None)|
+|values|(Default value = None)|
+|set_to_index|(Default value = None)|
+|disabled|disable or enable state of the element (Default value = None)|
+|readonly|make element readonly (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -2367,23 +2368,23 @@ Listbox(values,
 
 |Name|Meaning|
 |-|-|
-| values |  |
-| default_values | (Default value = None) |
-| select_mode | (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| bind_return_key | (Default value = False) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| disabled | set disable state for element (Default value = False) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|values||
+|default_values|(Default value = None)|
+|select_mode|(Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|bind_return_key|(Default value = False)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|disabled|set disable state for element (Default value = False)|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2409,11 +2410,11 @@ Update(values=None,
 
 |Name|Meaning|
 |-|-|
-| values | (Default value = None) |
-| disabled | disable or enable state of the element (Default value = None) |
-| set_to_index | highlights the item at this index as if user clicked (Default value = None) |
-| scroll_to_index | scroll the listbox so that this index is the first shown (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|values|(Default value = None)|
+|disabled|disable or enable state of the element (Default value = None)|
+|set_to_index|highlights the item at this index as if user clicked (Default value = None)|
+|scroll_to_index|scroll the listbox so that this index is the first shown (Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -2429,7 +2430,7 @@ SetValue(values)
 
 |Name|Meaning|
 |-|-|
-| values |  |
+|values||
 |||
 
 
@@ -2515,25 +2516,25 @@ Slider(range=(None, None),
 
 |Name|Meaning|
 |-|-|
-| range | (Default value = (None, None)) |
-| default_value | (Default value = None) |
-| resolution | (Default value = None) |
-| tick_interval | (Default value = None) |
-| orientation | (Default value = None) |
-| disable_number_display | (Default value = False) |
-| border_width | (Default value = None) |
-| relief | (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| disabled | set disable state for element (Default value = False) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|range|(Default value = (None, None))|
+|default_value|(Default value = None)|
+|resolution|(Default value = None)|
+|tick_interval|(Default value = None)|
+|orientation|(Default value = None)|
+|disable_number_display|(Default value = False)|
+|border_width|(Default value = None)|
+|relief|(Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|disabled|set disable state for element (Default value = False)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2603,10 +2604,10 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| range | (Default value = (None, None)) |
-| disabled | disable or enable state of the element (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|value|(Default value = None)|
+|range|(Default value = (None, None))|
+|disabled|disable or enable state of the element (Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -2675,21 +2676,21 @@ Radio(text,
 
 |Name|Meaning|
 |-|-|
-| text |  |
-| group_id |  |
-| default | (Default value = False) |
-| disabled | set disable state for element (Default value = False) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| visible | set visibility state of the element (Default value = True) |
+|text||
+|group_id||
+|default|(Default value = False)|
+|disabled|set disable state for element (Default value = False)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2740,9 +2741,9 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| disabled | disable or enable state of the element (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|value|(Default value = None)|
+|disabled|disable or enable state of the element (Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -2794,20 +2795,20 @@ Checkbox(text,
 
 |Name|Meaning|
 |-|-|
-| text |  |
-| default | (Default value = False) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| disabled | set disable state for element (Default value = False) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|text||
+|default|(Default value = False)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|disabled|set disable state for element (Default value = False)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2895,20 +2896,20 @@ Spin(values,
 
 |Name|Meaning|
 |-|-|
-| values |  |
-| initial_value | (Default value = None) |
-| disabled | set disable state for element (Default value = False) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|values||
+|initial_value|(Default value = None)|
+|disabled|set disable state for element (Default value = False)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -2969,10 +2970,10 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| values | (Default value = None) |
-| disabled | disable or enable state of the element (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|value|(Default value = None)|
+|values|(Default value = None)|
+|disabled|disable or enable state of the element (Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -3034,16 +3035,16 @@ Image(filename=None,
 
 |Name|Meaning|
 |-|-|
-| filename | (Default value = None) |
-| data | (Default value = None) |
-| background_color | color of background (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
-| enable_events | Turns on the element specific events.(Default value = False) |
+|filename|(Default value = None)|
+|data|(Default value = None)|
+|background_color|color of background (Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
+|enable_events|Turns on the element specific events.(Default value = False)|
 |||
 
 
@@ -3096,10 +3097,10 @@ Update(filename=None,
 
 |Name|Meaning|
 |-|-|
-| filename | (Default value = None) |
-| data | (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| visible | change visibility of element (Default value = None) |
+|filename|(Default value = None)|
+|data|(Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -3125,8 +3126,8 @@ UpdateAnimation(source,
 
 |Name|Meaning|
 |-|-|
-| source |  |
-| time_between_frames | (Default value = 0) |
+|source||
+|time_between_frames|(Default value = 0)|
 |||
 
 
@@ -3244,29 +3245,29 @@ Button(button_text="",
 
 |Name|Meaning|
 |-|-|
-| button_text | (Default value = '') |
-| button_type | (Default value = BUTTON_TYPE_READ_FORM) |
-| target |  |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| file_types | (Default value = (("ALL Files", "*.*"),)) |
-| initial_folder | (Default value = None) |
-| disabled | set disable state for element (Default value = False) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| image_filename | (Default value = None) |
-| image_data | (Default value = None) |
-| image_size | (Default value = (None) |
-| image_subsample | (Default value = None) |
-| border_width | (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None) |
-| auto_size_button | (Default value = None) |
-| button_color | (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| bind_return_key | (Default value = False) |
-| focus | if focus should be set to this (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|button_text|(Default value = '')|
+|button_type|(Default value = BUTTON_TYPE_READ_FORM)|
+|target||
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|file_types|(Default value = (("ALL Files", "*.*"),))|
+|initial_folder|(Default value = None)|
+|disabled|set disable state for element (Default value = False)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|image_filename|(Default value = None)|
+|image_data|(Default value = None)|
+|image_size|(Default value = (None)|
+|image_subsample|(Default value = None)|
+|border_width|(Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)|
+|auto_size_button|(Default value = None)|
+|button_color|(Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|bind_return_key|(Default value = False)|
+|focus|if focus should be set to this (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -3542,14 +3543,14 @@ Update(text=None,
 
 |Name|Meaning|
 |-|-|
-| text | (Default value = None) |
-| button_color | (Default value = (None) |
-| disabled | disable or enable state of the element (Default value = None) |
-| image_data | (Default value = None) |
-| image_filename | (Default value = None) |
-| visible | change visibility of element (Default value = None) |
-| image_subsample | (Default value = None) |
-| image_size | (Default value = None) |
+|text|(Default value = None)|
+|button_color|(Default value = (None)|
+|disabled|disable or enable state of the element (Default value = None)|
+|image_data|(Default value = None)|
+|image_filename|(Default value = None)|
+|visible|change visibility of element (Default value = None)|
+|image_subsample|(Default value = None)|
+|image_size|(Default value = None)|
 |||
 
 
@@ -3632,23 +3633,23 @@ ButtonMenu(button_text,
 
 |Name|Meaning|
 |-|-|
-| button_text |  |
-| menu_def |  |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| disabled | set disable state for element (Default value = False) |
-| image_filename | (Default value = None) |
-| image_data | (Default value = None) |
-| image_size | (Default value = (None, None)) |
-| image_subsample | (Default value = None) |
-| border_width | (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None) |
-| auto_size_button | (Default value = None) |
-| button_color | (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tearoff | (Default value = False) |
-| visible | set visibility state of the element (Default value = True) |
+|button_text||
+|menu_def||
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|disabled|set disable state for element (Default value = False)|
+|image_filename|(Default value = None)|
+|image_data|(Default value = None)|
+|image_size|(Default value = (None, None))|
+|image_subsample|(Default value = None)|
+|border_width|(Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)|
+|auto_size_button|(Default value = None)|
+|button_color|(Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tearoff|(Default value = False)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -3729,7 +3730,7 @@ VerticalSeparator(pad=None)
 
 |Name|Meaning|
 |-|-|
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
 |||
 
 
@@ -3808,17 +3809,17 @@ ProgressBar(max_value,
 
 |Name|Meaning|
 |-|-|
-| max_value |  |
-| orientation | (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| auto_size_text | True if size should fit the text length (Default value = None) |
-| bar_color | (Default value = (None) |
-| style | (Default value = None) |
-| border_width | (Default value = None) |
-| relief | (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|max_value||
+|orientation|(Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|auto_size_text|True if size should fit the text length (Default value = None)|
+|bar_color|(Default value = (None)|
+|style|(Default value = None)|
+|border_width|(Default value = None)|
+|relief|(Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -3883,15 +3884,15 @@ Output(size=(None, None),
 
 |Name|Meaning|
 |-|-|
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| background_color | color of background (Default value = None) |
-| text_color | color of the text (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -3910,8 +3911,8 @@ Update(value=None,
 
 |Name|Meaning|
 |-|-|
-| value | (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|value|(Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -4031,15 +4032,15 @@ Column(layout,
 
 |Name|Meaning|
 |-|-|
-| layout |  |
-| background_color | color of background (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| scrollable | (Default value = False) |
-| vertical_scroll_only | (Default value = False) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|layout||
+|background_color|color of background (Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|scrollable|(Default value = False)|
+|vertical_scroll_only|(Default value = False)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -4120,20 +4121,20 @@ Frame(title,
 
 |Name|Meaning|
 |-|-|
-| title |  |
-| layout |  |
-| title_color | (Default value = None) |
-| background_color | color of background (Default value = None) |
-| title_location | (Default value = None) |
-| relief | (Default value = DEFAULT_FRAME_RELIEF) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| border_width | (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|title||
+|layout||
+|title_color|(Default value = None)|
+|background_color|color of background (Default value = None)|
+|title_location|(Default value = None)|
+|relief|(Default value = DEFAULT_FRAME_RELIEF)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|border_width|(Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -4193,14 +4194,14 @@ Canvas(canvas=None,
 
 |Name|Meaning|
 |-|-|
-| canvas | (Default value = None) |
-| background_color | color of background (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|canvas|(Default value = None)|
+|background_color|color of background (Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -4317,18 +4318,18 @@ Graph(canvas_size,
 
 |Name|Meaning|
 |-|-|
-| canvas_size |  |
-| graph_bottom_left |  |
-| graph_top_right |  |
-| background_color | color of background (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| drag_submits | (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|canvas_size||
+|graph_bottom_left||
+|graph_top_right||
+|background_color|color of background (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|drag_submits|(Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -4363,10 +4364,10 @@ DrawLine(point_from,
 
 |Name|Meaning|
 |-|-|
-| point_from |  |
-| point_to |  |
-| color | (Default value = 'black') |
-| width | (Default value = 1) |
+|point_from||
+|point_to||
+|color|(Default value = 'black')|
+|width|(Default value = 1)|
 |||
 
 
@@ -4384,9 +4385,9 @@ DrawPoint(point,
 
 |Name|Meaning|
 |-|-|
-| point |  |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = 2) |
-| color | (Default value = 'black') |
+|point||
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = 2)|
+|color|(Default value = 'black')|
 |||
 
 
@@ -4405,10 +4406,10 @@ DrawCircle(center_location,
 
 |Name|Meaning|
 |-|-|
-| center_location |  |
-| radius |  |
-| fill_color | (Default value = None) |
-| line_color | (Default value = 'black') |
+|center_location||
+|radius||
+|fill_color|(Default value = None)|
+|line_color|(Default value = 'black')|
 |||
 
 
@@ -4427,10 +4428,10 @@ DrawOval(top_left,
 
 |Name|Meaning|
 |-|-|
-| top_left |  |
-| bottom_right |  |
-| fill_color | (Default value = None) |
-| line_color | (Default value = None) |
+|top_left||
+|bottom_right||
+|fill_color|(Default value = None)|
+|line_color|(Default value = None)|
 |||
 
 
@@ -4451,12 +4452,12 @@ DrawArc(top_left,
 
 |Name|Meaning|
 |-|-|
-| top_left |  |
-| bottom_right |  |
-| extent |  |
-| start_angle |  |
-| style | (Default value = None) |
-| arc_color | (Default value = 'black') |
+|top_left||
+|bottom_right||
+|extent||
+|start_angle||
+|style|(Default value = None)|
+|arc_color|(Default value = 'black')|
 |||
 
 
@@ -4475,10 +4476,10 @@ DrawRectangle(top_left,
 
 |Name|Meaning|
 |-|-|
-| top_left |  |
-| bottom_right |  |
-| fill_color | (Default value = None) |
-| line_color | (Default value = None) |
+|top_left||
+|bottom_right||
+|fill_color|(Default value = None)|
+|line_color|(Default value = None)|
 |||
 
 
@@ -4498,11 +4499,11 @@ DrawText(text,
 
 |Name|Meaning|
 |-|-|
-| text |  |
-| location |  |
-| color | (Default value = 'black') |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| angle | (Default value = 0) |
+|text||
+|location||
+|color|(Default value = 'black')|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|angle|(Default value = 0)|
 |||
 
 
@@ -4524,7 +4525,7 @@ DeleteFigure(id)
 
 |Name|Meaning|
 |-|-|
-| id |  |
+|id||
 |||
 
 
@@ -4541,8 +4542,8 @@ Update(background_color,
 
 |Name|Meaning|
 |-|-|
-| background_color | color of background |
-| visible | change visibility of element (Default value = None) |
+|background_color|color of background|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -4559,8 +4560,8 @@ Move(x_direction,
 
 |Name|Meaning|
 |-|-|
-| x_direction |  |
-| y_direction |  |
+|x_direction||
+|y_direction||
 |||
 
 
@@ -4578,9 +4579,9 @@ MoveFigure(figure,
 
 |Name|Meaning|
 |-|-|
-| figure |  |
-| x_direction |  |
-| y_direction |  |
+|figure||
+|x_direction||
+|y_direction||
 |||
 
 
@@ -4598,9 +4599,9 @@ RelocateFigure(figure,
 
 |Name|Meaning|
 |-|-|
-| figure |  |
-| x |  |
-| y |  |
+|figure||
+|x||
+|y||
 |||
 
 
@@ -4678,34 +4679,34 @@ Table(values,
 
 |Name|Meaning|
 |-|-|
-| values |  |
-| headings | (Default value = None) |
-| visible_column_map | (Default value = None) |
-| col_widths | (Default value = None) |
-| def_col_width | (Default value = 10) |
-| auto_size_columns | (Default value = True) |
-| max_col_width | (Default value = 20) |
-| select_mode | (Default value = None) |
-| display_row_numbers | (Default value = False) |
-| num_rows | (Default value = None) |
-| row_height | (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| justification | (Default value = 'right') |
-| text_color | color of the text (Default value = None) |
-| background_color | color of background (Default value = None) |
-| alternating_row_color | (Default value = None) |
-| row_colors | (Default value = None) |
-| vertical_scroll_only | (Default value = True) |
-| hide_vertical_scroll | (Default value = False) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| bind_return_key | (Default value = False) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|values||
+|headings|(Default value = None)|
+|visible_column_map|(Default value = None)|
+|col_widths|(Default value = None)|
+|def_col_width|(Default value = 10)|
+|auto_size_columns|(Default value = True)|
+|max_col_width|(Default value = 20)|
+|select_mode|(Default value = None)|
+|display_row_numbers|(Default value = False)|
+|num_rows|(Default value = None)|
+|row_height|(Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|justification|(Default value = 'right')|
+|text_color|color of the text (Default value = None)|
+|background_color|color of background (Default value = None)|
+|alternating_row_color|(Default value = None)|
+|row_colors|(Default value = None)|
+|vertical_scroll_only|(Default value = True)|
+|hide_vertical_scroll|(Default value = False)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|bind_return_key|(Default value = False)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -4733,10 +4734,10 @@ Update(values=None,
 
 |Name|Meaning|
 |-|-|
-| values | (Default value = None) |
-| num_rows | (Default value = None) |
-| visible | change visibility of element (Default value = None) |
-| select_rows | (Default value = None) |
+|values|(Default value = None)|
+|num_rows|(Default value = None)|
+|visible|change visibility of element (Default value = None)|
+|select_rows|(Default value = None)|
 |||
 
 
@@ -4787,29 +4788,29 @@ Tree(data=None,
 
 |Name|Meaning|
 |-|-|
-| data | (Default value = None) |
-| headings | (Default value = None) |
-| visible_column_map | (Default value = None) |
-| col_widths | (Default value = None) |
-| col0_width | (Default value = 10) |
-| def_col_width | (Default value = 10) |
-| auto_size_columns | (Default value = True) |
-| max_col_width | (Default value = 20) |
-| select_mode | (Default value = None) |
-| show_expanded | (Default value = False) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| justification | (Default value = 'right') |
-| text_color | color of the text (Default value = None) |
-| background_color | color of background (Default value = None) |
-| num_rows | (Default value = None) |
-| row_height | (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|data|(Default value = None)|
+|headings|(Default value = None)|
+|visible_column_map|(Default value = None)|
+|col_widths|(Default value = None)|
+|col0_width|(Default value = 10)|
+|def_col_width|(Default value = 10)|
+|auto_size_columns|(Default value = True)|
+|max_col_width|(Default value = 20)|
+|select_mode|(Default value = None)|
+|show_expanded|(Default value = False)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|justification|(Default value = 'right')|
+|text_color|color of the text (Default value = None)|
+|background_color|color of background (Default value = None)|
+|num_rows|(Default value = None)|
+|row_height|(Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -4937,20 +4938,20 @@ TabGroup(layout,
 
 |Name|Meaning|
 |-|-|
-| layout |  |
-| tab_location | (Default value = None) |
-| title_color | (Default value = None) |
-| selected_title_color | (Default value = None) |
-| background_color | color of background (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| change_submits | If True, pressing Enter key submits window (Default value = False) |
-| enable_events | Turns on the element specific events.(Default value = False) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| border_width | (Default value = None) |
-| theme | (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|layout||
+|tab_location|(Default value = None)|
+|title_color|(Default value = None)|
+|selected_title_color|(Default value = None)|
+|background_color|color of background (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|change_submits|If True, pressing Enter key submits window (Default value = False)|
+|enable_events|Turns on the element specific events.(Default value = False)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|border_width|(Default value = None)|
+|theme|(Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -4995,18 +4996,18 @@ Tab(title,
 
 |Name|Meaning|
 |-|-|
-| title |  |
-| layout |  |
-| title_color | (Default value = None) |
-| background_color | color of background (Default value = None) |
-| font | (common_key) specifies the font family, size, etc (Default value = None) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| disabled | set disable state for element (Default value = False) |
-| border_width | (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| tooltip | text, that will appear the you hover on (Default value = None) |
-| right_click_menu | see "Right Click Menus" (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|title||
+|layout||
+|title_color|(Default value = None)|
+|background_color|color of background (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|disabled|set disable state for element (Default value = False)|
+|border_width|(Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|tooltip|text, that will appear the you hover on (Default value = None)|
+|right_click_menu|see "Right Click Menus" (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -5047,12 +5048,12 @@ Update(values=None,
 
 |Name|Meaning|
 |-|-|
-| values | (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| value | (Default value = None) |
-| text | (Default value = None) |
-| icon | (Default value = None) |
-| visible | change visibility of element (Default value = None) |
+|values|(Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|value|(Default value = None)|
+|text|(Default value = None)|
+|icon|(Default value = None)|
+|visible|change visibility of element (Default value = None)|
 |||
 
 
@@ -5105,17 +5106,17 @@ Pane(pane_list,
 
 |Name|Meaning|
 |-|-|
-| pane_list |  |
-| background_color | color of background (Default value = None) |
-| size | (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None)) |
-| pad | (common_key) Amount of padding to put around element (Default value = None) |
-| orientation | (Default value = 'vertical') |
-| show_handle | (Default value = True) |
-| relief | (Default value = RELIEF_RAISED) |
-| handle_size | (Default value = None) |
-| border_width | (Default value = None) |
-| key | (common_key) Used with window.FindElement and with return values (Default value = None) |
-| visible | set visibility state of the element (Default value = True) |
+|pane_list||
+|background_color|color of background (Default value = None)|
+|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
+|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|orientation|(Default value = 'vertical')|
+|show_handle|(Default value = True)|
+|relief|(Default value = RELIEF_RAISED)|
+|handle_size|(Default value = None)|
+|border_width|(Default value = None)|
+|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
+|visible|set visibility state of the element (Default value = True)|
 |||
 
 
@@ -5858,8 +5859,8 @@ Update(menu_definition,
 
 |Name|Meaning|
 |-|-|
-| menu_definition |  |
-| visible | change visibility of element (Default value = None) |
+|menu_definition||
+|visible|change visibility of element (Default value = None)|
 |||
 
 
