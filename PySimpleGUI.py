@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-__version__ = "4.0.0"
+version = __version__ = "4.1.0 Unreleased"
 
 import sys
 
@@ -4769,6 +4769,7 @@ class Window:
 
         self.WindowIcon = wicon
         try:
+            # print(f'icon bitmap = {wicon}')
             self.TKroot.iconbitmap(wicon)
         except:
             pass
@@ -4989,19 +4990,17 @@ class Window:
 
     def FindElement(self, key, silent_on_error=False):
         """
+        Find element object associated with the provided key
+        :returns Found element object, an Error Element, or None
 
         :param key: (common_key) Used with window.FindElement and with return values
         :param silent_on_error:  (Default value = False)
 
         """
-        # print(f'In find elem key={key}', self.AllKeysDict)
-
         try:
             element = self.AllKeysDict[key]
         except KeyError:
             element = None
-        # element = _FindElementFromKeyInSubForm(self, key)
-        if element is None:
             if not silent_on_error:
                 print(
                     '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key)
@@ -5009,7 +5008,7 @@ class Window:
                            'Bad key = {}'.format(key),
                            'Your bad line of code may resemble this:',
                            'window.FindElement("{}")'.format(key))
-            return ErrorElement(key=key)
+                element = ErrorElement(key=key)
         return element
 
     Element = FindElement  # Shortcut function
@@ -10470,7 +10469,9 @@ def main():
         [Text('You are running the py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
         [Frame('Input Text Group', frame1, title_color='red'),
-         Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_')],
+         Text('VERSION\n{}'.format(__version__), size=(18, 2), text_color='red', font='ANY 24'),
+         Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_'),
+         ],
         [Frame('Multiple Choice Group', frame2, title_color='green'),
          Frame('Binary Choice Group', frame3, title_color='purple', tooltip='Binary Choice'),
          Frame('Variable Choice Group', frame4, title_color='blue')],
@@ -10489,6 +10490,7 @@ def main():
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     resizable=True,
+                    # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
