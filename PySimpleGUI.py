@@ -2486,7 +2486,7 @@ class Graph(Element):
     
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None,
-                 right_click_menu=None, visible=True):
+                 right_click_menu=None, visible=True, float_values=False):
         """
 
         :param canvas_size: 
@@ -2501,6 +2501,7 @@ class Graph(Element):
         :param tooltip: text, that will appear the you hover on (Default value = None)
         :param right_click_menu: see "Right Click Menus" (Default value = None)
         :param visible: set visibility state of the element (Default value = True)
+        :param float_values: bool: If True x,y coordinates are returned as floats, not ints
 
         """
         
@@ -2515,6 +2516,7 @@ class Graph(Element):
         self.MouseButtonDown = False
         self.Images = {}
         self.RightClickMenu = right_click_menu
+        self.FloatValues = float_values
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
@@ -2549,7 +2551,10 @@ class Graph(Element):
 
         new_x = x_in / scale_x + self.BottomLeft[0]
         new_y = (y_in - self.CanvasSize[1]) / scale_y + self.BottomLeft[1]
-        return int(new_x), int(new_y)
+        if self.FloatValues:
+            return new_x, new_y
+        else:
+            return int(new_x), int(new_y)
 
     def DrawLine(self, point_from, point_to, color='black', width=1):
         """
