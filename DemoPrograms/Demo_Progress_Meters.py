@@ -10,10 +10,11 @@ from time import sleep
 """
     Demonstration of simple and multiple OneLineProgressMeter's as well as the Progress Meter Element
     
-    There are 3 demos
+    There are 4 demos
     1. Manually updated progress bar
     2. Custom progress bar built into your window, updated in a loop
     3. OneLineProgressMeters, nested meters showing how 2 can be run at the same time.
+    4. An "iterable" style progress meter - a wrapper for OneLineProgressMeters
     
     If the software determined that a meter should be cancelled early, 
         calling OneLineProgresMeterCancel(key) will cancel the meter with the matching key
@@ -138,6 +139,64 @@ def custom_meter_example():
     window.Close()
 
 
+'''
+    A Wrapper for OneLineProgressMeter that combines your iterable with a progress meter into a single interface.  For this you need 2 functions:
+    progess_bar
+    progress_bar_range
+'''
+
+
+def progress_bar(key, iterable, *args, title='', **kwargs):
+    """
+    Takes your iterable and adds a progress meter onto it
+    :param key: Progress Meter key
+    :param iterable: your iterable
+    :param args: To be shown in one line progress meter
+    :param title: Title shown in meter window
+    :param kwargs: Other arguments to pass to OneLineProgressMeter
+    :return:
+    """
+    sg.OneLineProgressMeter(title, 0, len(iterable), key, *args, **kwargs)
+    for i, val in enumerate(iterable):
+        yield val
+        if not sg.OneLineProgressMeter(title, i+1, len(iterable), key, *args, **kwargs):
+            break
+
+
+def progress_bar_range(key, start, stop, step=1, *args, **kwargs):
+    """
+    Acts like the range() function but with a progress meter built-into it
+    :param key: progess meter's key
+    :param start: low end of the range
+    :param stop: Uppder end of range
+    :param step:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    return progress_bar(key, range(start, stop, step), *args, **kwargs)
+
+
+# -------------------- Demo Usage --------------------
+def demo_iterable_progress_bar():
+    my_list = list(range(1000))  # start with a list of 100 integers as the user's list
+
+    # first form takes an iterable and a key and will return a value from your iterable
+    # and bump the progress meter at the same time
+    for value in progress_bar('bar1', my_list):
+        # do something useful with value, a value from your list.
+        print(value)
+
+    # Since the progress_bar is an iterator, you can use it within a list comprehension
+    my_list = [x for x in progress_bar('bar1', my_list)]
+
+    # The second form will act like a range function and provide a set of integers while also
+    # incrementing a progress meter
+    for i in progress_bar_range('bar2', 1000, 2000, title='Range progress bar'):
+        # do something with i
+        print(i)
+
+demo_iterable_progress_bar()
 manually_updated_meter_test()
 custom_meter_example()
 demo_one_line_progress_meter()
