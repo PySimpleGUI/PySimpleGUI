@@ -140,9 +140,9 @@ def custom_meter_example():
 
 
 '''
-    A Wrapper for OneLineProgressMeter that combines your iterable with a progress meter into a single interface.  For this you need 2 functions:
-    progess_bar
-    progress_bar_range
+    A Wrapper for OneLineProgressMeter that combines your iterable with a progress meter into a single interface.  Two functions are provided  
+    progess_bar - The basic wrapper
+    progress_bar_range - A "convienence function" if you wanted to specify like a range
 '''
 
 
@@ -163,7 +163,7 @@ def progress_bar(key, iterable, *args, title='', **kwargs):
             break
 
 
-def progress_bar_range(key, start, stop, step=1, *args, **kwargs):
+def progress_bar_range(key, start, stop=None, step=1, *args, **kwargs):
     """
     Acts like the range() function but with a progress meter built-into it
     :param key: progess meter's key
@@ -183,18 +183,14 @@ def demo_iterable_progress_bar():
 
     # first form takes an iterable and a key and will return a value from your iterable
     # and bump the progress meter at the same time
-    for value in progress_bar('bar1', my_list):
+    for value in progress_bar('bar1', my_list, ):
         # do something useful with value, a value from your list.
         print(value)
 
     # Since the progress_bar is an iterator, you can use it within a list comprehension
     my_list = [x for x in progress_bar('bar1', my_list)]
 
-    # The second form will act like a range function and provide a set of integers while also
-    # incrementing a progress meter
-    for i in progress_bar_range('bar2', 1000, 2000, title='Range progress bar'):
-        # do something with i
-        print(i)
+
 
 demo_iterable_progress_bar()
 manually_updated_meter_test()
