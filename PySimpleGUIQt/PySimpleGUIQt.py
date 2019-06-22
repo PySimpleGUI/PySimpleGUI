@@ -4247,7 +4247,9 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         except:
                             value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
-                    value = element.QT_ComboBox.currentText()
+                    element = element           # type: Combo
+                    # value = element.QT_ComboBox.currentText()
+                    value = element.Values[element.QT_ComboBox.currentIndex()]
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     value = 0
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
@@ -4878,8 +4880,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Disabled:
                     element.QT_ComboBox.setDisabled(True)
-
-                element.QT_ComboBox.addItems(element.Values)
+                items_as_strings = [str(v) for v in element.Values]
+                # element.QT_ComboBox.addItems(element.Values)
+                element.QT_ComboBox.addItems(items_as_strings)
 
                 element.QT_ComboBox.setMaxVisibleItems(element.VisibleItems)
                 if element.DefaultValue is not None:
