@@ -755,7 +755,7 @@ class Combo(Element):
         self.Values = values
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits or enable_events
-        self.TKCombo = None
+        self.Widget = self.TKCombo = None               # type: ttk.Combobox
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
         self.Readonly = readonly
@@ -812,6 +812,16 @@ class Combo(Element):
             self.TKCombo.pack_forget()
         elif visible is True:
             self.TKCombo.pack()
+
+    def GetSelectedItemsIndexes(self):
+        """
+        Get the list of chosen items and return them as a list of indexes (offsets within the list)
+        :return: [int,] List of indexes of currently selected items
+        """
+        if not self.TKStringVar:
+            return []
+        return [self.TKCombo.current(),]            # for tkinter this will always be just 1 item
+
 
     def __del__(self):
         """ """
@@ -973,6 +983,7 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
+
     def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, visible=None):
         """
 
@@ -1009,6 +1020,7 @@ class Listbox(Element):
         if scroll_to_index is not None and len(self.Values):
             self.TKListbox.yview_moveto(scroll_to_index/len(self.Values))
 
+
     def SetValue(self, values):
         """
 
@@ -1025,9 +1037,11 @@ class Listbox(Element):
                 pass
         self.DefaultValues = values
 
+
     def GetListValues(self):
         """ """
         return self.Values
+
 
     def SetFocus(self, force=False):
         """ """
@@ -1038,6 +1052,7 @@ class Listbox(Element):
                 self.TKListbox.focus_set()
         except:
             pass
+
 
     def __del__(self):
         """ """
@@ -1442,14 +1457,16 @@ class Multiline(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    """ """
+    """
+    Text - Display some text in the window.  Can be single or multiple lines but no scrolling if multiple lines.
+    """
     
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True):
         """
 
-        :param text: 
+        :param text: The text to display (required)
         :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
         :param auto_size_text: True if size should fit the text length (Default value = None)
         :param click_submits:  (Default value = False)
@@ -1481,7 +1498,7 @@ class Text(Element):
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible)
-        return
+
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
@@ -1493,7 +1510,7 @@ class Text(Element):
         :param visible:  change visibility of element (Default value = None)
 
         """
-        
+
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1530,7 +1547,7 @@ class StatusBar(Element):
                  key=None, tooltip=None, visible=True):
         """
 
-        :param text: 
+        :param text: (required) text that is to be displayed in the widget
         :param size: (common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))
         :param auto_size_text: True if size should fit the text length (Default value = None)
         :param click_submits:  (Default value = None)
@@ -1561,6 +1578,7 @@ class StatusBar(Element):
                          visible=visible)
         return
 
+
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
 
@@ -1586,6 +1604,7 @@ class StatusBar(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack()
+
 
     def __del__(self):
         """ """
@@ -6304,7 +6323,9 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         except:
                             value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
-                    value = element.TKStringVar.get()
+                    element = element           # type: Combo
+                    # value = element.TKStringVar.get()
+                    value = element.Values[element.TKCombo.current()]
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     value = element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
@@ -9991,7 +10012,11 @@ class _Debugger():
             try:
                 result = ObjToStringSingleObj(mylocals[var])
             except Exception as e:
-                result = '{}\nError showing object {}'.format(e, var)
+                try:
+                    result = eval('{}'.format(var), myglobals, mylocals)
+                    result = ObjToStringSingleObj(result)
+                except Exception as e:
+                    result = '{}\nError showing object {}'.format(e, var)
             PopupScrolled(str(var) + '\n' + str(result), title=var, non_blocking=True)
         # ------------------------------- Process Watch Tab -------------------------------
         # BUTTON - Choose Locals to see
