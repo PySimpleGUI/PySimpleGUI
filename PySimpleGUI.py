@@ -6325,7 +6325,13 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     element = element           # type: Combo
                     # value = element.TKStringVar.get()
-                    value = element.Values[element.TKCombo.current()]
+                    try:
+                        if element.TKCombo.current() == -1:     # if the current value was not in the original list
+                            value = element.TKCombo.get()
+                        else:
+                            value = element.Values[element.TKCombo.current()]   # get value from original list given index
+                    except:
+                        value = '*Exception occurred*'
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     value = element.TKStringVar.get()
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
@@ -6337,6 +6343,10 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
                     try:
                         value = element.TKStringVar.get()
+                        for v in element.Values:
+                            if str(v) == value:
+                                value = v
+                                break
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
@@ -10457,10 +10467,10 @@ def main():
     ]
 
     frame2 = [
-        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(20, 5))],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Combo(['Combo item 1', ], size=(20, 3), text_color='red', background_color='red')],
-        [Spin([1, 2, 3], size=(4, 3))],
+        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5))],
+        [Combo(['Combo item 1',2,3,4 ], size=(20, 3),readonly=True, text_color='red', background_color='red', key='_COMBO1_')],
+        [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='red', background_color='red', key='_COMBO2_')],
+        [Spin([1, 2, 3, 'a','b','c'], size=(4, 3))],
     ]
 
     frame3 = [
