@@ -3667,29 +3667,6 @@ Parameters explained:
 |||
 
 
-
-<!-- 
-```python
-ButtonMenu( button_text,
-            menu_def,
-            tooltip=None,
-            disabled=False,
-            image_filename=None,
-            image_data=None,
-            image_size=(None, None),
-            image_subsample=None,
-            border_width=None,
-            size=(None, None),
-            auto_size_button=None,
-            button_color=None,
-            font=None,
-            pad=None,
-            key=None,
-            visible=True,
-            size_px=(None,None)):
-```
- -->
-
 One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
 
 This is the effect:
@@ -3697,27 +3674,6 @@ This is the effect:
 ![buttonmenu](https://user-images.githubusercontent.com/13696193/50387000-bc0d8180-06c0-11e9-8d17-3b22ed665e78.gif)
 
 Return values for ButtonMenus are sent via the return values dictionary.  If a selection is made, then an event is generated that will equal the ButtonMenu's key value.  Use that key value to look up the value selected by the user.  This is the same mechanism as the Menu Bar Element, but differs from the pop-up (right click) menu.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3746,16 +3702,6 @@ Parameters explained:
 |---|---|
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |||
-
-
-
-
-
-
-
-
-
-
 
 
 ## ProgressBar Element
@@ -4921,7 +4867,6 @@ Check out Tabs 7 and 8.  We've got a Window with a Column containing Tabs 5 and 
 As of Release 3.8.0, not all of *options* shown in the API definitions of the Tab and TabGroup Elements are working. They are there as placeholders.
 
 
-
 ```python
 TabGroup(layout,
 	tab_location=None,
@@ -4959,27 +4904,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
-
-
-
-
-
-<!--      TabGroup(layout,
-               title_color=None
-               background_color=None
-               font=None
-               pad=None
-               border_width=None
-               change_submits = False
-               key=None
-               tooltip=None)
- -->
-
-
-
-
-
 
 
 
@@ -5061,26 +4985,6 @@ Parameters explained:
 |icon|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
-
-
-<!-- ```python
-Update(disabled = None, visible=None)
-```
-WARNING - This Update method may not be working correctly -->
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -6915,11 +6819,3 @@ GNU Lesser General Public License (LGPL 3) +
 ## Acknowledgments
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIxNjg5MDM1Niw4NjQ5Nzg3NjUsLTEwNj
-U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
-OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
-YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
-MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
-QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
--->
