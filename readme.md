@@ -813,7 +813,7 @@ def PopupAnimated(image_source,
 		time_between_frames=0)
 ```
 | name | meaning |
-|-|-|
+|---|---|
 |image_source           | The GIF file specified as a string filename or a base64 variable |
 |message                | optional text message to be displayed under the animation |
 |background_color       | the background color to use for the window and all of the other parts of the window |
@@ -1655,7 +1655,7 @@ Read the Window's input values and button clicks but without blocking.  It will 
 Will consume 100% of your CPU if you do not have other blocking calls in your event loop.
 
 |name|meaning|
-|-|-|
+|---|---|
 | `Refresh() ` | Cause changes to the window to be displayed on the screen.  Normally not needed unless the changes are immediately required or if it's going to be a while before another call to Read.    |
 | `SetIcon(icon, pngbase64) ` | Sets the window's icon that will be shown on the titlebar.    Can either be a filename or a base64 string.|
 | `Fill(values_dict) ` | Populates the windows fields with the values shown in the dictionary.|
@@ -1844,7 +1844,7 @@ Text(text,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |text|The text to display (required)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |auto_size_text|True if size should fit the text length (Default value = None)|
@@ -1879,7 +1879,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |background_color|color of background (Default value = None)|
 |text_color|color of the text (Default value = None)|
@@ -1962,7 +1962,7 @@ Multiline(default_text="",
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |default_text|(Default value = '')|
 |enter_submits|(Default value = False)|
 |disabled|set disable state for element (Default value = False)|
@@ -2004,7 +2004,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
 |append|(Default value = False)|
@@ -2060,7 +2060,7 @@ InputText(default_text="",
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |default_text|(Default value = '')|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |disabled|set disable state for element (Default value = False)|
@@ -2105,7 +2105,7 @@ def InputText(default_text ='',
 
 .
 |name|meaning|
-|-|-|
+|---|---|
 | default_text | str. Text initially shown in the input box      |
 | size | (width, height) of element in characters      |
 | auto_size_text | Bool.  True is element should be sized to fit text      |
@@ -2151,7 +2151,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
 |select|(Default value = None)|
@@ -2179,7 +2179,7 @@ Update(value=None, disabled=None):
 Get()
 ```
 |name|meaning|
-|-|-|
+|---|---|
 | Update | Change the Element |
 | value | new value to display in field |
 | disabled | if True will disable the element |
@@ -2231,7 +2231,7 @@ Combo(values,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values||
 |default_value|(Default value = None)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
@@ -2270,7 +2270,7 @@ InputCombo(values,
 ```
 
 |name|meaning|
-|-|-|
+|---|---|
 | values | Choices to be displayed. List of strings      |
 | default_value | which value should be initially chosen      |
 | size | (width, height) of element in characters      |
@@ -2303,7 +2303,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |values|(Default value = None)|
 |set_to_index|(Default value = None)|
@@ -2374,7 +2374,7 @@ Listbox(values,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values||
 |default_values|(Default value = None)|
 |select_mode|(Default value = None)|
@@ -2415,7 +2415,7 @@ Update(values=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
 |set_to_index|highlights the item at this index as if user clicked (Default value = None)|
@@ -2434,7 +2434,7 @@ SetValue(values)
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values||
 |||
 
@@ -2460,7 +2460,7 @@ GetListValues()
 ```
 
 |name|meaning|
-|-|-|
+|---|---|
 | Update | Change element |
 | values | new list of choices |
 | disabled | if True disables the element |
@@ -2526,7 +2526,7 @@ Slider(range=(None, None),
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |range|(Default value = (None, None))|
 |default_value|(Default value = None)|
 |resolution|(Default value = None)|
@@ -2613,7 +2613,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |range|(Default value = (None, None))|
 |disabled|disable or enable state of the element (Default value = None)|
@@ -2688,7 +2688,7 @@ Radio(text,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |text||
 |group_id||
 |default|(Default value = False)|
@@ -2724,7 +2724,7 @@ Parameters explained:
 		visible=True)
 
 |name|meaning|
-|-|-|
+|---|---|
 | text| Text to display next to button|
 | group_id| Groups together multiple Radio Buttons. Can be any value|
 | default| Bool.  Initial state|
@@ -2752,7 +2752,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
 |visible|change visibility of element (Default value = None)|
@@ -2765,7 +2765,7 @@ Update(value=None, disabled=None, visible=None)
 ```
 
 |name|meaning|
-|-|-|
+|---|---|
 | value | Bool. if True change to selected |
 | disabled | if True disables the element |
 |||
@@ -2806,7 +2806,7 @@ Checkbox(text,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |text||
 |default|(Default value = False)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
@@ -2862,7 +2862,7 @@ Get()
 ```
 
 |name|meaning|
-|-|-|
+|---|---|
 | Update| changes the element|
 | value| Bool if True checks the checkbox|
 | disabled| if True disables the element|
@@ -2907,7 +2907,7 @@ Spin(values,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values||
 |initial_value|(Default value = None)|
 |disabled|set disable state for element (Default value = False)|
@@ -2980,7 +2980,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |values|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
@@ -3045,7 +3045,7 @@ Image(filename=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |filename|(Default value = None)|
 |data|(Default value = None)|
 |background_color|color of background (Default value = None)|
@@ -3106,7 +3106,7 @@ Update(filename=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |filename|(Default value = None)|
 |data|(Default value = None)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
@@ -3134,7 +3134,7 @@ UpdateAnimation(source,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |source||
 |time_between_frames|(Default value = 0)|
 |||
@@ -3253,7 +3253,7 @@ Button(button_text="",
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |button_text|(Default value = '')|
 |button_type|(Default value = BUTTON_TYPE_READ_FORM)|
 |target||
@@ -3550,7 +3550,7 @@ Update(text=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |text|(Default value = None)|
 |button_color|(Default value = (None)|
 |disabled|disable or enable state of the element (Default value = None)|
@@ -3646,7 +3646,7 @@ ButtonMenu(button_text,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |button_text||
 |menu_def||
 |tooltip|text, that will appear the you hover on (Default value = None)|
@@ -3743,7 +3743,7 @@ VerticalSeparator(pad=None)
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |||
 
@@ -3822,7 +3822,7 @@ ProgressBar(max_value,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |max_value||
 |orientation|(Default value = None)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
@@ -3897,7 +3897,7 @@ Output(size=(None, None),
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |background_color|color of background (Default value = None)|
 |text_color|color of the text (Default value = None)|
@@ -3923,7 +3923,7 @@ Update(value=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |value|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
@@ -4044,7 +4044,7 @@ Column(layout,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |layout||
 |background_color|color of background (Default value = None)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
@@ -4132,7 +4132,7 @@ Frame(title,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |title||
 |layout||
 |title_color|(Default value = None)|
@@ -4205,7 +4205,7 @@ Canvas(canvas=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |canvas|(Default value = None)|
 |background_color|color of background (Default value = None)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
@@ -4330,7 +4330,7 @@ Graph(canvas_size,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |canvas_size||
 |graph_bottom_left||
 |graph_top_right||
@@ -4376,7 +4376,7 @@ DrawLine(point_from,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |point_from||
 |point_to||
 |color|(Default value = 'black')|
@@ -4396,7 +4396,7 @@ DrawPoint(point,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |point||
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = 2)|
 |color|(Default value = 'black')|
@@ -4416,7 +4416,7 @@ DrawCircle(center_location,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |center_location||
 |radius||
 |fill_color|(Default value = None)|
@@ -4437,7 +4437,7 @@ DrawOval(top_left,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |top_left||
 |bottom_right||
 |fill_color|(Default value = None)|
@@ -4460,7 +4460,7 @@ DrawArc(top_left,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |top_left||
 |bottom_right||
 |extent||
@@ -4483,7 +4483,7 @@ DrawRectangle(top_left,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |top_left||
 |bottom_right||
 |fill_color|(Default value = None)|
@@ -4505,7 +4505,7 @@ DrawText(text,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |text||
 |location||
 |color|(Default value = 'black')|
@@ -4536,7 +4536,7 @@ DeleteFigure(id)
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |id||
 |||
 
@@ -4552,7 +4552,7 @@ Update(background_color,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |background_color|color of background|
 |visible|change visibility of element (Default value = None)|
 |||
@@ -4569,7 +4569,7 @@ Move(x_direction,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |x_direction||
 |y_direction||
 |||
@@ -4587,7 +4587,7 @@ MoveFigure(figure,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |figure||
 |x_direction||
 |y_direction||
@@ -4606,7 +4606,7 @@ RelocateFigure(figure,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |figure||
 |x||
 |y||
@@ -4686,7 +4686,7 @@ Table(values,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values||
 |headings|(Default value = None)|
 |visible_column_map|(Default value = None)|
@@ -4740,7 +4740,7 @@ Update(values=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values|(Default value = None)|
 |num_rows|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
@@ -4794,7 +4794,7 @@ Tree(data=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |data|(Default value = None)|
 |headings|(Default value = None)|
 |visible_column_map|(Default value = None)|
@@ -4943,7 +4943,7 @@ TabGroup(layout,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |layout||
 |tab_location|(Default value = None)|
 |title_color|(Default value = None)|
@@ -5002,7 +5002,7 @@ Tab(title,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |title||
 |layout||
 |title_color|(Default value = None)|
@@ -5053,7 +5053,7 @@ Update(values=None,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |values|(Default value = None)|
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |value|(Default value = None)|
@@ -5111,7 +5111,7 @@ Pane(pane_list,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |pane_list||
 |background_color|color of background (Default value = None)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
@@ -5863,7 +5863,7 @@ Update(menu_definition,
 Parameters explained:
 
 |Name|Meaning|
-|-|-|
+|---|---|
 |menu_definition||
 |visible|change visibility of element (Default value = None)|
 |||
@@ -6204,7 +6204,7 @@ A MikeTheWatchGuy production... entirely responsible for this code.... unless it
 
 ## Versions
 |Version | Description |
-|--|--|
+|---|---|
 | 1.0.9   | July 10, 2018 - Initial Release |
 | 1.0.21 | July 13, 2018 - Readme updates  |
 | 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
