@@ -4249,17 +4249,31 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     element = element           # type: Combo
                     # value = element.QT_ComboBox.currentText()
-                    value = element.Values[element.QT_ComboBox.currentIndex()]
+                    try:
+                        value = element.Values[element.QT_ComboBox.currentIndex()]
+                    except:
+                        value = None
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     value = 0
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
-                    try:
-                        value= [item.text() for item in element.QT_ListWidget.selectedItems()]
-                    except:
-                        value = []
+                    element = element            # type: Listbox
+                    # print(f'selected indexes = {element.QT_ListWidget.selectedIndexes()}')
+                    value = []
+                    # value = [element.Values[int(i)] for i in element.QT_ListWidget.selectedIndexes()]
+                    # value= [ for i, item in enumerate(element.QT_ListWidget.selectedItems()]
+                    selected_items = [item.text() for item in element.QT_ListWidget.selectedItems()]
+                    for v in element.Values:
+                        if str(v) in selected_items:
+                            value.append(v)
+                    # try:
+                    #     value= [item.index() for item in element.QT_ListWidget.selectedItems()]
+                    #     # value= [item.text() for item in element.QT_ListWidget.selectedItems()]
+                    # except:
+                    #     value = []
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
                     # value = str(element.QT_Spinner.value())
-                    value = str(element.QT_Spinner.textFromValue(element.QT_Spinner.value()))
+                    # value = str(element.QT_Spinner.textFromValue(element.QT_Spinner.value()))
+                    value = element.Values[element.QT_Spinner.value()]
                 elif element.Type == ELEM_TYPE_INPUT_DIAL:
                     value = str(element.QT_Dial.value())
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
@@ -4948,7 +4962,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.ChangeSubmits:
                     element.QT_ListWidget.currentRowChanged.connect(element.QtCurrentRowChanged)
 
-                element.QT_ListWidget.addItems(element.Values)
+                items = [str(v) for v in element.Values]
+                element.QT_ListWidget.addItems(items)
                 if element.Tooltip:
                     element.QT_ListWidget.setToolTip(element.Tooltip)
                 if not element.Visible:
@@ -5238,10 +5253,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element               # type: Graph
                 width, height = element_size
-                print(f'Graph element size = {element_size}')
+                # print(f'Graph element size = {element_size}')
                 element.Widget = element.QT_QGraphicsView = qgraphicsview = QGraphicsView()
                 # element.QT_QGraphicsView.setGeometry(0,0,element.CanvasSize[0],element.CanvasSize[1])
-                print(f'Graph Canvas size = {element.CanvasSize}')
+                # print(f'Graph Canvas size = {element.CanvasSize}')
 
                 element.QT_QGraphicsScene = QGraphicsScene()
                 element.QT_QGraphicsScene.setSceneRect(0,0,element.CanvasSize[0],element.CanvasSize[1])
@@ -5251,7 +5266,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
                 style.add(margin='{}px {}px {}px {}px'.format(*full_element_pad))
                 style.add(border='{}px solid gray '.format(border_depth))
-                print(f'style content = {style.content}')
+                # print(f'style content = {style.content}')
                 element.QT_QGraphicsView.setStyleSheet(style.content)
 
                 qgraphicsview.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -7302,8 +7317,9 @@ def main():
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3', 'Item 4', 'Item 5'], size=(200, 85), tooltip='Listbox',
                     key='_LISTBOX_', font='Courier 12', text_color='red', background_color='white')],
-        [Combo(['Combo item 1', 'Combo item 2', 'Combo item 3'], size=(200, 35), tooltip='Combo', visible_items=2)],
-        [Spin([1, 2, 3], size=(40, 30), tooltip='Spinner')],
+        [Combo([1,2,3], size=(200, 35), tooltip='Combo', visible_items=2, key='_COMBO_')],
+        [Spin([1, 2, 3], size=(40, 30), tooltip='Spinner', key='_SPIN1_')],
+        [Spin(['Combo item 1', 'Combo item 2', 'Combo item 3'], size=(240, 30), tooltip='Spinner', key='_SPIN2_')],
     ]
 
     frame3 = [
