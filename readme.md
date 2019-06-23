@@ -1,4 +1,4 @@
-<!-- CREATED: 2019-06-19 16.12.46 -->
+<!-- CREATED: 2019-06-23 14.11.12 -->
 <!--
 HOW DO I INSERT IMAGES ???
 	easy.
@@ -691,11 +691,8 @@ There are Popup calls for single-item inputs. These follow the pattern of `Popup
 - `PopupGetFolder` - get a folder name
 
 Use these Popups instead of making  a custom window to get one data value, call the Popup input function to get the item from the user.  If you find the parameters are unable to create the kind of window you are looking for, then it's time for you to create your own window.
-
 ### PopupGetText
-
 Use this Popup to get a line of text from the user.<br>
-
 ```
 PopupGetText(message,The message you wish to display with the input field
 		default_text='', Text to initially fill into the input field
@@ -812,7 +809,6 @@ def PopupAnimated(image_source,
 		alpha_channel=.8,
 		time_between_frames=0)
 ```
-
 | name | meaning |
 |-|-|
 |image_source           | The GIF file specified as a string filename or a base64 variable |
@@ -1808,7 +1804,7 @@ Many of the main method calls and Element names have shortcuts.  This enables yo
 ## Text Element | `T == Txt == Text`
 Basic Element. It displays text. That's it.
 
-
+ 
 
 
 ```python
@@ -1839,16 +1835,16 @@ Text(text,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
 |text||
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |auto_size_text|True if size should fit the text length (Default value = None)|
-|click_submits|(Default value = False)|
+|click_submits|if clicked will trigger `Call()` (Default value = False)|
 |enable_events|Turns on the element specific events.(Default value = False)|
-|relief|(Default value = None)|
+|relief|relief to use around the text (Default value = None)|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |text_color|color of the text (Default value = None)|
 |background_color|color of background (Default value = None)|
@@ -1859,7 +1855,6 @@ Text(text,
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -1875,7 +1870,7 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -1885,7 +1880,6 @@ Update(value=None,
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -1925,7 +1919,7 @@ If you set the parameter `enable_events` or `click_submits` then you will get an
 ## Multiline Element
 This Element doubles as both an input and output Element.
 
-
+ 
 
 ```python
 layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
@@ -1958,7 +1952,7 @@ Multiline(default_text="",
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -1985,7 +1979,6 @@ Multiline(default_text="",
 
 
 
-
 ### Methods
 
 
@@ -2001,20 +1994,19 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
-|value|(Default value = None)|
+|value|string to set the text field to (Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
-|append|(Default value = False)|
+|append|add the new text (Default value = False)|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |text_color|color of the text (Default value = None)|
 |background_color|color of background (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |autoscroll|(Default value = None)|
 |||
-
 
 
 
@@ -2057,7 +2049,7 @@ InputText(default_text="",
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2079,7 +2071,6 @@ InputText(default_text="",
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -2149,7 +2140,7 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2163,8 +2154,13 @@ Update(value=None,
 
 
 
+
 <br>
-Get()<br>
+
+Get() - method <br>
+
+
+
 
 
 
@@ -2223,7 +2219,7 @@ Combo(values,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2243,7 +2239,6 @@ Combo(values,
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -2296,7 +2291,7 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2308,7 +2303,6 @@ Update(value=None,
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -2332,8 +2326,12 @@ readonly - if True will make element readonly
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
-A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
-when a window.Read() is executed.
+
+    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
+    when a window.Read() is executed.
+    
+
+    
 
 
 ```python
@@ -2364,7 +2362,7 @@ Listbox(values,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2390,7 +2388,6 @@ Listbox(values,
 
 
 
-
 The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
 
 
@@ -2401,22 +2398,19 @@ The `select_mode` option can be a string or a constant value defined as a variab
 Update(values=None,
 	disabled=None,
 	set_to_index=None,
-	scroll_to_index=None,
 	visible=None)
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
 |values|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
-|set_to_index|highlights the item at this index as if user clicked (Default value = None)|
-|scroll_to_index|scroll the listbox so that this index is the first shown (Default value = None)|
+|set_to_index|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -2426,7 +2420,7 @@ SetValue(values)
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2437,8 +2431,14 @@ SetValue(values)
 
 
 
+
 <br>
-GetListValues()<br>
+
+GetListValues() - :returns :
+<br>
+
+
+
 
 
 
@@ -2480,7 +2480,7 @@ Another way ListBoxes can cause Reads to return is if the flag bind_return_key i
 
 Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
 
-
+ 
 ```python
 layout = [[sg.Slider(range=(1,500), default_value=222, size=(20,15), orientation='horizontal', font=('Helvetica', 12))]]
 ```
@@ -2512,7 +2512,7 @@ Slider(range=(None, None),
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2536,7 +2536,6 @@ Slider(range=(None, None),
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -2600,7 +2599,7 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2609,7 +2608,6 @@ Update(value=None,
 |disabled|disable or enable state of the element (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -2641,7 +2639,8 @@ disabled - if True disables element
 ## Radio Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
-1 choice in a list of choices.
+    1 choice in a list of choices.
+    
 
 ```python
 layout =  [
@@ -2672,7 +2671,7 @@ Radio(text,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2692,7 +2691,6 @@ Radio(text,
 |enable_events|Turns on the element specific events.(Default value = False)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -2737,7 +2735,7 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2745,7 +2743,6 @@ Update(value=None,
 |disabled|disable or enable state of the element (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -2771,7 +2768,7 @@ layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My sec
 ![checkbox](https://user-images.githubusercontent.com/13696193/44959906-6f5d2b00-aec4-11e8-9c8a-962c787f0286.jpg)
 
 
-
+ 
 
 ```python
 Checkbox(text,
@@ -2791,7 +2788,7 @@ Checkbox(text,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2810,7 +2807,6 @@ Checkbox(text,
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -2865,7 +2861,7 @@ Get()
 ## Spin Element
 An up/down spinner control.  The valid values are passed in as a list.
 
-
+ 
 
 ```python
 layout =  [[sg.Spin([i for i in range(1,11)], initial_value=1), sg.Text('Volume level')]]
@@ -2892,7 +2888,7 @@ Spin(values,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2911,7 +2907,6 @@ Spin(values,
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -2966,7 +2961,7 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -2975,7 +2970,6 @@ Update(value=None,
 |disabled|disable or enable state of the element (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -3012,7 +3006,7 @@ disabled - if True disables the element
 
 Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format.  JPGs cannot be shown because tkinter does not naively support JPGs.  You can use the Python Imaging Library (PIL) package  to convert your image to PNG prior to calling PySimpleGUI if your images are in JPG format.
 
-
+ 
 
 ????????????? add image here
 
@@ -3031,7 +3025,7 @@ Image(filename=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -3046,7 +3040,6 @@ Image(filename=None,
 |visible|set visibility state of the element (Default value = True)|
 |enable_events|Turns on the element specific events.(Default value = False)|
 |||
-
 
 
 
@@ -3093,7 +3086,7 @@ Update(filename=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -3102,7 +3095,6 @@ Update(filename=None,
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -3122,14 +3114,13 @@ UpdateAnimation(source,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
-|source||
-|time_between_frames|(Default value = 0)|
+|source|a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename parameter and base64 parameter into 2 parameters.|
+|time_between_frames|optional parameter.  It will keep track of the amount of time between frame changes for you to give you a smooth animation.  With this parameter you can call the function as often as you want and it will advance to the next frame only after the correct amount of time has lapsed. (Default value = 0)|
 |||
-
 
 
 
@@ -3205,7 +3196,7 @@ In Oct 2018, the definition of Button changed.  Previously Button would CLOSE th
 
 The most basic Button element call to use is `Button`
 
-
+ 
 
 ```python
 layout =  [[sg.OK(), sg.Cancel()]]
@@ -3241,7 +3232,7 @@ Button(button_text="",
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -3269,7 +3260,6 @@ Button(button_text="",
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -3539,7 +3529,7 @@ Update(text=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -3552,7 +3542,6 @@ Update(text=None,
 |image_subsample|(Default value = None)|
 |image_size|(Default value = None)|
 |||
-
 
 
 
@@ -3574,8 +3563,14 @@ Update - Change the button element
 GetText - Returns the current text shown on a button
 
 
+
+
 <br>
-GetText()<br>
+
+GetText() - method <br>
+
+
+
 
 
 
@@ -3604,7 +3599,7 @@ Here is a sample definition:
 ```
 The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
 
-
+ 
 
 
 
@@ -3629,7 +3624,7 @@ ButtonMenu(button_text,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -3651,7 +3646,6 @@ ButtonMenu(button_text,
 |tearoff|(Default value = False)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -3712,7 +3706,7 @@ This element has limited usefulness and is being included more for completeness 
 
 It works best when placed between columns or elements that span multiple rows.  If on a "normal" row with elements that are only 1 row high, then it will only span that one row.
 
-
+ 
 
 ```python
 VerticalSeparator(pad=None)
@@ -3726,13 +3720,12 @@ VerticalSeparator(pad=None)
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |||
-
 
 
 
@@ -3761,7 +3754,7 @@ The return value for `OneLineProgressMeter` is:
 #### Progress Mater in Your window
 Another way of using a Progress Meter with PySimpleGUI is to build a custom window with a `ProgressBar` Element in the window.  You will need to run your window as a non-blocking window.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
 
-
+ 
 
 ```python
 import PySimpleGUI as sg
@@ -3805,7 +3798,7 @@ ProgressBar(max_value,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -3849,14 +3842,13 @@ ProgressBar(max_value,
 
 
 
-
 <!-- %!% -->
 ## Output Elements
 The Output Element is a re-direction of Stdout.  Anything "printed" will be displayed in this element.
 
 Note that you will NOT see what you `print` until you call either window.Read or window.Refresh.  If you want to immediately see what was printed, call window.Refresh() immediately after your print statement.
 
-
+ 
 
 
 
@@ -3880,7 +3872,7 @@ Output(size=(None, None),
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -3897,7 +3889,6 @@ Output(size=(None, None),
 
 
 
-
 ### Methods
 
 
@@ -3907,14 +3898,13 @@ Update(value=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
 |value|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
@@ -4008,7 +3998,7 @@ Columns are specified in exactly the same way as a window is, as a list of lists
 
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
 
-
+ 
 
 ![column](https://user-images.githubusercontent.com/13696193/44959988-66b92480-aec5-11e8-9c26-316ed24a68c0.jpg)
 
@@ -4028,7 +4018,7 @@ Column(layout,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4042,7 +4032,6 @@ Column(layout,
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -4088,7 +4077,7 @@ sg.Popup(event, values, line_width=200)
 
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.
 
-
+ 
 
 
 ![frame element](https://user-images.githubusercontent.com/13696193/45889173-c2245700-bd8d-11e8-8f73-1e5f1be3ddb1.jpg)
@@ -4117,26 +4106,25 @@ Frame(title,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
-|title||
-|layout||
-|title_color|(Default value = None)|
+|title|the label / title to put on frame|
+|layout|list of rows of elements the frame contains|
+|title_color|color of the title text (Default value = None)|
 |background_color|color of background (Default value = None)|
-|title_location|(Default value = None)|
+|title_location|locations to put the title (Default value = None)|
 |relief|(Default value = DEFAULT_FRAME_RELIEF)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
-|border_width|(Default value = None)|
+|border_width|how thick the line going around frame should be (Default value = None)|
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -4175,7 +4163,7 @@ window = sg.Window('Frame with buttons', font=("Helvetica", 12)).Layout(layout)
 
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.
 
-
+ 
 
 
 ```python
@@ -4190,7 +4178,7 @@ Canvas(canvas=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4203,7 +4191,6 @@ Canvas(canvas=None,
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -4294,7 +4281,7 @@ You can move your figures around on the canvas by supplying the Figure ID the x,
 
 This Element is relatively new and may have some parameter additions or deletions.  It shouldn't break your code however.
 
-
+ 
 
 
 
@@ -4314,7 +4301,7 @@ Graph(canvas_size,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4331,7 +4318,6 @@ Graph(canvas_size,
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -4360,7 +4346,7 @@ DrawLine(point_from,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4373,7 +4359,6 @@ DrawLine(point_from,
 
 
 
-
 ```python
 DrawPoint(point,
 	size=2,
@@ -4381,7 +4366,7 @@ DrawPoint(point,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4389,7 +4374,6 @@ DrawPoint(point,
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = 2)|
 |color|(Default value = 'black')|
 |||
-
 
 
 
@@ -4402,7 +4386,7 @@ DrawCircle(center_location,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4415,7 +4399,6 @@ DrawCircle(center_location,
 
 
 
-
 ```python
 DrawOval(top_left,
 	bottom_right,
@@ -4424,7 +4407,7 @@ DrawOval(top_left,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4433,7 +4416,6 @@ DrawOval(top_left,
 |fill_color|(Default value = None)|
 |line_color|(Default value = None)|
 |||
-
 
 
 
@@ -4448,7 +4430,7 @@ DrawArc(top_left,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4463,7 +4445,6 @@ DrawArc(top_left,
 
 
 
-
 ```python
 DrawRectangle(top_left,
 	bottom_right,
@@ -4472,7 +4453,7 @@ DrawRectangle(top_left,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4481,7 +4462,6 @@ DrawRectangle(top_left,
 |fill_color|(Default value = None)|
 |line_color|(Default value = None)|
 |||
-
 
 
 
@@ -4495,7 +4475,7 @@ DrawText(text,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4510,8 +4490,13 @@ DrawText(text,
 
 
 
+
 <br>
-Erase()<br>
+
+Erase() - method <br>
+
+
+
 
 
 
@@ -4521,13 +4506,12 @@ DeleteFigure(id)
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
 |id||
 |||
-
 
 
 
@@ -4538,7 +4522,7 @@ Update(background_color,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4549,20 +4533,20 @@ Update(background_color,
 
 
 
-
 ```python
 Move(x_direction,
 	y_direction)
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
 |x_direction||
 |y_direction||
 |||
+
 
 
 
@@ -4573,7 +4557,7 @@ MoveFigure(figure,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4581,7 +4565,6 @@ MoveFigure(figure,
 |x_direction||
 |y_direction||
 |||
-
 
 
 
@@ -4593,7 +4576,7 @@ RelocateFigure(figure,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4601,6 +4584,8 @@ RelocateFigure(figure,
 |x||
 |y||
 |||
+
+
 
 
 
@@ -4623,12 +4608,19 @@ RelocateFigure(figure,
 
 
 
+
+
+
+
+
+
+
 <!-- %!% -->
 ## Table Element
 
 Out of all of the Elements, it's the Table and the Tree that are the most "problematic" in the tkinter inter and Qt implementations.  They're hard is my only defense.
 
-
+ 
 
 
 ```python
@@ -4663,7 +4655,7 @@ Table(values,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4699,7 +4691,6 @@ Table(values,
 
 
 
-
 ### Read return values from Table Element
 
 The values returned from a `Window.Read` call for the Tree Element are a list of row numbers that are currently highlighted.
@@ -4718,7 +4709,7 @@ Update(values=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4727,7 +4718,6 @@ Update(values=None,
 |visible|change visibility of element (Default value = None)|
 |select_rows|(Default value = None)|
 |||
-
 
 
 
@@ -4742,7 +4732,7 @@ If you click on the header, it can go into spasms for some tables. I don't under
 
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.
 
-
+ 
 
 
 ```python
@@ -4772,7 +4762,7 @@ Tree(data=None,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4800,7 +4790,6 @@ Tree(data=None,
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -4868,6 +4857,8 @@ View of second tab:
 
 First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
 
+ 
+ 
 
 ```python
 tab1_layout =  [[sg.T('This is inside tab 1')]]
@@ -4920,7 +4911,7 @@ TabGroup(layout,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4939,6 +4930,7 @@ TabGroup(layout,
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
+
 
 
 
@@ -4976,7 +4968,7 @@ Tab(title,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -4993,6 +4985,7 @@ Tab(title,
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
+
 
 
 <!-- 
@@ -5025,7 +5018,8 @@ Update(values=None,
 	visible=None)
 ```
 
- Parameters explained:
+
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -5039,12 +5033,30 @@ Update(values=None,
 
 
 
+<!-- ```python
+Update(disabled = None, visible=None)
+```
+WARNING - This Update method may not be working correctly -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- %!% -->
 ## Pane Element
 
 New in version 3.20 is the Pane Element, a super-cool tkinter feature.  You won't find this one in PySimpleGUIQt, only PySimpleGUI.   It's difficult to describe one of these things.  Think of them as "Tabs without labels" that you can slide.
 
-
+ 
 
 ![pane3](https://user-images.githubusercontent.com/13696193/50035040-fcd50e80-ffcd-11e8-939c-df8ab8d64712.gif)
 
@@ -5064,7 +5076,7 @@ Pane(pane_list,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
@@ -5080,7 +5092,6 @@ Pane(pane_list,
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |||
-
 
 
 
@@ -5797,7 +5808,7 @@ Use realtime keyboard capture by calling
 
 Beginning in version 3.01 you can add a MenuBar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as in the values dictionary.  The value returned will be the entire menu entry, including the key if you specified one.
 
-
+ 
 
 ```python
     menu_def = [['File', ['Open', 'Save', 'Exit',]],
@@ -5817,14 +5828,13 @@ Update(menu_definition,
 ```
 
 
- Parameters explained:
+Parameters explained:
 
 |Name|Meaning|
 |-|-|
 |menu_definition||
 |visible|change visibility of element (Default value = None)|
 |||
-
 
 
 
