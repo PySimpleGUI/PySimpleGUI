@@ -1,4 +1,4 @@
-<!-- CREATED: 2019-06-23 14.11.12 -->
+<!-- CREATED: 2019-06-23 14.19.18 -->
 <!--
 HOW DO I INSERT IMAGES ???
 	easy.
@@ -1804,7 +1804,9 @@ Many of the main method calls and Element names have shortcuts.  This enables yo
 ## Text Element | `T == Txt == Text`
 Basic Element. It displays text. That's it.
 
- 
+
+    Text - Display some text in the window.  Can be single or multiple lines but no scrolling if multiple lines.
+    
 
 
 ```python
@@ -1839,12 +1841,12 @@ Parameters explained:
 
 |Name|Meaning|
 |-|-|
-|text||
+|text|The text to display (required)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |auto_size_text|True if size should fit the text length (Default value = None)|
-|click_submits|if clicked will trigger `Call()` (Default value = False)|
+|click_submits|(Default value = False)|
 |enable_events|Turns on the element specific events.(Default value = False)|
-|relief|relief to use around the text (Default value = None)|
+|relief|(Default value = None)|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |text_color|color of the text (Default value = None)|
 |background_color|color of background (Default value = None)|
@@ -1998,9 +2000,9 @@ Parameters explained:
 
 |Name|Meaning|
 |-|-|
-|value|string to set the text field to (Default value = None)|
+|value|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
-|append|add the new text (Default value = False)|
+|append|(Default value = False)|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |text_color|color of the text (Default value = None)|
 |background_color|color of background (Default value = None)|
@@ -2326,10 +2328,9 @@ readonly - if True will make element readonly
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
-
-    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
+A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
     when a window.Read() is executed.
-    
+
 
     
 
@@ -2398,6 +2399,7 @@ The `select_mode` option can be a string or a constant value defined as a variab
 Update(values=None,
 	disabled=None,
 	set_to_index=None,
+	scroll_to_index=None,
 	visible=None)
 ```
 
@@ -2408,7 +2410,8 @@ Parameters explained:
 |-|-|
 |values|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
-|set_to_index|(Default value = None)|
+|set_to_index|highlights the item at this index as if user clicked (Default value = None)|
+|scroll_to_index|scroll the listbox so that this index is the first shown (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |||
 
@@ -2434,8 +2437,7 @@ Parameters explained:
 
 <br>
 
-GetListValues() - :returns :
-<br>
+GetListValues() - method <br>
 
 
 
@@ -2640,6 +2642,8 @@ disabled - if True disables element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
     1 choice in a list of choices.
+
+
     
 
 ```python
@@ -3118,8 +3122,8 @@ Parameters explained:
 
 |Name|Meaning|
 |-|-|
-|source|a filename ***or*** a base64 bytes variable (unlike other calls that split out the filename parameter and base64 parameter into 2 parameters.|
-|time_between_frames|optional parameter.  It will keep track of the amount of time between frame changes for you to give you a smooth animation.  With this parameter you can call the function as often as you want and it will advance to the next frame only after the correct amount of time has lapsed. (Default value = 0)|
+|source||
+|time_between_frames|(Default value = 0)|
 |||
 
 
@@ -4110,16 +4114,16 @@ Parameters explained:
 
 |Name|Meaning|
 |-|-|
-|title|the label / title to put on frame|
-|layout|list of rows of elements the frame contains|
-|title_color|color of the title text (Default value = None)|
+|title||
+|layout||
+|title_color|(Default value = None)|
 |background_color|color of background (Default value = None)|
-|title_location|locations to put the title (Default value = None)|
+|title_location|(Default value = None)|
 |relief|(Default value = DEFAULT_FRAME_RELIEF)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
-|border_width|how thick the line going around frame should be (Default value = None)|
+|border_width|(Default value = None)|
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
@@ -4297,7 +4301,8 @@ Graph(canvas_size,
 	key=None,
 	tooltip=None,
 	right_click_menu=None,
-	visible=True)
+	visible=True,
+	float_values=False)
 ```
 
 
@@ -4317,6 +4322,7 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
+|float_values|bool: If True x,y coordinates are returned as floats, not ints|
 |||
 
 
