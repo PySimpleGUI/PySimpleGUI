@@ -745,30 +745,36 @@ This is a typpical call
 The animated Popup enables you to easily display a "loading" style animation specified through a GIF file that is either stored in a file or a base64 variable.
 
 ```python
-def PopupAnimated(image_source,
-		message=None,
-		background_color=None,
-		text_color=None,
-		font=None,
-		no_titlebar=True,
-		grab_anywhere=True,
-		keep_on_top=True,
-		location=(None, None),
-		alpha_channel=.8,
-		time_between_frames=0)
+PopupAnimated(image_source,
+	message=None,
+	background_color=None,
+	text_color=None,
+	font=None,
+	no_titlebar=True,
+	grab_anywhere=True,
+	keep_on_top=True,
+	location=(None, None),
+	alpha_channel=None,
+	time_between_frames=0,
+	transparent_color=None)
 ```
-| name | meaning |
-|-|-|
-|image_source           | The GIF file specified as a string filename or a base64 variable |
-|message                | optional text message to be displayed under the animation |
-|background_color       | the background color to use for the window and all of the other parts of the window |
-|text_color                 | color to use for optional text |
-|font                   | font to use for the optional text |
-|no_titlebar            | no titlebar window setting |
-|location               | location to show the window |
-|alpha_channel          | alpha channel to use for the window |
-|time_between_frames    | amount of time in milliseconds to use between frames |
-|||
+
+Parameters explained:
+
+|Name|Meaning|
+|---|---|
+|image_source||
+|message|(Default value = None)|
+|background_color|color of background (Default value = None)|
+|text_color|color of the text (Default value = None)|
+|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|no_titlebar|(Default value = True)|
+|grab_anywhere|(Default value = True)|
+|keep_on_top|(Default value = True)|
+|location|(Default value = (None, None))|
+|alpha_channel|(Default value = None)|
+|time_between_frames|(Default value = 0)|
+|transparent_color|(Default value = None)|
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
 
@@ -1036,6 +1042,7 @@ While one goal was making it simple to create a GUI another just as important go
 The key to custom windows in PySimpleGUI is to view windows as ROWS of GUI  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.
 
 Let's dissect this little program
+
 ```python
 import PySimpleGUI as sg
 
@@ -1073,6 +1080,7 @@ And what about those return values?  Most people simply want to show a window, g
 For return values the window is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
 
 In our example window, there are 2 fields, so the return values from this window will be a list with 2 values in it.
+
 ```python
 event, values = window.Read()
 folder_path, file_path = values
@@ -1089,6 +1097,7 @@ As of version 2.8 there are 2 forms of return values, list and dictionary.
 ### Two Return Values
 
 All Window Read calls return 2 values.  By convention a read statement is written:
+
 ```python
 event, values = window.Read()
 ```
@@ -1131,6 +1140,7 @@ if event is None:
 ```
 
 Putting it all together we end up with an "event loop" that looks something like this:
+
 ```python
 while True:
 	event, values = window.Read()
@@ -1164,8 +1174,8 @@ while True:
 
 Some elements are capable of generating events when something happens to them.  For example, when a slider is moved, or list item clicked on or table row clicked on.  These events are not enabled by default.  To enable events for an Element, set the parameter `enable_events=True`.  This is the same as the older `click_submits` parameter.  You will find the `click_submits` parameter still in the function definition.  You can continue to use it. They are the same setting.  An 'or' of the two values is used.  In the future, click_submits will be removed so please migrate your code to using `enable_events`.
 
-| name | events |
-| -  | - |
+|Name|events|
+| ---  | --- |
 | InputText | any change |
 | Combo | item chosen |
 | Option menu | item chosen |
@@ -1436,8 +1446,8 @@ Window( title,
 
 Parameter Descriptions.  You will find these same parameters specified for each `Element` and some of them in `Row` specifications.  The `Element` specified value will take precedence over the `Row` and `window` values.
 
-| Name | Meaning |
-| - | - |
+|Name|Meaning|
+| ----- | ---- |
 | default_element_size | Size of elements in window in characters (width, height)      |
 | default_button_element_size | Size of buttons on this window      |
 | auto_size_text | Bool. True if elements should size themselves according to contents. Defaults to True      |
@@ -1465,7 +1475,6 @@ Parameter Descriptions.  You will find these same parameters specified for each 
 | disable_close | if True user will not be able to close using the X. |
 | disable_minimize | if True user will not be able to minimize the window|
 | right_click_menu | menu definition that will be used on wall elements that support right click. If a  definition is specified on an element then it will be used instead.|
-| | |
 
 ### Window Location
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.
@@ -1580,8 +1589,8 @@ Read the Window's input values and button clicks but without blocking.  It will 
 
 Will consume 100% of your CPU if you do not have other blocking calls in your event loop.
 
-|name|meaning|
-|-|-|
+|Name|Meaning|
+|-----|-----|
 | `Refresh() ` | Cause changes to the window to be displayed on the screen.  Normally not needed unless the changes are immediately required or if it's going to be a while before another call to Read.    |
 | `SetIcon(icon, pngbase64) ` | Sets the window's icon that will be shown on the titlebar.    Can either be a filename or a base64 string.|
 | `Fill(values_dict) ` | Populates the windows fields with the values shown in the dictionary.|
@@ -1752,6 +1761,7 @@ Text(text,
 	tooltip=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -1771,7 +1781,6 @@ Parameters explained:
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Methods
 
@@ -1782,6 +1791,7 @@ Update(value=None,
 	font=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -1791,7 +1801,6 @@ Parameters explained:
 |text_color|color of the text (Default value = None)|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
 
 ---
 
@@ -1847,6 +1856,7 @@ Multiline(default_text="",
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -1870,7 +1880,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Methods
 
@@ -1884,6 +1893,7 @@ Update(value=None,
 	visible=None,
 	autoscroll=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -1896,7 +1906,6 @@ Parameters explained:
 |background_color|color of background (Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |autoscroll|(Default value = None)|
-|||
 
 ## Text Input Element  | `Input == In`
 
@@ -1926,6 +1935,7 @@ InputText(default_text="",
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -1947,7 +1957,6 @@ Parameters explained:
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 There are two methods that can be called:
 
@@ -1970,6 +1979,7 @@ Update(value=None,
 	select=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -1978,7 +1988,6 @@ Parameters explained:
 |disabled|disable or enable state of the element (Default value = None)|
 |select|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
 
 Get() - method
 
@@ -2011,6 +2020,7 @@ Combo(values,
 	font=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2030,7 +2040,6 @@ Parameters explained:
 |readonly|make element readonly (Default value = False)|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Methods
 
@@ -2043,6 +2052,7 @@ Update(value=None,
 	font=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2054,7 +2064,6 @@ Parameters explained:
 |readonly|make element readonly (Default value = None)|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
 
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
@@ -2089,6 +2098,7 @@ Listbox(values,
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2110,7 +2120,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
 
@@ -2123,6 +2132,7 @@ Update(values=None,
 	scroll_to_index=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2132,17 +2142,16 @@ Parameters explained:
 |set_to_index|highlights the item at this index as if user clicked (Default value = None)|
 |scroll_to_index|scroll the listbox so that this index is the first shown (Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
 
 ```python
 SetValue(values)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |values||
-|||
 
 GetListValues() - method
 
@@ -2150,7 +2159,6 @@ GetListValues() - method
 
 ListBoxes can cause a window to return from a Read call.  If the flag change_submits is set, then when a user makes a selection, the Read immediately returns.
 Another way ListBoxes can cause Reads to return is if the flag bind_return_key is set.  If True, then if the user presses the return key while an entry is selected, then the Read returns.  Also, if this flag is set, if the user double-clicks an entry it will return from the Read.
-
 
 ## Slider Element
 
@@ -2184,6 +2192,7 @@ Slider(range=(None, None),
 	tooltip=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2207,7 +2216,6 @@ Parameters explained:
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Qt Sliders
 
@@ -2221,6 +2229,7 @@ Update(value=None,
 	disabled=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2229,9 +2238,6 @@ Parameters explained:
 |range|(Default value = (None, None))|
 |disabled|disable or enable state of the element (Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
-
-
 
 ## Radio Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
@@ -2266,6 +2272,7 @@ Radio(text,
 	enable_events=False,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2285,7 +2292,6 @@ Parameters explained:
 |change_submits|If True, pressing Enter key submits window (Default value = False)|
 |enable_events|Turns on the element specific events.(Default value = False)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ###  Methods
 
@@ -2294,6 +2300,7 @@ Update(value=None,
 	disabled=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2301,7 +2308,6 @@ Parameters explained:
 |value|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
 
 ## Checkbox Element | `CBox == CB == Check`
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
@@ -2329,6 +2335,7 @@ Checkbox(text,
 	tooltip=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2347,16 +2354,14 @@ Parameters explained:
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Methods
 ```python
 Update(value=None, disabled=None, visible=None)
 Get()
 ```
-
-|name|meaning|
-|-|-|
+|Name|Meaning|
+|-----|-----|
 | Update| changes the element|
 | value| Bool if True checks the checkbox|
 | disabled| if True disables the element|
@@ -2390,6 +2395,7 @@ Spin(values,
 	tooltip=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2408,7 +2414,6 @@ Parameters explained:
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Qt Differences - `values` is a range!
 
@@ -2424,6 +2429,7 @@ Update(value=None,
 	disabled=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2432,9 +2438,6 @@ Parameters explained:
 |values|(Default value = None)|
 |disabled|disable or enable state of the element (Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
-
-
 
 ## Image Element
 
@@ -2456,6 +2459,7 @@ Image(filename=None,
 	visible=True,
 	enable_events=False)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2470,7 +2474,6 @@ Parameters explained:
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |enable_events|Turns on the element specific events.(Default value = False)|
-|||
 
 ### Methods
 
@@ -2480,6 +2483,7 @@ Update(filename=None,
 	size=(None, None),
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2488,7 +2492,6 @@ Parameters explained:
 |data|(Default value = None)|
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
 |visible|change visibility of element (Default value = None)|
-|||
 
 Choose **either** a filename or in-ram data image to use to replace current image
 
@@ -2502,17 +2505,15 @@ You can specify an animated GIF as an image and can animate the GIF by calling `
 UpdateAnimation(source,
 	time_between_frames=0)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |source||
 |time_between_frames|(Default value = 0)|
-|||
 
 You can call the method without setting the `time_between_frames` value and it will show a frame and immediately move on to the next frame.  This enables you to do the inter-frame timing.
-
-
 
 ## Button Element
 
@@ -2552,10 +2553,10 @@ Sometimes there are multiple names for the same function.  This is simply to mak
 
 The 4 primary windows of PySimpleGUI buttons and their names are:
 
- 1. `Button`= `ReadButton` = `RButton` = `ReadFormButton` (old style... use Button instead)
- 2. `CloseButton` = `CButton`
- 3. `RealtimeButton`
- 4. `DummyButton`
+1. `Button`= `ReadButton` = `RButton` = `ReadFormButton` (old style... use Button instead)
+2. `CloseButton` = `CButton`
+3. `RealtimeButton`
+4. `DummyButton`
 
 You will find the long-form names in the older programs. ReadButton for example.
 
@@ -2596,6 +2597,7 @@ Button(button_text="",
 	key=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2623,7 +2625,6 @@ Parameters explained:
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Shortcut, Pre-defined Buttons
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, set the button text to match the function name and set the parameters to commonly used values. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
@@ -2828,6 +2829,7 @@ Update(text=None,
 	image_subsample=None,
 	image_size=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2840,13 +2842,10 @@ Parameters explained:
 |visible|change visibility of element (Default value = None)|
 |image_subsample|(Default value = None)|
 |image_size|(Default value = None)|
-|||
 
 GetText - Returns the current text shown on a button
 
 GetText() - method
-
-
 
 ## ButtonMenu Element
 
@@ -2879,6 +2878,7 @@ ButtonMenu(button_text,
 	tearoff=False,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -2900,7 +2900,6 @@ Parameters explained:
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |tearoff|(Default value = False)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
 
@@ -2909,8 +2908,6 @@ This is the effect:
 ![buttonmenu](https://user-images.githubusercontent.com/13696193/50387000-bc0d8180-06c0-11e9-8d17-3b22ed665e78.gif)
 
 Return values for ButtonMenus are sent via the return values dictionary.  If a selection is made, then an event is generated that will equal the ButtonMenu's key value.  Use that key value to look up the value selected by the user.  This is the same mechanism as the Menu Bar Element, but differs from the pop-up (right click) menu.
-
-
 
 ## VerticalSeparator Element
 This element has limited usefulness and is being included more for completeness than anything else.  It will draw a line between elements.
@@ -2928,12 +2925,12 @@ VerticalSeparator(pad=None)
 ```python
 VerticalSeparator(pad=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
-|||
 
 ## ProgressBar Element
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.
@@ -2974,7 +2971,7 @@ for i in range(10000):
   # update bar with loop value +1 so that bar eventually reaches the maximum
   progress_bar.UpdateBar(i + 1)
 # done with loop... need to destroy the window as it's still open
-window.Close())
+window.Close()
 ```
 
 ![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
@@ -2992,6 +2989,7 @@ ProgressBar(max_value,
 	pad=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3007,10 +3005,6 @@ Parameters explained:
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |pad|(common_key) Amount of padding to put around element (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
-
-
-
 
 ## Output Elements
 The Output Element is a re-direction of Stdout.  Anything "printed" will be displayed in this element.
@@ -3036,6 +3030,7 @@ Output(size=(None, None),
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3049,7 +3044,6 @@ Parameters explained:
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Methods
 
@@ -3057,13 +3051,13 @@ Parameters explained:
 Update(value=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |value|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
 
 ----
 
@@ -3125,6 +3119,7 @@ Column(layout,
 	key=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3138,7 +3133,6 @@ Parameters explained:
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ---
 
@@ -3204,6 +3198,7 @@ Frame(title,
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3222,7 +3217,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ---
 
@@ -3258,6 +3252,7 @@ Canvas(canvas=None,
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3270,7 +3265,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Matplotlib, Pyplot Integration
 
@@ -3281,7 +3275,7 @@ One such integration is with Matploplib and Pyplot.  There is a Demo program wri
              size - size in pixels
              pad - element padding for packing
              key - key used to lookup element
-             tooltip - tooltip text
+             tooltip - tooltip text)
 
 The order of operations to obtain a tkinter Canvas Widget is:
 
@@ -3360,6 +3354,7 @@ Graph(canvas_size,
 	visible=True,
 	float_values=False)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3377,7 +3372,6 @@ Parameters explained:
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
 |float_values|bool: If True x,y coordinates are returned as floats, not ints|
-|||
 
 ### Methods
 
@@ -3405,6 +3399,7 @@ DrawLine(point_from,
 	color="black",
 	width=1)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3413,13 +3408,13 @@ Parameters explained:
 |point_to||
 |color|(Default value = 'black')|
 |width|(Default value = 1)|
-|||
 
 ```python
 DrawPoint(point,
 	size=2,
 	color="black")
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3427,7 +3422,6 @@ Parameters explained:
 |point||
 |size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = 2)|
 |color|(Default value = 'black')|
-|||
 
 ```python
 DrawCircle(center_location,
@@ -3435,6 +3429,7 @@ DrawCircle(center_location,
 	fill_color=None,
 	line_color="black")
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3443,7 +3438,6 @@ Parameters explained:
 |radius||
 |fill_color|(Default value = None)|
 |line_color|(Default value = 'black')|
-|||
 
 ```python
 DrawOval(top_left,
@@ -3451,6 +3445,7 @@ DrawOval(top_left,
 	fill_color=None,
 	line_color=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3459,7 +3454,6 @@ Parameters explained:
 |bottom_right||
 |fill_color|(Default value = None)|
 |line_color|(Default value = None)|
-|||
 
 ```python
 DrawArc(top_left,
@@ -3469,6 +3463,7 @@ DrawArc(top_left,
 	style=None,
 	arc_color="black")
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3479,7 +3474,6 @@ Parameters explained:
 |start_angle||
 |style|(Default value = None)|
 |arc_color|(Default value = 'black')|
-|||
 
 ```python
 DrawRectangle(top_left,
@@ -3487,6 +3481,7 @@ DrawRectangle(top_left,
 	fill_color=None,
 	line_color=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3495,7 +3490,6 @@ Parameters explained:
 |bottom_right||
 |fill_color|(Default value = None)|
 |line_color|(Default value = None)|
-|||
 
 ```python
 DrawText(text,
@@ -3504,6 +3498,7 @@ DrawText(text,
 	font=None,
 	angle=0)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3513,49 +3508,49 @@ Parameters explained:
 |color|(Default value = 'black')|
 |font|(common_key) specifies the font family, size, etc (Default value = None)|
 |angle|(Default value = 0)|
-|||
 
 Erase() - method
 
 ```python
 DeleteFigure(id)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |id||
-|||
 
 ```python
 Update(background_color,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |background_color|color of background|
 |visible|change visibility of element (Default value = None)|
-|||
 
 ```python
 Move(x_direction,
 	y_direction)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |x_direction||
 |y_direction||
-|||
 
 ```python
 MoveFigure(figure,
 	x_direction,
 	y_direction)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3563,13 +3558,13 @@ Parameters explained:
 |figure||
 |x_direction||
 |y_direction||
-|||
 
 ```python
 RelocateFigure(figure,
 	x,
 	y)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3577,7 +3572,7 @@ Parameters explained:
 |figure||
 |x||
 |y||
-|||
+
 
 
 ## Table Element
@@ -3616,6 +3611,7 @@ Table(values,
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3648,7 +3644,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Read return values from Table Element
 
@@ -3664,6 +3659,7 @@ Update(values=None,
 	visible=None,
 	select_rows=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3672,7 +3668,6 @@ Parameters explained:
 |num_rows|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
 |select_rows|(Default value = None)|
-|||
 
 ---
 ### Known visualization problem....
@@ -3710,6 +3705,7 @@ Tree(data=None,
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3737,7 +3733,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 Unlike Tables there is no standard format for trees.  Thus the data structure passed to the Tree Element must be constructed.  This is done using the TreeData class.  The process is as follows:
 * Get a TreeData Object
@@ -3802,6 +3797,7 @@ View of second tab:
 First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
 
  
+
  
 
 ```python
@@ -3850,6 +3846,7 @@ TabGroup(layout,
 	tooltip=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3868,7 +3865,6 @@ Parameters explained:
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 
 ```python
@@ -3885,6 +3881,7 @@ Tab(title,
 	right_click_menu=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3901,7 +3898,6 @@ Parameters explained:
 |tooltip|text, that will appear the you hover on (Default value = None)|
 |right_click_menu|see "Right Click Menus" (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ### Reading Tab Groups
 
@@ -3917,6 +3913,7 @@ Update(values=None,
 	icon=None,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3927,7 +3924,6 @@ Parameters explained:
 |text|(Default value = None)|
 |icon|(Default value = None)|
 |visible|change visibility of element (Default value = None)|
-|||
 
 
 
@@ -3952,6 +3948,7 @@ Pane(pane_list,
 	key=None,
 	visible=True)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
@@ -3967,7 +3964,6 @@ Parameters explained:
 |border_width|(Default value = None)|
 |key|(common_key) Used with window.FindElement and with return values (Default value = None)|
 |visible|set visibility state of the element (Default value = True)|
-|||
 
 ***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
 
@@ -4157,7 +4153,7 @@ The preset `messageicon` values are:
 
 ```python
 ShowMessage(title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):
-    '''
+'''
  Shows a balloon above icon in system tray
  :param title:  Title shown in balloon
  :param message: Message to be displayed
@@ -4219,8 +4215,8 @@ Let's have some fun customizing!  Make PySimpleGUI look the way you want it to l
 
 Explanation of parameters
 
-| Name | Meaning |
-| - | - |
+|Name|Meaning|
+|----- | ---- |
 | icon     | filename of icon used for taskbar and title bar |
 | button_color     | button color (foreground, background) |
 | element_size     | element size (width, height) in characters |
@@ -4639,13 +4635,13 @@ Note the placement of ',' and of [].  It's tricky to get the nested menus correc
 Update(menu_definition,
 	visible=None)
 ```
+
 Parameters explained:
 
 |Name|Meaning|
 |---|---|
 |menu_definition||
 |visible|change visibility of element (Default value = None)|
-|||
 
 ---
 
@@ -5658,3 +5654,12 @@ GNU Lesser General Public License (LGPL 3) +
 ## Acknowledgments
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
+
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMTIxNjg5MDM1Niw4NjQ5Nzg3NjUsLTEwNj
+U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
+OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
+YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
+MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
+QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
+-->
