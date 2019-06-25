@@ -97,7 +97,7 @@ def main():
 
     while True:
         event, values = window.Read(timeout=0)
-        if event is 'Exit' or event is None:
+        if event in ('Exit', None):
             break
 
         run_a_ping_and_graph()
@@ -106,5 +106,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

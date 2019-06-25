@@ -46,6 +46,6 @@ while True:
         [window.FindElement(key).Update(disabled=value) for key,value in {'_Start_':False, '_Stop_':True, '_Reset_':True, '_Submit_':True}.items()]
         recording = False
         have_data = False
-    elif event is '_Submit_' and have_data:
+    elif event == '_Submit_' and have_data:
         [window.FindElement(key).Update(disabled=value) for key,value in {'_Start_':False, '_Stop_':True, '_Reset_':True, '_Submit_':False}.items()]
         recording = False

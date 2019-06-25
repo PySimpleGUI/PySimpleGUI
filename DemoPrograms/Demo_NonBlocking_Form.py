@@ -28,7 +28,7 @@ def StatusOutputExample():
         # This is the code that reads and updates your window
         event, values = window.Read(timeout=10)
         window.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
-        if event == 'Quit' or event is None:
+        if event in ('Quit', None):
             break
         if event == 'LED On':
             print('Turning on the LED')
@@ -63,9 +63,9 @@ def RemoteControlExample():
     while (True):
         # This is the code that reads and updates your window
         event, values = window.Read(timeout=0, timeout_key='timeout')
-        if event is not 'timeout':
+        if event != 'timeout':
             print(event)
-        if event == 'Quit' or event is None:
+        if event in ('Quit', None):
             break
 
     window.Close()

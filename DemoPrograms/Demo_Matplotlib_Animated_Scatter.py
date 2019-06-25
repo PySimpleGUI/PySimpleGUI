@@ -27,7 +27,7 @@ def main():
 
     while True:
         event, values = window.Read(timeout=10)
-        if event is 'Exit' or event is None:
+        if event in ('Exit', None):
             exit(69)
 
         def PyplotScatterWithLegend():
