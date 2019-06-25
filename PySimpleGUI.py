@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0 Unreleased"
+version = __version__ = "4.1.0.1 Unreleased"
 
 import sys
 
