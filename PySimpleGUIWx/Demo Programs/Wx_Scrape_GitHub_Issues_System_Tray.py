@@ -8,6 +8,7 @@ import PySimpleGUIWx as sgwx
 import PySimpleGUI as sg
 
 import subprocess
+import time
 import re
 # Import requests (to download the page)
 import requests
