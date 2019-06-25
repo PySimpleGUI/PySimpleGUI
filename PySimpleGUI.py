@@ -1006,7 +1006,7 @@ class Listbox(Element):
             self.TKListbox.selection_set(0, 0)
             self.Values = values
         if set_to_index is not None:
-            self.TKListbox.selection_clear(0)
+            self.TKListbox.selection_clear(0, len(self.Values))     # clear all listbox selections
             try:
                 self.TKListbox.selection_set(set_to_index, set_to_index)
             except:
@@ -10317,7 +10317,7 @@ class _Debugger():
             return
         for key in self.popout_choices:
             if self.popout_choices[key] is True and key in self.locals:
-                if key is not None:
+                if key is not None and self.popout_window is not None:
                     self.popout_window.Element(key, silent_on_error=True).Update(self.locals.get(key))
         event, values = self.popout_window.Read(timeout=1)
         if event in (None, '_EXIT_', 'Exit::RightClick'):
