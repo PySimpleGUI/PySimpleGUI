@@ -7,16 +7,37 @@ else:
 # GUI for switching an LED on and off to GPIO14
 
 # GPIO and time library:
-import RPi.GPIO as GPIO
 import time
+
+if sys.platform == 'win32':
+    from random import randint
+
+    class GPIO():
+        LOW = 0
+        HIGH = 1
+        BCM = OUT = 0
+        current_value = 0
+        @classmethod
+        def setmode(self, mode):
+            return
+        @classmethod
+        def setup(self, arg1, arg2):
+            return
+        @classmethod
+        def output(self, port, value):
+            self.current_value = value
+        @classmethod
+        def input(self, port):
+            return self.current_value
+else:
+    import RPi.GPIO as GPIO
 
 # determine that GPIO numbers are used:
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(14, GPIO.OUT)
 
 def SwitchLED():
-    varLEDStatus = GPIO.input(14)
-    varLedStatus = 0
+    varLedStatus = GPIO.input(14)
     if varLedStatus == 0:
         GPIO.output(14, GPIO.HIGH)
         return "LED is switched ON"
@@ -33,16 +54,16 @@ def FlashLED():
         time.sleep(0.5)
 
 layout = [[sg.T('Raspberry Pi LEDs')],
-           [sg.T('', size=(14, 1), key='output')],
+           [sg.T('', size=(20, 1), key='output')],
            [sg.Button('Switch LED')],
            [sg.Button('Flash LED')],
            [sg.Exit()]]
 
-window = sg.Window('Raspberry Pi GUI', grab_anywhere=False).Layout(layout)
+window = sg.Window('Raspberry Pi GUI', layout, grab_anywhere=False)
 
 while True:
     event, values = window.Read()
-    if event is None:
+    if event in (None, 'Exit'):
         break
 
     if event == 'Switch LED':
