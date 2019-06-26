@@ -33,7 +33,7 @@ def ChatBotWithHistory():
     history_offset = 0
     while True:
         (event, value) = window.Read()
-        if event is 'SEND':
+        if event == 'SEND':
             query = value['query'].rstrip()
             # EXECUTE YOUR COMMAND HERE
             print('The command you entered was {}'.format(query))
@@ -41,7 +41,7 @@ def ChatBotWithHistory():
             history_offset = len(command_history)-1
             window.FindElement('query').Update('')                       # manually clear input because keyboard events blocks clear
             window.FindElement('history').Update('\n'.join(command_history[-3:]))
-        elif event is None or event is 'EXIT':            # quit if exit event or X
+        elif event in (None, 'EXIT'):            # quit if exit event or X
             break
         elif 'Up' in event and len(command_history):
             command = command_history[history_offset]

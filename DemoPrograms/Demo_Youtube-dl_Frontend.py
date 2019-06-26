@@ -7,7 +7,7 @@ else:
 import subprocess
 
 """
-Simple wrapper for youtube-dl.exe. 
+Simple wrapper for youtube-dl.exe.
 Paste the youtube link into the GUI. The GUI link is queried when you click Get List.
 Get List will populate the pulldown list with the language options available for the video.
 Choose the language to download and click Download
@@ -45,9 +45,7 @@ def DownloadSubtitlesGUI():
             print('Done')
 
         elif event == 'Download':
-            lang = values['lang']
-            if lang is '':
-                lang = 'en'
+            lang = values['lang'] or 'en'
             print(f'Downloading subtitle for {lang}...')
             window.Refresh()
             command = [f'C:\\Python\\Anaconda3\\Scripts\\youtube-dl.exe --sub-lang {lang} --write-sub {link}',]

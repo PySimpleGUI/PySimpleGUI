@@ -45,9 +45,9 @@ while True:
     if event is None:
         break
 
-    if event is 'Switch LED':
+    if event == 'Switch LED':
         window.FindElement('output').Update(SwitchLED())
-    elif event is 'Flash LED':
+    elif event == 'Flash LED':
         window.FindElement('output').Update('LED is Flashing')
         window.Refresh()
         FlashLED()

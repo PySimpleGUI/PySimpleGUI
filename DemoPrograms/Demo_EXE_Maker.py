@@ -25,7 +25,7 @@ def Launcher():
     # ---===--- Loop taking in user input --- #
     while True:
         (button, values) = window.Read()
-        if button is 'Quit' or button is None:
+        if button in ('Quit', None):
             break           # exit button clicked
 
         source_file = values['_sourcefile_']
@@ -40,7 +40,7 @@ def Launcher():
         file_to_remove = os.path.join(source_path, source_filename[:-3]+'.spec')
         command_line = 'pyinstaller -wF "{}" {} {} {} {}'.format(source_file, icon_option, workpath_option, dispath_option, specpath_option)
 
-        if button is 'Make EXE':
+        if button == 'Make EXE':
             try:
                 print(command_line)
                 print('Making EXE... this will take a while.. the program has NOT locked up...')

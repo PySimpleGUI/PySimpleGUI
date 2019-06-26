@@ -11,7 +11,7 @@ A chat window.  Add call to your send-routine, print the response and you're don
 To see this program RUN on the web go here:
 https://repl.it/@PySimpleGUI/Chat-Application-Demo
 
-Note that the size of the display on repl.it is smaller than most, so the sizes of the 
+Note that the size of the display on repl.it is smaller than most, so the sizes of the
 Multiline and Output text areas were reduced in the online version.  Nothing else was changed
 '''
 
@@ -31,7 +31,7 @@ window = sg.Window('Chat window',
 # ---===--- Loop taking in user input and using it  --- #
 while True:
     event, value = window.Read()
-    if event is 'SEND':
+    if event == 'SEND':
         query = value['query'].rstrip()
         # EXECUTE YOUR COMMAND HERE
         print('The command you entered was {}'.format(query))

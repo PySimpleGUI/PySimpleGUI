@@ -27,9 +27,9 @@ def Timer():
         if values is None or button == 'Exit':
             break
 
-        if button is 'Reset':
+        if button == 'Reset':
             i=0
-        elif button is 'Pause':
+        elif button == 'Pause':
             paused = not paused
 
         if not paused:

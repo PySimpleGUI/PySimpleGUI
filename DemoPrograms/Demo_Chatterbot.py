@@ -12,7 +12,7 @@ import chatterbot.utils
 '''
 Demo_Chatterbot.py
 A GUI wrapped arouind the Chatterbot package.
-The GUI is used to show progress bars during the training process and 
+The GUI is used to show progress bars during the training process and
 to collect user input that is sent to the chatbot.  The reply is displayed in the GUI window
 '''
 
@@ -67,7 +67,7 @@ window = sg.Window('Chat Window', auto_size_text=True, default_element_size=(30,
 # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
 while True:
     event, (value,) = window.Read()
-    if event is not 'SEND':
+    if event != 'SEND':
         break
     string = value.rstrip()
     print('     '+string)
