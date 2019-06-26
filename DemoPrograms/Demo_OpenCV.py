@@ -41,7 +41,7 @@ def main():
     i = 0
     while vidFile.isOpened():
         event, values = window.Read(timeout=0)
-        if event is 'Exit' or event is None:
+        if event in ('Exit', None):
             exit(69)
         ret, frame = vidFile.read()
         if not ret:  # if out of data stop looping

@@ -21,11 +21,9 @@ while True:
     event, values = window.Read()
     if event is None:
         break
-    if event is 'Blue':
-        graph.TKCanvas.itemconfig(circle, fill = "Blue")
-    elif event is 'Red':
-        graph.TKCanvas.itemconfig(circle, fill = "Red")
-    elif event is 'Move':
+    if event in ('Blue', 'Red'):
+        graph.TKCanvas.itemconfig(circle, fill=event)
+    elif event == 'Move':
         graph.MoveFigure(point, 10,10)
         graph.MoveFigure(circle, 10,10)
         graph.MoveFigure(oval, 10,10)

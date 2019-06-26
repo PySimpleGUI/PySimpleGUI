@@ -64,10 +64,10 @@ Note this file contains a copy of ping.py. It is contained in the first part of 
     May 1, 2014
     -----------
     Little modifications by Mohammad Emami <emamirazavi@gmail.com>
-    - Added Python 3 support. For now this project will just support 
+    - Added Python 3 support. For now this project will just support
       python 3.x
     - Tested with python 3.3
-    - version was upped to 0.6 
+    - version was upped to 0.6
 
     March 19, 2013
     --------------
@@ -663,7 +663,7 @@ def main():
 
     while True:
         event, values = window.Read(timeout=0)
-        if event is 'Exit' or event is None:
+        if event in ('Exit', None):
             exit(0)
 
         run_a_ping_and_graph()

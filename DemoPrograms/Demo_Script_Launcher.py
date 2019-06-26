@@ -62,7 +62,7 @@ def Launcher2():
             print('Quickly launch your favorite programs using these shortcuts')
             print('Or  copy files to your github folder.  Or anything else you type on the command line')
             # copyfile(source, dest)
-        elif event is 'Run':
+        elif event == 'Run':
             for index, file in enumerate(values['demolist']):
                 print('Launching %s'%file)
                 window.Refresh()          # make the print appear immediately

@@ -18,7 +18,5 @@ while True:
     event, values = window.Read()
     if event is None:
         break
-    if event is 'Blue':
-        window.FindElement('canvas').TKCanvas.itemconfig(cir, fill = "Blue")
-    elif event is 'Red':
-        window.FindElement('canvas').TKCanvas.itemconfig(cir, fill = "Red")
+    if event in ('Blue', 'Red'):
+        window.FindElement('canvas').TKCanvas.itemconfig(cir, fill=event)

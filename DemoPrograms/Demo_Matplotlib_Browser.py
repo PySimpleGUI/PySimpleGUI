@@ -889,7 +889,7 @@ while True:
     event, values = window.Read()
     print(event)
     # show it all again and get buttons
-    if event is None or event is 'Exit':
+    if event in (None, 'Exit'):
         break
 
     try:
