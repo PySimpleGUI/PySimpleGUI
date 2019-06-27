@@ -107,7 +107,7 @@ if sys.version_info[0] >= 3:
 else:  
     import PySimpleGUI27 as sg  
   
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_', size=(10,1))],  
           [sg.Input(do_not_clear=True, key='_IN_')],  
           [sg.Button('Show'), sg.Button('Exit')]]  
   
@@ -215,7 +215,7 @@ Quickly add a GUI allowing the user to browse for a filename if a filename is no
     import sys      
       
     if len(sys.argv) == 1:      
-        event, (fname,) = sg.Window('My Script').Layout([[sg.Text('Document to open')],      
+        event, fname = sg.Window('My Script').Layout([[sg.Text('Document to open')],      
                                                          [sg.In(), sg.FileBrowse()],      
                                                          [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()  
     else:      
@@ -684,13 +684,13 @@ Instead of
               [sg.Input(), sg.FileBrowse()],      
               [sg.OK(), sg.Cancel()]]      
       
-    event, (number,) = sg.Window('Get filename example', layout).Read()  
+    event, number = sg.Window('Get filename example', layout).Read()  
 ```      
 you can write this line of code for the exact same result (OK, two lines with the import):      
 ```python      
     import PySimpleGUI as sg      
       
-    event, (filename,) = sg.Window('Get filename example').Layout(      
+    event, filename = sg.Window('Get filename example').Layout(      
         [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()  
 ```      
 
@@ -739,7 +739,7 @@ This simple program keep a window open, taking input values until the user termi
 ![math game](https://user-images.githubusercontent.com/13696193/44537842-c9444080-a6cd-11e8-94bc-6cdf1b765dd8.jpg)      
       
       
- ```python     
+```python     
     import PySimpleGUI as sg      
       
     layout = [ [sg.Txt('Enter values to calculate')],      
@@ -804,7 +804,8 @@ This recipe is a design pattern for multiple windows where the first window is n
 
 ```Python
 """  
- PySimpleGUI The Complete Course Lesson 7 - Multiple Windows"""  
+ PySimpleGUI The Complete Course Lesson 7 - Multiple Windows
+"""  
 import PySimpleGUI as sg  
   
 # Design pattern 1 - First window does not remain active  
@@ -852,7 +853,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
       
 ![canvas](https://user-images.githubusercontent.com/13696193/44632429-5266ac00-a948-11e8-9ee0-664103c40178.jpg)      
       
-  ```python    
+```python    
     import PySimpleGUI as sg      
       
     layout = [      
@@ -918,7 +919,8 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
 ## Keypad Touchscreen Entry - Input Element Update      
       
 This Recipe implements a Raspberry Pi touchscreen based keypad entry.  As the digits are entered using the buttons, the Input Element above it is updated with the input digits.      
-There are a number of features used in this Recipe including:      
+There are a number of features used in this Recipe including:  
+
 * Default Element Size      
 * auto_size_buttons      
 * Button      
@@ -930,7 +932,7 @@ There are a number of features used in this Recipe including:
 ![keypad 2](https://user-images.githubusercontent.com/13696193/44640891-57504d80-a992-11e8-93f4-4e97e586505e.jpg)      
       
       
-  ```python    
+```python    
     import PySimpleGUI as sg      
       
     # Demonstrates a number of PySimpleGUI features including:      

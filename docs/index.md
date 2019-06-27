@@ -3968,12 +3968,12 @@ Parameters explained:
 ***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
 
 Calls can get a little hairy looking if you try to declare everything in-line as you can see in this example.
-
+   
 ```python
 sg.Pane([col5, sg.Column([[sg.Pane([col1, col2, col4], handle_size=15, orientation='v',  background_color=None, show_handle=True, visible=True, key='_PANE_', border_width=0,  relief=sg.RELIEF_GROOVE),]]),col3 ], orientation='h', background_color=None, size=(160,160), relief=sg.RELIEF_RAISED, border_width=0)
 ```
 
-Combing these with *visibility* make for an interesting interface with entire panes being hidden from view until neded by the user.  It's one way of producing "dynamic" windows.
+Combing these with *visibility* make for an interesting interface with entire panes being hidden from view until needed by the user.  It's one way of producing "dynamic" windows.
 
 ## Colors
 Starting in version 2.5 you can change the background colors for the window and the Elements.
