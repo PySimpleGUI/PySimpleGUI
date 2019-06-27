@@ -5,7 +5,9 @@ import os
 """
     Demo of integrating PyGame with PySimpleGUI, the tkinter version
     A similar technique may be possible with WxPython
-    Only works on windows from what I've read
+    To make it work on Linux, set SDL_VIDEODRIVER like
+    specified in http://www.pygame.org/docs/ref/display.html, in the
+    pygame.display.init() section.
 """
 # --------------------- PySimpleGUI window layout and creation --------------------
 layout = [[sg.T('Test of PySimpleGUI with PyGame')],
@@ -18,7 +20,7 @@ graph = window.Element('_GRAPH_')
 # -------------- Magic code to integrate PyGame with tkinter -------
 embed = graph.TKCanvas
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
-os.environ['SDL_VIDEODRIVER'] = 'windib'
+os.environ['SDL_VIDEODRIVER'] = 'windib' # change this to 'x11' to make it work on Linux
 
 # ----------------------------- PyGame Code -----------------------------
 
