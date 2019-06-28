@@ -379,14 +379,13 @@ class ToolTip:
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    """The base class for all Elements.
+    """
+    The base class for all Elements.
     Holds the basic description of an Element like size and colors
-
-
     """
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         """
-
+        Element base class. Only used internally.  User will not create an Element object by itself
         :param type: ??????????????????????????
         :param size: ▲ (w,h) w=characters-wide, h=rows-high 
         :param auto_size_text: True if size should fit the text length 
@@ -426,8 +425,8 @@ class Element():
 
     def _RightClickMenuCallback(self, event):
         """
-
-        :param event: 
+        Callback function that's called when a right click happens. Shows right click menu as result
+        :param event: information provided by tkinter about the event including x,y location of click
 
         """
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
@@ -435,8 +434,8 @@ class Element():
 
     def _MenuItemChosenCallback(self, item_chosen):  # TEXT Menu item callback
         """
-
-        :param item_chosen: 
+        Callback function called when user chooses a menu item from menubar, Button Menu or right click menu
+        :param item_chosen: str. String holding the value chosen.
 
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
@@ -448,9 +447,10 @@ class Element():
 
     def _FindReturnKeyBoundButton(self, form):
         """
-
-        :param form: 
-
+        Searches for which Button has the flag Button.BindReturnKey set.  It is called recursively when a
+        "Container Element" is encountered. Func has to walk entire window including these "sub-forms"
+        :param form: the Window object to search
+        :return Button Object if a button is found, else None if no button found
         """
         for row in form.Rows:
             for element in row:
@@ -481,7 +481,8 @@ class Element():
 
     def _TextClickedHandler(self, event):
         """
-
+        Callback that's called when a text element is clicked on with events enabled on the Text Element.
+        Result is that control is returned back to user (quits mainloop).
         :param event: 
 
         """
@@ -506,8 +507,8 @@ class Element():
 
     def _ListboxSelectHandler(self, event):
         """
-
-        :param event: 
+        Callback function for when a listbox item is selected
+        :param event: Information from tkinter about the callback
 
         """
         # first, get the results table built
@@ -630,30 +631,32 @@ class Element():
 #                           Input Class                                  #
 # ---------------------------------------------------------------------- #
 class InputText(Element):
-    """Shows a single line of input."""
+    """
+    Display a single text input field.  Based on the tkinter Widget Entry
+    """
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None,   text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
                  right_click_menu=None, visible=True):
         """
 
-        :param default_text: Text initially shown in the input box (Default value = '')
+        :param default_text: Text initially shown in the input box as a default value(Default value = '')
         :param size: ▲ (w,h) w=characters-wide, h=rows-high 
         :param disabled: set disable state for element (Default = False)
-        :param password_char: Passwork character if this is a password field (Default value = '')
-        :param justification: justification for data display 
+        :param password_char: Password character if this is a password field (Default value = '')
+        :param justification: justification for data display. Valid choices - left, right, center
         :param background_color: color of background 
         :param text_color: color of the text 
         :param font: ▲ specifies the font family, size, etc 
-        :param tooltip: text, that will appear the you hover on 
+        :param tooltip: str. Text shown when cursor hovers over the element
         :param change_submits: If True, pressing Enter key submits window- DEPRICATED DO NOT USE! (Default = False)
         :param enable_events: Turns on the element specific events. Use this instead of change_submits (Default = False)
-        :param do_not_clear: see docx (Default = True)
-        :param key: ▲ Used with window.FindElement and with return values 
-        :param focus: if focus should be set to this 
-        :param pad: ▲ Amount of padding to put around element 
-        :param right_click_menu: see "Right Click Menus" 
-        :param visible: set visibility state of the element (Default = True)
+        :param do_not_clear: Bool. If False then the field will be set to blank after ANY submission (button, any event) (Default = True)
+        :param key: ▲ Any.  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values
+        :param focus: Bool. Determines if initial focus should go to this element.
+        :param pad: ▲ Tuple. Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
+        :param right_click_menu: [[]].  A list of lists of Menu items to show when this element is right clicked. See docs for format.
+        :param visible: Bool. set visibility state of the element (Default = True)
         """
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
@@ -929,10 +932,9 @@ InputOptionMenu = OptionMenu
 #                           Listbox                                      #
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
-    """A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
+    """
+    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
     when a window.Read() is executed.
-
-
     """
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None,
@@ -940,7 +942,7 @@ class Listbox(Element):
                  visible=True):
         """Listbox Element
 
-        :param values: list of values to display
+        :param values: list of values to display. Can be any type including mixed types as long as they have __str__ method
         :param default_values: list of objects for listbox 
         :param select_mode: can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options 
         :param change_submits: If True, pressing Enter key submits window (Default = False)
@@ -986,8 +988,8 @@ class Listbox(Element):
 
     def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, visible=None):
         """
-
-        :param values: new list of choices 
+        Update some of the element's settings
+        :param values: new list of choices to be shown to user
         :param disabled: disable or enable state of the element 
         :param set_to_index: highlights the item at this index as if user clicked 
         :param scroll_to_index: scroll the listbox so that this index is the first shown 
@@ -1039,12 +1041,20 @@ class Listbox(Element):
 
 
     def GetListValues(self):
-        """ """
+        # type: (Listbox) -> []
+        """
+        Returns list of Values provided by the user in the user's format
+        :return: List. List of values. Can be any / mixed types -> []
+        """
         return self.Values
 
 
     def SetFocus(self, force=False):
-        """ """
+        """
+        Moves the focus to this element
+        :param force: Bool. If True, will call focus_force instead of focus_set
+        :return:
+        """
         try:
             if force:
                 self.TKListbox.focus_force()
@@ -6526,9 +6536,10 @@ def _FindElementFromKeyInSubForm(form, key):
 
 
 def _FindElementWithFocusInSubForm(form):
+    # type: (...) -> Element or None
     """
-
-    :param form: 
+    Searches through a "sub-form" (can be a window or container) for the current element with focus
+    :param form: a Window, Column, Frame, or TabGroup (container elements)
 
     """
     for row_num, row in enumerate(form.Rows):
@@ -6561,7 +6572,7 @@ def _FindElementWithFocusInSubForm(form):
                 if element.TKButton is not None:
                     if element.TKButton is element.TKButton.focus_get():
                         return element
-
+    return None
 
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
