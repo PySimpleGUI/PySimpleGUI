@@ -7130,7 +7130,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # print(unique_field)
                     # Clones over the TCombobox.field element from the "alt" theme.
                     # This is what will allow us to change the background color without altering the whole programs theme
-                    combostyle.element_create(unique_field, "from", "alt")
+
+                    try:        # if this element is in a window that's shown TWICE, will get an error here, so skip error
+                        combostyle.element_create(unique_field, "from", "alt")
+                    except:
+                        pass
 
                     # Create widget layout using cloned "alt" field
                     combostyle.layout(style_name, [
