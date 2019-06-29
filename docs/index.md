@@ -764,17 +764,17 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |image_source||
-|message|(Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|no_titlebar|(Default value = True)|
-|grab_anywhere|(Default value = True)|
-|keep_on_top|(Default value = True)|
-|location|(Default value = (None, None))|
-|alpha_channel|(Default value = None)|
+|message||
+|background_color|color of background|
+|text_color|color of the text|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = True)|
+|grab_anywhere|(Default = True)|
+|keep_on_top|(Default = True)|
+|location||
+|alpha_channel||
 |time_between_frames|(Default value = 0)|
-|transparent_color|(Default value = None)|
+|transparent_color||
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
 
@@ -1767,20 +1767,20 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |text|The text to display (required)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|click_submits|(Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|relief|(Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|background_color|color of background (Default value = None)|
-|justification|justification for data display (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_text|True if size should fit the text length|
+|click_submits|????????????????????(Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|relief|relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`|
+|font|specifies the font family, size, etc|
+|text_color|color of the text|
+|background_color|color of background|
+|justification|justification for data display|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values|
+|right_click_menu|see "Right Click Menus"|
+|tooltip|text, that will appear the you hover on|
+|visible|set visibility state of the element (Default = True)|
 
 ### Methods
 
@@ -1796,11 +1796,11 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|visible|change visibility of element (Default value = None)|
+|value|new value to show|
+|background_color|color of background|
+|text_color|color of the text|
+|font|specifies the font family, size, etc|
+|visible|change visibility of element|
 
 ---
 
@@ -1861,25 +1861,25 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|default_text|(Default value = '')|
-|enter_submits|(Default value = False)|
-|disabled|set disable state for element (Default value = False)|
-|autoscroll|(Default value = False)|
-|border_width|(Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|do_not_clear|see docx (Default value = True)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|focus|if focus should be set to this (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|default_text|text to display in multiline (Default value = '')|
+|enter_submits|???????????? (Default = False)|
+|disabled|set disable state for element (Default = False)|
+|autoscroll|?????????? (Default = False)|
+|border_width|width of border around element|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_text|True if size should fit the text length|
+|background_color|color of background|
+|text_color|color of the text|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|do_not_clear|see docx (Default = True)|
+|key|Used with window.FindElement and with return values|
+|focus|if focus should be set to this|
+|font|specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 ### Methods
 
@@ -1898,18 +1898,19 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|disabled|disable or enable state of the element (Default value = None)|
-|append|(Default value = False)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|background_color|color of background (Default value = None)|
-|visible|change visibility of element (Default value = None)|
-|autoscroll|(Default value = None)|
+|value|new text to display|
+|disabled|disable or enable state of the element|
+|append|(Default = False)|
+|font|specifies the font family, size, etc|
+|text_color|color of the text|
+|background_color|color of background|
+|visible|change visibility of element|
+|autoscroll|??????????????????|
 
-## Text Input Element  | `Input == In`
+## Text Input Element  | `InputText == Input == In`
 
-Shows a single line of input.
+    Display a single text input field.  Based on the tkinter Widget `Entry`
+    
 ```python
 layout = [[sg.InputText('Default text')]]
 ```
@@ -1940,36 +1941,23 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|default_text|(Default value = '')|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|disabled|set disable state for element (Default value = False)|
-|password_char|Passwork character if this is a password field (Default value = '')|
-|justification|justification for data display (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|change_submits|If True, pressing Enter key submits window- DEPRICATED DO NOT USE! (Default value = False)|
-|enable_events|Turns on the element specific events. Use this instead of change_submits (Default value = False)|
-|do_not_clear|see docx (Default value = True)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|focus|if focus should be set to this (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
-
-There are two methods that can be called:
-
-```
-Input.Update(new_Value) - sets the input to new_value
-Input.Get() - returns the current value of the field.
-```
-
-Shorthand functions that are equivalent to `InputText` are `Input` and `In`
-
-#### do_not_clear Parameter
-
-**Important** - This trips a lot of people up.  If you do not set the `do_not_clear` parameter then the input field will clear when an event takes place.   The behavior is a "forms" style window development.  The assumption is that you want the field to clear.  If you are writing a chat program then you're thankful.  The rest of you, I'm sorry.
+|default_text|(str) Text initially shown in the input box as a default value(Default value = '')|
+|size|(int, int)  (width, height) w=characters-wide, h=rows-high|
+|disabled|(bool) set disable state for element (Default = False)|
+|password_char|(char) Password character if this is a password field (Default value = '')|
+|justification|(str) justification for data display. Valid choices - left, right, center|
+|background_color|(str) color of background in one of the color formats|
+|text_color|(str) color of the text|
+|font|(str / tuple)  specifies the font family, size, etc|
+|tooltip|(str) Text shown when cursor hovers over the element|
+|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
+|enable_events|(bool) If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)|
+|do_not_clear|(bool) If False then the field will be set to blank after ANY event (button, any event) (Default = True)|
+|key|(any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|focus|(bool) Determines if initial focus should go to this element.|
+|pad|(int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))|
+|right_click_menu|(list(list)) [ [ ] ]  A list of lists of Menu items to show when this element is right clicked. See docs for format.|
+|visible|(bool) set visibility state of the element (Default = True)|
 
 ### Methods
 
@@ -1984,21 +1972,29 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|disabled|disable or enable state of the element (Default value = None)|
-|select|(Default value = None)|
-|visible|change visibility of element (Default value = None)|
+|value|(str) new text to display as default text in Input field|
+|disabled|(bool) disable or enable state of the element (sets Entry Widget to readonly or normal)|
+|select|(bool) if True, then the text will be selected|
+|visible|(bool) change visibility of element|
 
-Get() - method
+Get() - Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
 
+        :return: (str) current value of Input field or '' if error encountered
 
-## Combo Element | `Combo == DropDown == Drop`
+---
+
+#### do_not_clear Parameter
+
+**Important** - This trips a lot of people up.  If you do not set the `do_not_clear` parameter then the input field will clear when an event takes place.   The behavior is a "forms" style window development.  The assumption is that you want the field to clear.  If you are writing a chat program then you're thankful.  The rest of you, I'm sorry.
+
+## Combo Element | `Combo == InputCombo == DropDown == Drop`
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
-ComboBox Element
+    ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
+    
 
 ```python
-layout = [[sg.InputCombo(['choice 1', 'choice 2'])]]
+layout = [[sg.Combo(['choice 1', 'choice 2'])]]
 ```
 
 ![combobox](https://user-images.githubusercontent.com/13696193/44959860-b565bf00-aec3-11e8-82fe-dbe41252458b.jpg)
@@ -2025,21 +2021,21 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|values||
-|default_value|(Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|disabled|set disable state for element (Default value = False)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|readonly|make element readonly (Default value = False)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|values|values to choice|
+|default_value|Choices to be displayed. List of strings|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_text|True if size should fit the text length|
+|background_color|color of background|
+|text_color|color of the text|
+|change_submits|(bool) DEPRICATED DO NOT USE. Use `enable_events` instead (Default = False)|
+|enable_events|(bool) Turns on the element specific events.(Default = False)|
+|disabled|(bool) set disable state for element (Default = False)|
+|key|(any) Used with window.FindElement and with return values|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text that will appear when mouse hovers over this element|
+|readonly|(combo) make element readonly (user can't change). True means user cannot change (Default = False)|
+|font|(str, tuple)  specifies the font family, size, etc|
+|visible|(bool) set visibility state of the element (Default = True)|
 
 ### Methods
 
@@ -2057,20 +2053,19 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|values|(Default value = None)|
-|set_to_index|(Default value = None)|
-|disabled|disable or enable state of the element (Default value = None)|
-|readonly|make element readonly (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|visible|change visibility of element (Default value = None)|
+|value|change which value is current selected|
+|values|change list of choices|
+|set_to_index|change selection to a particular choice|
+|disabled|disable or enable state of the element|
+|readonly|make element readonly|
+|font|specifies the font family, size, etc|
+|visible|change visibility of element|
 
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
-A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
+    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
     when a window.Read() is executed.
-
     
 
 ```python
@@ -2103,25 +2098,23 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|values||
-|default_values|(Default value = None)|
-|select_mode|(Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|bind_return_key|(Default value = False)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|disabled|set disable state for element (Default value = False)|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
-
-The `select_mode` option can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.
+|values|list of values to display. Can be any type including mixed types as long as they have __str__ method|
+|default_values|list of objects for listbox|
+|select_mode|can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|bind_return_key|(Default = False)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|disabled|set disable state for element (Default = False)|
+|auto_size_text|True if size should fit the text length|
+|font|specifies the font family, size, etc|
+|background_color|color of background|
+|text_color|color of the text|
+|key|Used with window.FindElement and with return values|
+|pad|Amount of padding to put around element|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 ### Methods
 
@@ -2137,11 +2130,11 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|values|(Default value = None)|
-|disabled|disable or enable state of the element (Default value = None)|
-|set_to_index|highlights the item at this index as if user clicked (Default value = None)|
-|scroll_to_index|scroll the listbox so that this index is the first shown (Default value = None)|
-|visible|change visibility of element (Default value = None)|
+|values|new list of choices to be shown to user|
+|disabled|disable or enable state of the element|
+|set_to_index|highlights the item at this index as if user clicked|
+|scroll_to_index|scroll the listbox so that this index is the first shown|
+|visible|change visibility of element|
 
 ```python
 SetValue(values)
@@ -2151,22 +2144,29 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|values||
+|values|new values to choice|
 
-GetListValues() - method
+GetListValues() - Returns list of Values provided by the user in the user's format
+        :return: List. List of values. Can be any / mixed types -> []
 
 ---
 
 ListBoxes can cause a window to return from a Read call.  If the flag change_submits is set, then when a user makes a selection, the Read immediately returns.
+
 Another way ListBoxes can cause Reads to return is if the flag bind_return_key is set.  If True, then if the user presses the return key while an entry is selected, then the Read returns.  Also, if this flag is set, if the user double-clicks an entry it will return from the Read.
 
 ## Slider Element
 
-Sliders have a couple of slider-specific settings as well as appearance settings.  Examples include the `orientation` and `range` settings.
+Sliders have a couple of slider-specific settings as well as appearance settings. Examples include the `orientation` and `range` settings.
 
  
+
 ```python
-layout = [[sg.Slider(range=(1,500), default_value=222, size=(20,15), orientation='horizontal', font=('Helvetica', 12))]]
+layout = [[sg.Slider(range=(1,500),
+         default_value=222,
+         size=(20,15),
+         orientation='horizontal',
+         font=('Helvetica', 12))]]
 ```
 
 ![slider](https://user-images.githubusercontent.com/13696193/44959858-b4349200-aec3-11e8-9e25-c0fcf025d19e.jpg)
@@ -2197,25 +2197,25 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|range|(Default value = (None, None))|
-|default_value|(Default value = None)|
-|resolution|(Default value = None)|
-|tick_interval|(Default value = None)|
-|orientation|(Default value = None)|
-|disable_number_display|(Default value = False)|
-|border_width|(Default value = None)|
-|relief|(Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|disabled|set disable state for element (Default value = False)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|range|(min, max) slider's range|
+|default_value|default setting (within range)|
+|resolution|how much each 'tick' should represent. Default = 1|
+|tick_interval||
+|orientation|'horizontal' or 'vertical' ('h' or 'v' work)|
+|disable_number_display|(Default = False)|
+|border_width|width of border around element|
+|relief|relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|font|specifies the font family, size, etc|
+|background_color|color of background|
+|text_color|color of the text|
+|key|Used with window.FindElement and with return values|
+|pad|Amount of padding to put around element|
+|tooltip|text, that will appear the you hover on|
+|visible|set visibility state of the element (Default = True)|
 
 ### Qt Sliders
 
@@ -2234,10 +2234,10 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|range|(Default value = (None, None))|
-|disabled|disable or enable state of the element (Default value = None)|
-|visible|change visibility of element (Default value = None)|
+|value|set current selection to value new value in slider|
+|range|new range in slider|
+|disabled|disable or enable state of the element|
+|visible|change visibility of element|
 
 ## Radio Element
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
@@ -2277,21 +2277,21 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|text||
-|group_id||
-|default|(Default value = False)|
-|disabled|set disable state for element (Default value = False)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|visible|set visibility state of the element (Default value = True)|
+|text|Text to display next to button|
+|group_id|Groups together multiple Radio Buttons. Can be any value|
+|default|Bool. Initial state (Default = False)|
+|disabled|set disable state for element (Default = False)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_text|True if size should fit the text length|
+|background_color|color of background|
+|text_color|color of the text|
+|font|specifies the font family, size, etc|
+|key|Used with window.FindElement and with return values|
+|pad|Amount of padding to put around element|
+|tooltip|text, that will appear the you hover on|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|visible|set visibility state of the element (Default = True)|
 
 ###  Methods
 
@@ -2305,19 +2305,19 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|disabled|disable or enable state of the element (Default value = None)|
-|visible|change visibility of element (Default value = None)|
+|value|Bool. if True change to selected|
+|disabled|disable or enable state of the element|
+|visible|change visibility of element|
 
 ## Checkbox Element | `CBox == CB == Check`
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
+
+ 
 
 ```python
 layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My second Checkbox!')]]
 ```
 ![checkbox](https://user-images.githubusercontent.com/13696193/44959906-6f5d2b00-aec4-11e8-9c8a-962c787f0286.jpg)
-
- 
 
 ```python
 Checkbox(text,
@@ -2340,33 +2340,38 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|text||
-|default|(Default value = False)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|disabled|set disable state for element (Default value = False)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|text|Text to display next to checkbox|
+|default|Bool + None.  Initial state. True = Checked, False = unchecked, None = Not available (grayed out) (Default = False)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_text|True if size should fit the text length|
+|font|specifies the font family, size, etc|
+|background_color|color of background|
+|text_color|color of the text|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|key|Used with window.FindElement and with return values|
+|pad|Amount of padding to put around element|
+|tooltip|text, that will appear the you hover on|
+|visible|set visibility state of the element (Default = True)|
 
 ### Methods
+
 ```python
-Update(value=None, disabled=None, visible=None)
-Get()
+Update(value=None,
+	disabled=None,
+	visible=None)
 ```
+
+Parameters explained:
+
 |Name|Meaning|
-|-----|-----|
-| Update| changes the element|
-| value| Bool if True checks the checkbox|
-| disabled| if True disables the element|
-| Get| returns current state|
-|||
+|---|---|
+|value|Bool if True checks the checkbox|
+|disabled|disable or enable state of the element|
+|visible|change visibility of element|
+
+Get() - method
 
 ## Spin Element
 An up/down spinner control.  The valid values are passed in as a list.
@@ -2400,20 +2405,20 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|values||
-|initial_value|(Default value = None)|
-|disabled|set disable state for element (Default value = False)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|values|List of valid values|
+|initial_value|String with initial value|
+|disabled|set disable state for element (Default = False)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_text|True if size should fit the text length|
+|font|specifies the font family, size, etc|
+|background_color|color of background|
+|text_color|color of the text|
+|key|Used with window.FindElement and with return values|
+|pad|Amount of padding to put around element|
+|tooltip|text, that will appear the you hover on|
+|visible|set visibility state of the element (Default = True)|
 
 ### Qt Differences - `values` is a range!
 
@@ -2434,10 +2439,12 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|values|(Default value = None)|
-|disabled|disable or enable state of the element (Default value = None)|
-|visible|change visibility of element (Default value = None)|
+|value|set the current value|
+|values|set available choices|
+|disabled|disable or enable state of the element|
+|visible|change visibility of element|
+
+Get() - method
 
 ## Image Element
 
@@ -2464,16 +2471,16 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|filename|(Default value = None)|
-|data|(Default value = None)|
-|background_color|color of background (Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
-|enable_events|Turns on the element specific events.(Default value = False)|
+|filename|file name if the image is in a file|
+|data|if image is in RAM (PIL format?)|
+|background_color|color of background|
+|size|(w,h) w=characters-wide, h=rows-high|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
+|enable_events|Turns on the element specific events.(Default = False)|
 
 ### Methods
 
@@ -2488,10 +2495,10 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|filename|(Default value = None)|
-|data|(Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|visible|change visibility of element (Default value = None)|
+|filename||
+|data||
+|size|(w,h) w=characters-wide, h=rows-high|
+|visible|change visibility of element|
 
 Choose **either** a filename or in-ram data image to use to replace current image
 
@@ -2602,29 +2609,29 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|button_text|(Default value = '')|
-|button_type|(Default value = BUTTON_TYPE_READ_FORM)|
-|target||
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|file_types|(Default value = (("ALL Files", "*.*"),))|
-|initial_folder|(Default value = None)|
-|disabled|set disable state for element (Default value = False)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|image_filename|(Default value = None)|
-|image_data|(Default value = None)|
-|image_size|(Default value = (None)|
-|image_subsample|(Default value = None)|
-|border_width|(Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)|
-|auto_size_button|(Default value = None)|
-|button_color|(Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|bind_return_key|(Default value = False)|
-|focus|if focus should be set to this (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|button_text|Text to be displayed on the button (Default value = '')|
+|button_type|You  should NOT be setting this directly (Default value = BUTTON_TYPE_READ_FORM)|
+|target|key or (row,col) target for the button|
+|tooltip|text, that will appear the you hover on|
+|file_types|the filetypes that will be used to match files (Default value = (("ALL Files", "*.*"),))|
+|initial_folder|starting path for folders and files|
+|disabled|set disable state for element (Default = False)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels  (Default = (None))|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around button in pixels|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|(text color, backound color)|
+|font|specifies the font family, size, etc|
+|bind_return_key|If True the return key will cause this button to fire (Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values|
+|visible|set visibility state of the element (Default = True)|
 
 ### Shortcut, Pre-defined Buttons
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, set the button text to match the function name and set the parameters to commonly used values. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
@@ -2735,14 +2742,17 @@ Your button images need to be in PNG or GIF format.  When you make a button with
 
 This example comes from the `Demo Media Player.py` example program.  Because it's a non-blocking button, it's defined as `RButton`.  You also put images on blocking buttons by using `Button`.
 
-    sg.RButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
-                       image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0)
-
+```python
+sg.RButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
+               image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0)
+```
 Three parameters are used for button images.
 
-    image_filename - Filename. Can be a relative path
-    image_size - Size of image file in pixels
-    image_subsample - Amount to divide the size by.  2 means your image will be 1/2 the size.  3 means 1/3
+```
+image_filename - Filename. Can be a relative path
+image_size - Size of image file in pixels
+image_subsample - Amount to divide the size by.  2 means your image will be 1/2 the size.  3 means 1/3
+```
 
 Here's an example window made with button images.
 
@@ -2758,9 +2768,9 @@ sg.RButton('Pause', button_color=sg.TRANSPARENT_BUTTON,
 ```
 This is one you'll have to experiment with at this point.  Not up for an exhaustive explanation.
 
-  **Realtime Buttons**
+**Realtime Buttons**
 
-  Normally buttons are considered "clicked" when the mouse button is let UP after a downward click on the button.  What about times when you need to read the raw up/down button values.  A classic example for this is a robotic remote control.  Building a remote control using a GUI is easy enough.  One button for each of the directions is a start.  Perhaps something like this:
+Normally buttons are considered "clicked" when the mouse button is let UP after a downward click on the button.  What about times when you need to read the raw up/down button values.  A classic example for this is a robotic remote control.  Building a remote control using a GUI is easy enough.  One button for each of the directions is a start.  Perhaps something like this:
 
 ![robot remote](https://user-images.githubusercontent.com/13696193/44959958-ff9b7000-aec4-11e8-99ea-7450926409be.jpg)
 
@@ -2834,30 +2844,30 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|text|(Default value = None)|
-|button_color|(Default value = (None)|
-|disabled|disable or enable state of the element (Default value = None)|
-|image_data|(Default value = None)|
-|image_filename|(Default value = None)|
-|visible|change visibility of element (Default value = None)|
-|image_subsample|(Default value = None)|
-|image_size|(Default value = None)|
+|text|sets button text|
+|button_color|(text, background) (Default = (None))|
+|disabled|disable or enable state of the element|
+|image_data|in-RAM image to be displayed on button|
+|image_filename|image filename if there is a button image|
+|visible|change visibility of element|
+|image_subsample|amount to reduce the size of the image|
+|image_size||
 
-GetText - Returns the current text shown on a button
+GetText() - Returns the current text shown on a button
 
-GetText() - method
+        :return: string value of button
 
 ## ButtonMenu Element
 
 The ButtonMenu element produces a unique kind of effect.  It's a button, that when clicked, shows you a menu.   It's like clicking one of the top-level menu items on a MenuBar.  As a result, the menu definition take the format of a single  menu entry from  a normal menu definition.  A normal menu definition is  a list of lists.  This definition is one of those lists.
 
-Here is a sample definition:
+ 
+
 ```python
  ['Menu', ['&Pause Graph', 'Menu item::optional_key']]
 ```
-The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
 
- 
+The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
 
 ```python
 ButtonMenu(button_text,
@@ -2883,27 +2893,25 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|button_text||
-|menu_def||
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|disabled|set disable state for element (Default value = False)|
-|image_filename|(Default value = None)|
-|image_data|(Default value = None)|
-|image_size|(Default value = (None, None))|
-|image_subsample|(Default value = None)|
-|border_width|(Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None)|
-|auto_size_button|(Default value = None)|
-|button_color|(Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tearoff|(Default value = False)|
-|visible|set visibility state of the element (Default value = True)|
+|button_text|Text to be displayed on the button (Default value = '')|
+|menu_def|??????????????????|
+|tooltip|text, that will appear the you hover on|
+|disabled|set disable state for element (Default = False)|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels  (Default = (None))|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around button in pixels|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|(text color, backound color)|
+|font|specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values|
+|tearoff|?????????????????? (Default = False)|
+|visible|set visibility state of the element (Default = True)|
 
 One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
-
-This is the effect:
 
 ![buttonmenu](https://user-images.githubusercontent.com/13696193/50387000-bc0d8180-06c0-11e9-8d17-3b22ed665e78.gif)
 
@@ -2930,7 +2938,7 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
+|pad|Amount of padding to put around element|
 
 ## ProgressBar Element
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.
@@ -2994,17 +3002,41 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|max_value||
-|orientation|(Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|auto_size_text|True if size should fit the text length (Default value = None)|
-|bar_color|(Default value = (None)|
-|style|(Default value = None)|
-|border_width|(Default value = None)|
-|relief|(Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|max_value|max value of progressbar|
+|orientation|'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_text|True if size should fit the text length|
+|bar_color|(Default = (None))|
+|style|????????????????????????????|
+|border_width|width of border around button|
+|relief|????????????????????????????|
+|key|Used with window.FindElement and with return values|
+|pad|Amount of padding to put around element|
+|visible|set visibility state of the element (Default = True)|
+
+### Methods
+
+```python
+Update(visible=None)
+```
+
+Parameters explained:
+
+|Name|Meaning|
+|---|---|
+|visible|change visibility of element|
+
+```python
+UpdateBar(current_count,
+	max=None)
+```
+
+Parameters explained:
+
+|Name|Meaning|
+|---|---|
+|current_count|sets the current value|
+|max|changes the max value|
 
 ## Output Elements
 The Output Element is a re-direction of Stdout.  Anything "printed" will be displayed in this element.
@@ -3035,15 +3067,15 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|background_color|color of background (Default value = None)|
-|text_color|color of the text (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|background_color|color of background|
+|text_color|color of the text|
+|pad|Amount of padding to put around element|
+|font|specifies the font family, size, etc|
+|tooltip|text, that will appear the you hover on|
+|key|Used with window.FindElement and with return values|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 ### Methods
 
@@ -3056,12 +3088,8 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|value|(Default value = None)|
-|visible|change visibility of element (Default value = None)|
-
-----
-
-UpdateBar - ?
+|value||
+|visible|change visibility of element|
 
 ----
 
@@ -3090,10 +3118,6 @@ def ChatBot():
 
 ChatBot()
 ```
-
-
-
-
 
 ## Column Element
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.
@@ -3124,15 +3148,15 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|layout||
-|background_color|color of background (Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|scrollable|(Default value = False)|
-|vertical_scroll_only|(Default value = False)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|layout|????????????????????????|
+|background_color|color of background|
+|size|(w,h) w=characters-wide, h=rows-high|
+|pad|Amount of padding to put around element|
+|scrollable|???????????????????????? (Default = False)|
+|vertical_scroll_only|???????????????????????? (Default = False)|
+|right_click_menu|see "Right Click Menus"|
+|key|Used with window.FindElement and with return values|
+|visible|set visibility state of the element (Default = True)|
 
 ---
 
@@ -3203,20 +3227,20 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|title||
-|layout||
-|title_color|(Default value = None)|
-|background_color|color of background (Default value = None)|
-|title_location|(Default value = None)|
-|relief|(Default value = DEFAULT_FRAME_RELIEF)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|border_width|(Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|title|title for frame above|
+|layout|layout of elements|
+|title_color|????????????????????????|
+|background_color|color of background|
+|title_location|????????????????????????|
+|relief|relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_FRAME_RELIEF)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|font|specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|border_width|width of border around element|
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 ---
 
@@ -3234,7 +3258,6 @@ layout = [
 
 window = sg.Window('Frame with buttons', font=("Helvetica", 12)).Layout(layout)
 ```
-
 
 ## Canvas Element
 
@@ -3257,14 +3280,14 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|canvas|(Default value = None)|
-|background_color|color of background (Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|canvas|????????????????????????|
+|background_color|color of background|
+|size|(w,h) w=characters-wide, h=rows-high|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 ### Matplotlib, Pyplot Integration
 
@@ -3359,18 +3382,18 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|canvas_size||
-|graph_bottom_left||
-|graph_top_right||
-|background_color|color of background (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|drag_submits|(Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|canvas_size|????????????????????????|
+|graph_bottom_left|????????????????????????|
+|graph_top_right|????????????????????????|
+|background_color|color of background|
+|pad|Amount of padding to put around element|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|drag_submits|???????????????????????? (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 |float_values|bool: If True x,y coordinates are returned as floats, not ints|
 
 ### Methods
@@ -3420,7 +3443,7 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |point||
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = 2)|
+|size|(w,h) w=characters-wide, h=rows-high (Default value = 2)|
 |color|(Default value = 'black')|
 
 ```python
@@ -3436,7 +3459,7 @@ Parameters explained:
 |---|---|
 |center_location||
 |radius||
-|fill_color|(Default value = None)|
+|fill_color||
 |line_color|(Default value = 'black')|
 
 ```python
@@ -3452,8 +3475,8 @@ Parameters explained:
 |---|---|
 |top_left||
 |bottom_right||
-|fill_color|(Default value = None)|
-|line_color|(Default value = None)|
+|fill_color||
+|line_color||
 
 ```python
 DrawArc(top_left,
@@ -3472,7 +3495,7 @@ Parameters explained:
 |bottom_right||
 |extent||
 |start_angle||
-|style|(Default value = None)|
+|style||
 |arc_color|(Default value = 'black')|
 
 ```python
@@ -3488,8 +3511,8 @@ Parameters explained:
 |---|---|
 |top_left||
 |bottom_right||
-|fill_color|(Default value = None)|
-|line_color|(Default value = None)|
+|fill_color||
+|line_color||
 
 ```python
 DrawText(text,
@@ -3506,7 +3529,7 @@ Parameters explained:
 |text||
 |location||
 |color|(Default value = 'black')|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|font|specifies the font family, size, etc|
 |angle|(Default value = 0)|
 
 Erase() - method
@@ -3531,7 +3554,7 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |background_color|color of background|
-|visible|change visibility of element (Default value = None)|
+|visible|change visibility of element|
 
 ```python
 Move(x_direction,
@@ -3617,33 +3640,33 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |values||
-|headings|(Default value = None)|
-|visible_column_map|(Default value = None)|
-|col_widths|(Default value = None)|
+|headings||
+|visible_column_map||
+|col_widths||
 |def_col_width|(Default value = 10)|
-|auto_size_columns|(Default value = True)|
+|auto_size_columns|(Default = True)|
 |max_col_width|(Default value = 20)|
-|select_mode|(Default value = None)|
-|display_row_numbers|(Default value = False)|
-|num_rows|(Default value = None)|
-|row_height|(Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|select_mode||
+|display_row_numbers|(Default = False)|
+|num_rows||
+|row_height||
+|font|specifies the font family, size, etc|
 |justification|(Default value = 'right')|
-|text_color|color of the text (Default value = None)|
-|background_color|color of background (Default value = None)|
-|alternating_row_color|(Default value = None)|
-|row_colors|(Default value = None)|
-|vertical_scroll_only|(Default value = True)|
-|hide_vertical_scroll|(Default value = False)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|bind_return_key|(Default value = False)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|text_color|color of the text|
+|background_color|color of background|
+|alternating_row_color||
+|row_colors||
+|vertical_scroll_only|(Default = True)|
+|hide_vertical_scroll|(Default = False)|
+|size|(w,h) w=characters-wide, h=rows-high|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|bind_return_key|(Default = False)|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 ### Read return values from Table Element
 
@@ -3664,10 +3687,10 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|values|(Default value = None)|
-|num_rows|(Default value = None)|
-|visible|change visibility of element (Default value = None)|
-|select_rows|(Default value = None)|
+|values||
+|num_rows||
+|visible|change visibility of element|
+|select_rows||
 
 ---
 ### Known visualization problem....
@@ -3710,29 +3733,29 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|data|(Default value = None)|
-|headings|(Default value = None)|
-|visible_column_map|(Default value = None)|
-|col_widths|(Default value = None)|
+|data||
+|headings||
+|visible_column_map||
+|col_widths||
 |col0_width|(Default value = 10)|
 |def_col_width|(Default value = 10)|
-|auto_size_columns|(Default value = True)|
+|auto_size_columns|(Default = True)|
 |max_col_width|(Default value = 20)|
-|select_mode|(Default value = None)|
-|show_expanded|(Default value = False)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
+|select_mode||
+|show_expanded|(Default = False)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|font|specifies the font family, size, etc|
 |justification|(Default value = 'right')|
-|text_color|color of the text (Default value = None)|
-|background_color|color of background (Default value = None)|
-|num_rows|(Default value = None)|
-|row_height|(Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|text_color|color of the text|
+|background_color|color of background|
+|num_rows||
+|row_height||
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 Unlike Tables there is no standard format for trees.  Thus the data structure passed to the Tree Element must be constructed.  This is done using the TreeData class.  The process is as follows:
 * Get a TreeData Object
@@ -3852,20 +3875,19 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |layout||
-|tab_location|(Default value = None)|
-|title_color|(Default value = None)|
-|selected_title_color|(Default value = None)|
-|background_color|color of background (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|change_submits|If True, pressing Enter key submits window (Default value = False)|
-|enable_events|Turns on the element specific events.(Default value = False)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|border_width|(Default value = None)|
-|theme|(Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
-
+|tab_location||
+|title_color||
+|selected_title_color||
+|background_color|color of background|
+|font|specifies the font family, size, etc|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|pad|Amount of padding to put around element|
+|border_width|width of border around element|
+|theme||
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|visible|set visibility state of the element (Default = True)|
 
 ```python
 Tab(title,
@@ -3887,17 +3909,17 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |title||
-|layout||
-|title_color|(Default value = None)|
-|background_color|color of background (Default value = None)|
-|font|(common_key) specifies the font family, size, etc (Default value = None)|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|disabled|set disable state for element (Default value = False)|
-|border_width|(Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|tooltip|text, that will appear the you hover on (Default value = None)|
-|right_click_menu|see "Right Click Menus" (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|layout|?????????????????????|
+|title_color||
+|background_color|color of background|
+|font|specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|disabled|set disable state for element (Default = False)|
+|border_width|width of border around element|
+|key|Used with window.FindElement and with return values|
+|tooltip|text, that will appear the you hover on|
+|right_click_menu|see "Right Click Menus"|
+|visible|set visibility state of the element (Default = True)|
 
 ### Reading Tab Groups
 
@@ -3918,14 +3940,12 @@ Parameters explained:
 
 |Name|Meaning|
 |---|---|
-|values|(Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|value|(Default value = None)|
-|text|(Default value = None)|
-|icon|(Default value = None)|
-|visible|change visibility of element (Default value = None)|
-
-
+|values||
+|key|Used with window.FindElement and with return values|
+|value||
+|text||
+|icon||
+|visible|change visibility of element|
 
 ## Pane Element
 
@@ -3954,16 +3974,16 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |pane_list||
-|background_color|color of background (Default value = None)|
-|size|(common_key) (w,h) w=characters-wide, h=rows-high (Default value = (None, None))|
-|pad|(common_key) Amount of padding to put around element (Default value = None)|
-|orientation|(Default value = 'vertical')|
-|show_handle|(Default value = True)|
-|relief|(Default value = RELIEF_RAISED)|
-|handle_size|(Default value = None)|
-|border_width|(Default value = None)|
-|key|(common_key) Used with window.FindElement and with return values (Default value = None)|
-|visible|set visibility state of the element (Default value = True)|
+|background_color|color of background|
+|size|(w,h) w=characters-wide, h=rows-high|
+|pad|Amount of padding to put around element|
+|orientation|'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')|
+|show_handle|(Default = True)|
+|relief|relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`|
+|handle_size||
+|border_width|width of border around element|
+|key|Used with window.FindElement and with return values|
+|visible|set visibility state of the element (Default = True)|
 
 ***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
 
@@ -4176,8 +4196,8 @@ You can update any of these items within a SystemTray object
 
  Change them all or just 1.
 
-
 # Global Settings
+
 **Global Settings**
 Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
 
@@ -4217,14 +4237,9 @@ Explanation of parameters
 
 |Name|Meaning|
 |----- | ---- |
-| icon     | filename of icon used for taskbar and title bar |
-| button_color     | button color (foreground, background) |
-| element_size     | element size (width, height) in characters |
-| margins      | tkinter margins around outsize |
 | element_padding      | tkinter padding around each element |
 | auto_size_text   | autosize the elements to fit their text |
 | auto_size_buttons    | autosize the buttons to fit their text |
-| font     | font used for elements |
 | border_width     | amount of bezel or border around sunken or raised elements |
 | slider_border_width      | changes the way sliders look |
 | slider_relief    | changes the way sliders look |
@@ -4247,7 +4262,6 @@ Explanation of parameters
 | text_justification   | justification to use on Text Elements. Values are strings - 'left', 'right', 'center' |
 | debug_win_size   | size of the Print output window |
 | window_location      | location on the screen (x,y) of window's top left cornder |
-| tooltip_time     | time in milliseconds to wait before showing a tooltip. Default is 400ms |
 | | |
 
 These settings apply to all windows `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the window-level being the highest and the Element-level the lowest.  Thus the levels are:
@@ -4641,7 +4655,7 @@ Parameters explained:
 |Name|Meaning|
 |---|---|
 |menu_definition||
-|visible|change visibility of element (Default value = None)|
+|visible|change visibility of element|
 
 ---
 
@@ -5654,12 +5668,3 @@ GNU Lesser General Public License (LGPL 3) +
 ## Acknowledgments
 
 #### SORRY!! Will add these back.  Lost due to file length limitation
-
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIxNjg5MDM1Niw4NjQ5Nzg3NjUsLTEwNj
-U5NzgxMjYsNTE5MDU1OTQsMjA1MzEyNTE0OSwtMTU3ODc0NjU4
-OCwyNjA1ODQ4MTQsMTEwMjA4ODMzMywxNjc5ODUwOTkyLC0xND
-YxNDI4MSwtNjA2MzcxMTgsLTUwOTM1OTEyMywtMjQ4OTc2Mjks
-MTMwNzY5MjU5LC0yOTY3ODM1NSwtNzc0MDc0MjMwLDI2NjM2ND
-QxNyw0NDk0MzMyNDMsLTExNDg0OTA2MjNdfQ==
--->
