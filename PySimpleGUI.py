@@ -26,6 +26,7 @@ import textwrap
 import inspect
 from typing import List, Any, Union
 from random import randint
+import warnings
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
 #  88    `8b          88.    "'                        88          d8'   `88 88     88 88
@@ -1029,7 +1030,7 @@ class Listbox(Element):
 
         :param values: List[Any] new list of choices to be shown to user
         :param disabled: (bool) disable or enable state of the element
-        :param set_to_index: (int) highlights the item at this index as if user clicked
+        :param set_to_index: Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted
         :param scroll_to_index: (int) scroll the listbox so that this index is the first shown
         :param visible: (bool) control visibility of element
         """
@@ -1046,10 +1047,17 @@ class Listbox(Element):
             self.Values = values
         if set_to_index is not None:
             self.TKListbox.selection_clear(0, len(self.Values))     # clear all listbox selections
-            try:
-                self.TKListbox.selection_set(set_to_index, set_to_index)
-            except:
-                pass
+            if type(set_to_index) in (tuple, list):
+                for i in set_to_index:
+                    try:
+                        self.TKListbox.selection_set(i, i)
+                    except:
+                        warnings.warn('* Listbox Update selection_set failed with index {}*'.format(set_to_index))
+            else:
+                try:
+                    self.TKListbox.selection_set(set_to_index, set_to_index)
+                except:
+                    warnings.warn('* Listbox Update selection_set failed with index {}*'.format(set_to_index))
         if visible is False:
             self.TKListbox.pack_forget()
             self.vsb.pack_forget()
