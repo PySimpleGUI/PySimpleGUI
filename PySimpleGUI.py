@@ -223,6 +223,7 @@ WRITE_ONLY_KEY = '__WRITE ONLY__'
 MENU_DISABLED_CHARACTER = '!'
 MENU_KEY_SEPARATOR = '::'
 
+ENABLE_TK_WINDOWS = False
 
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
@@ -4986,7 +4987,10 @@ class Window:
 
             if self.RootNeedsDestroying:
                 # print('*** DESTROYING really late***')
-                self.TKroot.destroy()
+                try:
+                    self.TKroot.destroy()
+                except:
+                    pass
                 # _my_windows.Decrement()
                 self.LastButtonClicked = None
                 return None, None
@@ -5012,7 +5016,10 @@ class Window:
             self.TimerCancelled = True
             if self.RootNeedsDestroying:
                 # print('*** DESTROYING LATE ***')
-                self.TKroot.destroy()
+                try:
+                    self.TKroot.destroy()
+                except:
+                    pass
                 Window.DecrementOpenCount()
                 # _my_windows.Decrement()
                 self.LastButtonClicked = None
@@ -8113,7 +8120,10 @@ def StartupTK(my_flex_form: Window):
     # ow = _my_windows.NumOpenWindows
     ow = Window.NumOpenWindows
     # print('Starting TK open Windows = {}'.format(ow))
-    if not ow and not my_flex_form.ForceTopLevel:
+    if ENABLE_TK_WINDOWS:
+        root = tk.Tk()
+        Window.IncrementOpenCount()
+    elif not ow and not my_flex_form.ForceTopLevel:
         # if first window being created, make a throwaway, hidden master root.  This stops one user
         # window from becoming the child of another user window. All windows are children of this
         # hidden window
@@ -8201,7 +8211,10 @@ def StartupTK(my_flex_form: Window):
             Window.DecrementOpenCount()
             # _my_windows.Decrement()
         if my_flex_form.RootNeedsDestroying:
-            my_flex_form.TKroot.destroy()
+            try:
+                my_flex_form.TKroot.destroy()
+            except:
+                pass
             my_flex_form.RootNeedsDestroying = False
     return
 
