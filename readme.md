@@ -643,6 +643,37 @@ POPUP_BUTTONS_NO_BUTTONS
 #### Scrolled Output
 There is a scrolled version of Popups should you have a lot of information to display.
 
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+PopupScrolled(args,
+    button_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    title=None,
+    non_blocking=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|Variable number of items to print|
+|button_color|button color (foreground, background)|
+|yes_no|(Default = False)|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|size|(w,h) w=characters-wide, h=rows-high|
+|location|(Default = (None))|
+|title||
+|non_blocking|(Default = False)|
+|||
+| **return** | Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+
 ```python
 PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None), title=None, non_blocking=False)
 ```
@@ -665,6 +696,48 @@ Note that the default max number of lines before scrolling happens is set to 50.
 If `non_blocking` parameter is set, then  the call will not blocking waiting for the user to close the window.  Execution will immediately return to the user.  Handy when you want to dump out debug info without disrupting the program flow. 
 
 ### PopupNoWait
+
+Show Popup window and immediately return (does not block)
+
+```
+PopupNoWait(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
 The Popup call PopupNoWait or PopupNonBlocking will create a popup window and then immediately return control back to you.  All other popup functions will block, waiting for the user to close the popup window. 
 
 This function is very handy for when you're **debugging** and want to display something as output but don't want to change the programs's overall timing by blocking.  Think of it like a `print` statement. There are no return values on one of these Popups. 
@@ -1571,43 +1644,46 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|title||
-|layout||
-|default_element_size|(Default value = DEFAULT_ELEMENT_SIZE)|
-|default_button_element_size||
-|auto_size_text|True if size should fit the text length|
-|auto_size_buttons||
-|location|Location on screen to display|
-|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
-|element_padding||
-|margins|(Default = (None))|
-|button_color|button color (foreground, background)|
-|font|specifies the font family, size, etc|
-|progress_bar_color|(Default = (None))|
-|background_color|color of background|
-|border_depth||
-|auto_close|(Default = False)|
-|auto_close_duration|(Default value = DEFAULT_AUTOCLOSE_TIME)|
-|icon|Icon to display. Filled in with default icon in init (Default value = None)|
-|force_toplevel|(Default = False)|
-|alpha_channel|(Default value = 1)|
-|return_keyboard_events|(Default = False)|
-|use_default_focus|(Default = True)|
-|text_justification||
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|resizable|(Default = False)|
-|disable_close|(Default = False)|
-|disable_minimize|(Default = False)|
+|title|(str) The title that will be displayed in the Titlebar and on the Taskbar|
+|layout|List[List[Elements]] The layout for the window. Can also be specified in the Layout method|
+|default_element_size|Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all elements in this window|
+|default_button_element_size|Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all Button elements in this window|
+|auto_size_text|(bool) True if Elements in Window should be sized to exactly fir the length of text|
+|auto_size_buttons|(bool) True if Buttons in this Window should be sized to exactly fit the text on this.|
+|location|Tuple[int, int] (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.|
+|size|Tuple[int, int] (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user|
+|element_padding|Tuple[int, int] or ((int, int),(int,int)) Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))|
+|margins|Tuple[int, int] (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.|
+|button_color|Tuple[str, str] (text color, button color) Default button colors for all buttons in the window|
+|font|Union[str, tuple]  specifies the font family, size.  Uses one of two font specifications formats|
+|progress_bar_color|Tuple[str, str] (bar color, background color) Sets the default colors for all progress bars in the window|
+|background_color|(str) color of background|
+|border_depth|(int) Default border depth (width) for all elements in the window|
+|auto_close|(bool) If True, the window will automatically close itself|
+|auto_close_duration|(int) Number of seconds to wait before closing the window|
+|icon|Union[str, str] Can be either a filename or Base64 value.|
+|force_toplevel|(bool) If True will cause this window to skip the normal use of a hidden master window|
+|alpha_channel|(float) Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.|
+|return_keyboard_events|(bool) if True key presses on the keyboard will be returned as Events from Read calls|
+|use_default_focus|(bool) If True will use the default focus algorithm to set the focus to the "Correct" element|
+|text_justification|(str) Union ['left', 'right', 'center'] Default text justification for all Text Elements in window|
+|no_titlebar|(bool) If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar|
+|grab_anywhere|(bool) If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems|
+|keep_on_top|(bool) If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm|
+|resizable|(bool) If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.|
+|disable_close|(bool) If True, the X button in the top right corner of the window will no work.  Use with caution and always give a way out toyour users|
+|disable_minimize|(bool) if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.|
 |right_click_menu|List[List[str]] see "Right Click Menus" for format|
-|transparent_color||
-|debugger_enabled|(Default = True)|
+|transparent_color|(str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.|
+|debugger_enabled|(bool) If True then the internal debugger will be enabled|
 
 ## Methods
 
 ### AddRow
 
-Parms are a variable number of Elements
+Adds a single row of elements to a window's self.Rows variables.
+Generally speaking this is NOT how users should be building Window layouts.
+Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
 
 ```
 AddRow(args)
@@ -1617,9 +1693,11 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args||
+|*args|List[Elements]|
 
 ### AddRows
+
+Loops through a list of lists of elements and adds each row, list, to the layout
 
 ```
 AddRows(rows)
@@ -1629,7 +1707,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|rows||
+|rows|List[List[Elements]] A list of a list of elements|
 
 ### BringToFront
 
@@ -1692,8 +1770,12 @@ Parameter Descriptions:
 |---|---|
 |values_dict|?????????????????|
 
-```python
-Finalize()
+Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
+Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
+Lots of action!
+
+```
+Finalize() -> (Window) Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!)
 ```
 
 Find element object associated with the provided key
@@ -1746,6 +1828,11 @@ GrabAnyWhereOn()
 Hide()
 ```
 
+Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
+a parameter to Window object.  The parameter method is the currently preferred method.  This call to Layout
+has been removed from examples contained in documents and in the Demo Programs.  Trying to remove this call
+from history and replace with sending as a parameter to Window.
+
 ```
 Layout(rows)
 ```
@@ -1754,7 +1841,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|rows||
+|rows|List[List[Elements]] Your entire layout|
 
 ```
 LoadFromDisk(filename)
@@ -1790,6 +1877,10 @@ Parameter Descriptions:
 Normal()
 ```
 
+THE biggest deal method in the Window class! This is how you get all of your data from your Window.
+Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
+if no other GUI events happen first.
+
 ```
 Read(timeout=None,
     timeout_key="__TIMEOUT__")
@@ -1799,15 +1890,23 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|timeout|timeout to wait, till Read will execute itself|
-|timeout_key|(Default value = TIMEOUT_KEY)|
+|timeout|(int) Milliseconds to wait until the Read will return IF no other GUI events happen first|
+|timeout_key|(Any) The value that will be returned from the call if the timer expired|
+|||
+| **return** | Tuple[(Any), Union[Dict[Any:Any], List[Any], None] (event, values)
+ (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window |
 
 ```python
 Reappear()
 ```
 
-```python
-Refresh()
+Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
+Use this call when you want something to appear in your Window immediately (as soon as this function is called).
+Without this call your changes to a Window will not be visible to the user until the next Read call
+
+```
+Refresh() -> Tuple[(Any), Union[Dict[Any:Any], List[Any], None] (event, values)
+                 (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window
 ```
 
 ```
@@ -1830,6 +1929,11 @@ Parameter Descriptions:
 |---|---|
 |alpha||
 
+Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
+* a filename which must be a .ICO icon file.
+* a bytes object
+* a BASE64 encoded file held in a variable
+
 ```
 SetIcon(icon=None,
     pngbase64=None)
@@ -1839,8 +1943,8 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|icon||
-|pngbase64||
+|icon|(str) Filename or bytes object|
+|pngbase64|(str) Base64 encoded GIF or PNG file|
 
 ```
 SetTransparentColor(color)
@@ -2064,8 +2168,7 @@ Many of the main method calls and Element names have shortcuts.  This enables yo
 ## Text Element | `T == Txt == Text`
 Basic Element. It displays text. That's it.
 
-    Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also
-    be multiple lines.  If multi-lined there are no scroll bars.
+    Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
 
 ```python
 layout = [
@@ -2176,7 +2279,9 @@ If you set the parameter `enable_events` or `click_submits` then you will get an
 ## Multiline Element
 This Element doubles as both an input and output Element.
 
-    Multiline Element - Display and read multiple lines of text.  This is both an input and output element.
+    Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
+    Other PySimpleGUI ports have a separate MultilineInput and MultilineOutput elements.  May want to split this
+    one up in the future too.
 
 ```python
 layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
@@ -2265,12 +2370,12 @@ Parameter Descriptions:
 Return current contents of the Multiline Element
 
 ```
-Get() -> (str) current contents of the Multiline Input element
+Get() -> (str) current contents of the Multiline Element (used as an input type of Multiline
 ```
 
 #### SetFocus
 
-Moves the focus to this Multiline
+Moves the focus (that little blinking cursor) to this Multiline Element
 
 ```
 SetFocus(force=False)
@@ -2585,7 +2690,7 @@ Parameter Descriptions:
 |---|---|
 |values|List[Any] new list of choices to be shown to user|
 |disabled|(bool) disable or enable state of the element|
-|set_to_index|(int) highlights the item at this index as if user clicked|
+|set_to_index|Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted|
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
 |visible|(bool) control visibility of element|
 
@@ -2955,7 +3060,7 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |values|List[Any] List of valid values|
-|initial_value|[Any] Initial item to show in window. Choose from list of values supplied|
+|initial_value|(Any) Initial item to show in window. Choose from list of values supplied|
 |disabled|(bool) set disable state|
 |change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
 |enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
