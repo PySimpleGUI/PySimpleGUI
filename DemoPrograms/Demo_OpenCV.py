@@ -57,10 +57,16 @@ def main():
         slider_elem.Update(cur_frame)
         cur_frame += 1
 
+        imgbytes = cv.imencode('.png', frame)[1].tobytes()  # ditto
+        image_elem.Update(data=imgbytes)
+
+"""
+        # This was another way updates were being done, but seems slower than the above
         img = Image.fromarray(frame)    # create PIL image from frame
         bio = io.BytesIO()              # a binary memory resident stream
         img.save(bio, format= 'PNG')    # save image as png to it
         imgbytes = bio.getvalue()       # this can be used by OpenCV hopefully
         image_elem.Update(data=imgbytes)
+"""
 
 main()
