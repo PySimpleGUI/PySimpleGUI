@@ -5130,8 +5130,8 @@ class Window:
                 self.TKAfterID = self.TKroot.after(timeout, self._TimeoutAlarmCallback)
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title} {self.TKroot}')
-            # self.TKroot.protocol("WM_DESTROY_WINDOW", self.OnClosingCallback)
-            # self.TKroot.protocol("WM_DELETE_WINDOW", self.OnClosingCallback)
+            # self.TKroot.protocol("WM_DESTROY_WINDOW", self._OnClosingCallback)
+            # self.TKroot.protocol("WM_DELETE_WINDOW", self._OnClosingCallback)
             self.TKroot.mainloop()
             # print('Out main')
             self.CurrentlyRunningMainloop = False
@@ -5359,10 +5359,10 @@ class Window:
 
     def SaveToDisk(self, filename):
         """
-        Saves the values contained in each of the input areas of the form. Basically saves what would be returned from
-        a call to Read
-        :param filename: ?????????????????
-
+        Saves the values contained in each of the input areas of the form. Basically saves what would be returned
+        from a call to Read.  It takes these results and saves them to disk using pickle
+        
+        :param filename: (str) Filename to save the values to in pickled form
         """
         try:
             results = _BuildResults(self, False, self)
@@ -5373,9 +5373,9 @@ class Window:
 
     def LoadFromDisk(self, filename):
         """
-
-        :param filename: ?????????????????
-
+        Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
+        
+        :param filename: (str) Pickle Filename to load 
         """
         try:
             with open(filename, 'rb') as df:
@@ -5383,8 +5383,13 @@ class Window:
         except:
             print('*** Error loading form to disk ***')
 
+
     def GetScreenDimensions(self):
-        """ """
+        """
+        Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
+        
+        :return: Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels
+        """
         if self.TKrootDestroyed:
             return None, None
         screen_width = self.TKroot.winfo_screenwidth()  # get window info to move to middle of screen
@@ -5393,10 +5398,9 @@ class Window:
 
     def Move(self, x, y):
         """
-
-        :param x: x coordinate
-        :param y: y coordinate
-
+        Move the upper left corner of this window to the x,y coordinates provided
+        :param x: (int) x coordinate in pixels
+        :param y: (int) y coordinate in pixels
         """
         try:
             self.TKroot.geometry("+%s+%s" % (x, y))
@@ -5404,11 +5408,17 @@ class Window:
             pass
 
     def Minimize(self):
-        """ """
+        """
+        Minimize this window to the task bar        
+        """
         self.TKroot.iconify()
 
     def Maximize(self):
-        """ """
+        """
+        Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
+        the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
+        The reason for the difference is the title bar is removed in some cases when using fullscreen option        
+        """
         if sys.platform != 'linux':
             self.TKroot.state('zoomed')
         else:
@@ -5417,17 +5427,18 @@ class Window:
         # self.TKroot.attributes('-fullscreen', True)
 
     def Normal(self):
-        """ """
+        """
+        Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
+        """
         if sys.platform != 'linux':
             self.TKroot.state('normal')
         else:
             self.TKroot.attributes('-fullscreen', False)
 
-    def StartMove(self, event):
+    def _StartMove(self, event):
         """
-
-        :param event:
-
+        Used by "Grab Anywhere" style windows. This function is bound to mouse-down. It marks the beginning of a drag.
+        :param event: (event) event information passed in by tkinter. Contains x,y position of mouse
         """
         try:
             self.TKroot.x = event.x
@@ -5436,11 +5447,12 @@ class Window:
             pass
         # print('Start move {},{}'.format(event.x,event.y))
 
-    def StopMove(self, event):
+
+    def _StopMove(self, event):
         """
-
-        :param event:
-
+        Used by "Grab Anywhere" style windows. This function is bound to mouse-up. It marks the ending of a drag.
+        Sets the position of the window to this final x,y coordinates
+        :param event: (event) event information passed in by tkinter. Contains x,y position of mouse
         """
         try:
             self.TKroot.x = None
@@ -5449,27 +5461,28 @@ class Window:
             pass
         # print('-Stop- move {},{}'.format(event.x,event.y))
 
-    def OnMotion(self, event):
+    def _OnMotion(self, event):
         """
-
-        :param event:
-
+        Used by "Grab Anywhere" style windows. This function is bound to mouse motion. It actually moves the window
+        :param event: (event) event information passed in by tkinter. Contains x,y position of mouse
         """
         try:
             deltax = event.x - self.TKroot.x
             deltay = event.y - self.TKroot.y
             x = self.TKroot.winfo_x() + deltax
             y = self.TKroot.winfo_y() + deltay
-            self.TKroot.geometry("+%s+%s" % (x, y))
+            self.TKroot.geometry("+%s+%s" % (x, y))     # this is what really moves the window
             # print('{},{}'.format(x,y))
         except:
             pass
 
+
     def _KeyboardCallback(self, event):
         """
-
-        :param event:
-
+        Window keyboard callback. Called by tkinter.  Will kick user out of the tkinter event loop. Should only be
+        called if user has requested window level keyboard events
+        
+        :param event: (event) object provided by tkinter that contains the key information
         """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
@@ -5484,9 +5497,10 @@ class Window:
 
     def _MouseWheelCallback(self, event):
         """
-
-        :param event:
-
+        Called by tkinter when a mouse wheel event has happened. Only called if keyboard events for the window
+        have been enabled
+        
+        :param event: (event) object sent in by tkinter that has the wheel direction
         """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
@@ -5497,7 +5511,10 @@ class Window:
             self.TKroot.quit()
 
     def _Close(self):
-        """ """
+        """
+        The internal close call that does the real work of building. This method basically sets up for closing
+        but doesn't destroy the window like the User's version of Close does
+        """
         try:
             self.TKroot.update()
         except:
@@ -5505,24 +5522,25 @@ class Window:
         if not self.NonBlocking:
             _BuildResults(self, False, self)
         if self.TKrootDestroyed:
-            return None
+            return
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
-        return None
+        return
 
     def Close(self):
-        """ """
+        """
+        Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
+        a window so that resources are properly freed up within your thread.  
+        """
         if self.TKrootDestroyed:
             return
         try:
             self.TKroot.destroy()
             Window.DecrementOpenCount()
-            # _my_windows.Decrement()
         except:
             pass
         # if down to 1 window, try and destroy the hidden window, if there is one
         if Window.NumOpenWindows == 1:
-            # print('Trying to destroy hidden')
             try:
                 Window.hidden_master_root.destroy()
                 Window.NumOpenWindows = 0  # if no hidden window, then this won't execute
@@ -5533,8 +5551,10 @@ class Window:
     CloseNonBlocking = Close
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
-    def OnClosingCallback(self):
-        """ """
+    def _OnClosingCallback(self):
+        """
+        Internally used method ONLY. Not sure callable.  tkinter calls this when the window is closed by clicking X
+        """
         # global _my_windows
         # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
@@ -5550,42 +5570,57 @@ class Window:
             self.RootNeedsDestroying = True
         self.RootNeedsDestroying = True
 
-        return
 
     def Disable(self):
-        """ """
+        """
+        Disables window from taking any input from the user
+        """
         self.TKroot.attributes('-disabled', 1)
         # self.TKroot.grab_set_global()
 
     def Enable(self):
-        """ """
+        """
+        Re-enables window to take user input after having it be Disabled previously
+        """
         self.TKroot.attributes('-disabled', 0)
         # self.TKroot.grab_release()
 
+
     def Hide(self):
-        """ """
+        """
+        Hides the window from the screen and the task bar
+        """
         self._Hidden = True
         self.TKroot.withdraw()
 
     def UnHide(self):
-        """ """
+        """
+        Used to bring back a window that was previously hidden using the Hide method
+        """
         if self._Hidden:
             self.TKroot.deiconify()
             self._Hidden = False
 
+
     def Disappear(self):
-        """ """
+        """
+        Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
+        channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
+        platforms.  The Raspberry Pi for example does not have an alpha setting
+        """
         self.TKroot.attributes('-alpha', 0)
 
     def Reappear(self):
-        """ """
+        """
+        Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
+        """
         self.TKroot.attributes('-alpha', 255)
 
     def SetAlpha(self, alpha):
         """
-
-        :param alpha:
-
+        Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
+        
+        :param alpha: (float) 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
         """
         # Change the window's transparency
         # :param alpha: From 0 to 1 with 0 being completely transparent
@@ -5594,34 +5629,49 @@ class Window:
 
     @property
     def AlphaChannel(self):
-        """ """
+        """
+        A property that changes the current alpha channel value (internal value)
+        :return: (float) the current alpha channel setting according to self, not read directly from tkinter
+        """
         return self._AlphaChannel
 
     @AlphaChannel.setter
     def AlphaChannel(self, alpha):
         """
-
-        :param alpha:
-
+        The setter method for this "property".
+        Planning on depricating so that a Set call is always used by users. This is more in line with the SDK
+        :param alpha: (float) 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
         """
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
 
+
     def BringToFront(self):
-        """ """
+        """
+        Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
+        on top")
+        """
         try:
             self.TKroot.lift()
         except:
             pass
 
     def CurrentLocation(self):
-        """ """
+        """
+        Get the current location of the window's top left corner
+
+        :return: Tuple[(int), (int)] The x and y location in tuple form (x,y)
+        """
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
 
     @property
     def Size(self):
-        """ """
+        """
+        Return the current size of the window in pixels
+
+        :return: Tuple[(int), (int)] the (width, height) of the window
+        """
         win_width = self.TKroot.winfo_width()
         win_height = self.TKroot.winfo_height()
         return win_width, win_height
@@ -5629,9 +5679,9 @@ class Window:
     @Size.setter
     def Size(self, size):
         """
+        Changes the size of the window, if possible
 
-        :param size:
-
+        :param size: Tuple[(int), (int)] (width, height) of the desired window size
         """
         try:
             self.TKroot.geometry("%sx%s" % (size[0], size[1]))
@@ -5640,15 +5690,18 @@ class Window:
             pass
 
     def VisibilityChanged(self):
-        """ """
+        """
+        Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible
+        """
         # A dummy function.  Needed in Qt but not tkinter
         return
 
+
     def SetTransparentColor(self, color):
         """
+        Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
 
-        :param color:
-
+        :param color: (str) Color string that defines the transparent color
         """
         try:
             self.TKroot.attributes('-transparentcolor', color)
@@ -5656,55 +5709,71 @@ class Window:
             print('Transparent color not supported on this platform (windows only)')
 
     def GrabAnyWhereOn(self):
-        """ """
-        self.TKroot.bind("<ButtonPress-1>", self.StartMove)
-        self.TKroot.bind("<ButtonRelease-1>", self.StopMove)
-        self.TKroot.bind("<B1-Motion>", self.OnMotion)
+        """
+        Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+        """
+        self.TKroot.bind("<ButtonPress-1>", self._StartMove)
+        self.TKroot.bind("<ButtonRelease-1>", self._StopMove)
+        self.TKroot.bind("<B1-Motion>", self._OnMotion)
 
     def GrabAnyWhereOff(self):
-        """ """
+        """
+        Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+        """
         self.TKroot.unbind("<ButtonPress-1>")
         self.TKroot.unbind("<ButtonRelease-1>")
         self.TKroot.unbind("<B1-Motion>")
 
+
     def _callback_main_debugger_window_create_keystroke(self, event):
         """
+        Called when user presses the key that creates the main debugger window
 
-        :param event:
-
+        :param event: (event) not used. Passed in event info
         """
         _Debugger.debugger._build_main_debugger_window()
 
     def _callback_popout_window_create_keystroke(self, event):
         """
+        Called when user presses the key that creates the floating debugger window
 
-        :param event:
-
+        :param event: (event) not used. Passed in event info
         """
         _Debugger.debugger._build_floating_window()
 
     def EnableDebugger(self):
-        """ """
+        """
+        Enables the internal debugger. By default, the debugger IS enabled
+        """
         self.TKroot.bind('<Cancel>', self._callback_main_debugger_window_create_keystroke)
         self.TKroot.bind('<Pause>', self._callback_popout_window_create_keystroke)
         self.DebuggerEnabled = True
 
 
     def DisableDebugger(self):
-        """ """
+        """
+        Disable the internal debugger. By default the debugger is ENABLED
+        """
         self.TKroot.unbind("<Cancel>")
         self.TKroot.unbind("<Pause>")
         self.DebuggerEnabled = False
 
     def __enter__(self):
-        """ """
+        """
+        WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
+        am afraid of removing right now
+        :return: (window)
+        """
         return self
 
     def __exit__(self, *a):
         """
-
-        :param *a:
-
+        WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
+        am afraid of removing right now
+        :param *a: (?) Not sure what's passed in.
+        :return: Always returns False which was needed for context manager to work
         """
         self.__del__()
         return False
@@ -8254,9 +8323,9 @@ def StartupTK(my_flex_form: Window):
     # Make moveable window
     if (my_flex_form.GrabAnywhere is not False and not (
             my_flex_form.NonBlocking and my_flex_form.GrabAnywhere is not True)):
-        root.bind("<ButtonPress-1>", my_flex_form.StartMove)
-        root.bind("<ButtonRelease-1>", my_flex_form.StopMove)
-        root.bind("<B1-Motion>", my_flex_form.OnMotion)
+        root.bind("<ButtonPress-1>", my_flex_form._StartMove)
+        root.bind("<ButtonRelease-1>", my_flex_form._StopMove)
+        root.bind("<B1-Motion>", my_flex_form._OnMotion)
 
     if not my_flex_form.Resizable:
         root.resizable(False, False)
@@ -8296,13 +8365,13 @@ def StartupTK(my_flex_form: Window):
     if my_flex_form.Timeout != None:
         my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
-        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
-        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form._OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form._OnClosingCallback)
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         my_flex_form.CurrentlyRunningMainloop = True
-        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form.OnClosingCallback)
-        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form.OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form._OnClosingCallback)
+        my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form._OnClosingCallback)
         my_flex_form.TKroot.mainloop()
         my_flex_form.CurrentlyRunningMainloop = False
         my_flex_form.TimerCancelled = True
