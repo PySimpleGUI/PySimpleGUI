@@ -35,7 +35,7 @@ OK, let's get the bullshit out of the way
 
 This software is available for your use under a MODIFIED LGPL3+ license
 
-This notice, these first 83 lines of code shall remain unchanged
+This notice, these first 100 lines of code shall remain unchanged
 
  #     #                                        
  ##   ##  ####  #####  # ###### # ###### #####  
@@ -60,12 +60,13 @@ And just what the fuck is that?  Well, it's LPGL3+ and these FOUR simple stipula
 1. These and all comments are to remain in this document
 2. You will not post this software in a repository or a location for others to download from:
    A. Unless you have made 10 lines of changes
+   B. A notice is posted with the code that it is not the original code but instead derived from an original
 3. Forking is OK and does NOT require any changes as long as it is obvious forked and stated on the page
    where your software is being hosted.  For example, GitHub does a fantastic job of indicating if a repository
    is the result of a fork.
-4. The "Official" version of PySimpleGUI and the associated documentation lives on two (and only two) places:
+4. The "Official" version of PySimpleGUI and the associated documentation lives on two (and **only** two) places:
        1. GitHub - (http://www.PySimpleGUI.com) currently pointing at:
-            # https://github.com/PySimpleGUI/PySimpleGUI
+          https://github.com/PySimpleGUI/PySimpleGUI
        2. Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
           https://pysimplegui.readthedocs.io/en/latest/
    If you've obtained this software in any other way, then those listed here, then SUPPORT WILL NOT BE PROVIDED.
@@ -73,7 +74,7 @@ And just what the fuck is that?  Well, it's LPGL3+ and these FOUR simple stipula
 
 -----------------------------------------------------------------------------------------------------------------
 
-I absolutely hate having to include that nonsense, but every word is there for solid reasons.
+I absolutely hate having to include this kind of nonsense, but every word is here for solid reasons.
 
 How about having FUN with this package??  Terrible note to begin this journey of actually having fun making
 GUI based applications so I'll try to make it up to you.
@@ -93,6 +94,7 @@ http://Cookbook.PySimpleGUI.org
 The User Manual and the Cookbook are both designed to paint some nice looking GUIs on your screen within 5 minutes of you deciding to PySimpleGUI out.
 
 """
+
 
 
 
@@ -119,7 +121,7 @@ import pickle
 import calendar
 import textwrap
 import inspect
-from typing import List, Any, Union, Tuple, Dict
+from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 from random import randint
 import warnings
 
@@ -1713,12 +1715,12 @@ class StatusBar(Element):
                  key=None, tooltip=None, visible=True):
         """
 
-        :param text: Text that is to be displayed in the widget
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param auto_size_text: True if size should fit the text length
+        :param text: (str) Text that is to be displayed in the widget
+        :param size: Tuple[(int), (int)]  (w,h) w=characters-wide, h=rows-high
+        :param auto_size_text: (bool)  True if size should fit the text length
         :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. StatusBar events occur when the bar is clicked
-        :param relief:  relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
+        :param relief: (enum) relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
         :param font: Union[str, tuple] specifies the font family, size, etc
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
@@ -1748,7 +1750,6 @@ class StatusBar(Element):
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
-
         :param value: (str) new text to show
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
@@ -1871,7 +1872,9 @@ class TKProgressBar():
 #       Scroll bar will span the length of the frame                     #
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
-    """ """
+    """
+    tkinter style class. Inherits Frame class from tkinter. Adds a tk.Text and a scrollbar together
+    """
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
         """
 
@@ -1938,25 +1941,24 @@ class TKOutput(tk.Frame):
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
 class Output(Element):
-    """ """
-
+    """
+    Output Element - a multi-lined text area where stdout and stderr are re-routed to.
+    """
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
                  key=None, right_click_menu=None, visible=True):
         """
-
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param background_color: color of background
-        :param text_color: color of the text
-        :param pad:  Amount of padding to put around element
-        :param font:  specifies the font family, size, etc
+        :param size: Tuple[(int), (int)]  (w,h) w=characters-wide, h=rows-high
+        :param background_color: (str) color of background
+        :param text_color: (str) color of the text
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param font: Union[str, tuple] specifies the font family, size, etc
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param right_click_menu: List[List[str]]  see "Right Click Menus"
+        :param visible: (bool) set visibility state of the element
         """
 
-        self._TKOut = None
+        self._TKOut = self.Widget = None        # type: TKOutput
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.RightClickMenu = right_click_menu
@@ -1976,7 +1978,7 @@ class Output(Element):
         """
         Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param value:
+        :param value: (str) string that will replace current contents of the output area
         :param visible: (bool) control visibility of element
         """
 
@@ -4809,19 +4811,27 @@ class Window:
 
     @classmethod
     def GetAContainerNumber(cls):
-        """ """
+        """
+        Not user callable!
+        :return: A simple counter that makes each container element unique
+        """
         cls.container_element_counter += 1
         return cls.container_element_counter
 
     @classmethod
     def IncrementOpenCount(self):
-        """ """
+        """
+        Not user callable!  Increments the number of open windows
+        Note - there is a bug where this count easily gets out of sync. Issue has been opened already. No ill effects
+        """
         self.NumOpenWindows += 1
         # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
     @classmethod
     def DecrementOpenCount(self):
-        """ """
+        """
+        Not user callable!  Decrements the number of open windows
+        """
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
         # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
@@ -4867,7 +4877,9 @@ class Window:
     # ------------------------- Add Multiple Rows to Form ------------------------- #
     def AddRows(self, rows):
         """
-        Loops through a list of lists of elements and adds each row, list, to the layout
+        Loops through a list of lists of elements and adds each row, list, to the layout.
+        This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
+        it as a parameter to the Window call is better.
 
         :param rows: List[List[Elements]] A list of a list of elements
 
@@ -4878,22 +4890,24 @@ class Window:
     def Layout(self, rows):
         """
         Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
-        a parameter to Window object.  The parameter method is the currently preferred method.  This call to Layout
-        has been removed from examples contained in documents and in the Demo Programs.  Trying to remove this call
+        a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
+        has been removed from examples contained in documents and in the Demo Programs. Trying to remove this call
         from history and replace with sending as a parameter to Window.
 
         :param rows: List[List[Elements]] Your entire layout
+        :return: (Window} self so that you can chain method calls
         """
         self.AddRows(rows)
-        self.BuildKeyDict()
+        self._BuildKeyDict()
         return self
+
 
     def LayoutAndRead(self, rows, non_blocking=False):
         """
-        Deprecated.  Now you layout your window's rows (layout) and then separately call Read.
-        :param rows:
-        :param non_blocking:  (Default = False)
+        Deprecated!!  Now your layout your window's rows (layout) and then separately call Read.
 
+        :param rows: (List[List[Element]]) The layout of the window
+        :param non_blocking: (bool) if True the Read call will not block
         """
         raise DeprecationWarning(
             'LayoutAndRead is no longer supported... change your call window.Layout(layout).Read()\nor window(title, layout).Read()')
@@ -4913,9 +4927,10 @@ class Window:
     def _Show(self, non_blocking=False):
         """
         NOT TO BE CALLED BY USERS.  INTERNAL ONLY!
-        It's this
+        It's this method that first shows the window to the user, collects results
 
         :param non_blocking: (bool) if True, this is a non-blocking call
+        :return: Tuple[Any, Dict] The event, values turple that is returned from Read calls
         """
         self.Shown = True
         # Compute num rows & num cols (it'll come in handy debugging)
@@ -4947,7 +4962,7 @@ class Window:
         StartupTK(self)
         # If a button or keyboard event happened but no results have been built, build the results
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
-            return BuildResults(self, False, self)
+            return _BuildResults(self, False, self)
         return self.ReturnValues
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
@@ -4960,7 +4975,6 @@ class Window:
 
         :param icon: (str) Filename or bytes object
         :param pngbase64: (str) Base64 encoded GIF or PNG file
-
         """
         if type(icon) is bytes:
             wicon = tkinter.PhotoImage(data=icon)
@@ -4983,6 +4997,7 @@ class Window:
             self.TKroot.iconbitmap(wicon)
         except:
             pass
+
 
     def _GetElementAtLocation(self, location):
         """
@@ -5010,7 +5025,6 @@ class Window:
         """
         Function that's called by tkinter when autoclode timer expires.  Closes the window
 
-        :return: None
         """
         try:
             window = self
@@ -5027,8 +5041,6 @@ class Window:
     def _TimeoutAlarmCallback(self):
         """
         Read Timeout Alarm callback. Will kick a mainloop call out of the tkinter event loop and cause it to return
-
-        :return: None
         """
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
@@ -5040,7 +5052,9 @@ class Window:
         self.FormRemainedOpen = True
         self.TKroot.quit()  # kick the users out of the mainloop
 
+
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+        # type: (int, Any) -> Tuple[Any, Union[Dict, List]]
         """
         THE biggest deal method in the Window class! This is how you get all of your data from your Window.
             Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -5074,7 +5088,7 @@ class Window:
             # if already have a button waiting, the return previously built results
             if self.LastButtonClicked is not None and not self.LastButtonClickedWasRealtime:
                 # print(f'*** Found previous clicked saved {self.LastButtonClicked}')
-                results = BuildResults(self, False, self)
+                results = _BuildResults(self, False, self)
                 self.LastButtonClicked = None
                 return results
             InitializeResults(self)
@@ -5091,7 +5105,7 @@ class Window:
                     Window.DecrementOpenCount()
                     # _my_windows.Decrement()
                     # print('ROOT Destroyed')
-                results = BuildResults(self, False, self)
+                results = _BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
                     return results
                 else:
@@ -5145,7 +5159,7 @@ class Window:
                 # _my_windows.Decrement()
         # Determine return values
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
-            results = BuildResults(self, False, self)
+            results = _BuildResults(self, False, self)
             if not self.LastButtonClickedWasRealtime:
                 self.LastButtonClicked = None
             return results
@@ -5159,9 +5173,10 @@ class Window:
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             return self.ReturnValues
 
+
     def _ReadNonBlocking(self):
         """
-        Should be never called directly by the user.  The user can call Window.Read(timeout=0) to get same effect
+        Should be NEVER called directly by the user.  The user can call Window.Read(timeout=0) to get same effect
 
         :return: Tuple[(Any), Union[Dict[Any:Any], List[Any], None] (event, values)
                  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window
@@ -5192,7 +5207,8 @@ class Window:
             self.Values = None
             self.LastButtonClicked = None
             return None, None
-        return BuildResults(self, False, self)
+        return _BuildResults(self, False, self)
+
 
     def Finalize(self):
         """
@@ -5223,8 +5239,7 @@ class Window:
         Use this call when you want something to appear in your Window immediately (as soon as this function is called).
         Without this call your changes to a Window will not be visible to the user until the next Read call
 
-        :return: Tuple[(Any), Union[Dict[Any:Any], List[Any], None] (event, values)
-                 (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window
+        :return: (Window) `self` so that method calls can be easily "chained"
         """
 
         if self.TKrootDestroyed:
@@ -5235,23 +5250,34 @@ class Window:
             pass
         return self
 
+
     def Fill(self, values_dict):
         """
+        Fill in elements that are input fields with data based on a 'values dictionary'
 
-        :param values_dict: ?????????????????
-
+        :param values_dict: (Dict[Any:Any]) {Element key : value} pairs
+        :return: (Window) returns self so can be chained with other methods
         """
+
         FillFormWithValues(self, values_dict)
         return self
 
+
     def FindElement(self, key, silent_on_error=False):
         """
-        Find element object associated with the provided key
-        :returns Found element object, an Error Element, or None
+        Find element object associated with the provided key.  This call can be abbreviated to any of these:
+        FindElement == Element == Find
+        So take your pick as to how much typing you want to do.
+        Rememeber that this call will return None if no match is found which may cause your code to crash if not
+        checked for.
 
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :param silent_on_error:  (Default = False)
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
+        :param silent_on_error: (bool)  If True do not display popup nor print warning of key errors
 
+        :return:  Union[Element, Error Element, None] Return value can be:
+                  * the Element that matches the supplied key if found
+                  * an Error Element if silent_on_error is False
+                  * None if silent_on_error True
         """
         try:
             element = self.AllKeysDict[key]
@@ -5270,24 +5296,33 @@ class Window:
     Element = FindElement  # Shortcut function
     Find = FindElement
 
+
     def FindElementWithFocus(self):
-        """ """
+        """
+        Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
+        :return: Union[Element, None] An Element if one has been found with focus or None if no element found
+        """
         element = _FindElementWithFocusInSubForm(self)
         return element
 
-    def BuildKeyDict(self):
-        """ """
+    def _BuildKeyDict(self):
+        """
+        Used internally only! Not user callable
+        Builds a dictionary containing all elements with keys for this window.
+        """
         dict = {}
         self.AllKeysDict = self._BuildKeyDictForWindow(self, self, dict)
         # print(f'keys built = {self.AllKeysDict}')
 
     def _BuildKeyDictForWindow(self, top_window, window, key_dict):
         """
+        Loop through all Rows and all Container Elements for this window and create the keys for all of them.
+        Note that the calls are recursive as all pathes must be walked
 
-        :param top_window:
-        :param window:
-        :param key_dict:
-
+        :param top_window: (Window) The highest level of the window
+        :param window: Union[Column, Frame, TabGroup, Pane, Tab] The "sub-window" (container element) to be searched
+        :param key_dict: The dictionary as it currently stands.... used as part of recursive call
+        :return: (dict) Dictionary filled with all keys in the window
         """
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
@@ -5324,12 +5359,13 @@ class Window:
 
     def SaveToDisk(self, filename):
         """
-
+        Saves the values contained in each of the input areas of the form. Basically saves what would be returned from
+        a call to Read
         :param filename: ?????????????????
 
         """
         try:
-            results = BuildResults(self, False, self)
+            results = _BuildResults(self, False, self)
             with open(filename, 'wb') as sf:
                 pickle.dump(results[1], sf)
         except:
@@ -5442,7 +5478,7 @@ class Window:
         else:
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
         if not self.NonBlocking:
-            BuildResults(self, False, self)
+            _BuildResults(self, False, self)
         if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.quit()
 
@@ -5456,7 +5492,7 @@ class Window:
         self.FormRemainedOpen = True
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
         if not self.NonBlocking:
-            BuildResults(self, False, self)
+            _BuildResults(self, False, self)
         if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
             self.TKroot.quit()
 
@@ -5467,7 +5503,7 @@ class Window:
         except:
             pass
         if not self.NonBlocking:
-            BuildResults(self, False, self)
+            _BuildResults(self, False, self)
         if self.TKrootDestroyed:
             return None
         self.TKrootDestroyed = True
@@ -6395,7 +6431,7 @@ def InitializeResults(form):
     :param form:
 
     """
-    BuildResults(form, True, form)
+    _BuildResults(form, True, form)
     return
 
 
@@ -6428,7 +6464,7 @@ def EncodeRadioRowCol(container, row, col):
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
 # format of return values is
 # (Button Pressed, input_values)
-def BuildResults(form, initialize_only, top_level_form):
+def _BuildResults(form, initialize_only, top_level_form):
     """
 
     :param form:
@@ -6445,13 +6481,13 @@ def BuildResults(form, initialize_only, top_level_form):
     form.DictionaryKeyCounter = 0
     form.ReturnValuesDictionary = {}
     form.ReturnValuesList = []
-    BuildResultsForSubform(form, initialize_only, top_level_form)
+    _BuildResultsForSubform(form, initialize_only, top_level_form)
     if not top_level_form.LastButtonClickedWasRealtime:
         top_level_form.LastButtonClicked = None
     return form.ReturnValues
 
 
-def BuildResultsForSubform(form, initialize_only, top_level_form):
+def _BuildResultsForSubform(form, initialize_only, top_level_form):
     """
 
     :param form:
@@ -6469,7 +6505,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
                 element.ReturnValuesDictionary = {}
-                BuildResultsForSubform(element, initialize_only, top_level_form)
+                _BuildResultsForSubform(element, initialize_only, top_level_form)
                 for item in element.ReturnValuesList:
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
@@ -6481,7 +6517,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
                 element.ReturnValuesDictionary = {}
-                BuildResultsForSubform(element, initialize_only, top_level_form)
+                _BuildResultsForSubform(element, initialize_only, top_level_form)
                 for item in element.ReturnValuesList:
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
@@ -6493,7 +6529,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
                 element.ReturnValuesDictionary = {}
-                BuildResultsForSubform(element, initialize_only, top_level_form)
+                _BuildResultsForSubform(element, initialize_only, top_level_form)
                 for item in element.ReturnValuesList:
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
@@ -6505,7 +6541,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
                 element.ReturnValuesDictionary = {}
-                BuildResultsForSubform(element, initialize_only, top_level_form)
+                _BuildResultsForSubform(element, initialize_only, top_level_form)
                 for item in element.ReturnValuesList:
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
@@ -6517,7 +6553,7 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
                 element.ReturnValuesList = []
                 element.ReturnValuesDictionary = {}
-                BuildResultsForSubform(element, initialize_only, top_level_form)
+                _BuildResultsForSubform(element, initialize_only, top_level_form)
                 for item in element.ReturnValuesList:
                     AddToReturnList(top_level_form, item)
                 if element.UseDictionary:
@@ -6670,99 +6706,27 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
     return form.ReturnValues
 
 
-def FillFormWithValues(form, values_dict):
+def FillFormWithValues(window, values_dict):
+    """
+    Fills a window with values provided in a values dictionary { element_key : new_value }
+
+    :param window: (Window) The window object to fill
+    :param values_dict: (Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call
     """
 
-    :param form:
-    :param values_dict:
-
-    """
-    FillSubformWithValues(form, values_dict)
-
-
-def FillSubformWithValues(form, values_dict):
-    """
-
-    :param form:
-    :param values_dict:
-
-    """
-    for row_num, row in enumerate(form.Rows):
-        for col_num, element in enumerate(row):
-            value = None
-            if element.Type == ELEM_TYPE_COLUMN:
-                FillSubformWithValues(element, values_dict)
-            if element.Type == ELEM_TYPE_FRAME:
-                FillSubformWithValues(element, values_dict)
-            if element.Type == ELEM_TYPE_TAB_GROUP:
-                FillSubformWithValues(element, values_dict)
-            if element.Type == ELEM_TYPE_TAB:
-                FillSubformWithValues(element, values_dict)
-            try:
-                value = values_dict[element.Key]
-            except:
-                continue
-            if element.Type == ELEM_TYPE_INPUT_TEXT:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_INPUT_RADIO:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_INPUT_COMBO:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
-                element.SetValue(value)
-            elif element.Type == ELEM_TYPE_INPUT_SLIDER:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_INPUT_SPIN:
-                element.Update(value)
-            elif element.Type == ELEM_TYPE_BUTTON:
-                element.Update(value)
-
-
-def _FindElementFromKeyInSubForm(form, key):
-    """
-
-    :param form:
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
-    """
-    for row_num, row in enumerate(form.Rows):
-        for col_num, element in enumerate(row):
-            if element.Type == ELEM_TYPE_COLUMN:
-                matching_elem = _FindElementFromKeyInSubForm(element, key)
-                if matching_elem is not None:
-                    return matching_elem
-            if element.Type == ELEM_TYPE_FRAME:
-                matching_elem = _FindElementFromKeyInSubForm(element, key)
-                if matching_elem is not None:
-                    return matching_elem
-            if element.Type == ELEM_TYPE_TAB_GROUP:
-                matching_elem = _FindElementFromKeyInSubForm(element, key)
-                if matching_elem is not None:
-                    return matching_elem
-            if element.Type == ELEM_TYPE_PANE:
-                matching_elem = _FindElementFromKeyInSubForm(element, key)
-                if matching_elem is not None:
-                    return matching_elem
-            if element.Type == ELEM_TYPE_TAB:
-                matching_elem = _FindElementFromKeyInSubForm(element, key)
-                if matching_elem is not None:
-                    return matching_elem
-            if element.Key == key:
-                return element
+    for element_key in values_dict:
+        try:
+            window.AllKeysDict[element_key].Update(values_dict[element_key])
+        except Exception as e:
+            print('Problem filling form. Perhaps bad key?  This is a suspected bad key: {}'.format(element_key))
 
 
 def _FindElementWithFocusInSubForm(form):
-    # type: (...) -> Element or None
     """
     Searches through a "sub-form" (can be a window or container) for the current element with focus
-    :param form: a Window, Column, Frame, or TabGroup (container elements)
 
+    :param form: a Window, Column, Frame, or TabGroup (container elements)
+    :return: Union[Element, None]
     """
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
@@ -6799,7 +6763,7 @@ def _FindElementWithFocusInSubForm(form):
 if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
         """
-
+        Only to be used internally. Not user callable
         :param top_menu:
         :param sub_menu_info:
         :param element:
@@ -10736,7 +10700,7 @@ def main():
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5))],
         [Combo(['Combo item 1',2,3,4 ], size=(20, 3),readonly=True, text_color='red', background_color='red', key='_COMBO1_')],
-        [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='red', background_color='red', key='_COMBO2_')],
+        # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='red', background_color='red', key='_COMBO2_')],
         [Spin([1, 2, 3, 'a','b','c'], size=(4, 3))],
     ]
 
@@ -10767,8 +10731,8 @@ def main():
         [graph_elem],
     ]
 
-    tab1 = Tab('Graph Number 1', frame6, tooltip='tab 1')
-    tab2 = Tab('Graph Number 2', [[]])
+    tab1 = Tab('Graph Number 1', frame6, tooltip='tab 1',  )
+    tab2 = Tab('Graph Number 2', [[]],)
 
     layout1 = [
         [Image(data=DEFAULT_BASE64_ICON)],
@@ -10783,7 +10747,7 @@ def main():
          Frame('Variable Choice Group', frame4, title_color='blue')],
         [Frame('Structured Data Group', frame5, title_color='red'), ],
         # [Frame('Graphing Group', frame6)],
-        [TabGroup([[tab1, tab2]])],
+        [TabGroup([[tab1, tab2]], )],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal'),
          Button('Exit', tooltip='Exit button')],
     ]
@@ -10796,6 +10760,7 @@ def main():
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     resizable=True,
+                    debugger_enabled=False,
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
