@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.27.0 Unreleased"
+version = __version__ = "0.27.0.1 Unreleased"
 
 import sys
 import types
@@ -870,6 +870,11 @@ class Radio(Element):
             self.QT_Radio_Button.setChecked(True)
         super().Update(self.QT_Radio_Button, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
+
+    def QtCallbackValueChanged(self, value):
+        if not self.ChangeSubmits:
+            return
+        element_callback_quit_mainloop(self)
 
 
     def __del__(self):
@@ -5107,6 +5112,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_QProgressBar)
             # -------------------------  INPUT RADIO BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
+                element = element           # type: Radio
                 default_value = element.InitialState
                 element.Widget = qradio = QRadioButton(element.Text)
                 element.QT_Radio_Button = qradio
@@ -5135,6 +5141,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     toplevel_win.RadioDict[element.GroupID] = QT_RadioButtonGroup
 
                 QT_RadioButtonGroup.addButton(element.QT_Radio_Button)
+
+                if element.ChangeSubmits:
+                    element.QT_Radio_Button.toggled.connect(element.QtCallbackValueChanged)
 
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 if element.Tooltip:
@@ -7357,6 +7366,8 @@ def main():
         [Menu(menu_def, key='_REALMENU_')],
         [Text('You are running the PySimpleGUI.py file itself', font=('ANY', 15, 'Bold'), text_color='red')],
                   [Text('You should be importing it rather than running it', font='ANY 15')],
+        [Text('VERSION {}'.format(__version__), text_color='red', font='ANY 24')],
+
         # [Image(data_base64=logo, tooltip='Image', click_submits=True, key='_IMAGE_'),
          [Frame('Input Text Group', frame1, title_color='red', tooltip='Text Group'), Stretch()],
         [Frame('Multiple Choice Group', frame2, title_color='green'),
@@ -7387,13 +7398,13 @@ def main():
     while True:  # Event Loop
         # TimerStart()
         event, values = window.Read(timeout=0)
-        print(event) if event != TIMEOUT_KEY else None
+        print(event, values) if event != TIMEOUT_KEY else None
         if event is None or event == 'Exit':
             break
         if values['_MENU_'] == 'Pause Graph':
             graph_paused = not graph_paused
-        if event != TIMEOUT_KEY:
-            print(event, values)
+        if event == 'About...':
+            Popup('You are running PySimpleGUIQt', 'The version number is', version)
         if not graph_paused:
             i += 1
 
