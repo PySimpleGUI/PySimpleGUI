@@ -1599,8 +1599,8 @@ class Multiline(Element):
 
         :return: (str) current contents of the Multiline Element (used as an input type of Multiline
         """
-
-        return self.TKText.get(1.0, tk.END)
+        
+        return self.TKText.get(1.0, 'end-1c') # end-1c means tk.END minus 1 character
 
     def SetFocus(self, force=False):
         """
@@ -6695,7 +6695,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     try:
-                        value = element.TKText.get(1.0, tk.END)
+                        value = element.TKText.get(1.0, 'end-1c') # end-1c means tk.END minus 1 character
                         if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                             element.TKText.delete('1.0', tk.END)
                     except:
