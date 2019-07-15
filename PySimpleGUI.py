@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.8 Unreleased"
+version = __version__ = "4.1.0.9 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -1279,8 +1279,6 @@ class Radio(Element):
     def ResetGroup(self):
         """
         Sets all Radio Buttons in the group to not selected
-
-        :return:
         """
         self.TKIntVar.set(0)
 
@@ -1790,15 +1788,15 @@ class TKProgressBar():
                  orientation='horizontal', BarColor=(None, None), key=None):
         """
 
-        :param root: ????????????????????????
-        :param max: ????????????????????????
+        :param root: ....
+        :param max: ....
         :param length:  (Default value = 400)
         :param width:  (Default value = DEFAULT_PROGRESS_BAR_SIZE[1])
         :param style:  (Default value = DEFAULT_PROGRESS_BAR_STYLE)
         :param relief:  relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
         :param border_width:  (Default value = DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
         :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'horizontal')
-        :param BarColor:  ????????????????????????
+        :param BarColor:  ....
         :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
 
         """
@@ -1839,8 +1837,8 @@ class TKProgressBar():
     def Update(self, count=None, max=None):
         """
 
-        :param count:  ?????????????????????????????????????
-        :param max:  ?????????????????????????????????????
+        :param count:  ....
+        :param max:  ....
 
         """
         if max is not None:
@@ -1911,7 +1909,7 @@ class TKOutput(tk.Frame):
     def write(self, txt):
         """
 
-        :param txt:
+        :param txt: (str) text of output
 
         """
         try:
@@ -2128,7 +2126,7 @@ class Button(Element):
                 pass
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
+            folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get folder' dialog box
             if folder_name != '':
                 try:
                     strvar.set(folder_name)
@@ -2141,7 +2139,7 @@ class Button(Element):
                     initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
                 file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
-                                                          initialdir=self.InitialFolder)  # show the 'get file' dialog box
+                                                          initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -2154,7 +2152,7 @@ class Button(Element):
             if sys.platform == 'darwin':
                 file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
             else:
-                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
             if file_name != '':
                 file_name = ';'.join(file_name)
                 strvar.set(file_name)
@@ -2165,7 +2163,7 @@ class Button(Element):
                     initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
                 file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
-                                                            initialdir=self.InitialFolder)  # show the 'get file' dialog box
+                                                            initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
             if file_name != '':
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -2242,7 +2240,7 @@ class Button(Element):
         :param image_filename: image filename if there is a button image
         :param visible: (bool) control visibility of element
         :param image_subsample:amount to reduce the size of the image
-        :param image_size:
+        :param image_size: Tuple[int, int] (width, height) size of the image in pixels
         """
 
         try:
@@ -2342,7 +2340,7 @@ class ButtonMenu(Element):
         """
 
         :param button_text: Text to be displayed on the button (Default value = '')
-        :param menu_def: ??????????????????
+        :param menu_def: (list of string) - menu structure. See example.
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param disabled: set disable state for element (Default = False)
         :param image_filename: image filename if there is a button image
@@ -2356,7 +2354,7 @@ class ButtonMenu(Element):
         :param font:  specifies the font family, size, etc
         :param pad:  Amount of padding to put around element
         :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param tearoff: ?????????????????? (Default = False)
+        :param tearoff: Determines if menus should allow them to be torn off (Default = False)
         :param visible: set visibility state of the element (Default = True)
 
         """
@@ -2438,9 +2436,9 @@ class ProgressBar(Element):
         :param size:  (w,h) w=characters-wide, h=rows-high
         :param auto_size_text: True if size should fit the text length
         :param bar_color:  (Default = (None))
-        :param style:  ????????????????????????????
+        :param style:  ....
         :param border_width:   width of border around button
-        :param relief:  ????????????????????????????
+        :param relief:  ....
         :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param pad:  Amount of padding to put around element
         :param visible: set visibility state of the element (Default = True)
@@ -2546,9 +2544,9 @@ class Image(Element):
         """
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param filename:
-        :param data:
-        :param size:  (w,h) w=characters-wide, h=rows-high
+        :param filename: (str) filename to the new image to display.
+        :param data: (str) Base64 encoded string
+        :param size: Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high
         :param visible: (bool) control visibility of element
         """
 
@@ -2575,10 +2573,11 @@ class Image(Element):
 
     def UpdateAnimation(self, source, time_between_frames=0):
         """
+        Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
+        NOTE - does NOT perform a sleep call to delay
 
-        :param source:
-        :param time_between_frames:  (Default value = 0)
-
+        :param source: Union[str,bytes] Filename or Base64 encoded string containing Animated GIF
+        :param time_between_frames: (int) Number of milliseconds to wait between showing frames
         """
 
         if self.Source != source:
@@ -2635,15 +2634,14 @@ class Canvas(Element):
                  right_click_menu=None, visible=True):
         """
 
-        :param canvas:  ????????????????????????
-        :param background_color: color of background
-        :param size:  (w,h) w=characters-wide, h=rows-high
+        :param canvas: (tk.Canvas) Your own tk.Canvas if you already created it. Leave blank to create a Canvas
+        :param background_color: (str) color of background
+        :param size: Tuple[int,int]  (width in char, height in rows) size in pixels to make canvas
         :param pad:  Amount of padding to put around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-
+        :param visible: (bool) set visibility state of the element
         """
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -5062,8 +5060,8 @@ class Window:
 
         :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
         :param timeout_key: (Any) The value that will be returned from the call if the timer expired
-        :return: Tuple[(Any), Union[Dict[Any:Any], List[Any], None] (event, values)
-                 (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window
+        :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
+                 (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window)
         """
         # ensure called only 1 time through a single read cycle
         if not Window.read_call_from_debugger:
@@ -5547,8 +5545,6 @@ class Window:
             except:
                 pass
 
-    CloseNonBlockingForm = Close
-    CloseNonBlocking = Close
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def _OnClosingCallback(self):
@@ -5619,7 +5615,7 @@ class Window:
     def SetAlpha(self, alpha):
         """
         Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
-        
+
         :param alpha: (float) 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
         """
         # Change the window's transparency
@@ -5787,7 +5783,8 @@ class Window:
 
 
 FlexForm = Window
-
+Window.CloseNonBlockingForm = Window.Close
+Window.CloseNonBlocking = Window.Close
 
 # ################################################################################
 # ################################################################################
@@ -10808,7 +10805,7 @@ def main():
         [Text('You are running the py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
         [Frame('Input Text Group', frame1, title_color='red'),
-         Text('VERSION\n{}'.format(__version__), size=(18, 2), text_color='red', font='ANY 24'),
+         Text('VERSION\n{}'.format(__version__), size=(18, 3), text_color='red', font='ANY 24'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_'),
          ],
         [Frame('Multiple Choice Group', frame2, title_color='green'),
