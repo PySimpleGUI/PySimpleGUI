@@ -3213,6 +3213,8 @@ class Window:
         self.BackgroundImage = background_image
         self.XFound = False
         self.DisableMinimize = disable_minimize
+        self.UniqueKeyCounter = 0
+
         if layout is not None:
             self.Layout(layout)
 
