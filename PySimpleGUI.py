@@ -2868,14 +2868,16 @@ class Graph(Element):
 
     def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
         """
+        Draws different types of arcs.  Uses a "bounding box" to define location
 
-        :param top_left:
-        :param bottom_right:
-        :param extent:
-        :param start_angle:
-        :param style:
-        :param arc_color:  (Default value = 'black')
-
+        :param top_left: Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle
+        :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle
+        :param extent: (float) Andle to end drawing. Used in conjunction with start_angle
+        :param start_angle: (float) Angle to begin drawing. Used in conjunction with extent
+        :param style: (str) Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last',
+                        'butt', 'projecting', 'round', 'bevel', 'miter'
+        :param arc_color: (str) color to draw arc with
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the arc
         """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
@@ -2894,13 +2896,15 @@ class Graph(Element):
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
         """
+        Draw a rectangle given 2 points. Can control the line and fill colors
 
-        :param top_left:
-        :param bottom_right:
-        :param fill_color:
-        :param line_color:
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
+        :param top_left: Union[Tuple[int, int], Tuple[float, float]] the top left point of rectangle
+        :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle
+        :param fill_color: (str) color of the interior
+        :param line_color: (str) color of outline
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle
         """
+
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
         if self._TKCanvas2 is None:
@@ -2917,13 +2921,14 @@ class Graph(Element):
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
         """
+        Draw some text on your graph.  This is how you label graph number lines for example
 
-        :param text:
-        :param location:
-        :param color:  (Default value = 'black')
-        :param font:  specifies the font family, size, etc
-        :param angle:  (Default value = 0)
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
+        :param text: (str) text to display
+        :param location: Union[Tuple[int, int], Tuple[float, float]] location to place first letter
+        :param color: (str) text color
+        :param font: Union[str, tuple]  specifies the font family, size, etc
+        :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text
         """
         if location == (None, None):
             return
@@ -2941,14 +2946,15 @@ class Graph(Element):
 
     def DrawImage(self, filename=None, data=None, location=(None, None), color='black', font=None, angle=0):
         """
+        Places an image onto your canvas.  It's a really important method for this element as it enables so much
 
-        :param filename:
-        :param data:
-        :param location:
-        :param color:  (Default value = 'black')
-        :param font:  specifies the font family, size, etc
-        :param angle:  (Default value = 0)
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
+        :param filename: (str) if image is in a file, path and filename for the image. (GIF and PNG only!)
+        :param data: Union[str, bytes] if image is in Base64 format or raw? format then use instead of filename
+        :param location: Union[Tuple[int, int], Tuple[float, float]] the (x,y) location to place image's top left corner
+        :param color: (str) text color
+        :param font: Union[str, tuple]  specifies the font family, size, etc
+        :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image
         """
         if location == (None, None):
             return
@@ -2972,8 +2978,11 @@ class Graph(Element):
             id = None
         return id
 
+
     def Erase(self):
-        """ """
+        """
+        Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
+        """
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
@@ -2984,11 +2993,12 @@ class Graph(Element):
         except:
             pass
 
+
     def DeleteFigure(self, id):
         """
+        Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
 
-        :param id:
-
+        :param id: (int) the id returned to you when calling one of the drawing methods
         """
         try:
             self._TKCanvas2.delete(id)
@@ -2998,7 +3008,8 @@ class Graph(Element):
             del self.Images[id]         # in case was an image. If wasn't an image, then will get exception
         except: pass
 
-    def Update(self, background_color, visible=None):
+
+    def Update(self, background_color=None, visible=None):
         """
         Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -3008,19 +3019,21 @@ class Graph(Element):
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
-            return None
-        self._TKCanvas2.configure(background=background_color)
+            return
+        if background_color is not None and background_color != COLOR_SYSTEM_DEFAULT:
+            self._TKCanvas2.configure(background=background_color)
         if visible is False:
             self._TKCanvas2.pack_forget()
         elif visible is True:
             self._TKCanvas2.pack()
 
+
     def Move(self, x_direction, y_direction):
         """
+        Moves the entire drawing area (the canvas) by indicated number of ticks in your coordinate system
 
-        :param x_direction:
-        :param y_direction:
-
+        :param x_direction: Union[int, float] how far to move in the "X" direction in your coordinates
+        :param y_direction: Union[int, float] how far to move in the "Y" direction in your coordinates
         """
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
@@ -4341,7 +4354,7 @@ class Table(Element):
         self.DisplayRowNumbers = display_row_numbers
         self.NumRows = num_rows if num_rows is not None else size[1]
         self.RowHeight = row_height
-        self.TKTreeview = None                      # type: ttk.Treeview
+        self.Widget = self.TKTreeview = None                      # type: ttk.Treeview
         self.AlternatingRowColor = alternating_row_color
         self.VerticalScrollOnly = vertical_scroll_only
         self.HideVerticalScroll = hide_vertical_scroll
