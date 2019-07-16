@@ -1788,17 +1788,16 @@ class TKProgressBar():
                  orientation='horizontal', BarColor=(None, None), key=None):
         """
 
-        :param root: ....
-        :param max: ....
-        :param length:  (Default value = 400)
-        :param width:  (Default value = DEFAULT_PROGRESS_BAR_SIZE[1])
-        :param style:  (Default value = DEFAULT_PROGRESS_BAR_STYLE)
-        :param relief:  relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
-        :param border_width:  (Default value = DEFAULT_PROGRESS_BAR_BORDER_WIDTH)
-        :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'horizontal')
-        :param BarColor:  ....
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-
+        :param root: Union[tk.Tk, tk.TopLevel] The root window bar is to be shown in
+        :param max: (int) Maximum value the bar will be measuring
+        :param length: (int) length in pixels of the bar
+        :param width:  (int) width in pixels of the bar
+        :param style:  (str) Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+        :param relief: (str) relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
+        :param border_width: (int) The amount of pixels that go around the outside of the bar
+        :param orientation: (str) 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')
+        :param BarColor:  Tuple[str, str] The 2 colors that make up a progress bar. One is the background, the other is the bar
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         """
 
         self.Length = length
@@ -1836,10 +1835,10 @@ class TKProgressBar():
 
     def Update(self, count=None, max=None):
         """
+        Update the current value of the bar and/or update the maximum value the bar can reach
 
-        :param count:  ....
-        :param max:  ....
-
+        :param count:  (int) current value
+        :param max:  (int) the maximum value
         """
         if max is not None:
             self.Max = max
@@ -1871,20 +1870,20 @@ class TKProgressBar():
 # ---------------------------------------------------------------------- #
 class TKOutput(tk.Frame):
     """
-    tkinter style class. Inherits Frame class from tkinter. Adds a tk.Text and a scrollbar together
+    tkinter style class. Inherits Frame class from tkinter. Adds a tk.Text and a scrollbar together.
+    Note - This is NOT a user controlled class. Users should NOT be directly using it unless making an extention
+    to PySimpleGUI by directly manipulating tkinter.
     """
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
         """
-
-        :param parent:
-        :param width:
-        :param height:
-        :param bd:
-        :param background_color: color of background
-        :param text_color: color of the text
-        :param font:  specifies the font family, size, etc
-        :param pad:  Amount of padding to put around element
-
+        :param parent: Union[tk.Tk, tk.Toplevel] The "Root" that the Widget will be in
+        :param width: (int) Width in characters
+        :param height: (int) height in rows
+        :param bd: (int) Border Depth.  How many pixels of border to show
+        :param background_color: (str) color of background
+        :param text_color: (str) color of the text
+        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         """
         self.frame = tk.Frame(parent)
         tk.Frame.__init__(self, self.frame)
@@ -1908,9 +1907,9 @@ class TKOutput(tk.Frame):
 
     def write(self, txt):
         """
+        Called by Python (not tkinter?) when stdout or stderr wants to write
 
         :param txt: (str) text of output
-
         """
         try:
             self.output.insert(tk.END, str(txt))
@@ -1919,17 +1918,23 @@ class TKOutput(tk.Frame):
             pass
 
     def Close(self):
-        """ """
+        """
+        Called when wanting to restore the old stdout/stderr
+        """
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
     def flush(self):
-        """ """
+        """
+        This doesn't look right.  This restores stdout and stderr to their old values
+        """
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
     def __del__(self):
-        """ """
+        """
+        If this Widget is deleted, be sure and restore the old stdout, stderr
+        """
         sys.stdout = self.previous_stdout
         sys.stderr = self.previous_stderr
 
@@ -2001,7 +2006,9 @@ class Output(Element):
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
 class Button(Element):
-    """ """
+    """
+    Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
+    """
 
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
@@ -2009,31 +2016,29 @@ class Button(Element):
                  image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True):
         """
-
-        :param button_text: Text to be displayed on the button (Default value = '')
-        :param button_type: You  should NOT be setting this directly (Default value = BUTTON_TYPE_READ_FORM)
-        :param target: key or (row,col) target for the button
+        :param button_text: (str) Text to be displayed on the button
+        :param button_type: (int) You  should NOT be setting this directly. ONLY the shortcut functions set this
+        :param target: Union[str, Tuple[int, int]]  key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param file_types: the filetypes that will be used to match files (Default value = (("ALL Files", "*.*"),))
-        :param initial_folder:  starting path for folders and files
-        :param disabled: set disable state for element (Default = False)
-        :param change_submits: If True, pressing Enter key submits window (Default = False)
-        :param enable_events: Turns on the element specific events.(Default = False)
-        :param image_filename: image filename if there is a button image
-        :param image_data: in-RAM image to be displayed on button
-        :param image_size: size of button image in pixels  (Default = (None))
-        :param image_subsample:amount to reduce the size of the image
-        :param border_width:  width of border around button in pixels
-        :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
-        :param auto_size_button:  True if button size is determined by button text
-        :param button_color: (text color, backound color)
-        :param font:  specifies the font family, size, etc
-        :param bind_return_key: If True the return key will cause this button to fire (Default = False)
-        :param focus: if focus should be set to this
-        :param pad:  Amount of padding to put around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param visible: set visibility state of the element (Default = True)
-
+        :param file_types: Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),)
+        :param initial_folder: (str) starting path for folders and files
+        :param disabled: (bool) If True button will be created disabled
+        :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :param enable_events: (bool) Turns on the element specific events. If this button is a target, should it generate an event when filled in
+        :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
+        :param image_data: Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
+        :param image_subsample: (int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :param border_width: (int) width of border around button in pixels
+        :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
+        :param auto_size_button: (bool) if True the button size is sized to fit the text
+        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
+        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param bind_return_key: (bool) If True the return key will cause this button to be pressed
+        :param focus: (bool) if True, initial focus will be put on this button
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param visible: (bool) set visibility state of the element
         """
 
         self.AutoSizeButton = auto_size_button
@@ -2059,15 +2064,15 @@ class Button(Element):
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
-
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
     # Realtime button release callback
     def ButtonReleaseCallBack(self, parm):
         """
+        Not a user callable function.  Called by tkinter when a "realtime" button is released
 
-        :param parm:
+        :param parm: the event info from tkinter
 
         """
         self.LastButtonClickedWasRealtime = False
@@ -2076,8 +2081,9 @@ class Button(Element):
     # Realtime button callback
     def ButtonPressCallBack(self, parm):
         """
+        Not a user callable method. Callback called by tkinter when a "realtime" button is pressed
 
-        :param parm:
+        :param parm: Event info passed in by tkinter
 
         """
         self.ParentForm.LastButtonClickedWasRealtime = True
@@ -2090,7 +2096,9 @@ class Button(Element):
 
     # -------  Button Callback  ------- #
     def ButtonCallBack(self):
-        """ """
+        """
+        Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
+        """
         # global _my_windows
 
         # print('Button callback')
@@ -2233,14 +2241,14 @@ class Button(Element):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param text: sets button text
-        :param button_color: (text, background) (Default = (None))
+        :param text: (str) sets button text
+        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
         :param disabled: (bool) disable or enable state of the element
-        :param image_data: in-RAM image to be displayed on button
-        :param image_filename: image filename if there is a button image
+        :param image_data: Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
         :param visible: (bool) control visibility of element
-        :param image_subsample:amount to reduce the size of the image
-        :param image_size: Tuple[int, int] (width, height) size of the image in pixels
+        :param image_subsample: (int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
         """
 
         try:
@@ -2285,13 +2293,19 @@ class Button(Element):
             self.TKButton.pack()
 
     def GetText(self):
-        """ Returns the current text shown on a button
+        """
+        Returns the current text shown on a button
 
-        :return: string value of button"""
+        :return: (str) The text currently displayed on the button
+        """
         return self.ButtonText
 
     def SetFocus(self, force=False):
-        """ """
+        """
+        Sets the focus to this button.  Can be forced with parameter
+
+        :param force: (bool) If True will call focus_force instead of focus_set
+        """
         try:
             if force:
                 self.TKButton.focus_force()
@@ -2302,10 +2316,9 @@ class Button(Element):
 
 
     def Click(self):
-        """Generates a click of the button as if the user clicked the button
-        :return:
-
-
+        """
+        Generates a click of the button as if the user clicked the button
+        Calls the tkinter invoke method for the button
         """
         try:
             self.TKButton.invoke()
@@ -2331,32 +2344,32 @@ Butt = Button
 #                           ButtonMenu Class                             #
 # ---------------------------------------------------------------------- #
 class ButtonMenu(Element):
-    """ """
+    """
+    The Button Menu Element.  Creates a button that when clicked will show a menu similar to right click menu
+    """
 
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None,
                  tearoff=False, visible=True):
         """
-
         :param button_text: Text to be displayed on the button (Default value = '')
-        :param menu_def: (list of string) - menu structure. See example.
+        :param menu_def: (list(list)) [ [ ] ]  A list of lists of Menu items to show when this element is clicked. See docs for format
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param disabled: set disable state for element (Default = False)
-        :param image_filename: image filename if there is a button image
-        :param image_data: in-RAM image to be displayed on button
-        :param image_size: size of button image in pixels  (Default = (None))
-        :param image_subsample:amount to reduce the size of the image
-        :param border_width:  width of border around button in pixels
-        :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
-        :param auto_size_button:  True if button size is determined by button text
-        :param button_color: (text color, backound color)
-        :param font:  specifies the font family, size, etc
-        :param pad:  Amount of padding to put around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param tearoff: Determines if menus should allow them to be torn off (Default = False)
-        :param visible: set visibility state of the element (Default = True)
-
+        :param disabled: (bool) If True button will be created disabled
+        :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
+        :param image_data: Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
+        :param image_subsample: (int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :param border_width: (int) width of border around button in pixels
+        :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
+        :param auto_size_button: (bool) if True the button size is sized to fit the text
+        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
+        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param tearoff: (bool) Determines if menus should allow them to be torn off
+        :param visible: (bool) set visibility state of the element
         """
 
         self.MenuDefinition = menu_def
@@ -2384,9 +2397,9 @@ class ButtonMenu(Element):
 
     def _MenuItemChosenCallback(self, item_chosen):  # ButtonMenu Menu Item Chosen Callback
         """
+        Not a user callable function.  Called by tkinter when an item is chosen from the menu.
 
-        :param item_chosen:
-
+        :param item_chosen: (str) The menu item chosen.
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&', '')
@@ -2394,6 +2407,7 @@ class ButtonMenu(Element):
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
 
     def Update(self, menu_definition, visible=None):
         """
@@ -2416,7 +2430,7 @@ class ButtonMenu(Element):
     def __del__(self):
         """ """
         try:
-            self.TKButton.__del__()
+            self.TKButtonMenu.__del__()
         except:
             pass
         super().__del__()
@@ -2426,23 +2440,23 @@ class ButtonMenu(Element):
 #                           ProgreessBar                                 #
 # ---------------------------------------------------------------------- #
 class ProgressBar(Element):
-    """ """
+    """
+    Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
+    """
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
                  style=None, border_width=None, relief=None, key=None, pad=None, visible=True):
         """
-
-        :param max_value: max value of progressbar
-        :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param auto_size_text: True if size should fit the text length
-        :param bar_color:  (Default = (None))
-        :param style:  ....
-        :param border_width:   width of border around button
-        :param relief:  ....
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param pad:  Amount of padding to put around element
-        :param visible: set visibility state of the element (Default = True)
-
+        :param max_value: (int) max value of progressbar
+        :param orientation: (str) 'horizontal' or 'vertical'
+        :param size: Tuple[int, int] Size of the bar.  If horizontal (chars wide, pixels high), vert (pixels wide, rows high)
+        :param auto_size_text: (bool) Not sure why this is here
+        :param bar_color:  Tuple[str, str] The 2 colors that make up a progress bar. One is the background, the other is the bar
+        :param style:  (str) Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+        :param border_width: (int) The amount of pixels that go around the outside of the bar
+        :param relief: (str) relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param visible: (bool)  set visibility state of the element
         """
 
         self.MaxValue = max_value
@@ -2461,10 +2475,10 @@ class ProgressBar(Element):
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
         """
+        Change what the bar shows by changing the current count and optionally the max count
 
-        :param current_count: sets the current value
-        :param max: changes the max value
-
+        :param current_count: (int) sets the current value
+        :param max: (int) changes the max value
         """
 
         if self.ParentForm.TKrootDestroyed:
@@ -2477,6 +2491,7 @@ class ProgressBar(Element):
             # _my_windows.Decrement()
             return False
         return True
+
 
     def Update(self, visible=None):
         """
@@ -2503,23 +2518,23 @@ class ProgressBar(Element):
 #                           Image                                        #
 # ---------------------------------------------------------------------- #
 class Image(Element):
-    """ """
+    """
+    Image Element - show an image in the window. Should be a GIF or a PNG only
+    """
 
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True, enable_events=False):
         """
-
-        :param filename:  file name if the image is in a file
-        :param data:  if image is in RAM (PIL format?)
+        :param filename:  (str) image filename if there is a button image. GIFs and PNGs only.
+        :param data:  Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
         :param background_color: color of background
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param pad:  Amount of padding to put around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param size: Tuple[int, int] (width, height) size of image in pixels
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-        :param enable_events: Turns on the element specific events.(Default = False)
-
+        :param visible: (bool) set visibility state of the element
+        :param enable_events: (bool) Turns on the element specific events. For an Image element, the event is "image clicked"
         """
 
         self.Filename = filename
@@ -2676,9 +2691,9 @@ class Graph(Element):
                  right_click_menu=None, visible=True, float_values=False):
         """
 
-        :param canvas_size: ????????????????????????
-        :param graph_bottom_left: ????????????????????????
-        :param graph_top_right: ????????????????????????
+        :param canvas_size: Tuple[int, int] (width, height) size of the canvas area in pixels
+        :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
+        :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
         :param background_color: color of background
         :param pad:  Amount of padding to put around element
         :param change_submits: If True, pressing Enter key submits window (Default = False)
@@ -2689,6 +2704,10 @@ class Graph(Element):
         :param right_click_menu: List[List[str]] see "Right Click Menus" for format
         :param visible: set visibility state of the element (Default = True)
         :param float_values: bool: If True x,y coordinates are returned as floats, not ints
+
+
+
+
 
         """
 
