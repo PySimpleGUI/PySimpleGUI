@@ -2684,31 +2684,35 @@ class Canvas(Element):
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
-    """ """
+    """
+    Creates an area for you to draw on.  The MAGICAL property this Element has is that you interact
+    with the element using your own coordinate system.  This is an important point!!  YOU define where the location
+    is for (0,0).  Want (0,0) to be in the middle of the graph like a math 4-quadrant graph?  No problem!  Set your
+    lower left corner to be (-100,-100) and your upper right to be (100,100) and you've got yourself a graph with
+    (0,0) at the center.
+    One of THE coolest of the Elements.
+    You can also use float values. To do so, be sure and set the float_values parameter.
+    Mouse click and drag events are possible and return the (x,y) coordinates of the mouse
+    Drawing primitives return an "id" that is referenced when you want to operation on that item (e.g. to erase it)
+    """
 
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None,
                  right_click_menu=None, visible=True, float_values=False):
         """
-
         :param canvas_size: Tuple[int, int] (width, height) size of the canvas area in pixels
         :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
         :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
-        :param background_color: color of background
-        :param pad:  Amount of padding to put around element
-        :param change_submits: If True, pressing Enter key submits window (Default = False)
-        :param drag_submits: ???????????????????????? (Default = False)
-        :param enable_events: Turns on the element specific events.(Default = False)
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param background_color: (str) background color of the drawing area
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
+        :param drag_submits:  (bool) if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down
+        :param enable_events: (bool) If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-        :param float_values: bool: If True x,y coordinates are returned as floats, not ints
-
-
-
-
-
+        :param visible: (bool) set visibility state of the element (Default = True)
+        :param float_values: (bool) If True x,y coordinates are returned as floats, not ints
         """
 
         self.CanvasSize = canvas_size
@@ -2730,10 +2734,11 @@ class Graph(Element):
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
         """
+        Not user callable.  Used to convert user's coordinates into the ones used by tkinter
 
-        :param x_in:
-        :param y_in:
-
+        :param x_in: Union[int, float] The x coordinate to convert
+        :param y_in: Union[int, float] The y coordinate to convert
+        :return: Tuple[int, int] The converted canvas coordinates
         """
         if None in (x_in, y_in):
             return None, None
@@ -2745,10 +2750,11 @@ class Graph(Element):
 
     def _convert_canvas_xy_to_xy(self, x_in, y_in):
         """
+        Not user callable.  Used to convert tkinter Canvas coords into user's coordinates
 
-        :param x_in:
-        :param y_in:
-
+        :param x_in: (int) The x coordinate in canvas coordinates
+        :param y_in: (int) The y coordinate in canvas coordinates
+        :return: Union[Tuple[int, int], Tuple[float, float]] The converted USER coordinates
         """
         if None in (x_in, y_in):
             return None, None
@@ -2764,12 +2770,14 @@ class Graph(Element):
 
     def DrawLine(self, point_from, point_to, color='black', width=1):
         """
+        Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
 
-        :param point_from:
-        :param point_to:
-        :param color:  (Default value = 'black')
-        :param width:  (Default value = 1)
-
+        :param point_from: Union[Tuple[int, int], Tuple[float, float]] Starting point for line
+        :param point_to: Union[Tuple[int, int], Tuple[float, float]] Ending point for line
+        :param color: (str) Color of the line
+        :param width: (int) width of line in pixels
+        :return: Union[int, None] id returned from tktiner or None if user closed the window. id is used when you
+        want to manipulate the line
         """
         if point_from == (None, None):
             return
@@ -2787,11 +2795,12 @@ class Graph(Element):
 
     def DrawPoint(self, point, size=2, color='black'):
         """
+        Draws a "dot" at the point you specify using the USER'S coordinate system
 
-        :param point:
-        :param size:  (w,h) w=characters-wide, h=rows-high (Default value = 2)
-        :param color:  (Default value = 'black')
-
+        :param point: Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system
+        :param size: Union[int, float] Radius? (Or is it the diameter?) in user's coordinate values.
+        :param color: (str) color of the point to draw
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
         """
         if point == (None, None):
             return
@@ -2806,16 +2815,17 @@ class Graph(Element):
                                              outline=color)
         except:
             id = None
-        return
+        return id
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
         """
+        Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
 
-        :param center_location:
-        :param radius:
-        :param fill_color:
-        :param line_color:  (Default value = 'black')
-
+        :param center_location: Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system
+        :param radius: Union[int, float] Radius in user's coordinate values.
+        :param fill_color: (str) color of the point to draw
+        :param line_color:  (str) color of the outer line that goes around the circle (sorry, can't set thickness)
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle
         """
         if center_location == (None, None):
             return
@@ -2834,12 +2844,13 @@ class Graph(Element):
 
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
         """
+        Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
 
-        :param top_left:
-        :param bottom_right:
-        :param fill_color:
-        :param line_color:
-
+        :param top_left: Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle
+        :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle
+        :param fill_color: (str) color of the interrior
+        :param line_color: (str) color of outline of oval
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval
         """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
@@ -2888,7 +2899,7 @@ class Graph(Element):
         :param bottom_right:
         :param fill_color:
         :param line_color:
-
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
         """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
@@ -2912,7 +2923,7 @@ class Graph(Element):
         :param color:  (Default value = 'black')
         :param font:  specifies the font family, size, etc
         :param angle:  (Default value = 0)
-
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
         """
         if location == (None, None):
             return
@@ -2937,7 +2948,7 @@ class Graph(Element):
         :param color:  (Default value = 'black')
         :param font:  specifies the font family, size, etc
         :param angle:  (Default value = 0)
-
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
         """
         if location == (None, None):
             return
