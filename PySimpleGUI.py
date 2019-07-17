@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.9 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.10 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3030,7 +3030,7 @@ class Graph(Element):
 
     def Move(self, x_direction, y_direction):
         """
-        Moves the entire drawing area (the canvas) by indicated number of ticks in your coordinate system
+        Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
 
         :param x_direction: Union[int, float] how far to move in the "X" direction in your coordinates
         :param y_direction: Union[int, float] how far to move in the "Y" direction in your coordinates
@@ -3044,13 +3044,14 @@ class Graph(Element):
             return None
         self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
 
+
     def MoveFigure(self, figure, x_direction, y_direction):
         """
+        Moves a previously drawn figure using a "delta" from current position
 
-        :param figure:
-        :param x_direction:
-        :param y_direction:
-
+        :param figure: (id) Previously obtained figure-id. These are returned from all Draw methods
+        :param x_direction: Union[int, float] delta to apply to position in the X direction
+        :param y_direction: Union[int, float] delta to apply to position in the Y direction
         """
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
@@ -3063,12 +3064,14 @@ class Graph(Element):
 
     def RelocateFigure(self, figure, x, y):
         """
+        Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
+        uses absolute coordinates versus relative for Move
 
-        :param figure:
-        :param x:
-        :param y:
-
+        :param figure: (id) Previously obtained figure-id. These are returned from all Draw methods
+        :param x: Union[int, float] location on X axis (in user coords) to move the upper left corner of the figure
+        :param y: Union[int, float] location on Y axis (in user coords) to move the upper left corner of the figure
         """
+
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x, y)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -3087,13 +3090,14 @@ class Graph(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas2
 
-    # Realtime button release callback
+    # button release callback
     def ButtonReleaseCallBack(self, event):
         """
+        Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
-        :param event:
-
+        :param event: (event) event info from tkinter. Note not used in this method
         """
+
         self.ClickPosition = (None, None)
         self.LastButtonClickedWasRealtime = not self.DragSubmits
         if self.Key is not None:
@@ -3106,13 +3110,14 @@ class Graph(Element):
             self.ParentForm.LastButtonClicked = None
         self.MouseButtonDown = False
 
-    # Realtime button callback
+    # button callback
     def ButtonPressCallBack(self, event):
         """
+        Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
-        :param event:
-
+        :param event: (event) event info from tkinter. Contains the x and y coordinates of a click
         """
+
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
         self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
         if self.Key is not None:
@@ -3123,13 +3128,14 @@ class Graph(Element):
             self.ParentForm.TKroot.quit()  # kick out of loop if read was called
         self.MouseButtonDown = True
 
-    # Realtime button callback
+    # button callback
     def MotionCallBack(self, event):
         """
+        Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
 
-        :param event:
-
+        :param event: (event) event info from tkinter. Contains the x and y coordinates of a mouse
         """
+
         if not self.MouseButtonDown:
             return
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
@@ -3142,7 +3148,12 @@ class Graph(Element):
             self.ParentForm.TKroot.quit()  # kick out of loop if read was called
 
     def SetFocus(self, force=False):
-        """ """
+        """
+        Sets the current focus to be on this Graph Element
+
+        :param force: (bool) if True will call focus_force otherwise calls focus_set
+        """
+
         try:
             if force:
                 self._TKCanvas2.focus_force()
@@ -3161,28 +3172,29 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    """ """
+    """
+    A Frame Element that contains other Elements. Encloses with a line around elements and a text label.
+    """
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True):
         """
-
-        :param title: title for frame above
-        :param layout: layout of elements
-        :param title_color: ????????????????????????
-        :param background_color: color of background
-        :param title_location: ????????????????????????
-        :param relief:  relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_FRAME_RELIEF)
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param font:  specifies the font family, size, etc
-        :param pad:  Amount of padding to put around element
-        :param border_width:   width of border around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param title: (str) text that is displayed as the Frame's "label" or title
+        :param layout: List[List[Elements]] The layout to put inside the Frame
+        :param title_color: (str) color of the title text
+        :param background_color: (str) background color of the Frame
+        :param title_location: (enum) location to place the text title.  Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT
+        :param relief: (enum) relief style. Values are same as other elements with reliefs.
+                        Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
+        :param size: Tuple(int, int) (width in characters, height in rows) (note this parameter may not always work)
+        :param font: Union[str, tuple]  specifies the font family, size, etc
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param border_width: (int)  width of border around element in pixels
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-
+        :param visible: (bool) set visibility state of the element
         """
 
         self.UseDictionary = False
@@ -3209,10 +3221,10 @@ class Frame(Element):
         return
 
     def AddRow(self, *args):
-        """Parms are a variable number of Elements
+        """
+        Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
-        :param *args:
-
+        :param *args: List[Element] The list of elements for this row
         """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -3229,19 +3241,24 @@ class Frame(Element):
 
     def Layout(self, rows):
         """
+        Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
-        :param rows:
-
+        :param rows: List[List[Element]] The rows of Elements
+        :return: (Frame) Used for chaining
         """
+
         for row in rows:
             self.AddRow(*row)
+        return self
 
     def _GetElementAtLocation(self, location):
         """
+        Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location:
-
+        :param location: Tuple[int, int] (row, column) position of the element to find in layout
+        :return: (Element) The element found at the location
         """
+
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
@@ -3268,17 +3285,17 @@ class Frame(Element):
 
 
 # ---------------------------------------------------------------------- #
-#                           Separator                                    #
-#  Routes stdout, stderr to a scrolled window                            #
+#                           Vertical Separator                           #
 # ---------------------------------------------------------------------- #
 class VerticalSeparator(Element):
-    """ """
+    """
+    Vertical Separator Element draws a vertical line at the given location. It will span 1 "row". Usually paired with
+    Column Element if extra height is needed
+    """
 
     def __init__(self, pad=None):
         """
-
-        :param pad:  Amount of padding to put around element
-
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         """
 
         self.Orientation = 'vertical'  # for now only vertical works
@@ -3298,25 +3315,25 @@ VSep = VerticalSeparator
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    """ """
+    """
+    Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
+    """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
                  border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True):
         """
-
-        :param title:
-        :param layout: ?????????????????????
-        :param title_color:
-        :param background_color: color of background
-        :param font:  specifies the font family, size, etc
-        :param pad:  Amount of padding to put around element
-        :param disabled: set disable state for element (Default = False)
-        :param border_width:  width of border around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param title: (str) text to show on the tab
+        :param layout: List[List[Element]] The element layout that will be shown in the tab
+        :param title_color: (str) color of the tab text (note not currently working on tkinter)
+        :param background_color: (str) color of background of the entire layout
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param disabled: (bool) If True button will be created disabled
+        :param border_width: (int)  width of border around element in pixels
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-
+        :param visible: (bool) set visibility state of the element
         """
 
         self.UseDictionary = False
@@ -3343,10 +3360,10 @@ class Tab(Element):
         return
 
     def AddRow(self, *args):
-        """Parms are a variable number of Elements
+        """
+        Not recommended use call.  Used to add rows of Elements to the Frame Element.
 
-        :param *args:
-
+        :param *args: List[Element] The list of elements for this row
         """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -3363,10 +3380,12 @@ class Tab(Element):
 
     def Layout(self, rows):
         """
+        Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
-        :param rows:
-
+        :param rows: List[List[Element]] The list of rows
+        :return: (Tab) used for chaining
         """
+
         for row in rows:
             self.AddRow(*row)
         return self
@@ -3392,10 +3411,12 @@ class Tab(Element):
 
     def _GetElementAtLocation(self, location):
         """
+        Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location:
-
+        :param location: Tuple[int, int] (row, column) position of the element to find in layout
+        :return: (Element) The element found at the location
         """
+
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
@@ -3413,28 +3434,28 @@ class Tab(Element):
 #                           TabGroup                                     #
 # ---------------------------------------------------------------------- #
 class TabGroup(Element):
-    """ """
+    """
+    TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
+    """
 
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
                  font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
                  key=None, tooltip=None, visible=True):
         """
-
-        :param layout:
-        :param tab_location:
-        :param title_color:
-        :param selected_title_color:
-        :param background_color: color of background
-        :param font:  specifies the font family, size, etc
-        :param change_submits: If True, pressing Enter key submits window (Default = False)
-        :param enable_events: Turns on the element specific events.(Default = False)
-        :param pad:  Amount of padding to put around element
-        :param border_width:  width of border around element
-        :param theme:
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param layout: List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
+        :param tab_location: (str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
+        :param title_color: (str) color of text on tabs
+        :param selected_title_color: (str) color of tab when it is selected
+        :param background_color: (str) color of background of tabs
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+        :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
+        :param enable_events: (bool) If True then switching tabs will generate an Event
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param border_width: (int)  width of border around element in pixels
+        :param theme: (enum) tabs can be 'themed'. These are the choices (some may not work on your OS): THEME_DEFAULT THEME_WINNATIVE THEME_CLAM THEME_ALT THEME_CLASSIC THEME_VISTA THEME_XPNATIVE
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: set visibility state of the element (Default = True)
-
+        :param visible: (bool) set visibility state of the element
         """
 
         self.UseDictionary = False
@@ -3461,11 +3482,12 @@ class TabGroup(Element):
         return
 
     def AddRow(self, *args):
-        """Parms are a variable number of Elements
-
-        :param *args:
-
         """
+        Not recommended user call.  Used to add rows of Elements to the Frame Element.
+
+        :param *args: List[Element] The list of elements for this row
+        """
+
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
         CurrentRow = []  # start with a blank row and build up
@@ -3481,19 +3503,23 @@ class TabGroup(Element):
 
     def Layout(self, rows):
         """
+        Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
-        :param rows:
-
+        :param rows: List[List[Element]] The rows of Elements
+        :return: (Frame) Used for chaining
         """
         for row in rows:
             self.AddRow(*row)
+        return self
 
     def _GetElementAtLocation(self, location):
         """
+        Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location:
-
+        :param location: Tuple[int, int] (row, column) position of the element to find in layout
+        :return: (Element) The element found at the location
         """
+
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
@@ -3501,9 +3527,10 @@ class TabGroup(Element):
 
     def FindKeyFromTabName(self, tab_name):
         """
+        Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
 
         :param tab_name:
-
+        :return: Union[key, None] Returns the key or None if no key found
         """
         for row in self.Rows:
             for element in row:
@@ -3513,10 +3540,10 @@ class TabGroup(Element):
 
     def SelectTab(self, index):
         """
-
-        :param index:
-
+        Create a tkinter event that mimics user clicking on a tab
+        :param index: (int) indicates which Tab should be selected. Count starts at 0
         """
+
         try:
             self.TKNotebook.select(index)
         except Exception as e:
@@ -3534,7 +3561,9 @@ class TabGroup(Element):
 #                           Slider                                       #
 # ---------------------------------------------------------------------- #
 class Slider(Element):
-    """ """
+    """
+    A slider, horizontal or vertical
+    """
 
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
@@ -3542,26 +3571,25 @@ class Slider(Element):
                  text_color=None, key=None, pad=None, tooltip=None, visible=True):
         """
 
-        :param range: (min, max) slider's range
-        :param default_value: default setting (within range)
-        :param resolution:  how much each 'tick' should represent. Default = 1
-        :param tick_interval:
-        :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work)
-        :param disable_number_display:  (Default = False)
-        :param border_width: width of border around element
-        :param relief:  relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
-        :param change_submits: If True, pressing Enter key submits window (Default = False)
-        :param enable_events: Turns on the element specific events.(Default = False)
-        :param disabled: set disable state for element (Default = False)
-        :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
-        :param font:  specifies the font family, size, etc
-        :param background_color: color of background
-        :param text_color: color of the text
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param pad:  Amount of padding to put around element
+        :param range: Union[Tuple[int, int], Tuple[float, float]] slider's range (min value, max value)
+        :param default_value: Union[int, float] starting value for the slider
+        :param resolution: Union[int, float] the smallest amount the slider can be moved
+        :param tick_interval: Union[int, float] how often a visible tick should be shown next to slider
+        :param orientation: (str) 'horizontal' or 'vertical' ('h' or 'v' also work)
+        :param disable_number_display: (bool) if True no number will be displayed by the Slider Element
+        :param border_width: (int) width of border around element in pixels
+        :param relief: (enum)  relief style. `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
+        :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
+        :param enable_events: (bool) If True then moving the slider will generate an Event
+        :param disabled: (bool) set disable state for element
+        :param size: Tuple[int, int] (width in characters, height in rows)
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+        :param background_color: (str) color of slider's background
+        :param text_color: (str) color of the slider's text
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: set visibility state of the element (Default = True)
-
+        :param visible: (bool) set visibility state of the element
         """
 
         self.TKScale = None  # type: tk.Scale
@@ -3587,8 +3615,8 @@ class Slider(Element):
         """
         Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param value: set current selection to value new value in slider
-        :param range: new range in slider
+        :param value: Union[int, float] sets current slider value
+        :param range: Union[Tuple[int, int], Tuple[float, float] Sets a new range for slider
         :param disabled: (bool) disable or enable state of the element
         :param visible: (bool) control visibility of element
 
@@ -3613,12 +3641,11 @@ class Slider(Element):
 
     def _SliderChangedHandler(self, event):
         """
+        Not user callable.  Callback function for when slider is moved.
 
-        :param event:
-
+        :param event: (event) the event data provided by tkinter. Unknown format. Not used.
         """
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
+
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -3774,22 +3801,23 @@ class TkScrollableFrame(tk.Frame):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    """ """
+    """
+    A container element that is used to create a layout within your window's layout
+    """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
         """
-
-        :param layout: ????????????????????????
-        :param background_color: color of background
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param pad:  Amount of padding to put around element
-        :param scrollable: ???????????????????????? (Default = False)
-        :param vertical_scroll_only: ???????????????????????? (Default = False)
+        :param layout: List[List[Element]] Layout that will be shown in the Column container
+        :param background_color: (str) color of background of entire Column
+        :param size: Tuple[int, int] (width, height) size in pixels (doesn't work quite right, sometimes
+                      only 1 dimension is set by tkinter
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param scrollable: (bool) if True then scrollbars will be added to the column
+        :param vertical_scroll_only: (bool) if Truen then no horizontal scrollbar will be shown
         :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :param visible: set visibility state of the element (Default = True)
-
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :param visible: (bool) set visibility state of the element
         """
 
         self.UseDictionary = False
@@ -3814,11 +3842,12 @@ class Column(Element):
         return
 
     def AddRow(self, *args):
-        """Parms are a variable number of Elements
-
-        :param *args:
-
         """
+        Not recommended user call.  Used to add rows of Elements to the Column Element.
+
+        :param *args: List[Element] The list of elements for this row
+        """
+
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
         CurrentRow = []  # start with a blank row and build up
@@ -3834,23 +3863,29 @@ class Column(Element):
 
     def Layout(self, rows):
         """
+        Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
-        :param rows:
-
+        :param rows: List[List[Element]] The rows of Elements
+        :return: (Frame) Used for chaining
         """
+
         for row in rows:
             self.AddRow(*row)
+        return self
 
     def _GetElementAtLocation(self, location):
         """
+        Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location:
-
+        :param location: Tuple[int, int] (row, column) position of the element to find in layout
+        :return: (Element) The element found at the location
         """
+
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
+
 
     def Update(self, visible=None):
         """
@@ -3882,11 +3917,15 @@ class Column(Element):
         super().__del__()
 
 
+
+
 # ---------------------------------------------------------------------- #
-#                           Pane                                       #
+#                           Pane                                         #
 # ---------------------------------------------------------------------- #
 class Pane(Element):
-    """ """
+    """
+    A sliding Pane that is unique to tkinter
+    """
 
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
