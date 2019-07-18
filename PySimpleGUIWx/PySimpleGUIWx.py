@@ -2734,7 +2734,7 @@ class SystemTray:
             self.App.SetAssertMode(wx.APP_ASSERT_SUPPRESS)
         else:
             self.App = Window.highest_level_app
-        self.Tooltip = tooltip
+        self.Tooltip = tooltip or wx.EmptyString
 
         frame = wx.Frame(None, title='Tray icon frame')
         if filename:
@@ -2743,7 +2743,7 @@ class SystemTray:
             self.icon = PyEmbeddedImage(data_base64).GetIcon()
         else:
             self.icon = PyEmbeddedImage(DEFAULT_BASE64_ICON).GetIcon()
-        self.TaskBarIcon = self.CustomTaskBarIcon(frame, self.App, self.Menu, self.icon, tooltip=tooltip)
+        self.TaskBarIcon = self.CustomTaskBarIcon(frame, self.App, self.Menu, self.icon, tooltip=self.Tooltip)
 
         # self.App.MainLoop()
 
@@ -2891,7 +2891,7 @@ class SystemTray:
         wx.DisableAsserts()
 
 
-    def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
+    def Update(self, menu=None, tooltip=None, filename=None, data=None, data_base64=None,):
         '''
         Updates the menu, tooltip or icon
         :param menu: menu defintion
@@ -2910,9 +2910,9 @@ class SystemTray:
             self.icon = PyEmbeddedImage(data_base64).GetIcon()
         elif not self.icon:
             self.icon = PyEmbeddedImage(DEFAULT_BASE64_ICON).GetIcon()
-        if self.icon:
-            self.Tooltip = tooltip or self.Tooltip
-            self.TaskBarIcon.SetIcon(self.icon, tooltip=self.Tooltip)
+        if tooltip is not None:
+            self.Tooltip = tooltip
+        self.TaskBarIcon.SetIcon(self.icon, tooltip=self.Tooltip)
         # Tooltip
         # if tooltip is not None:
         #     self.TrayIcon.setToolTip(str(tooltip))
