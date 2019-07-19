@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.12 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.13 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
