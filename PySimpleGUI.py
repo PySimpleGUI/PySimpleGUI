@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.10 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.12 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -2258,7 +2258,7 @@ class Button(Element):
             if sys.platform == 'darwin' and button_color != (None, None):
                 print('Button.Update *** WARNING - Button colors are not supported on the Mac***')
             if button_color != (None, None):
-                self.TKButton.config(foreground=button_color[0], background=button_color[1])
+                self.TKButton.config(foreground=button_color[0], background=button_color[1], activebackground=button_color[1])
                 self.ButtonColor = button_color
         except:
             return
@@ -10909,6 +10909,7 @@ def main():
                     # transparent_color= '#9FB8AD',
                     resizable=True,
                     debugger_enabled=False,
+                    keep_on_top=True,
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
@@ -10930,8 +10931,7 @@ def main():
         i += 1
         if event == 'Button':
             window.Element('_TEXT1_').SetTooltip('NEW TEXT')
-            # window.SetTransparentColor('#9FB8AD')
-            # window.Maximize()
+            window.SetTransparentColor('#9FB8AD')
             window.Element('_MENU_').Update(visible=True)
         elif event == 'Normal':
             window.Normal()
@@ -10940,7 +10940,6 @@ def main():
             show_debugger_popout_window()
         elif event == 'Launch Debugger':
             show_debugger_window()
-        # TimerStop()
     window.Close()
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
