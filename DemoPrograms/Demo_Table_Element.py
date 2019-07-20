@@ -48,7 +48,7 @@ while True:
             data.append(data[i])
         window.FindElement('_table_').Update(values = data)
     elif event == 'Update':
-        window.FindElement('_table_').Update( row_colors=((8,'red'), (9,'black')))
+        window.FindElement('_table_').Update( row_colors=((8,'white', 'red'), (9,'black')))
 
     # sg.Popup(event, values)
     # print(event, values)
