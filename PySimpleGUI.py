@@ -4428,7 +4428,12 @@ class Table(Element):
                 if self.BackgroundColor is not None and self.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     self.TKTreeview.tag_configure(id, background=self.BackgroundColor)
                 else:
-                    self.TKTreeview.tag_configure(id, background='#FFFFFF')
+                    self.TKTreeview.tag_configure(id, background='#FFFFFF', foreground='#000000')
+                if self.TextColor is not None and self.TextColor != COLOR_SYSTEM_DEFAULT:
+                    self.TKTreeview.tag_configure(id, foreground=self.TextColor)
+                else:
+                    self.TKTreeview.tag_configure(id, foreground='#000000')
+
             children = self.TKTreeview.get_children()
             for i in children:
                 self.TKTreeview.detach(i)
