@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.13 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.14 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3867,12 +3867,13 @@ class Column(Element):
         Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
         :param rows: List[List[Element]] The rows of Elements
-        :return: (Frame) Used for chaining
+        :return: (Column) Used for chaining
         """
 
         for row in rows:
             self.AddRow(*row)
         return self
+
 
     def _GetElementAtLocation(self, location):
         """
@@ -3925,25 +3926,23 @@ class Column(Element):
 # ---------------------------------------------------------------------- #
 class Pane(Element):
     """
-    A sliding Pane that is unique to tkinter
+    A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
     """
 
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
         """
-
-        :param pane_list:
-        :param background_color: color of background
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param pad:  Amount of padding to put around element
-        :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')
-        :param show_handle:  (Default = True)
-        :param relief:  relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
-        :param handle_size:
-        :param border_width:  width of border around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :param visible: set visibility state of the element (Default = True)
-
+        :param pane_list: List[Column] Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
+        :param background_color: (str) color of background
+        :param size: Tuple[int, int]  (w,h) w=characters-wide, h=rows-high How much room to reserve for the Pane
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param orientation: (str)  'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
+        :param show_handle: (bool) if True, the handle is drawn that makes it easier to grab and slide
+        :param relief: (enum) relief style. Values are same as other elements that use relief values.  `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
+        :param handle_size: (int) Size of the handle in pixels
+        :param border_width: (int)  width of border around element in pixels
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :param visible: (bool) set visibility state of the element
         """
 
         self.UseDictionary = False
@@ -3985,7 +3984,10 @@ class Pane(Element):
 #                           Calendar                                     #
 # ---------------------------------------------------------------------- #
 class TKCalendar(ttk.Frame):
-    """This code was shamelessly lifted from moshekaplan's repository - moshekaplan/tkinter_components"""
+    """
+    This code was shamelessly lifted from moshekaplan's repository - moshekaplan/tkinter_components
+    NONE of this code is user callable.  Stay away!
+    """
     # XXX ToDo: cget and configure
 
     datetime = calendar.datetime.datetime
@@ -4250,23 +4252,36 @@ class TKCalendar(ttk.Frame):
 
 
 # ---------------------------------------------------------------------- #
-#                           Menu                                       #
+#                           Menu                                         #
 # ---------------------------------------------------------------------- #
 class Menu(Element):
-    """ """
+    """
+    Menu Element is the Element that provides a Menu Bar that goes across the top of the window, just below titlebar.
+    Here is an example layout.  The "&" are shortcut keys ALT+key.
+    Is a List of -  "Item String" + List
+    Where Item String is what will be displayed on the Menubar itself.
+    The List that follows the item represents the items that are shown then Menu item is clicked
+    Notice how an "entry" in a mennu can be a list which means it branches out and shows another menu, etc. (resursive)
+    menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
+                ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['&Debugger', ['Popout', 'Launch Debugger']],
+                ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
+                ['&Help', '&About...'], ]
+    Finally, "keys" can be added to entires so make them unique.  The "Save" entry has a key associated with it. You
+    can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
+    menu is shown.  The key portion is returned as part of the event.
+    """
 
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None,
                  visible=True):
         """
-
-        :param menu_definition:
-        :param background_color: color of background
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param tearoff:  (Default = False)
-        :param pad:  Amount of padding to put around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :param visible: set visibility state of the element (Default = True)
-
+        :param menu_definition: List[List[Tuple[str, List[str]]]
+        :param background_color: (str) color of the background
+        :param size: Tuple[int, int]  Hmmm...not sure
+        :param tearoff: (bool) if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :param visible: (bool) set visibility state of the element
         """
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -4281,9 +4296,8 @@ class Menu(Element):
 
     def _MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
         """
-
-        :param item_chosen:
-
+        Not user callable.  Called when some end-point on the menu (an item) has been clicked.  Send the information back to the application as an event.  Before event can be sent
+        :param item_chosen: (str) the text that was clicked on / chosen from the menu
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen
@@ -4294,9 +4308,9 @@ class Menu(Element):
 
     def Update(self, menu_definition=None, visible=None):
         """
-        Update a menubar - can change the menu definition and visibility
+        Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
 
-        :param menu_definition: List[[str]] New menu defintion
+        :param menu_definition: List[List[Tuple[str, List[str]]]
         :param visible: (bool) control visibility of element
         """
 
