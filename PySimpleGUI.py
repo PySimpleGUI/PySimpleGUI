@@ -4409,16 +4409,17 @@ class Table(Element):
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
 
-    def Update(self, values=None, num_rows=None, visible=None, select_rows=None):
+    def Update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
         """
         Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param values:
-        :param num_rows:
-        :param visible: (bool) control visibility of element
-        :param select_rows:
+        :param values: List[List[Any]] A new 2-dimensional table to show
+        :param num_rows: (int) How many rows to display at a time
+        :param visible: (bool) if True then will be visible
+        :param select_rows: List[int] List of rows to select as if user did
+        :param alternating_row_color: (str) the color to make every other row
+        :param row_colors: List[Tuple[int, str]] list of tuples of (row, color). Changes the colors of listed rows to the color provided
         """
-
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -4443,6 +4444,20 @@ class Table(Element):
         if select_rows is not None:
             rows_to_select = [i+1 for i in select_rows]
             self.TKTreeview.selection_set(rows_to_select)
+
+        if alternating_row_color is not None:  # alternating colors
+            self.AlternatingRowColor = alternating_row_color
+
+        if self.AlternatingRowColor is not None:
+            for row in range(0, len(self.Values), 2):
+                self.TKTreeview.tag_configure(row, background=self.AlternatingRowColor)
+        if row_colors is not None:  # individual row colors
+            self.RowColors = row_colors
+            for row_def in self.RowColors:
+                if len(row_def) == 2:  # only background is specified
+                    self.TKTreeview.tag_configure(row_def[0], background=row_def[1])
+                else:
+                    self.TKTreeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
 
     def treeview_selected(self, event):
         """
