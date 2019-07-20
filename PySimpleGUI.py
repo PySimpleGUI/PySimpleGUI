@@ -4405,7 +4405,7 @@ class Table(Element):
         self.RowHeaderText = 'Row'
         self.RightClickMenu = right_click_menu
         self.RowColors = row_colors
-
+        self.tree_ids = []          # ids returned when inserting items into table - will use to delete colors
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
         return
@@ -4419,21 +4419,32 @@ class Table(Element):
         :param visible: (bool) if True then will be visible
         :param select_rows: List[int] List of rows to select as if user did
         :param alternating_row_color: (str) the color to make every other row
-        :param row_colors: List[Tuple[int, str]] list of tuples of (row, color). Changes the colors of listed rows to the color provided
+        :param row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)
         """
+
         if values is not None:
+            for id in self.tree_ids:
+                self.TKTreeview.item(id, tags=())
+                if self.BackgroundColor is not None and self.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    self.TKTreeview.tag_configure(id, background=self.BackgroundColor)
+                else:
+                    self.TKTreeview.tag_configure(id, background='#FFFFFF')
             children = self.TKTreeview.get_children()
             for i in children:
                 self.TKTreeview.detach(i)
                 self.TKTreeview.delete(i)
             children = self.TKTreeview.get_children()
-            # self.TKTreeview.delete(*self.TKTreeview.get_children())
+
+            self.tree_ids =[]
             for i, value in enumerate(values):
                 if self.DisplayRowNumbers:
                     value = [i + self.StartingRowNumber] + value
-                id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
-            if self.AlternatingRowColor is not None:
-                self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
+                id = self.TKTreeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i)
+                if self.BackgroundColor is not None and self.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    self.TKTreeview.tag_configure(id, background=self.BackgroundColor)
+                else:
+                    self.TKTreeview.tag_configure(id, background='#FFFFFF')
+                self.tree_ids.append(id)
             self.Values = values
             self.SelectedRows = []
         if visible is False:
@@ -8116,6 +8127,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if element.DisplayRowNumbers:
                         value = [i + element.StartingRowNumber] + value
                     id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i)
+                    element.tree_ids.append(id)
                 if element.AlternatingRowColor is not None:  # alternating colors
                     for row in range(0, len(element.Values), 2):
                         treeview.tag_configure(row, background=element.AlternatingRowColor)

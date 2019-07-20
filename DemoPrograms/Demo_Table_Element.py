@@ -8,6 +8,7 @@ else:
 import random
 import string
 
+
 # ------------------ Create a fake table ------------------
 class Fake():
     @classmethod
@@ -30,22 +31,26 @@ data = make_table(num_rows=15, num_cols=6)
 # sg.SetOptions(element_padding=(0,0))
 headings = [data[0][x] for x in range(len(data[0]))]
 
-layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
-                        auto_size_columns=True, display_row_numbers=True, justification='right', num_rows=20, alternating_row_color='lightblue', key='_table_')],
-          [sg.Button('Read'), sg.Button('Double')],
+layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25, background_color='lightblue',
+                        auto_size_columns=True, display_row_numbers=True, justification='right', num_rows=20, alternating_row_color='blue', key='_table_', tooltip='This is a table')],
+          [sg.Button('Read'), sg.Button('Double'), sg.Button('Update')],
           [sg.T('Read = read which rows are selected')],[sg.T('Double = double the amount of data in the table')]]
 
 window = sg.Window('Table', grab_anywhere=False, resizable=True).Layout(layout)
 
 while True:
     event, values = window.Read()
+    print(event, values)
     if event is None:
         break
     if event == 'Double':
         for i in range(len(data)):
             data.append(data[i])
         window.FindElement('_table_').Update(values = data)
-    sg.Popup(event, values)
+    elif event == 'Update':
+        window.FindElement('_table_').Update( row_colors=((8,'red'), (9,'black')))
+
+    # sg.Popup(event, values)
     # print(event, values)
 window.Close()
 sys.exit(69)
