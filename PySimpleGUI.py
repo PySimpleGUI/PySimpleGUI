@@ -200,6 +200,7 @@ DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
 DEFAULT_TOOLTIP_OFFSET = (0, -20)
+TOOLTIP_BACKGROUND_COLOR = "#ffffe0"
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -465,7 +466,7 @@ class ToolTip:
         self.tipwindow.wm_attributes("-topmost", 1)
 
         label = ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT,
-                          background="#ffffe0", relief=tk.SOLID, borderwidth=1)
+                      background=TOOLTIP_BACKGROUND_COLOR, relief=tk.SOLID, borderwidth=1)
         label.pack()
 
     def hidetip(self):
