@@ -5476,7 +5476,7 @@ class Window:
                     if element.Key in key_dict.keys():
                         print('*** Duplicate key found in your layout {} ***'.format(
                             element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
-                        element.Key = element.Key + str(self.UniqueKeyCounter)
+                        element.Key = str(element.Key) + str(self.UniqueKeyCounter)
                         self.UniqueKeyCounter += 1
                         print('*** Replaced new key with {} ***'.format(
                             element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
