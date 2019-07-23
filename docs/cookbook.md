@@ -263,6 +263,25 @@ else:
     sg.Popup('The filename you chose was', fname)
 ```
 
+How about a GUI **_and_** traditional CLI argument in 1 line of code?
+
+```python
+import PySimpleGUI as sg
+import sys
+
+fname = sys.argv[1] if len(sys.argv) == 1 else sg.PopupGetFile('Document to open')
+
+if not fname:
+    sg.Popup("Cancel", "No filename supplied")
+    raise SystemExit("Cancelling: no filename supplied")
+else:
+    sg.Popup('The filename you chose was', fname)
+```
+
+
+Really, how much more could you possibly ask for you lazy programmer?
+
+
 --------------      
       
 ## Compare 2 Files      
@@ -286,9 +305,12 @@ Browse to get 2 file names that can be then compared.
     print(event, values)      
 ```      
 ---------------      
-## Nearly All Widgets with Color Theme, Menus,  (The Everything Bagel)
+## Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
 
-Example of nearly all of the widgets in a single window.  Uses a customized color scheme.  Shows how to format menus.    
+Example of nearly all of the Elements in a single window.  Uses a customized color scheme, lots of Elements, default values, Columns, Frames with colored text, tooltips, file browsing.  There are at least 13 different Elements used.  
+
+Before scrolling down to the code, guess how many lines of Python code were required to create this custom layout window.
+
       
 ![latest everything bagel](https://user-images.githubusercontent.com/13696193/45920376-22d89000-be71-11e8-8ac4-640f011f84d0.jpg)      
       
@@ -348,38 +370,47 @@ Example of nearly all of the widgets in a single window.  Uses a customized colo
 
 ```
       
+      
+#### 35 lines of code
+
+That's what the window definition, creation, display and get values ultimately ended up being when you remove the blank lines above.  Try displaying 13 seperate "GUI Widgets" in any of the GUI frameworks.  There's $20 waiting for the person that can code up the same window in under 35 lines of Python code using tkinter, WxPython, or Qt
+
 -------------      
+
       
-          
-      
-      
-## Non-Blocking Window With Periodic Update    
-An async Window that has a event read loop.  A Text Element is updated periodically with a running timer.  Note that `value` is checked for None which indicates the window was closed using X.   
-Use caution when using windows with a timeout.  You should rarely need to use a timeout=0, non-blocking call, so try not to abuse this design pattern.
- 
+## Asynchronous Window With Periodic Update    
+
+An async Window that has a event loop, and updates a text element at a periodic interval.  In this case, we're outputting the time elapsed into the window. 
+
+Use this design pattern for projects that need to poll or output something on a regular basis.  In this case, we're indicating we want a `timeout=10` on our `window.Read` call.  This will cause the `Read` call to return a "timeout key" as the event when a timeout has happened without some GUI thing happening first (like the user clicking a button).  The timeout key is `PySimpleGUI.TIMEOUT_KEY` usually written as `sg.TIMEOUT_KEY` in normal PySimpleGUI code.
+
+Use caution when using windows with a timeout.  You should **rarely** need to use a `timeout=0`, non-blocking call, so try not to abuse this design pattern.  Honest, you shouldn't do it unless you're a realtime application and know what you're doing.  Hint - if you have < 1 year programming experience and you're using `timeout=0`, you're doing something wrong.
+
+A note about timers... this is not a good design for a stopwatch as it can very easily drift. This would never pass for a good solution in a bit of commercial code.  For better accuracy always get the actual time from a reputable source, like the operating system.  Use that as what you use to measure and display the time.  
+
       
 ![non-blocking](https://user-images.githubusercontent.com/13696193/43955295-70f6ac48-9c6d-11e8-8ea2-e6729ba9330c.jpg)      
       
 ```python      
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Stopwatch', size=(20, 2), justification='center')],
+layout = [  [sg.Text('Stopwatch', size=(20, 2), justification='center')],
             [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='_OUTPUT_')],
             [sg.T(' ' * 5), sg.Button('Start/Stop', focus=True), sg.Quit()]]
 
-window = sg.Window('Running Timer', layout)
+window = sg.Window('Stopwatch Timer', layout)
 
-timer_running = True
-i = 0
-# Event Loop
-while True:
-    i += 1 * (timer_running is True)
-    event, values = window.Read(timeout=10) # Please try and use a timeout when possible
-    if event is None or event == 'Quit':  # if user closed the window using X or clicked Quit button
+timer_running, i = True, 0
+
+while True:        # Event Loop
+    event, values = window.Read(timeout=10) # Please try and use as high of a timeout value as you can
+    if event is None or event == 'Quit':    # if user closed the window using X or clicked Quit button
         break
     elif event == 'Start/Stop':
         timer_running = not timer_running
-    window.Element('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+    if timer_running:
+        window.Element('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+        i += 1
 ```          
 
       
@@ -391,43 +422,47 @@ The architecture of some programs works better with button callbacks instead of 
 ![button callback 2](https://user-images.githubusercontent.com/13696193/43955588-e139ddc6-9c6e-11e8-8c78-c1c226b8d9b1.jpg)      
 
 ```python      
-    import PySimpleGUI as sg      
-      
-    # This design pattern simulates button callbacks      
-    # Note that callbacks are NOT a part of the package's interface to the      
-    # caller intentionally.  The underlying implementation actually does use      
-    # tkinter callbacks.  They are simply hidden from the user.      
-      
-    # The callback functions      
-    def button1():      
-        print('Button 1 callback')      
-      
-    def button2():      
-        print('Button 2 callback')      
-      
-      
-    # Layout the design of the GUI      
-    layout = [[sg.Text('Please click a button', auto_size_text=True)],      
-              [sg.Button('1'), sg.Button('2'), sg.Quit()]]      
-      
-    # Show the Window to the user    
-    window = sg.Window('Button callback example', layout)      
-      
-    # Event loop. Read buttons, make callbacks      
-    while True:      
-        # Read the Window    
-      event, value = window.Read()      
-        # Take appropriate action based on button      
-      if event == '1':      
-            button1()      
-      elif event == '2':      
-            button2()      
-      elif event =='Quit'  or event is None:  
-            window.Close()    
-            break      
-      
-    # All done!      
-    sg.PopupOK('Done')      
+import PySimpleGUI as sg
+
+# This design pattern simulates button callbacks
+# Note that callbacks are NOT a part of the package's interface to the
+# caller intentionally.  The underlying implementation actually does use
+# tkinter callbacks.  They are simply hidden from the user.
+
+# The callback functions
+def button1():
+    print('Button 1 callback')
+
+def button2():
+    print('Button 2 callback')
+
+# Lookup dictionary that maps button to function to call
+func_dict = {'1':button1, '2':button2}
+
+# Layout the design of the GUI
+layout = [[sg.Text('Please click a button', auto_size_text=True)],
+          [sg.Button('1'), sg.Button('2'), sg.Quit()]]
+
+# Show the Window to the user
+window = sg.Window('Button callback example', layout)
+
+# Event loop. Read buttons, make callbacks
+while True:
+    # Read the Window
+    event, value = window.Read()
+    if event in ('Quit', None):
+        break
+    # Lookup event in function dictionary
+    try:
+        func_to_call = func_dict[event]   # look for a match in the function dictionary
+        func_to_call()                    # if successfully found a match, call the function found
+    except:
+        pass
+
+window.Close()
+
+    # All done!
+sg.PopupOK('Done')     
 ```
       
    
