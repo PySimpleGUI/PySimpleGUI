@@ -8,7 +8,7 @@
       
 You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.  Study them to get an idea of what design patterns to follow.    
   
-The Recipes in this Cookbook all assume you're running on a Python3 machine.  If you are running Python 2.7 then your code will differ by 2 character.  Replace the import statement:  
+The Recipes in this Cookbook all assume you're running on a Python3 machine.  If you are running Python 2.7 then your code will differ by 2 characters.  Replace the import statement:  
   
     import PySimpleGUI as sg  
   
@@ -16,15 +16,10 @@ with
   
     import PySimpleGUI27 as sg  
   
-There is a short section in the Readme with instruction on installing PySimpleGUI  
+There is a short section in the main documentation at http://www.PySimpleGUI.org with instructions on installing PySimpleGUI.  
   
-If you like this Cookbook, then you'll LOVE the 100+ sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  
+If you like this Cookbook, then you'll LOVE the 170+ sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  
 
-# Experimental repl.it Embedded Windows
-
-You'll find a few of these Recipes are running in your browser window using PySimpleGUIWeb.  They are included so that you can immediately play around with the SDK before installing one of the PySimpleGUI variants on your computer.
-
-This is a new capability for PySimpleGUI that has only very recently been started.  Only a few of the elements are operational using PySimpleGUIWeb.  So, be prepared for some bugs.   It's got a ways to go, but still seemed valuable to include.
       
 # Copy these design patterns!      
       
@@ -59,7 +54,6 @@ text_input = values[0]
 print(text_input)
 ```    
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-1-One-shot-Window?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
     
     
 ## Pattern 2 A - Persistent window (multiple reads using an event loop)      
@@ -88,7 +82,6 @@ while True:
 window.Close()
 ```    
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2A-Persistent-Window?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 
 
@@ -98,71 +91,70 @@ This is a slightly more complex, but maybe more realistic version that reads inp
 
 Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
-A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False, the default setting (you can remove the parameter completely).
+A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False. The default setting is True so they are not cleared.  Some older programs may explicitly set this parameter to True.
 
 ```python
-import sys  
-if sys.version_info[0] >= 3:  
-    import PySimpleGUI as sg  
-else:  
-    import PySimpleGUI27 as sg  
-  
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],  
-          [sg.Input(do_not_clear=True, key='_IN_')],  
-          [sg.Button('Show'), sg.Button('Exit')]]  
-  
-window = sg.Window('Window Title', layout)  
-  
-while True:                 # Event Loop  
-  event, values = window.Read()  
-  print(event, values)
-  if event is None or event == 'Exit':  
-      break  
-  if event == 'Show':  
-      # change the "output" element to be the value of "input" element  
-      window.Element('_OUTPUT_').Update(values['_IN_'])
+import PySimpleGUI as sg
+
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(15,1), key='_OUTPUT_')],
+          [sg.Input(key='_IN_')],
+          [sg.Button('Show'), sg.Button('Exit')]]
+
+window = sg.Window('Window Title', layout)
+
+while True:  # Event Loop
+    event, values = window.Read()
+    print(event, values)
+    if event is None or event == 'Exit':
+        break
+    if event == 'Show':
+        # Update the "output" element to be the value of "input" element
+        window.Element('_OUTPUT_').Update(values['_IN_'])
 
 window.Close()
 ```
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Design-Pattern-2B-Persistent-Window-with-Updates?lite=false" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
+# 1 Shot - Simple Data Entry - Return Values - Auto Numbered   
+
+An Element's key will be automatically numbered, starting at 0, if you do not use the `key` parameter when creating an element and it's an element that will return values to you via the `Window.Read()` call.
+
+This example has no keys specified.  The 3 input fields will have keys 0, 1, 2.  Keys like this make the return values look like a list rather than a dictionary.  Your first input element will be accessed as `values[0]`, just like a list would look.
 
 
-# Simple Data Entry - Return Values As List      
-Same GUI screen except the return values are in a list instead of a dictionary and doesn't have initial values.      
-      
 ![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)      
       
 ```python
-    import PySimpleGUI as sg      
-      
-    # Very basic window.  Return values as a list      
-     
-    layout = [      
-              [sg.Text('Please enter your Name, Address, Phone')],      
-              [sg.Text('Name', size=(15, 1)), sg.InputText()],      
-              [sg.Text('Address', size=(15, 1)), sg.InputText()],      
-              [sg.Text('Phone', size=(15, 1)), sg.InputText()],      
-              [sg.Submit(), sg.Cancel()]      
-             ]      
-      
-    window = sg.Window('Simple data entry window', layout)  
-    event, values = window.Read()   
-    window.Close()
-    print(event, values[0], values[1], values[2])      
+import PySimpleGUI as sg
+
+# Very basic window.  Return values using auto numbered keys
+
+layout = [
+    [sg.Text('Please enter your Name, Address, Phone')],
+    [sg.Text('Name', size=(15, 1)), sg.InputText()],
+    [sg.Text('Address', size=(15, 1)), sg.InputText()],
+    [sg.Text('Phone', size=(15, 1)), sg.InputText()],
+    [sg.Submit(), sg.Cancel()]
+]
+
+window = sg.Window('Simple data entry window', layout)
+event, values = window.Read()
+window.Close()
+print(event, values[0], values[1], values[2])    # the input data looks like a simple list when auto numbered
+print(event, values)     
 ```    
       
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Return-Values-as-List?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
-# Simple data entry - Return Values As Dictionary      
-A simple GUI with default values.  Results returned in a dictionary.    
+# Simple data entry - Explicit Keys
+
+A simple GUI with default values in input elements, and uses user defined keys.  You will normally use keys like in this example.  If you use autonumbering, then if you add an element between other elements, then your numbering will shift and you'll have to modify your code quite a bit.  By naming them yourself, you can use the key to store data and be more descriptive.
       
 ![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)      
       
 ```python
     import PySimpleGUI as sg      
       
-    # Very basic window.  Return values as a dictionary      
+    # Very basic window.  Explicityly named keys     
     
     layout = [      
               [sg.Text('Please enter your Name, Address, Phone')],      
@@ -178,56 +170,99 @@ A simple GUI with default values.  Results returned in a dictionary.
     
     window.Close()
     
-    print(event, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])      
+    print(event, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])    
+    print(event, values)        # print so that you can see the format of the dictionary  
 ```      
 
-
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Return-Values-As-Dictionary?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
-
--------      
-      
-
-
-## Simple File Browse      
-Browse for a filename that is populated directly into the user's variable
-      
-![simple file browse](https://user-images.githubusercontent.com/13696193/43934539-d8bd9490-9c1d-11e8-927f-98b523776fcb.jpg)      
-      
-```python   
-    import PySimpleGUI as sg      
-          
-    layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],    
-                 [sg.InputText(), sg.FileBrowse()],      
-                 [sg.Submit(), sg.Cancel()]]      
-      
-    (event, (source_filename,)) = sg.Window('SHA-1 & 256 Hash', layout).Read()  
-      
-    print(event, source_filename)      
-```      
 --------------------------      
 ## Add GUI to Front-End of Script      
-Quickly add a GUI allowing the user to browse for a filename if a filename is not supplied on the command line using this 1-line GUI. It's the best of both worlds.      
+Quickly add a GUI allowing the user to browse for a filename if a filename is not supplied on the command line using this 1-line GUI. It's the best of both worlds.  If you want command line, you can use it.  If you don't specify, then the GUI will fire up.
+
+### The "Single Line GUI" version
+
+Here's the "single line GUI" version of a front-end
       
 ![script front-end](https://user-images.githubusercontent.com/13696193/44756573-39e9c380-aaf9-11e8-97b4-6679f9f5bd46.jpg)      
       
 ```python      
-    import PySimpleGUI as sg      
-    import sys      
+import PySimpleGUI as sg
+import sys
+
+if len(sys.argv) == 1:
+    event, values = sg.Window('My Script').Layout([[sg.Text('Document to open')],
+                                                   [sg.In(), sg.FileBrowse()],
+                                                   [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()
+    fname = values[0]
+    print(event, values)
+else:
+    fname = sys.argv[1]
+
+if not fname:
+    sg.Popup("Cancel", "No filename supplied")
+    raise SystemExit("Cancelling: no filename supplied")
+    
+```     
+
+### The More "Typical Version"
+
+That's showing off a bit just to crunch things down to a single line of GUI code.
+
+It's unusual to use the `CloseButton` Element.  Typically you use `Button`.  Normally you would not chain together so many calls.  Instead you would create the `Window` and put into `window` variable.  Then `Read` the window and finally `window.Close()`
+
+Using the more "traditional" style PySimpleGUI code:
+
+```python
+import PySimpleGUI as sg
+import sys
+
+if len(sys.argv) == 1:
+    layout = [[sg.Text('Document to open')],
+             [sg.In(), sg.FileBrowse()],
+             [sg.Open(), sg.Cancel()]]
+    
+    window = sg.Window('My Script', layout)
+    event, values = window.Read()
+    window.Close()
+    
+    fname = values[0]
+    print(event, values)
+else:
+    fname = sys.argv[1]
+
+if not fname:
+    sg.Popup("Cancel", "No filename supplied")
+    raise SystemExit("Cancelling: no filename supplied")
+else:
+    sg.Popup('The filename you chose was', fname)
+
+```
       
-    if len(sys.argv) == 1:      
-        event, (fname,) = sg.Window('My Script').Layout([[sg.Text('Document to open')],      
-                                                         [sg.In(), sg.FileBrowse()],      
-                                                         [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()  
-    else:      
-        fname = sys.argv[1]      
-      
-    if not fname:      
-        sg.Popup("Cancel", "No filename supplied")      
-        raise SystemExit("Cancelling: no filename supplied")      
-    print(event, fname)      
-```      
-      
-      
+### The `PopupGetFile` Version
+
+Why recreate the wheel?  There's a `Popup` function that will get a Filename for you.  This truly is a single-line GUI:
+```python
+fname = sg.PopupGetFile('Document to open')
+```
+
+The entire Popup based solution for this get filename example is:
+
+
+```python
+import PySimpleGUI as sg
+import sys
+
+if len(sys.argv) == 1:
+    fname = sg.PopupGetFile('Document to open')
+else:
+    fname = sys.argv[1]
+
+if not fname:
+    sg.Popup("Cancel", "No filename supplied")
+    raise SystemExit("Cancelling: no filename supplied")
+else:
+    sg.Popup('The filename you chose was', fname)
+```
+
 --------------      
       
 ## Compare 2 Files      
@@ -240,8 +275,8 @@ Browse to get 2 file names that can be then compared.
     import PySimpleGUI as sg      
       
     layout = [[sg.Text('Enter 2 files to comare')],    
-                 [sg.Text('File 1', size=(8, 1)), sg.InputText(), sg.FileBrowse()],      
-                 [sg.Text('File 2', size=(8, 1)), sg.InputText(), sg.FileBrowse()],      
+                 [sg.Text('File 1', size=(8, 1)), sg.Input(), sg.FileBrowse()],      
+                 [sg.Text('File 2', size=(8, 1)), sg.Input(), sg.FileBrowse()],      
                  [sg.Submit(), sg.Cancel()]]      
       
     window = sg.Window('File Compare', layout)  
@@ -251,8 +286,9 @@ Browse to get 2 file names that can be then compared.
     print(event, values)      
 ```      
 ---------------      
-## Nearly All Widgets with Green Color Theme      
-Example of nearly all of the widgets in a single window.  Uses a customized color scheme.      
+## Nearly All Widgets with Color Theme, Menus,  (The Everything Bagel)
+
+Example of nearly all of the widgets in a single window.  Uses a customized color scheme.  Shows how to format menus.    
       
 ![latest everything bagel](https://user-images.githubusercontent.com/13696193/45920376-22d89000-be71-11e8-8ac4-640f011f84d0.jpg)      
       
@@ -346,7 +382,6 @@ while True:
     window.Element('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 ```          
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Timer?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>           
       
 --------      
       
@@ -795,7 +830,6 @@ while True:             # Event Loop
 window.Close()
 ```
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Compound-Element?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
 ## Multiple Windows
 
@@ -970,7 +1004,6 @@ There are a number of features used in this Recipe including:
         window.Element('input').Update(keys_entered)  # change the window to reflect current key string    
 ```
 
-<iframe height="800px" width="100%" src="https://repl.it/@PySimpleGUI/Cookbook-Keypad-Touchscreen-Entry?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
       
 ## Animated Matplotlib Graph      
@@ -1547,9 +1580,3 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
 (famous last words that screw up just about anything being referenced)      
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzNTc5NjUyNTUsLTk0Mjc2ODgzNywtMz
-UwNzA2ODE4LC0xOTgzMjAzNjMwLC0xMDAwMjc2OTU0LC0xNDAy
-ODQwOTg2LDY2ODc4OTc0OSwtMTE3NDc5OTg5Miw3MTcwNDk2Nj
-AsLTY3OTU0OTY3NSwtMzM5MzcxMzUyXX0=
--->
