@@ -2937,6 +2937,8 @@ class SystemTray:
         self.App = Window.QTApplication
         self.Widget = self.QWidget = QWidget()              # type: QWidget
 
+        if filename is None and data is None and data_base64 is None:
+            data_base64 = DEFAULT_BASE64_ICON
         qicon = None
         if filename is not None:
             qicon = QIcon(filename)
