@@ -3845,6 +3845,10 @@ def create_style_from_font(font):
     if font is None:
         return ''
 
+    # Allows user to specify just underlining and keeping default (Helvetica) text and size (10) by just typing 'underline' or ('', '', 'underline') in the font argument
+    if font == 'underline' or font == ('', '', 'underline'):
+        return "font-family: Helvetica;\nfont-size: 10;\ntext-decoration: underline;"
+    
     if type(font) is str:
         _font = font.split(' ')
     else:
