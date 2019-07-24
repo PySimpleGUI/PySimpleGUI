@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.27.0.2 Unreleased"
+version = __version__ = "0.27.0.3 Unreleased"
 
 import sys
 import types
@@ -4927,6 +4927,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 max_line_len = max([len(str(l)) for l in element.Values])
             # -------------------------  LISTBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
+                element = element       # type: Listbox
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
                 element.Widget = element.QT_ListWidget = QListWidget()
                 style = element.QT_ListWidget.styleSheet()
@@ -4967,9 +4968,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.ChangeSubmits:
                     element.QT_ListWidget.currentRowChanged.connect(element.QtCurrentRowChanged)
-
+                # add all Values to the ListWidget
                 items = [str(v) for v in element.Values]
                 element.QT_ListWidget.addItems(items)
+                # select the default items
+                for index, value in enumerate(element.Values):
+                    item = element.QT_ListWidget.item(index)
+                    if element.DefaultValues is not None and value in element.DefaultValues:
+                        element.QT_ListWidget.setItemSelected(item, True)
+
                 if element.Tooltip:
                     element.QT_ListWidget.setToolTip(element.Tooltip)
                 if not element.Visible:
@@ -7325,7 +7332,7 @@ def main():
     ]
 
     frame2 = [
-        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3', 'Item 4', 'Item 5'], size=(200, 85), tooltip='Listbox',
+        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3', 'Item 4', 'Item 5'], default_values=['Listbox 2', 'Listbox 3'], size=(200, 85), tooltip='Listbox',
                     key='_LISTBOX_', font='Courier 12', text_color='red', background_color='white')],
         [Combo([1,2,3], size=(200, 35), tooltip='Combo', visible_items=2, key='_COMBO_')],
         [Spin([1, 2, 3], size=(40, 30), tooltip='Spinner', key='_SPIN1_')],
