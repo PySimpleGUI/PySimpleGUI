@@ -2616,7 +2616,7 @@ class Table(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
-        self.Widget = self.QT_TableWidget = None                    # type: QTabWidget
+        self.Widget = self.QT_TableWidget = None                    # type: QTableWidget
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible, size_px=size_px)
@@ -2640,7 +2640,7 @@ class Table(Element):
         if values is not None:
             self.Values = values
             self.SelectedRows = []
-            self.QT_TableWidget.clear()
+            self.QT_TableWidget.clearContents()
             if len(values) != 0:
                 self.QT_TableWidget.setRowCount(len(self.Values))
                 self.QT_TableWidget.setColumnCount(len(self.Values[0]))
@@ -3120,7 +3120,6 @@ class Window:
     QTApplication = None
     active_popups = {}
 
-
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
@@ -3515,7 +3514,7 @@ class Window:
                 if element.Key is not None:
                     if element.Key in key_dict.keys():
                         print('*** Duplicate key found in your layout {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
-                        element.Key = element.Key + str(self.UniqueKeyCounter)
+                        element.Key = str(element.Key) + str(self.UniqueKeyCounter)
                         self.UniqueKeyCounter += 1
                         print('*** Replaced new key with {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
                     key_dict[element.Key] = element
