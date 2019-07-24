@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.27.0.1 Unreleased"
+version = __version__ = "0.27.0.2 Unreleased"
 
 import sys
 import types
@@ -7277,7 +7277,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     """
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
-              [InputText(default_text=default_text, size=size, password_char=password_char)],
+              [InputText(default_text=default_text, size=size, password_char=password_char, key='_INPUT_')],
               [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
