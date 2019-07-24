@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.27.0.1 Unreleased"
+version = __version__ = "0.27.0.2 Unreleased"
 
 import sys
 import types
