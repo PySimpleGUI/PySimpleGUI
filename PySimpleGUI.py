@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.14 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.15 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -500,7 +500,7 @@ class Element():
         :param type: (int - could be enum) The type of element. These constants all start with "ELEM_TYPE_"
         :param size: (int,int)  (width ,height ) w=characters-wide, h=rows-high
         :param auto_size_text: (bool) True if the Widget should be shrunk to exactly fit the number of chars to show
-        :param font: (str or tuple)  specifies the font family, size, bold, ....  See docs on format of this field
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc (see docs for exact formats)
         :param background_color: (str) color of background. Can be in #RRGGBB format or a color name "black"
         :param text_color: (str) element's text color. Can be in #RRGGBB format or a color name "black"
         :param key: (Any)  Identifies an Element. Should be UNIQUE to this window.
@@ -767,7 +767,7 @@ class InputText(Element):
         :param justification: (str) justification for data display. Valid choices - left, right, center
         :param background_color: (str) color of background in one of the color formats
         :param text_color: (str) color of the text
-        :param font: (str / tuple)  specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
         :param enable_events: (bool) If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)
@@ -881,7 +881,7 @@ class Combo(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text that will appear when mouse hovers over this element
         :param readonly: (bool) make element readonly (user can't change). True means user cannot change
-        :param font: Union[str, tuple]  specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param visible: (bool) set visibility state of the element
         """
         self.Values = values
@@ -905,7 +905,7 @@ class Combo(Element):
         :param set_to_index: (int) change selection to a particular choice starting with index = 0
         :param disabled: (bool) disable or enable state of the element
         :param readonly:  (bool) if True make element readonly (user cannot change any choices)
-        :param font:  Union[str, tuple] specifies the font family, size, using one of the two font formats
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param visible: (bool) control visibility of element
         """
         if values is not None:
@@ -1070,17 +1070,20 @@ class Listbox(Element):
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
                  visible=True):
         """
-
         :param values: List[Any] list of values to display. Can be any type including mixed types as long as they have __str__ method
         :param default_values: List[Any] which values should be initially selected
-        :param select_mode: [str] can be a string or a constant value defined as a variable.  Generally speaking strings are used for these kinds of options.  Valid choices begin with "LISTBOX_SELECT_MODE_"
+        :param select_mode: [enum] Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected.   Valid choices begin with "LISTBOX_SELECT_MODE_" and include:
+            LISTBOX_SELECT_MODE_SINGLE
+            LISTBOX_SELECT_MODE_MULTIPLE
+            LISTBOX_SELECT_MODE_BROWSE
+            LISTBOX_SELECT_MODE_EXTENDED
         :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. Listbox generates events when an item is clicked
         :param bind_return_key: (bool) If True, then the return key will cause a the Listbox to generate an event
         :param size: Tuple(int, int) (width, height) width = characters-wide, height = rows-high
         :param disabled: (bool) set disable state for element
         :param auto_size_text: (bool) True if element should be the same size as the contents
-        :param font: Union[str, tuple]  specifies the font family, size.  Uses one of two font specifications formats
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
@@ -1231,7 +1234,7 @@ class Radio(Element):
         :param auto_size_text: (bool) if True will size the element to match the length of the text
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
@@ -1318,7 +1321,7 @@ class Checkbox(Element):
         :param default: (bool). Set to True if you want this checkbox initially checked
         :param size: (int, int) (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True will size the element to match the length of the text
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
         :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -1408,7 +1411,7 @@ class Spin(Element):
         :param enable_events: (bool) Turns on the element specific events. Spin events happen when an item changes
         :param size: (int, int) (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True will size the element to match the length of the text
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
@@ -1523,7 +1526,7 @@ class Multiline(Element):
         :param do_not_clear: if False the element will be cleared any time the Window.Read call returns
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param focus: (bool) if True initial focus will go to this element
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[str]]  see "Right Click Menus"
@@ -1554,7 +1557,7 @@ class Multiline(Element):
         :param value: (str) new text to display
         :param disabled: (bool) disable or enable state of the element
         :param append: (bool) if True then new value will be added onto the end of the current value. if False then contents will be replaced.
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
         :param visible: (bool) set visibility state of the element
@@ -1639,7 +1642,7 @@ class Text(Element):
         :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. Text events happen when the text is clicked
         :param relief:  (str/enum) relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
         :param justification: (str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
@@ -1673,7 +1676,7 @@ class Text(Element):
         :param value: (str) new text to show
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param visible: (bool) set visibility state of the element
         """
 
@@ -1720,7 +1723,7 @@ class StatusBar(Element):
         :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. StatusBar events occur when the bar is clicked
         :param relief: (enum) relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
         :param justification: (str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
@@ -1752,7 +1755,7 @@ class StatusBar(Element):
         :param value: (str) new text to show
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param visible: (bool) set visibility state of the element
         """
 
@@ -1883,7 +1886,7 @@ class TKOutput(tk.Frame):
         :param bd: (int) Border Depth.  How many pixels of border to show
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         """
         self.frame = tk.Frame(parent)
@@ -1955,7 +1958,7 @@ class Output(Element):
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param right_click_menu: List[List[str]]  see "Right Click Menus"
@@ -2034,7 +2037,7 @@ class Button(Element):
         :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
         :param auto_size_button: (bool) if True the button size is sized to fit the text
         :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param bind_return_key: (bool) If True the return key will cause this button to be pressed
         :param focus: (bool) if True, initial focus will be put on this button
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -2366,7 +2369,7 @@ class ButtonMenu(Element):
         :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
         :param auto_size_button: (bool) if True the button size is sized to fit the text
         :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :param font: Union[str, tuple] specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tearoff: (bool) Determines if menus should allow them to be torn off
@@ -2927,7 +2930,7 @@ class Graph(Element):
         :param text: (str) text to display
         :param location: Union[Tuple[int, int], Tuple[float, float]] location to place first letter
         :param color: (str) text color
-        :param font: Union[str, tuple]  specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text
         """
@@ -2953,7 +2956,7 @@ class Graph(Element):
         :param data: Union[str, bytes] if image is in Base64 format or raw? format then use instead of filename
         :param location: Union[Tuple[int, int], Tuple[float, float]] the (x,y) location to place image's top left corner
         :param color: (str) text color
-        :param font: Union[str, tuple]  specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image
         """
@@ -3189,7 +3192,7 @@ class Frame(Element):
         :param relief: (enum) relief style. Values are same as other elements with reliefs.
                         Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
         :param size: Tuple(int, int) (width in characters, height in rows) (note this parameter may not always work)
-        :param font: Union[str, tuple]  specifies the font family, size, etc
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param border_width: (int)  width of border around element in pixels
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -4267,7 +4270,7 @@ class Menu(Element):
                 ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
-    Finally, "keys" can be added to entires so make them unique.  The "Save" entry has a key associated with it. You
+    Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
     can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
     menu is shown.  The key portion is returned as part of the event.
     """
@@ -4277,7 +4280,7 @@ class Menu(Element):
         """
         :param menu_definition: List[List[Tuple[str, List[str]]]
         :param background_color: (str) color of the background
-        :param size: Tuple[int, int]  Hmmm...not sure
+        :param size: Tuple[int, int]  Not used in the tkinter port
         :param tearoff: (bool) if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -4297,6 +4300,7 @@ class Menu(Element):
     def _MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
         """
         Not user callable.  Called when some end-point on the menu (an item) has been clicked.  Send the information back to the application as an event.  Before event can be sent
+
         :param item_chosen: (str) the text that was clicked on / chosen from the menu
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
@@ -4361,36 +4365,37 @@ class Table(Element):
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, tooltip=None, right_click_menu=None, visible=True):
         """
-
-        :param values:
-        :param headings:
-        :param visible_column_map:
-        :param col_widths:
-        :param def_col_width:  (Default value = 10)
-        :param auto_size_columns:  (Default = True)
-        :param max_col_width:  (Default value = 20)
-        :param select_mode:
-        :param display_row_numbers:  (Default = False)
-        :param num_rows:
-        :param row_height:
-        :param font:  specifies the font family, size, etc
-        :param justification:  (Default value = 'right')
-        :param text_color: color of the text
-        :param background_color: color of background
-        :param alternating_row_color:
+        :param values: List[List[Union[str, int, float]]]
+        :param headings: List[str] The headings to show on the top line
+        :param visible_column_map: List[bool] One entry for each column. False indicates the column is not shown
+        :param col_widths: List[int] Number of characters that each column will occupy
+        :param def_col_width: (int) Default column width in characters
+        :param auto_size_columns: (bool) if True columns will be sized automatically
+        :param max_col_width: (int) Maximum width for all columns in characters
+        :param select_mode: (enum) Select Mode. Valid values start with "TABLE_SELECT_MODE_".  Valid values are:
+                            TABLE_SELECT_MODE_NONE
+                            TABLE_SELECT_MODE_BROWSE
+                            TABLE_SELECT_MODE_EXTENDED
+        :param display_row_numbers: (bool) if True, the first column of the table will be the row #
+        :param num_rows: (int) The number of rows of the table to display at a time
+        :param row_height: (int) height of a single row in pixels
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+        :param justification:  (str) 'left', 'right', 'center' are valid choices
+        :param text_color: (str) color of the text
+        :param background_color: (str) color of background
+        :param alternating_row_color: (str) if set then every other row will have this color in the background.
         :param row_colors:
-        :param vertical_scroll_only:  (Default = True)
-        :param hide_vertical_scroll:  (Default = False)
-        :param size:  (w,h) w=characters-wide, h=rows-high
-        :param change_submits: If True, pressing Enter key submits window (Default = False)
-        :param enable_events: Turns on the element specific events.(Default = False)
-        :param bind_return_key:  (Default = False)
-        :param pad:  Amount of padding to put around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
+        :param vertical_scroll_only:  (bool) if True only the vertical scrollbar will be visible
+        :param hide_vertical_scroll:  (bool) if True vertical scrollbar will be hidden
+        :param size: Tuple[int, int] DO NOT USE! Use num_rows instead
+        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :param enable_events: (bool) Turns on the element specific events. Table events happen when row is clicked
+        :param bind_return_key: (bool) if True, pressing return key will cause event coming from Table
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-
+        :param right_click_menu: List[List[str]]  see "Right Click Menus"
+        :param visible: (bool) set visibility state of the element
         """
 
         self.Values = values
@@ -4428,7 +4433,7 @@ class Table(Element):
         """
         Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param values: List[List[Any]] A new 2-dimensional table to show
+        :param values: List[List[Union[str, int, float]]] A new 2-dimensional table to show
         :param num_rows: (int) How many rows to display at a time
         :param visible: (bool) if True then will be visible
         :param select_rows: List[int] List of rows to select as if user did
@@ -4492,14 +4497,14 @@ class Table(Element):
 
     def treeview_selected(self, event):
         """
+        Not user callable.  Callback function that is called when something is selected from Table.
+        Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
 
-        :param event:
-
+        :param event: (unknown) event information from tkinter
         """
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
-            MyForm = self.ParentForm
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = self.Key
             else:
@@ -4510,14 +4515,15 @@ class Table(Element):
 
     def treeview_double_click(self, event):
         """
+        Not user callable.  Callback function that is called when something is selected from Table.
+        Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
+        TODO: Why is BindReturnKey being checked??
 
-        :param event:
-
+        :param event: (unknown) event information from tkinter
         """
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
-        if self.BindReturnKey:
-            MyForm = self.ParentForm
+        if self.BindReturnKey:          # shouldn't this be ChangeSubmits?
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = self.Key
             else:
@@ -4535,7 +4541,10 @@ class Table(Element):
 #                           Tree                                         #
 # ---------------------------------------------------------------------- #
 class Tree(Element):
-    """ """
+    """
+    Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
+    to hold the user's data and pass to the element for display.
+    """
 
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
@@ -4544,30 +4553,31 @@ class Tree(Element):
                  right_click_menu=None, visible=True):
         """
 
-        :param data:
-        :param headings:
-        :param visible_column_map:
-        :param col_widths:
-        :param col0_width:  (Default value = 10)
-        :param def_col_width:  (Default value = 10)
-        :param auto_size_columns:  (Default = True)
-        :param max_col_width:  (Default value = 20)
-        :param select_mode:
-        :param show_expanded:  (Default = False)
-        :param change_submits: If True, pressing Enter key submits window (Default = False)
-        :param enable_events: Turns on the element specific events.(Default = False)
-        :param font:  specifies the font family, size, etc
-        :param justification:  (Default value = 'right')
-        :param text_color: color of the text
-        :param background_color: color of background
-        :param num_rows:
-        :param row_height:
-        :param pad:  Amount of padding to put around element
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
+        :param data: (TreeData) The data represented using a PySimpleGUI provided TreeData class
+        :param headings: List[str] List of individual headings for each column
+        :param visible_column_map: List[bool] Determines if a column should be visible. If left empty, all columns will be shown
+        :param col_widths: List[int] List of column widths so that individual column widths can be controlled
+        :param col0_width:  (int) Size of Column 0 which is where the row numbers will be optionally shown
+        :param def_col_width:  (int) default column width
+        :param auto_size_columns: (bool) if True, the size of a column is determined  using the contents of the column
+        :param max_col_width: (int) the maximum size a column can be
+        :param select_mode: (enum) Use same values as found on Table Element.  Valid values include:
+                            TABLE_SELECT_MODE_NONE
+                            TABLE_SELECT_MODE_BROWSE
+                            TABLE_SELECT_MODE_EXTENDED
+        :param show_expanded: (bool) if True then the tree will be initially shown with all nodes completely expanded
+        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :param enable_events: (bool) Turns on the element specific events. Tree events happen when row is clicked
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+        :param justification:  (str) 'left', 'right', 'center' are valid choices
+        :param text_color: (str) color of the text
+        :param background_color: (str) color of background
+        :param num_rows: (int) The number of rows of the table to display at a time
+        :param row_height: (int) height of a single row in pixels
+        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
-        :param visible: set visibility state of the element (Default = True)
-
+        :param right_click_menu: List[List[str]]  see "Right Click Menus"
         """
 
         self.TreeData = data
@@ -4598,10 +4608,12 @@ class Tree(Element):
 
     def treeview_selected(self, event):
         """
+        Not a user function.  Callback function that happens when an item is selected from the tree.  In this
+        method, it saves away the reported selections so they can be properly returned.
 
-        :param event:
-
+        :param event: (Any) An event parameter passed in by tkinter.  Not used
         """
+
         selections = self.TKTreeview.selection()
         self.SelectedRows = [x for x in selections]
         if self.ChangeSubmits:
@@ -4614,11 +4626,12 @@ class Tree(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
+
     def add_treeview_data(self, node):
         """
+        Not a user function.  Recursive method that inserts tree data into the tkinter treeview widget.
 
-        :param node:
-
+        :param node: (TreeData) The node to insert.  Will insert all nodes from starting point downward, recursively
         """
         # print(f'Inserting {node.key} under parent {node.parent}')
         if node.key != '':
@@ -4644,11 +4657,11 @@ class Tree(Element):
         """
         Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param values:
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :param value:
-        :param text:
-        :param icon:
+        :param values: (TreeData) Representation of the tree
+        :param key: (Any) identifies a particular item in tree to update
+        :param value: (Any) sets the node identified by key to a particular value
+        :param text:  (str) sets the node identified by ket to this string
+        :param icon: Union[bytes, str] can be either a base64 icon or a filename for the icon
         :param visible: (bool) control visibility of element
         """
 
@@ -4850,7 +4863,7 @@ class Window:
         :param element_padding: Tuple[int, int] or ((int, int),(int,int)) Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
         :param margins:  Tuple[int, int] (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
         :param button_color: Tuple[str, str] (text color, button color) Default button colors for all buttons in the window
-        :param font: Union[str, tuple]  specifies the font family, size.  Uses one of two font specifications formats
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param progress_bar_color:  Tuple[str, str] (bar color, background color) Sets the default colors for all progress bars in the window
         :param background_color: (str) color of background
         :param border_depth: (int) Default border depth (width) for all elements in the window
@@ -5942,7 +5955,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param disabled: set disable state for element (Default = False)
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font:  specifies the font family, size, etc
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
 
@@ -5971,7 +5984,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param button_color: button color (foreground, background)
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font:  specifies the font family, size, etc
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param disabled: set disable state for element (Default = False)
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
@@ -6001,7 +6014,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param button_color: button color (foreground, background)
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font:  specifies the font family, size, etc
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
 
@@ -6030,7 +6043,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param button_color: button color (foreground, background)
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font:  specifies the font family, size, etc
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
 
@@ -6059,7 +6072,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param button_color: button color (foreground, background)
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font:  specifies the font family, size, etc
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
 
