@@ -511,6 +511,7 @@ Features of PySimpleGUI include:
 - Menubar
 - Button Menu
 - Slider
+- Spinner
 - Dial
 - Graph
 - Frame with title
@@ -1963,7 +1964,7 @@ Parameter Descriptions:
 |element_padding|Tuple[int, int] or ((int, int),(int,int)) Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))|
 |margins|Tuple[int, int] (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.|
 |button_color|Tuple[str, str] (text color, button color) Default button colors for all buttons in the window|
-|font|Union[str, tuple] specifies the font family, size. Uses one of two font specifications formats|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |progress_bar_color|Tuple[str, str] (bar color, background color) Sets the default colors for all progress bars in the window|
 |background_color|(str) color of background|
 |border_depth|(int) Default border depth (width) for all elements in the window|
@@ -2605,7 +2606,7 @@ Parameter Descriptions:
 |click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
 |enable_events|(bool) Turns on the element specific events. Text events happen when the text is clicked|
 |relief|(str/enum) relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |text_color|(str) color of the text|
 |background_color|(str) color of background|
 |justification|(str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`|
@@ -2636,7 +2637,7 @@ Parameter Descriptions:
 |value|(str) new text to show|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
 #### SetToolTip
@@ -2732,7 +2733,7 @@ Parameter Descriptions:
 |do_not_clear|if False the element will be cleared any time the Window.Read call returns|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |focus|(bool) if True initial focus will go to this element|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[str]] see "Right Click Menus"|
@@ -2762,7 +2763,7 @@ Parameter Descriptions:
 |value|(str) new text to display|
 |disabled|(bool) disable or enable state of the element|
 |append|(bool) if True then new value will be added onto the end of the current value. if False then contents will be replaced.|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |text_color|(str) color of the text|
 |background_color|(str) color of background|
 |visible|(bool) set visibility state of the element|
@@ -2847,7 +2848,7 @@ Parameter Descriptions:
 |justification|(str) justification for data display. Valid choices - left, right, center|
 |background_color|(str) color of background in one of the color formats|
 |text_color|(str) color of the text|
-|font|(str / tuple) specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
 |enable_events|(bool) If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)|
@@ -2970,7 +2971,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text that will appear when mouse hovers over this element|
 |readonly|(bool) make element readonly (user can't change). True means user cannot change|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
 ### Methods
@@ -2998,7 +2999,7 @@ Parameter Descriptions:
 |set_to_index|(int) change selection to a particular choice starting with index = 0|
 |disabled|(bool) disable or enable state of the element|
 |readonly|(bool) if True make element readonly (user cannot change any choices)|
-|font|Union[str, tuple] specifies the font family, size, using one of the two font formats|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) control visibility of element|
 
 #### GetSelectedItemsIndexes 
@@ -3063,14 +3064,14 @@ Parameter Descriptions:
 |---|---|
 |values|List[Any] list of values to display. Can be any type including mixed types as long as they have __str__ method|
 |default_values|List[Any] which values should be initially selected|
-|select_mode|[str] can be a string or a constant value defined as a variable. Generally speaking strings are used for these kinds of options. Valid choices begin with "LISTBOX_SELECT_MODE_"|
+|select_mode|[enum] Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected. Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED|
 |change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
 |enable_events|(bool) Turns on the element specific events. Listbox generates events when an item is clicked|
 |bind_return_key|(bool) If True, then the return key will cause a the Listbox to generate an event|
 |size|Tuple(int, int) (width, height) width = characters-wide, height = rows-high|
 |disabled|(bool) set disable state for element|
 |auto_size_text|(bool) True if element should be the same size as the contents|
-|font|Union[str, tuple] specifies the font family, size. Uses one of two font specifications formats|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
@@ -3210,7 +3211,7 @@ Parameter Descriptions:
 |orientation|(str) 'horizontal' or 'vertical' ('h' or 'v' also work)|
 |disable_number_display|(bool) if True no number will be displayed by the Slider Element|
 |border_width|(int) width of border around element in pixels|
-|relief|(enum) relief style. `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`|
+|relief|(enum) relief style. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
 |change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
 |enable_events|(bool) If True then moving the slider will generate an Event|
 |disabled|(bool) set disable state for element|
@@ -3293,7 +3294,7 @@ Parameter Descriptions:
 |auto_size_text|(bool) if True will size the element to match the length of the text|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
@@ -3388,7 +3389,7 @@ Parameter Descriptions:
 |default|(bool). Set to True if you want this checkbox initially checked|
 |size|(int, int) (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) if True will size the element to match the length of the text|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
 |change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
@@ -3483,19 +3484,13 @@ Parameter Descriptions:
 |enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
 |size|(int, int) (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) if True will size the element to match the length of the text|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
-
-### Qt Differences - `values` is a range!
-
-Note that Qt does not allow arbitrary spinner values.  With PySimpleGUI-tkinter you can have any values in your list.  In Qt they must be integers.  Yea, it kinda sucks.  I'm working on it.
-
-On Qt values is a tuple representing a range.  On plain PySimpleGUI this value is a list of items.  Make sure on the plain version you specify items as a list using [] and not a generator using ().
 
 ### Methods
 
@@ -3549,9 +3544,15 @@ Parameter Descriptions:
 
 Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format.  JPGs cannot be shown because tkinter does not naively support JPGs.  You can use the Python Imaging Library (PIL) package  to convert your image to PNG prior to calling PySimpleGUI if your images are in JPG format.
 
+```python
+layout = [
+            [sg.Image(r'C:\PySimpleGUI\Logos\PySimpleGUI_Logo_320.png')],
+         ]
+```
+
     Image Element - show an image in the window. Should be a GIF or a PNG only
 
-????????????? add image here
+![image](https://user-images.githubusercontent.com/13696193/61885709-4e326e00-aecc-11e9-8695-7193df2831ec.png)
 
 ```
 Image(filename=None,
@@ -3583,6 +3584,22 @@ Parameter Descriptions:
 
 ### Methods
 
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
@@ -3601,13 +3618,7 @@ Parameter Descriptions:
 |size|Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high|
 |visible|(bool) control visibility of element|
 
-Choose **either** a filename or in-ram data image to use to replace current image
-
-##### `UpdateAnimation` Method for Animated GIFs
-
-You can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
-
-![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)
+#### UpdateAnimation
 
 Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
 NOTE - does NOT perform a sleep call to delay
@@ -3622,6 +3633,10 @@ Parameter Descriptions:
 |---|---|
 |source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
 |time_between_frames|(int) Number of milliseconds to wait between showing frames|
+
+You can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
+
+![loading animation](https://user-images.githubusercontent.com/13696193/51280871-d2041e80-19ae-11e9-8757-802eb95352ed.gif)
 
 You can call the method without setting the `time_between_frames` value and it will show a frame and immediately move on to the next frame.  This enables you to do the inter-frame timing.
 
@@ -3716,7 +3731,7 @@ Parameter Descriptions:
 |button_type|(int) You should NOT be setting this directly. ONLY the shortcut functions set this|
 |target|Union[str, Tuple[int, int]] key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
-|file_types|Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),)|
+|file_types|Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC|
 |initial_folder|(str) starting path for folders and files|
 |disabled|(bool) If True button will be created disabled|
 |click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
@@ -3728,8 +3743,8 @@ Parameter Descriptions:
 |border_width|(int) width of border around button in pixels|
 |size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
 |auto_size_button|(bool) if True the button size is sized to fit the text|
-|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Note - Does not always work on Macs|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |bind_return_key|(bool) If True the return key will cause this button to be pressed|
 |focus|(bool) if True, initial focus will be put on this button|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
@@ -4002,8 +4017,8 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|button_text|Text to be displayed on the button (Default value = '')|
-|menu_def|(list(list)) [ [ ] ] A list of lists of Menu items to show when this element is clicked. See docs for format|
+|button_text|(str) Text to be displayed on the button|
+|menu_def|List[List[str]] A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |disabled|(bool) If True button will be created disabled|
 |image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
@@ -4014,7 +4029,7 @@ Parameter Descriptions:
 |size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
 |auto_size_button|(bool) if True the button size is sized to fit the text|
 |button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |tearoff|(bool) Determines if menus should allow them to be torn off|
@@ -4157,7 +4172,7 @@ Parameter Descriptions:
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |right_click_menu|List[List[str]] see "Right Click Menus"|
@@ -4277,6 +4292,7 @@ layout = [[sg.Slider(range=(1,100), default_value=10, orientation='v', size=(8,2
 event, values = sg.Window('Compact 1-line window with column', layout).Read()
 
 sg.Popup(event, values, line_width=200)
+
 ```
 
 ----
@@ -4321,7 +4337,7 @@ Parameter Descriptions:
 |title_location|(enum) location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT|
 |relief|(enum) relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
 |size|Tuple(int, int) (width in characters, height in rows) (note this parameter may not always work)|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |border_width|(int) width of border around element in pixels|
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
@@ -4350,6 +4366,8 @@ window = sg.Window('Frame with buttons', layout, font=("Helvetica", 12))
 
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.
 
+However, there's another way to get that power and that's through the Graph Element, an even MORE powerful Element as it uses a Canvas that you can directly access if needed.  The Graph Element has a large number of drawing methods that the Canvas Element does not have.
+
 ```
 Canvas(canvas=None,
     background_color=None,
@@ -4375,6 +4393,8 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 
 ### Matplotlib, Pyplot Integration
+
+**NOTE - The newest version of Matplotlib (3.1.0) no longer works with this technique. ** You must install 3.0.3 in order to use the Demo Matplotlib programs provided in the Demo Programs section.
 
 One such integration is with Matploplib and Pyplot.  There is a Demo program written that you can use as a design pattern to get an understanding of how to use the Canvas Widget once you get it.
 
@@ -4415,7 +4435,7 @@ To get a tkinter Canvas Widget from PySimpleGUI, follow these steps:
 
 See `Demo_Matplotlib.py` for a Recipe you can copy.
 
-### Methods
+### Methods & Properties
 
 TKCanvas - not a method but a property. Returns the tkinter Canvas Widget
 
@@ -4425,22 +4445,24 @@ All you math fans will enjoy this Element... and all you non-math fans will enjo
 
 I've found nothing to be less fun than dealing with a graphic's coordinate system from a GUI Framework.  It's always upside down from what I want.  (0,0) is in the upper left hand corner.  In short, it's a **pain in the ass**.
 
-Graph Element to the rescue.  A Graph Element creates a pixel addressable canvas using YOUR coordinate system.  *You* get to define the units on the X and Y axis.
+If you've ever been frustrated with where (0,0) is located on some surface you draw on, then fear not, your frustration ends right here.  You get to draw using whatever coordinate system you want.  Place (0,0) anywhere you want, including not anywhere on your Graph.  You could define a Graph that's all negative numbers between -2.1 and -3.5 in the X axis and -3 to -8.2 in the Y axis
 
 There are 3 values you'll need to supply the Graph Element.  They are:
-* Size of the canvas in pixels
-* The lower left (x,y) coordinate of your coordinate system
-* The upper right (x,y) coordinate of your coordinate system
+
+- Size of the canvas in pixels
+- The lower left (x,y) coordinate of your coordinate system
+- The upper right (x,y) coordinate of your coordinate system
 
 After you supply those values you can scribble all of over your graph by creating Graph Figures.  Graph Figures are created, and a Figure ID is obtained by calling:
-* DrawCircle
-* DrawLine
-* DrawPoint
-* DrawRectangle
-* DrawOval
-* DrawImage
 
-You can move your figures around on the canvas by supplying the Figure ID the x,y amount to move.
+- DrawCircle
+- DrawLine
+- DrawPoint
+- DrawRectangle
+- DrawOval
+- DrawImage
+
+You can move your figures around on the canvas by supplying the Figure ID the **x,y delta** to move.  It does not move to an absolute position, but rather an offset from where the figure is now.  (Use Relocate to move to a specific location)
 
     graph.MoveFigure(my_circle, 10, 10)
 
@@ -4492,23 +4514,7 @@ Parameter Descriptions:
 
 ### Methods
 
-`DrawLine` - draws a point, line, circle, oval, arc, rectangle, text
-
-`DrawImage` - places an image onto the graph
-
-`Erase` - erases entire graph
-
-`Update` - changes background color
-
-`Move` - moves everything an x,y direction
-
-`MoveFigure` - moves an individual figure by some delta
-
-`RelocateFigure` - moves figure to an absolute location
-
-`DeleteFigure` - delete an individual figure
-
-All of the Drawing methods return a "***figure***" that can be used move and delete the figure
+All of the Drawing methods return a "***figure***" that can be used move and delete the drawn figure.
 
 Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
 
@@ -4649,10 +4655,34 @@ Parameter Descriptions:
 |text|(str) text to display|
 |location|Union[Tuple[int, int], Tuple[float, float]] location to place first letter|
 |color|(str) text color|
-|font|Union[str, tuple] specifies the font family, size, etc|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text |
+
+Places an image onto your canvas.  It's a really important method for this element as it enables so much
+
+```
+DrawImage(filename=None,
+    data=None,
+    location=(None, None),
+    color="black",
+    font=None,
+    angle=0)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) if image is in a file, path and filename for the image. (GIF and PNG only!)|
+|data|Union[str, bytes] if image is in Base64 format or raw? format then use instead of filename|
+|location|Union[Tuple[int, int], Tuple[float, float]] the (x,y) location to place image's top left corner|
+|color|(str) text color|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image |
 
 Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
 
@@ -4770,42 +4800,58 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|values||
-|headings||
-|visible_column_map||
-|col_widths||
-|def_col_width|(Default value = 10)|
-|auto_size_columns|(Default = True)|
-|max_col_width|(Default value = 20)|
-|select_mode||
-|display_row_numbers|(Default = False)|
-|num_rows||
-|row_height||
-|font|specifies the font family, size, etc|
-|justification|(Default value = 'right')|
-|text_color|color of the text|
-|background_color|color of background|
-|alternating_row_color||
+|values|List[List[Union[str, int, float]]]|
+|headings|List[str] The headings to show on the top line|
+|visible_column_map|List[bool] One entry for each column. False indicates the column is not shown|
+|col_widths|List[int] Number of characters that each column will occupy|
+|def_col_width|(int) Default column width in characters|
+|auto_size_columns|(bool) if True columns will be sized automatically|
+|max_col_width|(int) Maximum width for all columns in characters|
+|select_mode|(enum) Select Mode. Valid values start with "TABLE_SELECT_MODE_". Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED|
+|display_row_numbers|(bool) if True, the first column of the table will be the row #|
+|num_rows|(int) The number of rows of the table to display at a time|
+|row_height|(int) height of a single row in pixels|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|justification|(str) 'left', 'right', 'center' are valid choices|
+|text_color|(str) color of the text|
+|background_color|(str) color of background|
+|alternating_row_color|(str) if set then every other row will have this color in the background.|
 |row_colors||
-|vertical_scroll_only|(Default = True)|
-|hide_vertical_scroll|(Default = False)|
-|size|(w,h) w=characters-wide, h=rows-high|
-|change_submits|If True, pressing Enter key submits window (Default = False)|
-|enable_events|Turns on the element specific events.(Default = False)|
-|bind_return_key|(Default = False)|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
+|vertical_scroll_only|(bool) if True only the vertical scrollbar will be visible|
+|hide_vertical_scroll|(bool) if True vertical scrollbar will be hidden|
+|size|Tuple[int, int] DO NOT USE! Use num_rows instead|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Table events happen when row is clicked|
+|bind_return_key|(bool) if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[str]] see "Right Click Menus" for format|
-|visible|set visibility state of the element (Default = True)|
+|right_click_menu|List[List[str]] see "Right Click Menus"|
+|visible|(bool) set visibility state of the element|
 
 ### Read return values from Table Element
 
-The values returned from a `Window.Read` call for the Tree Element are a list of row numbers that are currently highlighted.
+The values returned from a `Window.Read` call for the Table Element are a list of row numbers that are currently highlighted.
 
 ### Methods
 
-The Update method can be used to make changes to a table that's already been displayed.  The call takes a single parameter, values, which is the new table to display.  The entire table is replaced.
+The Update method can be used to make changes to a table that's already been displayed.  The call takes a single parameter, values, which is the new table to display.  The entire table is replaced.  You must call `window.Finalize`or `window.Read` prior to calling Update on ANY element
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4822,7 +4868,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|values|List[List[Any]] A new 2-dimensional table to show|
+|values|List[List[Union[str, int, float]]] A new 2-dimensional table to show|
 |num_rows|(int) How many rows to display at a time|
 |visible|(bool) if True then will be visible|
 |select_rows|List[int] List of rows to select as if user did|
@@ -4837,6 +4883,9 @@ If you click on the header, it can go into spasms for some tables. I don't under
 ## Tree Element
 
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.
+
+    Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
+    to hold the user's data and pass to the element for display.
 
 ```
 Tree(data=None,
@@ -4868,34 +4917,74 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|data||
-|headings||
-|visible_column_map||
-|col_widths||
-|col0_width|(Default value = 10)|
-|def_col_width|(Default value = 10)|
-|auto_size_columns|(Default = True)|
-|max_col_width|(Default value = 20)|
-|select_mode||
-|show_expanded|(Default = False)|
-|change_submits|If True, pressing Enter key submits window (Default = False)|
-|enable_events|Turns on the element specific events.(Default = False)|
-|font|specifies the font family, size, etc|
-|justification|(Default value = 'right')|
-|text_color|color of the text|
-|background_color|color of background|
-|num_rows||
-|row_height||
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
+|data|(TreeData) The data represented using a PySimpleGUI provided TreeData class|
+|headings|List[str] List of individual headings for each column|
+|visible_column_map|List[bool] Determines if a column should be visible. If left empty, all columns will be shown|
+|col_widths|List[int] List of column widths so that individual column widths can be controlled|
+|col0_width|(int) Size of Column 0 which is where the row numbers will be optionally shown|
+|def_col_width|(int) default column width|
+|auto_size_columns|(bool) if True, the size of a column is determined using the contents of the column|
+|max_col_width|(int) the maximum size a column can be|
+|select_mode|(enum) Use same values as found on Table Element. Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED|
+|show_expanded|(bool) if True then the tree will be initially shown with all nodes completely expanded|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Tree events happen when row is clicked|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|justification|(str) 'left', 'right', 'center' are valid choices|
+|text_color|(str) color of the text|
+|background_color|(str) color of background|
+|num_rows|(int) The number of rows of the table to display at a time|
+|row_height|(int) height of a single row in pixels|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[str]] see "Right Click Menus" for format|
-|visible|set visibility state of the element (Default = True)|
+|right_click_menu|List[List[str]] see "Right Click Menus"|
 
 Unlike Tables there is no standard format for trees.  Thus the data structure passed to the Tree Element must be constructed.  This is done using the TreeData class.  The process is as follows:
-* Get a TreeData Object
-* "Insert" data into the tree
-* Pass the filled in TreeData object to Tree Element
+
+- Get a TreeData Object
+- "Insert" data into the tree
+- Pass the filled in TreeData object to Tree Element
+
+### Methods
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(values=None,
+    key=None,
+    value=None,
+    text=None,
+    icon=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|(TreeData) Representation of the tree|
+|key|(Any) identifies a particular item in tree to update|
+|value|(Any) sets the node identified by key to a particular value|
+|text|(str) sets the node identified by ket to this string|
+|icon|Union[bytes, str] can be either a base64 icon or a filename for the icon|
+|visible|(bool) control visibility of element|
 
 #### TreeData format
 ```python
@@ -4955,6 +5044,7 @@ View of second tab:
 First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
 
     Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
+    Tabs are never placed directly into a layout.  They are always "Contained" in a TabGroup layout
 
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
 
@@ -5107,7 +5197,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |orientation|(str) 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide|
 |show_handle|(bool) if True, the handle is drawn that makes it easier to grab and slide|
-|relief|(enum) relief style. Values are same as other elements that use relief values. `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`|
+|relief|(enum) relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
 |handle_size|(int) Size of the handle in pixels|
 |border_width|(int) width of border around element in pixels|
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
@@ -5770,7 +5860,7 @@ Beginning in version 3.01 you can add a MenuBar to your window.  You specify the
                 ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
-    Finally, "keys" can be added to entires so make them unique.  The "Save" entry has a key associated with it. You
+    Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
     can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
     menu is shown.  The key portion is returned as part of the event.
 
