@@ -691,22 +691,11 @@ Maybe there's no "there there".  ***Or*** maybe a simple GUI API will enable Pyt
 
 # Getting Started with PySimpleGUI
 
+There is a "Troubleshooting" section towards the end of this document should you run into trouble.  It goes into more detail about what you can do to help yourself.
+
 ## Installing PySimpleGUI
 
 Of course if you're installing for Qt, WxPython, Web, you'll use PySimpleGUIQt, PySimpleGUIWx, and PySimpleGUIWeb instead of straight PySimpleGUI in the instructions below.
-
-### IDEs
-
-Some IDEs provide virtual environments.  PyCharm is one example.  For these, you will either use their GUI interface to add packages or use their built-in terminal to do pip installs.
-
-#### Officially Supported IDEs
-
-A number of IDEs have **known problems with PySimpleGUI**.  IDLE, Spyder, and Thonny all have problems with intermittent or inconsistent results, especially when a program exits.  Any IDE that is based on tkinter is going to have issues with the straight PySimpleGUI port.
-
-The official list of supported IDEs is:
-1. PyCharm (or course this is THE IDE to use for use with PySimpleGUI)
-2. Wing
-3. Visual Studio
 
 ### Installing on Python 3
 
@@ -793,6 +782,8 @@ You will see a "test harness" that exercises the SDK, tells you the version numb
 
 ### Finding Out Where Your PySimpleGUI Is Coming From
 
+It's **critical** for you to be certain where your code is coming from and which version you're running.
+
 Sometimes when debugging, questions arise as to exactly which PySimpleGUI you are running.  The quick way to find this out is to again, run Python from the command line.  This time you'll type:
 
 ```python3
@@ -801,6 +792,18 @@ Sometimes when debugging, questions arise as to exactly which PySimpleGUI you ar
 ```
 
 When you type sg, Python will tell you the full patch to your PySimpleGUI file / package.  This is critical information to know when debugging because it's really easy to forget you've got an old copy of PySimpleGUI laying around somewhere.
+
+### Finding Out Where Your PySimpleGUI Is Coming From (from within your code)
+
+If you continue to have troubles with getting the right version of PySimpleGUI loaded, THE definitive way to determine where your program is getting PySimpleGUI from is to add a print to your program.  It's that *simple*!
+
+```python
+import PySimpleGUI as sg
+
+print(sg)
+```
+
+Just like when using the REPL >>> to determine the location, this `print` in your code will display the same path information.
 
 ### Manual installation
 
@@ -818,6 +821,43 @@ PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It
 
 If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this document.
 
+## IDEs
+
+A lot of people ask about IDEs, and many outright fear PyCharm.  Listen up.... compared to your journey of learning Python, learning to use PyCharm as your IDE is NOTHING.  It's a DAY typically (from 1 to 8 hours).  Or, if you're really really new, perhaps as much as a week *to get used to*.  So, we're not talking about you needing to learn to flap your arms and fly.
+
+To sum up that paragraph, stop whining like a little b*tch.  You're a grown man/woman, act like it.  "But it's hard..."  If you found this package, then you're a bright person :-)  Have some confidence in yourself for Christ sake.... I do.  Not going to lead you off some cliff, promise!
+
+Some IDEs provide virtual environments, but it's optional.  PyCharm is one example.  For these, you will either use their GUI interface to add packages or use their built-in terminal to do pip installs.  **It's not recommended for beginners to be working with Virtual Environments.**  They can be quite confusing.
+
+### Officially Supported IDEs
+
+A number of IDEs have **known problems with PySimpleGUI**.  IDLE, Spyder, and Thonny all have problems with intermittent or inconsistent results, especially when a program exits.  Any IDE that is based on tkinter is going to have issues with the straight PySimpleGUI port.
+
+The official list of supported IDEs is:
+1. PyCharm (or course this is THE IDE to use for use with PySimpleGUI)
+2. Wing
+3. Visual Studio
+
+If you're on a Raspberry Pi or some other limited environment, then you'll have to use IDLE or Thonny.  Just be aware there could be problems using the debugger to debug due to both using tkinter.
+
+### Using The Docstrings (Don't skip this section)
+
+Beginning with the 4.0 release of PySimpleGUI, the tkinter port, a whole new world opened up for PySimpleGUI programmers, one where referencing the readme and ReadTheDocs documentation is no longer needed.  PyCharm and Wing both support these docstrings REALLY well and I'm sure Visual Studio does too.  Why is this important?  Because it will teach you the PySimpleGUI SDK as you use the package.  
+
+Don't know the parameters and various options for the `InputText` Element?  It's a piece of cake with PyCharm.  You can set PyCharm to automatically display documentation about the class, function, method, etc, that your cursor is currently sitting on.  You can also manually bring up the documentation by pressing CONTROL+Q.  When you do, you'll be treated to a window similar to this:
+
+![image](https://user-images.githubusercontent.com/13696193/61997565-46f89500-b071-11e9-968e-83a99ecb718a.png)
+
+Note that my cursor is on `InputText`.  On the left side of the screen, the `InputText` element's parameters are not just shown to you, but they are each individually described to you, and, the type is shown as well.  *I mean, honestly, how much more could you ask for?*
+
+OK, I suppose you could ask for a smaller window that just shows the parameters are you're typing them in.  Well, OK, in PyCharm, when your cursor is between the  `(   )` press CONTROL+P.  When you do, you'll be treated to a little window like this one:
+
+![image](https://user-images.githubusercontent.com/13696193/61997590-aa82c280-b071-11e9-8d76-7d9c811f8fcc.png)
+
+See.... written with the "Developer" in mind, at all times.  It's about YOU, Mr/Ms Developer!  So enjoy your package.
+
+The other ports of PySimpleGUI (Qt, WxPython, Web) have not yet had their docstrings updated.  They're NEXT in line to be better documented.  Work on a tool has already begun to make that happen sooner than later.
+
 ## Using  - Python 3
 
 To use in your code, simply import....
@@ -834,7 +874,10 @@ Yes, it's just that easy to have a window appear on the screen using Python.  Wi
 ## Using  - Python 2.7
 
 Those using Python 2.7 will import a different module name
-`import PySimpleGUI27 as sg`
+
+```python
+import PySimpleGUI27 as sg
+```
 
 ## Code to Automatically Import Correct Version
 
@@ -1861,18 +1904,21 @@ With PySimpleGUI if your window will remain open following button clicks, then y
 
 There's nothing mysterious about event loops... they are loops where you take care of.... wait for it..... *events*.  Events are things like button clicks, key strokes, mouse scroll-wheel up/down.
 
-Let's take a Pi demo program as an example.  This program shows a GUI window, gets button presses, and uses them to control some LEDs.  It loops, reading user input and doing something with it.
+This little program has a typical PySimpleGUI Event Loop.
 
-This little program has a typical Event Loop
+The anatomy of a PySimpleGUI event loop is as follows, *generally speaking*.
+* The actual "loop" part is a `while True` loop
+* "Read" the event and any input values the window has
+* Check to see if window was closed or user wishes to exit
+* A series of `if event ....` statements
 
-![readme example](https://user-images.githubusercontent.com/13696193/46566965-f4d65f80-c8f6-11e8-91a3-8cebad0cba90.jpg)
-
+Here is a complete, short program to demonstrate each of these concepts.
 ```python
 import PySimpleGUI as sg
 
 layout = [[sg.Text('Click read to read the input value')],
 		  [sg.Input()],
-		  [sg.RButton('Read'), sg.Exit()]]
+		  [sg.Button('Read'), sg.Exit()]]
 
 window = sg.Window('Persistent GUI Window', layout)
 
@@ -1880,11 +1926,14 @@ while True:
 	event, values = window.Read()
 	if event is None or event == 'Exit':
 		break
-	print(event, values)
+    if event == 'Read':     # the Read button was clicked
+        print('Doi)
 window.Close()
 ```
 
-In the Event Loop we are reading the window and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)
+![readme example](https://user-images.githubusercontent.com/13696193/46566965-f4d65f80-c8f6-11e8-91a3-8cebad0cba90.jpg)
+
+In this Event Loop we are reading the window and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)
 
 The way buttons are presented to the caller in PySimpleGUI is ***not*** how *most* GUI frameworks handle button clicks.  Most GUI frameworks, including tkinter, use ***callback*** functions, a function you define would be called when a button is clicked.  This requires you to write asynchronous code, a concept beginners often stumble on and one that presents a barrier.
 
@@ -3748,7 +3797,7 @@ Sometimes there are multiple names for the same function.  This is simply to mak
 
 The 4 primary windows of PySimpleGUI buttons and their names are:
 
-1. `Button`= `ReadButton` = `RButton` = `ReadFormButton` (old style... use Button instead)
+1. `Button`= `ReadButton` = `RButton` = `ReadFormButton` (Use `Button`, others are old methods)
 2. `CloseButton` = `CButton`
 3. `RealtimeButton`
 4. `DummyButton`
@@ -3757,15 +3806,27 @@ You will find the long-form names in the older programs. ReadButton for example.
 
 In Oct 2018, the definition of Button changed.  Previously Button would CLOSE the window when clicked.  It has been changed so the Button calls will leave the window open in exactly the same way as a ReadButton.  They are the same calls now.   To enables windows to be closed using buttons, a new button was added... `CloseButton` or `CButton`.
 
+Your PySimpleGUI program is most likely going to contain only `Button` calls. The others are generally not foundin user code.
+
 The most basic Button element call to use is `Button`
 
     Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
 
 ```python
-layout =  [[sg.OK(), sg.Cancel()]]
+layout =  [[sg.Button('Ok'), sg.Button('Cancel')]]
 ```
 
 ![ok cancel 3](https://user-images.githubusercontent.com/13696193/44959927-aa5f5e80-aec4-11e8-86e1-5dc0b3a2b803.jpg)
+
+You will rarely see these 2 buttons in particular written this way.  Recall that PySimpleGUI is focused on YOU (which generally directly means.... less typing).  As a result, the code for the above window is normally written using shortcuts found in the next section.
+
+You will typically see this instead of calls to `Button`:
+
+```python
+layout =  [[sg.Ok(), sg.Cancel()]]
+```
+
+In reality `Button` is in fact being called on your behalf.  Behind the scenes, `sg.Ok` and `sg.Cancel` call `Button` with the text set to `Ok` and `Cancel` and returning the results that then go into the layout.  If you were to print the layout it will look identical to the first layout shown that has `Button` shown specifically in the layout.
 
 ```
 Button(button_text="",
@@ -3822,23 +3883,31 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 
 ### Shortcut, Pre-defined Buttons
-These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, set the button text to match the function name and set the parameters to commonly used values. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
+These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, **set the button text to match the function name and set the parameters to commonly used values**. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
 
-    OK
-    Ok
-    Submit
-    Cancel
-    Yes
-    No
-    Exit
-    Quit
-    Help
-    Save
-    SaveAs
-    FileBrowse
-    FilesBrowse
-    FileSaveAs
-    FolderBrowse
+- OK
+- Ok
+- Submit
+- Cancel
+- Yes
+- No
+- Exit
+- Quit
+- Help
+- Save
+- SaveAs
+- Open
+
+### "Chooser" Buttons 
+
+These buttons are used to show dialog boxes that choose something like a filename, date, color, etc. that are filled into an `InputText` Element (or some other "target".... see below regarding targets)
+
+- CalendarButton
+- ColorChooserButton
+- FileBrowse
+- FilesBrowse
+- FileSaveAs
+- FolderBrowse
 
 **IMPORT NOTE ABOUT SHORTCUT BUTTONS**
 Prior to release 3.11.0, these buttons closed the window.  Starting with 3.11 they will not close the window.  They act like RButtons (return the button text and do not close the window)
@@ -3849,7 +3918,7 @@ Using older versions, if you want a Submit() button that does not close the wind
 
 ### Button targets
 
-The `FileBrowse`, `FolderBrowse`, `FileSaveAs` , `FilesSaveAs`, `CalendarButton`, `ColorChooserButton` buttons all fill-in values into another element located on the window.  The target can be a Text Element or an InputText Element.  The location of the element is specified by the `target` variable in the function call.
+The `FileBrowse`, `FolderBrowse`, `FileSaveAs` , `FilesSaveAs`, `CalendarButton`, `ColorChooserButton` buttons all fill-in values into another element located on the window.  The target can be a Text Element or an InputText Element or the button itself.  The location of the element is specified by the `target` variable in the function call.
 
 The Target comes in two forms.
 1. Key
@@ -3892,7 +3961,11 @@ layout = [[sg.T('Source Folder')],
 
 See how much easier the key method is?
 
-**Save & Open Buttons**
+#### Invisible Targets
+
+One very handy trick is to make your target invisible.  This will remove the ability to edit the chosen value like you normally would be able to with an Input Element.  It's a way of making things look cleaner, less cluttered too perhaps.
+
+### Save & Open Buttons
 
 There are 4 different types of File/Folder open dialog box available.  If you are looking for a file to open, the `FileBrowse` is what you want. If you want to save a file, `SaveAs` is the button. If you want to get a folder name, then `FolderBrowse` is the button to use. To open several files at once, use the `FilesBrowse` button.  It will create a list of files that are separated by ';'
 
@@ -3902,28 +3975,37 @@ There are 4 different types of File/Folder open dialog box available.  If you ar
 
 ![saveas](https://user-images.githubusercontent.com/13696193/45243807-2beb2e00-b2c3-11e8-8549-ba71cdc05951.jpg)
 
-**Calendar Buttons**
+### Calendar Buttons
 
 These buttons pop up a calendar chooser window.  The chosen date is returned as a string.
 
 ![calendar](https://user-images.githubusercontent.com/13696193/45243374-99965a80-b2c1-11e8-8311-49777835ca40.jpg)
 
-**Color Chooser Buttons**
+### Color Chooser Buttons
 
 These buttons pop up a standard color chooser window.  The result is returned as a tuple.  One of the returned values is an RGB hex representation.
 
 ![color](https://user-images.githubusercontent.com/13696193/45243375-99965a80-b2c1-11e8-9779-b71bed85fab6.jpg)
 
-**Custom Buttons**
+### Custom Buttons
 Not all buttons are created equal.  A button that closes a window is different that a button that returns from the window without closing it.  If you want to define your own button, you will generally do this with the Button Element `Button`, which closes the window when clicked.
 
+```python
 layout =  [[sg.Button('My Button')]]
+```
 
 ![button](https://user-images.githubusercontent.com/13696193/44959862-b696ec00-aec3-11e8-9e88-4b9af0338a03.jpg)
 
-All buttons can have their text changed by changing the `button_text` variable in the button call.  It is this text that is returned when a window is read.  This text will be what tells you which button is called so make it unique.  Most of the convenience buttons (Submit, Cancel, Yes, etc) are all Buttons. Some that are not are `FileBrowse` ,  `FolderBrowse`, `FileSaveAs`.  They clearly do not close the window. Instead they bring up a file or folder browser dialog box.
+All buttons can have their text changed by changing the `button_text` parameter in the button call.  It is this text that is returned when a window is read.  This text will be what tells you which button was clicked.  However, you can also use keys on your buttons so that they will be unique.  If only the text were used, you would never be able to have 2 buttons in the same window with the same text.
 
-**Button Images**
+```python
+layout =  [[sg.Button('My Button', key='_BUTTON_KEY_')]]
+```
+
+With this layout, the event that is returned from a `Window.Read()` call when the button is clicked will be "`_BUTTON_KEY_`"
+
+### Button Images
+
 Now this is an exciting feature not found in many simplified packages.... images on buttons!  You can make a pretty spiffy user interface with the help of a few button images.
 
 Your button images need to be in PNG or GIF format.  When you make a button with an image, set the button background to the same color as the background.  There's a button color TRANSPARENT_BUTTON that you can set your button color to in order for it to blend into the background.  Note that this value is currently the same as the color as the default system background on Windows.  If you want to set the button background color to the current system default, use the value COLOR_SYSTEM_DEFAULT as the background color.
@@ -3931,7 +4013,7 @@ Your button images need to be in PNG or GIF format.  When you make a button with
 This example comes from the `Demo Media Player.py` example program.  Because it's a non-blocking button, it's defined as `RButton`.  You also put images on blocking buttons by using `Button`.
 
 ```python
-sg.RButton('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
+sg.Button('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
                image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0)
 ```
 Three parameters are used for button images.
@@ -3948,15 +4030,16 @@ Here's an example window made with button images.
 
 You'll find the source code in the file Demo Media Player.  Here is what the button calls look like to create media player window
  ```python
-sg.RButton('Pause', button_color=sg.TRANSPARENT_BUTTON,
+sg.Button('Pause', button_color=sg.TRANSPARENT_BUTTON,
               image_filename=image_pause,
               image_size=(50, 50),
               image_subsample=2,
               border_width=0)
 ```
-This is one you'll have to experiment with at this point.  Not up for an exhaustive explanation.
 
-**Realtime Buttons**
+Experimentation is sometimes required for these concepts to really sink in.
+
+### Realtime Buttons
 
 Normally buttons are considered "clicked" when the mouse button is let UP after a downward click on the button.  What about times when you need to read the raw up/down button values.  A classic example for this is a robotic remote control.  Building a remote control using a GUI is easy enough.  One button for each of the directions is a start.  Perhaps something like this:
 
@@ -4275,7 +4358,7 @@ def ChatBot():
     layout = [[(sg.Text('This is where standard out is being routed', size=[40, 1]))],
               [sg.Output(size=(80, 20))],
               [sg.Multiline(size=(70, 5), enter_submits=True),
-               sg.RButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])),
+               sg.Button('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])),
                sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
 
   window = sg.Window('Chat Window', layout, default_element_size=(30, 2))
@@ -5129,7 +5212,7 @@ The layout for the entire window looks like this:
 
 ```python
 layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]])],
-              [sg.RButton('Read')]]
+              [sg.Button('Read')]]
 ```
 
 The Window layout has the TabGroup and within the tab Group are the two Tab elements.
@@ -5579,7 +5662,7 @@ import PySimpleGUI as sg
 
 layout = [[sg.Text('Persistent window')],
           [sg.Input()],
-          [sg.RButton('Read'), sg.Exit()]]
+          [sg.Button('Read'), sg.Exit()]]
 
 window = sg.Window('Window that stays open').Layout(layout)
 
