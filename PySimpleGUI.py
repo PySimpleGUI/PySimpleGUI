@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.15 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.16 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -403,7 +403,7 @@ class ToolTip:
         """
 
         :param widget: (widget type varies) The tkinter widget
-        :param text: text for the tooltip. It can inslude \n
+        :param text: (str) text for the tooltip. It can inslude \n
         :param timeout: (int) Time in milliseconds that mouse must remain still before tip is shown
 
         """
@@ -867,7 +867,6 @@ class Combo(Element):
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, readonly=False, font=None, visible=True):
         """
-
         :param values: List[Any]  values to choose. While displayed as text, the items returned are what the caller supplied, not text
         :param default_value: (Any) Choice to be displayed as initial value. Must match one of values variable contents
         :param size: (int, int) (width, height) width = characters-wide, height = rows-high
@@ -985,7 +984,6 @@ class OptionMenu(Element):
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
         """
-
         :param values: List[Any] Values to be displayed
         :param default_value: (Any) the value to choose by default
         :param size:  Tuple[int, int] (width, height) size in characters (wide) and rows (high)
@@ -2024,7 +2022,7 @@ class Button(Element):
         :param button_type: (int) You  should NOT be setting this directly. ONLY the shortcut functions set this
         :param target: Union[str, Tuple[int, int]]  key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param file_types: Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),)
+        :param file_types: Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),).  Note - NOT SUPPORTED ON MAC
         :param initial_folder: (str) starting path for folders and files
         :param disabled: (bool) If True button will be created disabled
         :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -2036,7 +2034,7 @@ class Button(Element):
         :param border_width: (int) width of border around button in pixels
         :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
         :param auto_size_button: (bool) if True the button size is sized to fit the text
-        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
+        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Note - Does not always work on Macs
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param bind_return_key: (bool) If True the return key will cause this button to be pressed
         :param focus: (bool) if True, initial focus will be put on this button
@@ -2357,8 +2355,8 @@ class ButtonMenu(Element):
                  size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None,
                  tearoff=False, visible=True):
         """
-        :param button_text: Text to be displayed on the button (Default value = '')
-        :param menu_def: (list(list)) [ [ ] ]  A list of lists of Menu items to show when this element is clicked. See docs for format
+        :param button_text: (str) Text to be displayed on the button
+        :param menu_def: List[List[str]] A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param disabled: (bool) If True button will be created disabled
         :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
@@ -3321,6 +3319,7 @@ VSep = VerticalSeparator
 class Tab(Element):
     """
     Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
+    Tabs are never placed directly into a layout.  They are always "Contained" in a TabGroup layout
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
@@ -3544,7 +3543,8 @@ class TabGroup(Element):
 
     def SelectTab(self, index):
         """
-        Create a tkinter event that mimics user clicking on a tab
+        Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
+
         :param index: (int) indicates which Tab should be selected. Count starts at 0
         """
 
@@ -3582,7 +3582,13 @@ class Slider(Element):
         :param orientation: (str) 'horizontal' or 'vertical' ('h' or 'v' also work)
         :param disable_number_display: (bool) if True no number will be displayed by the Slider Element
         :param border_width: (int) width of border around element in pixels
-        :param relief: (enum)  relief style. `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
+        :param relief: (enum)  relief style.
+                        RELIEF_RAISED
+                        RELIEF_SUNKEN
+                        RELIEF_FLAT
+                        RELIEF_RIDGE
+                        RELIEF_GROOVE
+                        RELIEF_SOLID
         :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
         :param enable_events: (bool) If True then moving the slider will generate an Event
         :param disabled: (bool) set disable state for element
@@ -3596,7 +3602,7 @@ class Slider(Element):
         :param visible: (bool) set visibility state of the element
         """
 
-        self.TKScale = None  # type: tk.Scale
+        self.TKScale = self.Widget = None  # type: tk.Scale
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
         self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
@@ -3941,7 +3947,13 @@ class Pane(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param orientation: (str)  'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
         :param show_handle: (bool) if True, the handle is drawn that makes it easier to grab and slide
-        :param relief: (enum) relief style. Values are same as other elements that use relief values.  `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
+        :param relief: (enum) relief style. Values are same as other elements that use relief values.
+                    RELIEF_RAISED
+                    RELIEF_SUNKEN
+                    RELIEF_FLAT
+                    RELIEF_RIDGE
+                    RELIEF_GROOVE
+                    RELIEF_SOLID
         :param handle_size: (int) Size of the handle in pixels
         :param border_width: (int)  width of border around element in pixels
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -4390,7 +4402,7 @@ class Table(Element):
         :param size: Tuple[int, int] DO NOT USE! Use num_rows instead
         :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. Table events happen when row is clicked
-        :param bind_return_key: (bool) if True, pressing return key will cause event coming from Table
+        :param bind_return_key: (bool) if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
@@ -4517,13 +4529,12 @@ class Table(Element):
         """
         Not user callable.  Callback function that is called when something is selected from Table.
         Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
-        TODO: Why is BindReturnKey being checked??
 
         :param event: (unknown) event information from tkinter
         """
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
-        if self.BindReturnKey:          # shouldn't this be ChangeSubmits?
+        if self.BindReturnKey:          # Signifies BOTH a return key AND a double click
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = self.Key
             else:
@@ -4703,25 +4714,30 @@ class Tree(Element):
 
 
 class TreeData(object):
-    """ """
+    """
+    Class that user fills in to represent their tree data. It's a very simple tree representation with a root "Node"
+    with possibly one or more children "Nodes".  Each Node contains a key, text to display, list of values to display
+    and an icon
+    """
     class Node(object):
-        """ """
+        """
+        Contains information about the individual node in the tree
+        """
         def __init__(self, parent, key, text, values, icon=None):
             """
-
-            :param parent:
-            :param key:  Used with window.FindElement and with return values to uniquely identify this element
-            :param text:
-            :param values:
-            :param icon:
-
+            :param parent: (Node) The parent Node
+            :param key:  (Any) Used to uniquely identify this node
+            :param text: (str) The text that is displayed at this node's location
+            :param values: List[Any] The list of values that are displayed at this node
+            :param icon: Union[str, bytes]
             """
-            self.parent = parent
-            self.children = []
-            self.key = key
-            self.text = text
-            self.values = values
-            self.icon = icon
+
+            self.parent = parent        # type: TreeData.Node
+            self.children = []          # type: List[TreeData.Node]
+            self.key = key              # type: str
+            self.text = text            # type: str
+            self.values = values        # type: List[Any]
+            self.icon = icon            # type: Union[str, bytes]
 
         def _Add(self, node):
             """
@@ -4739,38 +4755,43 @@ class TreeData(object):
 
     def _AddNode(self, key, node):
         """
+        Adds a node to tree dictionary (not user callable)
 
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :param node:
-
+        :param key:  (str) Uniquely identifies this Node
+        :param node: (Node) Node being added
         """
         self.tree_dict[key] = node
 
     def Insert(self, parent, key, text, values, icon=None):
         """
+        Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
 
-        :param parent:
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :param text:
-        :param values:
-        :param icon:
-
+        :param parent: (Node) the parent Node
+        :param key:  (Any) Used to uniquely identify this node
+        :param text: (str) The text that is displayed at this node's location
+        :param values: List[Any] The list of values that are displayed at this node
+        :param icon: Union[str, bytes]
         """
+
         node = self.Node(parent, key, text, values, icon)
         self.tree_dict[key] = node
         parent_node = self.tree_dict[parent]
         parent_node._Add(node)
 
     def __repr__(self):
-        """ """
+        """
+        Converts the TreeData into a printable version, nicely formatted
+
+        :return: (str) A formatted, text version of the TreeData
+        """
         return self._NodeStr(self.root_node, 1)
 
     def _NodeStr(self, node, level):
         """
+        Does the magic of converting the TreeData into a nicely formatted string version
 
-        :param node:
-        :param level:
-
+        :param node: (Node) The node to begin printing the tree
+        :param level: (int) The indentation level for string formatting
         """
         return '\n'.join(
             [str(node.key) + ' : ' + str(node.text)] +
@@ -4781,26 +4802,26 @@ class TreeData(object):
 #                           Error Element                                #
 # ---------------------------------------------------------------------- #
 class ErrorElement(Element):
-    """ """
+    """
+    A "dummy Element" that is returned when there are error conditions, like trying to find an element that's invalid
+    """
     def __init__(self, key=None):
-        """Error Element
-
+        """
         :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
         """
         self.Key = key
 
         super().__init__(ELEM_TYPE_ERROR, key=key)
-        return
+
 
     def Update(self, silent_on_error=True, *args, **kwargs):
         """
         Update method for the Error Element, an element that should not be directly used by developer
 
         :param silent_on_error: (bool) if False, then a Popup window will be shown
-        :param *args: (Any) meant to "soak up" any normal paramters passed in
+        :param *args: (Any) meant to "soak up" any normal parameters passed in
         :param **kwargs: (Any) meant to "soak up" any keyword parameters that were passed in
-
+        :return: (ErrorElement) returns 'self' so call can be chained
         """
         if not silent_on_error:
             PopupError('Keyword error in Update',
@@ -4811,7 +4832,11 @@ class ErrorElement(Element):
         return self
 
     def Get(self):
-        """ """
+        """
+        One of the method names found in other Elements. Used here to return an error string in case it's called
+
+        :return: (str) A warning text string.
+        """
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
     def __del__(self):
@@ -4851,7 +4876,6 @@ class Window:
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True):
         """
-
         :param title: (str) The title that will be displayed in the Titlebar and on the Taskbar
         :param layout: List[List[Elements]] The layout for the window. Can also be specified in the Layout method
         :param default_element_size: Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all elements in this window
@@ -9479,27 +9503,27 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
           font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
-    "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages
+    "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
-    :param *args: Variable number of your arguments.  Load up the call with stuff to see!
-    :param title:  Optional title for the window
-    :param button_color: Tuple(str, str) Color of the buttons shown (text color, button color)
-    :param background_color: (str) Window background color
+    :param *args: (Any) Variable number of your arguments.  Load up the call with stuff to see!
+    :param title: (str)  Optional title for the window. If none provided, the first arg will be used instead.
+    :param button_color: Tuple[str, str] Color of the buttons shown (text color, button color)
+    :param background_color: (str) Window's background color
     :param text_color: (str) text color
-    :param button_type: (enum) determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). The user normally will NOT change this value.  There are many Popup functions and they call Popup, changing this parameter to get the desired effect.
+    :param button_type: (enum) NOT USER SET!  Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.
     :param auto_close: (bool) If True the window will automatically close
     :param auto_close_duration:  (int) time in seconds to keep window open before closing it automatically
-    :param custom_text:  Union[tuple(str, str), str] A string or pair of strings that contain the text to display on the buttons
-    :param non_blocking:  (bool) If True then will immediately return from the function without waiting for the uder's input.
-    :param icon: Union[str, bytes] icon to display on the window. Same format was Window call
-    :param line_width: (int) Width of lines in characters to use.  Defaults to MESSAGE_BOX_LINE_WIDTH
-    :param font:  Union[str, tuple(font, size, modifiors) specifies the font family, size, etc
+    :param custom_text:  Union[Tuple[str, str], str] A string or pair of strings that contain the text to display on the buttons
+    :param non_blocking:  (bool) If True then will immediately return from the function without waiting for the user's input.
+    :param icon: Union[str, bytes] icon to display on the window. Same format as a Window call
+    :param line_width: (int) Width of lines in characters.  Defaults to MESSAGE_BOX_LINE_WIDTH
+    :param font:  Union[str, tuple(font name, size, modifiers) specifies the font family, size, etc
     :param no_titlebar:  (bool) If True will not show the frame around the window and the titlebar across the top
     :param grab_anywhere: (bool) If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too
-    :param location: (int, int)  Location on screen to display the top left corner of window. Defaults to centered on screen
+    :param location: Tuple[int, int]  Location on screen to display the top left corner of window. Defaults to window centered on screen
     :return: Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X
-
     """
+
     if not args:
         args_to_print = ['']
     else:
@@ -10034,24 +10058,24 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
                    grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
     """
-    Display popup with text entry field and browse button. Browse for folder
+    Display popup with text entry field and browse button so that a folder can be chosen.
 
-    :param message:
-    :param title:
-    :param default_path:  (Default value = '')
-    :param no_window:  (Default = False)
-    :param size:  (w,h) w=characters-wide, h=rows-high
-    :param button_color: button color (foreground, background)
-    :param background_color: color of background
-    :param text_color: color of the text
-    :param icon: Icon to display
-    :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:  (Default = (None))
-    :param initial_folder:
-    :return: Union[str, None] Contents of text field. None if closed using X or cancelled
+    :param message: (str) message displayed to user
+    :param title: (str) Window title
+    :param default_path: (str) path to display to user as starting point (filled into the input field)
+    :param no_window:  (bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
+    :param size: Tuple[int, int] (width, height) of the InputText Element
+    :param button_color: Tuple[str, str] Color of the button (text, background)
+    :param background_color: (str) background color of the entire window
+    :param text_color: (str) color of the message text
+    :param icon: Union[bytes, str] filename or base64 string to be used for the window's icon
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+    :param no_titlebar: (bool) If True no titlebar will be shown
+    :param grab_anywhere: (bool) If True can click and drag anywhere in the window to move the window
+    :param keep_on_top: (bool) If True the window will remain above all current windows
+    :param location: Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window
+    :param initial_folder: (str) location in filesystem to begin browsing
+    :return: Union[str, None]  string representing the path chosen, None if cancelled or window closed with X
     """
 
     # global _my_windows
@@ -10109,28 +10133,28 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
                  icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                  location=(None, None), initial_folder=None):
     """
-    Display popup with text entry field and browse button. Browse for file
+    Display popup window with text entry field and browse button so that a file can be chosen by user.
 
-    :param message:
-    :param title:
-    :param default_path:  (Default value = '')
-    :param default_extension:  (Default value = '')
-    :param save_as:  (Default = False)
-    :param multiple_files:  (Default = False)
-    :param file_types:  (Default value = (("ALL Files", "*.*")))
-    :param no_window:  (Default = False)
-    :param size:  (w,h) w=characters-wide, h=rows-high
-    :param button_color: button color (foreground, background)
-    :param background_color: color of background
-    :param text_color: color of the text
-    :param icon: Icon to display
-    :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:  (Default = (None))
-    :param initial_folder:
-    :return: Union[str, None]  string representing the path chosen, None if cancelled or window closed with X
+    :param message: (str) message displayed to user
+    :param title: (str) Window title
+    :param default_path: (str) path to display to user as starting point (filled into the input field)
+    :param default_extension: (str) If no extension entered by user, add this to filename (only used in saveas dialogs)
+    :param save_as:  (bool) if True, the "save as" dialog is shown which will verify before overwriting
+    :param multiple_files:  (bool) if True, then allows multiple files to be selected that are returned with ';' between each filename
+    :param file_types:  Tuple[Tuple[str,str]] List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),)
+    :param no_window:  (bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
+    :param size: Tuple[int, int] (width, height) of the InputText Element
+    :param button_color: Tuple[str, str] Color of the button (text, background)
+    :param background_color: (str) background color of the entire window
+    :param text_color: (str) color of the message text
+    :param icon: Union[bytes, str] filename or base64 string to be used for the window's icon
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+    :param no_titlebar: (bool) If True no titlebar will be shown
+    :param grab_anywhere: (bool) If True can click and drag anywhere in the window to move the window
+    :param keep_on_top: (bool) If True the window will remain above all current windows
+    :param location: Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window
+    :param initial_folder: (str) location in filesystem to begin browsing
+    :return: Union[str, None]  string representing the file(s) chosen, None if cancelled or window closed with X
     """
 
     if no_window:
@@ -10201,23 +10225,23 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
                  background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
                  grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
-    Display Popup with text entry field
+    Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
-    :param message:
-    :param title:
-    :param default_text:  (Default value = '')
-    :param password_char: Passwork character if this is a password field (Default value = '')
-    :param size:  (w,h) w=characters-wide, h=rows-high
-    :param button_color: button color (foreground, background)
-    :param background_color: color of background
-    :param text_color: color of the text
-    :param icon: Icon to display
-    :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:  (Default = (None))
-    :return: Union[str, None] Text entered or None if window was closed
+    :param message: (str) message displayed to user
+    :param title: (str) Window title
+    :param default_text:  (str) default value to put into input area
+    :param password_char: (str) character to be shown instead of actually typed characters
+    :param size: Tuple[int, int] (width, height) of the InputText Element
+    :param button_color: Tuple[str, str] Color of the button (text, background)
+    :param background_color: (str) background color of the entire window
+    :param text_color: (str) color of the message text
+    :param icon: Union[bytes, str] filename or base64 string to be used for the window's icon
+    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+    :param no_titlebar: (bool) If True no titlebar will be shown
+    :param grab_anywhere: (bool) If True can click and drag anywhere in the window to move the window
+    :param keep_on_top: (bool) If True the window will remain above all current windows
+    :param location: Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window
+    :return: Union[str, None] Text entered or None if window was closed or cancel button clicked
     """
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
@@ -10246,9 +10270,11 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     """
     "Plays" an animated GIF file.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
-     event loop is running every 10 ms.
+     event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
+     loop.
+
     :param image_source: Union[str, bytes] Either a filename or a base64 string.
-    :param message:  An optional message to be shown with the animation
+    :param message: (str) An optional message to be shown with the animation
     :param background_color: (str) color of background
     :param text_color: (str) color of the text
     :param font: Union[str, tuple) specifies the font family, size, etc
@@ -10256,9 +10282,9 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     :param grab_anywhere: (bool) If True then you can move the window just clicking anywhere on window, hold and drag
     :param keep_on_top:  (bool) If True then Window will remain on top of all other windows currently shownn
     :param location:  (int, int) (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
-    :param alpha_channel:
-    :param time_between_frames:  (Default value = 0)
-    :param transparent_color:
+    :param alpha_channel: (float) Window transparency 0 = invisible 1 = completely visible. Values between are see through
+    :param time_between_frames: (int) Amount of time in milliseconds between each frame
+    :param transparent_color: (str) This color will be completely see-through in your window. Can even click through
     """
     if image_source is None:
         for image in Window.animated_popup_dict:

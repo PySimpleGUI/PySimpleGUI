@@ -852,7 +852,7 @@ Preview of popups:
 </p>
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
-"print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages
+"print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
 ```
 Popup(args,
@@ -878,22 +878,22 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args|Variable number of your arguments. Load up the call with stuff to see!|
-|title|Optional title for the window|
-|button_color|Tuple(str, str) Color of the buttons shown (text color, button color)|
-|background_color|(str) Window background color|
+|*args|(Any) Variable number of your arguments. Load up the call with stuff to see!|
+|title|(str) Optional title for the window. If none provided, the first arg will be used instead.|
+|button_color|Tuple[str, str] Color of the buttons shown (text color, button color)|
+|background_color|(str) Window's background color|
 |text_color|(str) text color|
-|button_type|(enum) determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). The user normally will NOT change this value. There are many Popup functions and they call Popup, changing this parameter to get the desired effect.|
+|button_type|(enum) NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.|
 |auto_close|(bool) If True the window will automatically close|
 |auto_close_duration|(int) time in seconds to keep window open before closing it automatically|
-|custom_text|Union[tuple(str, str), str] A string or pair of strings that contain the text to display on the buttons|
-|non_blocking|(bool) If True then will immediately return from the function without waiting for the uder's input.|
-|icon|Union[str, bytes] icon to display on the window. Same format was Window call|
-|line_width|(int) Width of lines in characters to use. Defaults to MESSAGE_BOX_LINE_WIDTH|
-|font|Union[str, tuple(font, size, modifiors) specifies the font family, size, etc|
+|custom_text|Union[Tuple[str, str], str] A string or pair of strings that contain the text to display on the buttons|
+|non_blocking|(bool) If True then will immediately return from the function without waiting for the user's input.|
+|icon|Union[str, bytes] icon to display on the window. Same format as a Window call|
+|line_width|(int) Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH|
+|font|Union[str, tuple(font name, size, modifiers) specifies the font family, size, etc|
 |no_titlebar|(bool) If True will not show the frame around the window and the titlebar across the top|
 |grab_anywhere|(bool) If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too|
-|location|(int, int) Location on screen to display the top left corner of window. Defaults to centered on screen|
+|location|Tuple[int, int] Location on screen to display the top left corner of window. Defaults to window centered on screen|
 |||
 | **return** | Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X |
 
@@ -1025,7 +1025,7 @@ Use these Popups instead of making  a custom window to get one data value, call 
 ### PopupGetText
 Use this Popup to get a line of text from the user.
 
-Display Popup with text entry field
+Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
 ```
 PopupGetText(message,
@@ -1048,21 +1048,22 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|message||
-|title||
-|default_text|(Default value = '')|
-|password_char|Passwork character if this is a password field (Default value = '')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|icon|Icon to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location|(Default = (None))|
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_text|(str) default value to put into input area|
+|password_char|(str) character to be shown instead of actually typed characters|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
 |||
-| **return** | Union[str, None] Text entered or None if window was closed |
+| **return** | Union[str, None] Text entered or None if window was closed or cancel button clicked |
 
 ```python
 import PySimpleGUI as sg
@@ -1077,7 +1078,7 @@ sg.Popup('Results', 'The value returned from PopupGetText', text)
 ### PopupGetFile
 Gets a filename from the user.  There are options to configure the type of dialog box to show.  Normally an "Open File" dialog box is shown.
 
-Display popup with text entry field and browse button. Browse for file
+Display popup window with text entry field and browse button so that a file can be chosen by user.
 
 ```
 PopupGetFile(message,
@@ -1105,26 +1106,27 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|message||
-|title||
-|default_path|(Default value = '')|
-|default_extension|(Default value = '')|
-|save_as|(Default = False)|
-|multiple_files|(Default = False)|
-|file_types|(Default value = (("ALL Files", "*.*")))|
-|no_window|(Default = False)|
-|size|(w,h) w=characters-wide, h=rows-high|
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|icon|Icon to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location|(Default = (None))|
-|initial_folder||
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_path|(str) path to display to user as starting point (filled into the input field)|
+|default_extension|(str) If no extension entered by user, add this to filename (only used in saveas dialogs)|
+|save_as|(bool) if True, the "save as" dialog is shown which will verify before overwriting|
+|multiple_files|(bool) if True, then allows multiple files to be selected that are returned with ';' between each filename|
+|file_types|Tuple[Tuple[str,str]] List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),)|
+|no_window|(bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|initial_folder|(str) location in filesystem to begin browsing|
 |||
-| **return** | Union[str, None]  string representing the path chosen, None if cancelled or window closed with X |
+| **return** | Union[str, None]  string representing the file(s) chosen, None if cancelled or window closed with X |
 
 If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this. 
 
@@ -1149,7 +1151,7 @@ sg.Popup('Results', 'The value returned from PopupGetFile', text)
 
 The window created to get a folder name looks the same as the get a file name.  The difference is in what the browse button does.  `PopupGetFile` shows an Open File dialog box while `PopupGetFolder`  shows an Open Folder dialog box.
 
-Display popup with text entry field and browse button. Browse for folder
+Display popup with text entry field and browse button so that a folder can be chosen.
 
 ```
 PopupGetFolder(message,
@@ -1173,22 +1175,23 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|message||
-|title||
-|default_path|(Default value = '')|
-|no_window|(Default = False)|
-|size|(w,h) w=characters-wide, h=rows-high|
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|icon|Icon to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location|(Default = (None))|
-|initial_folder||
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_path|(str) path to display to user as starting point (filled into the input field)|
+|no_window|(bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|initial_folder|(str) location in filesystem to begin browsing|
 |||
-| **return** | Union[str, None] Contents of text field. None if closed using X or cancelled |
+| **return** | Union[str, None]  string representing the path chosen, None if cancelled or window closed with X |
 
 This is a typpical call
 
@@ -1207,7 +1210,8 @@ The animated Popup enables you to easily display a "loading" style animation spe
 
 "Plays" an animated GIF file.  This function has its own internal clocking meaning you can call it at any frequency
  and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
- event loop is running every 10 ms.
+ event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
+ loop.
 
 ```
 PopupAnimated(image_source,
@@ -1229,7 +1233,7 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |image_source|Union[str, bytes] Either a filename or a base64 string.|
-|message|An optional message to be shown with the animation|
+|message|(str) An optional message to be shown with the animation|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
 |font|Union[str, tuple) specifies the font family, size, etc|
@@ -1237,9 +1241,9 @@ Parameter Descriptions:
 |grab_anywhere|(bool) If True then you can move the window just clicking anywhere on window, hold and drag|
 |keep_on_top|(bool) If True then Window will remain on top of all other windows currently shownn|
 |location|(int, int) (x,y) location on the screen to place the top left corner of your window. Default is to center on screen|
-|alpha_channel||
-|time_between_frames|(Default value = 0)|
-|transparent_color||
+|alpha_channel|(float) Window transparency 0 = invisible 1 = completely visible. Values between are see through|
+|time_between_frames|(int) Amount of time in milliseconds between each frame|
+|transparent_color|(str) This color will be completely see-through in your window. Can even click through|
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
 
