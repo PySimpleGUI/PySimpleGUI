@@ -5532,11 +5532,17 @@ class Window:
         :param filename: (str) Filename to save the values to in pickled form
         """
         try:
-            results = _BuildResults(self, False, self)
+            event, values = _BuildResults(self, False, self)
+            remove_these = []
+            for key in values:
+                if self.Element(key).Type == ELEM_TYPE_BUTTON:
+                    remove_these.append(key)
+            for key in remove_these:
+                del values[key]
             with open(filename, 'wb') as sf:
-                pickle.dump(results[1], sf)
+                pickle.dump(values, sf)
         except:
-            print('*** Error saving form to disk ***')
+            print('*** Error saving Window contents to disk ***')
 
     def LoadFromDisk(self, filename):
         """
