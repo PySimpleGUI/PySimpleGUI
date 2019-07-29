@@ -477,15 +477,15 @@ These tools were created to help you achieve a steady stream of these little suc
 The initial "get up and running" portion of PySimpleGUI should take you less than 5 minutes.  The goal is 5 minutes from your decision "I'll give it a try" to having your first window up on the screen "Oh wow, it was that easy?!"
 
 The primary learning pathes for PySimpleGUI are:
- - This readme document over 100 pages of PySimpleGUI User Manual 
- 	- http://www.PySimpleGUI.org
- - The Cookbook - Recipes to get you going and quick
- 	- http://Cookbook.PySimpleGUI.org
- - The Demo Programs - Start hacking on one of these running soluitions
-	- http://www.PySimpleGUI.com
- - The YouTube videos - If you like instructional videos, there are 15+ videos
-	- [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
-	- [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
+* This readme document over 100 pages of PySimpleGUI User Manual 
+	* http://www.PySimpleGUI.org
+* The Cookbook - Recipes to get you going and quick
+	* http://Cookbook.PySimpleGUI.org
+* The Demo Programs - Start hacking on one of these running soluitions
+	* http://www.PySimpleGUI.com
+* The YouTube videos - If you like instructional videos, there are 15+ videos
+	* [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
+	* [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
 
 Everything is geared towards giving you a "quick start" whether that be a Recipe or a Demo Program.  The idea is to give you something running and let you hack away at it.  As a developer this saves tremendous amounts of time.
 
