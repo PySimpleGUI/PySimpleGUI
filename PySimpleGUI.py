@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.16 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.17 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -8,6 +8,7 @@ version = __version__ = "4.1.0.16 Unreleased - Anniversary Edition"
 #  88        88    88       `8b 88 88'`88'`88 88'  `88 88 88ooood8 88   YP88 88     88 88
 #  88        88.  .88 d8'   .8P 88 88  88  88 88.  .88 88 88.  ... Y8.   .88 Y8.   .8P 88
 #  dP        `8888P88  Y88888P  dP dP  dP  dP 88Y888P' dP `88888P'  `88888'  `Y88888P' dP
+#                 .88                         88
 #                 .88                         88
 #             d8888P                          dP
 
@@ -775,7 +776,7 @@ class InputText(Element):
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param focus: (bool) Determines if initial focus should go to this element.
         :param pad:  (int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
-        :param right_click_menu: (list(list)) [ [ ] ]  A list of lists of Menu items to show when this element is right clicked. See docs for format.
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element (Default = True)
         """
         self.DefaultText = default_text
@@ -1087,7 +1088,7 @@ class Listbox(Element):
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         """
         self.Values = values
@@ -1527,7 +1528,7 @@ class Multiline(Element):
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]]  see "Right Click Menus"
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         """
 
@@ -1633,7 +1634,6 @@ class Text(Element):
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True):
         """
-
         :param text: (str) The text to display. Can include /n to achieve multiple lines
         :param size: (int, int) (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True size of the Text Element will be sized to fit the string provided in 'text' parm
@@ -1646,7 +1646,7 @@ class Text(Element):
         :param justification: (str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param right_click_menu: List[List[str]]  see "Right Click Menus"
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
         """
@@ -1959,7 +1959,7 @@ class Output(Element):
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param right_click_menu: List[List[str]]  see "Right Click Menus"
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         """
 
@@ -2534,7 +2534,7 @@ class Image(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         :param enable_events: (bool) Turns on the element specific events. For an Image element, the event is "image clicked"
         """
@@ -2657,7 +2657,7 @@ class Canvas(Element):
         :param pad:  Amount of padding to put around element
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         """
 
@@ -2712,7 +2712,7 @@ class Graph(Element):
         :param enable_events: (bool) If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element (Default = True)
         :param float_values: (bool) If True x,y coordinates are returned as floats, not ints
         """
@@ -3195,7 +3195,7 @@ class Frame(Element):
         :param border_width: (int)  width of border around element in pixels
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         """
 
@@ -3335,7 +3335,7 @@ class Tab(Element):
         :param border_width: (int)  width of border around element in pixels
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         """
 
@@ -3825,7 +3825,7 @@ class Column(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param scrollable: (bool) if True then scrollbars will be added to the column
         :param vertical_scroll_only: (bool) if Truen then no horizontal scrollbar will be shown
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param visible: (bool) set visibility state of the element
         """
@@ -4406,7 +4406,7 @@ class Table(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]]  see "Right Click Menus"
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         """
 
@@ -4588,7 +4588,8 @@ class Tree(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[str]]  see "Right Click Menus"
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :param visible: (bool) set visibility state of the element
         """
 
         self.TreeData = data
@@ -4717,7 +4718,7 @@ class TreeData(object):
     """
     Class that user fills in to represent their tree data. It's a very simple tree representation with a root "Node"
     with possibly one or more children "Nodes".  Each Node contains a key, text to display, list of values to display
-    and an icon
+    and an icon.  The entire tree is built using a single method, Insert.  Nothing else is required to make the tree.
     """
     class Node(object):
         """
@@ -4725,7 +4726,7 @@ class TreeData(object):
         """
         def __init__(self, parent, key, text, values, icon=None):
             """
-            :param parent: (Node) The parent Node
+            :param parent: (TreeData.Node) The parent Node
             :param key:  (Any) Used to uniquely identify this node
             :param text: (str) The text that is displayed at this node's location
             :param values: List[Any] The list of values that are displayed at this node
@@ -4748,23 +4749,26 @@ class TreeData(object):
             self.children.append(node)
 
     def __init__(self):
-        """ """
-        self.tree_dict = {}
-        self.root_node = self.Node("", "", 'root', [], None)
-        self.tree_dict[""] = self.root_node
+        """
+        Instantiate the object, initializes the Tree Data, creates a root node for you
+        """
+        self.tree_dict = {}             # type: Dict[str : TreeData.Node]
+        self.root_node = self.Node("", "", 'root', [], None)    # The root node
+        self.tree_dict[""] = self.root_node                     # Start the tree out with the root node
 
     def _AddNode(self, key, node):
         """
         Adds a node to tree dictionary (not user callable)
 
         :param key:  (str) Uniquely identifies this Node
-        :param node: (Node) Node being added
+        :param node: (TreeData.Node) Node being added
         """
         self.tree_dict[key] = node
 
     def Insert(self, parent, key, text, values, icon=None):
         """
         Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
+        This is the ONLY user callable method in the TreeData class
 
         :param parent: (Node) the parent Node
         :param key:  (Any) Used to uniquely identify this node
@@ -4790,7 +4794,7 @@ class TreeData(object):
         """
         Does the magic of converting the TreeData into a nicely formatted string version
 
-        :param node: (Node) The node to begin printing the tree
+        :param node: (TreeData.Node) The node to begin printing the tree
         :param level: (int) The indentation level for string formatting
         """
         return '\n'.join(
@@ -4905,7 +4909,7 @@ class Window:
         :param resizable:  (bool) If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.
         :param disable_close: (bool) If True, the X button in the top right corner of the window will no work.  Use with caution and always give a way out toyour users
         :param disable_minimize:  (bool) if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.
-        :param right_click_menu: List[List[str]] see "Right Click Menus" for format
+        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param transparent_color:  (str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
         :param debugger_enabled: (bool) If True then the internal debugger will be enabled
         """
@@ -5968,7 +5972,6 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
                  font=None, pad=None, key=None):
     """
-
     :param button_text: text in the button (Default value = 'Browse')
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param initial_folder:  starting path for folders and files
@@ -5982,7 +5985,6 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
     """
 
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
@@ -9617,20 +9619,20 @@ def MsgBox(*args):
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None),
-                  location=(None, None), title=None, non_blocking=False):
+def PopupScrolled(*args,  title=None, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None),
+                  location=(None, None),non_blocking=False):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
 
-    :param *args: Variable number of items to print
+    :param *args: (Any) Variable number of items to display
+    :param title: (str) Title to display in the window.
     :param button_color: button color (foreground, background)
     :param yes_no:  (Default = False)
     :param auto_close:  (Default = False)
     :param auto_close_duration:
     :param size:  (w,h) w=characters-wide, h=rows-high
     :param location:  (Default = (None))
-    :param title:
     :param non_blocking:  (Default = False)
     :return: Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X
     """
