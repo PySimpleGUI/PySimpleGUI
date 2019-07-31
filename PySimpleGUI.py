@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.17 Unreleased - Anniversary Edition"
+version = __version__ = "4.1.0.18 Unreleased - Anniversary Edition"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -727,6 +727,22 @@ class Element():
         :param tooltip_text: (str) the text to show in tooltip.
         """
         self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
+
+    def SetFocus(self, force=False):
+        """
+        Sets the current focus to be on this element
+
+        :param force: (bool) if True will call focus_force otherwise calls focus_set
+        """
+
+        try:
+            if force:
+                self.Widget.focus_force()
+            else:
+                self.Widget.focus_set()
+        except:
+            print('Was unable to set focus.  The Widget passed in was perhaps not present in this element?  Check your elements .Widget property')
+
 
     def __del__(self):
         """ """
@@ -5460,9 +5476,9 @@ class Window:
                 element = ErrorElement(key=key)
         return element
 
-    Element = FindElement  # Shortcut function
-    Find = FindElement
-
+    Element = FindElement   # Shortcut function
+    Find = FindElement      # Shortcut function, most likely not used by many people.
+    Elem = FindElement      # NEW for 2019!  More laziness... Another shortcut
 
     def FindElementWithFocus(self):
         """
