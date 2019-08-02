@@ -289,6 +289,17 @@ TITLE_LOCATION_TOP_RIGHT = tk.NE
 TITLE_LOCATION_BOTTOM_LEFT = tk.SW
 TITLE_LOCATION_BOTTOM_RIGHT = tk.SE
 
+TEXT_LOCATION_TOP = tk.N
+TEXT_LOCATION_BOTTOM = tk.S
+TEXT_LOCATION_LEFT = tk.W
+TEXT_LOCATION_RIGHT = tk.E
+TEXT_LOCATION_TOP_LEFT = tk.NW
+TEXT_LOCATION_TOP_RIGHT = tk.NE
+TEXT_LOCATION_BOTTOM_LEFT = tk.SW
+TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
+TEXT_LOCATION_CENTER = tk.CENTER
+
+
 THEME_DEFAULT = 'default'
 THEME_WINNATIVE = 'winnative'
 THEME_CLAM = 'clam'
@@ -499,7 +510,7 @@ class Element():
         Element base class. Only used internally.  User will not create an Element object by itself
 
         :param type: (int - could be enum) The type of element. These constants all start with "ELEM_TYPE_"
-        :param size: (int,int)  (width ,height ) w=characters-wide, h=rows-high
+        :param size: Tuple[int, int]  (width ,height ) w=characters-wide, h=rows-high
         :param auto_size_text: (bool) True if the Widget should be shrunk to exactly fit the number of chars to show
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc (see docs for exact formats)
         :param background_color: (str) color of background. Can be in #RRGGBB format or a color name "black"
@@ -778,7 +789,7 @@ class InputText(Element):
         """
 
         :param default_text: (str) Text initially shown in the input box as a default value(Default value = '')
-        :param size: (int, int)  (width, height) w=characters-wide, h=rows-high
+        :param size: Tuple[int, int]  (width, height) w=characters-wide, h=rows-high
         :param disabled: (bool) set disable state for element (Default = False)
         :param password_char: (char) Password character if this is a password field (Default value = '')
         :param justification: (str) justification for data display. Valid choices - left, right, center
@@ -886,7 +897,7 @@ class Combo(Element):
         """
         :param values: List[Any]  values to choose. While displayed as text, the items returned are what the caller supplied, not text
         :param default_value: (Any) Choice to be displayed as initial value. Must match one of values variable contents
-        :param size: (int, int) (width, height) width = characters-wide, height = rows-high
+        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) True if element should be the same size as the contents
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
@@ -1245,7 +1256,7 @@ class Radio(Element):
         :param group_id: (Any) Groups together multiple Radio Buttons. Any type works
         :param default: (bool). Set to True for the one element of the group you want initially selected
         :param disabled: (bool) set disable state
-        :param size: (int, int) (width, height) width = characters-wide, height = rows-high
+        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True will size the element to match the length of the text
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
@@ -1334,7 +1345,7 @@ class Checkbox(Element):
 
         :param text: (str) Text to display next to checkbox
         :param default: (bool). Set to True if you want this checkbox initially checked
-        :param size: (int, int) (width, height) width = characters-wide, height = rows-high
+        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True will size the element to match the length of the text
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param background_color: (str) color of background
@@ -1424,7 +1435,7 @@ class Spin(Element):
         :param disabled: (bool) set disable state
         :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. Spin events happen when an item changes
-        :param size: (int, int) (width, height) width = characters-wide, height = rows-high
+        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True will size the element to match the length of the text
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param background_color: (str) color of background
@@ -1532,7 +1543,7 @@ class Multiline(Element):
         :param disabled: (bool) set disable state
         :param autoscroll: (bool) If True the contents of the element will automatically scroll as more data added to the end
         :param border_width: (int)  width of border around element in pixels
-        :param size: (int, int) (width, height) width = characters-wide, height = rows-high
+        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True will size the element to match the length of the text
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
@@ -1651,7 +1662,7 @@ class Text(Element):
                  right_click_menu=None, tooltip=None, visible=True):
         """
         :param text: (str) The text to display. Can include /n to achieve multiple lines
-        :param size: (int, int) (width, height) width = characters-wide, height = rows-high
+        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
         :param auto_size_text: (bool) if True size of the Text Element will be sized to fit the string provided in 'text' parm
         :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. Text events happen when the text is clicked
@@ -1968,7 +1979,7 @@ class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
                  key=None, right_click_menu=None, visible=True):
         """
-        :param size: Tuple[(int), (int)]  (w,h) w=characters-wide, h=rows-high
+        :param size: Tuple[int, int]  (w,h) w=characters-wide, h=rows-high
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -2937,7 +2948,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawText(self, text, location, color='black', font=None, angle=0):
+    def DrawText(self, text, location, color='black', font=None, angle=0, text_location=TEXT_LOCATION_CENTER):
         """
         Draw some text on your graph.  This is how you label graph number lines for example
 
@@ -2956,8 +2967,7 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         try:  # in case closed with X
-            id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
-                                             angle=angle)
+            id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color, angle=angle, anchor=text_location)
         except:
             id = None
         return id
@@ -3205,7 +3215,7 @@ class Frame(Element):
         :param title_location: (enum) location to place the text title.  Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT
         :param relief: (enum) relief style. Values are same as other elements with reliefs.
                         Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
-        :param size: Tuple(int, int) (width in characters, height in rows) (note this parameter may not always work)
+        :param size: Tuple[int, int] (width in characters, height in rows) (note this parameter may not always work)
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param border_width: (int)  width of border around element in pixels
@@ -4974,7 +4984,7 @@ class Window:
         self.Resizable = resizable
         self._AlphaChannel = alpha_channel
         self.Timeout = None
-        self.TimeoutKey = '_timeout_'
+        self.TimeoutKey = TIMEOUT_KEY
         self.TimerCancelled = False
         self.DisableClose = disable_close
         self.DisableMinimize = disable_minimize
@@ -5868,7 +5878,7 @@ class Window:
         """
         Changes the size of the window, if possible
 
-        :param size: Tuple[(int), (int)] (width, height) of the desired window size
+        :param size: Tuple[int, int] (width, height) of the desired window size
         """
         try:
             self.TKroot.geometry("%sx%s" % (size[0], size[1]))
@@ -8547,10 +8557,10 @@ def StartupTK(my_flex_form: Window):
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
-        my_flex_form.TKAfterID = root.after(duration * 1000, my_flex_form._AutoCloseAlarmCallback)
+        my_flex_form.TKAfterID = root.after(int(duration * 1000), my_flex_form._AutoCloseAlarmCallback)
 
     if my_flex_form.Timeout != None:
-        my_flex_form.TKAfterID = root.after(my_flex_form.Timeout, my_flex_form._TimeoutAlarmCallback)
+        my_flex_form.TKAfterID = root.after(int(my_flex_form.Timeout), my_flex_form._TimeoutAlarmCallback)
     if my_flex_form.NonBlocking:
         my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form._OnClosingCallback)
         my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form._OnClosingCallback)
@@ -8645,7 +8655,7 @@ class QuickMeter(object):
         :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')
         :param bar_color:  ???????????????????????????????????
         :param button_color: button color (foreground, background)
-        :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+        :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
         :param border_width:  width of border around element
         :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
 
@@ -8759,7 +8769,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')
     :param bar_color:
     :param button_color: button color (foreground, background)
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+    :param size:  Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
     :param border_width:  width of border around element
     :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
 
@@ -8821,7 +8831,7 @@ class DebugWin():
                  grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
         """
 
-        :param size:  (w,h) w=characters-wide, h=rows-high
+        :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high
         :param location:  (Default = (None))
         :param font:  specifies the font family, size, etc
         :param no_titlebar:  (Default = False)
@@ -8905,7 +8915,7 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
     """
 
     :param *args:
-    :param size:  (w,h) w=characters-wide, h=rows-high
+    :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high
     :param end:
     :param sep:
     :param location:  (Default = (None))
@@ -8974,8 +8984,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     :param icon: filename of icon used for taskbar and title bar
     :param button_color: button color (foreground, background)
-    :param element_size: element size (width, height) in characters
-    :param button_element_size:  (Default = (None))
+    :param element_size: Tuple[int, int] element size (width, height) in characters
+    :param button_element_size: Tuple[int, int]
     :param margins: tkinter margins around outsize (Default = (None))
     :param element_padding:  (Default = (None))
     :param auto_size_text: True if size should fit the text length
@@ -8991,7 +9001,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :param progress_meter_style:
     :param progress_meter_relief:
     :param progress_meter_color:
-    :param progress_meter_size:
+    :param progress_meter_size: Tuple[int, int]
     :param text_justification:
     :param background_color: color of background
     :param element_background_color:
@@ -9001,7 +9011,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :param scrollbar_color:
     :param text_color: color of the text
     :param element_text_color:
-    :param debug_win_size:  (Default = (None))
+    :param debug_win_size:  Tuple[int, int] (Default = (None))
     :param window_location:  (Default = (None))
     :param error_button_color:  (Default = (None))
     :param tooltip_time:  time in milliseconds to wait before showing a tooltip. Default is 400ms
@@ -9649,14 +9659,14 @@ def PopupScrolled(*args,  title=None, button_color=None, yes_no=False, auto_clos
 
     :param *args: (Any) Variable number of items to display
     :param title: (str) Title to display in the window.
-    :param button_color: button color (foreground, background)
-    :param yes_no:  (Default = False)
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param size:  (w,h) w=characters-wide, h=rows-high
-    :param location:  (Default = (None))
-    :param non_blocking:  (Default = False)
-    :return: Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :param button_color: Tuple[str, str] button color (foreground, background)
+    :param yes_no: (bool) If True, displays Yes and No buttons instead of Ok
+    :param auto_close:  (bool) if True window will close itself
+    :param auto_close_duration: Union[int, float] Older versions only accept int. Time in seconds until window will close
+    :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high
+    :param location: Tuple[int, int] Location on the screen to place the upper left corner of the window
+    :param non_blocking: (bool) if True the call will immediately return rather than waiting on user input
+    :return: Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X
     """
     if not args: return
     width, height = size
