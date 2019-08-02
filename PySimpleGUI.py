@@ -2957,6 +2957,7 @@ class Graph(Element):
         :param color: (str) text color
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
+        :param text_location: (enum) "anchor" location for the text. Values start with TEXT_LOCATION_
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text
         """
         if location == (None, None):
