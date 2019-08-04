@@ -21,15 +21,15 @@ _________ Python programming experience
 _________ Programming experience overall
 _________ Have used another Python GUI Framework (tkiner, Qt, etc) previously (yes/no is fine)?
 
-### You have done these:
+### You have completed these steps:
 
-[ ] - Read instructions on how to file an Issue
-[ ] - Searched through main docs http://www.PySimpleGUI.org
-[ ] - Searched through the readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
-[ ] - Looked for Demo Programs that are similar to your goal http://www.PySimpleGUI.com
-[ ] - Note that there are also Demo Programs under each port on GitHub
-[ ] - Run your program outside of your debugger (from a command line)
-[ ] - Searched through Issues (open and closed) to see if already reported
+- [ ] Read instructions on how to file an Issue
+- [ ] Searched through main docs http://www.PySimpleGUI.org for your problem
+- [ ] Searched through the readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
+- [ ] Looked for Demo Programs that are similar to your goal http://www.PySimpleGUI.com
+- [ ] Note that there are also Demo Programs under each port on GitHub
+- [ ] Run your program outside of your debugger (from a command line)
+- [ ] Searched through Issues (open and closed) to see if already reported
 
 
 ### Code or partial code causing the problem
