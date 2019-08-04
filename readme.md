@@ -10,7 +10,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.0.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.1.0-red.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.0.0-blue.svg?longCache=true&style=for-the-badge)
 
@@ -21,7 +21,8 @@
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.28.1-orange.svg?longCache=true&style=for-the-badge)
 
 # PySimpleGUI User's Manual
-## This manual is crammed full of answers so start your search for answers here. Seriously, USE this document.
+## This manual is crammed full of answers so start your search for answers here. Read/Search this PRIOR to opening an Issue on GitHub.
+
 ## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into a people-friendly Pythonic interfaces
 
 #### July-2019 Note - This readme is being generated from the PySimpleGUI.py file located on GitHub.  As a result, some of the calls or parameters may not match the PySimpleGUI that you pip installed.
@@ -88,11 +89,11 @@
 
 #### Quick Links To Help and Read Up on the Latest News and Releases
 
+[ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.
+
 [Homepage - Lastest Readme and Code - GitHub](http://www.PySimpleGUI.com)
 
 [Announcements of Latest Developments, Release news, Misc](https://github.com/PySimpleGUI/PySimpleGUI/issues/142)
-
-[ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, etc. **All** the documentation in **one** place
 
 [COOKBOOK!](http://Cookbook.PySimpleGUI.org)
 
@@ -110,12 +111,17 @@ The YouTube videos - If you like instructional videos, there are over 15 videos
 - [The Named Truth (An updaate on the technology)](https://youtu.be/BFTxBmihsUY)
 - There are numerous short videos also on that channel that demonstrate PySimpleGUI being used
 
-#### Python versions
-As of 9/25/2018 **both Python 3 and Python 2.7 are supported** when using **tkinter version** of PySimpleGUI! The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.  **None** of the other ports can use Python 2.
+# About The PySimpleGUI Documentation System
 
-Note that the 2.7 port will cease to exist on this GitHub on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
+This User's Manual (also the project's readme) is one ***vital*** part of the PySimpleGUI programming environment.  There are 5 resources that work together to provide to you the fastest path to success.  These 5 resources are:
 
-By "will cease to exist on this GitHub" I mean, it will be deleted entirely.  No source code, no supporting programs.  Nothing.  If you're stuck using 2.7 in December, it would behoove you to fork the 2.7 code on Dec 31, 2019.  Legacy Python doesn't have a permanent home here.
+1. This User's Manual
+2. The Cookbook
+3. The 170+ Demo Programs
+4. Docstrings enable you to access help directly from Python or your IDE
+5. Searching the GitHub Issues as a last resort
+
+Pace yourself.  The intial progress is exciting.  GUIs take time and thought to build.  Take a deep breath and use the provided materials and you'll do fine.
 
 # Platforms
 
@@ -138,6 +144,14 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 * Linux on Raspbnerry Pi
 * Linux on Android - Must use either Termux or PyDroid3
 * Mac OS (Sorry I don't know much about Macs)
+
+#### Python versions
+
+As of 9/25/2018 **both Python 3 and Python 2.7 are supported** when using **tkinter version** of PySimpleGUI! The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.  **None** of the other ports can use Python 2.
+
+Note that the 2.7 port will cease to exist on this GitHub on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
+
+By "will cease to exist on this GitHub" I mean, it will be deleted entirely.  No source code, no supporting programs.  Nothing.  If you're stuck using 2.7 in December, it would behoove you to fork the 2.7 code on Dec 31, 2019.  Legacy Python doesn't have a permanent home here.
 
 ## Output Devices
 
@@ -186,6 +200,8 @@ window.Close()
 You gotta admit that the code above is a lot more "fun" looking that tkinter code you've studied before.  Adding stuff to your GUI is ***trivial***.  You can clearly see the "mapping" of those 3 lines of code to specific Elements laid out in a Window.   It's not a trick.  It's how easy it is to code in PySimpleGUI.  With this simple concept comes the ability to create any window layout you wish.  There are parameters to move elements around inside the window should you need more control.
 
 It's a thrill to complete your GUI project way ahead of what you estimated.  Some people take that extra time to polish their GUI to make it even nicer, adding more bells and whistles because it's so easy and it's a lot of fun to see success after success as you write your program.
+
+Some are more advanced users and push the boundaries out and extend PySimpleGUI using their own extensions.
 
 Others, like IT people and hackers are busily cranking out GUI program after GUI program, and creating tools that others can use.  Finally there's an easy way to throw a GUI onto your program and give it to someone.  It's a pretty big leap in capability for some people.  It's GREAT to hear these successes.  It's motivating for everyone in the end.  Your success can easily motivate the next person to give it a try and also potentially be successful.
 
@@ -1032,18 +1048,18 @@ A lot of people ask about IDEs, and many outright fear PyCharm.  Listen up.... c
 
 To sum up that paragraph, stop whining like a little b*tch.  You're a grown man/woman, act like it.  "But it's hard..."  If you found this package, then you're a bright person :-)  Have some confidence in yourself for Christ sake.... I do.  Not going to lead you off some cliff, promise!
 
-Some IDEs provide virtual environments, but it's optional.  PyCharm is one example.  For these, you will either use their GUI interface to add packages or use their built-in terminal to do pip installs.  **It's not recommended for beginners to be working with Virtual Environments.**  They can be quite confusing.
+Some IDEs provide virtual environments, but it's optional.  PyCharm is one example.  For these, you will either use their GUI interface to add packages or use their built-in terminal to do pip installs.  **It's not recommended for beginners to be working with Virtual Environments.**  They can be quite confusing.  However, if you are a seasoned professional developer and know what you're doing, there is nothing about PySimpleGUI that will prevent you from working this way.  It's mostly a caution for beginners because more often than not, they get really messed up and confused.
 
 ### Officially Supported IDEs
 
-A number of IDEs have **known problems with PySimpleGUI**.  IDLE, Spyder, and Thonny all have problems with intermittent or inconsistent results, especially when a program exits.  Any IDE that is based on tkinter is going to have issues with the straight PySimpleGUI port.
+A number of IDEs have **known problems with PySimpleGUI**.  IDLE, Spyder, and Thonny all have known, demonstrable, problems with intermittent or inconsistent results, **especially when a program exits** and you want to continue to work with it. *** Any IDE that is based on tkinter is going to have issues with the straight PySimpleGUI port.***  This is NOT a PySimpleGUI problem.
 
 The official list of supported IDEs is:
 1. PyCharm (or course this is THE IDE to use for use with PySimpleGUI)
 2. Wing
 3. Visual Studio
 
-If you're on a Raspberry Pi or some other limited environment, then you'll have to use IDLE or Thonny.  Just be aware there could be problems using the debugger to debug due to both using tkinter.
+If you're on a Raspberry Pi or some other limited environment, then you'll may have to use IDLE or Thonny.  Just be aware there could be problems using the debugger to debug due to both using tkinter.
 
 ### Using The Docstrings (Don't skip this section)
 
@@ -1257,15 +1273,15 @@ Parameter Descriptions:
 |---|---|
 |*args|(Any) Variable number of items to display|
 |title|(str) Title to display in the window.|
-|button_color|button color (foreground, background)|
-|yes_no|(Default = False)|
-|auto_close|(Default = False)|
-|auto_close_duration||
-|size|(w,h) w=characters-wide, h=rows-high|
-|location|(Default = (None))|
-|non_blocking|(Default = False)|
+|button_color|Tuple[str, str] button color (foreground, background)|
+|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
+|auto_close|(bool) if True window will close itself|
+|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
+|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
 |||
-| **return** | Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
 
 ```python
 PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None), title=None, non_blocking=False)
@@ -1993,6 +2009,15 @@ while True:
 		break
 ```
 
+Actually, the more "Pythonic version" is used in most Demo Programs and examples.   They do  **exactly** the same thing.
+
+```python
+while True:
+	event, values = window.Read()
+	if event in (None, 'Quit'):
+		break
+```
+
 ### Element Events
 
 Some elements are capable of generating events when something happens to them.  For example, when a slider is moved, or list item clicked on or table row clicked on.  These events are not enabled by default.  To enable events for an Element, set the parameter `enable_events=True`.  This is the same as the older `click_submits` parameter.  You will find the `click_submits` parameter still in the function definition.  You can continue to use it. They are the same setting.  An 'or' of the two values is used.  In the future, click_submits will be removed so please migrate your code to using `enable_events`.
@@ -2040,13 +2065,13 @@ If you set a timeout parameter in your read, then the system TIMEOUT_KEY will be
 
 The second parameter from a Read call is either a list or a dictionary of the input fields on the Window.
 
-By default return values are a list of values, one entry for each input field.
+By default return values are a list of values, one entry for each input field, but for all but the simplest of windows the return values will be a dictionary.  This is because you are likely to use a 'key' in your layout.  When you do, it forces the return values to be a dictionary.
 
-Each of the Elements that are Input Elements will have a value in the list of return values.  You can unpack your GUI directly into the variables you want to use.
+Each of the Elements that are Input Elements will have a value in the list of return values.  If you know for sure that the values will be returned as a list, then you could get clever and unpack directly into variables.
 
 event, (filename, folder1, folder2, should_overwrite) = sg.Window('My title', window_rows).Read()
 
-Or, more commonly, you can unpack the return results separately.
+Or, more commonly, you can unpack the return results separately.  This is the preferred method because it works for **both** list and dictionary return values.
 
 ```python
 event, values = sg.Window('My title', window_rows).Read()
@@ -2055,9 +2080,10 @@ value1 = value_list[0]
 value2 = value_list[1]
 	 ...
 ```
-However, this method isn't good when you have a lot of input fields.  If you insert a new element into your window then you will have to shuffle your unpacks down, modifying each of the statements to reference `value_list[x]    `.
 
-The more common / advanced method is to request your values be returned as a dictionary.
+However, this method isn't good when you have a lot of input fields.  If you insert a new element into your window then you will have to shuffle your unpacks down, modifying each of the statements to reference `value_list[x]`.
+
+The more common method is to request your values be returned as a dictionary by placing keys on the "important" elements (those that you wish to get values from and want to interact with)
 
 ### `values` Variable - Return values as a dictionary
 
@@ -2081,31 +2107,32 @@ import PySimpleGUI as sg
 
 layout = [
 			[sg.Text('Please enter your Name, Address, Phone')],
-			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_name_')],
-			[sg.Text('Address', size=(15, 1)), sg.InputText('2', key='_address_')],
-			[sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='_phone_')],
+			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_NAME_')],
+			[sg.Text('Address', size=(15, 1)), sg.InputText('2', key='_ADDRESS_')],
+			[sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='_PHONE_')],
 			[sg.Submit(), sg.Cancel()]
 			]
 
 window = sg.Window('Simple data entry window', layout)
 event, values = window.Read()
+window.Close()
 
-sg.Popup(event, values, values['_name_'], values['_address_'], values['_phone_'])
+sg.Popup(event, values, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])
 ```
 
 To get the value of an input field, you use whatever value used as the `key` value as the index value.  Thus to get the value of the name field, it is written as
 
-	values['name']
+	values['_NAME_']
 
-Think of the variable values in the same way as you would a list, however, instead of using 0,1,2, to reference each item in the list, use the values of the key.  The Name field in the window above is referenced by `values['_name_']`.
+Think of the variable values in the same way as you would a list, however, instead of using 0,1,2, to reference each item in the list, use the values of the key.  The Name field in the window above is referenced by `values['_NAME_']`.
 
 You will find the key field used quite heavily in most PySimpleGUI windows unless the window is very simple.
 
-Another  convention you'll see in some of the demo programs is keys being named with an underscore at the beginning and the end.  You don't HAVE to do this... your key value may look like this:
-`key = 'name'`
+One convention you'll see in many of the demo programs is keys being named in all caps with an underscores at the beginning and the end.  You don't HAVE to do this... your key value may look like this:
+`key = '_NAME__'`
 
 The reason for this naming convention is that when you are scanning the code, these key values jump out at you.   You instantly know it's a key.  Try scanning the code above and see if those keys pop out.
-`key = '_name_'`
+`key = '_NAME__'`
 
 ## The Event Loop / Callback Functions
 
@@ -2127,118 +2154,107 @@ Here is a complete, short program to demonstrate each of these concepts.
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Click read to read the input value')],
-		  [sg.Input()],
-		  [sg.Button('Read'), sg.Exit()]]
-
-window = sg.Window('Persistent GUI Window', layout)
-
-while True:
-	event, values = window.Read()
-	if event is None or event == 'Exit':
-		break
-    if event == 'Read':     # the Read button was clicked
-        print('Doi)
-window.Close()
-```
-
-![readme example](https://user-images.githubusercontent.com/13696193/46566965-f4d65f80-c8f6-11e8-91a3-8cebad0cba90.jpg)
-
-In this Event Loop we are reading the window and then doing a series of button compares to determine what to do  based on the button that was clicks (value of `button` variable)
-
-The way buttons are presented to the caller in PySimpleGUI is ***not*** how *most* GUI frameworks handle button clicks.  Most GUI frameworks, including tkinter, use ***callback*** functions, a function you define would be called when a button is clicked.  This requires you to write asynchronous code, a concept beginners often stumble on and one that presents a barrier.
-
-There is a more communications that have to happen between parts of your program when using callbacks.  Callbacks break apart your program's logic apart and scatter it.  One of the larger hurdles for beginners to GUI programming are these callback functions.
-
-PySimpleGUI was specifically designed in a way so that callbacks would not be required.  There is no coordination between one function and another required.  You simply read your button click and take appropriate action at the same location in the code as when you read the button value.
-
-Whether or not this is a "proper" design for GUI programs can be debated.  It's not a terrible trade-off to run your own event loop and having a functioning GUI application versus one that maybe never gets written because callback functions were too much to grasp.
-
-## All Widgets / Elements
-
-This code utilizes many of the common Elements.  It does not include Tabs/Tab Groups.
-```python
-import PySimpleGUI as sg
-
 sg.ChangeLookAndFeel('GreenTan')
 
 # ------ Menu Definition ------ #
-menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],
-			['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
-			['Help', 'About...'], ]
+menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
+            ['&Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+            ['&Help', '&About...'], ]
 
 # ------ Column Definition ------ #
-column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],
-			[sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
-			[sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
-			[sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+column1 = [[sg.Text('Column 1', background_color='lightblue', justification='center', size=(10, 1))],
+           [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
+           [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
+           [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
 
 layout = [
-	[sg.Menu(menu_def, tearoff=True)],
-	[sg.Text('All graphic widgets in one window!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
-	[sg.Text('Here is some text.... and a place to enter text')],
-	[sg.InputText('This is my text')],
-	[sg.Frame(layout=[
-	[sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],
-	[sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
-	[sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
-		sg.Multiline(default_text='A second multi-line', size=(35, 3))],
-	[sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
-		sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
-	[sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
-	[sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
-		sg.Frame('Labelled Group',[[
-		sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),
-		sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
-		sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
-		sg.Column(column1, background_color='#F7F3EC')]])],
-	[sg.Text('_'  * 80)],
-	[sg.Text('Choose A Folder', size=(35, 1))],
-	[sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
-		sg.InputText('Default Folder'), sg.FolderBrowse()],
-	[sg.Submit(tooltip='Click to submit this window'), sg.Cancel()]
-]
+    [sg.Menu(menu_def, tearoff=True)],
+    [sg.Text('(Almost) All widgets in one Window!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+    [sg.Text('Here is some text.... and a place to enter text')],
+    [sg.InputText('This is my text')],
+    [sg.Frame(layout=[
+    [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],
+    [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
+    [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
+     sg.Multiline(default_text='A second multi-line', size=(35, 3))],
+    [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
+     sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
+    [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
+    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
+     sg.Frame('Labelled Group',[[
+     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25, tick_interval=25),
+     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
+     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
+     sg.Column(column1, background_color='lightblue')]])],
+    [sg.Text('_' * 80)],
+    [sg.Text('Choose A Folder', size=(35, 1))],
+    [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
+     sg.InputText('Default Folder'), sg.FolderBrowse()],
+    [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]]
 
-window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
-
+window = sg.Window('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
 event, values = window.Read()
 
 sg.Popup('Title',
-			'The results of the window.',
-			'The button clicked was "{}"'.format(event),
-			'The values are', values)
-```
-This is a somewhat complex window with quite a bit of custom sizing to make things line up well.  This is code you only have to write once.  When looking at the code, remember that what you're seeing is a list of lists.  Each row contains a list of Graphical Elements that are used to create the window.
+         'The results of the window.',
+         'The button clicked was "{}"'.format(event),
+         'The values are', values)
 
-![everything bagel](https://user-images.githubusercontent.com/13696193/45914128-87163800-be0e-11e8-9a83-7ee5960e88b9.jpg)
+```
+This is a complex window with quite a bit of custom sizing to make things line up well.  This is code you only have to write once.  When looking at the code, remember that what you're seeing is a list of lists.  Each row contains a list of Graphical Elements that are used to create the window.  If you see a pair of square brackets [ ] then you know you're reading one of the rows.  Each row of your GUI will be one of these lists.
+
+This window may look "ugly" to you which is because no effort has been made to make it look nice. It's purely functional. There are 30 Elements in the window.  THIRTY Elements. Considering what it does, it's miraculous or in the least incredibly impressive.  Why?  Because in less than 50 lines of code that window was created, shown, collected the results and showed the results in another window.
+
+50 lines.  It'll take you 50 lines of tkinter or Qt code to get the first 3 elements of the window written, if you can even do that.  
+
+No, let's be clear here... this window will take a massive amount of code using the conventional Python GUI packages.  It's a fact and if you care to prove me wrong, then by ALL means PLEASE do it.  Please write this window using tkinter, Qt, or WxPython and send the code!
+
+Note this window even has a menubar across the top, something easy to miss.
+
+![image](https://user-images.githubusercontent.com/13696193/62234730-4295ea00-b399-11e9-9281-5defb91886f6.png)
 
 Clicking the Submit button caused the window call to return.  The call to Popup resulted in this window.
 
-![everything bagel reseults](https://user-images.githubusercontent.com/13696193/45914129-87aece80-be0e-11e8-8aae-9a483a9ad4a6.jpg)
+![image](https://user-images.githubusercontent.com/13696193/62234737-47f33480-b399-11e9-8a2c-087cc49868cd.png)
 
-**`Note, button value can be None`**.  The value for `button` will be the text that is displayed on the button element when it was created.  If the user closed the window using something other than a button, then `button` will be `None`.   It is ***vitally*** ***important*** that your code contain the proper checks for None.  Always give your users a way out of the window.  Otherwise you'll end up  with windows that never properly close.
+**`Note, event values can be None`**.  The value for `event` will be the text that is displayed on the button element when it was created or the key for the button.  If the user closed the window using the "X" in the upper right corner of the window, then `event` will be `None`.   It is ***vitally*** ***important*** that your code contain the proper checks for None. 
 
-You can see in the results Popup window that the values returned are a list.  Each input field in the window generates one item in the return values list.  All input fields return a `string` except for Check Boxes and Radio Buttons.  These return `bool`.
+For "persistent windows",  **always give your users a way out of the window**.  Otherwise you'll end up  with windows that never properly close.  It's literally 2 lines of code that you'll find in every Demo Program.  While you're at it, make sure a `window.Close()` call is after your event loop so that your window closes for sure.
+
+You can see in the results Popup window that the values returned are a dictionary.  Each input field in the window generates one item in the return values list.  Input fields often return a `string`. Check Boxes and Radio Buttons return `bool`.  Sliders return float or perhaps int depending on how you configured it or which port you're using.
+
+If your window has no keys and it has no buttons that are "browse" type of buttons, then it will return values to you as a list instead of a dictionary.  If possible PySimpleGUI tries to return the values as a list to keep things simple.
+
+Note in the list of return values in this example, many of the keys are numbers.  That's because no keys were specified on any of the elements (although one was automatically made for you).  If you don't specify a key for your element, then a number will be sequentially assigned.  For elements that you don't plan on modifying or reading values from, like a Text Element, you can skip adding keys.  For other elements, you'll likely want to add keys so that you can easily access the values and perform operations on them.
 
 # Building Custom Windows
 
-You will find it ***much easier*** to write code using PySimpleGUI if you use an IDE such as PyCharm.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
+You will find it ***much easier*** to write code using PySimpleGUI if you use an IDE such as ***PyCharm***.  The features that show you documentation about the API call you are making will help you determine which settings you want to change, if any.  In PyCharm, two commands are particularly helpful.
 
 	Control-Q (when cursor is on function name) brings up a box with the function definition
 	Control-P (when cursor inside function call "()") shows a list of parameters and their default values
 
 ## Synchronous windows
 The most common use of PySimpleGUI is to display and collect information from the user.  The most straightforward way to do this is using a "blocking" GUI call.  Execution is "blocked" while waiting for the user to close the GUI window/dialog box.
-You've already seen a number of examples above that use blocking windows.  A truly non-blocking Read call looks like this:
+You've already seen a number of examples above that use blocking windows.  You'll know it blocks if the `Read` call has no timeout parameter.
+
+A blocking Read (one that waits until an event happens) look like this:
 
 ```python
-event, values = window.Read(timeout=0)
+event, values = window.Read()
+```
+
+A non-blocking / Async Read call looks like this:
+
+```python
+event, values = window.Read(timeout=100)
 ```
 
 You can learn more about these async / non-blocking windows toward the end of this document.
 
 # Window Object - Beginning a window
-The first step is to create the window object using the desired window customization.  
+
+The first step is to create the window object using the desired window customizations.  
 
 **IMPORTANT** - Many of the `Window` methods require you to either call `Window.Read` or `Window.Finalize` before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
 
@@ -2686,7 +2702,7 @@ PySimpleGUI computes the exact center of your window and centers the window on t
 
 ### Window Size
 
-You can get your window's size by access the `Size`property.  The window has to be Read once or Finalized in order for the value to be correct. Note that it's a property, not a call.
+You can get your window's size by access the `Size` property.  The window has to be Read once or Finalized in order for the value to be correct. Note that it's a property, not a call.
 
 `my_windows_size = window.Size`
 
@@ -2697,11 +2713,16 @@ window = Window('My Title', layout).Finalize()
 ```
 
 ### Element Sizes
-Note several variables that deal with "size".  Element sizes are measured in characters.  A Text Element with a size of 20,1 has a size of 20 characters wide by 1 character tall.
+
+There are multiple ways to set the size of Elements.  They are:
+
+1. The global default size - change using `SetOptions` function
+2. At the Window level - change using the parameter `default_element_size` in your call to `Window`
+3. At the Element level - each element has a `size` parameter
+
+Element sizes are measured in characters (there are exceptions).  A Text Element with  `size = (20,1)` has a size of 20 characters wide by 1 character tall.
 
 The default Element size for PySimpleGUI is `(45,1)`.
-
-Sizes can be set at the element level, or in this case, the size variables apply to all elements in the window.  Setting `size=(20,1)` in the window creation call will set all elements in the window to that size.
 
 There are a couple of widgets where one of the size values is in pixels rather than characters.  This is true for Progress Meters and Sliders.  The second parameter is the 'height' in pixels.
 
@@ -2813,17 +2834,37 @@ Some parameters that you  will see on almost all Elements are:
 - visible - Make elements appear and disappear
 
 #### Tooltip
+
 Tooltips are text boxes that popup next to an element if you hold your mouse over the top of it.  If you want to be extra kind to your window's user, then you can create tooltips for them by setting the parameter `tooltip` to some text string.  You will need to supply your own line breaks / text wrapping.  If you don't want to manually add them, then take a look at the standard library package `textwrap`.
 
 Tooltips are one of those "polish" items that really dress-up a GUI and show's a level of sophistication.  Go ahead, impress people, throw some tooltips into your GUI.  You can change the color of the background of the tooltip on the tkinter version of PySimpleGUI by setting `TOOLTIP_BACKGROUND_COLOR` to the color string of your choice.  The default value for the color is:
+
 `TOOLTIP_BACKGROUND_COLOR = "#ffffe0"`
 
 #### Size
+
+Info on setting default element sizes is discussed in the Window section above.
+
 Specifies the amount of room reserved for the Element.  For elements that are character based, such a Text, it is (# characters, # rows).  Sometimes it is a pixel measurement such as the Image element.  And sometimes a mix like on the Slider element (characters long by pixels wide).  
 
 Some elements, Text and Button, have an auto-size setting that is `on` by default. It will size the element based on the contents.  The result is that buttons and text fields will be the size of the string creating them.  You can turn it off.  For example, for Buttons, the effect will be that all buttons will be the same size in that window.
 
+#### Element Sizes - Non-tkinter Ports (Qt, WxPython, Web)
+
+In non-tkinter ports you can set the specific element sizes in 2 ways.  One is to use the normal `size` parameter like you're used to using.  This will be in characters and rows.
+
+The other way is to use a new parameter, `size_px`.  This parameter allows you to specify the size directly in pixels.  A setting of `size_px=(300,200)` will create an Element that is 300 x 200 pixels.
+
+Additionally, you can also indicate pixels using the `size` parameter, **if the size exceeds the threshold for conversion.**  What does that mean?  It means if your width is > 20 (`DEFAULT_PIXEL_TO_CHARS_CUTOFF`), then it is assumed you're talking pixels, not characters.  However, some of the "normally large" Elements have a cutoff value of 100.  These include, for example, the `Multline` and `Output` elements.
+
+If you're curious about the math used to do the character to pixels conversion, it's quite crude, but functional.  The conversion is completed with the help of this variable:
+
+`DEFAULT_PIXELS_TO_CHARS_SCALING = (10,26)`
+
+The conversion simply takes your `size[0]` and multiplies by 10 and your `size[1]` and multiplies it by 26.
+
 #### Colors
+
 A string representing color.  Anytime colors are involved, you can specify the tkinter color name such as 'lightblue' or an RGB hex value '#RRGGBB'.  For buttons, the color parameter is a tuple (text color, background color)
 
 Anytime colors are written as a tuple in PySimpleGUI, the way to figure out which color is the background is to replace the "," with the word "on".  ('white', 'red') specifies a button that is "white on red".  Works anywhere there's a color tuple.
@@ -2835,6 +2876,7 @@ The amount of room around the element in pixels. The default value is (5,3) whic
 If you want more pixels on one side than the other, then you can split the number into 2 number.  If you want 200 pixels on the left side, and 3 pixels on the right, the pad would be ((200,3), 3).  In this example, only the x-axis is split.
 
 #### Font
+
 Specifies the font family, size, and style.  Font families on Windows include:
 * Arial
 * Courier
@@ -2860,6 +2902,7 @@ To specify an underlined, Helvetica font with a size of 15 the values:
 
 If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.
 Keys are a way for you to "tag" an Element with a value that will be used to identify that element.  After you put a key in an element's definition, the values returned from Read will use that key to tell you the value.  For example, if you have an input field:
+
 `Input(key='mykey')`
 
 And your read looks like this: `event, values = Read()`
@@ -2879,9 +2922,12 @@ Most of the time they are simple text strings.  In the Demo Programs, keys are w
 `_KEY_NAME_` (underscore at beginning and end with all caps letters).  You don't have to follow that convention.  It's used so that you can quickly spot when a key is being used.
 
 #### Visible
+
 Beginning in version 3.17 you can create Elements that are initially invisible that you can later make visible.
 
-To create an invisible Element, place the element in the layout like you normally would and add the parameter `visible=False`.
+To create an invisible Element, place the element in the layout like you normally would and add the parameter 
+
+`visible=False`.
 
 Later when you want to make that Element visible you simply call the Element's `Update` method and pass in the parameter `visible=True`
 
@@ -2889,11 +2935,13 @@ This feature works best on Qt, but does work on the tkinter version as well.  Th
 
 ## Shortcut Functions / Multiple Function Names
 
-Perhaps not the best idea, but one that's done none the less is the naming of methods and functions.  Some of the more "Heavily Travelled Elements" have "shortcuts".  
+Perhaps not the best idea, but one that's done none the less is the naming of methods and functions.  Some of the more "Heavily Travelled Elements" (and methods/functions) have "shortcuts".  
 
 In other words, I am lazy and don't like to type. The result is multiple ways to do exactly the same thing.  Typically, the Demo Programs and other examples use the full name, or at least a longer name.  Thankfully PyCharm will show you the same documentation regardless which you use.
 
- This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.
+This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.  
+
+It's an ongoing thing.  If you don't stay up to date and one of the newer shortcuts is used, you'll need to simply rename that shortcut. 
 
 ## Text Element | `T == Txt == Text`
 Basic Element. It displays text. That's it.
@@ -2931,7 +2979,7 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |text|(str) The text to display. Can include /n to achieve multiple lines|
-|size|(int, int) (width, height) width = characters-wide, height = rows-high|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) if True size of the Text Element will be sized to fit the string provided in 'text' parm|
 |click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
 |enable_events|(bool) Turns on the element specific events. Text events happen when the text is clicked|
@@ -3054,7 +3102,7 @@ Parameter Descriptions:
 |disabled|(bool) set disable state|
 |autoscroll|(bool) If True the contents of the element will automatically scroll as more data added to the end|
 |border_width|(int) width of border around element in pixels|
-|size|(int, int) (width, height) width = characters-wide, height = rows-high|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) if True will size the element to match the length of the text|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
@@ -3172,7 +3220,7 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |default_text|(str) Text initially shown in the input box as a default value(Default value = '')|
-|size|(int, int) (width, height) w=characters-wide, h=rows-high|
+|size|Tuple[int, int] (width, height) w=characters-wide, h=rows-high|
 |disabled|(bool) set disable state for element (Default = False)|
 |password_char|(char) Password character if this is a password field (Default value = '')|
 |justification|(str) justification for data display. Valid choices - left, right, center|
@@ -3290,7 +3338,7 @@ Parameter Descriptions:
 |---|---|
 |values|List[Any] values to choose. While displayed as text, the items returned are what the caller supplied, not text|
 |default_value|(Any) Choice to be displayed as initial value. Must match one of values variable contents|
-|size|(int, int) (width, height) width = characters-wide, height = rows-high|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) True if element should be the same size as the contents|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
@@ -3560,6 +3608,8 @@ There is an important difference between Qt and tkinter sliders.  On Qt, the sli
 
 ### Slider Methods
 
+#### Update
+
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
@@ -3577,6 +3627,34 @@ Parameter Descriptions:
 |range|Union[Tuple[int, int], Tuple[float, float] Sets a new range for slider|
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
 
 ## Radio Element
 
@@ -3620,7 +3698,7 @@ Parameter Descriptions:
 |group_id|(Any) Groups together multiple Radio Buttons. Any type works|
 |default|(bool). Set to True for the one element of the group you want initially selected|
 |disabled|(bool) set disable state|
-|size|(int, int) (width, height) width = characters-wide, height = rows-high|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) if True will size the element to match the length of the text|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
@@ -3670,6 +3748,20 @@ Sets all Radio Buttons in the group to not selected
 ResetGroup()
 ```
 
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
 #### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
@@ -3717,7 +3809,7 @@ Parameter Descriptions:
 |---|---|
 |text|(str) Text to display next to checkbox|
 |default|(bool). Set to True if you want this checkbox initially checked|
-|size|(int, int) (width, height) width = characters-wide, height = rows-high|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) if True will size the element to match the length of the text|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |background_color|(str) color of background|
@@ -3760,6 +3852,20 @@ Return the current state of this checkbox
 |Name|Meaning|
 |---|---|
 | **return** | (bool) Current state of checkbox |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
 
 #### SetTooltip
 
@@ -3812,7 +3918,7 @@ Parameter Descriptions:
 |disabled|(bool) set disable state|
 |change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
 |enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
-|size|(int, int) (width, height) width = characters-wide, height = rows-high|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
 |auto_size_text|(bool) if True will size the element to match the length of the text|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |background_color|(str) color of background|
@@ -3855,6 +3961,20 @@ item returned will be an int (not a string)
 |Name|Meaning|
 |---|---|
 | **return** | (Any) The currently visible entry |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
 
 #### SetTooltip
 
@@ -3913,6 +4033,20 @@ Parameter Descriptions:
 |enable_events|(bool) Turns on the element specific events. For an Image element, the event is "image clicked"|
 
 ### Methods
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
 
 #### SetTooltip
 
@@ -4311,6 +4445,55 @@ If there are more than 1 button on a window, the FIRST button that is of type Cl
 
 ### Methods
 
+#### Click
+
+Generates a click of the button as if the user clicked the button
+        Calls the tkinter invoke method for the button
+
+```python
+Click()
+```
+
+#### GetText
+
+Returns the current text shown on a button
+
+`GetText()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (str) The text currently displayed on the button |
+
+#### SetFocus
+
+Sets the focus to this button.  Can be forced with parameter
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) If True will call focus_force instead of focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
@@ -4336,14 +4519,6 @@ Parameter Descriptions:
 |visible|(bool) control visibility of element|
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
-
-Returns the current text shown on a button
-
-`GetText()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (str) The text currently displayed on the button |
 
 ## ButtonMenu Element
 
@@ -4504,7 +4679,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 
 ## Output Element
-The Output Element is a re-direction of Stdout.  Anything "printed" will be displayed in this element.
+The Output Element is a re-direction of Stdout.  **Anything "printed" will be displayed in this element.**  This is the "trivial" way to show scrolling text in your window.  It's as easy as dropping an Output Element into your window and then calling print as much as you want.
 
 Note that you will NOT see what you `print` until you call either window.Read or window.Refresh.  If you want to immediately see what was printed, call window.Refresh() immediately after your print statement.
 
@@ -4532,7 +4707,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|size|Tuple[(int), (int)] (w,h) w=characters-wide, h=rows-high|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
@@ -4543,6 +4718,10 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 
 ### Methods
+
+#### Update
+
+This method is used to "clear" the Output window.  If you have a lot of text in it, setting the value to `` will clear it.  The Update also has a visibility parameter like other elements.
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4559,7 +4738,7 @@ Parameter Descriptions:
 
 ----
 
-Here's a complete solution for a chat-window using an Async window with an Output Element
+Here's a complete solution for a chat-window using an Output Element.  To display data that's received, you would to simply "print" it and it will show up in the output area.  You'll find this technique used in several Demo Programs including the HowDoI application.
 
 ```python
 import PySimpleGUI as sg
@@ -4586,6 +4765,7 @@ ChatBot()
 ```
 
 ## Column Element
+
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.
 
 Columns are specified in exactly the same way as a window is, as a list of lists.
@@ -4596,7 +4776,7 @@ Columns are needed when you have an element that has a height > 1 line on the le
 
 ![column](https://user-images.githubusercontent.com/13696193/44959988-66b92480-aec5-11e8-9c26-316ed24a68c0.jpg)
 
-The Column Element has 1 required parameter and 1 optional (the layout and the background color).  Setting the background color has the same effect as setting the window's background color, except it only affects the column rectangle.
+Without a Column Element you can't create a layout like this.  But with it, you should be able to closely match any layout created using tkinter only.
 
 ```
 Column(layout,
@@ -4700,7 +4880,7 @@ Parameter Descriptions:
 |background_color|(str) background color of the Frame|
 |title_location|(enum) location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT|
 |relief|(enum) relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
-|size|Tuple(int, int) (width in characters, height in rows) (note this parameter may not always work)|
+|size|Tuple[int, int] (width in characters, height in rows) (note this parameter may not always work)|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |border_width|(int) width of border around element in pixels|
@@ -5009,7 +5189,8 @@ DrawText(text,
     location,
     color="black",
     font=None,
-    angle=0)
+    angle=0,
+    text_location="center")
 ```
 
 Parameter Descriptions:
@@ -5021,6 +5202,7 @@ Parameter Descriptions:
 |color|(str) text color|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
+|text_location|(enum) "anchor" location for the text. Values start with TEXT_LOCATION_|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text |
 
@@ -7214,6 +7396,57 @@ A combination of user requests, and needs of new `imwatchingyou` debugger
 * Listbox.Update - New parameter - scroll_to_index - scroll view so that index is shown at the top
 * First PyPI release to use new documentation!
 
+## PySimpleGUI 4.1 Anniversary Release!  4-Aug-2019
+
+NEVER has there been this long of a lag, sorry to all users!
+Long time coming.  Docstrings continue to be a focus.
+
+* Version can be found using PySimpleGUI.version
+* New bit of licensing info at the top of the file
+* Types used in the doc strings. Also type hints in some comments. Because also running on 2.7 can't use full typing
+* Added using of Warnings. Just getting started using this mechanism. May be great, maybe not. We'll see with this change
+* Added TOOLTIP_BACKGROUND_COLOR which can be changed (it's tkinter only setting however so undertand this!)
+* Graph.DrawText.  Ability to set `text_location` when drawing text onto a Graph Element.  Determines what part of the text will be located at the point you provide when you draw the text.   Choices are:
+	* TEXT_LOCATION_TOP
+	* TEXT_LOCATION_BOTTOM
+	* TEXT_LOCATION_LEFT
+	* TEXT_LOCATION_RIGHT
+	* TEXT_LOCATION_TOP_LEFT
+	* TEXT_LOCATION_TOP_RIGHT
+	* TEXT_LOCATION_BOTTOM_LEFT
+	* TEXT_LOCATION_BOTTOM_RIGT
+	* TEXT_LOCATION_CENTER
+* Flag ENABLE_TK_WINDOWS = False.  If True, all windows will be made using only tk.Tk()
+* SetFocus available for all elements now due to it being added to base class. May NOT work on all elements however
+* Added Combo.GetSElectedItemsIndexes() - returns a list of all currently selected items
+* Fixed Listbox.Update - set_to_index changed to be an int, list or tuple
+* Added parent parameter to call to tkinter's askopenfilename, directory, filenames.  Not sure why the root wasn't passed in before
+* Button.Update - also sets the activebackground to the button's background color
+* Graph - New parameter when creating. `float_values`.  If True, then you're indicating that your coordinate system is float not int based
+* Graph.Update - made background color optional parm so that visible only can be set
+* Frame.Layout returns self now for chaining
+* TabGroup.Layout returns self now for chaining
+* Column.Layout returns self now for chaining
+* Menu.Update menu_definition is now optional to allow for changing visibility only
+* Added inivisiblity support for menu bars
+* Table.Update supports setting alternating row color and row_colors (list of rows and the color to set)
+* Set window.TimeoutKey to TIMEOUT_KEY initially
+* Window - check for types for title (should be string) and layout (should be list) and warns user if not correct
+* Window - renamed some methods by adding _ in front (like Show) as they are NOT user callable
+* Another shortcut! Elem = Element = FindElement
+* SaveToDisk - will not write buttons to file.  Fixed problems due to buttons having keys
+* Remapped Windowl.CloseNonBlockingForm, Window.CloseNonBlocking to be Window.CloseNonBlocking
+* Fix for returning values from a combo list. Wasn't handling current value not in list of provided values
+* Spin - Returns an actual value from list provided when Spin was created or updated
+* Chaneged FillFormWithValues to use the new internal AllKeysDict dictionary
+* Added try when creating combo. Problem happens when window is created twice.  Prior window had already created the style
+* Added list of table (tree) ids to the Table element
+* Enabled autoclose to use fractions of a second
+* Added a try around one of the destroys because it could fail if user aborted
+* Popup - Icon is no longer set to default by default
+* Fix for debugger trying to execute a REPL comand.  The exec is only avilable in Python 3
+* main() will display the version number in big letters when program is running
+
 ### Upcoming
 Make suggestions people!  Future release features
 
@@ -7256,7 +7489,8 @@ tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, 
 From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
 
 ## Author
-Mike - who wrote PySimpleGUI is not important. It's the software that's important
+
+***Who*** wrote PySimpleGUI is not important. What's important is that it works well and enables anyone that wants to create a GUI to do so.
 
 ## License
 
