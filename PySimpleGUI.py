@@ -68,14 +68,14 @@ And just what the fuck is that?  Well, it's LPGL3+ and these FOUR simple stipula
 4. The "Official" version of PySimpleGUI and the associated documentation lives on two (and **only** two) places:
        1. GitHub - (http://www.PySimpleGUI.com) currently pointing at:
           https://github.com/PySimpleGUI/PySimpleGUI
-       2. Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
+       2. PyPI - pip install PySimpleGUI is the customary way of obtaining the latest release
+       
+       THE official documentation location is:
+          Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
           https://pysimplegui.readthedocs.io/en/latest/
    If you've obtained this software in any other way, then those listed here, then SUPPORT WILL NOT BE PROVIDED.
-   Please don't waste anyone's time by filing an Issue unless you have a genuine copy of the software. 
 
 -----------------------------------------------------------------------------------------------------------------
-
-I absolutely hate having to include this kind of nonsense, but every word is here for solid reasons.
 
 How about having FUN with this package??  Terrible note to begin this journey of actually having fun making
 GUI based applications so I'll try to make it up to you.
@@ -95,8 +95,6 @@ http://Cookbook.PySimpleGUI.org
 The User Manual and the Cookbook are both designed to paint some nice looking GUIs on your screen within 5 minutes of you deciding to PySimpleGUI out.
 
 """
-
-
 
 
 # do the Python 2 or 3 check so the right tkinter stuff can get pulled in
@@ -1026,7 +1024,7 @@ class OptionMenu(Element):
         """
         self.Values = values
         self.DefaultValue = default_value
-        self.TKOptionMenu = None  # type: tk.OptionMenu
+        self.Widget = self.TKOptionMenu = None  # type: tk.OptionMenu
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
