@@ -2748,7 +2748,7 @@ class Graph(Element):
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
         # self._TKCanvas = None               # type: tk.Canvas
-        self._TKCanvas2 = None  # type: tk.Canvas
+        self._TKCanvas2 = self.Widget = None  # type: tk.Canvas
         self.ChangeSubmits = change_submits or enable_events
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
@@ -3697,16 +3697,16 @@ class Slider(Element):
 
 
 # ---------------------------------------------------------------------- #
-#                          TkScrollableFrame (Used by Column)            #
+#                          TkFixedFrame (Used by Column)                 #
 # ---------------------------------------------------------------------- #
 class TkFixedFrame(tk.Frame):
-    """ """
+    """
+    A tkinter frame that is used with Column Elements that do not have a scrollbar
+    """
     def __init__(self, master, **kwargs):
         """
-
-        :param master:
-        :param **kwargs:
-
+        :param master: (tk.Widget) The parent widget
+        :param **kwargs: The keyword args
         """
         tk.Frame.__init__(self, master, **kwargs)
 
@@ -3730,17 +3730,17 @@ class TkFixedFrame(tk.Frame):
 #                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
 class TkScrollableFrame(tk.Frame):
-    """ """
+    """
+    A frame with one or two scrollbars.  Used to make Columns with scrollbars
+    """
     def __init__(self, master, vertical_only, **kwargs):
         """
 
-        :param master: ????????????????????????
-        :param vertical_only: ????????????????????????
-        :param **kwargs:
-
+        :param master: (tk.Widget) The parent widget
+        :param vertical_only: (bool) if True the only a vertical scrollbar will be shown
+        :param **kwargs: The keyword parms
         """
         tk.Frame.__init__(self, master, **kwargs)
-
         # create a canvas object and a vertical scrollbar for scrolling it
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
         self.vscrollbar.pack(side='right', fill="y", expand="false")
@@ -5000,6 +5000,12 @@ class Window:
         self.TransparentColor = transparent_color
         self.UniqueKeyCounter = 0
         self.DebuggerEnabled = debugger_enabled
+
+        if type(title) != str:
+            warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
+        if layout is not None and type(layout) != list:
+            warnings.warn('Your layout is not a list... this is not good!')
+
         if layout is not None:
             self.Layout(layout)
 
