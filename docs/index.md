@@ -2192,7 +2192,7 @@ layout = [
      sg.InputText('Default Folder'), sg.FolderBrowse()],
     [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]]
 
-window = sg.Window('Everything bagel', default_element_size=(40, 1), grab_anywhere=False).Layout(layout)
+window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
 event, values = window.Read()
 
 sg.Popup('Title',
@@ -2772,11 +2772,11 @@ Call to force a window to go through the final stages of initialization.  This w
 
 If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
-#### Read(timeout=None, timeout_key='__TIMEOUT__')
+#### Read(timeout=None, timeout_key=TIMEOUT_KEY)
 
 Read the Window's input values and button clicks in a blocking-fashion
 
-Returns event, values.  Adding a timeout can be achieved by setting timeout=number of milliseconds before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event.   If you do not specify a timeout key, then the value `TIMEOUT_KEY` will be returned.
+Returns event, values.  Adding a timeout can be achieved by setting timeout=*number of milliseconds* before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event.   If you do not specify a timeout key, then the value `TIMEOUT_KEY` will be returned.
 
 If you set the timeout = 0, then the Read will immediately return rather than waiting for input or for a timeout. This is the same as the old ReadNonBlocking call.
 
@@ -6148,7 +6148,7 @@ layout = [[sg.Text('Persistent window')],
           [sg.Input()],
           [sg.Button('Read'), sg.Exit()]]
 
-window = sg.Window('Window that stays open').Layout(layout)
+window = sg.Window('Window that stays open', layout)
 
 while True:
     event, values = window.Read()
@@ -6271,7 +6271,7 @@ layout = [[sg.Text('')],
           sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
-window = sg.Window('Running Timer', no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True).Layout(layout)
+window = sg.Window('Running Timer', layout, no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
 
 # ----------------  main loop  ----------------
 current_time = 0
@@ -6315,7 +6315,7 @@ import PySimpleGUI as sg
 layout = [ [sg.Text('My layout', key='_TEXT_')],
            [sg.Button('Read')]]
 
-window = sg.Window('My new window').Layout(layout)
+window = sg.Window('My new window', layout)
 
 while True:             # Event Loop
     event, values = window.Read()
@@ -6334,7 +6334,7 @@ layout = [ [sg.Text('My layout', key='_TEXT_')],
            [sg.Button('Read')]
          ]
 
-window = sg.Window('My new window').Layout(layout).Finalize()
+window = sg.Window('My new window', layout).Finalize()
 
 window.Element('_TEXT_').Update('My new text value')
 
@@ -6373,7 +6373,7 @@ layout = [[sg.Spin([sz for sz in range(6, 172)], font=('Helvetica 20'), initial_
            sg.Text("Aa", size=(2, 1), font="Helvetica "  + str(fontSize), key='text')]]
 
 sz = fontSize
-window = sg.Window("Font size selector", grab_anywhere=False).Layout(layout)
+window = sg.Window("Font size selector", layout, grab_anywhere=False)
 # Event Loop
 while True:
     event, values= window.Read()
@@ -6412,20 +6412,25 @@ It works as follows.  The call to `window.FindElement` returns the Element objec
 
 The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used as targets in  Button calls.
 
-### Locating Elements
+### Locating Elements (FindElement == Element == Elem)
 
 The Window method call that's used to find an element is:
 `FindElement`
 or the shortened version
 `Element`
+or even shorter (version 4.1+)
+`Elem`
 
 When you see a call to window.FindElement or window.Element, then you know an element is being addressed.  Normally this is done so you can call the element's Update method.
 
 ### ProgressBar / Progress Meters
 
-Note that to change a progress meter's progress, you call UpdateBar, not Update.      It's an old naming convention that's left over from before the Update calls were implemented.
+Note that to change a progress meter's progress, you call `UpdateBar`, not `Update`.
 
 # Keyboard & Mouse Capture
+
+NOTE - keyboard capture is currently formatted uniquely among the ports. For basic letters and numbers there is no great differences, but when you start adding Shift and Control or special keyus, they all behave slightly differently.  Your best bet is to simply print what is being returned to you to determine what the format for the particular port is.
+
 Beginning in version 2.10 you can capture keyboard key presses and mouse scroll-wheel events.   Keyboard keys can be used, for example, to detect the page-up and page-down keys for a PDF viewer.  To use this feature, there's a boolean setting in the Window call `return_keyboard_events` that is set to True in order to get keys returned along with buttons.
 
 Keys and scroll-wheel events are returned in exactly the same way as buttons.
@@ -6438,47 +6443,31 @@ Keyboard keys return 2 types of key events. For "normal" keys (a,b,c, etc), a si
 
 Key Sym is a string such as 'Control_L'.  The Key Code is a numeric representation of that key.  The left control key, when pressed will return the value 'Control_L:17'
 
-    import PySimpleGUI as sg
+```python
+import PySimpleGUI as sg
 
-    # Recipe for getting keys, one at a time as they are released
-    # If want to use the space bar, then be sure and disable the "default focus"
+# Recipe for getting keys, one at a time as they are released
+# If want to use the space bar, then be sure and disable the "default focus"
 
-    with sg.Window("Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:
-        text_elem = sg.Text("", size=(18, 1))
-        layout = [[sg.Text("Press a key or scroll mouse")],
-                  [text_elem],
-                  [sg.Button("OK")]]
+text_elem = sg.Text("", size=(18, 1))
 
-        window.Layout(layout)
-        # ---===--- Loop taking in user input --- #
-    while True:
-        event, value = window.Read()
+layout = [[sg.Text("Press a key or scroll mouse")],
+          [text_elem],
+          [sg.Button("OK")]]
 
-        if event == "OK"  or event is None:
-            print(event, "exiting")
-            break
-       text_elem.Update(event)
+window = sg.Window("Keyboard Test", layout,  return_keyboard_events=True, use_default_focus=False)
+
+# ---===--- Loop taking in user input --- #
+while True:
+    event, value = window.Read()
+
+    if event == "OK" or event is None:
+        print(event, "exiting")
+        break
+    text_elem.Update(event)
+```
 
 You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.
-
-### Realtime Keyboard Capture
-Use realtime keyboard capture by calling
-
-    import PySimpleGUI as sg
-
-    with sg.Window("Realtime Keyboard Test", return_keyboard_events=True, use_default_focus=False) as window:
-        layout = [[sg.Text("Hold down a key")],
-                  [sg.Button("OK")]]
-
-        window.Layout(layout)
-
-        while True:
-            event, value = window.Read(timeout=0)
-            if event == "OK"  or event is None:
-                print(event, value, "exiting")
-                break
-            if event != sg.TIMEOUT_KEY:
-                print(event)
 
 # Menus
 
@@ -6590,6 +6579,8 @@ To add the `key` `_MY_KEY_` to the Special menu entry, the code would be:
 
 # Running Multiple Windows
 
+This is where PySimpleGUI continues to be simple, but the problem space just went into the realm of "Complex".
+
 If you wish to run multiple windows in your event loop, then there are 2 methods for doing this.
 
 1. First window does not remain active while second window is visible
@@ -6600,10 +6591,21 @@ You will find the 2 design matters in 2 demo programs in the Demo Program area o
 ***Critically important***
 When creating a new window you must use a "fresh" layout every time.  You cannot reuse a layout from a previous window.  As a result you will see the layout for window 2 being defined inside of the larger event loop.
 
-A rule of thumb to follow:
+If you have a window layout that you used with a window and you've closed the window, you cannot use the specific elements that were in that window.  You must RE-CREATE your `layout` variable every time you create a new window.  Read that phrase again....  You must RE-CREATE your `layout` variable every time you create a new window.  That means you should have a statemenat that begins with `layout = `.  Sorry to be stuck on this point, but so many people seem to have trouble following this simple instruction.
 
-> If you are calling `Window` then you should define your window layout
-> in the statement just prior to the `Window` call.
+## THE GOLDEN RULE OF WINDOW LAYOUTS
+
+***Thou shalt not re-use a windows's layout.... ever!***
+
+Or more explicitly put....
+
+> If you are calling `Window` then you should define your window layout in the statement just prior to the `Window` call.
+
+## Demo Programs For Multiple Windows
+
+There are several "Demo Programs" that will help you run multiple windows.  Please download these programs and FOLLOW the example they have created for you.
+
+Here is ***some*** of the code patterns you'll find when looking through the demo programs.
 
 ## Multi-Window Design Pattern 1 - both windows active
 
@@ -6617,7 +6619,7 @@ layout = [[ sg.Text('Window 1'),],
           [sg.Text('', key='_OUTPUT_')],
           [sg.Button('Launch 2'), sg.Button('Exit')]]
 
-win1 = sg.Window('Window 1').Layout(layout)
+win1 = sg.Window('Window 1', layout)
 
 win2_active = False
 while True:
@@ -6631,7 +6633,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2').Layout(layout2)
+        win2 = sg.Window('Window 2', layout)
 
     if win2_active:
         ev2, vals2 = win2.Read(timeout=100)
@@ -6652,7 +6654,7 @@ layout = [[ sg.Text('Window 1'),],
           [sg.Text('', key='_OUTPUT_')],
           [sg.Button('Launch 2')]]
 
-win1 = sg.Window('Window 1').Layout(layout)
+win1 = sg.Window('Window 1', layout)
 win2_active=False
 while True:
     ev1, vals1 = win1.Read(timeout=100)
@@ -6666,7 +6668,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2').Layout(layout2)
+        win2 = sg.Window('Window 2', layout)
         while True:
             ev2, vals2 = win2.Read()
             if ev2 is None or ev2 == 'Exit':
