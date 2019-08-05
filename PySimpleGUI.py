@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.1.0.18 Unreleased - Anniversary Edition"
+version = __version__ = "4.2.0.0 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3124,8 +3124,9 @@ class Graph(Element):
 
         :param event: (event) event info from tkinter. Note not used in this method
         """
-
-        self.ClickPosition = (None, None)
+        if not self.DragSubmits:            # only report mouse up for drag operations
+            return
+        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
         self.LastButtonClickedWasRealtime = not self.DragSubmits
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
@@ -3134,7 +3135,7 @@ class Graph(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
         if self.DragSubmits:
-            self.ParentForm.LastButtonClicked = None
+            self.ParentForm.LastButtonClicked += '+UP'
         self.MouseButtonDown = False
 
     # button callback
