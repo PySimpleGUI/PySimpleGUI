@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0.0 Unreleased"
+version = __version__ = "4.2.0.1 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -10852,10 +10852,9 @@ class _Debugger():
 
 def show_debugger_window(location=(None, None), *args):
     """
-
-    :param location:
-    :param *args:
-
+    Shows the large main debugger window
+    :param location: Tuple[int, int] Locations (x,y) on the screen to place upper left corner of the window
+    :param *args:  Not used
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
@@ -10876,10 +10875,10 @@ def show_debugger_window(location=(None, None), *args):
 
 def show_debugger_popout_window(location=(None, None), *args):
     """
+    Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
-    :param location:
-    :param *args:
-
+    :param location: Tuple[int, int] Locations (x,y) on the screen to place upper left corner of the window
+    :param *args:  Not used
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
