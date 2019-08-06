@@ -7085,10 +7085,11 @@ def main():
     layout = [
         [Menu(menu_def, key='_MENU_', text_color='yellow', background_color='#475841',  font='Courier 14')],
         # [T('123435', size=(1,8))],
+        [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
         # [OptionMenu([])],
         [T('System platform = %s'%sys.platform)],
         [Image(data=DEFAULT_BASE64_ICON, enable_events=True)],
-        [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
+        [Text('VERSION {}'.format(version), text_color='red', font='Courier 24')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
