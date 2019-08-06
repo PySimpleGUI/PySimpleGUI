@@ -1,4 +1,6 @@
 #usr/bin/python3
+version = __version__ = "0.30.0.0 Unreleased"
+
 import sys
 import types
 import datetime
@@ -3550,7 +3552,8 @@ class Window:
             else:
                 self.window = userdata2         # type: Window
             self.master_widget = None
-            self.window.App = self
+            print("new App instance %s" % str(id(self)))
+            # self.window.App = self
             Window.App = self
             self.lines_shown = []
 
@@ -3558,6 +3561,10 @@ class Window:
                 # res_path = os.path.dirname(os.path.abspath(__file__))
                 # print('res path', res_path)
                 super(Window.MyApp, self).__init__(*args,  static_file_path={'C':'c:','c':'c:','D':'d:', 'd':'d:', 'E':'e:', 'e':'e:', 'dot':'.', '.':'.'})
+
+        def _instance(self):
+            remi.App._instance(self)
+            self.window.App = remi.server.clients[self.session]
 
         def log_message(self, *args, **kwargs):
             pass
@@ -4090,9 +4097,9 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     element = element       # type: Checkbox
                     value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_RADIO:
-                    RadVar = element.TKIntVar.get()
-                    this_rowcol = EncodeRadioRowCol(row_num, col_num)
-                    value = RadVar == this_rowcol
+                    # RadVar = element.TKIntVar.get()
+                    # this_rowcol = EncodeRadioRowCol(row_num, col_num)
+                    value = False
                 elif element.Type == ELEM_TYPE_BUTTON:
                     if top_level_form.LastButtonClicked == element.ButtonText:
                         button_pressed_text = top_level_form.LastButtonClicked
@@ -4110,24 +4117,26 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     element = element  # type: Combo
-                    value = element.Widget.get_value()
+                    value = element.DefaultValue
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
-                    value = element.TKStringVar.get()
+                    # value = element.TKStringVar.get()
+                    value = None
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                     element = element  # type: Listbox
-                    value = element.Widget.get_value()
-                    value = [value,]
+                    value = element.DefaultValues
+                    # value = [value,]
                     # items = element.TKListbox.curselection()
                     # value = [element.Values[int(item)] for item in items]
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
                     element = element       # type: Spin
-                    value = element.Widget.get_value()
+                    value = element.DefaultValue
+                    # value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                     element = element       # type: Slider
-                    value = element.Widget.get_value()
+                    value = element.DefaultValue
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     element = element  # type: Multiline
-                    value = element.Widget.get_value()
+                    value = element.DefaultText
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
                         value = element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
