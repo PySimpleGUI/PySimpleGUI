@@ -124,8 +124,6 @@ from typing import List, Any, Union, Tuple, Dict    # because this code has to r
 from random import randint
 import warnings
 
-
-
 g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
@@ -7249,7 +7247,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.TKColFrame = TkFixedFrame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                         element.TKColFrame.TKFrame.update()
-                        if element.Size[1] is not None:
+                        if None not in (element.Size[0], element.Size[1]):
+                            element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
+                        elif element.Size[1] is not None:
                             element.TKColFrame.canvas.config(height=element.Size[1])
                         elif element.Size[0] is not None:
                             element.TKColFrame.canvas.config(width=element.Size[0])
@@ -9818,6 +9818,7 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
     :param no_titlebar:  (Default = False)
     :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
     :param location: Location on screen to display
+    :param location:
     :param location:
 
     """
