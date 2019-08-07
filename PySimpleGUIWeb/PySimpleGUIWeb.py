@@ -1,5 +1,5 @@
 #usr/bin/python3
-version = __version__ = "0.30.0.0 Unreleased"
+version = __version__ = "0.31.0.0 Unreleased"
 
 import sys
 import types
@@ -3554,7 +3554,7 @@ class Window:
             self.master_widget = None
             print("new App instance %s" % str(id(self)))
             # self.window.App = self
-            Window.App = self
+            #Window.App = self
             self.lines_shown = []
 
             if userdata2 is None:
