@@ -2261,6 +2261,19 @@ class TabGroup(Element):
         if self.ChangeSubmits:
             element_callback_quit_mainloop(self)
 
+    def SelectTab(self, index):
+        try:
+            self.QT_QTabWidget.setCurrentIndex(index)
+        except:
+            pass
+
+    def GetCurrent(self):
+        try:
+            index = self.QT_QTabWidget.currentIndex()
+        except:
+            index = None
+        return index
+
 
     def __del__(self):
         for row in self.Rows:
@@ -5530,6 +5543,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_Dial)
             # -------------------------  Stretch element  ------------------------- #
             elif element_type == ELEM_TYPE_STRETCH:
+                element = element       # type: Stretch
                 element.Widget = qt_row_layout.addStretch(1)
             # -------------------------  TABLE element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
@@ -5577,6 +5591,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TableWidget)
             # -------------------------  Tree element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
+                element = element   # type: Tree
                 element.Widget = element.QT_QTreeWidget = QTreeWidget()
                 if element_size != (None, None):
                     element.QT_QTreeWidget.setFixedWidth(element_size[0])
