@@ -3577,6 +3577,20 @@ class TabGroup(Element):
         except Exception as e:
             print('Exception Selecting Tab {}'.format(e))
 
+
+    def GetCurrentIndex(self):
+        """
+        Returns the "index" of the currently selected tab in this TabGroup.  Indexes start at 0. Returns None if there is an error.
+
+        :return: Union[int, None] The index number of the currently selected tab or None if there was a problem
+        """
+        try:
+            index = self.TKNotebook.index('current')
+        except:
+            index = None
+        return index
+
+
     def __del__(self):
         """ """
         for row in self.Rows:
@@ -11021,7 +11035,7 @@ def main():
          Frame('Variable Choice Group', frame4, title_color='blue')],
         [Frame('Structured Data Group', frame5, title_color='red'), ],
         # [Frame('Graphing Group', frame6)],
-        [TabGroup([[tab1, tab2]], )],
+        [TabGroup([[tab1, tab2]],key='_TAB_GROUP_' )],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal'),
          Button('Exit', tooltip='Exit button')],
     ]
