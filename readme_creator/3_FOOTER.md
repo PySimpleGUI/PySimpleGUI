@@ -1,8 +1,48 @@
+
+
+---
+
+# The PySimpleGUI Debugger
+
+Starting on June 1, 2019, a built-in version of the debugger `imwatchingyou` has been shipping in every copy of PySimpleGUI.  It's been largely downplayed to gauge whether or not the added code and the added feature and the use of a couple of keys, would mess up any users.  
+
+So far no one has reported anything at all about the debugger.  The assumption is that it is quietly lying dormant, waiting for you to press the `BREAK` or `CONTROL` + `BREAK` keys.  It's odd no one has accidently done this and freaked out, logging an Issue.
+
+The plain PySimpleGUI module has a debugger builtin.  For the other ports, please use the package `imwatchingyou`.
+
+## Preparing To Run the Debugger
+
+If your program is running with blocking `Read` calls, then you will want to add a timeout to your reads.  This is because the debugger gets it's cycles by stealing a little bit of time from these async calls.
+
+Your event loop will be modified from this:
+```python
+while True:
+    event, values = window.Read()
+```
+
+To this:
+```python
+while True:
+    event, values = window.Read(timeout=100)
+    if event == sg.TIMEOUT_KEY:
+        continue
+```
+
+This event loop will do nothing at all if a timeout occurs and will execute your normal code (that follows the if statement) when there is any event that is not a timeout.
+
+This timeout value of 100 means that your debugger GUI will be updated 10 times a second.  If this adds too much "drag" to your application, you can make the timeout larger.  Try using 1000 instead of 100.
+
+## Debugger Windows
+
+There are 2 debugger windows. One is called a "Popout".  The Popout window displays all of your variables
+
+
+
 # "Demo Programs" Applications
 
 There are too many to list!!
 
-There are over 130 sample programs to give you a jump start.
+There are over 170 sample programs to give you a jump start.
 
 
 You will find Demo Programs located in a subfolder named "Demo Programs" under each of the PySimpleGUI ports on GitHub.
@@ -21,15 +61,6 @@ https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb/Demo%20Pro
 
 
 There are not many programs under each of the port's folders because the main Demo Programs should run on all of the other platforms with minimal changes (often only the import statement changes).
-
-## Start Here
-
-When you are just beginning to build your application, or to design it, look through the Demo Programs first to see if there is a program written that does what you're looking for.  If so, then this program could be a good starting point.  Copy it and modify it to your liking.
-
-Even if no program perfectly matches your situation, there are still a good number of example uses of Elements or techniques that are demonstrated.  
-
-Maybe you're going to write a program that uses the Graph Element.  In addition to reading the documentaion about the Graph Element, check to see if there's a Demo Program that uses it.   At the moment there are 7 Demo programs that match "Demo_Graph_*.py"
-
 
 
 ## Packages Used In Demos
@@ -169,5 +200,4 @@ While not an "issue" this is a ***stern warning***
 
 ## Contributing
 
-A MikeTheWatchGuy production... entirely responsible for this code.... unless it causes you trouble in which case I'm not at all responsible.
-
+Core code pull requests are not being accepted at this time.

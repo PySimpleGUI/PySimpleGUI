@@ -92,5 +92,7 @@ if method == 'with logs':
 ########################################
 if enable_popup:
     import PySimpleGUI as sg
-    sg.Popup('Completed making {}'.format(OUTPUT_FILENAME))
+    lines = open('usage.log.txt', mode='r').readlines()
+    sg.PopupScrolled('Completed making {}'.format(OUTPUT_FILENAME), ''.join(lines), size=(80,50))
+
 
