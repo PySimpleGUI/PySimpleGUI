@@ -656,6 +656,57 @@ A combination of user requests, and needs of new `imwatchingyou` debugger
 * First PyPI release to use new documentation!
 
 
+## PySimpleGUI 4.1 Anniversary Release!  4-Aug-2019
+
+NEVER has there been this long of a lag, sorry to all users!
+Long time coming.  Docstrings continue to be a focus.
+
+* Version can be found using PySimpleGUI.version
+* New bit of licensing info at the top of the file
+* Types used in the doc strings. Also type hints in some comments. Because also running on 2.7 can't use full typing
+* Added using of Warnings. Just getting started using this mechanism. May be great, maybe not. We'll see with this change
+* Added TOOLTIP_BACKGROUND_COLOR which can be changed (it's tkinter only setting however so undertand this!)
+* Graph.DrawText.  Ability to set `text_location` when drawing text onto a Graph Element.  Determines what part of the text will be located at the point you provide when you draw the text.   Choices are:
+	* TEXT_LOCATION_TOP
+	* TEXT_LOCATION_BOTTOM
+	* TEXT_LOCATION_LEFT
+	* TEXT_LOCATION_RIGHT
+	* TEXT_LOCATION_TOP_LEFT
+	* TEXT_LOCATION_TOP_RIGHT
+	* TEXT_LOCATION_BOTTOM_LEFT
+	* TEXT_LOCATION_BOTTOM_RIGT
+	* TEXT_LOCATION_CENTER
+* Flag ENABLE_TK_WINDOWS = False.  If True, all windows will be made using only tk.Tk()
+* SetFocus available for all elements now due to it being added to base class. May NOT work on all elements however
+* Added Combo.GetSElectedItemsIndexes() - returns a list of all currently selected items
+* Fixed Listbox.Update - set_to_index changed to be an int, list or tuple
+* Added parent parameter to call to tkinter's askopenfilename, directory, filenames.  Not sure why the root wasn't passed in before
+* Button.Update - also sets the activebackground to the button's background color
+* Graph - New parameter when creating. `float_values`.  If True, then you're indicating that your coordinate system is float not int based
+* Graph.Update - made background color optional parm so that visible only can be set
+* Frame.Layout returns self now for chaining
+* TabGroup.Layout returns self now for chaining
+* Column.Layout returns self now for chaining
+* Menu.Update menu_definition is now optional to allow for changing visibility only
+* Added inivisiblity support for menu bars
+* Table.Update supports setting alternating row color and row_colors (list of rows and the color to set)
+* Set window.TimeoutKey to TIMEOUT_KEY initially
+* Window - check for types for title (should be string) and layout (should be list) and warns user if not correct
+* Window - renamed some methods by adding _ in front (like Show) as they are NOT user callable
+* Another shortcut! Elem = Element = FindElement
+* SaveToDisk - will not write buttons to file.  Fixed problems due to buttons having keys
+* Remapped Windowl.CloseNonBlockingForm, Window.CloseNonBlocking to be Window.CloseNonBlocking
+* Fix for returning values from a combo list. Wasn't handling current value not in list of provided values
+* Spin - Returns an actual value from list provided when Spin was created or updated
+* Chaneged FillFormWithValues to use the new internal AllKeysDict dictionary
+* Added try when creating combo. Problem happens when window is created twice.  Prior window had already created the style
+* Added list of table (tree) ids to the Table element
+* Enabled autoclose to use fractions of a second
+* Added a try around one of the destroys because it could fail if user aborted
+* Popup - Icon is no longer set to default by default
+* Fix for debugger trying to execute a REPL comand.  The exec is only avilable in Python 3
+* main() will display the version number in big letters when program is running
+
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -701,7 +752,8 @@ From the start of the PSG project, tkinter was not meant to be the only underlyi
 
 
 ## Author
-Mike - who wrote PySimpleGUI is not important. It's the software that's important
+
+***Who*** wrote PySimpleGUI is not important. What's important is that it works well and enables anyone that wants to create a GUI to do so.
 
 
 ## License
