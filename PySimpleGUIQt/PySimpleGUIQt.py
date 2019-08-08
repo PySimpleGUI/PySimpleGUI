@@ -2267,7 +2267,7 @@ class TabGroup(Element):
         except:
             pass
 
-    def GetCurrentIndex(self):
+    def GetCurrentlySelectedTabIndex(self):
         try:
             index = self.QT_QTabWidget.currentIndex()
         except:
