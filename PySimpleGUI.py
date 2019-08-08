@@ -3578,7 +3578,7 @@ class TabGroup(Element):
             print('Exception Selecting Tab {}'.format(e))
 
 
-    def GetCurrentIndex(self):
+    def GetCurrentlySelectedTabIndex(self):
         """
         Returns the "index" of the currently selected tab in this TabGroup.  Indexes start at 0. Returns None if there is an error.
 
