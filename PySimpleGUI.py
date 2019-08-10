@@ -971,14 +971,27 @@ class Combo(Element):
 
     def GetSelectedItemsIndexes(self):
         """
-        Get the list of chosen items and return them as a list of indexes (offsets within the list)
+        Get the list of chosen items and return them as a list of indexes (offsets within the list).
+        Do NOT use them method as an alternative from reading the values returned to you in your call to
+        `Window.Read()`.  All input elements should have their values read using the window.Read call, not methods
+        like this one.
 
         :return: List[int] List of indexes of currently selected items
         """
         if not self.TKStringVar:
             return []
-        return [self.TKCombo.current(),]            # for tkinter this will always be just 1 item
+        return [self.TKCombo.current(),]      # for tkinter this will always be just 1 item
 
+
+    def Get(self):
+        try:
+            if self.TKCombo.current() == -1:  # if the current value was not in the original list
+                value = self.TKCombo.get()    # then get the value typed in by user
+            else:
+                value = self.Values[self.TKCombo.current()]  # get value from original list given index
+        except:
+            value = None                      # only would happen if user closes window
+        return value
 
     def __del__(self):
         """ """
@@ -3449,6 +3462,20 @@ class Tab(Element):
         element = row[col_num]
         return element
 
+
+    def Select(self):
+        """
+        Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
+
+        :param index: (int) indicates which Tab should be selected. Count starts at 0
+        """
+
+        try:
+            self.ParentNotebook.select(self.TabID)
+        except Exception as e:
+            print('Exception Selecting Tab {}'.format(e))
+
+
     def __del__(self):
         """ """
         for row in self.Rows:
@@ -3565,30 +3592,50 @@ class TabGroup(Element):
                     return element.Key
         return None
 
-    def SelectTab(self, index):
-        """
-        Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
+    # def SelectTab(self, index):
+    #     """
+    #     Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
+    #
+    #     :param index: (int) indicates which Tab should be selected. Count starts at 0
+    #     """
+    #
+    #     try:
+    #         self.TKNotebook.select(index)
+    #     except Exception as e:
+    #         print('Exception Selecting Tab {}'.format(e))
+    #
 
-        :param index: (int) indicates which Tab should be selected. Count starts at 0
+    def Get(self):
+        """
+        Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
+        the tab if no key is defined.  Returns None if an error occurs.
+        Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
+        are using this method correctly?
+
+        :return: Union[Any, None] The key of the currently selected tab or the tab's text if it has no key
         """
 
         try:
-            self.TKNotebook.select(index)
-        except Exception as e:
-            print('Exception Selecting Tab {}'.format(e))
-
-
-    def GetCurrentlySelectedTabIndex(self):
-        """
-        Returns the "index" of the currently selected tab in this TabGroup.  Indexes start at 0. Returns None if there is an error.
-
-        :return: Union[int, None] The index number of the currently selected tab or None if there was a problem
-        """
-        try:
-            index = self.TKNotebook.index('current')
+            value = self.TKNotebook.tab(self.TKNotebook.index('current'))['text']
+            tab_key = self.FindKeyFromTabName(value)
+            if tab_key is not None:
+                value = tab_key
         except:
-            index = None
-        return index
+            value = None
+        return value
+
+    #
+    # def GetCurrentlySelectedTabIndex(self):
+    #     """
+    #     Returns the "index" of the currently selected tab in this TabGroup.  Indexes start at 0. Returns None if there is an error.
+    #
+    #     :return: Union[int, None] The index number of the currently selected tab or None if there was a problem
+    #     """
+    #     try:
+    #         index = self.TKNotebook.index('current')
+    #     except:
+    #         index = None
+    #     return index
 
 
     def __del__(self):
@@ -5550,6 +5597,8 @@ class Window:
                 if element.Key is None:  # if no key has been assigned.... create one for input elements
                     if element.Type == ELEM_TYPE_BUTTON:
                         element.Key = element.ButtonText
+                    elif element.Type == ELEM_TYPE_TAB:
+                        element.Key = element.Title
                     if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU, ELEM_TYPE_CANVAS,
                                         ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
                                         ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
@@ -7239,6 +7288,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
+                element = element           # type: Column
                 if element.Scrollable:
                     element.TKColFrame = element.Widget = TkScrollableFrame(tk_row_frame,
                                                                             element.VerticalScrollOnly)  # do not use yet!  not working
@@ -7248,7 +7298,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth(),
                                                          height=element.TKColFrame.TKFrame.winfo_reqheight() / 2)
                     else:
-                        element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
+                        if None not in (element.Size[0], element.Size[1]):
+                            element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
+                        elif element.Size[1] is not None:
+                            element.TKColFrame.canvas.config(height=element.Size[1])
+                        elif element.Size[0] is not None:
+                            element.TKColFrame.canvas.config(width=element.Size[0])
 
                     if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                         element.TKColFrame.canvas.config(background=element.BackgroundColor)
@@ -7264,22 +7319,30 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if None not in (element.Size[0], element.Size[1]):
                             element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
                         elif element.Size[1] is not None:
+                            print('height only')
                             element.TKColFrame.canvas.config(height=element.Size[1])
                         elif element.Size[0] is not None:
                             element.TKColFrame.canvas.config(width=element.Size[0])
+                        if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
+                            element.TKColFrame.canvas.config(background=element.BackgroundColor)
+                            element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
+                                                      highlightthickness=0)
                     else:
                         element.TKColFrame = tk.Frame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
+                        if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
+                            element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
+                                                  highlightthickness=0)
 
                 element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
 
-                element.TKColFrame = element.TKColFrame
-                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    element.TKColFrame.configure(background=element.BackgroundColor,
-                                                 highlightbackground=element.BackgroundColor,
-                                                 highlightcolor=element.BackgroundColor)
+                # element.TKColFrame = element.TKColFrame
+                # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
+                #     element.TKColFrame.configure(background=element.BackgroundColor,
+                #                                  highlightbackground=element.BackgroundColor,
+                #                                  highlightcolor=element.BackgroundColor)
                 if element.RightClickMenu or toplevel_form.RightClickMenu:
                     menu = element.RightClickMenu or toplevel_form.RightClickMenu
                     top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
@@ -8054,6 +8117,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.bind('<Button-3>', element._RightClickMenuCallback)
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
+                element = element               # type: Tab
                 element.TKFrame = element.Widget = tk.Frame(form.TKNotebook)
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
                 if element.Disabled:
