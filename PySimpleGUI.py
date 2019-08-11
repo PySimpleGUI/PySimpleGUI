@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0.4 Unreleased"
+version = __version__ = "4.2.0.5 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3104,6 +3104,26 @@ class Graph(Element):
             return None
         xy = self._TKCanvas2.coords(figure)
         self._TKCanvas2.move(figure, shift_converted[0] - xy[0], shift_converted[1] - xy[1])
+
+
+    def SendFigureToBack(self, figure):
+        """
+        Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
+
+        :param figure: (int) value returned by tkinter when creating the figure / drawing
+        """
+        self.TKCanvas.tag_lower(figure)           # move figure to the "bottom" of all other figure
+
+
+    def BringFigureToFront(self, figure):
+        """
+        Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
+
+        :param figure: (int) value returned by tkinter when creating the figure / drawing
+        """
+        self.TKCanvas.tag_raise(figure)           # move figure to the "top" of all other figures
+
+
 
     @property
     def TKCanvas(self):
