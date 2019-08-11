@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0.3 Unreleased"
+version = __version__ = "4.2.0.4 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -967,21 +967,6 @@ class Combo(Element):
             self.TKCombo.pack_forget()
         elif visible is True:
             self.TKCombo.pack()
-
-
-    def GetSelectedItemsIndexes(self):
-        """
-        Get the list of chosen items and return them as a list of indexes (offsets within the list).
-        Do NOT use them method as an alternative from reading the values returned to you in your call to
-        `Window.Read()`.  All input elements should have their values read using the window.Read call, not methods
-        like this one.
-
-        :return: List[int] List of indexes of currently selected items
-        """
-        if not self.TKStringVar:
-            return []
-        return [self.TKCombo.current(),]      # for tkinter this will always be just 1 item
-
 
     def Get(self):
         try:

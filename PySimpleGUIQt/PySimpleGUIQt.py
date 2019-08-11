@@ -2123,7 +2123,7 @@ class Tab(Element):
         self.Title = title
         self.BorderWidth = border_width
         self.Disabled = disabled
-        self.ParentNotebook = None
+        self.ParentTabGroup = None                          # type: TabGroup
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.Widget = self.QT_QWidget = None                # type: QWidget
@@ -2170,6 +2170,18 @@ class Tab(Element):
         element = row[col_num]
         return element
 
+
+    def Select(self):
+        """
+        Selects this tab.  Mimics user clicking on this tab. Must have called window.Finalize / Read first!
+        """
+        try:
+            index = self.ParentTabGroup.TabList.index(self)
+            self.ParentTabGroup.QT_QTabWidget.setCurrentIndex(index)
+        except:
+            print('** EXCEPTION while trying to Select tab with key =', self.Key)
+
+
     def __del__(self):
         for row in self.Rows:
             for element in row:
@@ -2213,6 +2225,7 @@ class TabGroup(Element):
         self.BackgroundColor = background_color if background_color is not None else COLOR_SYSTEM_DEFAULT
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
+        self.TabList = []                                   # type: List[Tab]
         self.Widget = self.QT_QTabWidget = None             # type: QTabWidget
         self.Layout(layout)
 
@@ -2229,9 +2242,11 @@ class TabGroup(Element):
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
+            element.ParentTabGroup = self
             CurrentRow.append(element)
             if element.Key is not None:
                 self.UseDictionary = True
+            self.TabList.append(element)
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
@@ -2261,19 +2276,23 @@ class TabGroup(Element):
         if self.ChangeSubmits:
             element_callback_quit_mainloop(self)
 
-    def SelectTab(self, index):
-        try:
-            self.QT_QTabWidget.setCurrentIndex(index)
-        except:
-            pass
+    def Get(self):
+        """
+        Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
+        the tab if no key is defined.  Returns None if an error occurs.
+        Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
+        are using this method correctly?
 
-    def GetCurrentlySelectedTabIndex(self):
+        :return: Union[Any, None] The key of the currently selected tab or the tab's text if it has no key
+        """
+        value = None
         try:
-            index = self.QT_QTabWidget.currentIndex()
+            cur_index = self.QT_QTabWidget.currentIndex()
+            tab_element = self.TabList[cur_index]
+            value = tab_element.Key
         except:
-            index = None
-        return index
-
+            value = None
+        return value
 
     def __del__(self):
         for row in self.Rows:
@@ -3519,6 +3538,8 @@ class Window:
                 if element.Key is None:   # if no key has been assigned.... create one for input elements
                     if element.Type == ELEM_TYPE_BUTTON:
                         element.Key = element.ButtonText
+                    elif element.Type == ELEM_TYPE_TAB:
+                        element.Key = element.Title
                     if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU, ELEM_TYPE_CANVAS,
                                         ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
                                         ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
@@ -4304,14 +4325,10 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         element.QT_TextEdit.setText('')
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
-                    try:
-                        value = element.QT_QTabWidget.getCurrentIndex()
-                        tab_key = element.FindKeyFromTabName(value)
-                        if tab_key is not None:
-                            value = tab_key
-                    except:
-                        value = None
-                    value = 0
+                    element = element   # type: TabGroup
+                    cur_index = element.QT_QTabWidget.currentIndex()
+                    tab_element = element.TabList[cur_index]
+                    value = tab_element.Key
                 elif element.Type == ELEM_TYPE_TABLE:
                     value = []
                     indexes = element.QT_TableWidget.selectionModel().selectedRows()
