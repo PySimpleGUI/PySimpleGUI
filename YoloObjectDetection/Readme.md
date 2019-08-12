@@ -18,6 +18,7 @@ You will need to pip install openCV and PySimpleGUI
 ```
 pip install opencv-python
 pip install pysimplegui
+pip install imutils
 ```
 
 Run any of the .py files in the top level directory:
