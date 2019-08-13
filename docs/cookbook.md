@@ -269,7 +269,7 @@ How about a GUI **_and_** traditional CLI argument in 1 line of code?
 import PySimpleGUI as sg
 import sys
 
-fname = sys.argv[1] if len(sys.argv) == 1 else sg.PopupGetFile('Document to open')
+fname = sys.argv[1] if len(sys.argv) > 1 else sg.PopupGetFile('Document to open')
 
 if not fname:
     sg.Popup("Cancel", "No filename supplied")
