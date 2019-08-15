@@ -14,6 +14,8 @@ import cv2
     What's remarkable about this program is that the animation is created by updating individual Text Elements going
     down the window, one line at a time, every time through the loop.  That's 48 lines of text every time. Rough
     timing shows an animation of more than 10 fps when running any of the PySimpleGUI ports.
+    Also added onto this are a spinner and a slider. They do essentially the same thing, enable a pair of parameters
+    to be modified on the fly. 
 """
 
 # The magic bits that make the ASCII stuff work shamelessly taken from https://gist.github.com/cdiener/10491632
@@ -24,18 +26,21 @@ sg.ChangeLookAndFeel('Black')   # make it look cool
 
 # define the window layout
 NUM_LINES = 48  # number of lines of text elements. Depends on cameras image size and the variable SC (scaller)
-layout =  [*[[sg.T(i,size=(120,1), font=('Courier', font_size), key='_OUT_'+str(i))] for i in range(NUM_LINES)],
-          [ sg.Button('Exit')]]
+layout =  [*[[sg.T(i,size=(120,1), font=('Courier', font_size), pad=(0,0), key='_OUT_'+str(i))] for i in range(NUM_LINES)],
+          [ sg.Button('Exit', size=(5,1)),
+            sg.T('GCF', size=(4,1)), sg.Spin([round(i,2) for i in np.arange(0.1,20.0,0.1)], initial_value=1,  key='_SPIN_GCF_', size=(6,1)),
+            sg.T('WCF', size=(4,1)), sg.Slider((1,4), resolution=.05, default_value=1.75, orientation='h', key='_SLIDER_WCF_', size=(15,15))
+            ]]
 
 # if using PySimpleGUIQt, use this layout instead.  The text rows are too far apart otherwise.
 # layout =  [*[[sg.T(i, size_px=(800,12), font=('Courier', font_size), key='_OUT_'+str(i))] for i in range(NUM_LINES)],
-#           [ sg.Button('Exit')]]
-
-
+#            [sg.Button('Exit', size=(8,1)),
+#             sg.T('GCF', size=(4,1)), sg.Spin([round(i,2) for i in np.arange(0.1,20.0,0.1)], initial_value=1,  key='_SPIN_GCF_', size=(6,1)),
+#             sg.T('WCF', size=(4,1)), sg.Slider((1,4), resolution=.05, default_value=1.75, orientation='h', key='_SLIDER_WCF_', size=(15,15))
+#             ]]
 
 # create the window and show it without the plot
-window = sg.Window('Demo Application - OpenCV Integration', layout, location=(800,400),
-                   no_titlebar=True, grab_anywhere=True, element_padding=(0,0))
+window = sg.Window('Demo Application - OpenCV Integration', layout, location=(800,400))
 
 # ---===--- Event LOOP Read and display frames, operate the GUI --- #
 cap = cv2.VideoCapture(0)                               # Setup the OpenCV capture device (webcam)
@@ -46,6 +51,8 @@ while True:
     ret, frame = cap.read()                             # Read image from capture device (camera)
 
     img = Image.fromarray(frame)  # create PIL image from frame
+    GCF = float(values['_SPIN_GCF_'])
+    WCF = values['_SLIDER_WCF_']
     # More magic that coverts the image to ascii
     S = (round(img.size[0] * SC * WCF), round(img.size[1] * SC))
     img = np.sum(np.asarray(img.resize(S)), axis=2)
