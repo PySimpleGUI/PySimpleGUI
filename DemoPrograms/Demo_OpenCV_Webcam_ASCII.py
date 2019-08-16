@@ -34,14 +34,12 @@ sg.ChangeLookAndFeel('Black')   # make it look cool
 NUM_LINES = 48  # number of lines of text elements. Depends on cameras image size and the variable SC (scaller)
 if USING_QT:
     layout = [[sg.T(i, size_px=(800, 12), font=('Courier', font_size), key='_OUT_' + str(i))] for i in range(NUM_LINES)]
-
 else:
     layout =  [[sg.T(i,size=(120,1), font=('Courier', font_size), pad=(0,0), key='_OUT_'+str(i))] for i in range(NUM_LINES)]
 
 layout += [[ sg.Button('Exit', size=(5,1)),
             sg.T('GCF', size=(4,1)), sg.Spin([round(i,2) for i in np.arange(0.1,20.0,0.1)], initial_value=1,  key='_SPIN_GCF_', size=(5,1)),
-            sg.T('WCF', size=(4,1)), sg.Slider((1,4), resolution=.05, default_value=1.75, orientation='h', key='_SLIDER_WCF_', size=(15,15))
-            ]]
+            sg.T('WCF', size=(4,1)), sg.Slider((1,4), resolution=.05, default_value=1.75, orientation='h', key='_SLIDER_WCF_', size=(15,15))]]
 
 # create the window and show it without the plot
 window = sg.Window('Demo Application - OpenCV Integration', layout, location=(800,400), font='Any 18')

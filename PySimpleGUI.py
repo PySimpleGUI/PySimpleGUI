@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0.5 Unreleased"
+version = __version__ = "4.2.0.7 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -540,6 +540,7 @@ class Element():
         self.Visible = visible
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
+        self.Tearoff = False
 
     def _RightClickMenuCallback(self, event):
         """
@@ -5934,7 +5935,9 @@ class Window:
 
     def VisibilityChanged(self):
         """
-        Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible
+        Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
+        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
+        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
         """
         # A dummy function.  Needed in Qt but not tkinter
         return
@@ -10023,7 +10026,7 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
     :param location:  (Default = (None))
     """
     tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
-    Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
+    return Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
           non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color,
           auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
@@ -10034,8 +10037,8 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
 def PopupCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
-    """Display Popup with "cancelled" button text
-    :return:
+    """
+    Display Popup with "cancelled" button text
 
     :param *args:
     :param title:
@@ -10054,7 +10057,7 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     :param location:
 
     """
-    Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
+    return Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
           text_color=text_color,
           non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
@@ -10084,7 +10087,7 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
     :param location: Location on screen to display
     :param location:
     """
-    Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
+    return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
           non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
           auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
           keep_on_top=keep_on_top, location=location)
@@ -10372,7 +10375,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
                   grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None,
                   time_between_frames=0, transparent_color=None):
     """
-    "Plays" an animated GIF file.  This function has its own internal clocking meaning you can call it at any frequency
+     Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
      event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
      loop.
