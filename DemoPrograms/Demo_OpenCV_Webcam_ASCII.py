@@ -1,8 +1,8 @@
 from PIL import Image
 import numpy as np
-import PySimpleGUI as sg; font_size=6
-# import PySimpleGUIQt as sg; font_size=8            # if using, be sure and use the second layout that is commented out
-# import PySimpleGUIWeb as sg; font_size=12           # yes, it runs in a webpage too!
+import PySimpleGUI as sg; font_size=6; USING_QT=False
+# import PySimpleGUIQt as sg; font_size=8; USING_QT=True            # if using, be sure and use the second layout that is commented out
+# import PySimpleGUIWeb as sg; font_size=12; USING_QT=False           # yes, it runs in a webpage too! Not as good as tkinter but works
 import cv2
 
 """
@@ -32,21 +32,19 @@ sg.ChangeLookAndFeel('Black')   # make it look cool
 
 # define the window layout
 NUM_LINES = 48  # number of lines of text elements. Depends on cameras image size and the variable SC (scaller)
-layout =  [*[[sg.T(i,size=(120,1), font=('Courier', font_size), pad=(0,0), key='_OUT_'+str(i))] for i in range(NUM_LINES)],
-          [ sg.Button('Exit', size=(5,1)),
-            sg.T('GCF', size=(4,1)), sg.Spin([round(i,2) for i in np.arange(0.1,20.0,0.1)], initial_value=1,  key='_SPIN_GCF_', size=(6,1)),
+if USING_QT:
+    layout = [[sg.T(i, size_px=(800, 12), font=('Courier', font_size), key='_OUT_' + str(i))] for i in range(NUM_LINES)]
+
+else:
+    layout =  [[sg.T(i,size=(120,1), font=('Courier', font_size), pad=(0,0), key='_OUT_'+str(i))] for i in range(NUM_LINES)]
+
+layout += [[ sg.Button('Exit', size=(5,1)),
+            sg.T('GCF', size=(4,1)), sg.Spin([round(i,2) for i in np.arange(0.1,20.0,0.1)], initial_value=1,  key='_SPIN_GCF_', size=(5,1)),
             sg.T('WCF', size=(4,1)), sg.Slider((1,4), resolution=.05, default_value=1.75, orientation='h', key='_SLIDER_WCF_', size=(15,15))
             ]]
 
-# if using PySimpleGUIQt, use this layout instead.  The text rows are too far apart otherwise.
-# layout =  [*[[sg.T(i, size_px=(800,12), font=('Courier', font_size), key='_OUT_'+str(i))] for i in range(NUM_LINES)],
-#            [sg.Button('Exit', size=(8,1)),
-#             sg.T('GCF', size=(4,1)), sg.Spin([round(i,2) for i in np.arange(0.1,20.0,0.1)], initial_value=1,  key='_SPIN_GCF_', size=(6,1)),
-#             sg.T('WCF', size=(4,1)), sg.Slider((1,4), resolution=.05, default_value=1.75, orientation='h', key='_SLIDER_WCF_', size=(15,15))
-#             ]]
-
 # create the window and show it without the plot
-window = sg.Window('Demo Application - OpenCV Integration', layout, location=(800,400))
+window = sg.Window('Demo Application - OpenCV Integration', layout, location=(800,400), font='Any 18')
 
 # ---===--- Event LOOP Read and display frames, operate the GUI --- #
 cap = cv2.VideoCapture(0)                               # Setup the OpenCV capture device (webcam)
