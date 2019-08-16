@@ -7045,34 +7045,38 @@ def _FindElementWithFocusInSubForm(form):
                 matching_elem = _FindElementWithFocusInSubForm(element)
                 if matching_elem is not None:
                     return matching_elem
-            if element.Type == ELEM_TYPE_FRAME:
+            elif element.Type == ELEM_TYPE_FRAME:
                 matching_elem = _FindElementWithFocusInSubForm(element)
                 if matching_elem is not None:
                     return matching_elem
-            if element.Type == ELEM_TYPE_TAB_GROUP:
+            elif element.Type == ELEM_TYPE_TAB_GROUP:
                 matching_elem = _FindElementWithFocusInSubForm(element)
                 if matching_elem is not None:
                     return matching_elem
-            if element.Type == ELEM_TYPE_TAB:
+            elif element.Type == ELEM_TYPE_TAB:
                 matching_elem = _FindElementWithFocusInSubForm(element)
                 if matching_elem is not None:
                     return matching_elem
-            if element.Type == ELEM_TYPE_INPUT_TEXT:
+            elif element.Type == ELEM_TYPE_INPUT_TEXT:
                 if element.TKEntry is not None:
                     if element.TKEntry is element.TKEntry.focus_get():
                         return element
-            if element.Type == ELEM_TYPE_INPUT_MULTILINE:
+            elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                 if element.TKText is not None:
                     if element.TKText is element.TKText.focus_get():
                         return element
-            if element.Type == ELEM_TYPE_BUTTON:
+            elif element.Type == ELEM_TYPE_BUTTON:
                 if element.TKButton is not None:
                     if element.TKButton is element.TKButton.focus_get():
                         return element
-            if element.Type == ELEM_TYPE_INPUT_LISTBOX:
-                if element.Widget is not None:
-                    if element.Widget is element.Widget.focus_get():
-                        return element
+            else:       # The "Catch All" - if type isn't one of the above, try generic element.Widget
+                try:
+                    if element.Widget is not None:
+                        if element.Widget is element.Widget.focus_get():
+                            return element
+                except:
+                    return None
+
     return None
 
 if sys.version_info[0] >= 3:
