@@ -16,6 +16,12 @@ import cv2
     timing shows an animation of more than 10 fps when running any of the PySimpleGUI ports.
     Also added onto this are a spinner and a slider. They do essentially the same thing, enable a pair of parameters
     to be modified on the fly. 
+    
+    You need PySimpleGUI installed as well as OpenCV.  Both are easily installed via pip:
+    pip install PySimpleGUI
+    pip install opencv-python
+    
+    On Linux / Mac use pip3 instead of pip
 """
 
 # The magic bits that make the ASCII stuff work shamelessly taken from https://gist.github.com/cdiener/10491632
