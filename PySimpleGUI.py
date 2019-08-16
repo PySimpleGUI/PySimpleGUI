@@ -3596,18 +3596,6 @@ class TabGroup(Element):
                     return element.Key
         return None
 
-    # def SelectTab(self, index):
-    #     """
-    #     Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
-    #
-    #     :param index: (int) indicates which Tab should be selected. Count starts at 0
-    #     """
-    #
-    #     try:
-    #         self.TKNotebook.select(index)
-    #     except Exception as e:
-    #         print('Exception Selecting Tab {}'.format(e))
-    #
 
     def Get(self):
         """
@@ -3627,19 +3615,6 @@ class TabGroup(Element):
         except:
             value = None
         return value
-
-    #
-    # def GetCurrentlySelectedTabIndex(self):
-    #     """
-    #     Returns the "index" of the currently selected tab in this TabGroup.  Indexes start at 0. Returns None if there is an error.
-    #
-    #     :return: Union[int, None] The index number of the currently selected tab or None if there was a problem
-    #     """
-    #     try:
-    #         index = self.TKNotebook.index('current')
-    #     except:
-    #         index = None
-    #     return index
 
 
     def __del__(self):
@@ -5062,11 +5037,11 @@ class Window:
         self.TransparentColor = transparent_color
         self.UniqueKeyCounter = 0
         self.DebuggerEnabled = debugger_enabled
-
+        self.WasClosed = False
         if type(title) != str:
             warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
-        if layout is not None and type(layout) != list:
-            warnings.warn('Your layout is not a list... this is not good!')
+        if layout is not None and type(layout) not in  (list, tuple):
+            warnings.warn('Your layout is not a list or tuple... this is not good!')
 
         if layout is not None:
             self.Layout(layout)
@@ -7093,6 +7068,10 @@ def _FindElementWithFocusInSubForm(form):
             if element.Type == ELEM_TYPE_BUTTON:
                 if element.TKButton is not None:
                     if element.TKButton is element.TKButton.focus_get():
+                        return element
+            if element.Type == ELEM_TYPE_INPUT_LISTBOX:
+                if element.Widget is not None:
+                    if element.Widget is element.Widget.focus_get():
                         return element
     return None
 
@@ -9735,8 +9714,6 @@ def MsgBox(*args):
 
 
 
-
-
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args,  title=None, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None),
@@ -11144,6 +11121,7 @@ def main():
         elif event == 'Normal':
             window.Normal()
             window.Element('_MENU_').Update(visible=False)
+            print()
         elif event == 'Popout':
             show_debugger_popout_window()
         elif event == 'Launch Debugger':
