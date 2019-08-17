@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.27.0.3 Unreleased"
+version = __version__ = "0.27.0.4 Unreleased"
 
 import sys
 import types
@@ -3807,8 +3807,20 @@ class Window:
     def Size(self, size):
         self.QT_QMainWindow.resize(QSize(size[0], size[1]))
 
+    def __getitem__(self, key):
+        """
+        Returns Element that matches the passed in key.
+        This is "called" by writing code as thus:
+        window['element key'].Update
 
-
+        :param key: (Any) The key to find
+        :return: Union[Element, None] The element found or None if no element was found
+        """
+        try:
+            return self.Element(key)
+        except Exception as e:
+            print('The key you passed in is no good. Key = {}*'.format(key))
+            return None
 
     def __enter__(self):
         return self
