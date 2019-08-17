@@ -1,5 +1,5 @@
 #usr/bin/python3
-version = __version__ = "0.31.0.0 Unreleased"
+version = __version__ = "0.31.0.2 Unreleased"
 
 import sys
 import types
@@ -39,7 +39,7 @@ def TimerStop():
 
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
-    print(g_time_delta)
+    print(g_time_delta*1000)
 
 ######           #####                                       #####   #     #  ###  #     #
 #     #  #   #  #     #  #  #    #  #####   #       ######  #     #  #     #   #   #  #  #  ######  #####
@@ -3492,6 +3492,21 @@ class Window:
         self.Size = size
         self.MasterFrame.SetSizer(self.OuterSizer)
         self.OuterSizer.Fit(self.MasterFrame)
+
+    def __getitem__(self, key):
+        """
+        Returns Element that matches the passed in key.
+        This is "called" by writing code as thus:
+        window['element key'].Update
+
+        :param key: (Any) The key to find
+        :return: Union[Element, None] The element found or None if no element was found
+        """
+        try:
+            return self.Element(key)
+        except Exception as e:
+            print('The key you passed in is no good. Key = {}*'.format(key))
+            return None
 
     def __enter__(self):
         return self

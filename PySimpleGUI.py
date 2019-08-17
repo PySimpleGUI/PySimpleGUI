@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0.7 Unreleased"
+version = __version__ = "4.2.0.8 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -5047,6 +5047,7 @@ class Window:
         if layout is not None:
             self.Layout(layout)
 
+
     @classmethod
     def GetAContainerNumber(cls):
         """
@@ -6013,6 +6014,22 @@ class Window:
         :return: (window)
         """
         return self
+
+    def __getitem__(self, key):
+        """
+        Returns Element that matches the passed in key.
+        This is "called" by writing code as thus:
+        window['element key'].Update
+
+        :param key: (Any) The key to find
+        :return: Union[Element, None] The element found or None if no element was found
+        """
+        try:
+            return self.Element(key)
+        except Exception as e:
+            warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
+            return None
+
 
     def __exit__(self, *a):
         """
@@ -11118,7 +11135,7 @@ def main():
             graph_elem.Move(-1, 0)
             graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))
 
-        window.FindElement('+PROGRESS+').UpdateBar(i % 800)
+        window['+PROGRESS+'].UpdateBar(i % 800)
         window.Element('_IMAGE_').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
         i += 1
         if event == 'Button':
