@@ -23,7 +23,7 @@
 # PySimpleGUI User's Manual
 ## This manual is crammed full of answers so start your search for answers here. Read/Search this PRIOR to opening an Issue on GitHub.
 
-## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into a people-friendly Pythonic interfaces
+## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
 #### July-2019 Note - This readme is being generated from the PySimpleGUI.py file located on GitHub.  As a result, some of the calls or parameters may not match the PySimpleGUI that you pip installed.
 
@@ -97,18 +97,20 @@
 
 [COOKBOOK!](http://Cookbook.PySimpleGUI.org)
 
-[Brief Tutorial](https://pysimplegui.readthedocs.io/tutorial/)
+[Brief Tutorial](http://Tutorial.PySimpleGUI.org)
 
-[Latest Demos and Master Branch on GitHub](https://github.com/PySimpleGUI/PySimpleGUI)
+[Latest Demos and Master Branch on GitHub](http//www.PySimpleGUI.com)
 
 [Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
 
 [Lots of screenshots](https://github.com/PySimpleGUI/PySimpleGUI/issues/1)
 
+[How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
+
 The YouTube videos - If you like instructional videos, there are over 15 videos
 - [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
 - [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
-- [The Named Truth (An updaate on the technology)](https://youtu.be/BFTxBmihsUY)
+- [The Naked Truth (An updaate on the technology)](https://youtu.be/BFTxBmihsUY)
 - There are numerous short videos also on that channel that demonstrate PySimpleGUI being used
 
 # About The PySimpleGUI Documentation System
@@ -307,8 +309,6 @@ Here is a summary of the Qt Elements with no real effort spent on design clearly
 
 As you can see, you've got a full array of GUI Elements to work with.  All the standard ones are there in a single window.  So don't be fooled into thinking PySimpleGUIQt is barely working or doesn't have many widgets to choose from.  You even get TWO "Bonus Elements" - `Dial` and `Stretch`
 
-![scrolling graphics](https://user-images.githubusercontent.com/13696193/48665874-8bfd0e00-ea84-11e8-880d-8e164d9fea34.gif)
-
 ## WxPython Version
 
 [PySimpleGUIWx GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWx).  **There is a separate Readme file for the WxPython version**.
@@ -329,15 +329,17 @@ The underlying framework supplying the web capability is the Python package Remi
 
 **Use this solution for your Pi projects** that don't have anything connected in terms of input devices or display.  Run your Pi in "headless" mode and then access it via the Web interface.  This allows you to easily access and make changes to your Pi without having to hook up anything to it.
 
-****It's not really meant to "serve up web pages"****, although with enough work, you could "lay out" a webpage. I would think of it more as a mock-up than a functional web page.  If you manage to get your application hosted somewhere and use PySimpleGUIWeb as the frontend, please log an Issue with the information!! I'm sure others would love to hear your experiences.
+****It's not meant to "serve up web pages"****
 
-Instead of a Web Page, PySimpleGUIWeb meant to be a ***GUI***. ***A programs's front end***.  When you have a Python system that has no keyboard and no display, but you want to interact with it using a GUI, then PySimpleGUIWeb is perfect for this.  This is how it is best used.
+PySimpleGUIWeb is first and foremost a **GUI**, a program's front-end. It is designed to have a single user connect and interact with the **GUI**.
+
+If more than 1 person connects at a time, then both users will see the exact same stuff and will be interacting with the program as if a single user was using it.
 
 ## Source code compatibility
 
-Your source code is completely portable from one platform to another by simply changing the import statement.  That's the GOAL and is OFTEN the case.  I've been stunned how many times thins works.  Seeing your code run on tkinter, then change the import to `import  PySimpleGUIWeb as sg` and instead of a tkinter window, up pops Chrome with your window running in there instead.
+In theory, your source code is completely portable from one platform to another by simply changing the import statement.  That's the GOAL and suprisingly many times this 1-line change works.  Seeing your code run on tkinter, then change the import to `import  PySimpleGUIWeb as sg` and instead of a tkinter window, up pops your default browser with your window running on it is an incredible feeling.
 
-But, caution is advised.  As you've read already, some ports are further along than others.  That means when you move from one port to another, some features may not work.  There also may be some alignment tweaks if you have an application that precisely aligns Elements.
+But, ***caution is advised.***  As you've read already, some ports are further along than others.  That means when you move from one port to another, some features may not work.  There also may be some alignment tweaks if you have an application that precisely aligns Elements.
 
 What does this mean, assuming it works?  It means it takes a trivial amount of effort to move across GUI Frameworks.  Don't like the way your GUI looks on tkinter?  No problem, change over to try PySimpleGUIQt.  Made a nice desktop app but want to bring it to the web too?  Again, no problem, use PySimpleGUIWeb.
 
@@ -563,7 +565,7 @@ As of this writing, on 2019-07-10 there are 177 Demo Programs for you to choose 
 
 These programs demonstrate to you how to use the Elements and especially how to integtate PySimpleGUI with some of the popular open source technologies such as OpenCV, PyGame, PyPlot, and Matplotlib to name a few.
 
-Many Demo Programs that are in the main folder will run on multiple ports of PySimpleGUI.  There are alse port-specific Demo Programs.  You'll find those in the folder with the port.  So,  Qt specific Demo Programs are in the PySimpleGUIQt folder.
+Many Demo Programs that are in the main folder will run on multiple ports of PySimpleGUI.  There are alse port-specific Demo Programs.  You'll find those in the folder with the port.  So, Qt specific Demo Programs are in the PySimpleGUIQt folder.
 
 ---
 
@@ -658,11 +660,13 @@ I don't think PySimpleGUI is ***difficult*** to explain, but I am striving to fu
 
 > In the face of ambiguity, refuse the temptation to guess.
 
-Sometimes you can guess and be fine.  Other times, things may work, but the side effects are potentially significant.  So, there may be a much better way.
+Sometimes you can guess and be fine.  Other times, things may work, but the side effects are potentially significant.  There may be a much better way to solve a problem - Log an Issue on GitHub!  
 
 ------
 
-# Polishing Your Windows = Building "Beautiful Windows"
+# Some Examples
+
+## Polishing Your Windows = Building "Beautiful Windows"
 
 And STILL the Zen of Python fits:
 
@@ -678,11 +682,9 @@ Find a balance that works for you.
 "It looks like the 1990s" (this one is often said by people that were not alive in the 1990s)
 "What Python GUI SDK will make my window look beautiful?"  (posted to Reddit at least every 2 weeks)
 
-These windows below were ALL made using PySimpleGUI, the tkinter version.  They look pretty damned good to me.
+These windows below were ALL made using PySimpleGUI, the tkinter version and they look good enough to not be simply scoffed at and dismissed.  Remember, developer, you have a rather significant hand in how your application looks and operates.  You certainly cannot pin it all on the GUIs you're using.
 
-Your window does not have to look like the boring gray window used in the examples so far.
-
-So many posts on Reddit asking which GUI is going to result in a "beautiful window", as if there's a magic GUI library that pretties things up for you.  
+So many posts on Reddit asking which GUI is going to result in a "beautiful window", as if there's a magic GUI library that pretties things up for you.  There are some calls in PySimpleGUI that will help you.  For example, you can make a single call to "Chang the look and feel" which loads predefined color pallets so your windows can have some instant color and it matches.
 
 Beautiful windows are created, not simply given to you.  There are people that design and create artwork for user interfaces, you know that right?  Artists draw buttons, artwork that you include in the window to make it nicer.
 
@@ -695,6 +697,12 @@ Some of these have been "polished", others like the Matplotlib example is more a
 This chess program is capable of running multiple AI chess engines and was written by another user using PySimpleGUI.
 
 ![image](https://user-images.githubusercontent.com/13696193/61083102-e9214780-a3f8-11e9-9d1d-7c0a388625be.png)
+
+This downloader can download files as well as YouTube videos and metadata.  If you're worried about multiple windows working, don't.  Worried your project is "too much" or "too complex" for PySimpleGUI?  Do an initial assessment if you want.  Check out what others have done.  
+
+Your program have 2 or 3 windows and you're concerned?  Below you'll see 11 windows open, each running independently with multiple tabs per window and progress meters that are all being updated concurrently.  
+
+![concurrent_windows](https://user-images.githubusercontent.com/13696193/62832448-3eb96180-bbfc-11e9-8777-6f2669566c93.png)
 
 ![pyplot 1](https://user-images.githubusercontent.com/13696193/44683336-11d46480-aa14-11e8-9d6c-f656796fc915.jpg)
 
@@ -1574,7 +1582,7 @@ This is a typpical call
 
 The animated Popup enables you to easily display a "loading" style animation specified through a GIF file that is either stored in a file or a base64 variable.
 
-"Plays" an animated GIF file.  This function has its own internal clocking meaning you can call it at any frequency
+Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
  and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
  event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
  loop.
@@ -1645,7 +1653,7 @@ With a little trickery you can provide a way to break out of your loop using the
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
 
-# Debug Output
+# Debug Output (EasyPrint = Print = eprint)
 
 Another call in the 'Easy' families of APIs is `EasyPrint`.  As is with other commonly used PySimpleGUI calls, there are other names for the same call.  You can use `Print` or `eprint` in addition to `EasyPrint`.  They all do the same thing, output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick an 'sg.Print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement
 
@@ -2288,445 +2296,6 @@ The first step is to create the window object using the desired window customiza
 
 **IMPORTANT** - Many of the `Window` methods require you to either call `Window.Read` or `Window.Finalize` before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
 
-    Represents a single Window
-
-```
-Window(title,
-    layout=None,
-    default_element_size=(45, 1),
-    default_button_element_size=(None, None),
-    auto_size_text=None,
-    auto_size_buttons=None,
-    location=(None, None),
-    size=(None, None),
-    element_padding=None,
-    margins=(None, None),
-    button_color=None,
-    font=None,
-    progress_bar_color=(None, None),
-    background_color=None,
-    border_depth=None,
-    auto_close=False,
-    auto_close_duration=3,
-    icon=None,
-    force_toplevel=False,
-    alpha_channel=1,
-    return_keyboard_events=False,
-    use_default_focus=True,
-    text_justification=None,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    resizable=False,
-    disable_close=False,
-    disable_minimize=False,
-    right_click_menu=None,
-    transparent_color=None,
-    debugger_enabled=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|title|(str) The title that will be displayed in the Titlebar and on the Taskbar|
-|layout|List[List[Elements]] The layout for the window. Can also be specified in the Layout method|
-|default_element_size|Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all elements in this window|
-|default_button_element_size|Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all Button elements in this window|
-|auto_size_text|(bool) True if Elements in Window should be sized to exactly fir the length of text|
-|auto_size_buttons|(bool) True if Buttons in this Window should be sized to exactly fit the text on this.|
-|location|Tuple[int, int] (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.|
-|size|Tuple[int, int] (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user|
-|element_padding|Tuple[int, int] or ((int, int),(int,int)) Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))|
-|margins|Tuple[int, int] (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.|
-|button_color|Tuple[str, str] (text color, button color) Default button colors for all buttons in the window|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|progress_bar_color|Tuple[str, str] (bar color, background color) Sets the default colors for all progress bars in the window|
-|background_color|(str) color of background|
-|border_depth|(int) Default border depth (width) for all elements in the window|
-|auto_close|(bool) If True, the window will automatically close itself|
-|auto_close_duration|(int) Number of seconds to wait before closing the window|
-|icon|Union[str, str] Can be either a filename or Base64 value.|
-|force_toplevel|(bool) If True will cause this window to skip the normal use of a hidden master window|
-|alpha_channel|(float) Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.|
-|return_keyboard_events|(bool) if True key presses on the keyboard will be returned as Events from Read calls|
-|use_default_focus|(bool) If True will use the default focus algorithm to set the focus to the "Correct" element|
-|text_justification|(str) Union ['left', 'right', 'center'] Default text justification for all Text Elements in window|
-|no_titlebar|(bool) If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar|
-|grab_anywhere|(bool) If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems|
-|keep_on_top|(bool) If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm|
-|resizable|(bool) If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.|
-|disable_close|(bool) If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users|
-|disable_minimize|(bool) if True the user won't be able to minimize window. Good for taking over entire screen and staying that way.|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|transparent_color|(str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.|
-|debugger_enabled|(bool) If True then the internal debugger will be enabled|
-
-## Methods
-
-#### AddRows (Don't use)
-
-Loops through a list of lists of elements and adds each row, list, to the layout.
-This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
-it as a parameter to the Window call is better.
-
-```
-AddRows(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Elements]] A list of a list of elements|
-
-#### BringToFront
-
-Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
-        on top")
-
-```python
-BringToFront()
-```
-
-#### Close
-
-Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
-        a window so that resources are properly freed up within your thread.
-
-```python
-Close()
-```
-
-#### CurrentLocation
-
-Get the current location of the window's top left corner
-
-`CurrentLocation()`
-
-|Name|Meaning|
-|---|---|
-| **return** | Tuple[(int), (int)] The x and y location in tuple form (x,y) |
-
-#### Disable
-
-Disables window from taking any input from the user
-
-```python
-Disable()
-```
-
-#### DisableDebugger
-
-Disable the internal debugger. By default the debugger is ENABLED
-
-```python
-DisableDebugger()
-```
-
-#### Disappear
-
-Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
-        channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
-        platforms.  The Raspberry Pi for example does not have an alpha setting
-
-```python
-Disappear()
-```
-
-#### Enable
-
-Re-enables window to take user input after having it be Disabled previously
-
-```python
-Enable()
-```
-
-#### EnableDebugger
-
-Enables the internal debugger. By default, the debugger IS enabled
-
-```python
-EnableDebugger()
-```
-
-#### Fill
-
-Fill in elements that are input fields with data based on a 'values dictionary'
-
-```
-Fill(values_dict)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values_dict|(Dict[Any:Any]) {Element key : value} pairs|
-|||
-| **return** | (Window) returns self so can be chained with other methods |
-
-#### Finalize
-
-Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
-Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
-Lots of action!
-
-`Finalize()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (Window) Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
-
-#### FindElement == Element == Find
-
-Find element object associated with the provided key.  This call can be abbreviated to any of these:
-FindElement == Element == Find
-So take your pick as to how much typing you want to do.
-Rememeber that this call will return None if no match is found which may cause your code to crash if not
-checked for.
-
-```
-FindElement(key, silent_on_error=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
-|silent_on_error|(bool) If True do not display popup nor print warning of key errors|
-|||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
-
-#### FindElementWithFocus
-
-Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
-
-`FindElementWithFocus()`
-
-|Name|Meaning|
-|---|---|
-| **return** | Union[Element, None] An Element if one has been found with focus or None if no element found |
-
-#### GetScreenDimensions
-
-Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
-
-`GetScreenDimensions()`
-
-|Name|Meaning|
-|---|---|
-| **return** | Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels |
-
-#### GrabAnyWhereOff
-
-Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
-        been Finalized or Read.
-
-```python
-GrabAnyWhereOff()
-```
-
-#### GrabAnyWhereOn
-
-Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
-        been Finalized or Read.
-
-```python
-GrabAnyWhereOn()
-```
-
-#### Hide
-
-Hides the window from the screen and the task bar
-
-```python
-Hide()
-```
-
-#### Layout
-
-Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
-a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
-has been removed from examples contained in documents and in the Demo Programs. Trying to remove this call
-from history and replace with sending as a parameter to Window.
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Elements]] Your entire layout|
-|||
-| **return** | (Window} self so that you can chain method calls |
-
-#### LoadFromDisk
-
-Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
-
-```
-LoadFromDisk(filename)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|filename|(str) Pickle Filename to load|
-
-#### Maximize
-
-Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
-        the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
-        The reason for the difference is the title bar is removed in some cases when using fullscreen option
-
-```python
-Maximize()
-```
-
-#### Minimize
-
-Minimize this window to the task bar
-
-```python
-Minimize()
-```
-
-#### Move
-
-Move the upper left corner of this window to the x,y coordinates provided
-
-```
-Move(x, y)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|x|(int) x coordinate in pixels|
-|y|(int) y coordinate in pixels|
-
-#### Normal
-
-Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
-
-```python
-Normal()
-```
-
-#### Read
-
-THE biggest deal method in the Window class! This is how you get all of your data from your Window.
-Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
-if no other GUI events happen first.
-
-```
-Read(timeout=None, timeout_key="__TIMEOUT__")
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|timeout|(int) Milliseconds to wait until the Read will return IF no other GUI events happen first|
-|timeout_key|(Any) The value that will be returned from the call if the timer expired|
-|||
-| **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) <br>  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window) |
-
-#### Reappear
-
-Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
-
-```python
-Reappear()
-```
-
-#### Refresh
-
-Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
-Use this call when you want something to appear in your Window immediately (as soon as this function is called).
-Without this call your changes to a Window will not be visible to the user until the next Read call
-
-`Refresh()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (Window) `self` so that method calls can be easily "chained" |
-
-#### SaveToDisk
-
-Saves the values contained in each of the input areas of the form. Basically saves what would be returned
-from a call to Read.  It takes these results and saves them to disk using pickle
-
-```
-SaveToDisk(filename)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|filename|(str) Filename to save the values to in pickled form|
-
-#### SetAlpha
-
-Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
-
-```
-SetAlpha(alpha)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|alpha|(float) 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through)|
-
-#### SetIcon
-
-Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
-* a filename which must be a .ICO icon file.
-* a bytes object
-* a BASE64 encoded file held in a variable
-
-```
-SetIcon(icon=None, pngbase64=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|icon|(str) Filename or bytes object|
-|pngbase64|(str) Base64 encoded GIF or PNG file|
-
-#### SetTransparentColor
-
-Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
-
-```
-SetTransparentColor(color)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|color|(str) Color string that defines the transparent color|
-
-#### UnHide
-
-Used to bring back a window that was previously hidden using the Hide method
-
-```python
-UnHide()
-```
-
 ### Window Location
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.
 
@@ -2976,8 +2545,6 @@ It's an ongoing thing.  If you don't stay up to date and one of the newer shortc
 ## Text Element | `T == Txt == Text`
 Basic Element. It displays text. That's it.
 
-    Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
-
 ```python
 layout = [
   [sg.Text('This is what a Text Element looks like')],
@@ -2985,82 +2552,6 @@ layout = [
  ]
 ```
 ![simple text](https://user-images.githubusercontent.com/13696193/44959877-e9d97b00-aec3-11e8-9d24-b4405ee4a148.jpg)
-
-```
-Text(text,
-    size=(None, None),
-    auto_size_text=None,
-    click_submits=False,
-    enable_events=False,
-    relief=None,
-    font=None,
-    text_color=None,
-    background_color=None,
-    justification=None,
-    pad=None,
-    key=None,
-    right_click_menu=None,
-    tooltip=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|text|(str) The text to display. Can include /n to achieve multiple lines|
-|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
-|auto_size_text|(bool) if True size of the Text Element will be sized to fit the string provided in 'text' parm|
-|click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Text events happen when the text is clicked|
-|relief|(str/enum) relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|text_color|(str) color of the text|
-|background_color|(str) color of background|
-|justification|(str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Update
-
-Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None,
-    background_color=None,
-    text_color=None,
-    font=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(str) new text to show|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|visible|(bool) set visibility state of the element|
-
-#### SetToolTip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
 
 ---
 
@@ -3091,241 +2582,19 @@ If you set the parameter `enable_events` then you will get an event if the user 
 ## Multiline Element
 This Element doubles as both an input and output Element.
 
-    Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
-    Other PySimpleGUI ports have a separate MultilineInput and MultilineOutput elements.  May want to split this
-    one up in the future too.
-
 ```python
 layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
 ```
 
 ![multiline](https://user-images.githubusercontent.com/13696193/44959853-b139a180-aec3-11e8-972f-f52188510c88.jpg)
 
-```
-Multiline(default_text="",
-    enter_submits=False,
-    disabled=False,
-    autoscroll=False,
-    border_width=None,
-    size=(None, None),
-    auto_size_text=None,
-    background_color=None,
-    text_color=None,
-    change_submits=False,
-    enable_events=False,
-    do_not_clear=True,
-    key=None,
-    focus=False,
-    font=None,
-    pad=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|default_text|(str) Initial text to show|
-|enter_submits|(bool) if True, the Window.Read call will return is enter key is pressed in this element|
-|disabled|(bool) set disable state|
-|autoscroll|(bool) If True the contents of the element will automatically scroll as more data added to the end|
-|border_width|(int) width of border around element in pixels|
-|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
-|auto_size_text|(bool) if True will size the element to match the length of the text|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
-|do_not_clear|if False the element will be cleared any time the Window.Read call returns|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|focus|(bool) if True initial focus will go to this element|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Update
-
-Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None,
-    disabled=None,
-    append=False,
-    font=None,
-    text_color=None,
-    background_color=None,
-    visible=None,
-    autoscroll=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(str) new text to display|
-|disabled|(bool) disable or enable state of the element|
-|append|(bool) if True then new value will be added onto the end of the current value. if False then contents will be replaced.|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|text_color|(str) color of the text|
-|background_color|(str) color of background|
-|visible|(bool) set visibility state of the element|
-|autoscroll|(bool) if True then contents of element are scrolled down when new text is added to the end|
-
-#### Get
-
-Return current contents of the Multiline Element
-
-`Get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (str) current contents of the Multiline Element (used as an input type of Multiline |
-
-#### SetFocus
-
-Moves the focus (that little blinking cursor) to this Multiline Element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool). If True, will call focus_force instead of focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
 ## Text Input Element  | `InputText == Input == In`
-
-    Display a single text input field.  Based on the tkinter Widget `Entry`
 
 ```python
 layout = [[sg.InputText('Default text')]]
 ```
 
 ![inputtext 2](https://user-images.githubusercontent.com/13696193/44959861-b5fe5580-aec3-11e8-8040-53ec241b5079.jpg)
-
-```
-InputText(default_text="",
-    size=(None, None),
-    disabled=False,
-    password_char="",
-    justification=None,
-    background_color=None,
-    text_color=None,
-    font=None,
-    tooltip=None,
-    change_submits=False,
-    enable_events=False,
-    do_not_clear=True,
-    key=None,
-    focus=False,
-    pad=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|default_text|(str) Text initially shown in the input box as a default value(Default value = '')|
-|size|Tuple[int, int] (width, height) w=characters-wide, h=rows-high|
-|disabled|(bool) set disable state for element (Default = False)|
-|password_char|(char) Password character if this is a password field (Default value = '')|
-|justification|(str) justification for data display. Valid choices - left, right, center|
-|background_color|(str) color of background in one of the color formats|
-|text_color|(str) color of the text|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
-|enable_events|(bool) If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)|
-|do_not_clear|(bool) If False then the field will be set to blank after ANY event (button, any event) (Default = True)|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|focus|(bool) Determines if initial focus should go to this element.|
-|pad|(int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element (Default = True)|
-
-### Methods
-
-#### Update
-
-Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None,
-    disabled=None,
-    select=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(str) new text to display as default text in Input field|
-|disabled|(bool) disable or enable state of the element (sets Entry Widget to readonly or normal)|
-|select|(bool) if True, then the text will be selected|
-|visible|(bool) change visibility of element|
-
-#### Get
-
-Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
-
-`Get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (str) current value of Input field or '' if error encountered |
-
-#### SetFocus
-
-Sets focus to this element using focus_set. Will use focus_force if force flag set. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True then tkinter's `Entry.focus_force` will be called instead of `Entry.focus_set`|
-
-#### SetToolTip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
 
 ---
 
@@ -3336,236 +2605,20 @@ This used to really trip people up, but don't think so anymore.  The `do_not_cle
 ## Combo Element | `Combo == InputCombo == DropDown == Drop`
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
-    ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
-
 ```python
 layout = [[sg.Combo(['choice 1', 'choice 2'])]]
 ```
 
 ![combobox](https://user-images.githubusercontent.com/13696193/44959860-b565bf00-aec3-11e8-82fe-dbe41252458b.jpg)
 
-```
-Combo(values,
-    default_value=None,
-    size=(None, None),
-    auto_size_text=None,
-    background_color=None,
-    text_color=None,
-    change_submits=False,
-    enable_events=False,
-    disabled=False,
-    key=None,
-    pad=None,
-    tooltip=None,
-    readonly=False,
-    font=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|List[Any] values to choose. While displayed as text, the items returned are what the caller supplied, not text|
-|default_value|(Any) Choice to be displayed as initial value. Must match one of values variable contents|
-|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
-|auto_size_text|(bool) True if element should be the same size as the contents|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|change_submits|(bool) DEPRICATED DO NOT USE. Use `enable_events` instead|
-|enable_events|(bool) Turns on the element specific events. Combo event is when a choice is made|
-|disabled|(bool) set disable state for element|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|tooltip|(str) text that will appear when mouse hovers over this element|
-|readonly|(bool) make element readonly (user can't change). True means user cannot change|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Update
-
-Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None,
-    values=None,
-    set_to_index=None,
-    disabled=None,
-    readonly=None,
-    font=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(Any) change which value is current selected hased on new list of previous list of choices|
-|values|List[Any] change list of choices|
-|set_to_index|(int) change selection to a particular choice starting with index = 0|
-|disabled|(bool) disable or enable state of the element|
-|readonly|(bool) if True make element readonly (user cannot change any choices)|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|visible|(bool) control visibility of element|
-
-#### GetSelectedItemsIndexes 
-
-Get the list of chosen items and return them as a list of indexes (offsets within the list).
-Do NOT use them method as an alternative from reading the values returned to you in your call to
-`Window.Read()`.  All input elements should have their values read using the window.Read call, not methods
-like this one.
-
-`GetSelectedItemsIndexes()`
-
-|Name|Meaning|
-|---|---|
-| **return** | List[int] List of indexes of currently selected items |
-
-#### SetToolTip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
-
-    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
-    when a window.Read() is executed.
 
 ```python
 layout = [[sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
 ```
 
 ![listbox 2](https://user-images.githubusercontent.com/13696193/44959859-b4cd2880-aec3-11e8-881c-1e369d5c6337.jpg)
-
-```
-Listbox(values,
-    default_values=None,
-    select_mode=None,
-    change_submits=False,
-    enable_events=False,
-    bind_return_key=False,
-    size=(None, None),
-    disabled=False,
-    auto_size_text=None,
-    font=None,
-    background_color=None,
-    text_color=None,
-    key=None,
-    pad=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|List[Any] list of values to display. Can be any type including mixed types as long as they have __str__ method|
-|default_values|List[Any] which values should be initially selected|
-|select_mode|[enum] Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected. Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Listbox generates events when an item is clicked|
-|bind_return_key|(bool) If True, then the return key will cause a the Listbox to generate an event|
-|size|Tuple(int, int) (width, height) width = characters-wide, height = rows-high|
-|disabled|(bool) set disable state for element|
-|auto_size_text|(bool) True if element should be the same size as the contents|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Update
-
-Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(values=None,
-    disabled=None,
-    set_to_index=None,
-    scroll_to_index=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|List[Any] new list of choices to be shown to user|
-|disabled|(bool) disable or enable state of the element|
-|set_to_index|Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted|
-|scroll_to_index|(int) scroll the listbox so that this index is the first shown|
-|visible|(bool) control visibility of element|
-
-#### SetValue
-
-Set listbox highlighted choices
-
-```
-SetValue(values)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|List[Any] new values to choose based on previously set values|
-
-#### GetListValues
-
-Returns list of Values provided by the user in the user's format
-
-`GetListValues()`
-
-|Name|Meaning|
-|---|---|
-| **return** | List[Any]. List of values. Can be any / mixed types -> [] |
-
-#### SetFocus
-
-Moves the focus to this Listbox
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool). If True, will call focus_force instead of focus_set|
-
-#### SetToolTip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
 
 ---
 
@@ -3577,8 +2630,6 @@ Another way ListBoxes can cause Reads to return is if the flag bind_return_key i
 
 Sliders have a couple of slider-specific settings as well as appearance settings. Examples include the `orientation` and `range` settings.
 
-    A slider, horizontal or vertical
-
 ```python
 layout = [[sg.Slider(range=(1,500),
          default_value=222,
@@ -3589,112 +2640,11 @@ layout = [[sg.Slider(range=(1,500),
 
 ![slider](https://user-images.githubusercontent.com/13696193/44959858-b4349200-aec3-11e8-9e25-c0fcf025d19e.jpg)
 
-```
-Slider(range=(None, None),
-    default_value=None,
-    resolution=None,
-    tick_interval=None,
-    orientation=None,
-    disable_number_display=False,
-    border_width=None,
-    relief=None,
-    change_submits=False,
-    enable_events=False,
-    disabled=False,
-    size=(None, None),
-    font=None,
-    background_color=None,
-    text_color=None,
-    key=None,
-    pad=None,
-    tooltip=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|range|Union[Tuple[int, int], Tuple[float, float]] slider's range (min value, max value)|
-|default_value|Union[int, float] starting value for the slider|
-|resolution|Union[int, float] the smallest amount the slider can be moved|
-|tick_interval|Union[int, float] how often a visible tick should be shown next to slider|
-|orientation|(str) 'horizontal' or 'vertical' ('h' or 'v' also work)|
-|disable_number_display|(bool) if True no number will be displayed by the Slider Element|
-|border_width|(int) width of border around element in pixels|
-|relief|(enum) relief style. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
-|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
-|enable_events|(bool) If True then moving the slider will generate an Event|
-|disabled|(bool) set disable state for element|
-|size|Tuple[int, int] (width in characters, height in rows)|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|background_color|(str) color of slider's background|
-|text_color|(str) color of the slider's text|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|visible|(bool) set visibility state of the element|
-
 ### Qt Sliders
 
 There is an important difference between Qt and tkinter sliders.  On Qt, the slider values must be integer, not float.  If you want your slider to go from 0.1 to 1.0, then make your slider go from 1 to 10 and divide by 10.  It's an easy math thing to do and not a big deal.  Just deal with it.... you're writing software after all.  Presumably you know how to do these things.  ;-)
 
-### Slider Methods
-
-#### Update
-
-Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None,
-    range=(None, None),
-    disabled=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|Union[int, float] sets current slider value|
-|range|Union[Tuple[int, int], Tuple[float, float] Sets a new range for slider|
-|disabled|(bool) disable or enable state of the element|
-|visible|(bool) control visibility of element|
-
-#### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-## Radio Element
-
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
-
-    Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
-    1 choice in a list of choices.
 
 ```python
 layout =  [
@@ -3705,323 +2655,22 @@ layout =  [
 
 ![radio](https://user-images.githubusercontent.com/13696193/44959857-b4349200-aec3-11e8-8e2d-e6a49ffbd0b6.jpg)
 
-```
-Radio(text,
-    group_id,
-    default=False,
-    disabled=False,
-    size=(None, None),
-    auto_size_text=None,
-    background_color=None,
-    text_color=None,
-    font=None,
-    key=None,
-    pad=None,
-    tooltip=None,
-    change_submits=False,
-    enable_events=False,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|text|(str) Text to display next to button|
-|group_id|(Any) Groups together multiple Radio Buttons. Any type works|
-|default|(bool). Set to True for the one element of the group you want initially selected|
-|disabled|(bool) set disable state|
-|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
-|auto_size_text|(bool) if True will size the element to match the length of the text|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Radio Button events happen when an item is selected|
-|visible|(bool) set visibility state of the element|
-
-###  Methods
-
-#### Update
-
-Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None,
-    disabled=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(bool) if True change to selected and set others in group to unselected|
-|disabled|(bool) disable or enable state of the element|
-|visible|(bool) control visibility of element|
-
-#### Get
-
-A snapshot of the value of Radio Button -> (bool)
-
-`Get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (bool) True if this radio button is selected |
-
-#### ResetGroup
-
-Sets all Radio Buttons in the group to not selected
-
-```python
-ResetGroup()
-```
-
-#### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
 ## Checkbox Element | `CBox == CB == Check`
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
-
-    Checkbox Element - Displays a checkbox and text next to it
 
 ```python
 layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My second Checkbox!')]]
 ```
 ![checkbox](https://user-images.githubusercontent.com/13696193/44959906-6f5d2b00-aec4-11e8-9c8a-962c787f0286.jpg)
 
-```
-Checkbox(text,
-    default=False,
-    size=(None, None),
-    auto_size_text=None,
-    font=None,
-    background_color=None,
-    text_color=None,
-    change_submits=False,
-    enable_events=False,
-    disabled=False,
-    key=None,
-    pad=None,
-    tooltip=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|text|(str) Text to display next to checkbox|
-|default|(bool). Set to True if you want this checkbox initially checked|
-|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
-|auto_size_text|(bool) if True will size the element to match the length of the text|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Checkbox events happen when an item changes|
-|disabled|(bool) set disable state|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Update
-
-Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
-Note that changing visibility may cause element to change locations when made visible after invisible
-
-```
-Update(value=None,
-    disabled=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(bool) if True checks the checkbox, False clears it|
-|disabled|(bool) disable or enable element|
-|visible|(bool) control visibility of element|
-
-#### Get
-
-Return the current state of this checkbox
-
-`Get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (bool) Current state of checkbox |
-
-#### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
 ## Spin Element
 An up/down spinner control.  The valid values are passed in as a list.
-
-    A spinner with up/down buttons and a single line of text. Choose 1 values from list
 
 ```python
 layout =  [[sg.Spin([i for i in range(1,11)], initial_value=1), sg.Text('Volume level')]]
 ```
 
 ![spinner](https://user-images.githubusercontent.com/13696193/44959855-b1d23800-aec3-11e8-9f51-afb2109879da.jpg)
-
-```
-Spin(values,
-    initial_value=None,
-    disabled=False,
-    change_submits=False,
-    enable_events=False,
-    size=(None, None),
-    auto_size_text=None,
-    font=None,
-    background_color=None,
-    text_color=None,
-    key=None,
-    pad=None,
-    tooltip=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|List[Any] List of valid values|
-|initial_value|(Any) Initial item to show in window. Choose from list of values supplied|
-|disabled|(bool) set disable state|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
-|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
-|auto_size_text|(bool) if True will size the element to match the length of the text|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Update
-
-Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None,
-    values=None,
-    disabled=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(Any) set the current value from list of choices|
-|values|List[Any] set available choices|
-|disabled|(bool) disable or enable state of the element|
-|visible|(bool) control visibility of element|
-
-#### Get
-
-Return the current chosen value showing in spinbox.
-This value will be the same as what was provided as list of choices.  If list items are ints, then the
-item returned will be an int (not a string)
-
-`Get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (Any) The currently visible entry |
-
-#### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
 
 ## Image Element
 
@@ -4033,103 +2682,7 @@ layout = [
          ]
 ```
 
-    Image Element - show an image in the window. Should be a GIF or a PNG only
-
 ![image](https://user-images.githubusercontent.com/13696193/61885709-4e326e00-aecc-11e9-8695-7193df2831ec.png)
-
-```
-Image(filename=None,
-    data=None,
-    background_color=None,
-    size=(None, None),
-    pad=None,
-    key=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True,
-    enable_events=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|filename|(str) image filename if there is a button image. GIFs and PNGs only.|
-|data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
-|background_color|color of background|
-|size|Tuple[int, int] (width, height) size of image in pixels|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
-|enable_events|(bool) Turns on the element specific events. For an Image element, the event is "image clicked"|
-
-### Methods
-
-#### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-#### Update
-
-Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(filename=None,
-    data=None,
-    size=(None, None),
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|filename|(str) filename to the new image to display.|
-|data|(str) Base64 encoded string|
-|size|Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high|
-|visible|(bool) control visibility of element|
-
-#### UpdateAnimation
-
-Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
-NOTE - does NOT perform a sleep call to delay
-
-```
-UpdateAnimation(source, time_between_frames=0)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
-|time_between_frames|(int) Number of milliseconds to wait between showing frames|
 
 You can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
 
@@ -4188,8 +2741,6 @@ Your PySimpleGUI program is most likely going to contain only `Button` calls. Th
 
 The most basic Button element call to use is `Button`
 
-    Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
-
 ```python
 layout =  [[sg.Button('Ok'), sg.Button('Cancel')]]
 ```
@@ -4205,60 +2756,6 @@ layout =  [[sg.Ok(), sg.Cancel()]]
 ```
 
 In reality `Button` is in fact being called on your behalf.  Behind the scenes, `sg.Ok` and `sg.Cancel` call `Button` with the text set to `Ok` and `Cancel` and returning the results that then go into the layout.  If you were to print the layout it will look identical to the first layout shown that has `Button` shown specifically in the layout.
-
-```
-Button(button_text="",
-    button_type=7,
-    target=(None, None),
-    tooltip=None,
-    file_types=(('ALL Files', '*.*'),),
-    initial_folder=None,
-    disabled=False,
-    change_submits=False,
-    enable_events=False,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    bind_return_key=False,
-    focus=False,
-    pad=None,
-    key=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|(str) Text to be displayed on the button|
-|button_type|(int) You should NOT be setting this directly. ONLY the shortcut functions set this|
-|target|Union[str, Tuple[int, int]] key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|file_types|Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC|
-|initial_folder|(str) starting path for folders and files|
-|disabled|(bool) If True button will be created disabled|
-|click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. If this button is a target, should it generate an event when filled in|
-|image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
-|image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
-|image_size|Tuple[int, int] Size of the image in pixels (width, height)|
-|image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
-|border_width|(int) width of border around button in pixels|
-|size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
-|auto_size_button|(bool) if True the button size is sized to fit the text|
-|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Note - Does not always work on Macs|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|bind_return_key|(bool) If True the return key will cause this button to be pressed|
-|focus|(bool) if True, initial focus will be put on this button|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|visible|(bool) set visibility state of the element|
 
 ### Shortcut, Pre-defined Buttons
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, **set the button text to match the function name and set the parameters to commonly used values**. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
@@ -4476,136 +2973,15 @@ NOTE - Mac users will not be able to use the file_types parameter.  tkinter has 
 The Enter Key can be "bound" to a particular button so that when the key is pressed, it causes the window to return as if the button was clicked.  This is done using the `bind_return_key` parameter in the button calls.
 If there are more than 1 button on a window, the FIRST button that is of type Close window or Read window is used.  First is determined by scanning the window, top to bottom and left to right.
 
-### Methods
-
-#### Click
-
-Generates a click of the button as if the user clicked the button
-        Calls the tkinter invoke method for the button
-
-```python
-Click()
-```
-
-#### GetText
-
-Returns the current text shown on a button
-
-`GetText()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (str) The text currently displayed on the button |
-
-#### SetFocus
-
-Sets the focus to this button.  Can be forced with parameter
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) If True will call focus_force instead of focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-#### Update
-
-Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(text=None,
-    button_color=(None, None),
-    disabled=None,
-    image_data=None,
-    image_filename=None,
-    visible=None,
-    image_subsample=None,
-    image_size=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|text|(str) sets button text|
-|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"|
-|disabled|(bool) disable or enable state of the element|
-|image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
-|image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
-|visible|(bool) control visibility of element|
-|image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
-|image_size|Tuple[int, int] Size of the image in pixels (width, height)|
-
 ## ButtonMenu Element
 
 The ButtonMenu element produces a unique kind of effect.  It's a button, that when clicked, shows you a menu.   It's like clicking one of the top-level menu items on a MenuBar.  As a result, the menu definition take the format of a single  menu entry from  a normal menu definition.  A normal menu definition is  a list of lists.  This definition is one of those lists.
-
-    The Button Menu Element.  Creates a button that when clicked will show a menu similar to right click menu
 
 ```python
  ['Menu', ['&Pause Graph', 'Menu item::optional_key']]
 ```
 
 The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
-
-```
-ButtonMenu(button_text,
-    menu_def,
-    tooltip=None,
-    disabled=False,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    pad=None,
-    key=None,
-    tearoff=False,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|(str) Text to be displayed on the button|
-|menu_def|List[List[str]] A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|disabled|(bool) If True button will be created disabled|
-|image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
-|image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
-|image_size|Tuple[int, int] Size of the image in pixels (width, height)|
-|image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
-|border_width|(int) width of border around button in pixels|
-|size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
-|auto_size_button|(bool) if True the button size is sized to fit the text|
-|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|tearoff|(bool) Determines if menus should allow them to be torn off|
-|visible|(bool) set visibility state of the element|
 
 One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
 
@@ -4618,24 +2994,11 @@ This element has limited usefulness and is being included more for completeness 
 
 It works best when placed between columns or elements that span multiple rows.  If on a "normal" row with elements that are only 1 row high, then it will only span that one row.
 
-    Vertical Separator Element draws a vertical line at the given location. It will span 1 "row". Usually paired with
-    Column Element if extra height is needed
-
 ```python
 VerticalSeparator(pad=None)
 ```
 
 ![snag-0129](https://user-images.githubusercontent.com/13696193/47376041-a92a0100-d6bf-11e8-8f5b-0c0df56cf0f3.jpg)
-
-```
-VerticalSeparator(pad=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 
 ## ProgressBar Element
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.
@@ -4653,8 +3016,6 @@ The return value for `OneLineProgressMeter` is:
 
 #### Progress Meter in Your window
 Another way of using a Progress Meter with PySimpleGUI is to build a custom window with a `ProgressBar` Element in the window.  You will need to run your window as a non-blocking window.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
-
-    Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
 
 ```python
 import PySimpleGUI as sg
@@ -4681,36 +3042,6 @@ window.Close()
 
 ![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
 
-```
-ProgressBar(max_value,
-    orientation=None,
-    size=(None, None),
-    auto_size_text=None,
-    bar_color=(None, None),
-    style=None,
-    border_width=None,
-    relief=None,
-    key=None,
-    pad=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|max_value|(int) max value of progressbar|
-|orientation|(str) 'horizontal' or 'vertical'|
-|size|Tuple[int, int] Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high)|
-|auto_size_text|(bool) Not sure why this is here|
-|bar_color|Tuple[str, str] The 2 colors that make up a progress bar. One is the background, the other is the bar|
-|style|(str) Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
-|border_width|(int) The amount of pixels that go around the outside of the bar|
-|relief|(str) relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|visible|(bool) set visibility state of the element|
-
 ## Output Element
 
 The Output Element is a re-direction of Stdout.
@@ -4721,58 +3052,11 @@ If you are looking for a way to quickly add the ability to show scrolling text w
 
 ***IMPORTANT***  You will NOT see what you `print` until you call either `window.Read` or `window.Refresh`.  If you want to immediately see what was printed, call `window.Refresh()` immediately after your print statement.
 
-    Output Element - a multi-lined text area where stdout and stderr are re-routed to.
-
 ```python
 Output(size=(80,20))
 ```
 
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)
-
-```
-Output(size=(None, None),
-    background_color=None,
-    text_color=None,
-    pad=None,
-    font=None,
-    tooltip=None,
-    key=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|background_color|(str) color of background|
-|text_color|(str) color of the text|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Update
-
-This method is used to "clear" the Output window.  If you have a lot of text in it, setting the value to `` will clear it.  The Update also has a visibility parameter like other elements.
-
-Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value=None, visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|value|(str) string that will replace current contents of the output area|
-|visible|(bool) control visibility of element|
 
 ----
 
@@ -4810,37 +3094,9 @@ Columns are specified in exactly the same way as a window is, as a list of lists
 
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
 
-    A container element that is used to create a layout within your window's layout
-
 ![column](https://user-images.githubusercontent.com/13696193/44959988-66b92480-aec5-11e8-9c26-316ed24a68c0.jpg)
 
 Without a Column Element you can't create a layout like this.  But with it, you should be able to closely match any layout created using tkinter only.
-
-```
-Column(layout,
-    background_color=None,
-    size=(None, None),
-    pad=None,
-    scrollable=False,
-    vertical_scroll_only=False,
-    right_click_menu=None,
-    key=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|layout|List[List[Element]] Layout that will be shown in the Column container|
-|background_color|(str) color of background of entire Column|
-|size|Tuple[int, int] (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|scrollable|(bool) if True then scrollbars will be added to the column|
-|vertical_scroll_only|(bool) if Truen then no horizontal scrollbar will be shown|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|visible|(bool) set visibility state of the element|
 
 ---
 
@@ -4883,49 +3139,11 @@ sg.Popup(event, values, line_width=200)
 
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.
 
-    A Frame Element that contains other Elements. Encloses with a line around elements and a text label.
-
 ![frame element](https://user-images.githubusercontent.com/13696193/45889173-c2245700-bd8d-11e8-8f73-1e5f1be3ddb1.jpg)
 
 Notice how the Frame layout looks identical to a window layout. A window works exactly the same way as a Column and a Frame.  They all are "container elements" - elements that contain other elements.
 
 *These container Elements can be nested as deep as you want.* That's a pretty spiffy feature, right?  Took a lot of work so be appreciative.  Recursive code isn't trivial.
-
-```
-Frame(title,
-    layout,
-    title_color=None,
-    background_color=None,
-    title_location=None,
-    relief="groove",
-    size=(None, None),
-    font=None,
-    pad=None,
-    border_width=None,
-    key=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|title|(str) text that is displayed as the Frame's "label" or title|
-|layout|List[List[Elements]] The layout to put inside the Frame|
-|title_color|(str) color of the title text|
-|background_color|(str) background color of the Frame|
-|title_location|(enum) location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT|
-|relief|(enum) relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
-|size|Tuple[int, int] (width in characters, height in rows) (note this parameter may not always work)|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|border_width|(int) width of border around element in pixels|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
 
 ---
 
@@ -4949,30 +3167,6 @@ window = sg.Window('Frame with buttons', layout, font=("Helvetica", 12))
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.
 
 However, there's another way to get that power and that's through the Graph Element, an even MORE powerful Element as it uses a Canvas that you can directly access if needed.  The Graph Element has a large number of drawing methods that the Canvas Element does not have.
-
-```
-Canvas(canvas=None,
-    background_color=None,
-    size=(None, None),
-    pad=None,
-    key=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|canvas|(tk.Canvas) Your own tk.Canvas if you already created it. Leave blank to create a Canvas|
-|background_color|(str) color of background|
-|size|Tuple[int,int] (width in char, height in rows) size in pixels to make canvas|
-|pad|Amount of padding to put around element|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
 
 ### Matplotlib, Pyplot Integration
 
@@ -5084,470 +3278,13 @@ graph {'graph': (154, 254)}
 graph+UP {'graph': (154, 254)}
 ```
 
-    Creates an area for you to draw on.  The MAGICAL property this Element has is that you interact
-    with the element using your own coordinate system.  This is an important point!!  YOU define where the location
-    is for (0,0).  Want (0,0) to be in the middle of the graph like a math 4-quadrant graph?  No problem!  Set your
-    lower left corner to be (-100,-100) and your upper right to be (100,100) and you've got yourself a graph with
-    (0,0) at the center.
-    One of THE coolest of the Elements.
-    You can also use float values. To do so, be sure and set the float_values parameter.
-    Mouse click and drag events are possible and return the (x,y) coordinates of the mouse
-    Drawing primitives return an "id" that is referenced when you want to operation on that item (e.g. to erase it)
-
-```
-Graph(canvas_size,
-    graph_bottom_left,
-    graph_top_right,
-    background_color=None,
-    pad=None,
-    change_submits=False,
-    drag_submits=False,
-    enable_events=False,
-    key=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True,
-    float_values=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|canvas_size|Tuple[int, int] (width, height) size of the canvas area in pixels|
-|graph_bottom_left|Tuple[int, int] (x,y) The bottoms left corner of your coordinate system|
-|graph_top_right|Tuple[int, int] (x,y) The top right corner of your coordinate system|
-|background_color|(str) background color of the drawing area|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
-|drag_submits|(bool) if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down|
-|enable_events|(bool) If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element (Default = True)|
-|float_values|(bool) If True x,y coordinates are returned as floats, not ints|
-
-### Methods
-
-All of the Drawing methods return a "***figure***" that can be used move and delete the drawn figure.
-
-#### DeleteFigure
-
-Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
-
-```
-DeleteFigure(id)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|id|(int) the id returned to you when calling one of the drawing methods|
-
-#### DrawArc
-
-Draws different types of arcs.  Uses a "bounding box" to define location
-
-```
-DrawArc(top_left,
-    bottom_right,
-    extent,
-    start_angle,
-    style=None,
-    arc_color="black")
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle|
-|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
-|extent|(float) Andle to end drawing. Used in conjunction with start_angle|
-|start_angle|(float) Angle to begin drawing. Used in conjunction with extent|
-|style|(str) Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last', 'butt', 'projecting', 'round', 'bevel', 'miter'|
-|arc_color|(str) color to draw arc with|
-|||
-| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the arc |
-
-#### DrawCircle
-
-Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
-
-```
-DrawCircle(center_location,
-    radius,
-    fill_color=None,
-    line_color="black")
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|center_location|Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system|
-|radius|Union[int, float] Radius in user's coordinate values.|
-|fill_color|(str) color of the point to draw|
-|line_color|(str) color of the outer line that goes around the circle (sorry, can't set thickness)|
-|||
-| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
-
-#### DrawImage
-
-Places an image onto your canvas.  It's a really important method for this element as it enables so much
-
-```
-DrawImage(filename=None,
-    data=None,
-    location=(None, None),
-    color="black",
-    font=None,
-    angle=0)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|filename|(str) if image is in a file, path and filename for the image. (GIF and PNG only!)|
-|data|Union[str, bytes] if image is in Base64 format or raw? format then use instead of filename|
-|location|Union[Tuple[int, int], Tuple[float, float]] the (x,y) location to place image's top left corner|
-|color|(str) text color|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
-|||
-| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image |
-
-#### DrawLine
-
-Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
-
-```
-DrawLine(point_from,
-    point_to,
-    color="black",
-    width=1)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|point_from|Union[Tuple[int, int], Tuple[float, float]] Starting point for line|
-|point_to|Union[Tuple[int, int], Tuple[float, float]] Ending point for line|
-|color|(str) Color of the line|
-|width|(int) width of line in pixels|
-|||
-| **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br> want to manipulate the line |
-
-#### DrawOval
-
-Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
-
-```
-DrawOval(top_left,
-    bottom_right,
-    fill_color=None,
-    line_color=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle|
-|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
-|fill_color|(str) color of the interrior|
-|line_color|(str) color of outline of oval|
-|||
-| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
-
-#### DrawPoint
-
-Draws a "dot" at the point you specify using the USER'S coordinate system
-
-```
-DrawPoint(point,
-    size=2,
-    color="black")
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|point|Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system|
-|size|Union[int, float] Radius? (Or is it the diameter?) in user's coordinate values.|
-|color|(str) color of the point to draw|
-|||
-| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point |
-
-#### DrawRectangle
-
-Draw a rectangle given 2 points. Can control the line and fill colors
-
-```
-DrawRectangle(top_left,
-    bottom_right,
-    fill_color=None,
-    line_color=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of rectangle|
-|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle|
-|fill_color|(str) color of the interior|
-|line_color|(str) color of outline|
-|||
-| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
-
-#### DrawText
-
-Draw some text on your graph.  This is how you label graph number lines for example
-
-```
-DrawText(text,
-    location,
-    color="black",
-    font=None,
-    angle=0,
-    text_location="center")
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|text|(str) text to display|
-|location|Union[Tuple[int, int], Tuple[float, float]] location to place first letter|
-|color|(str) text color|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
-|text_location|(enum) "anchor" location for the text. Values start with TEXT_LOCATION_|
-|||
-| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text |
-
-#### Erase
-
-Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
-
-```python
-Erase()
-```
-
-#### Move
-
-Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
-
-```
-Move(x_direction, y_direction)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|x_direction|Union[int, float] how far to move in the "X" direction in your coordinates|
-|y_direction|Union[int, float] how far to move in the "Y" direction in your coordinates|
-
-#### MoveFigure
-
-Moves a previously drawn figure using a "delta" from current position
-
-```
-MoveFigure(figure,
-    x_direction,
-    y_direction)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|figure|(id) Previously obtained figure-id. These are returned from all Draw methods|
-|x_direction|Union[int, float] delta to apply to position in the X direction|
-|y_direction|Union[int, float] delta to apply to position in the Y direction|
-
-#### RelocateFigure
-
-Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
-uses absolute coordinates versus relative for Move
-
-```
-RelocateFigure(figure,
-    x,
-    y)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|figure|(id) Previously obtained figure-id. These are returned from all Draw methods|
-|x|Union[int, float] location on X axis (in user coords) to move the upper left corner of the figure|
-|y|Union[int, float] location on Y axis (in user coords) to move the upper left corner of the figure|
-
-#### SetFocus
-
-Sets the current focus to be on this Graph Element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-#### Update
-
-Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(background_color=None, visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|background_color|color of background|
-|visible|(bool) control visibility of element|
-
 ## Table Element
 
 Out of all of the Elements, it's the Table and the Tree that are the most "problematic" in the tkinter inter and Qt implementations.  They're hard is my only defense.
 
-```
-Table(values,
-    headings=None,
-    visible_column_map=None,
-    col_widths=None,
-    def_col_width=10,
-    auto_size_columns=True,
-    max_col_width=20,
-    select_mode=None,
-    display_row_numbers=False,
-    num_rows=None,
-    row_height=None,
-    font=None,
-    justification="right",
-    text_color=None,
-    background_color=None,
-    alternating_row_color=None,
-    row_colors=None,
-    vertical_scroll_only=True,
-    hide_vertical_scroll=False,
-    size=(None, None),
-    change_submits=False,
-    enable_events=False,
-    bind_return_key=False,
-    pad=None,
-    key=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|List[List[Union[str, int, float]]]|
-|headings|List[str] The headings to show on the top line|
-|visible_column_map|List[bool] One entry for each column. False indicates the column is not shown|
-|col_widths|List[int] Number of characters that each column will occupy|
-|def_col_width|(int) Default column width in characters|
-|auto_size_columns|(bool) if True columns will be sized automatically|
-|max_col_width|(int) Maximum width for all columns in characters|
-|select_mode|(enum) Select Mode. Valid values start with "TABLE_SELECT_MODE_". Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED|
-|display_row_numbers|(bool) if True, the first column of the table will be the row #|
-|num_rows|(int) The number of rows of the table to display at a time|
-|row_height|(int) height of a single row in pixels|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|justification|(str) 'left', 'right', 'center' are valid choices|
-|text_color|(str) color of the text|
-|background_color|(str) color of background|
-|alternating_row_color|(str) if set then every other row will have this color in the background.|
-|row_colors||
-|vertical_scroll_only|(bool) if True only the vertical scrollbar will be visible|
-|hide_vertical_scroll|(bool) if True vertical scrollbar will be hidden|
-|size|Tuple[int, int] DO NOT USE! Use num_rows instead|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Table events happen when row is clicked|
-|bind_return_key|(bool) if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
-
 ### Read return values from Table Element
 
 The values returned from a `Window.Read` call for the Table Element are a list of row numbers that are currently highlighted.
-
-### Methods
-
-The Update method can be used to make changes to a table that's already been displayed.  The call takes a single parameter, values, which is the new table to display.  The entire table is replaced.  You must call `window.Finalize`or `window.Read` prior to calling Update on ANY element
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-#### Update
-
-Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(values=None,
-    num_rows=None,
-    visible=None,
-    select_rows=None,
-    alternating_row_color=None,
-    row_colors=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|List[List[Union[str, int, float]]] A new 2-dimensional table to show|
-|num_rows|(int) How many rows to display at a time|
-|visible|(bool) if True then will be visible|
-|select_rows|List[int] List of rows to select as if user did|
-|alternating_row_color|(str) the color to make every other row|
-|row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)|
 
 ---
 ### Known visualization problem....
@@ -5558,108 +3295,11 @@ If you click on the header, it can go into spasms for some tables. I don't under
 
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.
 
-    Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
-    to hold the user's data and pass to the element for display.
-
-```
-Tree(data=None,
-    headings=None,
-    visible_column_map=None,
-    col_widths=None,
-    col0_width=10,
-    def_col_width=10,
-    auto_size_columns=True,
-    max_col_width=20,
-    select_mode=None,
-    show_expanded=False,
-    change_submits=False,
-    enable_events=False,
-    font=None,
-    justification="right",
-    text_color=None,
-    background_color=None,
-    num_rows=None,
-    row_height=None,
-    pad=None,
-    key=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|data|(TreeData) The data represented using a PySimpleGUI provided TreeData class|
-|headings|List[str] List of individual headings for each column|
-|visible_column_map|List[bool] Determines if a column should be visible. If left empty, all columns will be shown|
-|col_widths|List[int] List of column widths so that individual column widths can be controlled|
-|col0_width|(int) Size of Column 0 which is where the row numbers will be optionally shown|
-|def_col_width|(int) default column width|
-|auto_size_columns|(bool) if True, the size of a column is determined using the contents of the column|
-|max_col_width|(int) the maximum size a column can be|
-|select_mode|(enum) Use same values as found on Table Element. Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED|
-|show_expanded|(bool) if True then the tree will be initially shown with all nodes completely expanded|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
-|enable_events|(bool) Turns on the element specific events. Tree events happen when row is clicked|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|justification|(str) 'left', 'right', 'center' are valid choices|
-|text_color|(str) color of the text|
-|background_color|(str) color of background|
-|num_rows|(int) The number of rows of the table to display at a time|
-|row_height|(int) height of a single row in pixels|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
-
 Unlike Tables there is no standard format for trees.  Thus the data structure passed to the Tree Element must be constructed.  This is done using the TreeData class.  The process is as follows:
 
 - Get a TreeData Object
 - "Insert" data into the tree
 - Pass the filled in TreeData object to Tree Element
-
-### Methods
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-#### Update
-
-Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(values=None,
-    key=None,
-    value=None,
-    text=None,
-    icon=None,
-    visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|values|(TreeData) Representation of the tree|
-|key|(Any) identifies a particular item in tree to update|
-|value|(Any) sets the node identified by key to a particular value|
-|text|(str) sets the node identified by ket to this string|
-|icon|Union[bytes, str] can be either a base64 icon or a filename for the icon|
-|visible|(bool) control visibility of element|
 
 #### TreeData format
 ```python
@@ -5698,15 +3338,15 @@ Here is the result of showing an icon with a tree entry.
 
 ## Tab and Tab Group Elements
 
-Tabs have been a part of PySimpleGUI since the initial release.  However, the initial implementation applied tabs at the top level only. The entire window had to be tabbed.  There with other limitations that came along with that implementation.  That all changed in version 3.8.0 with the new elements - Tab and TabGroup.  The old implementation of Tabs was removed in version 3.8.0 as well.
+Tabs are another of PySimpleGUI "Container Elements".  It is capable of "containing" a layout just as a window contains a layout.  Other container elements include the `Column` and `Frame` elements.
 
-Tabs are another "Container Element".  The other Container Elements include:
-* Frame
-* Column
+Just like windows and the other container elements, the `Tab` Element has a layout consisting of any desired combination of Elements in any desired layouts.  You can have Tabs inside of Tabs inside of Columns inside of Windows, etc.
 
-You layout a Frame in exactly the same way as a Frame or Column elements, by passing in a list of elements.
+`Tab` layouts look exactly like Window layouts, that is they are **a list of lists of Elements**.
 
-How you place a Tab into a Window is different than Graph or Frame elements.  You cannot place a tab directly into a Window's layout.  It much first be placed into a TabGroup.  The  TabGroup can then be placed into the Window.
+*How you place a Tab element into a window is different than all other elements.*  You cannot place a Tab directly into a Window's layout.  
+
+Tabs are contained in TabGroups.  They are **not** placed into other layouts.  To get a Tab into your window, first place the `Tab` Element into a `TabGroup` Element and then place the `TabGroup` Element into the Window layout.
 
 Let's look at this Window as an example:
 
@@ -5715,102 +3355,6 @@ Let's look at this Window as an example:
 View of second tab:
 
 ![tabbed 2](https://user-images.githubusercontent.com/13696193/45992809-b10f6a80-c059-11e8-94e6-3bf543c9b0bd.jpg)
-
-First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
-
-## Tab Element
-
-    Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
-    Tabs are never placed directly into a layout.  They are always "Contained" in a TabGroup layout
-
-```
-Tab(title,
-    layout,
-    title_color=None,
-    background_color=None,
-    font=None,
-    pad=None,
-    disabled=False,
-    border_width=None,
-    key=None,
-    tooltip=None,
-    right_click_menu=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|title|(str) text to show on the tab|
-|layout|List[List[Element]] The element layout that will be shown in the tab|
-|title_color|(str) color of the tab text (note not currently working on tkinter)|
-|background_color|(str) color of background of the entire layout|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|disabled|(bool) If True button will be created disabled|
-|border_width|(int) width of border around element in pixels|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
-|visible|(bool) set visibility state of the element|
-
-### Methods
-
-#### Select
-
-Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
-
-```python
-Select()
-```
-
-#### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-#### Update
-
-Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(disabled=None, visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|disabled|(bool) disable or enable state of the element|
-|visible|(bool) control visibility of element|
-
-### TabGroup Element
-
-    TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
 
 ```python
 tab1_layout =  [[sg.T('This is inside tab 1')]]
@@ -5828,7 +3372,7 @@ layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layo
 
 The Window layout has the TabGroup and within the tab Group are the two Tab elements.
 
-One important thing to notice about all of these container Elements... they all take a "list of lists" at the layout.  They all have a layout that starts with `[[`
+One important thing to notice about all of these container Elements and Windows layouts... they all take a "list of lists" as the layout.  They all have a layout that looks like this `[[   ]]`
 
 You will want to keep this `[[ ]]` construct in your head a you're debugging your tabbed windows.  It's easy to overlook one or two necessary ['s
 
@@ -5842,126 +3386,17 @@ Check out Tabs 7 and 8.  We've got a Window with a Column containing Tabs 5 and 
 
 As of Release 3.8.0, not all of *options* shown in the API definitions of the Tab and TabGroup Elements are working. They are there as placeholders.
 
-```
-TabGroup(layout,
-    tab_location=None,
-    title_color=None,
-    selected_title_color=None,
-    background_color=None,
-    font=None,
-    change_submits=False,
-    enable_events=False,
-    pad=None,
-    border_width=None,
-    theme=None,
-    key=None,
-    tooltip=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|layout|List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row|
-|tab_location|(str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright|
-|title_color|(str) color of text on tabs|
-|selected_title_color|(str) color of tab when it is selected|
-|background_color|(str) color of background of tabs|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
-|enable_events|(bool) If True then switching tabs will generate an Event|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|border_width|(int) width of border around element in pixels|
-|theme|(enum) tabs can be 'themed'. These are the choices (some may not work on your OS): THEME_DEFAULT THEME_WINNATIVE THEME_CLAM THEME_ALT THEME_CLASSIC THEME_VISTA THEME_XPNATIVE|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|visible|(bool) set visibility state of the element|
+First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
 
 ### Reading Tab Groups
 
 Tab Groups now return a value when a Read returns.  They return which tab is currently selected.  There is also a `enable_events` parameter that can be set that causes a Read to return if a Tab in that group is selected / changed.  The key or title belonging to the Tab that was switched to will be returned as the value
 
-### Method
-
-#### Get
-
-Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
-the tab if no key is defined.  Returns None if an error occurs.
-Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
-are using this method correctly?
-
-`Get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | Union[Any, None] The key of the currently selected tab or the tab's text if it has no key |
-
-#### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-#### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-## Pane Element
+x## Pane Element
 
 New in version 3.20 is the Pane Element, a super-cool tkinter feature.  You won't find this one in PySimpleGUIQt, only PySimpleGUI.   It's difficult to describe one of these things.  Think of them as "Tabs without labels" that you can slide.
 
-    A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
-
 ![pane3](https://user-images.githubusercontent.com/13696193/50035040-fcd50e80-ffcd-11e8-939c-df8ab8d64712.gif)
-
-```
-Pane(pane_list,
-    background_color=None,
-    size=(None, None),
-    pad=None,
-    orientation="vertical",
-    show_handle=True,
-    relief="raised",
-    handle_size=None,
-    border_width=None,
-    key=None,
-    visible=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|pane_list|List[Column] Must be a list of Column Elements. Each Column supplied becomes one pane that's shown|
-|background_color|(str) color of background|
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high How much room to reserve for the Pane|
-|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
-|orientation|(str) 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide|
-|show_handle|(bool) if True, the handle is drawn that makes it easier to grab and slide|
-|relief|(enum) relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
-|handle_size|(int) Size of the handle in pixels|
-|border_width|(int) width of border around element in pixels|
-|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
-|visible|(bool) set visibility state of the element|
 
 ***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
 
@@ -6176,77 +3611,17 @@ You can update any of these items within a SystemTray object
 
 # Global Settings
 
-**Global Settings**
-Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
+There are multiple ways to customize PySimpleGUI.  The call with the most granularity (allows access to specific and precise settings).  The `ChangeLookAndFeel` call is in reality a single call to `SetOptions` where it changes 13 different settings.  
 
-    SetOptions(icon=None
-        button_color=(None,None)
-        element_size=(None,None),
-        margins=(None,None),
-        element_padding=(None,None)
-        auto_size_text=None
-        auto_size_buttons=None
-        font=None
-        border_width=None
-        slider_border_width=None
-        slider_relief=None
-        slider_orientation=None
-        autoclose_time=None
-        message_box_line_width=None
-        progress_meter_border_depth=None
-        progress_meter_style=None
-        progress_meter_relief=None
-        progress_meter_color=None
-        progress_meter_size=None
-        text_justification=None
-        text_color=None
-        background_color=None
-        element_background_color=None
-        text_element_background_color=None
-        input_elements_background_color=None
-        element_text_color=None
-        input_text_color=None
-        scrollbar_color=None, text_color=None
-        debug_win_size=(None,None)
-        window_location=(None,None)
-        tooltip_time = None
+**Mac Users** - You can't call `ChangeLookAndFeel` but you can call `SetOptions` with any sets of values you want.  Nothing is being blocked or filtered.
 
-Explanation of parameters
+**These settings apply to all windows that are created in the future.**
 
-|Name|Meaning|
-|----- | ---- |
-| element_padding      | tkinter padding around each element |
-| auto_size_text   | autosize the elements to fit their text |
-| auto_size_buttons    | autosize the buttons to fit their text |
-| border_width     | amount of bezel or border around sunken or raised elements |
-| slider_border_width      | changes the way sliders look |
-| slider_relief    | changes the way sliders look |
-| slider_orientation   | changes orientation of slider |
-| autoclose_time   | time in seconds for autoclose boxes |
-| message_box_line_width   | number of characers in a line of text in message boxes |
-| progress_meter_border_depth      | amount of border around raised or lowered progress meters |
-| progress_meter_style     | style of progress meter as defined by tkinter |
-| progress_meter_relief    | relief style |
-| progress_meter_color     | color of the bar and background of progress meters |
-| progress_meter_size      | size in (characters, pixels) |
-| background_color     | Color of the main window's background |
-| element_background_color     | Background color of the elements |
-| text_element_background_color    | Text element background color |
-| input_elements_background_color      | Input fields background color |
-| element_text_color   | Text color of elements that have text, like Radio Buttons |
-| input_text_color     | Color of the text that you type in |
-| scrollbar_color      | Color for scrollbars (may not always work) |
-| text_color   | Text element default text color |
-| text_justification   | justification to use on Text Elements. Values are strings - 'left', 'right', 'center' |
-| debug_win_size   | size of the Print output window |
-| window_location      | location on the screen (x,y) of window's top left cornder |
-| | |
+ `SetOptions`.  The  options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the window-level being the highest and the Element-level the lowest.  Thus the levels are:
 
-These settings apply to all windows `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the window-level being the highest and the Element-level the lowest.  Thus the levels are:
-
- - window level
- - Row level
- - Element level
+ - Global
+ - Window
+ - Element
 
 Each lower level overrides the settings of the higher level.  Once settings have been changed, they remain changed for the duration of the program (unless changed again).
 
@@ -6284,7 +3659,7 @@ window.Close()
 
 ## Read(timeout = t, timeout_key=TIMEOUT_KEY)
 
-Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, if you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
+Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
 
 One way of thinking of reads with timeouts:
 > During the timeout time, you are "yielding" the processor to do other tasks.
@@ -6315,17 +3690,16 @@ while True:             # Event Loop
 
 This event loop will run every 100 ms.  You're making a Read call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
 
-## Non-Blocking Windows   (Asynchronous reads)
+## Non-Blocking Windows   (Asynchronous reads, timeouts)
 
-There are TWO ways to perform a non-blocking read.
+You can easily spot a non-blocking call in PySimpleGUI.  If you see a call to `Window.Read()` with a timeout parameter set to a value other than `None`, then it is a non-blocking call.
 
-The "old way" was:
-```python
-event, values = sg.ReadNonBlocking()
+This call to read is asynchronous as it has a timeout value:
+
 ```
 The new way
 ```python
-event, values = sg.Read(timeout=0)
+event, values = sg.Read(timeout=20)
 ```
 You should use the new way if you're reading this for the first time.
 
@@ -6334,7 +3708,7 @@ The difference in the 2 calls is in the value of event.  For ReadNonBlocking, ev
 ## sg.TIMEOUT_KEY
 
 If you're using the new, timeout=0 method, then an event value of None signifies that the window was closed, just like a normal Read.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `timeout_key`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
-TIMEOUT_KEY = '__timeout__'
+`TIMEOUT_KEY = __timeout__`
 
 If you wanted to test for "no event" in your loop, it would be written like this:
 ```python
@@ -6346,9 +3720,13 @@ while True:
         print("Nothing happened")
 ```
 
-Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.      It's important to be a good citizen.   Don't chew up CPU cycles needlessly.
+Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and yuou've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
-Non-blocking is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+Non-blocking (timeout=0) is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+
+### Small Timeout Values (under 10ms)
+
+***Do Not*** use a timeout of less than 10ms.  Otherwise you will simply thrash, spending your time trying to do some GUI stuff, only to be interruped by a timeout timer before it can get anything done.  The results are potentially disasterous.
 
 There is a hybrid approach... a read with a timeout.   You'll score much higher points on the impressive meter if you're able to use a lot less CPU time by using this type of read.
 
@@ -6598,21 +3976,6 @@ You want to turn off the default focus so that there no buttons that will be sel
 
 Beginning in version 3.01 you can add a MenuBar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as in the values dictionary.  The value returned will be the entire menu entry, including the key if you specified one.
 
-    Menu Element is the Element that provides a Menu Bar that goes across the top of the window, just below titlebar.
-    Here is an example layout.  The "&" are shortcut keys ALT+key.
-    Is a List of -  "Item String" + List
-    Where Item String is what will be displayed on the Menubar itself.
-    The List that follows the item represents the items that are shown then Menu item is clicked
-    Notice how an "entry" in a mennu can be a list which means it branches out and shows another menu, etc. (resursive)
-    menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
-                ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
-                ['&Debugger', ['Popout', 'Launch Debugger']],
-                ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
-                ['&Help', '&About...'], ]
-    Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
-    can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
-    menu is shown.  The key portion is returned as part of the event.
-
 ```python
     menu_def = [['File', ['Open', 'Save', 'Exit',]],
                 ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
@@ -6624,19 +3987,6 @@ Beginning in version 3.01 you can add a MenuBar to your window.  You specify the
 Note the placement of ',' and of [].  It's tricky to get the nested menus correct that implement cascading menus.  See how paste has Special and Normal as a list after it.  This means that Paste has a cascading menu with items Special and Normal.
 
 ## Methods
-
-Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
-
-```
-Update(menu_definition=None, visible=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|menu_definition|List[List[Tuple[str, List[str]]]|
-|visible|(bool) control visibility of element|
 
 ---
 
@@ -6800,6 +4150,5123 @@ while True:
                 win1.UnHide()
                 break
 ```
+
+------------------
+
+# ELEMENT AND FUNCTION CALL REFERENCE
+
+This reference section was previously intermixed with the text explanation, diagrams, code samples, etc.  That was OK early on, but now that there are more Elements and more methods are being added on a fequent basis, it means that keeping this list updated is a difficult chore if it has a lot of text all around it.
+
+Hoping this is a change for the better and that users will be able to find the information they seek quicker.
+
+NOTE that this documentatiuopn section is created using the ***GitHUB released PySimpleGUI.py file***.  Some of the calls may not be available to you or your port (Qt, Wx, Web).  And some of the parameters may be different.  We're working on adding docstrings to all the ports which will enable this kind of document to be available for each port.
+
+Without further delay... here are all of the Elements
+
+### Button Element
+
+    Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
+
+```
+Button(button_text="",
+    button_type=7,
+    target=(None, None),
+    tooltip=None,
+    file_types=(('ALL Files', '*.*'),),
+    initial_folder=None,
+    disabled=False,
+    change_submits=False,
+    enable_events=False,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|(str) Text to be displayed on the button|
+|button_type|(int) You should NOT be setting this directly. ONLY the shortcut functions set this|
+|target|Union[str, Tuple[int, int]] key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|file_types|Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC|
+|initial_folder|(str) starting path for folders and files|
+|disabled|(bool) If True button will be created disabled|
+|click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. If this button is a target, should it generate an event when filled in|
+|image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
+|image_size|Tuple[int, int] Size of the image in pixels (width, height)|
+|image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
+|border_width|(int) width of border around button in pixels|
+|size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
+|auto_size_button|(bool) if True the button size is sized to fit the text|
+|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Note - Does not always work on Macs|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|bind_return_key|(bool) If True the return key will cause this button to be pressed|
+|focus|(bool) if True, initial focus will be put on this button|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|visible|(bool) set visibility state of the element|
+
+#### ButtonCallBack
+
+Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
+
+```python
+ButtonCallBack()
+```
+
+#### ButtonPressCallBack
+
+Not a user callable method. Callback called by tkinter when a "realtime" button is pressed
+
+```
+ButtonPressCallBack(parm)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|parm|Event info passed in by tkinter|
+
+#### ButtonReleaseCallBack
+
+Not a user callable function.  Called by tkinter when a "realtime" button is released
+
+```
+ButtonReleaseCallBack(parm)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|parm|the event info from tkinter|
+
+#### Click
+
+Generates a click of the button as if the user clicked the button
+        Calls the tkinter invoke method for the button
+
+```python
+Click()
+```
+
+#### GetText
+
+Returns the current text shown on a button
+
+`GetText()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (str) The text currently displayed on the button |
+
+#### SetFocus
+
+Sets the focus to this button.  Can be forced with parameter
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) If True will call focus_force instead of focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(text=None,
+    button_color=(None, None),
+    disabled=None,
+    image_data=None,
+    image_filename=None,
+    visible=None,
+    image_subsample=None,
+    image_size=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|text|(str) sets button text|
+|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"|
+|disabled|(bool) disable or enable state of the element|
+|image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
+|image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|visible|(bool) control visibility of element|
+|image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
+|image_size|Tuple[int, int] Size of the image in pixels (width, height)|
+
+### ButtonMenu Element
+
+    The Button Menu Element.  Creates a button that when clicked will show a menu similar to right click menu
+
+```
+ButtonMenu(button_text,
+    menu_def,
+    tooltip=None,
+    disabled=False,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    pad=None,
+    key=None,
+    tearoff=False,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|(str) Text to be displayed on the button|
+|menu_def|List[List[str]] A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|disabled|(bool) If True button will be created disabled|
+|image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
+|image_size|Tuple[int, int] Size of the image in pixels (width, height)|
+|image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
+|border_width|(int) width of border around button in pixels|
+|size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
+|auto_size_button|(bool) if True the button size is sized to fit the text|
+|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|tearoff|(bool) Determines if menus should allow them to be torn off|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(menu_definition, visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|menu_definition|(List[List]) New menu definition (in menu definition format)|
+|visible|(bool) control visibility of element|
+
+### Canvas Element
+
+```
+Canvas(canvas=None,
+    background_color=None,
+    size=(None, None),
+    pad=None,
+    key=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|canvas|(tk.Canvas) Your own tk.Canvas if you already created it. Leave blank to create a Canvas|
+|background_color|(str) color of background|
+|size|Tuple[int,int] (width in char, height in rows) size in pixels to make canvas|
+|pad|Amount of padding to put around element|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### TKCanvas
+
+### Checkbox Element
+
+    Checkbox Element - Displays a checkbox and text next to it
+
+```
+Checkbox(text,
+    default=False,
+    size=(None, None),
+    auto_size_text=None,
+    font=None,
+    background_color=None,
+    text_color=None,
+    change_submits=False,
+    enable_events=False,
+    disabled=False,
+    key=None,
+    pad=None,
+    tooltip=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|text|(str) Text to display next to checkbox|
+|default|(bool). Set to True if you want this checkbox initially checked|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
+|auto_size_text|(bool) if True will size the element to match the length of the text|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Checkbox events happen when an item changes|
+|disabled|(bool) set disable state|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|visible|(bool) set visibility state of the element|
+
+#### Get
+
+Return the current state of this checkbox
+
+`Get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (bool) Current state of checkbox |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
+Note that changing visibility may cause element to change locations when made visible after invisible
+
+```
+Update(value=None,
+    disabled=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(bool) if True checks the checkbox, False clears it|
+|disabled|(bool) disable or enable element|
+|visible|(bool) control visibility of element|
+
+### Column Element
+
+    A container element that is used to create a layout within your window's layout
+
+```
+Column(layout,
+    background_color=None,
+    size=(None, None),
+    pad=None,
+    scrollable=False,
+    vertical_scroll_only=False,
+    right_click_menu=None,
+    key=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|layout|List[List[Element]] Layout that will be shown in the Column container|
+|background_color|(str) color of background of entire Column|
+|size|Tuple[int, int] (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|scrollable|(bool) if True then scrollbars will be added to the column|
+|vertical_scroll_only|(bool) if Truen then no horizontal scrollbar will be shown|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|visible|(bool) set visibility state of the element|
+
+#### AddRow
+
+Not recommended user call.  Used to add rows of Elements to the Column Element.
+
+```
+AddRow(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+#### Layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The rows of Elements|
+|||
+| **return** | (Column) Used for chaining |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|visible|(bool) control visibility of element|
+
+### Combo Element
+
+    ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
+
+```
+Combo(values,
+    default_value=None,
+    size=(None, None),
+    auto_size_text=None,
+    background_color=None,
+    text_color=None,
+    change_submits=False,
+    enable_events=False,
+    disabled=False,
+    key=None,
+    pad=None,
+    tooltip=None,
+    readonly=False,
+    font=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[Any] values to choose. While displayed as text, the items returned are what the caller supplied, not text|
+|default_value|(Any) Choice to be displayed as initial value. Must match one of values variable contents|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
+|auto_size_text|(bool) True if element should be the same size as the contents|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|change_submits|(bool) DEPRICATED DO NOT USE. Use `enable_events` instead|
+|enable_events|(bool) Turns on the element specific events. Combo event is when a choice is made|
+|disabled|(bool) set disable state for element|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text that will appear when mouse hovers over this element|
+|readonly|(bool) make element readonly (user can't change). True means user cannot change|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|visible|(bool) set visibility state of the element|
+
+#### Get
+
+Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
+You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
+
+`Get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Union[Any, None] Returns the value of what is currently chosen |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    values=None,
+    set_to_index=None,
+    disabled=None,
+    readonly=None,
+    font=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(Any) change which value is current selected hased on new list of previous list of choices|
+|values|List[Any] change list of choices|
+|set_to_index|(int) change selection to a particular choice starting with index = 0|
+|disabled|(bool) disable or enable state of the element|
+|readonly|(bool) if True make element readonly (user cannot change any choices)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|visible|(bool) control visibility of element|
+
+### Frame Element
+
+    A Frame Element that contains other Elements. Encloses with a line around elements and a text label.
+
+```
+Frame(title,
+    layout,
+    title_color=None,
+    background_color=None,
+    title_location=None,
+    relief="groove",
+    size=(None, None),
+    font=None,
+    pad=None,
+    border_width=None,
+    key=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|(str) text that is displayed as the Frame's "label" or title|
+|layout|List[List[Elements]] The layout to put inside the Frame|
+|title_color|(str) color of the title text|
+|background_color|(str) background color of the Frame|
+|title_location|(enum) location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT|
+|relief|(enum) relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
+|size|Tuple[int, int] (width in characters, height in rows) (note this parameter may not always work)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|border_width|(int) width of border around element in pixels|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### AddRow
+
+Not recommended user call.  Used to add rows of Elements to the Frame Element.
+
+```
+AddRow(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+#### Layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The rows of Elements|
+|||
+| **return** | (Frame) Used for chaining |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|visible|(bool) control visibility of element|
+
+### Graph Element
+
+    Creates an area for you to draw on.  The MAGICAL property this Element has is that you interact
+    with the element using your own coordinate system.  This is an important point!!  YOU define where the location
+    is for (0,0).  Want (0,0) to be in the middle of the graph like a math 4-quadrant graph?  No problem!  Set your
+    lower left corner to be (-100,-100) and your upper right to be (100,100) and you've got yourself a graph with
+    (0,0) at the center.
+    One of THE coolest of the Elements.
+    You can also use float values. To do so, be sure and set the float_values parameter.
+    Mouse click and drag events are possible and return the (x,y) coordinates of the mouse
+    Drawing primitives return an "id" that is referenced when you want to operation on that item (e.g. to erase it)
+
+```
+Graph(canvas_size,
+    graph_bottom_left,
+    graph_top_right,
+    background_color=None,
+    pad=None,
+    change_submits=False,
+    drag_submits=False,
+    enable_events=False,
+    key=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True,
+    float_values=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|canvas_size|Tuple[int, int] (width, height) size of the canvas area in pixels|
+|graph_bottom_left|Tuple[int, int] (x,y) The bottoms left corner of your coordinate system|
+|graph_top_right|Tuple[int, int] (x,y) The top right corner of your coordinate system|
+|background_color|(str) background color of the drawing area|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
+|drag_submits|(bool) if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down|
+|enable_events|(bool) If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element (Default = True)|
+|float_values|(bool) If True x,y coordinates are returned as floats, not ints|
+
+#### BringFigureToFront
+
+Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
+
+```
+BringFigureToFront(figure)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(int) value returned by tkinter when creating the figure / drawing|
+
+#### ButtonPressCallBack
+
+Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
+
+```
+ButtonPressCallBack(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(event) event info from tkinter. Contains the x and y coordinates of a click|
+
+#### ButtonReleaseCallBack
+
+Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
+
+```
+ButtonReleaseCallBack(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(event) event info from tkinter. Note not used in this method|
+
+#### DeleteFigure
+
+Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
+
+```
+DeleteFigure(id)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|id|(int) the id returned to you when calling one of the drawing methods|
+
+#### DrawArc
+
+Draws different types of arcs.  Uses a "bounding box" to define location
+
+```
+DrawArc(top_left,
+    bottom_right,
+    extent,
+    start_angle,
+    style=None,
+    arc_color="black")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle|
+|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
+|extent|(float) Andle to end drawing. Used in conjunction with start_angle|
+|start_angle|(float) Angle to begin drawing. Used in conjunction with extent|
+|style|(str) Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last', 'butt', 'projecting', 'round', 'bevel', 'miter'|
+|arc_color|(str) color to draw arc with|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the arc |
+
+#### DrawCircle
+
+Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
+
+```
+DrawCircle(center_location,
+    radius,
+    fill_color=None,
+    line_color="black")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|center_location|Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system|
+|radius|Union[int, float] Radius in user's coordinate values.|
+|fill_color|(str) color of the point to draw|
+|line_color|(str) color of the outer line that goes around the circle (sorry, can't set thickness)|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
+
+#### DrawImage
+
+Places an image onto your canvas.  It's a really important method for this element as it enables so much
+
+```
+DrawImage(filename=None,
+    data=None,
+    location=(None, None),
+    color="black",
+    font=None,
+    angle=0)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) if image is in a file, path and filename for the image. (GIF and PNG only!)|
+|data|Union[str, bytes] if image is in Base64 format or raw? format then use instead of filename|
+|location|Union[Tuple[int, int], Tuple[float, float]] the (x,y) location to place image's top left corner|
+|color|(str) text color|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image |
+
+#### DrawLine
+
+Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
+
+```
+DrawLine(point_from,
+    point_to,
+    color="black",
+    width=1)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|point_from|Union[Tuple[int, int], Tuple[float, float]] Starting point for line|
+|point_to|Union[Tuple[int, int], Tuple[float, float]] Ending point for line|
+|color|(str) Color of the line|
+|width|(int) width of line in pixels|
+|||
+| **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br> want to manipulate the line |
+
+#### DrawOval
+
+Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
+
+```
+DrawOval(top_left,
+    bottom_right,
+    fill_color=None,
+    line_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle|
+|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
+|fill_color|(str) color of the interrior|
+|line_color|(str) color of outline of oval|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
+
+#### DrawPoint
+
+Draws a "dot" at the point you specify using the USER'S coordinate system
+
+```
+DrawPoint(point,
+    size=2,
+    color="black")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|point|Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system|
+|size|Union[int, float] Radius? (Or is it the diameter?) in user's coordinate values.|
+|color|(str) color of the point to draw|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point |
+
+#### DrawRectangle
+
+Draw a rectangle given 2 points. Can control the line and fill colors
+
+```
+DrawRectangle(top_left,
+    bottom_right,
+    fill_color=None,
+    line_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of rectangle|
+|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle|
+|fill_color|(str) color of the interior|
+|line_color|(str) color of outline|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
+
+#### DrawText
+
+Draw some text on your graph.  This is how you label graph number lines for example
+
+```
+DrawText(text,
+    location,
+    color="black",
+    font=None,
+    angle=0,
+    text_location="center")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|text|(str) text to display|
+|location|Union[Tuple[int, int], Tuple[float, float]] location to place first letter|
+|color|(str) text color|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
+|text_location|(enum) "anchor" location for the text. Values start with TEXT_LOCATION_|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text |
+
+#### Erase
+
+Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
+
+```python
+Erase()
+```
+
+#### MotionCallBack
+
+Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
+
+```
+MotionCallBack(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
+
+#### Move
+
+Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
+
+```
+Move(x_direction, y_direction)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|x_direction|Union[int, float] how far to move in the "X" direction in your coordinates|
+|y_direction|Union[int, float] how far to move in the "Y" direction in your coordinates|
+
+#### MoveFigure
+
+Moves a previously drawn figure using a "delta" from current position
+
+```
+MoveFigure(figure,
+    x_direction,
+    y_direction)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(id) Previously obtained figure-id. These are returned from all Draw methods|
+|x_direction|Union[int, float] delta to apply to position in the X direction|
+|y_direction|Union[int, float] delta to apply to position in the Y direction|
+
+#### RelocateFigure
+
+Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
+uses absolute coordinates versus relative for Move
+
+```
+RelocateFigure(figure,
+    x,
+    y)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(id) Previously obtained figure-id. These are returned from all Draw methods|
+|x|Union[int, float] location on X axis (in user coords) to move the upper left corner of the figure|
+|y|Union[int, float] location on Y axis (in user coords) to move the upper left corner of the figure|
+
+#### SendFigureToBack
+
+Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
+
+```
+SendFigureToBack(figure)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(int) value returned by tkinter when creating the figure / drawing|
+
+#### SetFocus
+
+Sets the current focus to be on this Graph Element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### TKCanvas
+
+#### Update
+
+Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(background_color=None, visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|background_color|color of background|
+|visible|(bool) control visibility of element|
+
+### Image Element
+
+    Image Element - show an image in the window. Should be a GIF or a PNG only
+
+```
+Image(filename=None,
+    data=None,
+    background_color=None,
+    size=(None, None),
+    pad=None,
+    key=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True,
+    enable_events=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
+|background_color|color of background|
+|size|Tuple[int, int] (width, height) size of image in pixels|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+|enable_events|(bool) Turns on the element specific events. For an Image element, the event is "image clicked"|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(filename=None,
+    data=None,
+    size=(None, None),
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) filename to the new image to display.|
+|data|(str) Base64 encoded string|
+|size|Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high|
+|visible|(bool) control visibility of element|
+
+#### UpdateAnimation
+
+Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
+NOTE - does NOT perform a sleep call to delay
+
+```
+UpdateAnimation(source, time_between_frames=0)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
+|time_between_frames|(int) Number of milliseconds to wait between showing frames|
+
+### InputText Element
+
+    Display a single text input field.  Based on the tkinter Widget `Entry`
+
+```
+InputText(default_text="",
+    size=(None, None),
+    disabled=False,
+    password_char="",
+    justification=None,
+    background_color=None,
+    text_color=None,
+    font=None,
+    tooltip=None,
+    change_submits=False,
+    enable_events=False,
+    do_not_clear=True,
+    key=None,
+    focus=False,
+    pad=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|default_text|(str) Text initially shown in the input box as a default value(Default value = '')|
+|size|Tuple[int, int] (width, height) w=characters-wide, h=rows-high|
+|disabled|(bool) set disable state for element (Default = False)|
+|password_char|(char) Password character if this is a password field (Default value = '')|
+|justification|(str) justification for data display. Valid choices - left, right, center|
+|background_color|(str) color of background in one of the color formats|
+|text_color|(str) color of the text|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
+|enable_events|(bool) If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)|
+|do_not_clear|(bool) If False then the field will be set to blank after ANY event (button, any event) (Default = True)|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|focus|(bool) Determines if initial focus should go to this element.|
+|pad|(int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element (Default = True)|
+
+#### Get
+
+Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
+
+`Get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (str) current value of Input field or '' if error encountered |
+
+#### SetFocus
+
+Sets focus to this element using focus_set. Will use focus_force if force flag set. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True then tkinter's `Entry.focus_force` will be called instead of `Entry.focus_set`|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    disabled=None,
+    select=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(str) new text to display as default text in Input field|
+|disabled|(bool) disable or enable state of the element (sets Entry Widget to readonly or normal)|
+|select|(bool) if True, then the text will be selected|
+|visible|(bool) change visibility of element|
+
+### Listbox Element
+
+    A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
+    when a window.Read() is executed.
+
+```
+Listbox(values,
+    default_values=None,
+    select_mode=None,
+    change_submits=False,
+    enable_events=False,
+    bind_return_key=False,
+    size=(None, None),
+    disabled=False,
+    auto_size_text=None,
+    font=None,
+    background_color=None,
+    text_color=None,
+    key=None,
+    pad=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[Any] list of values to display. Can be any type including mixed types as long as they have __str__ method|
+|default_values|List[Any] which values should be initially selected|
+|select_mode|[enum] Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected. Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Listbox generates events when an item is clicked|
+|bind_return_key|(bool) If True, then the return key will cause a the Listbox to generate an event|
+|size|Tuple(int, int) (width, height) width = characters-wide, height = rows-high|
+|disabled|(bool) set disable state for element|
+|auto_size_text|(bool) True if element should be the same size as the contents|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### GetListValues
+
+Returns list of Values provided by the user in the user's format
+
+`GetListValues()`
+
+|Name|Meaning|
+|---|---|
+| **return** | List[Any]. List of values. Can be any / mixed types -> [] |
+
+#### SetFocus
+
+Moves the focus to this Listbox
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool). If True, will call focus_force instead of focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### SetValue
+
+Set listbox highlighted choices
+
+```
+SetValue(values)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[Any] new values to choose based on previously set values|
+
+#### Update
+
+Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(values=None,
+    disabled=None,
+    set_to_index=None,
+    scroll_to_index=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[Any] new list of choices to be shown to user|
+|disabled|(bool) disable or enable state of the element|
+|set_to_index|Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted|
+|scroll_to_index|(int) scroll the listbox so that this index is the first shown|
+|visible|(bool) control visibility of element|
+
+### Menu Element
+
+    Menu Element is the Element that provides a Menu Bar that goes across the top of the window, just below titlebar.
+    Here is an example layout.  The "&" are shortcut keys ALT+key.
+    Is a List of -  "Item String" + List
+    Where Item String is what will be displayed on the Menubar itself.
+    The List that follows the item represents the items that are shown then Menu item is clicked
+    Notice how an "entry" in a mennu can be a list which means it branches out and shows another menu, etc. (resursive)
+    menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
+                ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['&Debugger', ['Popout', 'Launch Debugger']],
+                ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
+                ['&Help', '&About...'], ]
+    Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
+    can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
+    menu is shown.  The key portion is returned as part of the event.
+
+```
+Menu(menu_definition,
+    background_color=None,
+    size=(None, None),
+    tearoff=False,
+    pad=None,
+    key=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|menu_definition|List[List[Tuple[str, List[str]]]|
+|background_color|(str) color of the background|
+|size|Tuple[int, int] Not used in the tkinter port|
+|tearoff|(bool) if True, then can tear the menu off from the window ans use as a floating window. Very cool effect|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+
+```
+Update(menu_definition=None, visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|menu_definition|List[List[Tuple[str, List[str]]]|
+|visible|(bool) control visibility of element|
+
+### Multiline Element
+
+    Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
+    Other PySimpleGUI ports have a separate MultilineInput and MultilineOutput elements.  May want to split this
+    one up in the future too.
+
+```
+Multiline(default_text="",
+    enter_submits=False,
+    disabled=False,
+    autoscroll=False,
+    border_width=None,
+    size=(None, None),
+    auto_size_text=None,
+    background_color=None,
+    text_color=None,
+    change_submits=False,
+    enable_events=False,
+    do_not_clear=True,
+    key=None,
+    focus=False,
+    font=None,
+    pad=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|default_text|(str) Initial text to show|
+|enter_submits|(bool) if True, the Window.Read call will return is enter key is pressed in this element|
+|disabled|(bool) set disable state|
+|autoscroll|(bool) If True the contents of the element will automatically scroll as more data added to the end|
+|border_width|(int) width of border around element in pixels|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
+|auto_size_text|(bool) if True will size the element to match the length of the text|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
+|do_not_clear|if False the element will be cleared any time the Window.Read call returns|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|focus|(bool) if True initial focus will go to this element|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### Get
+
+Return current contents of the Multiline Element
+
+`Get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (str) current contents of the Multiline Element (used as an input type of Multiline |
+
+#### SetFocus
+
+Moves the focus (that little blinking cursor) to this Multiline Element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool). If True, will call focus_force instead of focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    disabled=None,
+    append=False,
+    font=None,
+    text_color=None,
+    background_color=None,
+    visible=None,
+    autoscroll=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(str) new text to display|
+|disabled|(bool) disable or enable state of the element|
+|append|(bool) if True then new value will be added onto the end of the current value. if False then contents will be replaced.|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|text_color|(str) color of the text|
+|background_color|(str) color of background|
+|visible|(bool) set visibility state of the element|
+|autoscroll|(bool) if True then contents of element are scrolled down when new text is added to the end|
+
+### OptionMenu Element
+
+    Option Menu is an Element available ONLY on the tkinter port of PySimpleGUI.  It's is a widget that is unique
+    to tkinter.  However, it looks much like a ComboBox.  Instead of an arrow to click to pull down the list of
+    choices, another little graphic is shown on the widget to indicate where you click.  After clicking to activate,
+    it looks like a Combo Box that you scroll to select a choice.
+
+```
+OptionMenu(values,
+    default_value=None,
+    size=(None, None),
+    disabled=False,
+    auto_size_text=None,
+    background_color=None,
+    text_color=None,
+    key=None,
+    pad=None,
+    tooltip=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[Any] Values to be displayed|
+|default_value|(Any) the value to choose by default|
+|size|Tuple[int, int] (width, height) size in characters (wide) and rows (high)|
+|disabled|(bool) control enabled / disabled|
+|auto_size_text|(bool) True if size of Element should match the contents of the items|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text that will appear when mouse hovers over this element|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    values=None,
+    disabled=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(Any) the value to choose by default|
+|values|List[Any] Values to be displayed|
+|disabled|(bool) disable or enable state of the element|
+|visible|(bool) control visibility of element|
+
+### Output Element
+
+    Output Element - a multi-lined text area where stdout and stderr are re-routed to.
+
+```
+Output(size=(None, None),
+    background_color=None,
+    text_color=None,
+    pad=None,
+    font=None,
+    tooltip=None,
+    key=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### TKOut
+
+#### Update
+
+Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None, visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(str) string that will replace current contents of the output area|
+|visible|(bool) control visibility of element|
+
+### Pane Element
+
+    A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
+
+```
+Pane(pane_list,
+    background_color=None,
+    size=(None, None),
+    pad=None,
+    orientation="vertical",
+    show_handle=True,
+    relief="raised",
+    handle_size=None,
+    border_width=None,
+    key=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|pane_list|List[Column] Must be a list of Column Elements. Each Column supplied becomes one pane that's shown|
+|background_color|(str) color of background|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high How much room to reserve for the Pane|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|orientation|(str) 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide|
+|show_handle|(bool) if True, the handle is drawn that makes it easier to grab and slide|
+|relief|(enum) relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
+|handle_size|(int) Size of the handle in pixels|
+|border_width|(int) width of border around element in pixels|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|visible|(bool) control visibility of element|
+
+### ProgressBar Element
+
+    Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
+
+```
+ProgressBar(max_value,
+    orientation=None,
+    size=(None, None),
+    auto_size_text=None,
+    bar_color=(None, None),
+    style=None,
+    border_width=None,
+    relief=None,
+    key=None,
+    pad=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|max_value|(int) max value of progressbar|
+|orientation|(str) 'horizontal' or 'vertical'|
+|size|Tuple[int, int] Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high)|
+|auto_size_text|(bool) Not sure why this is here|
+|bar_color|Tuple[str, str] The 2 colors that make up a progress bar. One is the background, the other is the bar|
+|style|(str) Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
+|border_width|(int) The amount of pixels that go around the outside of the bar|
+|relief|(str) relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|visible|(bool) control visibility of element|
+
+#### UpdateBar
+
+Change what the bar shows by changing the current count and optionally the max count
+
+```
+UpdateBar(current_count, max=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|current_count|(int) sets the current value|
+|max|(int) changes the max value|
+
+### Radio Element
+
+    Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
+    1 choice in a list of choices.
+
+```
+Radio(text,
+    group_id,
+    default=False,
+    disabled=False,
+    size=(None, None),
+    auto_size_text=None,
+    background_color=None,
+    text_color=None,
+    font=None,
+    key=None,
+    pad=None,
+    tooltip=None,
+    change_submits=False,
+    enable_events=False,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|text|(str) Text to display next to button|
+|group_id|(Any) Groups together multiple Radio Buttons. Any type works|
+|default|(bool). Set to True for the one element of the group you want initially selected|
+|disabled|(bool) set disable state|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
+|auto_size_text|(bool) if True will size the element to match the length of the text|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Radio Button events happen when an item is selected|
+|visible|(bool) set visibility state of the element|
+
+#### Get
+
+A snapshot of the value of Radio Button -> (bool)
+
+`Get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (bool) True if this radio button is selected |
+
+#### ResetGroup
+
+Sets all Radio Buttons in the group to not selected
+
+```python
+ResetGroup()
+```
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    disabled=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(bool) if True change to selected and set others in group to unselected|
+|disabled|(bool) disable or enable state of the element|
+|visible|(bool) control visibility of element|
+
+### Slider Element
+
+    A slider, horizontal or vertical
+
+```
+Slider(range=(None, None),
+    default_value=None,
+    resolution=None,
+    tick_interval=None,
+    orientation=None,
+    disable_number_display=False,
+    border_width=None,
+    relief=None,
+    change_submits=False,
+    enable_events=False,
+    disabled=False,
+    size=(None, None),
+    font=None,
+    background_color=None,
+    text_color=None,
+    key=None,
+    pad=None,
+    tooltip=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|range|Union[Tuple[int, int], Tuple[float, float]] slider's range (min value, max value)|
+|default_value|Union[int, float] starting value for the slider|
+|resolution|Union[int, float] the smallest amount the slider can be moved|
+|tick_interval|Union[int, float] how often a visible tick should be shown next to slider|
+|orientation|(str) 'horizontal' or 'vertical' ('h' or 'v' also work)|
+|disable_number_display|(bool) if True no number will be displayed by the Slider Element|
+|border_width|(int) width of border around element in pixels|
+|relief|(enum) relief style. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID|
+|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
+|enable_events|(bool) If True then moving the slider will generate an Event|
+|disabled|(bool) set disable state for element|
+|size|Tuple[int, int] (width in characters, height in rows)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|background_color|(str) color of slider's background|
+|text_color|(str) color of the slider's text|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    range=(None, None),
+    disabled=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|Union[int, float] sets current slider value|
+|range|Union[Tuple[int, int], Tuple[float, float] Sets a new range for slider|
+|disabled|(bool) disable or enable state of the element|
+|visible|(bool) control visibility of element|
+
+### Spin Element
+
+    A spinner with up/down buttons and a single line of text. Choose 1 values from list
+
+```
+Spin(values,
+    initial_value=None,
+    disabled=False,
+    change_submits=False,
+    enable_events=False,
+    size=(None, None),
+    auto_size_text=None,
+    font=None,
+    background_color=None,
+    text_color=None,
+    key=None,
+    pad=None,
+    tooltip=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[Any] List of valid values|
+|initial_value|(Any) Initial item to show in window. Choose from list of values supplied|
+|disabled|(bool) set disable state|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
+|auto_size_text|(bool) if True will size the element to match the length of the text|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|visible|(bool) set visibility state of the element|
+
+#### Get
+
+Return the current chosen value showing in spinbox.
+This value will be the same as what was provided as list of choices.  If list items are ints, then the
+item returned will be an int (not a string)
+
+`Get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (Any) The currently visible entry |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    values=None,
+    disabled=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(Any) set the current value from list of choices|
+|values|List[Any] set available choices|
+|disabled|(bool) disable or enable state of the element|
+|visible|(bool) control visibility of element|
+
+### StatusBar Element
+
+    A StatusBar Element creates the sunken text-filled strip at the bottom. Many Windows programs have this line
+
+```
+StatusBar(text,
+    size=(None, None),
+    auto_size_text=None,
+    click_submits=None,
+    enable_events=False,
+    relief="sunken",
+    font=None,
+    text_color=None,
+    background_color=None,
+    justification=None,
+    pad=None,
+    key=None,
+    tooltip=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|text|(str) Text that is to be displayed in the widget|
+|size|Tuple[(int), (int)] (w,h) w=characters-wide, h=rows-high|
+|auto_size_text|(bool) True if size should fit the text length|
+|click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. StatusBar events occur when the bar is clicked|
+|relief|(enum) relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|text_color|(str) color of the text|
+|background_color|(str) color of background|
+|justification|(str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    background_color=None,
+    text_color=None,
+    font=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(str) new text to show|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|visible|(bool) set visibility state of the element|
+
+### Tab Element
+
+    Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
+    Tabs are never placed directly into a layout.  They are always "Contained" in a TabGroup layout
+
+```
+Tab(title,
+    layout,
+    title_color=None,
+    background_color=None,
+    font=None,
+    pad=None,
+    disabled=False,
+    border_width=None,
+    key=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|(str) text to show on the tab|
+|layout|List[List[Element]] The element layout that will be shown in the tab|
+|title_color|(str) color of the tab text (note not currently working on tkinter)|
+|background_color|(str) color of background of the entire layout|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|disabled|(bool) If True button will be created disabled|
+|border_width|(int) width of border around element in pixels|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### AddRow
+
+Not recommended use call.  Used to add rows of Elements to the Frame Element.
+
+```
+AddRow(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+#### Layout
+
+Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The list of rows|
+|||
+| **return** | (Tab) used for chaining |
+
+#### Select
+
+Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
+
+```python
+Select()
+```
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(disabled=None, visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|disabled|(bool) disable or enable state of the element|
+|visible|(bool) control visibility of element|
+
+### TabGroup Element
+
+    TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
+
+```
+TabGroup(layout,
+    tab_location=None,
+    title_color=None,
+    selected_title_color=None,
+    background_color=None,
+    font=None,
+    change_submits=False,
+    enable_events=False,
+    pad=None,
+    border_width=None,
+    theme=None,
+    key=None,
+    tooltip=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|layout|List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row|
+|tab_location|(str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright|
+|title_color|(str) color of text on tabs|
+|selected_title_color|(str) color of tab when it is selected|
+|background_color|(str) color of background of tabs|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
+|enable_events|(bool) If True then switching tabs will generate an Event|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|border_width|(int) width of border around element in pixels|
+|theme|(enum) tabs can be 'themed'. These are the choices (some may not work on your OS): THEME_DEFAULT THEME_WINNATIVE THEME_CLAM THEME_ALT THEME_CLASSIC THEME_VISTA THEME_XPNATIVE|
+|key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|visible|(bool) set visibility state of the element|
+
+#### AddRow
+
+Not recommended user call.  Used to add rows of Elements to the Frame Element.
+
+```
+AddRow(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+#### FindKeyFromTabName
+
+Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
+
+```
+FindKeyFromTabName(tab_name)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tab_name||
+|||
+| **return** | Union[key, None] Returns the key or None if no key found |
+
+#### Get
+
+Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
+the tab if no key is defined.  Returns None if an error occurs.
+Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
+are using this method correctly?
+
+`Get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Union[Any, None] The key of the currently selected tab or the tab's text if it has no key |
+
+#### Layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The rows of Elements|
+|||
+| **return** | (Frame) Used for chaining |
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### Table Element
+
+```
+Table(values,
+    headings=None,
+    visible_column_map=None,
+    col_widths=None,
+    def_col_width=10,
+    auto_size_columns=True,
+    max_col_width=20,
+    select_mode=None,
+    display_row_numbers=False,
+    num_rows=None,
+    row_height=None,
+    font=None,
+    justification="right",
+    text_color=None,
+    background_color=None,
+    alternating_row_color=None,
+    row_colors=None,
+    vertical_scroll_only=True,
+    hide_vertical_scroll=False,
+    size=(None, None),
+    change_submits=False,
+    enable_events=False,
+    bind_return_key=False,
+    pad=None,
+    key=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[List[Union[str, int, float]]]|
+|headings|List[str] The headings to show on the top line|
+|visible_column_map|List[bool] One entry for each column. False indicates the column is not shown|
+|col_widths|List[int] Number of characters that each column will occupy|
+|def_col_width|(int) Default column width in characters|
+|auto_size_columns|(bool) if True columns will be sized automatically|
+|max_col_width|(int) Maximum width for all columns in characters|
+|select_mode|(enum) Select Mode. Valid values start with "TABLE_SELECT_MODE_". Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED|
+|display_row_numbers|(bool) if True, the first column of the table will be the row #|
+|num_rows|(int) The number of rows of the table to display at a time|
+|row_height|(int) height of a single row in pixels|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|justification|(str) 'left', 'right', 'center' are valid choices|
+|text_color|(str) color of the text|
+|background_color|(str) color of background|
+|alternating_row_color|(str) if set then every other row will have this color in the background.|
+|row_colors||
+|vertical_scroll_only|(bool) if True only the vertical scrollbar will be visible|
+|hide_vertical_scroll|(bool) if True vertical scrollbar will be hidden|
+|size|Tuple[int, int] DO NOT USE! Use num_rows instead|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Table events happen when row is clicked|
+|bind_return_key|(bool) if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(values=None,
+    num_rows=None,
+    visible=None,
+    select_rows=None,
+    alternating_row_color=None,
+    row_colors=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[List[Union[str, int, float]]] A new 2-dimensional table to show|
+|num_rows|(int) How many rows to display at a time|
+|visible|(bool) if True then will be visible|
+|select_rows|List[int] List of rows to select as if user did|
+|alternating_row_color|(str) the color to make every other row|
+|row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)|
+
+### Text Element
+
+    Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
+
+```
+Text(text,
+    size=(None, None),
+    auto_size_text=None,
+    click_submits=False,
+    enable_events=False,
+    relief=None,
+    font=None,
+    text_color=None,
+    background_color=None,
+    justification=None,
+    pad=None,
+    key=None,
+    right_click_menu=None,
+    tooltip=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|text|(str) The text to display. Can include /n to achieve multiple lines|
+|size|Tuple[int, int] (width, height) width = characters-wide, height = rows-high|
+|auto_size_text|(bool) if True size of the Text Element will be sized to fit the string provided in 'text' parm|
+|click_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Text events happen when the text is clicked|
+|relief|(str/enum) relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|text_color|(str) color of the text|
+|background_color|(str) color of background|
+|justification|(str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value=None,
+    background_color=None,
+    text_color=None,
+    font=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|value|(str) new text to show|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|visible|(bool) set visibility state of the element|
+
+### Tree Element
+
+    Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
+    to hold the user's data and pass to the element for display.
+
+```
+Tree(data=None,
+    headings=None,
+    visible_column_map=None,
+    col_widths=None,
+    col0_width=10,
+    def_col_width=10,
+    auto_size_columns=True,
+    max_col_width=20,
+    select_mode=None,
+    show_expanded=False,
+    change_submits=False,
+    enable_events=False,
+    font=None,
+    justification="right",
+    text_color=None,
+    background_color=None,
+    num_rows=None,
+    row_height=None,
+    pad=None,
+    key=None,
+    tooltip=None,
+    right_click_menu=None,
+    visible=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|data|(TreeData) The data represented using a PySimpleGUI provided TreeData class|
+|headings|List[str] List of individual headings for each column|
+|visible_column_map|List[bool] Determines if a column should be visible. If left empty, all columns will be shown|
+|col_widths|List[int] List of column widths so that individual column widths can be controlled|
+|col0_width|(int) Size of Column 0 which is where the row numbers will be optionally shown|
+|def_col_width|(int) default column width|
+|auto_size_columns|(bool) if True, the size of a column is determined using the contents of the column|
+|max_col_width|(int) the maximum size a column can be|
+|select_mode|(enum) Use same values as found on Table Element. Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED|
+|show_expanded|(bool) if True then the tree will be initially shown with all nodes completely expanded|
+|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|enable_events|(bool) Turns on the element specific events. Tree events happen when row is clicked|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|justification|(str) 'left', 'right', 'center' are valid choices|
+|text_color|(str) color of the text|
+|background_color|(str) color of background|
+|num_rows|(int) The number of rows of the table to display at a time|
+|row_height|(int) height of a single row in pixels|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|visible|(bool) set visibility state of the element|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+#### Update
+
+Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(values=None,
+    key=None,
+    value=None,
+    text=None,
+    icon=None,
+    visible=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|(TreeData) Representation of the tree|
+|key|(Any) identifies a particular item in tree to update|
+|value|(Any) sets the node identified by key to a particular value|
+|text|(str) sets the node identified by ket to this string|
+|icon|Union[bytes, str] can be either a base64 icon or a filename for the icon|
+|visible|(bool) control visibility of element|
+
+### TreeData Class For Tree Element
+
+    Class that user fills in to represent their tree data. It's a very simple tree representation with a root "Node"
+    with possibly one or more children "Nodes".  Each Node contains a key, text to display, list of values to display
+    and an icon.  The entire tree is built using a single method, Insert.  Nothing else is required to make the tree.
+
+Instantiate the object, initializes the Tree Data, creates a root node for you
+
+```python
+TreeData()
+```
+
+#### Insert
+
+Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
+This is the ONLY user callable method in the TreeData class
+
+```
+Insert(parent,
+    key,
+    text,
+    values,
+    icon=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|parent|(Node) the parent Node|
+|key|(Any) Used to uniquely identify this node|
+|text|(str) The text that is displayed at this node's location|
+|values|List[Any] The list of values that are displayed at this node|
+|icon|Union[str, bytes]|
+
+#### Node
+
+Contains information about the individual node in the tree
+
+```
+Node(parent,
+    key,
+    text,
+    values,
+    icon=None)
+```
+
+### VerticalSeparator Element
+
+    Vertical Separator Element draws a vertical line at the given location. It will span 1 "row". Usually paired with
+    Column Element if extra height is needed
+
+```
+VerticalSeparator(pad=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
+
+#### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+#### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### Window Element
+
+    Represents a single Window
+
+```
+Window(title,
+    layout=None,
+    default_element_size=(45, 1),
+    default_button_element_size=(None, None),
+    auto_size_text=None,
+    auto_size_buttons=None,
+    location=(None, None),
+    size=(None, None),
+    element_padding=None,
+    margins=(None, None),
+    button_color=None,
+    font=None,
+    progress_bar_color=(None, None),
+    background_color=None,
+    border_depth=None,
+    auto_close=False,
+    auto_close_duration=3,
+    icon=None,
+    force_toplevel=False,
+    alpha_channel=1,
+    return_keyboard_events=False,
+    use_default_focus=True,
+    text_justification=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    resizable=False,
+    disable_close=False,
+    disable_minimize=False,
+    right_click_menu=None,
+    transparent_color=None,
+    debugger_enabled=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|(str) The title that will be displayed in the Titlebar and on the Taskbar|
+|layout|List[List[Elements]] The layout for the window. Can also be specified in the Layout method|
+|default_element_size|Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all elements in this window|
+|default_button_element_size|Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all Button elements in this window|
+|auto_size_text|(bool) True if Elements in Window should be sized to exactly fir the length of text|
+|auto_size_buttons|(bool) True if Buttons in this Window should be sized to exactly fit the text on this.|
+|location|Tuple[int, int] (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.|
+|size|Tuple[int, int] (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user|
+|element_padding|Tuple[int, int] or ((int, int),(int,int)) Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))|
+|margins|Tuple[int, int] (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.|
+|button_color|Tuple[str, str] (text color, button color) Default button colors for all buttons in the window|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|progress_bar_color|Tuple[str, str] (bar color, background color) Sets the default colors for all progress bars in the window|
+|background_color|(str) color of background|
+|border_depth|(int) Default border depth (width) for all elements in the window|
+|auto_close|(bool) If True, the window will automatically close itself|
+|auto_close_duration|(int) Number of seconds to wait before closing the window|
+|icon|Union[str, str] Can be either a filename or Base64 value.|
+|force_toplevel|(bool) If True will cause this window to skip the normal use of a hidden master window|
+|alpha_channel|(float) Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.|
+|return_keyboard_events|(bool) if True key presses on the keyboard will be returned as Events from Read calls|
+|use_default_focus|(bool) If True will use the default focus algorithm to set the focus to the "Correct" element|
+|text_justification|(str) Union ['left', 'right', 'center'] Default text justification for all Text Elements in window|
+|no_titlebar|(bool) If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar|
+|grab_anywhere|(bool) If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems|
+|keep_on_top|(bool) If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm|
+|resizable|(bool) If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.|
+|disable_close|(bool) If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users|
+|disable_minimize|(bool) if True the user won't be able to minimize window. Good for taking over entire screen and staying that way.|
+|right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
+|transparent_color|(str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.|
+|debugger_enabled|(bool) If True then the internal debugger will be enabled|
+
+#### AddRow
+
+Adds a single row of elements to a window's self.Rows variables.
+Generally speaking this is NOT how users should be building Window layouts.
+Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
+
+```
+AddRow(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Elements]|
+
+#### AddRows
+
+Loops through a list of lists of elements and adds each row, list, to the layout.
+This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
+it as a parameter to the Window call is better.
+
+```
+AddRows(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Elements]] A list of a list of elements|
+
+#### AlphaChannel
+
+#### BringToFront
+
+Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
+        on top")
+
+```python
+BringToFront()
+```
+
+#### Close
+
+Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
+        a window so that resources are properly freed up within your thread.
+
+```python
+Close()
+```
+
+#### CurrentLocation
+
+Get the current location of the window's top left corner
+
+`CurrentLocation()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[(int), (int)] The x and y location in tuple form (x,y) |
+
+#### DecrementOpenCount
+
+Not user callable!  Decrements the number of open windows
+
+```
+DecrementOpenCount()
+```
+
+#### Disable
+
+Disables window from taking any input from the user
+
+```python
+Disable()
+```
+
+#### DisableDebugger
+
+Disable the internal debugger. By default the debugger is ENABLED
+
+```python
+DisableDebugger()
+```
+
+#### Disappear
+
+Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
+        channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
+        platforms.  The Raspberry Pi for example does not have an alpha setting
+
+```python
+Disappear()
+```
+
+#### Elem
+
+Find element object associated with the provided key.  This call can be abbreviated to any of these:
+FindElement == Element == Find
+So take your pick as to how much typing you want to do.
+Rememeber that this call will return None if no match is found which may cause your code to crash if not
+checked for.
+
+```
+Elem(key, silent_on_error=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|silent_on_error|(bool) If True do not display popup nor print warning of key errors|
+|||
+| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+
+#### Element
+
+Find element object associated with the provided key.  This call can be abbreviated to any of these:
+FindElement == Element == Find
+So take your pick as to how much typing you want to do.
+Rememeber that this call will return None if no match is found which may cause your code to crash if not
+checked for.
+
+```
+Element(key, silent_on_error=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|silent_on_error|(bool) If True do not display popup nor print warning of key errors|
+|||
+| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+
+#### Enable
+
+Re-enables window to take user input after having it be Disabled previously
+
+```python
+Enable()
+```
+
+#### EnableDebugger
+
+Enables the internal debugger. By default, the debugger IS enabled
+
+```python
+EnableDebugger()
+```
+
+#### Fill
+
+Fill in elements that are input fields with data based on a 'values dictionary'
+
+```
+Fill(values_dict)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values_dict|(Dict[Any:Any]) {Element key : value} pairs|
+|||
+| **return** | (Window) returns self so can be chained with other methods |
+
+#### Finalize
+
+Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
+Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
+Lots of action!
+
+`Finalize()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (Window) Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
+
+#### Find
+
+Find element object associated with the provided key.  This call can be abbreviated to any of these:
+FindElement == Element == Find
+So take your pick as to how much typing you want to do.
+Rememeber that this call will return None if no match is found which may cause your code to crash if not
+checked for.
+
+```
+Find(key, silent_on_error=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|silent_on_error|(bool) If True do not display popup nor print warning of key errors|
+|||
+| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+
+#### FindElement
+
+Find element object associated with the provided key.  This call can be abbreviated to any of these:
+FindElement == Element == Find
+So take your pick as to how much typing you want to do.
+Rememeber that this call will return None if no match is found which may cause your code to crash if not
+checked for.
+
+```
+FindElement(key, silent_on_error=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|silent_on_error|(bool) If True do not display popup nor print warning of key errors|
+|||
+| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+
+#### FindElementWithFocus
+
+Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
+
+`FindElementWithFocus()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Union[Element, None] An Element if one has been found with focus or None if no element found |
+
+#### GetScreenDimensions
+
+Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
+
+`GetScreenDimensions()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels |
+
+#### GrabAnyWhereOff
+
+Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+
+```python
+GrabAnyWhereOff()
+```
+
+#### GrabAnyWhereOn
+
+Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+
+```python
+GrabAnyWhereOn()
+```
+
+#### Hide
+
+Hides the window from the screen and the task bar
+
+```python
+Hide()
+```
+
+#### IncrementOpenCount
+
+Not user callable!  Increments the number of open windows
+Note - there is a bug where this count easily gets out of sync. Issue has been opened already. No ill effects
+
+```
+IncrementOpenCount()
+```
+
+#### Layout
+
+Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
+a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
+has been removed from examples contained in documents and in the Demo Programs. Trying to remove this call
+from history and replace with sending as a parameter to Window.
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Elements]] Your entire layout|
+|||
+| **return** | (Window} self so that you can chain method calls |
+
+#### LayoutAndRead
+
+Deprecated!!  Now your layout your window's rows (layout) and then separately call Read.
+
+```
+LayoutAndRead(rows, non_blocking=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|(List[List[Element]]) The layout of the window|
+|non_blocking|(bool) if True the Read call will not block|
+
+#### LayoutAndShow
+
+Deprecated - do not use any longer.  Layout your window and then call Read.  Or can add a Finalize call before the Read
+
+```
+LayoutAndShow(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows||
+
+#### LoadFromDisk
+
+Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
+
+```
+LoadFromDisk(filename)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) Pickle Filename to load|
+
+#### Maximize
+
+Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
+        the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
+        The reason for the difference is the title bar is removed in some cases when using fullscreen option
+
+```python
+Maximize()
+```
+
+#### Minimize
+
+Minimize this window to the task bar
+
+```python
+Minimize()
+```
+
+#### Move
+
+Move the upper left corner of this window to the x,y coordinates provided
+
+```
+Move(x, y)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|x|(int) x coordinate in pixels|
+|y|(int) y coordinate in pixels|
+
+#### Normal
+
+Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
+
+```python
+Normal()
+```
+
+#### Read
+
+THE biggest deal method in the Window class! This is how you get all of your data from your Window.
+Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
+if no other GUI events happen first.
+
+```
+Read(timeout=None, timeout_key="__TIMEOUT__")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|timeout|(int) Milliseconds to wait until the Read will return IF no other GUI events happen first|
+|timeout_key|(Any) The value that will be returned from the call if the timer expired|
+|||
+| **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) <br>  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window) |
+
+#### Reappear
+
+Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
+
+```python
+Reappear()
+```
+
+#### Refresh
+
+Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
+Use this call when you want something to appear in your Window immediately (as soon as this function is called).
+Without this call your changes to a Window will not be visible to the user until the next Read call
+
+`Refresh()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (Window) `self` so that method calls can be easily "chained" |
+
+#### SaveToDisk
+
+Saves the values contained in each of the input areas of the form. Basically saves what would be returned
+from a call to Read.  It takes these results and saves them to disk using pickle
+
+```
+SaveToDisk(filename)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) Filename to save the values to in pickled form|
+
+#### SetAlpha
+
+Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
+
+```
+SetAlpha(alpha)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|alpha|(float) 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through)|
+
+#### SetIcon
+
+Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
+* a filename which must be a .ICO icon file.
+* a bytes object
+* a BASE64 encoded file held in a variable
+
+```
+SetIcon(icon=None, pngbase64=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|icon|(str) Filename or bytes object|
+|pngbase64|(str) Base64 encoded GIF or PNG file|
+
+#### SetTransparentColor
+
+Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
+
+```
+SetTransparentColor(color)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|color|(str) Color string that defines the transparent color|
+
+#### Size
+
+#### UnHide
+
+Used to bring back a window that was previously hidden using the Hide method
+
+```python
+UnHide()
+```
+
+#### VisibilityChanged
+
+Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
+        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
+        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
+
+```python
+VisibilityChanged()
+```
+
+```
+CButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+CalendarButton(button_text,
+    target=(None, None),
+    close_when_date_chosen=True,
+    default_date_m_d_y=(None, None, None),
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    tooltip=None,
+    border_width=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None,
+    locale=None,
+    format=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|target||
+|close_when_date_chosen|(Default = True)|
+|default_date_m_d_y|(Default = (None))|
+|None||
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|(Default = (None))|
+|image_subsample|amount to reduce the size of the image|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|border_width|width of border around element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|locale||
+|format||
+|||
+| **return** | (Button) |
+
+```
+Cancel(button_text="Cancel",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Cancel')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+ChangeLookAndFeel(index)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|index||
+
+```
+CloseButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+ColorChooserButton(button_text,
+    target=(None, None),
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    tooltip=None,
+    border_width=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|target||
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|(Default = (None))|
+|image_subsample|amount to reduce the size of the image|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|border_width|width of border around element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+Debug(button_text="",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    font=None,
+    tooltip=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = '')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|font|specifies the font family, size, etc|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+DummyButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    disabled=False,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+EasyPrint(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+EasyPrintClose()
+```
+
+```
+Exit(button_text="Exit",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Exit')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+FileBrowse(button_text="Browse",
+    target=(555666777, -1),
+    file_types=(('ALL Files', '*.*'),),
+    initial_folder=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    change_submits=False,
+    enable_events=False,
+    font=None,
+    disabled=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Browse')|
+|target|key or (row,col) target for the button (Default value = (ThisRow, -1))|
+|file_types|(Default value = (("ALL Files", "*.*")))|
+|initial_folder|starting path for folders and files|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|disabled|set disable state for element (Default = False)|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+FileSaveAs(button_text="Save As...",
+    target=(555666777, -1),
+    file_types=(('ALL Files', '*.*'),),
+    initial_folder=None,
+    disabled=False,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    change_submits=False,
+    enable_events=False,
+    font=None,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Save As...')|
+|target|key or (row,col) target for the button (Default value = (ThisRow, -1))|
+|file_types|(Default value = (("ALL Files", "*.*")))|
+|initial_folder|starting path for folders and files|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+FilesBrowse(button_text="Browse",
+    target=(555666777, -1),
+    file_types=(('ALL Files', '*.*'),),
+    disabled=False,
+    initial_folder=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    change_submits=False,
+    enable_events=False,
+    font=None,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Browse')|
+|target|key or (row,col) target for the button (Default value = (ThisRow, -1))|
+|file_types|(Default value = (("ALL Files", "*.*")))|
+|disabled|set disable state for element (Default = False)|
+|initial_folder|starting path for folders and files|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+Fills a window with values provided in a values dictionary { element_key : new_value }
+
+```
+FillFormWithValues(window, values_dict)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|window|(Window) The window object to fill|
+|values_dict|(Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call|
+
+```
+FolderBrowse(button_text="Browse",
+    target=(555666777, -1),
+    initial_folder=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    change_submits=False,
+    enable_events=False,
+    font=None,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Browse')|
+|target|key or (row,col) target for the button (Default value = (ThisRow, -1))|
+|initial_folder|starting path for folders and files|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+Help(button_text="Help",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    font=None,
+    tooltip=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Help')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|font|specifies the font family, size, etc|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+ListOfLookAndFeelValues()
+```
+
+```
+No(button_text="No",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'No')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+OK(button_text="OK",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    bind_return_key=True,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'OK')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = True)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+ObjToString(obj, extra="    ")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|obj||
+|extra|(Default value = ' ')|
+
+```
+ObjToStringSingleObj(obj)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|obj||
+
+```
+Ok(button_text="Ok",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    bind_return_key=True,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Ok')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = True)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+OneLineProgressMeter(title,
+    current_value,
+    max_value,
+    key,
+    args,
+    orientation="v",
+    bar_color=(None, None),
+    button_color=None,
+    size=(20, 20),
+    border_width=None,
+    grab_anywhere=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|text to display|
+|current_value|current progressbar value|
+|max_value|max value of progressbar|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|*args|stuff to output.|
+|orientation|'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')|
+|bar_color||
+|button_color|button color (foreground, background)|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)|
+|border_width|width of border around element|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+
+```
+OneLineProgressMeterCancel(key)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+Open(button_text="Open",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    bind_return_key=True,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Open')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = True)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+Show Popup box that doesn't block and closes itself
+
+```
+PopupQuick(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=2,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration|(Default value = 2)|
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Show Popup window with no titlebar, doesn't block, and auto closes itself.
+
+```
+PopupQuickMessage(args,
+    title=None,
+    button_type=5,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=2,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=True,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_NO_BUTTONS)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration|(Default value = 2)|
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = True)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+PopupScrolled(args,
+    title=None,
+    button_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    non_blocking=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|(Any) Variable number of items to display|
+|title|(str) Title to display in the window.|
+|button_color|Tuple[str, str] button color (foreground, background)|
+|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
+|auto_close|(bool) if True window will close itself|
+|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
+|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
+|||
+| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+
+Popup that closes itself after some time period
+
+```
+PopupTimed(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display Popup with Yes and No buttons
+
+```
+PopupYesNo(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|Location on screen to display|
+|||
+| **return** | Union["Yes", "No", None] |
+
+```
+Print(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+PrintClose()
+```
+
+```
+Quit(button_text="Quit",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Quit')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+RButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+ReadButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+RealtimeButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    disabled=False,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+Save(button_text="Save",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    bind_return_key=True,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Save')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|bind_return_key|(Default = True)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+SaveAs(button_text="Save As...",
+    target=(555666777, -1),
+    file_types=(('ALL Files', '*.*'),),
+    initial_folder=None,
+    disabled=False,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    change_submits=False,
+    enable_events=False,
+    font=None,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Save As...')|
+|target|key or (row,col) target for the button (Default value = (ThisRow, -1))|
+|file_types|(Default value = (("ALL Files", "*.*")))|
+|initial_folder|starting path for folders and files|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+ScrolledTextBox(args,
+    title=None,
+    button_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    non_blocking=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|(Any) Variable number of items to display|
+|title|(str) Title to display in the window.|
+|button_color|Tuple[str, str] button color (foreground, background)|
+|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
+|auto_close|(bool) if True window will close itself|
+|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
+|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
+|||
+| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+
+```
+SetGlobalIcon(icon)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|icon||
+
+```
+SetOptions(icon=None,
+    button_color=None,
+    element_size=(None, None),
+    button_element_size=(None, None),
+    margins=(None, None),
+    element_padding=(None, None),
+    auto_size_text=None,
+    auto_size_buttons=None,
+    font=None,
+    border_width=None,
+    slider_border_width=None,
+    slider_relief=None,
+    slider_orientation=None,
+    autoclose_time=None,
+    message_box_line_width=None,
+    progress_meter_border_depth=None,
+    progress_meter_style=None,
+    progress_meter_relief=None,
+    progress_meter_color=None,
+    progress_meter_size=None,
+    text_justification=None,
+    background_color=None,
+    element_background_color=None,
+    text_element_background_color=None,
+    input_elements_background_color=None,
+    input_text_color=None,
+    scrollbar_color=None,
+    text_color=None,
+    element_text_color=None,
+    debug_win_size=(None, None),
+    window_location=(None, None),
+    error_button_color=(None, None),
+    tooltip_time=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|icon|filename of icon used for taskbar and title bar|
+|button_color|button color (foreground, background)|
+|element_size|Tuple[int, int] element size (width, height) in characters|
+|button_element_size|Tuple[int, int]|
+|margins|tkinter margins around outsize (Default = (None))|
+|element_padding|(Default = (None))|
+|auto_size_text|True if size should fit the text length|
+|auto_size_buttons||
+|font|specifies the font family, size, etc|
+|border_width|width of border around element|
+|slider_border_width||
+|slider_relief||
+|slider_orientation||
+|autoclose_time||
+|message_box_line_width||
+|progress_meter_border_depth||
+|progress_meter_style||
+|progress_meter_relief||
+|progress_meter_color||
+|progress_meter_size|Tuple[int, int]|
+|text_justification||
+|background_color|color of background|
+|element_background_color||
+|text_element_background_color||
+|input_elements_background_color||
+|input_text_color||
+|scrollbar_color||
+|text_color|color of the text|
+|element_text_color||
+|debug_win_size|Tuple[int, int] (Default = (None))|
+|window_location|(Default = (None))|
+|error_button_color|(Default = (None))|
+|tooltip_time|time in milliseconds to wait before showing a tooltip. Default is 400ms|
+
+```
+Submit(button_text="Submit",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    bind_return_key=True,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Submit')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = True)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+Time your code easily.... start the timer.
+
+```
+TimerStart()
+```
+
+Time your code easily.... stop the timer and print the number of ms since the timer start
+
+```
+TimerStop()
+```
+
+```
+Yes(button_text="Yes",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    bind_return_key=True,
+    focus=False,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Yes')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = True)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+eprint(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+
+```
+main()
+```
+
+Shows the smaller "popout" window.  Default location is the upper right corner of your screen
+
+```
+show_debugger_popout_window(location=(None, None), args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|location|Tuple[int, int] Locations (x,y) on the screen to place upper left corner of the window|
+|*args|Not used|
+
+Shows the large main debugger window
+
+```
+show_debugger_window(location=(None, None), args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|location|Tuple[int, int] Locations (x,y) on the screen to place upper left corner of the window|
+|*args|Not used|
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+sprint(args,
+    title=None,
+    button_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    non_blocking=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|(Any) Variable number of items to display|
+|title|(str) Title to display in the window.|
+|button_color|Tuple[str, str] button color (foreground, background)|
+|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
+|auto_close|(bool) if True window will close itself|
+|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
+|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
+|||
+| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
 
 ---
 
@@ -7124,10 +9591,8 @@ Run this command on your Mac
 This info was located on Reddit with the source traced back to:
 https://github.com/pyinstaller/pyinstaller/issues/1350
 
-## Fun Stuff
-Here are some things to try if you're bored or want to further customize
+# Debug Output
 
-**Debug Output**
 Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
 
 For a fun time, add these lines to the top of your script
@@ -7138,7 +9603,9 @@ For a fun time, add these lines to the top of your script
 ```
 This will turn all of your print statements into prints that display in a window on your screen rather than to the terminal.
 
-**Look and Feel**
+# Look and Feel (`ChangleLookAndFeel`)
+
+While you can define colors for each individual element and you can even define some on a windows wide basis, but it requires setting a lot of different settings.
 Dial in the look and feel that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
 Or beginning in version 2.9 you can choose from a look and feel using pre-defined color schemes.   Call ChangeLookAndFeel with a description string.
 
@@ -7161,6 +9628,24 @@ Valid values for the  description string are:
       Kayak
       SandyBeach
       TealMono
+
+The way this call actually works is that it calls `SetOptions` with a LOT of color settings.  Here is the actual call that's made.  As you can see lots of stuff is defined for you.
+
+```python
+SetOptions(background_color=colors['BACKGROUND'],
+            text_element_background_color=colors['BACKGROUND'],
+            element_background_color=colors['BACKGROUND'],
+            text_color=colors['TEXT'],
+            input_elements_background_color=colors['INPUT'],
+            button_color=colors['BUTTON'],
+            progress_meter_color=colors['PROGRESS'],
+            border_width=colors['BORDER'],
+            slider_border_width=colors['SLIDER_DEPTH'],
+            progress_meter_border_depth=colors['PROGRESS_DEPTH'],
+            scrollbar_color=(colors['SCROLL']),
+            element_text_color=colors['TEXT'],
+            input_text_color=colors['TEXT_INPUT'])
+```
 
 To see the latest list of color choices, take a look at the bottom of the `PySimpleGUI.py` file where you'll find the `ChangLookAndFeel` function.
 
