@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0.8 Unreleased"
+version = __version__ = "4.2.0.9 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -752,24 +752,10 @@ class Element():
             print('Was unable to set focus.  The Widget passed in was perhaps not present in this element?  Check your elements .Widget property')
 
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKStringVar.__del__()
-        except:
-            pass
-        try:
-            self.TKIntVar.__del__()
-        except:
-            pass
-        try:
-            self.TKText.__del__()
-        except:
-            pass
-        try:
-            self.TKEntry.__del__()
-        except:
-            pass
+    def __call__(self, *args, **kwargs):
+        '''Change the position of the entity.'''
+        print('IN CALL!')
+        return self.Update(*args, **kwargs)
 
 
 # ---------------------------------------------------------------------- #
@@ -870,10 +856,6 @@ class InputText(Element):
         except:
             pass
 
-    def __del__(self):
-        """ """
-        super().__del__()
-
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
 In = InputText
@@ -970,6 +952,12 @@ class Combo(Element):
             self.TKCombo.pack()
 
     def Get(self):
+        """
+        Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
+        You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
+
+        :return: Union[Any, None] Returns the value of what is currently chosen
+        """
         try:
             if self.TKCombo.current() == -1:  # if the current value was not in the original list
                 value = self.TKCombo.get()    # then get the value typed in by user
@@ -979,13 +967,6 @@ class Combo(Element):
             value = None                      # only would happen if user closes window
         return value
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKCombo.__del__()
-        except:
-            pass
-        super().__del__()
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
@@ -1065,13 +1046,7 @@ class OptionMenu(Element):
         elif visible is True:
             self.TKOptionMenu.pack()
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKOptionMenu.__del__()
-        except:
-            pass
-        super().__del__()
+
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
@@ -1225,13 +1200,7 @@ class Listbox(Element):
             pass
 
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKListBox.__del__()
-        except:
-            pass
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -1317,13 +1286,7 @@ class Radio(Element):
         return self.TKIntVar.get() == self.EncodedRadioValue
 
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKRadio.__del__()
-        except:
-            pass
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -1400,9 +1363,7 @@ class Checkbox(Element):
         elif visible is True:
             self.TKCheckbutton.pack()
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -1508,20 +1469,13 @@ class Spin(Element):
         """
         return self.TKStringVar.get()
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKSpinBox.__del__()
-        except:
-            pass
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
 class Multiline(Element):
-    """ 
+    """
     Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
     Other PySimpleGUI ports have a separate MultilineInput and MultilineOutput elements.  May want to split this
     one up in the future too.
@@ -1533,7 +1487,7 @@ class Multiline(Element):
                  right_click_menu=None, visible=True):
         """
 
-        :param default_text: (str) Initial text to show 
+        :param default_text: (str) Initial text to show
         :param enter_submits: (bool) if True, the Window.Read call will return is enter key is pressed in this element
         :param disabled: (bool) set disable state
         :param autoscroll: (bool) If True the contents of the element will automatically scroll as more data added to the end
@@ -1639,9 +1593,7 @@ class Multiline(Element):
         except:
             pass
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -1715,9 +1667,9 @@ class Text(Element):
         elif visible is True:
             self.TKText.pack()
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
+
+
 
 
 # -------------------------  Text Element lazy functions  ------------------------- #
@@ -1794,10 +1746,6 @@ class StatusBar(Element):
         elif visible is True:
             self.TKText.pack()
 
-
-    def __del__(self):
-        """ """
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1877,13 +1825,6 @@ class TKProgressBar():
             except:
                 return False
         return True
-
-    def __del__(self):
-        """ """
-        try:
-            self.TKProgressBarForReal.__del__()
-        except:
-            pass
 
 
 # ---------------------------------------------------------------------- #
@@ -2017,13 +1958,6 @@ class Output(Element):
         elif visible is True:
             self._TKOut.frame.pack()
 
-    def __del__(self):
-        """ """
-        try:
-            self._TKOut.__del__()
-        except:
-            pass
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -2349,14 +2283,6 @@ class Button(Element):
         except:
             print('Exception clicking button')
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKButton.__del__()
-        except:
-            pass
-        super().__del__()
-
 
 # -------------------------  Button lazy functions  ------------------------- #
 B = Button
@@ -2451,13 +2377,7 @@ class ButtonMenu(Element):
         elif visible is True:
             self.TKButtonMenu.pack()
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKButtonMenu.__del__()
-        except:
-            pass
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -2529,13 +2449,7 @@ class ProgressBar(Element):
         elif visible is True:
             self.TKProgressBar.TKProgressBarForReal.pack()
 
-    def __del__(self):
-        """ """
-        try:
-            self.TKProgressBar.__del__()
-        except:
-            pass
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -2658,9 +2572,7 @@ class Image(Element):
         except:
             pass
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -2699,9 +2611,7 @@ class Canvas(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -3208,9 +3118,7 @@ class Graph(Element):
             pass
 
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -3321,12 +3229,7 @@ class Frame(Element):
         elif visible is True:
             self.TKFrame.pack()
 
-    def __del__(self):
-        """ """
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -3347,9 +3250,7 @@ class VerticalSeparator(Element):
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 VSeperator = VerticalSeparator
@@ -3481,12 +3382,6 @@ class Tab(Element):
             print('Exception Selecting Tab {}'.format(e))
 
 
-    def __del__(self):
-        """ """
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -3618,12 +3513,7 @@ class TabGroup(Element):
         return value
 
 
-    def __del__(self):
-        """ """
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -3729,9 +3619,7 @@ class Slider(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -3981,16 +3869,7 @@ class Column(Element):
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
 
-    def __del__(self):
-        """ """
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        try:
-            del (self.TKFrame)
-        except:
-            pass
-        super().__del__()
+
 
 
 
@@ -4421,9 +4300,7 @@ class Menu(Element):
         elif self.TKMenu is not None:
             self.ParentForm.TKroot.configure(menu=self.TKMenu)
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
@@ -4608,9 +4485,6 @@ class Table(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
-    def __del__(self):
-        """ """
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -4774,9 +4648,7 @@ class Tree(Element):
             self.TKTreeview.pack()
         return self
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 class TreeData(object):
@@ -4908,9 +4780,7 @@ class ErrorElement(Element):
         """
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-    def __del__(self):
-        """ """
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -5097,7 +4967,7 @@ class Window:
                       'This list will be stripped from your layout'
                       )
                 continue
-            elif callable(element):
+            elif callable(element) and not isinstance(element, Element):
                 PopupError('Error creating layout',
                       'Layout has a FUNCTION instead of an ELEMENT',
                       'This means you are missing () from your layout',
@@ -5504,9 +5374,22 @@ class Window:
 
     def FindElement(self, key, silent_on_error=False):
         """
-        Find element object associated with the provided key.  This call can be abbreviated to any of these:
+        Find element object associated with the provided key.
+        THIS METHOD IS NO LONGER NEEDED to be called by the user
+
+        You can perform the same operation by writing this statement:
+        element = window[key]
+
+        You can drop the entire "FindElement" function name and use [ ] instead.
+
+        Typically used in combination with a call to element's Update method (or any other element method!):
+        window[key].Update(new_value)
+
+        Versus the "old way"
+        window.FindElement(key).Update(new_value)
+
+        This call can be abbreviated to any of these:
         FindElement == Element == Find
-        So take your pick as to how much typing you want to do.
         Rememeber that this call will return None if no match is found which may cause your code to crash if not
         checked for.
 
@@ -5602,7 +5485,7 @@ class Window:
         """
         Saves the values contained in each of the input areas of the form. Basically saves what would be returned
         from a call to Read.  It takes these results and saves them to disk using pickle
-        
+
         :param filename: (str) Filename to save the values to in pickled form
         """
         try:
@@ -5621,8 +5504,8 @@ class Window:
     def LoadFromDisk(self, filename):
         """
         Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
-        
-        :param filename: (str) Pickle Filename to load 
+
+        :param filename: (str) Pickle Filename to load
         """
         try:
             with open(filename, 'rb') as df:
@@ -5634,7 +5517,7 @@ class Window:
     def GetScreenDimensions(self):
         """
         Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
-        
+
         :return: Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels
         """
         if self.TKrootDestroyed:
@@ -5656,7 +5539,7 @@ class Window:
 
     def Minimize(self):
         """
-        Minimize this window to the task bar        
+        Minimize this window to the task bar
         """
         self.TKroot.iconify()
 
@@ -5664,7 +5547,7 @@ class Window:
         """
         Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
         the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
-        The reason for the difference is the title bar is removed in some cases when using fullscreen option        
+        The reason for the difference is the title bar is removed in some cases when using fullscreen option
         """
         if sys.platform != 'linux':
             self.TKroot.state('zoomed')
@@ -5728,7 +5611,7 @@ class Window:
         """
         Window keyboard callback. Called by tkinter.  Will kick user out of the tkinter event loop. Should only be
         called if user has requested window level keyboard events
-        
+
         :param event: (event) object provided by tkinter that contains the key information
         """
         self.LastButtonClicked = None
@@ -5746,7 +5629,7 @@ class Window:
         """
         Called by tkinter when a mouse wheel event has happened. Only called if keyboard events for the window
         have been enabled
-        
+
         :param event: (event) object sent in by tkinter that has the wheel direction
         """
         self.LastButtonClicked = None
@@ -5777,7 +5660,7 @@ class Window:
     def Close(self):
         """
         Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
-        a window so that resources are properly freed up within your thread.  
+        a window so that resources are properly freed up within your thread.
         """
         if self.TKrootDestroyed:
             return
@@ -6007,13 +5890,13 @@ class Window:
         self.TKroot.unbind("<Pause>")
         self.DebuggerEnabled = False
 
-    def __enter__(self):
-        """
-        WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
-        am afraid of removing right now
-        :return: (window)
-        """
-        return self
+    # def __enter__(self):
+    #     """
+    #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
+    #     am afraid of removing right now
+    #     :return: (window)
+    #     """
+    #     return self
 
     def __getitem__(self, key):
         """
@@ -6030,23 +5913,23 @@ class Window:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
             return None
 
-
-    def __exit__(self, *a):
-        """
-        WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
-        am afraid of removing right now
-        :param *a: (?) Not sure what's passed in.
-        :return: Always returns False which was needed for context manager to work
-        """
-        self.__del__()
-        return False
-
-    def __del__(self):
-        """ """
-        # print('DELETING WINDOW')
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
+    #
+    # def __exit__(self, *a):
+    #     """
+    #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
+    #     am afraid of removing right now
+    #     :param *a: (?) Not sure what's passed in.
+    #     :return: Always returns False which was needed for context manager to work
+    #     """
+    #     self.__del__()
+    #     return False
+    #
+    # def __del__(self):
+    #     """ """
+    #     # print('DELETING WINDOW')
+    #     for row in self.Rows:
+    #         for element in row:
+    #             element.__del__()
 
 
 FlexForm = Window
@@ -6454,7 +6337,7 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -6477,7 +6360,7 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=COLOR_SYSTEM_DEFAULT, font=font, disabled=disabled,
@@ -6507,7 +6390,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -6538,7 +6421,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -6638,7 +6521,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -6677,7 +6560,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
     :param locale:
     :param format:
-
+    :return: (Button)
     """
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
@@ -6715,7 +6598,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
@@ -6735,7 +6618,6 @@ def AddToReturnDictionary(form, element, value):
 
     """
     form.ReturnValuesDictionary[element.Key] = value
-    return
     # if element.Key is None:
     #     form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
     #     element.Key = form.DictionaryKeyCounter
@@ -6790,6 +6672,7 @@ def EncodeRadioRowCol(container, row, col):
     """
     RadValue = container * 100000 + row * 1000 + col
     return RadValue
+
 
 
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
@@ -9730,7 +9613,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
 # MsgBox is the legacy call and should not be used any longer
 def MsgBox(*args):
     """
-
+    Do not call this anymore it will raise exception.  Use Popups instead
     :param *args:
 
     """
@@ -9989,7 +9872,6 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                    location=(None, None)):
     """Popup that closes itself after some time period
-    :return:
 
     :param *args:
     :param title:
@@ -10161,7 +10043,6 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
     :param no_titlebar:  (Default = False)
     :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
     :param location: Location on screen to display
-    :param location:
     :return: Union["Yes", "No", None]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color,
