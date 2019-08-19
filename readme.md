@@ -10,9 +10,9 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.1.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.2.0-red.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.0.0-blue.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.2.0-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)
 
@@ -119,6 +119,8 @@ This User's Manual (also the project's readme) is one ***vital*** part of the Py
 
 If you are a professional or skilled in how to develop software, then you understand the role of documentation in the world of technology development.  You can skip this bit.... look for the bold "**GO TO HERE**" below.
 
+RTFM is not a new acronym. It stretches back to 1979, the dawn of the computer-era and in particular the microprocessor.  The point is that this is not a new problem.  It's a very old problem.
+
 Bluntness is required here as the subtle approach has not worked in the past:
 
 ***It WILL be required, at times, for you to read or search this document in order to be successful.***
@@ -141,13 +143,13 @@ There are 5 resources that work together to provide to you the fastest path to s
 2. The Cookbook
 3. The 170+ Demo Programs
 4. Docstrings enable you to access help directly from Python or your IDE
-5. Searching the GitHub Issues as a last resort
+5. Searching the GitHub Issues as a last resort (search both open and closed issues)
 
-Pace yourself.  The intial progress is exciting and FAST PACED.  However, GUIs take time and thought to build.  Take a deep breath and use the provided materials and you'll do fine.  Don't skip the design phase of your GUI after you run some demos and get the hang of things.
+Pace yourself.  The intial progress is exciting and FAST PACED.  However, GUIs take time and thought to build.  Take a deep breath and use the provided materials and you'll do fine.  Don't skip the design phase of your GUI after you run some demos and get the hang of things.  If you've tried other GUI frameworks before, successful or not, then you know you're already way ahead of the game using PySimpleGUI versus the underlying GUI frameworks.  It may feel like the 3 days you've been working on your code has been forever, but by comparison of 3 days learning Qt, PySimpleGUI will look trivial to learn.
 
 It is not by accident that this section, about documentation, is at the TOP of this document.
 
-This documentation is not HUGE in length.  It's not written in complex english.  It is understandable by complete beginners.  And pressing `Control+F` is all you need to do to search this document.  USUALLY you'll find less than 6 matches.
+This documentation is not HUGE in length for a package this size. In fact it's still one document and it's the readme for the GitHub.  It's not written in complex english.  It is understandable by complete beginners.  And pressing `Control+F` is all you need to do to search this document.  USUALLY you'll find less than 6 matches.
 
 ## Documentation and Demos Get Out of Date
 
@@ -2386,6 +2388,9 @@ Some of the old code examples showed calling this function.  You should now call
 Please file an Issue if you see this call in any code or in any documentation.  It must go away never to be seen again.
 
 # Elements
+
+You will find information on Elements and all other classes and functions are located near the end of this manual.  They are in 1 large section of the readme, in alphabetical order for easy lookups.  This section's discussion of Elements is meant to teach you how they work.  The other section has detailed call signatures and parameter definitions.
+
 "Elements" are the building blocks used to create windows.  Some GUI APIs use the term "Widget" to describe these graphic elements.
 
 - Text
@@ -2403,7 +2408,7 @@ Please file an Issue if you see this call in any code or in any documentation.  
 - Listbox
 - Slider
 - Multi-line Text Input/Output
-- Multi-line Text Output (Qt only)
+- Multi-line Text Output (not on tkinter version)
 - Scroll-able Output
 - Vertical Separator
 - Progress Bar
@@ -2422,7 +2427,9 @@ Please file an Issue if you see this call in any code or in any documentation.  
 - Stretch (Qt only)
 
 ## Common Element Parameters
-Some parameters that you  will see on almost all Elements are:
+
+Some parameters that you  will see on almost all Element creation calls include:
+
 - key   -  Used with window.FindElement and with return values
 - tooltip   - Hover your mouse over the elemnt and you'll get a popup with this text
 - size  - (width, height) - usually measured in characters-wide, rows-high.  Sometimes they mean pixels
@@ -4151,6 +4158,253 @@ while True:
                 break
 ```
 
+---
+
+# The PySimpleGUI Debugger
+
+Listen up if you are
+* advanced programmers debugging some really hairy stuff
+* programmers from another era that like to debug this way
+* those that want to have "x-ray vision" into their code
+* asked to use debugger to gather information
+* running on a platform that lacks ANY debugger
+* debugging a problem that happens only outside of a debugger environment
+* finding yourself saying "but it works when running PyCharm"
+
+Starting on June 1, 2019, a built-in version of the debugger `imwatchingyou` has been shipping in every copy of PySimpleGUI.  It's been largely downplayed to gauge whether or not the added code and the added feature and the use of a couple of keys, would mess up any users.  Over 30,000 users have installed PySimpleGUI since then and there's not be a single Issue filed nor comment/complaint made, so seems safe enough to normal users... so far....
+
+So far no one has reported anything at all about the debugger.  The assumption is that it is quietly lying dormant, waiting for you to press the `BREAK` or `CONTROL` + `BREAK` keys.  It's odd no one has accidently done this and freaked out, logging an Issue.
+
+The plain PySimpleGUI module has a debugger builtin.  For the other ports, please use the package `imwatchingyou`.
+
+## What is it?  Why use it?  What the heck?  I already have an IDE.
+
+This debugger provides you with something unique to most typical Python developers, the ability to "see" and interact with your code, **while it is running**.  You can change variable values while your code continues to run.
+
+Print statements are cool, but perhaps you're tired of seeing this:
+```
+Push Me {0: 'Input here'}
+Push Me {0: 'Input here'}
+Push Me {0: 'Input here'}
+```
+
+And would prefer to see this window updating continuously in the upper right corner of your display:
+
+![image](https://user-images.githubusercontent.com/13696193/62793751-54197900-baa0-11e9-9a98-f780259062b1.png)
+
+Notice how easy it is, using this window alone, to get the location that your PySimpleGUI package is coming from ***for sure***, no guessing.  Expect this window to be in your debugging future as it'll get asked for from time to time.
+
+## Preparing To Run the Debugger
+
+If your program is running with blocking `Read` calls, then you will want to add a timeout to your reads.  This is because the debugger gets it's cycles by stealing a little bit of time from these async calls... but only when you have one of these debugger windows open so no bitching about wasted CPU time as there is none.
+
+Your event loop will be modified from this blocking:
+```python
+while True:
+    event, values = window.Read()
+```
+
+To this non-blocking:
+```python
+while True:
+    event, values = window.Read(timeout=200)
+    if event == sg.TIMEOUT_KEY:
+        continue
+```
+
+These 3 lines will in no way change how your application looks and performs.  You can do this to any PySimpleGUI app that uses a blocking read and you'll not notice a difference.  The reason this is a NOP (No-operation) is that when a timeout happens, the envent will be set to `sg.TIMEOUT_KEY`.  If a timeout is returned as the event, the code simply ignores it and restarts the loop by executing a `continue` statement.
+
+This timeout value of 200 means that your debugger GUI will be updated 5 times a second if nothing is happening.  If this adds too much "drag" to your application, you can make the timeout larger.  Try using 500 or 1000 instead of 100.
+
+### What happens if you don't add a timeout
+
+Let's say you're in a situation where a very intermettent bug has just happened and the debugger would really help you, but you don't have a timeout on your `windows.Read()` call.  It's OK.  Recall that the way the debugger gets its "cycles" is to borrow from your `Read` calls.  What you need to do is alternate between using the debugger and then generating another pass through your event loop.
+
+Maybe it's an OK button that will cause your loop to execute again (without exiting).  If so, you can use it to help move the debugger along.  
+
+Yes, this is a major pain in the ass, but it's not THAT bad and compared to nothing in a time of crisis and this is potentially your "savior tool" that's going to save your ass, pressing that OK button a few times is going to look like nothing to you.  You just want to dump out the value of a variable that holds an instance of your class!
+
+## A Sample Program For Us To Use
+
+Now that you understand how to add the debugger to your program, let's make a simple little program that you can use to follow these examples:
+
+```python
+import PySimpleGUI as sg
+
+window = sg.Window('Testing the Debugger', [[sg.Text('Debugger Tester'), sg.In('Input here'), sg.B('Push Me')]])
+
+while True:
+    event, values = window.Read(timeout=500)
+    if event == sg.TIMEOUT_KEY:
+        continue
+    if event is None:
+        break
+    print(event, values)
+window.Close()
+```
+
+## Debugger Windows
+
+### "Popout Debugger Window"
+
+There are 2 debugger windows. One is called the "Popout" debugger window.  The Popout window displays as many currently in-scope local variables as possible.  This window is not interactive.  It is meant to be a frequently updated "dashboard" or "snapshot" of your variables.
+
+One "variable" shown in the popout window that is an often asked for piece of information when debugging Issues and that variable is `sg` (or whatever you named the PySimpleGUI pacakge when you did your import). The assumption is that your import is `import PySimpleGUI as sg`.  If your import is different, then you'll see a different variable.  The point is that it's shown here.
+
+Exiting this window is done via the little red X, **or using the rickt-click menu** which is also used as one way to launch the Main Debugger Window
+
+#### When you are asked for the "Location of your PySimpleGUI package or PySimpleGUI.py file" do this
+
+If you wish to use the debugger to find the location of THIS running program's PySimpleGUI package / the PySimpleGUI.py file, then all you need to do is:
+* Press the `BREAK` key on your keyboard. 
+    * This is sometimes labelled as the `Cancel` key
+    * May also have `Pause` printed on key
+    * On some US keyboards, it is located next to `Scroll Lock` and/or above `PageUp` key
+* This will open a window located in the upper right corner of your screen that looks something like this:
+![image](https://user-images.githubusercontent.com/13696193/62793751-54197900-baa0-11e9-9a98-f780259062b1.png)
+* The information you are seeking is shown next to the `sg` in the window
+You don't need to modify your program to get this info using this technique.
+
+If your variable's value is too long and doesn't fit, then you'lll need to collect this information using the "Main Debugger Window"
+
+#### What's NOT Listed In The Popout Debugger Window
+
+The Popup window is a "Snapshot" of your local variables at the time the window was opened. This means **any variables that did not exist at the time the Popout was created will not be shown**.   This window does **NOT** expand in size by adding new variables.  Maybe in the future.
+
+### The "Main Debugger Window"
+
+Now we're talking serious Python debugging!
+
+Ever wish you had a `repl>>>` prompt that you could run while your program is running.  Well, that's pretty much what you're getting with the PySimpleGUI debugger Main Window!  Cool, huh?  If you're not impressed, go get a cup of coffee and walk off that distraction in your head before carring on because we're in to some seriously cool shit here....
+
+You'll find that this window has 2 tabs, one is labelled `Variables` and the other is labelled `REPL & Watches`
+
+#### The "Variables" Tab of Main Debugger Window
+
+![SNAG-0440](https://user-images.githubusercontent.com/13696193/62797391-a01ceb80-baa9-11e9-845d-3cd02ca0dbcc.jpg)
+
+Notice the the "frame" surrounding this window is labelled "Auto Watches" in blue.  Like the Popup window, this debugger window also "Watches" variables, which means continuously updates them as often as you call `Window.Read`.
+
+The maximum number of "watches" you can have any any one time is 9.
+
+##### Choosing variables to watch
+
+You can simply click "Show All Variable" button and the list of watched variables will be automatically populard by the first 9 variables it finds.  Or you can click the "Choose Variables to Auto Watch" button where you can individually choose what variables, **and expressions** you wish to display.
+
+![SNAG-0442](https://user-images.githubusercontent.com/13696193/62797520-e96d3b00-baa9-11e9-8ba0-794e479b6fc5.jpg)
+
+In this window we're checking checkboxes to display these variables:
+
+`event`, `sg`, `values`, `window`, `__file__`
+
+![SNAG-0443](https://user-images.githubusercontent.com/13696193/62797518-e8d4a480-baa9-11e9-8575-5256dcf6b5ab.jpg)
+
+Additionally, you can see at the bottom of the window a "Custom Watch" has been defined.  This can be any experession you want.  Let's say you have a window with a LOT of values.  Rather than looking through the `values` variable and finding the entry with the key you are looking for, the values variable's entry for a specific key is displayed.
+
+In this example the Custom Watch entered was `values[0]`.  After clicking on the "OK" button, indicating the variables are chosen that we wish to watch, this is the Main window that is shown:
+
+![SNAG-0444](https://user-images.githubusercontent.com/13696193/62797514-e8d4a480-baa9-11e9-9a86-cfe99342dedb.jpg)
+
+We can see the variables we checked as well as the defined expression `values[0]`.  If you leave this window open, these values with continuously be updated, on the fly, every time we call the line in our example code `window.Read(timeout=500)`.  This means that the Main Debugger Window and these variables we defined will be updated every 500 milliseconds.
+
+#### The REPL & Watches Tab
+
+![SNAG-0441](https://user-images.githubusercontent.com/13696193/62797507-e7a37780-baa9-11e9-93c4-6ff0c8acb11d.jpg)
+
+This tab is provided to you as a way to interact with your running program on a real-time basis.  
+
+If you want to quickly look at the values of variables, nearly ANY variables, then type the information into one of the 3 spaces provided to "Watch" either variables or experessions.  In this example, the variable window was typed into the first slow.  
+
+***Immediately*** after typing the character 'w', the information to the right was displayed.  No button needs to be clicked.  You merely neeed to type in a valid experession and it will be displayed to you.... and it will be displayed on an on-going, constantly-refreshing-basis.
+
+![SNAG-0447](https://user-images.githubusercontent.com/13696193/62797393-a0b58200-baa9-11e9-8016-1cadca4d97e7.jpg)
+
+If the area to the right of the input field is too small, then you can click on the "Detail" button and you will be shown a popup, scrolled window with all of the information displayed as if it were printed.  
+
+I'm sure you've had the lovely experience of printing an object.  When clicking the "Detail" button next to the `window` variable being shown, this window is shown:
+
+![SNAG-0449](https://user-images.githubusercontent.com/13696193/62801423-b0d25f00-bab3-11e9-829a-aebb429521cd.jpg)
+
+Oh, Python, -sigh-.  I just want to see my `window` object printed.  
+
+#### `Obj` Button to the Rescue!
+
+PySimpleGUI has a fun and very useful function that is discussed in the docs named `ObjToString` which takes an object and converts it's **contents** it into a nicely formatted string.  This function is used to create the text output when you click the `Obj` button.  The result is this instead of the tiny window shown previously:
+
+![SNAG-0446](https://user-images.githubusercontent.com/13696193/62797508-e7a37780-baa9-11e9-96bf-b2c066e72d78.jpg)
+
+## The REPL Prompt
+
+While not **really** a Python REPL prompt, this window's `REPL >>>` prompt is meant to act as much like one as possible.  Here you can enter experessions and code too.
+
+The uses for this prompt are so numerous and diverse that listing them all won't be attempted. 
+
+### Your "XRay" and "Endoscope" into Your Program
+
+Think of this prompt as a way to get specific diagnostics information about your ***running*** program.  It cannot be stressed enough that the power and the usefullness of this tool is in its ability to diagnose a running program, after you've already started it running. 
+
+### Execute Code 
+
+In addition to displaying information, getting paths to packages, finding version information, you can execute code from the PySimpleGUI Debugger's `REPL >>>` prompt.  You can type in any expression as well as any **executable statement**.
+
+For example, want to see what `PopupError` looks like while you're running your program.  From the REPL prompt, type:
+`sg.PopupError('This is an error popup')`
+
+The result is that you are shown a popup window with the text you supplied.
+
+### KNOW Answers to Questions About Your Program
+
+Using this runtime tool, you can be confident in the data you collect.  Right?  
+
+***There's no better way to find what version of a package that your program is using than to ask your program.***  This is so true.  Think about it.  Rather than go into PyCharm, look at your project's "Virtual Environment", follow some path to get to a window that lists packages installed for that project, get the verstion and your're done, right?  Well, maybe.  But are you CERTAIN your program is using THAT version of the package in question?
+
+SO MUCH time has been wasted in the past  when people KNEW, for sure, what version they were running. Or, they had NO CLUE what version, or no clue to find out.  There's nothing wrong with not knowing how to do something.  We ALL start there.  Geeez..
+
+A real world example.....
+
+## How To Use the Debugger to Find The Version Number of a Package
+
+Let's pull together everything we've learned to now and use the debugger to solve a problem that happens often and sometimes it's not at all obvious how to find the answer.
+
+We're using ***Matplotlib*** and want to find the "Version".
+
+For this example, the little 12-line program in the section "A Sample Program For Us To Use" is being used.
+
+That program does not import `matplotlib`.  We have a couple of choices, we can change the code, we can can import the package from the debugger.  Let's use the debgger.
+
+Pull up the Main Debugger Window by pressing `CONTROL+BREAK` keys.  Then click the "REPL * Watches" tab.  At the `>>>` prompt we'll first import the package by typing:
+`import matplotlib as m`
+
+The result returned from Python calls that don't return anything is the value None.  You will see the command you entered in the output area followed by "None", indicating success.
+
+finally, type:
+`m.__version__`
+
+The entire set of operations is shown in this window:
+
+![SNAG-0448](https://user-images.githubusercontent.com/13696193/62797392-a0b58200-baa9-11e9-97f4-9ef74cbb86f7.jpg)
+
+By convention you'll find many modules have a variable `__version__` that has the package's version number.  PySimpleGUI has one.  As you can see matplotlib has one.  The `requests` module has this variable.
+
+For maximum compatibility, PySimpleGUI not only uses `__version__`, but also has the version contained in another variable `version` which has the version number because in some situations the `__version__` is not available but the `version` variable is avaiable.
+
+**It is recommended that you use the variable `version` to get the PySimpleGUI version** as it's so far been the most successful method.
+
+tkinter, however does NOT.... of course.... follow this convention.  No, to get the tkinter version, you need to look at the variable:
+`TkVersion`
+
+Here's the output from the REPL in the debugger showing the tkinter version:
+
+```
+>>> import tkinter as t
+None
+>>> t.TkVersion
+8.6
+>>> t.__version__
+Exception module 'tkinter' has no attribute '__version__'
+```
+---
+
 ------------------
 
 # ELEMENT AND FUNCTION CALL REFERENCE
@@ -4220,42 +4474,6 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |visible|(bool) set visibility state of the element|
-
-#### ButtonCallBack
-
-Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
-
-```python
-ButtonCallBack()
-```
-
-#### ButtonPressCallBack
-
-Not a user callable method. Callback called by tkinter when a "realtime" button is pressed
-
-```
-ButtonPressCallBack(parm)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|parm|Event info passed in by tkinter|
-
-#### ButtonReleaseCallBack
-
-Not a user callable function.  Called by tkinter when a "realtime" button is released
-
-```
-ButtonReleaseCallBack(parm)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|parm|the event info from tkinter|
 
 #### Click
 
@@ -7251,7 +7469,8 @@ Window(title,
     disable_minimize=False,
     right_click_menu=None,
     transparent_color=None,
-    debugger_enabled=True)
+    debugger_enabled=True,
+    finalize=False)
 ```
 
 Parameter Descriptions:
@@ -7289,6 +7508,7 @@ Parameter Descriptions:
 |disable_minimize|(bool) if True the user won't be able to minimize window. Good for taking over entire screen and staying that way.|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |transparent_color|(str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.|
+|finalize|(bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code|
 |debugger_enabled|(bool) If True then the internal debugger will be enabled|
 
 #### AddRow
@@ -7389,9 +7609,22 @@ Disappear()
 
 #### Elem
 
-Find element object associated with the provided key.  This call can be abbreviated to any of these:
+Find element object associated with the provided key.
+THIS METHOD IS NO LONGER NEEDED to be called by the user
+
+You can perform the same operation by writing this statement:
+element = window[key]
+
+You can drop the entire "FindElement" function name and use [ ] instead.
+
+Typically used in combination with a call to element's Update method (or any other element method!):
+window[key].Update(new_value)
+
+Versus the "old way"
+window.FindElement(key).Update(new_value)
+
+This call can be abbreviated to any of these:
 FindElement == Element == Find
-So take your pick as to how much typing you want to do.
 Rememeber that this call will return None if no match is found which may cause your code to crash if not
 checked for.
 
@@ -7410,9 +7643,22 @@ Parameter Descriptions:
 
 #### Element
 
-Find element object associated with the provided key.  This call can be abbreviated to any of these:
+Find element object associated with the provided key.
+THIS METHOD IS NO LONGER NEEDED to be called by the user
+
+You can perform the same operation by writing this statement:
+element = window[key]
+
+You can drop the entire "FindElement" function name and use [ ] instead.
+
+Typically used in combination with a call to element's Update method (or any other element method!):
+window[key].Update(new_value)
+
+Versus the "old way"
+window.FindElement(key).Update(new_value)
+
+This call can be abbreviated to any of these:
 FindElement == Element == Find
-So take your pick as to how much typing you want to do.
 Rememeber that this call will return None if no match is found which may cause your code to crash if not
 checked for.
 
@@ -7475,9 +7721,22 @@ Lots of action!
 
 #### Find
 
-Find element object associated with the provided key.  This call can be abbreviated to any of these:
+Find element object associated with the provided key.
+THIS METHOD IS NO LONGER NEEDED to be called by the user
+
+You can perform the same operation by writing this statement:
+element = window[key]
+
+You can drop the entire "FindElement" function name and use [ ] instead.
+
+Typically used in combination with a call to element's Update method (or any other element method!):
+window[key].Update(new_value)
+
+Versus the "old way"
+window.FindElement(key).Update(new_value)
+
+This call can be abbreviated to any of these:
 FindElement == Element == Find
-So take your pick as to how much typing you want to do.
 Rememeber that this call will return None if no match is found which may cause your code to crash if not
 checked for.
 
@@ -7496,9 +7755,22 @@ Parameter Descriptions:
 
 #### FindElement
 
-Find element object associated with the provided key.  This call can be abbreviated to any of these:
+Find element object associated with the provided key.
+THIS METHOD IS NO LONGER NEEDED to be called by the user
+
+You can perform the same operation by writing this statement:
+element = window[key]
+
+You can drop the entire "FindElement" function name and use [ ] instead.
+
+Typically used in combination with a call to element's Update method (or any other element method!):
+window[key].Update(new_value)
+
+Versus the "old way"
+window.FindElement(key).Update(new_value)
+
+This call can be abbreviated to any of these:
 FindElement == Element == Find
-So take your pick as to how much typing you want to do.
 Rememeber that this call will return None if no match is found which may cause your code to crash if not
 checked for.
 
@@ -9270,250 +9542,6 @@ Parameter Descriptions:
 
 ---
 
-# The PySimpleGUI Debugger
-
-Listen up if you are
-* advanced programmers debugging some really hairy stuff
-* programmers from another era that like to debug this way
-* those that want to have "x-ray vision" into their code
-* asked to use debugger to gather information
-* running on a platform that lacks ANY debugger
-* debugging a problem that happens only outside of a debugger environment
-* finding yourself saying "but it works when running PyCharm"
-
-Starting on June 1, 2019, a built-in version of the debugger `imwatchingyou` has been shipping in every copy of PySimpleGUI.  It's been largely downplayed to gauge whether or not the added code and the added feature and the use of a couple of keys, would mess up any users.  Over 30,000 users have installed PySimpleGUI since then and there's not be a single Issue filed nor comment/complaint made, so seems safe enough to normal users... so far....
-
-So far no one has reported anything at all about the debugger.  The assumption is that it is quietly lying dormant, waiting for you to press the `BREAK` or `CONTROL` + `BREAK` keys.  It's odd no one has accidently done this and freaked out, logging an Issue.
-
-The plain PySimpleGUI module has a debugger builtin.  For the other ports, please use the package `imwatchingyou`.
-
-## What is it?  Why use it?  What the heck?  I already have an IDE.
-
-This debugger provides you with something unique to most typical Python developers, the ability to "see" and interact with your code, **while it is running**.  You can change variable values while your code continues to run.
-
-Print statements are cool, but perhaps you're tired of seeing this:
-```
-Push Me {0: 'Input here'}
-Push Me {0: 'Input here'}
-Push Me {0: 'Input here'}
-```
-
-And would prefer to see this window updating continuously in the upper right corner of your display:
-
-![image](https://user-images.githubusercontent.com/13696193/62793751-54197900-baa0-11e9-9a98-f780259062b1.png)
-
-Notice how easy it is, using this window alone, to get the location that your PySimpleGUI package is coming from ***for sure***, no guessing.  Expect this window to be in your debugging future as it'll get asked for from time to time.
-
-## Preparing To Run the Debugger
-
-If your program is running with blocking `Read` calls, then you will want to add a timeout to your reads.  This is because the debugger gets it's cycles by stealing a little bit of time from these async calls... but only when you have one of these debugger windows open so no bitching about wasted CPU time as there is none.
-
-Your event loop will be modified from this blocking:
-```python
-while True:
-    event, values = window.Read()
-```
-
-To this non-blocking:
-```python
-while True:
-    event, values = window.Read(timeout=200)
-    if event == sg.TIMEOUT_KEY:
-        continue
-```
-
-These 3 lines will in no way change how your application looks and performs.  You can do this to any PySimpleGUI app that uses a blocking read and you'll not notice a difference.  The reason this is a NOP (No-operation) is that when a timeout happens, the envent will be set to `sg.TIMEOUT_KEY`.  If a timeout is returned as the event, the code simply ignores it and restarts the loop by executing a `continue` statement.
-
-This timeout value of 200 means that your debugger GUI will be updated 5 times a second if nothing is happening.  If this adds too much "drag" to your application, you can make the timeout larger.  Try using 500 or 1000 instead of 100.
-
-### What happens if you don't add a timeout
-
-Let's say you're in a situation where a very intermettent bug has just happened and the debugger would really help you, but you don't have a timeout on your `windows.Read()` call.  It's OK.  Recall that the way the debugger gets its "cycles" is to borrow from your `Read` calls.  What you need to do is alternate between using the debugger and then generating another pass through your event loop.
-
-Maybe it's an OK button that will cause your loop to execute again (without exiting).  If so, you can use it to help move the debugger along.  
-
-Yes, this is a major pain in the ass, but it's not THAT bad and compared to nothing in a time of crisis and this is potentially your "savior tool" that's going to save your ass, pressing that OK button a few times is going to look like nothing to you.  You just want to dump out the value of a variable that holds an instance of your class!
-
-## A Sample Program For Us To Use
-
-Now that you understand how to add the debugger to your program, let's make a simple little program that you can use to follow these examples:
-
-```python
-import PySimpleGUI as sg
-
-window = sg.Window('Testing the Debugger', [[sg.Text('Debugger Tester'), sg.In('Input here'), sg.B('Push Me')]])
-
-while True:
-    event, values = window.Read(timeout=500)
-    if event == sg.TIMEOUT_KEY:
-        continue
-    if event is None:
-        break
-    print(event, values)
-window.Close()
-```
-
-## Debugger Windows
-
-### "Popout Debugger Window"
-
-There are 2 debugger windows. One is called the "Popout" debugger window.  The Popout window displays as many currently in-scope local variables as possible.  This window is not interactive.  It is meant to be a frequently updated "dashboard" or "snapshot" of your variables.
-
-One "variable" shown in the popout window that is an often asked for piece of information when debugging Issues and that variable is `sg` (or whatever you named the PySimpleGUI pacakge when you did your import). The assumption is that your import is `import PySimpleGUI as sg`.  If your import is different, then you'll see a different variable.  The point is that it's shown here.
-
-Exiting this window is done via the little red X, **or using the rickt-click menu** which is also used as one way to launch the Main Debugger Window
-
-#### When you are asked for the "Location of your PySimpleGUI package or PySimpleGUI.py file" do this
-
-If you wish to use the debugger to find the location of THIS running program's PySimpleGUI package / the PySimpleGUI.py file, then all you need to do is:
-* Press the `BREAK` key on your keyboard. 
-    * This is sometimes labelled as the `Cancel` key
-    * May also have `Pause` printed on key
-    * On some US keyboards, it is located next to `Scroll Lock` and/or above `PageUp` key
-* This will open a window located in the upper right corner of your screen that looks something like this:
-![image](https://user-images.githubusercontent.com/13696193/62793751-54197900-baa0-11e9-9a98-f780259062b1.png)
-* The information you are seeking is shown next to the `sg` in the window
-You don't need to modify your program to get this info using this technique.
-
-If your variable's value is too long and doesn't fit, then you'lll need to collect this information using the "Main Debugger Window"
-
-#### What's NOT Listed In The Popout Debugger Window
-
-The Popup window is a "Snapshot" of your local variables at the time the window was opened. This means **any variables that did not exist at the time the Popout was created will not be shown**.   This window does **NOT** expand in size by adding new variables.  Maybe in the future.
-
-### The "Main Debugger Window"
-
-Now we're talking serious Python debugging!
-
-Ever wish you had a `repl>>>` prompt that you could run while your program is running.  Well, that's pretty much what you're getting with the PySimpleGUI debugger Main Window!  Cool, huh?  If you're not impressed, go get a cup of coffee and walk off that distraction in your head before carring on because we're in to some seriously cool shit here....
-
-You'll find that this window has 2 tabs, one is labelled `Variables` and the other is labelled `REPL & Watches`
-
-#### The "Variables" Tab of Main Debugger Window
-
-![SNAG-0440](https://user-images.githubusercontent.com/13696193/62797391-a01ceb80-baa9-11e9-845d-3cd02ca0dbcc.jpg)
-
-Notice the the "frame" surrounding this window is labelled "Auto Watches" in blue.  Like the Popup window, this debugger window also "Watches" variables, which means continuously updates them as often as you call `Window.Read`.
-
-The maximum number of "watches" you can have any any one time is 9.
-
-##### Choosing variables to watch
-
-You can simply click "Show All Variable" button and the list of watched variables will be automatically populard by the first 9 variables it finds.  Or you can click the "Choose Variables to Auto Watch" button where you can individually choose what variables, **and expressions** you wish to display.
-
-![SNAG-0442](https://user-images.githubusercontent.com/13696193/62797520-e96d3b00-baa9-11e9-8ba0-794e479b6fc5.jpg)
-
-In this window we're checking checkboxes to display these variables:
-
-`event`, `sg`, `values`, `window`, `__file__`
-
-![SNAG-0443](https://user-images.githubusercontent.com/13696193/62797518-e8d4a480-baa9-11e9-8575-5256dcf6b5ab.jpg)
-
-Additionally, you can see at the bottom of the window a "Custom Watch" has been defined.  This can be any experession you want.  Let's say you have a window with a LOT of values.  Rather than looking through the `values` variable and finding the entry with the key you are looking for, the values variable's entry for a specific key is displayed.
-
-In this example the Custom Watch entered was `values[0]`.  After clicking on the "OK" button, indicating the variables are chosen that we wish to watch, this is the Main window that is shown:
-
-![SNAG-0444](https://user-images.githubusercontent.com/13696193/62797514-e8d4a480-baa9-11e9-9a86-cfe99342dedb.jpg)
-
-We can see the variables we checked as well as the defined expression `values[0]`.  If you leave this window open, these values with continuously be updated, on the fly, every time we call the line in our example code `window.Read(timeout=500)`.  This means that the Main Debugger Window and these variables we defined will be updated every 500 milliseconds.
-
-#### The REPL & Watches Tab
-
-![SNAG-0441](https://user-images.githubusercontent.com/13696193/62797507-e7a37780-baa9-11e9-93c4-6ff0c8acb11d.jpg)
-
-This tab is provided to you as a way to interact with your running program on a real-time basis.  
-
-If you want to quickly look at the values of variables, nearly ANY variables, then type the information into one of the 3 spaces provided to "Watch" either variables or experessions.  In this example, the variable window was typed into the first slow.  
-
-***Immediately*** after typing the character 'w', the information to the right was displayed.  No button needs to be clicked.  You merely neeed to type in a valid experession and it will be displayed to you.... and it will be displayed on an on-going, constantly-refreshing-basis.
-
-![SNAG-0447](https://user-images.githubusercontent.com/13696193/62797393-a0b58200-baa9-11e9-8016-1cadca4d97e7.jpg)
-
-If the area to the right of the input field is too small, then you can click on the "Detail" button and you will be shown a popup, scrolled window with all of the information displayed as if it were printed.  
-
-I'm sure you've had the lovely experience of printing an object.  When clicking the "Detail" button next to the `window` variable being shown, this window is shown:
-
-![SNAG-0449](https://user-images.githubusercontent.com/13696193/62801423-b0d25f00-bab3-11e9-829a-aebb429521cd.jpg)
-
-Oh, Python, -sigh-.  I just want to see my `window` object printed.  
-
-#### `Obj` Button to the Rescue!
-
-PySimpleGUI has a fun and very useful function that is discussed in the docs named `ObjToString` which takes an object and converts it's **contents** it into a nicely formatted string.  This function is used to create the text output when you click the `Obj` button.  The result is this instead of the tiny window shown previously:
-
-![SNAG-0446](https://user-images.githubusercontent.com/13696193/62797508-e7a37780-baa9-11e9-96bf-b2c066e72d78.jpg)
-
-## The REPL Prompt
-
-While not **really** a Python REPL prompt, this window's `REPL >>>` prompt is meant to act as much like one as possible.  Here you can enter experessions and code too.
-
-The uses for this prompt are so numerous and diverse that listing them all won't be attempted. 
-
-### Your "XRay" and "Endoscope" into Your Program
-
-Think of this prompt as a way to get specific diagnostics information about your ***running*** program.  It cannot be stressed enough that the power and the usefullness of this tool is in its ability to diagnose a running program, after you've already started it running. 
-
-### Execute Code 
-
-In addition to displaying information, getting paths to packages, finding version information, you can execute code from the PySimpleGUI Debugger's `REPL >>>` prompt.  You can type in any expression as well as any **executable statement**.
-
-For example, want to see what `PopupError` looks like while you're running your program.  From the REPL prompt, type:
-`sg.PopupError('This is an error popup')`
-
-The result is that you are shown a popup window with the text you supplied.
-
-### KNOW Answers to Questions About Your Program
-
-Using this runtime tool, you can be confident in the data you collect.  Right?  
-
-***There's no better way to find what version of a package that your program is using than to ask your program.***  This is so true.  Think about it.  Rather than go into PyCharm, look at your project's "Virtual Environment", follow some path to get to a window that lists packages installed for that project, get the verstion and your're done, right?  Well, maybe.  But are you CERTAIN your program is using THAT version of the package in question?
-
-SO MUCH time has been wasted in the past  when people KNEW, for sure, what version they were running. Or, they had NO CLUE what version, or no clue to find out.  There's nothing wrong with not knowing how to do something.  We ALL start there.  Geeez..
-
-A real world example.....
-
-## How To Use the Debugger to Find The Version Number of a Package
-
-Let's pull together everything we've learned to now and use the debugger to solve a problem that happens often and sometimes it's not at all obvious how to find the answer.
-
-We're using ***Matplotlib*** and want to find the "Version".
-
-For this example, the little 12-line program in the section "A Sample Program For Us To Use" is being used.
-
-That program does not import `matplotlib`.  We have a couple of choices, we can change the code, we can can import the package from the debugger.  Let's use the debgger.
-
-Pull up the Main Debugger Window by pressing `CONTROL+BREAK` keys.  Then click the "REPL * Watches" tab.  At the `>>>` prompt we'll first import the package by typing:
-`import matplotlib as m`
-
-The result returned from Python calls that don't return anything is the value None.  You will see the command you entered in the output area followed by "None", indicating success.
-
-finally, type:
-`m.__version__`
-
-The entire set of operations is shown in this window:
-
-![SNAG-0448](https://user-images.githubusercontent.com/13696193/62797392-a0b58200-baa9-11e9-97f4-9ef74cbb86f7.jpg)
-
-By convention you'll find many modules have a variable `__version__` that has the package's version number.  PySimpleGUI has one.  As you can see matplotlib has one.  The `requests` module has this variable.
-
-For maximum compatibility, PySimpleGUI not only uses `__version__`, but also has the version contained in another variable `version` which has the version number because in some situations the `__version__` is not available but the `version` variable is avaiable.
-
-**It is recommended that you use the variable `version` to get the PySimpleGUI version** as it's so far been the most successful method.
-
-tkinter, however does NOT.... of course.... follow this convention.  No, to get the tkinter version, you need to look at the variable:
-`TkVersion`
-
-Here's the output from the REPL in the debugger showing the tkinter version:
-
-```
->>> import tkinter as t
-None
->>> t.TkVersion
-8.6
->>> t.__version__
-Exception module 'tkinter' has no attribute '__version__'
-```
-
 # "Demo Programs" Applications
 
 There are too many to list!!
@@ -10384,6 +10412,34 @@ Long time coming.  Docstrings continue to be a focus.
 * Popup - Icon is no longer set to default by default
 * Fix for debugger trying to execute a REPL comand.  The exec is only avilable in Python 3
 * main() will display the version number in big letters when program is running
+
+### 4.2 PySimpleGUI  2.2 for PySimpleGUI27  8 - Aug 2019
+
+The cool lookup release!  No more need for FindElement. You can continue to use FindElement.
+However, your code will look weird and ancient.  ;-)  (i.e. readable)
+MORE Docstring and main doc updates!
+
+* Finally 2.7 gets an upgrade and with it doc strings.  It however doesn't get a full-version bump like main PySimpleGUI as this may be its last release.
+* New window[key] == window.FindElement(key)
+* New Update calling method. Can directly call an Element and it will call its Update method
+	* window[key](value=new_value)    ==     window.FindElement(key).Update(value=new_value)
+* Made Tearoff part of element so anything can be a menu in theory
+* Removed a bunch of __del__ calls. Hoping it doesn't bite me in memory leaks
+* Combo.Get method added
+* Combo.GetSelectedItemsIndexes removed
+* New Graph methods SendFigureToBack, BringFigureToFront
+* Butten release changed for better Graph Dragging
+	* Now returns key+"Up" for the event
+	* Also returns the x,y coords in the values
+* Tab.Select method added
+* TabGroup.Get method added - returns key of currently selected Tab
+* Window finalize parameter added - Will call finalize if a layout is also included.  No more need for Finalize!!
+* Quiet, steady change to PEP8 user interface started
+	* Now available are Window methods - read, layout, finalize, find_element, element, close
+	* Should provide 100% PEP with these alone for most PySimpleGUI programs
+* Added finding focus across ALL elements by using the .Widget member variable
+* Fixed sizing Columns!  NOW they will finally be the size specified
+* Fixed not using the initialdir paramter in PopupGetFile if the no_window option is set
 
 ### Upcoming
 Make suggestions people!  Future release features

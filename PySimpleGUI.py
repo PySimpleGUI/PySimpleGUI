@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0.9 Unreleased"
+version = __version__ = "4.2.0. Released Cool Lookups Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
