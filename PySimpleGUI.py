@@ -753,8 +753,18 @@ class Element():
 
 
     def __call__(self, *args, **kwargs):
-        '''Change the position of the entity.'''
-        print('IN CALL!')
+        """
+        Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
+        the Update method for the element.
+        Example:    If this text element was in yoiur layout:
+                    sg.Text('foo', key='T')
+                    Then you can call the Update method for that element by writing:
+                    window.FindElement('T')('new text value')
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         return self.Update(*args, **kwargs)
 
 
@@ -4813,7 +4823,7 @@ class Window:
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
-                 disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True):
+                 disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True, finalize=False):
         """
         :param title: (str) The title that will be displayed in the Titlebar and on the Taskbar
         :param layout: List[List[Elements]] The layout for the window. Can also be specified in the Layout method
@@ -4846,6 +4856,7 @@ class Window:
         :param disable_minimize:  (bool) if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param transparent_color:  (str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
+        :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
         :param debugger_enabled: (bool) If True then the internal debugger will be enabled
         """
 
@@ -4916,7 +4927,8 @@ class Window:
 
         if layout is not None:
             self.Layout(layout)
-
+            if finalize:
+                self.Finalize()
 
     @classmethod
     def GetAContainerNumber(cls):
@@ -5930,6 +5942,13 @@ class Window:
     #     for row in self.Rows:
     #         for element in row:
     #             element.__del__()
+# -------------------------------- PEP8-ify the Window Class USER Interfaces -------------------------------- #
+    read = Read
+    layout = Layout
+    finalize = Finalize
+    find_element = FindElement
+    element =FindElement
+    close = Close
 
 
 FlexForm = Window
@@ -8452,12 +8471,16 @@ def ConvertFlexToTK(MyFlexForm):
 
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
-def StartupTK(my_flex_form: Window):
+def StartupTK(my_flex_form):
     """
+    NOT user callable
+    Creates the window (for real) lays out all the elements, etc.  It's a HUGE set of things it does.  It's the basic
+    "porting layer" that will change depending on the GUI framework PySimpleGUI is running on top of.
 
-    :param my_flex_form: Window:
+    :param my_flex_form: (Window):
 
     """
+    my_flex_form = my_flex_form        # type: Window
     # global _my_windows
     # ow = _my_windows.NumOpenWindows
     ow = Window.NumOpenWindows
@@ -10181,14 +10204,18 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             root.withdraw()
         except:
             pass
+        # TODO - Macs will not like this code because of the filetypes being used.  Need another Darwin check.
         if save_as:
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
+                                                       initialdir = initial_folder,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
             filename = tk.filedialog.askopenfilenames(filetypes=file_types,
+                                                      initialdir=initial_folder,
                                                       defaultextension=default_extension)  # show the 'get file' dialog box
         else:
             filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                     initialdir=initial_folder,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
 
         root.destroy()
@@ -11033,6 +11060,8 @@ def main():
         elif event == 'Launch Debugger':
             show_debugger_window()
     window.Close()
+
+
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
