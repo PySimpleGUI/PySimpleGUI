@@ -5966,6 +5966,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :return: (Button)
     """
 
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
@@ -5995,7 +5996,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param disabled: set disable state for element (Default = False)
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
@@ -6024,7 +6025,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                   initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
@@ -6053,7 +6054,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
@@ -6082,7 +6083,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
@@ -6106,7 +6107,7 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -6129,7 +6130,7 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -6176,7 +6177,7 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -6199,7 +6200,7 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -6245,7 +6246,7 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -6291,7 +6292,7 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :param focus: if focus should be set to this
     :param pad:  Amount of padding to put around element
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :return: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
