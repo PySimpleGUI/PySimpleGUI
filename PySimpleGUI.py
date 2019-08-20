@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.0. Released Cool Lookups Version"
+version = __version__ = "4.3.0.1 Unreleased PEP8 SDK Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -505,7 +505,7 @@ class Element():
         """
         Element base class. Only used internally.  User will not create an Element object by itself
 
-        :param type: (int - could be enum) The type of element. These constants all start with "ELEM_TYPE_"
+        :param type: (int) (could be enum) The type of element. These constants all start with "ELEM_TYPE_"
         :param size: Tuple[int, int]  (width ,height ) w=characters-wide, h=rows-high
         :param auto_size_text: (bool) True if the Widget should be shrunk to exactly fit the number of chars to show
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc (see docs for exact formats)
@@ -572,7 +572,7 @@ class Element():
         "Container Element" is encountered. Func has to walk entire window including these "sub-forms"
 
         :param form: the Window object to search
-        :return: union[Button, None] Button Object if a button is found, else None if no button found
+        :return: Union[Button, None] Button Object if a button is found, else None if no button found
         """
         for row in form.Rows:
             for element in row:
@@ -7229,7 +7229,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if None not in (element.Size[0], element.Size[1]):
                             element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
                         elif element.Size[1] is not None:
-                            print('height only')
                             element.TKColFrame.canvas.config(height=element.Size[1])
                         elif element.Size[0] is not None:
                             element.TKColFrame.canvas.config(width=element.Size[0])
@@ -11060,6 +11059,272 @@ def main():
         elif event == 'Launch Debugger':
             show_debugger_window()
     window.Close()
+
+
+
+# ------------------------ PEP8-ify The SDK ------------------------#
+
+Button.button_call_back = Button.ButtonCallBack
+Button.button_press_call_back = Button.ButtonPressCallBack
+Button.button_release_call_back = Button.ButtonReleaseCallBack
+Button.click = Button.Click
+Button.get_text = Button.GetText
+Button.set_focus = Button.SetFocus
+Button.set_tooltip = Button.SetTooltip
+Button.update = Button.Update
+
+ButtonMenu.set_focus = ButtonMenu.SetFocus
+ButtonMenu.set_tooltip = ButtonMenu.SetTooltip
+ButtonMenu.update = ButtonMenu.Update
+
+Canvas.set_focus = Canvas.SetFocus
+Canvas.set_tooltip = Canvas.SetTooltip
+Canvas.tk_canvas = Canvas.TKCanvas
+
+Checkbox.get = Checkbox.Get
+Checkbox.set_focus = Checkbox.SetFocus
+Checkbox.set_tooltip = Checkbox.SetTooltip
+Checkbox.update = Checkbox.Update
+
+Column.add_row = Column.AddRow
+Column.layout = Column.Layout
+Column.set_focus = Column.SetFocus
+Column.set_tooltip = Column.SetTooltip
+Column.update = Column.Update
+
+Combo.get = Combo.Get
+Combo.set_focus = Combo.SetFocus
+Combo.set_tooltip = Combo.SetTooltip
+Combo.update = Combo.Update
+
+DebugWin.close = DebugWin.Close
+DebugWin.print = DebugWin.Print
+
+ErrorElement.get = ErrorElement.Get
+ErrorElement.set_focus = ErrorElement.SetFocus
+ErrorElement.set_tooltip = ErrorElement.SetTooltip
+ErrorElement.update = ErrorElement.Update
+
+Frame.add_row = Frame.AddRow
+Frame.layout = Frame.Layout
+Frame.set_focus = Frame.SetFocus
+Frame.set_tooltip = Frame.SetTooltip
+Frame.update = Frame.Update
+
+Graph.bring_figure_to_front = Graph.BringFigureToFront
+Graph.button_press_call_back = Graph.ButtonPressCallBack
+Graph.button_release_call_back = Graph.ButtonReleaseCallBack
+Graph.delete_figure = Graph.DeleteFigure
+Graph.draw_arc = Graph.DrawArc
+Graph.draw_circle = Graph.DrawCircle
+Graph.draw_image = Graph.DrawImage
+Graph.draw_line = Graph.DrawLine
+Graph.draw_oval = Graph.DrawOval
+Graph.draw_point = Graph.DrawPoint
+Graph.draw_rectangle = Graph.DrawRectangle
+Graph.draw_text = Graph.DrawText
+Graph.erase = Graph.Erase
+Graph.motion_call_back = Graph.MotionCallBack
+Graph.move = Graph.Move
+Graph.move_figure = Graph.MoveFigure
+Graph.relocate_figure = Graph.RelocateFigure
+Graph.send_figure_to_back = Graph.SendFigureToBack
+Graph.set_focus = Graph.SetFocus
+Graph.set_tooltip = Graph.SetTooltip
+Graph.tk_canvas = Graph.TKCanvas
+Graph.update = Graph.Update
+
+Image.set_focus = Image.SetFocus
+Image.set_tooltip = Image.SetTooltip
+Image.update = Image.Update
+Image.update_animation = Image.UpdateAnimation
+
+InputText.get = InputText.Get
+InputText.set_focus = InputText.SetFocus
+InputText.set_tooltip = InputText.SetTooltip
+InputText.update = InputText.Update
+
+Listbox.get_list_values = Listbox.GetListValues
+Listbox.set_focus = Listbox.SetFocus
+Listbox.set_tooltip = Listbox.SetTooltip
+Listbox.set_value = Listbox.SetValue
+Listbox.update = Listbox.Update
+
+Menu.set_focus = Menu.SetFocus
+Menu.set_tooltip = Menu.SetTooltip
+Menu.update = Menu.Update
+
+Multiline.get = Multiline.Get
+Multiline.set_focus = Multiline.SetFocus
+Multiline.set_tooltip = Multiline.SetTooltip
+Multiline.update = Multiline.Update
+
+OptionMenu.set_focus = OptionMenu.SetFocus
+OptionMenu.set_tooltip = OptionMenu.SetTooltip
+OptionMenu.update = OptionMenu.Update
+
+Output.set_focus = Output.SetFocus
+Output.set_tooltip = Output.SetTooltip
+Output.tk_out = Output.TKOut
+Output.update = Output.Update
+
+Pane.set_focus = Pane.SetFocus
+Pane.set_tooltip = Pane.SetTooltip
+Pane.update = Pane.Update
+
+ProgressBar.set_focus = ProgressBar.SetFocus
+ProgressBar.set_tooltip = ProgressBar.SetTooltip
+ProgressBar.update = ProgressBar.Update
+ProgressBar.update_bar = ProgressBar.UpdateBar
+
+QuickMeter.build_window = QuickMeter.BuildWindow
+QuickMeter.compute_progress_stats = QuickMeter.ComputeProgressStats
+QuickMeter.update_meter = QuickMeter.UpdateMeter
+
+Radio.get = Radio.Get
+Radio.reset_group = Radio.ResetGroup
+Radio.set_focus = Radio.SetFocus
+Radio.set_tooltip = Radio.SetTooltip
+Radio.update = Radio.Update
+
+Slider.set_focus = Slider.SetFocus
+Slider.set_tooltip = Slider.SetTooltip
+Slider.update = Slider.Update
+
+Spin.get = Spin.Get
+Spin.set_focus = Spin.SetFocus
+Spin.set_tooltip = Spin.SetTooltip
+Spin.update = Spin.Update
+
+StatusBar.set_focus = StatusBar.SetFocus
+StatusBar.set_tooltip = StatusBar.SetTooltip
+StatusBar.update = StatusBar.Update
+
+Tab.add_row = Tab.AddRow
+Tab.layout = Tab.Layout
+Tab.select = Tab.Select
+Tab.set_focus = Tab.SetFocus
+Tab.set_tooltip = Tab.SetTooltip
+Tab.update = Tab.Update
+
+TabGroup.add_row = TabGroup.AddRow
+TabGroup.find_key_from_tab_name = TabGroup.FindKeyFromTabName
+TabGroup.get = TabGroup.Get
+TabGroup.layout = TabGroup.Layout
+TabGroup.set_focus = TabGroup.SetFocus
+TabGroup.set_tooltip = TabGroup.SetTooltip
+
+Table.set_focus = Table.SetFocus
+Table.set_tooltip = Table.SetTooltip
+Table.update = Table.Update
+
+Text.set_focus = Text.SetFocus
+Text.set_tooltip = Text.SetTooltip
+Text.update = Text.Update
+
+Tree.set_focus = Tree.SetFocus
+Tree.set_tooltip = Tree.SetTooltip
+Tree.update = Tree.Update
+
+TreeData.insert = TreeData.Insert
+TreeData.node = TreeData.Node
+
+VerticalSeparator.set_focus = VerticalSeparator.SetFocus
+VerticalSeparator.set_tooltip = VerticalSeparator.SetTooltip
+
+Window.add_row = Window.AddRow
+Window.add_rows = Window.AddRows
+Window.alpha_channel = Window.AlphaChannel
+Window.bring_to_front = Window.BringToFront
+Window.close = Window.Close
+Window.close_non_blocking = Window.CloseNonBlocking
+Window.close_non_blocking_form = Window.CloseNonBlockingForm
+Window.current_location = Window.CurrentLocation
+Window.decrement_open_count = Window.DecrementOpenCount
+Window.disable = Window.Disable
+Window.disable_debugger = Window.DisableDebugger
+Window.disappear = Window.Disappear
+Window.elem = Window.Elem
+Window.element = Window.Element
+Window.enable = Window.Enable
+Window.enable_debugger = Window.EnableDebugger
+Window.fill = Window.Fill
+Window.finalize = Window.Finalize
+Window.find = Window.Find
+Window.find_element = Window.FindElement
+Window.find_element_with_focus = Window.FindElementWithFocus
+Window.get_a_container_number = Window.GetAContainerNumber
+Window.get_screen_dimensions = Window.GetScreenDimensions
+Window.grab_any_where_off = Window.GrabAnyWhereOff
+Window.grab_any_where_on = Window.GrabAnyWhereOn
+Window.hide = Window.Hide
+Window.increment_open_count = Window.IncrementOpenCount
+Window.layout = Window.Layout
+Window.layout_and_read = Window.LayoutAndRead
+Window.layout_and_show = Window.LayoutAndShow
+Window.load_from_disk = Window.LoadFromDisk
+Window.maximize = Window.Maximize
+Window.minimize = Window.Minimize
+Window.move = Window.Move
+Window.normal = Window.Normal
+Window.num_open_windows = Window.NumOpenWindows
+Window.read = Window.Read
+Window.reappear = Window.Reappear
+Window.refresh = Window.Refresh
+Window.save_to_disk = Window.SaveToDisk
+Window.set_alpha = Window.SetAlpha
+Window.set_icon = Window.SetIcon
+Window.set_transparent_color = Window.SetTransparentColor
+Window.size = Window.Size
+Window.un_hide = Window.UnHide
+Window.visibility_changed = Window.VisibilityChanged
+Window.close = Window.close
+Window.element = Window.element
+Window.finalize = Window.finalize
+Window.layout = Window.layout
+Window.read = Window.read
+
+change_look_and_feel = ChangeLookAndFeel
+convert_args_to_single_string = ConvertArgsToSingleString
+convert_flex_to_tk = ConvertFlexToTK
+easy_print = EasyPrint
+easy_print_close = EasyPrintClose
+fill_form_with_values = FillFormWithValues
+get_complimentary_hex = GetComplimentaryHex
+list_of_look_and_feel_values = ListOfLookAndFeelValues
+obj_to_string = ObjToString
+obj_to_string_single_obj = ObjToStringSingleObj
+one_line_progress_meter = OneLineProgressMeter
+one_line_progress_meter_cancel = OneLineProgressMeterCancel
+popup = Popup
+popup_animated = PopupAnimated
+popup_annoying = PopupAnnoying
+popup_auto_close = PopupAutoClose
+popup_cancel = PopupCancel
+popup_error = PopupError
+popup_get_file = PopupGetFile
+popup_get_folder = PopupGetFolder
+popup_get_text = PopupGetText
+popup_no_border = PopupNoBorder
+popup_no_buttons = PopupNoButtons
+popup_no_frame = PopupNoFrame
+popup_no_titlebar = PopupNoTitlebar
+popup_no_wait = PopupNoWait
+popup_non_blocking = PopupNonBlocking
+popup_ok = PopupOK
+popup_ok_cancel = PopupOKCancel
+popup_quick = PopupQuick
+popup_quick_message = PopupQuickMessage
+popup_scrolled = PopupScrolled
+popup_timed = PopupTimed
+popup_yes_no = PopupYesNo
+sgprint = Print
+sgprint_close = PrintClose
+quit = Quit
+rgb = RGB
+scrolled_text_box = ScrolledTextBox
+set_global_icon = SetGlobalIcon
+set_options = SetOptions
 
 
 
