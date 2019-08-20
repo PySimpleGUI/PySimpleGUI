@@ -852,19 +852,11 @@ class InputText(Element):
             text = ''
         return text
 
-    def SetFocus(self, force=False):
-        """
-        Sets focus to this element using focus_set. Will use focus_force if force flag set. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param force: (bool) if True then tkinter's `Entry.focus_force` will be called instead of `Entry.focus_set`
-        """
-        try:
-            if force:
-                self.TKEntry.focus_force()
-            else:
-                self.TKEntry.focus_set()
-        except:
-            pass
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
@@ -977,7 +969,10 @@ class Combo(Element):
             value = None                      # only would happen if user closes window
         return value
 
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 InputCombo = Combo
@@ -1056,7 +1051,9 @@ class OptionMenu(Element):
         elif visible is True:
             self.TKOptionMenu.pack()
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
@@ -1194,23 +1191,11 @@ class Listbox(Element):
         """
         return self.Values
 
-
-    def SetFocus(self, force=False):
-        """
-        Moves the focus to this Listbox
-
-        :param force: (bool). If True, will call focus_force instead of focus_set
-        """
-        try:
-            if force:
-                self.TKListbox.focus_force()
-            else:
-                self.TKListbox.focus_set()
-        except:
-            pass
-
-
-
+    get_list_values = GetListValues
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    set_value = SetValue
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1295,8 +1280,11 @@ class Radio(Element):
         """
         return self.TKIntVar.get() == self.EncodedRadioValue
 
-
-
+    get = Get
+    reset_group = ResetGroup
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1373,7 +1361,10 @@ class Checkbox(Element):
         elif visible is True:
             self.TKCheckbutton.pack()
 
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -1479,7 +1470,10 @@ class Spin(Element):
         """
         return self.TKStringVar.get()
 
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
@@ -1589,21 +1583,11 @@ class Multiline(Element):
 
         return self.TKText.get(1.0, tk.END)
 
-    def SetFocus(self, force=False):
-        """
-        Moves the focus (that little blinking cursor) to this Multiline Element
 
-        :param force: (bool). If True, will call focus_force instead of focus_set
-        """
-        try:
-            if force:
-                self.TKText.focus_force()
-            else:
-                self.TKText.focus_set()
-        except:
-            pass
-
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1677,8 +1661,9 @@ class Text(Element):
         elif visible is True:
             self.TKText.pack()
 
-
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 
@@ -1756,7 +1741,9 @@ class StatusBar(Element):
         elif visible is True:
             self.TKText.pack()
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                       TKProgressBar                                    #
@@ -1968,7 +1955,10 @@ class Output(Element):
         elif visible is True:
             self._TKOut.frame.pack()
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    tk_out = TKOut
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Button Class                                 #
@@ -2268,20 +2258,6 @@ class Button(Element):
         """
         return self.ButtonText
 
-    def SetFocus(self, force=False):
-        """
-        Sets the focus to this button.  Can be forced with parameter
-
-        :param force: (bool) If True will call focus_force instead of focus_set
-        """
-        try:
-            if force:
-                self.TKButton.focus_force()
-            else:
-                self.TKButton.focus_set()
-        except:
-            pass
-
 
     def Click(self):
         """
@@ -2292,6 +2268,13 @@ class Button(Element):
             self.TKButton.invoke()
         except:
             print('Exception clicking button')
+
+
+    click = Click
+    get_text = GetText
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # -------------------------  Button lazy functions  ------------------------- #
@@ -2387,6 +2370,9 @@ class ButtonMenu(Element):
         elif visible is True:
             self.TKButtonMenu.pack()
 
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 
@@ -2459,7 +2445,10 @@ class ProgressBar(Element):
         elif visible is True:
             self.TKProgressBar.TKProgressBarForReal.pack()
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
+    update_bar = UpdateBar
 
 
 # ---------------------------------------------------------------------- #
@@ -2582,7 +2571,10 @@ class Image(Element):
         except:
             pass
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
+    update_animation = UpdateAnimation
 
 
 # ---------------------------------------------------------------------- #
@@ -2621,7 +2613,9 @@ class Canvas(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    tk_canvas = TKCanvas
 
 
 # ---------------------------------------------------------------------- #
@@ -3112,22 +3106,28 @@ class Graph(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick out of loop if read was called
 
-    def SetFocus(self, force=False):
-        """
-        Sets the current focus to be on this Graph Element
-
-        :param force: (bool) if True will call focus_force otherwise calls focus_set
-        """
-
-        try:
-            if force:
-                self._TKCanvas2.focus_force()
-            else:
-                self._TKCanvas2.focus_set()
-        except:
-            pass
-
-
+    bring_figure_to_front = BringFigureToFront
+    button_press_call_back = ButtonPressCallBack
+    button_release_call_back = ButtonReleaseCallBack
+    delete_figure = DeleteFigure
+    draw_arc = DrawArc
+    draw_circle = DrawCircle
+    draw_image = DrawImage
+    draw_line = DrawLine
+    draw_oval = DrawOval
+    draw_point = DrawPoint
+    draw_rectangle = DrawRectangle
+    draw_text = DrawText
+    erase = Erase
+    motion_call_back = MotionCallBack
+    move = Move
+    move_figure = MoveFigure
+    relocate_figure = RelocateFigure
+    send_figure_to_back = SendFigureToBack
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    tk_canvas = TKCanvas
+    update = Update
 
 
 
@@ -3239,7 +3239,11 @@ class Frame(Element):
         elif visible is True:
             self.TKFrame.pack()
 
-
+    add_row = AddRow
+    layout = Layout
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -3260,12 +3264,11 @@ class VerticalSeparator(Element):
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
-
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
 
 VSeperator = VerticalSeparator
 VSep = VerticalSeparator
-
 
 # ---------------------------------------------------------------------- #
 #                           Tab                                          #
@@ -3391,8 +3394,12 @@ class Tab(Element):
         except Exception as e:
             print('Exception Selecting Tab {}'.format(e))
 
-
-
+    add_row = AddRow
+    layout = Layout
+    select = Select
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           TabGroup                                     #
@@ -3522,7 +3529,12 @@ class TabGroup(Element):
             value = None
         return value
 
-
+    add_row = AddRow
+    find_key_from_tab_name = FindKeyFromTabName
+    get = Get
+    layout = Layout
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
 
 
 
@@ -3629,7 +3641,9 @@ class Slider(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -3879,9 +3893,11 @@ class Column(Element):
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
 
-
-
-
+    add_row = AddRow
+    layout = Layout
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -3947,6 +3963,10 @@ class Pane(Element):
             self.PanedWindow.pack_forget()
         elif visible is True:
             self.PanedWindow.pack()
+
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -4310,7 +4330,9 @@ class Menu(Element):
         elif self.TKMenu is not None:
             self.ParentForm.TKroot.configure(menu=self.TKMenu)
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
@@ -4495,6 +4517,9 @@ class Table(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -4658,7 +4683,9 @@ class Tree(Element):
             self.TKTreeview.pack()
         return self
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 class TreeData(object):
@@ -4748,6 +4775,8 @@ class TreeData(object):
             [str(node.key) + ' : ' + str(node.text)] +
             [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
 
+    insert = Insert
+
 
 # ---------------------------------------------------------------------- #
 #                           Error Element                                #
@@ -4790,7 +4819,10 @@ class ErrorElement(Element):
         """
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -5924,6 +5956,45 @@ class Window:
         except Exception as e:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
             return None
+
+    add_row = AddRow
+    add_rows = AddRows
+    alpha_channel = AlphaChannel
+    bring_to_front = BringToFront
+    close = Close
+    current_location = CurrentLocation
+    disable = Disable
+    disable_debugger = DisableDebugger
+    disappear = Disappear
+    elem = Elem
+    element = Element
+    enable = Enable
+    enable_debugger = EnableDebugger
+    fill = Fill
+    finalize = Finalize
+    find = Find
+    find_element = FindElement
+    find_element_with_focus = FindElementWithFocus
+    get_screen_dimensions = GetScreenDimensions
+    grab_any_where_off = GrabAnyWhereOff
+    grab_any_where_on = GrabAnyWhereOn
+    hide = Hide
+    layout = Layout
+    load_from_disk = LoadFromDisk
+    maximize = Maximize
+    minimize = Minimize
+    move = Move
+    normal = Normal
+    read = Read
+    reappear = Reappear
+    refresh = Refresh
+    save_to_disk = SaveToDisk
+    set_alpha = SetAlpha
+    set_icon = SetIcon
+    set_transparent_color = SetTransparentColor
+    size = Size
+    un_hide = UnHide
+    visibility_changed = VisibilityChanged
 
     #
     # def __exit__(self, *a):
@@ -11057,211 +11128,6 @@ def main():
 
 
 # ------------------------ PEP8-ify The SDK ------------------------#
-
-Button.click = Button.Click
-Button.get_text = Button.GetText
-Button.set_focus = Button.SetFocus
-Button.set_tooltip = Button.SetTooltip
-Button.update = Button.Update
-
-ButtonMenu.set_focus = ButtonMenu.SetFocus
-ButtonMenu.set_tooltip = ButtonMenu.SetTooltip
-ButtonMenu.update = ButtonMenu.Update
-
-Canvas.set_focus = Canvas.SetFocus
-Canvas.set_tooltip = Canvas.SetTooltip
-Canvas.tk_canvas = Canvas.TKCanvas
-
-Checkbox.get = Checkbox.Get
-Checkbox.set_focus = Checkbox.SetFocus
-Checkbox.set_tooltip = Checkbox.SetTooltip
-Checkbox.update = Checkbox.Update
-
-Column.add_row = Column.AddRow
-Column.layout = Column.Layout
-Column.set_focus = Column.SetFocus
-Column.set_tooltip = Column.SetTooltip
-Column.update = Column.Update
-
-Combo.get = Combo.Get
-Combo.set_focus = Combo.SetFocus
-Combo.set_tooltip = Combo.SetTooltip
-Combo.update = Combo.Update
-
-DebugWin.close = DebugWin.Close
-DebugWin.print = DebugWin.Print
-
-ErrorElement.get = ErrorElement.Get
-ErrorElement.set_focus = ErrorElement.SetFocus
-ErrorElement.set_tooltip = ErrorElement.SetTooltip
-ErrorElement.update = ErrorElement.Update
-
-Frame.add_row = Frame.AddRow
-Frame.layout = Frame.Layout
-Frame.set_focus = Frame.SetFocus
-Frame.set_tooltip = Frame.SetTooltip
-Frame.update = Frame.Update
-
-Graph.bring_figure_to_front = Graph.BringFigureToFront
-Graph.button_press_call_back = Graph.ButtonPressCallBack
-Graph.button_release_call_back = Graph.ButtonReleaseCallBack
-Graph.delete_figure = Graph.DeleteFigure
-Graph.draw_arc = Graph.DrawArc
-Graph.draw_circle = Graph.DrawCircle
-Graph.draw_image = Graph.DrawImage
-Graph.draw_line = Graph.DrawLine
-Graph.draw_oval = Graph.DrawOval
-Graph.draw_point = Graph.DrawPoint
-Graph.draw_rectangle = Graph.DrawRectangle
-Graph.draw_text = Graph.DrawText
-Graph.erase = Graph.Erase
-Graph.motion_call_back = Graph.MotionCallBack
-Graph.move = Graph.Move
-Graph.move_figure = Graph.MoveFigure
-Graph.relocate_figure = Graph.RelocateFigure
-Graph.send_figure_to_back = Graph.SendFigureToBack
-Graph.set_focus = Graph.SetFocus
-Graph.set_tooltip = Graph.SetTooltip
-Graph.tk_canvas = Graph.TKCanvas
-Graph.update = Graph.Update
-
-Image.set_focus = Image.SetFocus
-Image.set_tooltip = Image.SetTooltip
-Image.update = Image.Update
-Image.update_animation = Image.UpdateAnimation
-
-InputText.get = InputText.Get
-InputText.set_focus = InputText.SetFocus
-InputText.set_tooltip = InputText.SetTooltip
-InputText.update = InputText.Update
-
-Listbox.get_list_values = Listbox.GetListValues
-Listbox.set_focus = Listbox.SetFocus
-Listbox.set_tooltip = Listbox.SetTooltip
-Listbox.set_value = Listbox.SetValue
-Listbox.update = Listbox.Update
-
-Menu.set_focus = Menu.SetFocus
-Menu.set_tooltip = Menu.SetTooltip
-Menu.update = Menu.Update
-
-Multiline.get = Multiline.Get
-Multiline.set_focus = Multiline.SetFocus
-Multiline.set_tooltip = Multiline.SetTooltip
-Multiline.update = Multiline.Update
-
-OptionMenu.set_focus = OptionMenu.SetFocus
-OptionMenu.set_tooltip = OptionMenu.SetTooltip
-OptionMenu.update = OptionMenu.Update
-
-Output.set_focus = Output.SetFocus
-Output.set_tooltip = Output.SetTooltip
-Output.tk_out = Output.TKOut
-Output.update = Output.Update
-
-Pane.set_focus = Pane.SetFocus
-Pane.set_tooltip = Pane.SetTooltip
-Pane.update = Pane.Update
-
-ProgressBar.set_focus = ProgressBar.SetFocus
-ProgressBar.set_tooltip = ProgressBar.SetTooltip
-ProgressBar.update = ProgressBar.Update
-ProgressBar.update_bar = ProgressBar.UpdateBar
-
-Radio.get = Radio.Get
-Radio.reset_group = Radio.ResetGroup
-Radio.set_focus = Radio.SetFocus
-Radio.set_tooltip = Radio.SetTooltip
-Radio.update = Radio.Update
-
-Slider.set_focus = Slider.SetFocus
-Slider.set_tooltip = Slider.SetTooltip
-Slider.update = Slider.Update
-
-Spin.get = Spin.Get
-Spin.set_focus = Spin.SetFocus
-Spin.set_tooltip = Spin.SetTooltip
-Spin.update = Spin.Update
-
-StatusBar.set_focus = StatusBar.SetFocus
-StatusBar.set_tooltip = StatusBar.SetTooltip
-StatusBar.update = StatusBar.Update
-
-Tab.add_row = Tab.AddRow
-Tab.layout = Tab.Layout
-Tab.select = Tab.Select
-Tab.set_focus = Tab.SetFocus
-Tab.set_tooltip = Tab.SetTooltip
-Tab.update = Tab.Update
-
-TabGroup.add_row = TabGroup.AddRow
-TabGroup.find_key_from_tab_name = TabGroup.FindKeyFromTabName
-TabGroup.get = TabGroup.Get
-TabGroup.layout = TabGroup.Layout
-TabGroup.set_focus = TabGroup.SetFocus
-TabGroup.set_tooltip = TabGroup.SetTooltip
-
-Table.set_focus = Table.SetFocus
-Table.set_tooltip = Table.SetTooltip
-Table.update = Table.Update
-
-Text.set_focus = Text.SetFocus
-Text.set_tooltip = Text.SetTooltip
-Text.update = Text.Update
-
-Tree.set_focus = Tree.SetFocus
-Tree.set_tooltip = Tree.SetTooltip
-Tree.update = Tree.Update
-
-TreeData.insert = TreeData.Insert
-TreeData.node = TreeData.Node
-
-VerticalSeparator.set_focus = VerticalSeparator.SetFocus
-VerticalSeparator.set_tooltip = VerticalSeparator.SetTooltip
-
-Window.add_row = Window.AddRow
-Window.add_rows = Window.AddRows
-Window.alpha_channel = Window.AlphaChannel
-Window.bring_to_front = Window.BringToFront
-Window.close = Window.Close
-Window.current_location = Window.CurrentLocation
-Window.disable = Window.Disable
-Window.disable_debugger = Window.DisableDebugger
-Window.disappear = Window.Disappear
-Window.elem = Window.Elem
-Window.element = Window.Element
-Window.enable = Window.Enable
-Window.enable_debugger = Window.EnableDebugger
-Window.fill = Window.Fill
-Window.finalize = Window.Finalize
-Window.find = Window.Find
-Window.find_element = Window.FindElement
-Window.find_element_with_focus = Window.FindElementWithFocus
-Window.get_screen_dimensions = Window.GetScreenDimensions
-Window.grab_any_where_off = Window.GrabAnyWhereOff
-Window.grab_any_where_on = Window.GrabAnyWhereOn
-Window.hide = Window.Hide
-Window.layout = Window.Layout
-Window.load_from_disk = Window.LoadFromDisk
-Window.maximize = Window.Maximize
-Window.minimize = Window.Minimize
-Window.move = Window.Move
-Window.normal = Window.Normal
-Window.read = Window.Read
-Window.reappear = Window.Reappear
-Window.refresh = Window.Refresh
-Window.save_to_disk = Window.SaveToDisk
-Window.set_alpha = Window.SetAlpha
-Window.set_icon = Window.SetIcon
-Window.set_transparent_color = Window.SetTransparentColor
-Window.size = Window.Size
-Window.un_hide = Window.UnHide
-Window.visibility_changed = Window.VisibilityChanged
-Window.close = Window.close
-Window.element = Window.element
-Window.finalize = Window.finalize
-Window.layout = Window.layout
-Window.read = Window.read
 
 change_look_and_feel = ChangeLookAndFeel
 convert_args_to_single_string = ConvertArgsToSingleString

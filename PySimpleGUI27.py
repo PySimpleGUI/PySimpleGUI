@@ -12,7 +12,7 @@ from builtins import str
 from builtins import object
 from future import standard_library
 standard_library.install_aliases()
-version = __version__ = "2.2.0.0 Unreleased - Docstrings version"
+version = __version__ = "2.3.0.0 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -133,8 +133,7 @@ import pickle
 import calendar
 import textwrap
 import inspect
-from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
-from random import randint
+# from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 import warnings
 
 g_time_start = 0
@@ -4933,7 +4932,7 @@ class Window(object):
         self.UniqueKeyCounter = 0
         self.DebuggerEnabled = debugger_enabled
         self.WasClosed = False
-        if type(title) != str:
+        if not isinstance(title, str):
             warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
         if layout is not None and type(layout) not in  (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -7242,7 +7241,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if None not in (element.Size[0], element.Size[1]):
                             element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
                         elif element.Size[1] is not None:
-                            print('height only')
                             element.TKColFrame.canvas.config(height=element.Size[1])
                         elif element.Size[0] is not None:
                             element.TKColFrame.canvas.config(width=element.Size[0])
