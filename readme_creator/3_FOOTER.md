@@ -2,40 +2,6 @@
 
 ---
 
-# The PySimpleGUI Debugger
-
-Starting on June 1, 2019, a built-in version of the debugger `imwatchingyou` has been shipping in every copy of PySimpleGUI.  It's been largely downplayed to gauge whether or not the added code and the added feature and the use of a couple of keys, would mess up any users.  
-
-So far no one has reported anything at all about the debugger.  The assumption is that it is quietly lying dormant, waiting for you to press the `BREAK` or `CONTROL` + `BREAK` keys.  It's odd no one has accidently done this and freaked out, logging an Issue.
-
-The plain PySimpleGUI module has a debugger builtin.  For the other ports, please use the package `imwatchingyou`.
-
-## Preparing To Run the Debugger
-
-If your program is running with blocking `Read` calls, then you will want to add a timeout to your reads.  This is because the debugger gets it's cycles by stealing a little bit of time from these async calls.
-
-Your event loop will be modified from this:
-```python
-while True:
-    event, values = window.Read()
-```
-
-To this:
-```python
-while True:
-    event, values = window.Read(timeout=100)
-    if event == sg.TIMEOUT_KEY:
-        continue
-```
-
-This event loop will do nothing at all if a timeout occurs and will execute your normal code (that follows the if statement) when there is any event that is not a timeout.
-
-This timeout value of 100 means that your debugger GUI will be updated 10 times a second.  If this adds too much "drag" to your application, you can make the timeout larger.  Try using 1000 instead of 100.
-
-## Debugger Windows
-
-There are 2 debugger windows. One is called a "Popout".  The Popout window displays all of your variables
-
 
 
 # "Demo Programs" Applications
@@ -121,11 +87,8 @@ Run this command on your Mac
 This info was located on Reddit with the source traced back to:
 https://github.com/pyinstaller/pyinstaller/issues/1350
 
+# Debug Output
 
-## Fun Stuff
-Here are some things to try if you're bored or want to further customize
-
-**Debug Output**
 Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
 
 For a fun time, add these lines to the top of your script
@@ -136,7 +99,9 @@ For a fun time, add these lines to the top of your script
 ```
 This will turn all of your print statements into prints that display in a window on your screen rather than to the terminal.
 
-**Look and Feel**
+# Look and Feel (`ChangleLookAndFeel`)
+
+While you can define colors for each individual element and you can even define some on a windows wide basis, but it requires setting a lot of different settings.
 Dial in the look and feel that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
 Or beginning in version 2.9 you can choose from a look and feel using pre-defined color schemes.   Call ChangeLookAndFeel with a description string.
 
@@ -159,6 +124,32 @@ Valid values for the  description string are:
       Kayak
       SandyBeach
       TealMono
+
+The way this call actually works is that it calls `SetOptions` with a LOT of color settings.  Here is the actual call that's made.  As you can see lots of stuff is defined for you.
+
+```python
+SetOptions(background_color=colors['BACKGROUND'],
+            text_element_background_color=colors['BACKGROUND'],
+            element_background_color=colors['BACKGROUND'],
+            text_color=colors['TEXT'],
+            input_elements_background_color=colors['INPUT'],
+            button_color=colors['BUTTON'],
+            progress_meter_color=colors['PROGRESS'],
+            border_width=colors['BORDER'],
+            slider_border_width=colors['SLIDER_DEPTH'],
+            progress_meter_border_depth=colors['PROGRESS_DEPTH'],
+            scrollbar_color=(colors['SCROLL']),
+            element_text_color=colors['TEXT'],
+            input_text_color=colors['TEXT_INPUT'])
+```
+
+
+<!-- <+func.ListOfLookAndFeelValues+> -->
+
+
+
+<!-- <+func.ChangeLookAndFeel+> -->
+
 
 To see the latest list of color choices, take a look at the bottom of the `PySimpleGUI.py` file where you'll find the `ChangLookAndFeel` function.
 

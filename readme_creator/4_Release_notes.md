@@ -707,6 +707,34 @@ Long time coming.  Docstrings continue to be a focus.
 * Fix for debugger trying to execute a REPL comand.  The exec is only avilable in Python 3
 * main() will display the version number in big letters when program is running
 
+### 4.2 PySimpleGUI  2.2 for PySimpleGUI27  8 - Aug 2019
+
+The cool lookup release!  No more need for FindElement. You can continue to use FindElement.
+However, your code will look weird and ancient.  ;-)  (i.e. readable)
+MORE Docstring and main doc updates!
+
+* Finally 2.7 gets an upgrade and with it doc strings.  It however doesn't get a full-version bump like main PySimpleGUI as this may be its last release.
+* New window[key] == window.FindElement(key)
+* New Update calling method. Can directly call an Element and it will call its Update method
+	* window[key](value=new_value)    ==     window.FindElement(key).Update(value=new_value)
+* Made Tearoff part of element so anything can be a menu in theory
+* Removed a bunch of __del__ calls. Hoping it doesn't bite me in memory leaks
+* Combo.Get method added
+* Combo.GetSelectedItemsIndexes removed
+* New Graph methods SendFigureToBack, BringFigureToFront
+* Butten release changed for better Graph Dragging
+	* Now returns key+"Up" for the event
+	* Also returns the x,y coords in the values
+* Tab.Select method added
+* TabGroup.Get method added - returns key of currently selected Tab
+* Window finalize parameter added - Will call finalize if a layout is also included.  No more need for Finalize!!
+* Quiet, steady change to PEP8 user interface started
+	* Now available are Window methods - read, layout, finalize, find_element, element, close
+	* Should provide 100% PEP with these alone for most PySimpleGUI programs
+* Added finding focus across ALL elements by using the .Widget member variable
+* Fixed sizing Columns!  NOW they will finally be the size specified
+* Fixed not using the initialdir paramter in PopupGetFile if the no_window option is set
+
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -751,10 +779,13 @@ tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, 
 From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
 
 
-## Author
+## Author & Owner
 
-***Who*** wrote PySimpleGUI is not important. What's important is that it works well and enables anyone that wants to create a GUI to do so.
+The PySimpleGUI Organization
 
+This documentation as well as all PySimpleGUI code is Copyright 2018, 2019 by PySimpleGUI.org
+
+PySimpleGUI@PySimpleGUI.org
 
 ## License
 
@@ -762,4 +793,6 @@ GNU Lesser General Public License (LGPL 3) +
 
 ## Acknowledgments
 
-#### SORRY!! Will add these back.  Lost due to file length limitation
+There are a number of people that have been key contributors to this project both directly and indirectly.  Paid professional help has been deployed a number of critical times in the project's history.  This happens in the life of software development from time to time.
+
+If you've helped, I sure hope that you feel like you've been properly thanked.  That you have been recognized.  If not, then say something.... drop an email to comments@PySimpleGUI.org. 
