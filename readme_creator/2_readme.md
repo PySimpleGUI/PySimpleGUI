@@ -262,7 +262,7 @@ With a little trickery you can provide a way to break out of your loop using the
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
 
-# Debug Output
+# Debug Output (EasyPrint = Print = eprint)
 
 Another call in the 'Easy' families of APIs is `EasyPrint`.  As is with other commonly used PySimpleGUI calls, there are other names for the same call.  You can use `Print` or `eprint` in addition to `EasyPrint`.  They all do the same thing, output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick an 'sg.Print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement
 
@@ -920,141 +920,6 @@ The first step is to create the window object using the desired window customiza
 **IMPORTANT** - Many of the `Window` methods require you to either call `Window.Read` or `Window.Finalize` before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
 
 
-<!-- <+Window.doc+> -->
-
-<!-- <+Window.__init__+> -->
-
-## Methods
-
-
-#### AddRows (Don't use)
-
-<!-- <+Window.AddRows+> -->
-
-#### BringToFront
-
-<!-- <+Window.BringToFront+> -->
-
-#### Close
-
-<!-- <+Window.Close+> -->
-
-#### CurrentLocation
-
-<!-- <+Window.CurrentLocation+> -->
-
-#### Disable
-
-<!-- <+Window.Disable+> -->
-
-#### DisableDebugger
-
-<!-- <+Window.DisableDebugger+> -->
-
-#### Disappear
-
-<!-- <+Window.Disappear+> -->
-
-#### Enable
-
-<!-- <+Window.Enable+> -->
-
-#### EnableDebugger
-
-<!-- <+Window.EnableDebugger+> -->
-
-#### Fill
-
-<!-- <+Window.Fill+> -->
-
-#### Finalize
-
-<!-- <+Window.Finalize+> -->
-
-#### FindElement == Element == Find
-
-<!-- <+Window.FindElement+> -->
-
-#### FindElementWithFocus
-
-<!-- <+Window.FindElementWithFocus+> -->
-
-#### GetScreenDimensions
-
-<!-- <+Window.GetScreenDimensions+> -->
-
-#### GrabAnyWhereOff
-
-<!-- <+Window.GrabAnyWhereOff+> -->
-
-#### GrabAnyWhereOn
-
-<!-- <+Window.GrabAnyWhereOn+> -->
-
-#### Hide
-
-<!-- <+Window.Hide+> -->
-
-#### Layout
-
-<!-- <+Window.Layout+> -->
-
-#### LoadFromDisk
-
-<!-- <+Window.LoadFromDisk+> -->
-
-#### Maximize
-
-<!-- <+Window.Maximize+> -->
-
-#### Minimize
-
-<!-- <+Window.Minimize+> -->
-
-#### Move
-
-<!-- <+Window.Move+> -->
-
-#### Normal
-
-<!-- <+Window.Normal+> -->
-
-#### Read
-
-<!-- <+Window.Read+> -->
-
-#### Reappear
-
-<!-- <+Window.Reappear+> -->
-
-#### Refresh
-
-<!-- <+Window.Refresh+> -->
-
-#### SaveToDisk
-
-<!-- <+Window.SaveToDisk+> -->
-
-#### SetAlpha
-
-<!-- <+Window.SetAlpha+> -->
-
-#### SetIcon
-
-<!-- <+Window.SetIcon+> -->
-
-#### SetTransparentColor
-
-<!-- <+Window.SetTransparentColor+> -->
-
-#### UnHide
-
-<!-- <+Window.UnHide+> -->
-
-
-
-
-
 
 ### Window Location
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.
@@ -1154,6 +1019,9 @@ Please file an Issue if you see this call in any code or in any documentation.  
 
 
 # Elements
+
+You will find information on Elements and all other classes and functions are located near the end of this manual.  They are in 1 large section of the readme, in alphabetical order for easy lookups.  This section's discussion of Elements is meant to teach you how they work.  The other section has detailed call signatures and parameter definitions.
+
 "Elements" are the building blocks used to create windows.  Some GUI APIs use the term "Widget" to describe these graphic elements.
 
 - Text
@@ -1171,7 +1039,7 @@ Please file an Issue if you see this call in any code or in any documentation.  
 - Listbox
 - Slider
 - Multi-line Text Input/Output
-- Multi-line Text Output (Qt only)
+- Multi-line Text Output (not on tkinter version)
 - Scroll-able Output
 - Vertical Separator
 - Progress Bar
@@ -1190,7 +1058,9 @@ Please file an Issue if you see this call in any code or in any documentation.  
 - Stretch (Qt only)
 
 ## Common Element Parameters
-Some parameters that you  will see on almost all Elements are:
+
+Some parameters that you  will see on almost all Element creation calls include:
+
 - key   -  Used with window.FindElement and with return values
 - tooltip   - Hover your mouse over the elemnt and you'll get a popup with this text
 - size  - (width, height) - usually measured in characters-wide, rows-high.  Sometimes they mean pixels
@@ -1319,7 +1189,6 @@ It's an ongoing thing.  If you don't stay up to date and one of the newer shortc
 ## Text Element | `T == Txt == Text`
 Basic Element. It displays text. That's it.
 
-<!-- <+Text.doc+> -->
 
 
 ```python
@@ -1330,18 +1199,6 @@ layout = [
 ```
 ![simple text](https://user-images.githubusercontent.com/13696193/44959877-e9d97b00-aec3-11e8-9d24-b4405ee4a148.jpg)
 
-
-<!-- <+Text.__init__+> -->
-
-### Methods
-
-#### Update
-
-<!-- <+Text.Update+> -->
-
-#### SetToolTip
-
-<!-- <+Text.SetTooltip+> -->
 
 ---
 
@@ -1371,11 +1228,9 @@ The shorthand functions for `Text` are `Txt` and `T`
 If you set the parameter `enable_events` then you will get an event if the user clicks on the Text.
 
 
-<!-- %!% -->
 ## Multiline Element
 This Element doubles as both an input and output Element.
 
-<!-- <+Multiline.doc+> -->
 
 ```python
 layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
@@ -1384,32 +1239,8 @@ layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', siz
 ![multiline](https://user-images.githubusercontent.com/13696193/44959853-b139a180-aec3-11e8-972f-f52188510c88.jpg)
 
 
-<!-- <+Multiline.__init__+> -->
-
-### Methods
-
-#### Update
-
-<!-- <+Multiline.Update+> -->
-
-#### Get
-
-<!-- <+Multiline.Get+> -->
-
-#### SetFocus
-
-<!-- <+Multiline.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Multiline.SetTooltip+> -->
-
-
-
-<!-- %!% -->
 ## Text Input Element  | `InputText == Input == In`
 
-<!-- <+InputText.doc+> -->
 
 ```python
 layout = [[sg.InputText('Default text')]]
@@ -1417,25 +1248,6 @@ layout = [[sg.InputText('Default text')]]
 
 ![inputtext 2](https://user-images.githubusercontent.com/13696193/44959861-b5fe5580-aec3-11e8-8040-53ec241b5079.jpg)
 
-<!-- <+InputText.__init__+> -->
-
-### Methods
-
-#### Update
-
-<!-- <+InputText.Update+> -->
-
-#### Get
-
-<!-- <+InputText.Get+> -->
-
-#### SetFocus
-
-<!-- <+InputText.SetFocus+> -->
-
-#### SetToolTip
-
-<!-- <+InputText.SetTooltip+> -->
 
 ---
 
@@ -1444,12 +1256,10 @@ layout = [[sg.InputText('Default text')]]
 This used to really trip people up, but don't think so anymore.  The `do_not_clear` parameter is initialized when creating the InputText Element.  If set to False, then the input field's contents will be erased after every `Window.Read()` call.  Use this setting for when your window is an "Input Form" type of window where you want all of the fields to be erased and start over again every time.
 
 
-<!-- %!% -->
 
 ## Combo Element | `Combo == InputCombo == DropDown == Drop`
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
 
-<!-- <+Combo.doc+> -->
 
 ```python
 layout = [[sg.Combo(['choice 1', 'choice 2'])]]
@@ -1457,58 +1267,16 @@ layout = [[sg.Combo(['choice 1', 'choice 2'])]]
 
 ![combobox](https://user-images.githubusercontent.com/13696193/44959860-b565bf00-aec3-11e8-82fe-dbe41252458b.jpg)
 
-<!-- <+Combo.__init__+> -->
 
-### Methods
-
-#### Update
-
-<!-- <+Combo.Update+> -->
-
-#### GetSelectedItemsIndexes 
-
-<!-- <+Combo.GetSelectedItemsIndexes+> -->
-
-#### SetToolTip
-
-<!-- <+Combo.SetTooltip+> -->
-
-
-<!-- %!% -->
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
 
-<!-- <+Listbox.doc+> -->
 
 ```python
 layout = [[sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
 ```
 
 ![listbox 2](https://user-images.githubusercontent.com/13696193/44959859-b4cd2880-aec3-11e8-881c-1e369d5c6337.jpg)
-
-<!-- <+Listbox.__init__+> -->
-
-### Methods
-
-#### Update
-
-<!-- <+Listbox.Update+> -->
-
-#### SetValue
-
-<!-- <+Listbox.SetValue+> -->
-
-#### GetListValues
-
-<!-- <+Listbox.GetListValues+> -->
-
-#### SetFocus
-
-<!-- <+Listbox.SetFocus+> -->
-
-#### SetToolTip
-<!-- <+Listbox.SetTooltip+> -->
-
 
 
 ---
@@ -1517,12 +1285,10 @@ ListBoxes can cause a window to return from a Read call.  If the flag `enable_ev
 
 Another way ListBoxes can cause Reads to return is if the flag bind_return_key is set.  If True, then if the user presses the return key while an entry is selected, then the Read returns.  Also, if this flag is set, if the user double-clicks an entry it will return from the Read.
 
-<!-- %!% -->
 ## Slider Element
 
 Sliders have a couple of slider-specific settings as well as appearance settings. Examples include the `orientation` and `range` settings.
 
-<!-- <+Slider.doc+> -->
 
 ```python
 layout = [[sg.Slider(range=(1,500),
@@ -1534,33 +1300,13 @@ layout = [[sg.Slider(range=(1,500),
 
 ![slider](https://user-images.githubusercontent.com/13696193/44959858-b4349200-aec3-11e8-9e25-c0fcf025d19e.jpg)
 
-<!-- <+Slider.__init__+> -->
-
 ### Qt Sliders
 
 There is an important difference between Qt and tkinter sliders.  On Qt, the slider values must be integer, not float.  If you want your slider to go from 0.1 to 1.0, then make your slider go from 1 to 10 and divide by 10.  It's an easy math thing to do and not a big deal.  Just deal with it.... you're writing software after all.  Presumably you know how to do these things.  ;-)
 
 
-### Slider Methods
-
-#### Update
-
-<!-- <+Slider.Update+> -->
-
-#### SetFocus
-
-<!-- <+Slider.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Slider.SetTooltip+> -->
-
-<!-- %!% -->
-## Radio Element
-
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
-<!-- <+Radio.doc+> -->
 
 ```python
 layout =  [
@@ -1571,69 +1317,20 @@ layout =  [
 
 ![radio](https://user-images.githubusercontent.com/13696193/44959857-b4349200-aec3-11e8-8e2d-e6a49ffbd0b6.jpg)
 
-<!-- <+Radio.__init__+> -->
 
-###  Methods
-
-#### Update
-
-<!-- <+Radio.Update+> -->
-
-#### Get
-
-<!-- <+Radio.Get+> -->
-
-#### ResetGroup
-
-<!-- <+Radio.ResetGroup+> -->
-
-#### SetFocus
-
-<!-- <+Radio.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Radio.SetTooltip+> -->
-
-
-<!-- %!% -->
 ## Checkbox Element | `CBox == CB == Check`
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
 
-<!-- <+Checkbox.doc+> -->
 
 ```python
 layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My second Checkbox!')]]
 ```
 ![checkbox](https://user-images.githubusercontent.com/13696193/44959906-6f5d2b00-aec4-11e8-9c8a-962c787f0286.jpg)
 
-<!-- <+Checkbox.__init__+> -->
 
-### Methods
-
-#### Update
-
-<!-- <+Checkbox.Update+> -->
-
-#### Get
-
-<!-- <+Checkbox.Get+> -->
-
-#### SetFocus
-
-<!-- <+Checkbox.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Checkbox.SetTooltip+> -->
-
-
-
-<!-- %!% -->
 ## Spin Element
 An up/down spinner control.  The valid values are passed in as a list.
 
-<!-- <+Spin.doc+> -->
 
 ```python
 layout =  [[sg.Spin([i for i in range(1,11)], initial_value=1), sg.Text('Volume level')]]
@@ -1641,30 +1338,7 @@ layout =  [[sg.Spin([i for i in range(1,11)], initial_value=1), sg.Text('Volume 
 
 ![spinner](https://user-images.githubusercontent.com/13696193/44959855-b1d23800-aec3-11e8-9f51-afb2109879da.jpg)
 
-<!-- <+Spin.__init__+> -->
 
-
-
-### Methods
-
-#### Update
-
-<!-- <+Spin.Update+> -->
-
-#### Get
-
-<!-- <+Spin.Get+> -->
-
-#### SetFocus
-
-<!-- <+Spin.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Spin.SetTooltip+> -->
-
-
-<!-- %!% -->
 ## Image Element
 
 Images can be placed in your window provide they are in PNG, GIF, PPM/PGM format.  JPGs cannot be shown because tkinter does not naively support JPGs.  You can use the Python Imaging Library (PIL) package  to convert your image to PNG prior to calling PySimpleGUI if your images are in JPG format.
@@ -1675,29 +1349,8 @@ layout = [
          ]
 ```
 
-<!-- <+Image.doc+> -->
 
 ![image](https://user-images.githubusercontent.com/13696193/61885709-4e326e00-aecc-11e9-8695-7193df2831ec.png)
-
-<!-- <+Image.__init__+> -->
-
-### Methods
-
-#### SetFocus
-
-<!-- <+Image.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Image.SetTooltip+> -->
-
-#### Update
-
-<!-- <+Image.Update+> -->
-
-#### UpdateAnimation
-
-<!-- <+Image.UpdateAnimation+> -->
 
 
 You can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
@@ -1706,7 +1359,6 @@ You can specify an animated GIF as an image and can animate the GIF by calling `
 
 You can call the method without setting the `time_between_frames` value and it will show a frame and immediately move on to the next frame.  This enables you to do the inter-frame timing.
 
-<!-- %!% -->
 ## Button Element
 
 **MAC USERS** - Macs suck when it comes to tkinter and button colors.  It sucks so badly with colors that the `LookAndFeel` call is disabled.  You cannot change button colors for Macs.  You're stuck with the system default color if you are using the tkinter version of PySimpleGUI.  The Qt version does not have this issue.
@@ -1759,7 +1411,6 @@ Your PySimpleGUI program is most likely going to contain only `Button` calls. Th
 
 The most basic Button element call to use is `Button`
 
-<!-- <+Button.doc+> -->
 
 ```python
 layout =  [[sg.Button('Ok'), sg.Button('Cancel')]]
@@ -1778,7 +1429,6 @@ layout =  [[sg.Ok(), sg.Cancel()]]
 In reality `Button` is in fact being called on your behalf.  Behind the scenes, `sg.Ok` and `sg.Cancel` call `Button` with the text set to `Ok` and `Cancel` and returning the results that then go into the layout.  If you were to print the layout it will look identical to the first layout shown that has `Button` shown specifically in the layout.
 
 
-<!-- <+Button.__init__+> -->
 
 ### Shortcut, Pre-defined Buttons
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, **set the button text to match the function name and set the parameters to commonly used values**. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
@@ -2005,37 +1655,10 @@ The Enter Key can be "bound" to a particular button so that when the key is pres
 If there are more than 1 button on a window, the FIRST button that is of type Close window or Read window is used.  First is determined by scanning the window, top to bottom and left to right.
 
 
-### Methods
-
-
-#### Click
-
-<!-- <+Button.Click+> -->
-
-#### GetText
-
-<!-- <+Button.GetText+> -->
-
-#### SetFocus
-
-<!-- <+Button.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Button.SetTooltip+> -->
-
-#### Update
-
-<!-- <+Button.Update+> -->
-
-
-
-<!-- %!% -->
 ## ButtonMenu Element
 
 The ButtonMenu element produces a unique kind of effect.  It's a button, that when clicked, shows you a menu.   It's like clicking one of the top-level menu items on a MenuBar.  As a result, the menu definition take the format of a single  menu entry from  a normal menu definition.  A normal menu definition is  a list of lists.  This definition is one of those lists.
 
-<!-- <+ButtonMenu.doc+> -->
 
 ```python
  ['Menu', ['&Pause Graph', 'Menu item::optional_key']]
@@ -2044,7 +1667,6 @@ The ButtonMenu element produces a unique kind of effect.  It's a button, that wh
 
 The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
 
-<!-- <+ButtonMenu.__init__+> -->
 
 One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
 
@@ -2054,13 +1676,11 @@ Return values for ButtonMenus are sent via the return values dictionary.  If a s
 
 
 
-<!-- %!% -->
 ## VerticalSeparator Element
 This element has limited usefulness and is being included more for completeness than anything else.  It will draw a line between elements.
 
 It works best when placed between columns or elements that span multiple rows.  If on a "normal" row with elements that are only 1 row high, then it will only span that one row.
 
-<!-- <+VerticalSeparator.doc+> -->
 
 ```python
 VerticalSeparator(pad=None)
@@ -2068,12 +1688,7 @@ VerticalSeparator(pad=None)
 
 ![snag-0129](https://user-images.githubusercontent.com/13696193/47376041-a92a0100-d6bf-11e8-8f5b-0c0df56cf0f3.jpg)
 
-<!-- <+VerticalSeparator.__init__+> -->
 
-
-
-
-<!-- %!% -->
 ## ProgressBar Element
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.
 
@@ -2091,7 +1706,6 @@ The return value for `OneLineProgressMeter` is:
 #### Progress Meter in Your window
 Another way of using a Progress Meter with PySimpleGUI is to build a custom window with a `ProgressBar` Element in the window.  You will need to run your window as a non-blocking window.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
 
-<!-- <+ProgressBar.doc+> -->
 
 ```python
 import PySimpleGUI as sg
@@ -2118,10 +1732,8 @@ window.Close()
 
 ![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
 
-<!-- <+ProgressBar.__init__+> -->
 
 
-<!-- %!% -->
 ## Output Element
 
 The Output Element is a re-direction of Stdout.
@@ -2134,7 +1746,6 @@ If you are looking for a way to quickly add the ability to show scrolling text w
 
 
 
-<!-- <+Output.doc+> -->
 
 ```python
 Output(size=(80,20))
@@ -2142,15 +1753,6 @@ Output(size=(80,20))
 
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)
 
-<!-- <+Output.__init__+> -->
-
-### Methods
-
-#### Update
-
-This method is used to "clear" the Output window.  If you have a lot of text in it, setting the value to `` will clear it.  The Update also has a visibility parameter like other elements.
-
-<!-- <+Output.Update+> -->
 
 ----
 
@@ -2182,7 +1784,6 @@ ChatBot()
 ```
 
 
-<!-- %!% -->
 ## Column Element
 
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.
@@ -2191,13 +1792,11 @@ Columns are specified in exactly the same way as a window is, as a list of lists
 
 Columns are needed when you have an element that has a height > 1 line on the left, with single-line elements on the right.  Here's an example of this kind of layout:
 
-<!-- <+Column.doc+> -->
 
 ![column](https://user-images.githubusercontent.com/13696193/44959988-66b92480-aec5-11e8-9c26-316ed24a68c0.jpg)
 
 Without a Column Element you can't create a layout like this.  But with it, you should be able to closely match any layout created using tkinter only.
 
-<!-- <+Column.__init__+> -->
 
 ---
 
@@ -2241,7 +1840,6 @@ sg.Popup(event, values, line_width=200)
 
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.
 
-<!-- <+Frame.doc+> -->
 
 ![frame element](https://user-images.githubusercontent.com/13696193/45889173-c2245700-bd8d-11e8-8f73-1e5f1be3ddb1.jpg)
 
@@ -2250,7 +1848,6 @@ Notice how the Frame layout looks identical to a window layout. A window works e
 *These container Elements can be nested as deep as you want.* That's a pretty spiffy feature, right?  Took a lot of work so be appreciative.  Recursive code isn't trivial.
 
 
-<!-- <+Frame.__init__+> -->
 
 ---
 
@@ -2271,17 +1868,11 @@ window = sg.Window('Frame with buttons', layout, font=("Helvetica", 12))
 
 
 
-<!-- %!% -->
 ## Canvas Element
 
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.
 
 However, there's another way to get that power and that's through the Graph Element, an even MORE powerful Element as it uses a Canvas that you can directly access if needed.  The Graph Element has a large number of drawing methods that the Canvas Element does not have.
-
-<!-- <+Canvas.doc+> -->
-
-<!-- <+Canvas.__init__+> -->
-
 
 ### Matplotlib, Pyplot Integration
 
@@ -2334,7 +1925,6 @@ See `Demo_Matplotlib.py` for a Recipe you can copy.
 TKCanvas - not a method but a property. Returns the tkinter Canvas Widget
 
 
-<!-- %!% -->
 ## Graph Element
 
 All you math fans will enjoy this Element... and all you non-math fans will enjoy it even more.
@@ -2399,107 +1989,16 @@ graph+UP {'graph': (154, 254)}
 ```
 
 
-<!-- <+Graph.doc+> -->
 
-
-<!-- <+Graph.__init__+> -->
-
-
-### Methods
-
-
-All of the Drawing methods return a "***figure***" that can be used move and delete the drawn figure.
-
-#### DeleteFigure
-
-<!-- <+Graph.DeleteFigure+> -->
-
-#### DrawArc
-
-<!-- <+Graph.DrawArc+> -->
-
-#### DrawCircle
-
-<!-- <+Graph.DrawCircle+> -->
-
-#### DrawImage
-
-<!-- <+Graph.DrawImage+> -->
-
-#### DrawLine
-
-<!-- <+Graph.DrawLine+> -->
-
-#### DrawOval
-
-<!-- <+Graph.DrawOval+> -->
-
-#### DrawPoint
-
-<!-- <+Graph.DrawPoint+> -->
-
-#### DrawRectangle
-
-<!-- <+Graph.DrawRectangle+> -->
-
-#### DrawText
-
-<!-- <+Graph.DrawText+> -->
-
-#### Erase
-
-<!-- <+Graph.Erase+> -->
-
-#### Move
-
-<!-- <+Graph.Move+> -->
-
-#### MoveFigure
-
-<!-- <+Graph.MoveFigure+> -->
-
-#### RelocateFigure
-
-<!-- <+Graph.RelocateFigure+> -->
-
-#### SetFocus
-
-<!-- <+Graph.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+Graph.SetTooltip+> -->
-
-#### Update
-
-<!-- <+Graph.Update+> -->
-
-
-<!-- %!% -->
 ## Table Element
 
 Out of all of the Elements, it's the Table and the Tree that are the most "problematic" in the tkinter inter and Qt implementations.  They're hard is my only defense.
 
-<!-- <+Table.doc+> -->
-
-<!-- <+Table.__init__+> -->
 
 ### Read return values from Table Element
 
 The values returned from a `Window.Read` call for the Table Element are a list of row numbers that are currently highlighted.
 
-
-### Methods
-
-The Update method can be used to make changes to a table that's already been displayed.  The call takes a single parameter, values, which is the new table to display.  The entire table is replaced.  You must call `window.Finalize`or `window.Read` prior to calling Update on ANY element
-
-#### SetTooltip
-
-<!-- <+Table.SetTooltip+> -->
-
-#### Update
-
-<!-- <+Table.Update+> -->
 
 ---
 ### Known visualization problem....
@@ -2507,30 +2006,17 @@ The Update method can be used to make changes to a table that's already been dis
 If you click on the header, it can go into spasms for some tables. I don't understand what's causing it and it's been there evidently since the first release of Tables.
 
 
-<!-- %!% -->
+
 ## Tree Element
 
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc.
 
-<!-- <+Tree.doc+> -->
-
-<!-- <+Tree.__init__+> -->
 
 Unlike Tables there is no standard format for trees.  Thus the data structure passed to the Tree Element must be constructed.  This is done using the TreeData class.  The process is as follows:
 
 - Get a TreeData Object
 - "Insert" data into the tree
 - Pass the filled in TreeData object to Tree Element
-
-### Methods
-
-#### SetTooltip
-
-<!-- <+Tree.SetTooltip+> -->
-
-#### Update
-
-<!-- <+Tree.Update+> -->
 
 #### TreeData format
 ```python
@@ -2570,15 +2056,15 @@ Here is the result of showing an icon with a tree entry.
 
 ## Tab and Tab Group Elements
 
-Tabs have been a part of PySimpleGUI since the initial release.  However, the initial implementation applied tabs at the top level only. The entire window had to be tabbed.  There with other limitations that came along with that implementation.  That all changed in version 3.8.0 with the new elements - Tab and TabGroup.  The old implementation of Tabs was removed in version 3.8.0 as well.
+Tabs are another of PySimpleGUI "Container Elements".  It is capable of "containing" a layout just as a window contains a layout.  Other container elements include the `Column` and `Frame` elements.
 
-Tabs are another "Container Element".  The other Container Elements include:
-* Frame
-* Column
+Just like windows and the other container elements, the `Tab` Element has a layout consisting of any desired combination of Elements in any desired layouts.  You can have Tabs inside of Tabs inside of Columns inside of Windows, etc.
 
-You layout a Frame in exactly the same way as a Frame or Column elements, by passing in a list of elements.
+`Tab` layouts look exactly like Window layouts, that is they are **a list of lists of Elements**.
 
-How you place a Tab into a Window is different than Graph or Frame elements.  You cannot place a tab directly into a Window's layout.  It much first be placed into a TabGroup.  The  TabGroup can then be placed into the Window.
+*How you place a Tab element into a window is different than all other elements.*  You cannot place a Tab directly into a Window's layout.  
+
+Tabs are contained in TabGroups.  They are **not** placed into other layouts.  To get a Tab into your window, first place the `Tab` Element into a `TabGroup` Element and then place the `TabGroup` Element into the Window layout.
 
 Let's look at this Window as an example:
 
@@ -2589,11 +2075,6 @@ View of second tab:
 ![tabbed 2](https://user-images.githubusercontent.com/13696193/45992809-b10f6a80-c059-11e8-94e6-3bf543c9b0bd.jpg)
 
 
-First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
-
-<!-- <+Tab.doc+> -->
-
-<!-- <+TabGroup.doc+> -->
 
 ```python
 tab1_layout =  [[sg.T('This is inside tab 1')]]
@@ -2611,7 +2092,7 @@ layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layo
 
 The Window layout has the TabGroup and within the tab Group are the two Tab elements.
 
-One important thing to notice about all of these container Elements... they all take a "list of lists" at the layout.  They all have a layout that starts with `[[`
+One important thing to notice about all of these container Elements and Windows layouts... they all take a "list of lists" as the layout.  They all have a layout that looks like this `[[   ]]`
 
 You will want to keep this `[[ ]]` construct in your head a you're debugging your tabbed windows.  It's easy to overlook one or two necessary ['s
 
@@ -2625,30 +2106,24 @@ Check out Tabs 7 and 8.  We've got a Window with a Column containing Tabs 5 and 
 
 As of Release 3.8.0, not all of *options* shown in the API definitions of the Tab and TabGroup Elements are working. They are there as placeholders.
 
-<!-- <+TabGroup.__init__+> -->
 
-<!-- <+Tab.__init__+> -->
+First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
+
 
 ### Reading Tab Groups
 
 Tab Groups now return a value when a Read returns.  They return which tab is currently selected.  There is also a `enable_events` parameter that can be set that causes a Read to return if a Tab in that group is selected / changed.  The key or title belonging to the Tab that was switched to will be returned as the value
 
 
-### Methods
-
-<!-- <+Tab.Update+> -->
 
 
-<!-- %!% -->
-## Pane Element
+x## Pane Element
 
 New in version 3.20 is the Pane Element, a super-cool tkinter feature.  You won't find this one in PySimpleGUIQt, only PySimpleGUI.   It's difficult to describe one of these things.  Think of them as "Tabs without labels" that you can slide.
 
-<!-- <+Pane.doc+> -->
 
 ![pane3](https://user-images.githubusercontent.com/13696193/50035040-fcd50e80-ffcd-11e8-939c-df8ab8d64712.gif)
 
-<!-- <+Pane.__init__+> -->
 
 ***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
 
@@ -2885,78 +2360,17 @@ Update(menu=None, tooltip=None,filename=None, data=None, data_base64=None,)
 
 # Global Settings
 
-**Global Settings**
-Let's have some fun customizing!  Make PySimpleGUI look the way you want it to look. You can set the global settings using the function `PySimpleGUI.SetOptions`.  Each option has an optional parameter that's used to set it.
+There are multiple ways to customize PySimpleGUI.  The call with the most granularity (allows access to specific and precise settings).  The `ChangeLookAndFeel` call is in reality a single call to `SetOptions` where it changes 13 different settings.  
 
-    SetOptions(icon=None
-        button_color=(None,None)
-        element_size=(None,None),
-        margins=(None,None),
-        element_padding=(None,None)
-        auto_size_text=None
-        auto_size_buttons=None
-        font=None
-        border_width=None
-        slider_border_width=None
-        slider_relief=None
-        slider_orientation=None
-        autoclose_time=None
-        message_box_line_width=None
-        progress_meter_border_depth=None
-        progress_meter_style=None
-        progress_meter_relief=None
-        progress_meter_color=None
-        progress_meter_size=None
-        text_justification=None
-        text_color=None
-        background_color=None
-        element_background_color=None
-        text_element_background_color=None
-        input_elements_background_color=None
-        element_text_color=None
-        input_text_color=None
-        scrollbar_color=None, text_color=None
-        debug_win_size=(None,None)
-        window_location=(None,None)
-        tooltip_time = None
+**Mac Users** - You can't call `ChangeLookAndFeel` but you can call `SetOptions` with any sets of values you want.  Nothing is being blocked or filtered.
 
-Explanation of parameters
+**These settings apply to all windows that are created in the future.**
 
-|Name|Meaning|
-|----- | ---- |
-| element_padding      | tkinter padding around each element |
-| auto_size_text   | autosize the elements to fit their text |
-| auto_size_buttons    | autosize the buttons to fit their text |
-| border_width     | amount of bezel or border around sunken or raised elements |
-| slider_border_width      | changes the way sliders look |
-| slider_relief    | changes the way sliders look |
-| slider_orientation   | changes orientation of slider |
-| autoclose_time   | time in seconds for autoclose boxes |
-| message_box_line_width   | number of characers in a line of text in message boxes |
-| progress_meter_border_depth      | amount of border around raised or lowered progress meters |
-| progress_meter_style     | style of progress meter as defined by tkinter |
-| progress_meter_relief    | relief style |
-| progress_meter_color     | color of the bar and background of progress meters |
-| progress_meter_size      | size in (characters, pixels) |
-| background_color     | Color of the main window's background |
-| element_background_color     | Background color of the elements |
-| text_element_background_color    | Text element background color |
-| input_elements_background_color      | Input fields background color |
-| element_text_color   | Text color of elements that have text, like Radio Buttons |
-| input_text_color     | Color of the text that you type in |
-| scrollbar_color      | Color for scrollbars (may not always work) |
-| text_color   | Text element default text color |
-| text_justification   | justification to use on Text Elements. Values are strings - 'left', 'right', 'center' |
-| debug_win_size   | size of the Print output window |
-| window_location      | location on the screen (x,y) of window's top left cornder |
-| | |
-
-
-These settings apply to all windows `SetOptions`.  The Row options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the window-level being the highest and the Element-level the lowest.  Thus the levels are:
-
- - window level
- - Row level
- - Element level
+ `SetOptions`.  The  options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the window-level being the highest and the Element-level the lowest.  Thus the levels are:
+ 
+ - Global
+ - Window
+ - Element
 
 Each lower level overrides the settings of the higher level.  Once settings have been changed, they remain changed for the duration of the program (unless changed again).
 
@@ -2995,7 +2409,7 @@ window.Close()
 
 ## Read(timeout = t, timeout_key=TIMEOUT_KEY)
 
-Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, if you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
+Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
 
 One way of thinking of reads with timeouts:
 > During the timeout time, you are "yielding" the processor to do other tasks.
@@ -3027,17 +2441,16 @@ while True:             # Event Loop
 This event loop will run every 100 ms.  You're making a Read call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
 
 
-## Non-Blocking Windows   (Asynchronous reads)
+## Non-Blocking Windows   (Asynchronous reads, timeouts)
 
-There are TWO ways to perform a non-blocking read.
+You can easily spot a non-blocking call in PySimpleGUI.  If you see a call to `Window.Read()` with a timeout parameter set to a value other than `None`, then it is a non-blocking call.
 
-The "old way" was:
-```python
-event, values = sg.ReadNonBlocking()
+This call to read is asynchronous as it has a timeout value:
+
 ```
 The new way
 ```python
-event, values = sg.Read(timeout=0)
+event, values = sg.Read(timeout=20)
 ```
 You should use the new way if you're reading this for the first time.
 
@@ -3047,7 +2460,7 @@ The difference in the 2 calls is in the value of event.  For ReadNonBlocking, ev
 ## sg.TIMEOUT_KEY
 
 If you're using the new, timeout=0 method, then an event value of None signifies that the window was closed, just like a normal Read.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `timeout_key`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
-TIMEOUT_KEY = '__timeout__'
+`TIMEOUT_KEY = __timeout__`
 
 If you wanted to test for "no event" in your loop, it would be written like this:
 ```python
@@ -3060,9 +2473,15 @@ while True:
 ```
 
 
-Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a sleep in your loop, you will eat up 100% of the CPU time.      It's important to be a good citizen.   Don't chew up CPU cycles needlessly.
+Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and yuou've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
-Non-blocking is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+Non-blocking (timeout=0) is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+
+### Small Timeout Values (under 10ms)
+
+***Do Not*** use a timeout of less than 10ms.  Otherwise you will simply thrash, spending your time trying to do some GUI stuff, only to be interruped by a timeout timer before it can get anything done.  The results are potentially disasterous.
+
+
 
 There is a hybrid approach... a read with a timeout.   You'll score much higher points on the impressive meter if you're able to use a lot less CPU time by using this type of read.
 
@@ -3325,7 +2744,6 @@ You want to turn off the default focus so that there no buttons that will be sel
 
 Beginning in version 3.01 you can add a MenuBar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as in the values dictionary.  The value returned will be the entire menu entry, including the key if you specified one.
 
-<!-- <+Menu.doc+> -->
 
 ```python
     menu_def = [['File', ['Open', 'Save', 'Exit',]],
@@ -3338,7 +2756,6 @@ Beginning in version 3.01 you can add a MenuBar to your window.  You specify the
 Note the placement of ',' and of [].  It's tricky to get the nested menus correct that implement cascading menus.  See how paste has Special and Normal as a list after it.  This means that Paste has a cascading menu with items Special and Normal.
 
 ## Methods
-<!-- <+Menu.Update+> -->
 
 ---
 
@@ -3507,3 +2924,1144 @@ while True:
 ```
 
 
+---
+
+
+# The PySimpleGUI Debugger
+
+Listen up if you are
+* advanced programmers debugging some really hairy stuff
+* programmers from another era that like to debug this way
+* those that want to have "x-ray vision" into their code
+* asked to use debugger to gather information
+* running on a platform that lacks ANY debugger
+* debugging a problem that happens only outside of a debugger environment
+* finding yourself saying "but it works when running PyCharm"
+
+Starting on June 1, 2019, a built-in version of the debugger `imwatchingyou` has been shipping in every copy of PySimpleGUI.  It's been largely downplayed to gauge whether or not the added code and the added feature and the use of a couple of keys, would mess up any users.  Over 30,000 users have installed PySimpleGUI since then and there's not be a single Issue filed nor comment/complaint made, so seems safe enough to normal users... so far....
+
+So far no one has reported anything at all about the debugger.  The assumption is that it is quietly lying dormant, waiting for you to press the `BREAK` or `CONTROL` + `BREAK` keys.  It's odd no one has accidently done this and freaked out, logging an Issue.
+
+The plain PySimpleGUI module has a debugger builtin.  For the other ports, please use the package `imwatchingyou`.
+
+
+## What is it?  Why use it?  What the heck?  I already have an IDE.
+
+This debugger provides you with something unique to most typical Python developers, the ability to "see" and interact with your code, **while it is running**.  You can change variable values while your code continues to run.
+
+Print statements are cool, but perhaps you're tired of seeing this:
+```
+Push Me {0: 'Input here'}
+Push Me {0: 'Input here'}
+Push Me {0: 'Input here'}
+```
+
+And would prefer to see this window updating continuously in the upper right corner of your display:
+
+![image](https://user-images.githubusercontent.com/13696193/62793751-54197900-baa0-11e9-9a98-f780259062b1.png)
+
+Notice how easy it is, using this window alone, to get the location that your PySimpleGUI package is coming from ***for sure***, no guessing.  Expect this window to be in your debugging future as it'll get asked for from time to time.
+
+
+## Preparing To Run the Debugger
+
+If your program is running with blocking `Read` calls, then you will want to add a timeout to your reads.  This is because the debugger gets it's cycles by stealing a little bit of time from these async calls... but only when you have one of these debugger windows open so no bitching about wasted CPU time as there is none.
+
+Your event loop will be modified from this blocking:
+```python
+while True:
+    event, values = window.Read()
+```
+
+To this non-blocking:
+```python
+while True:
+    event, values = window.Read(timeout=200)
+    if event == sg.TIMEOUT_KEY:
+        continue
+```
+
+These 3 lines will in no way change how your application looks and performs.  You can do this to any PySimpleGUI app that uses a blocking read and you'll not notice a difference.  The reason this is a NOP (No-operation) is that when a timeout happens, the envent will be set to `sg.TIMEOUT_KEY`.  If a timeout is returned as the event, the code simply ignores it and restarts the loop by executing a `continue` statement.
+
+This timeout value of 200 means that your debugger GUI will be updated 5 times a second if nothing is happening.  If this adds too much "drag" to your application, you can make the timeout larger.  Try using 500 or 1000 instead of 100.
+
+### What happens if you don't add a timeout
+
+Let's say you're in a situation where a very intermettent bug has just happened and the debugger would really help you, but you don't have a timeout on your `windows.Read()` call.  It's OK.  Recall that the way the debugger gets its "cycles" is to borrow from your `Read` calls.  What you need to do is alternate between using the debugger and then generating another pass through your event loop.
+
+Maybe it's an OK button that will cause your loop to execute again (without exiting).  If so, you can use it to help move the debugger along.  
+
+Yes, this is a major pain in the ass, but it's not THAT bad and compared to nothing in a time of crisis and this is potentially your "savior tool" that's going to save your ass, pressing that OK button a few times is going to look like nothing to you.  You just want to dump out the value of a variable that holds an instance of your class!
+
+## A Sample Program For Us To Use
+
+Now that you understand how to add the debugger to your program, let's make a simple little program that you can use to follow these examples:
+
+```python
+import PySimpleGUI as sg
+
+window = sg.Window('Testing the Debugger', [[sg.Text('Debugger Tester'), sg.In('Input here'), sg.B('Push Me')]])
+
+while True:
+    event, values = window.Read(timeout=500)
+    if event == sg.TIMEOUT_KEY:
+        continue
+    if event is None:
+        break
+    print(event, values)
+window.Close()
+```
+
+## Debugger Windows
+
+
+### "Popout Debugger Window"
+
+There are 2 debugger windows. One is called the "Popout" debugger window.  The Popout window displays as many currently in-scope local variables as possible.  This window is not interactive.  It is meant to be a frequently updated "dashboard" or "snapshot" of your variables.
+
+One "variable" shown in the popout window that is an often asked for piece of information when debugging Issues and that variable is `sg` (or whatever you named the PySimpleGUI pacakge when you did your import). The assumption is that your import is `import PySimpleGUI as sg`.  If your import is different, then you'll see a different variable.  The point is that it's shown here.
+
+Exiting this window is done via the little red X, **or using the rickt-click menu** which is also used as one way to launch the Main Debugger Window
+
+#### When you are asked for the "Location of your PySimpleGUI package or PySimpleGUI.py file" do this
+
+If you wish to use the debugger to find the location of THIS running program's PySimpleGUI package / the PySimpleGUI.py file, then all you need to do is:
+* Press the `BREAK` key on your keyboard. 
+    * This is sometimes labelled as the `Cancel` key
+    * May also have `Pause` printed on key
+    * On some US keyboards, it is located next to `Scroll Lock` and/or above `PageUp` key
+* This will open a window located in the upper right corner of your screen that looks something like this:
+![image](https://user-images.githubusercontent.com/13696193/62793751-54197900-baa0-11e9-9a98-f780259062b1.png)
+* The information you are seeking is shown next to the `sg` in the window
+You don't need to modify your program to get this info using this technique.
+
+If your variable's value is too long and doesn't fit, then you'lll need to collect this information using the "Main Debugger Window"
+
+#### What's NOT Listed In The Popout Debugger Window
+
+The Popup window is a "Snapshot" of your local variables at the time the window was opened. This means **any variables that did not exist at the time the Popout was created will not be shown**.   This window does **NOT** expand in size by adding new variables.  Maybe in the future.
+
+
+### The "Main Debugger Window"
+
+Now we're talking serious Python debugging!
+
+Ever wish you had a `repl>>>` prompt that you could run while your program is running.  Well, that's pretty much what you're getting with the PySimpleGUI debugger Main Window!  Cool, huh?  If you're not impressed, go get a cup of coffee and walk off that distraction in your head before carring on because we're in to some seriously cool shit here....
+
+You'll find that this window has 2 tabs, one is labelled `Variables` and the other is labelled `REPL & Watches`
+
+
+#### The "Variables" Tab of Main Debugger Window
+
+![SNAG-0440](https://user-images.githubusercontent.com/13696193/62797391-a01ceb80-baa9-11e9-845d-3cd02ca0dbcc.jpg)
+
+Notice the the "frame" surrounding this window is labelled "Auto Watches" in blue.  Like the Popup window, this debugger window also "Watches" variables, which means continuously updates them as often as you call `Window.Read`.
+
+The maximum number of "watches" you can have any any one time is 9.
+
+##### Choosing variables to watch
+
+You can simply click "Show All Variable" button and the list of watched variables will be automatically populard by the first 9 variables it finds.  Or you can click the "Choose Variables to Auto Watch" button where you can individually choose what variables, **and expressions** you wish to display.
+
+![SNAG-0442](https://user-images.githubusercontent.com/13696193/62797520-e96d3b00-baa9-11e9-8ba0-794e479b6fc5.jpg)
+
+
+In this window we're checking checkboxes to display these variables:
+
+`event`, `sg`, `values`, `window`, `__file__`
+
+![SNAG-0443](https://user-images.githubusercontent.com/13696193/62797518-e8d4a480-baa9-11e9-8575-5256dcf6b5ab.jpg)
+
+Additionally, you can see at the bottom of the window a "Custom Watch" has been defined.  This can be any experession you want.  Let's say you have a window with a LOT of values.  Rather than looking through the `values` variable and finding the entry with the key you are looking for, the values variable's entry for a specific key is displayed.
+
+In this example the Custom Watch entered was `values[0]`.  After clicking on the "OK" button, indicating the variables are chosen that we wish to watch, this is the Main window that is shown:
+
+![SNAG-0444](https://user-images.githubusercontent.com/13696193/62797514-e8d4a480-baa9-11e9-9a86-cfe99342dedb.jpg)
+
+We can see the variables we checked as well as the defined expression `values[0]`.  If you leave this window open, these values with continuously be updated, on the fly, every time we call the line in our example code `window.Read(timeout=500)`.  This means that the Main Debugger Window and these variables we defined will be updated every 500 milliseconds.
+
+
+
+#### The REPL & Watches Tab
+
+![SNAG-0441](https://user-images.githubusercontent.com/13696193/62797507-e7a37780-baa9-11e9-93c4-6ff0c8acb11d.jpg)
+
+
+This tab is provided to you as a way to interact with your running program on a real-time basis.  
+
+If you want to quickly look at the values of variables, nearly ANY variables, then type the information into one of the 3 spaces provided to "Watch" either variables or experessions.  In this example, the variable window was typed into the first slow.  
+
+***Immediately*** after typing the character 'w', the information to the right was displayed.  No button needs to be clicked.  You merely neeed to type in a valid experession and it will be displayed to you.... and it will be displayed on an on-going, constantly-refreshing-basis.
+
+![SNAG-0447](https://user-images.githubusercontent.com/13696193/62797393-a0b58200-baa9-11e9-8016-1cadca4d97e7.jpg)
+
+
+If the area to the right of the input field is too small, then you can click on the "Detail" button and you will be shown a popup, scrolled window with all of the information displayed as if it were printed.  
+
+I'm sure you've had the lovely experience of printing an object.  When clicking the "Detail" button next to the `window` variable being shown, this window is shown:
+
+![SNAG-0449](https://user-images.githubusercontent.com/13696193/62801423-b0d25f00-bab3-11e9-829a-aebb429521cd.jpg)
+
+Oh, Python, -sigh-.  I just want to see my `window` object printed.  
+
+#### `Obj` Button to the Rescue!
+
+PySimpleGUI has a fun and very useful function that is discussed in the docs named `ObjToString` which takes an object and converts it's **contents** it into a nicely formatted string.  This function is used to create the text output when you click the `Obj` button.  The result is this instead of the tiny window shown previously:
+
+![SNAG-0446](https://user-images.githubusercontent.com/13696193/62797508-e7a37780-baa9-11e9-96bf-b2c066e72d78.jpg)
+
+
+## The REPL Prompt
+
+While not **really** a Python REPL prompt, this window's `REPL >>>` prompt is meant to act as much like one as possible.  Here you can enter experessions and code too.
+
+The uses for this prompt are so numerous and diverse that listing them all won't be attempted. 
+
+### Your "XRay" and "Endoscope" into Your Program
+
+Think of this prompt as a way to get specific diagnostics information about your ***running*** program.  It cannot be stressed enough that the power and the usefullness of this tool is in its ability to diagnose a running program, after you've already started it running. 
+
+### Execute Code 
+
+In addition to displaying information, getting paths to packages, finding version information, you can execute code from the PySimpleGUI Debugger's `REPL >>>` prompt.  You can type in any expression as well as any **executable statement**.
+
+For example, want to see what `PopupError` looks like while you're running your program.  From the REPL prompt, type:
+`sg.PopupError('This is an error popup')`
+
+The result is that you are shown a popup window with the text you supplied.
+
+### KNOW Answers to Questions About Your Program
+
+Using this runtime tool, you can be confident in the data you collect.  Right?  
+
+***There's no better way to find what version of a package that your program is using than to ask your program.***  This is so true.  Think about it.  Rather than go into PyCharm, look at your project's "Virtual Environment", follow some path to get to a window that lists packages installed for that project, get the verstion and your're done, right?  Well, maybe.  But are you CERTAIN your program is using THAT version of the package in question?
+
+SO MUCH time has been wasted in the past  when people KNEW, for sure, what version they were running. Or, they had NO CLUE what version, or no clue to find out.  There's nothing wrong with not knowing how to do something.  We ALL start there.  Geeez..
+
+A real world example.....
+
+## How To Use the Debugger to Find The Version Number of a Package
+
+Let's pull together everything we've learned to now and use the debugger to solve a problem that happens often and sometimes it's not at all obvious how to find the answer.
+
+We're using ***Matplotlib*** and want to find the "Version".
+
+For this example, the little 12-line program in the section "A Sample Program For Us To Use" is being used.
+
+That program does not import `matplotlib`.  We have a couple of choices, we can change the code, we can can import the package from the debugger.  Let's use the debgger.
+
+Pull up the Main Debugger Window by pressing `CONTROL+BREAK` keys.  Then click the "REPL * Watches" tab.  At the `>>>` prompt we'll first import the package by typing:
+`import matplotlib as m`
+
+The result returned from Python calls that don't return anything is the value None.  You will see the command you entered in the output area followed by "None", indicating success.
+
+finally, type:
+`m.__version__`
+
+The entire set of operations is shown in this window:
+
+![SNAG-0448](https://user-images.githubusercontent.com/13696193/62797392-a0b58200-baa9-11e9-97f4-9ef74cbb86f7.jpg)
+
+By convention you'll find many modules have a variable `__version__` that has the package's version number.  PySimpleGUI has one.  As you can see matplotlib has one.  The `requests` module has this variable.
+
+For maximum compatibility, PySimpleGUI not only uses `__version__`, but also has the version contained in another variable `version` which has the version number because in some situations the `__version__` is not available but the `version` variable is avaiable.
+
+**It is recommended that you use the variable `version` to get the PySimpleGUI version** as it's so far been the most successful method.
+
+tkinter, however does NOT.... of course.... follow this convention.  No, to get the tkinter version, you need to look at the variable:
+`TkVersion`
+
+Here's the output from the REPL in the debugger showing the tkinter version:
+
+```
+>>> import tkinter as t
+None
+>>> t.TkVersion
+8.6
+>>> t.__version__
+Exception module 'tkinter' has no attribute '__version__'
+```
+---
+
+------------------
+
+# ELEMENT AND FUNCTION CALL REFERENCE
+
+This reference section was previously intermixed with the text explanation, diagrams, code samples, etc.  That was OK early on, but now that there are more Elements and more methods are being added on a fequent basis, it means that keeping this list updated is a difficult chore if it has a lot of text all around it.
+
+Hoping this is a change for the better and that users will be able to find the information they seek quicker.
+
+NOTE that this documentatiuopn section is created using the ***GitHUB released PySimpleGUI.py file***.  Some of the calls may not be available to you or your port (Qt, Wx, Web).  And some of the parameters may be different.  We're working on adding docstrings to all the ports which will enable this kind of document to be available for each port.
+
+Without further delay... here are all of the Elements
+
+
+
+
+### Button Element
+
+<!-- <+Button.doc+> -->
+<!-- <+Button.__init__+> -->
+
+#### Click
+
+<!-- <+Button.Click+> -->
+
+#### GetText
+
+<!-- <+Button.GetText+> -->
+
+#### SetFocus
+
+<!-- <+Button.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Button.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Button.Update+> -->
+
+### ButtonMenu Element
+
+<!-- <+ButtonMenu.doc+> -->
+<!-- <+ButtonMenu.__init__+> -->
+
+#### SetFocus
+
+<!-- <+ButtonMenu.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+ButtonMenu.SetTooltip+> -->
+
+#### Update
+
+<!-- <+ButtonMenu.Update+> -->
+
+### Canvas Element
+
+<!-- <+Canvas.doc+> -->
+<!-- <+Canvas.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Canvas.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Canvas.SetTooltip+> -->
+
+#### TKCanvas
+
+<!-- <+Canvas.TKCanvas+> -->
+
+### Checkbox Element
+
+<!-- <+Checkbox.doc+> -->
+<!-- <+Checkbox.__init__+> -->
+
+#### Get
+
+<!-- <+Checkbox.Get+> -->
+
+#### SetFocus
+
+<!-- <+Checkbox.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Checkbox.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Checkbox.Update+> -->
+
+### Column Element
+
+<!-- <+Column.doc+> -->
+<!-- <+Column.__init__+> -->
+
+#### AddRow
+
+<!-- <+Column.AddRow+> -->
+
+#### Layout
+
+<!-- <+Column.Layout+> -->
+
+#### SetFocus
+
+<!-- <+Column.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Column.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Column.Update+> -->
+
+### Combo Element
+
+<!-- <+Combo.doc+> -->
+<!-- <+Combo.__init__+> -->
+
+#### Get
+
+<!-- <+Combo.Get+> -->
+
+#### SetFocus
+
+<!-- <+Combo.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Combo.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Combo.Update+> -->
+
+
+### Frame Element
+
+<!-- <+Frame.doc+> -->
+<!-- <+Frame.__init__+> -->
+
+#### AddRow
+
+<!-- <+Frame.AddRow+> -->
+
+#### Layout
+
+<!-- <+Frame.Layout+> -->
+
+#### SetFocus
+
+<!-- <+Frame.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Frame.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Frame.Update+> -->
+
+### Graph Element
+
+<!-- <+Graph.doc+> -->
+<!-- <+Graph.__init__+> -->
+
+#### BringFigureToFront
+
+<!-- <+Graph.BringFigureToFront+> -->
+
+#### ButtonPressCallBack
+
+<!-- <+Graph.ButtonPressCallBack+> -->
+
+#### ButtonReleaseCallBack
+
+<!-- <+Graph.ButtonReleaseCallBack+> -->
+
+#### DeleteFigure
+
+<!-- <+Graph.DeleteFigure+> -->
+
+#### DrawArc
+
+<!-- <+Graph.DrawArc+> -->
+
+#### DrawCircle
+
+<!-- <+Graph.DrawCircle+> -->
+
+#### DrawImage
+
+<!-- <+Graph.DrawImage+> -->
+
+#### DrawLine
+
+<!-- <+Graph.DrawLine+> -->
+
+#### DrawOval
+
+<!-- <+Graph.DrawOval+> -->
+
+#### DrawPoint
+
+<!-- <+Graph.DrawPoint+> -->
+
+#### DrawRectangle
+
+<!-- <+Graph.DrawRectangle+> -->
+
+#### DrawText
+
+<!-- <+Graph.DrawText+> -->
+
+#### Erase
+
+<!-- <+Graph.Erase+> -->
+
+#### MotionCallBack
+
+<!-- <+Graph.MotionCallBack+> -->
+
+#### Move
+
+<!-- <+Graph.Move+> -->
+
+#### MoveFigure
+
+<!-- <+Graph.MoveFigure+> -->
+
+#### RelocateFigure
+
+<!-- <+Graph.RelocateFigure+> -->
+
+#### SendFigureToBack
+
+<!-- <+Graph.SendFigureToBack+> -->
+
+#### SetFocus
+
+<!-- <+Graph.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Graph.SetTooltip+> -->
+
+#### TKCanvas
+
+<!-- <+Graph.TKCanvas+> -->
+
+#### Update
+
+<!-- <+Graph.Update+> -->
+
+### Image Element
+
+<!-- <+Image.doc+> -->
+<!-- <+Image.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Image.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Image.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Image.Update+> -->
+
+#### UpdateAnimation
+
+<!-- <+Image.UpdateAnimation+> -->
+
+### InputText Element
+
+<!-- <+InputText.doc+> -->
+<!-- <+InputText.__init__+> -->
+
+#### Get
+
+<!-- <+InputText.Get+> -->
+
+#### SetFocus
+
+<!-- <+InputText.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+InputText.SetTooltip+> -->
+
+#### Update
+
+<!-- <+InputText.Update+> -->
+
+### Listbox Element
+
+<!-- <+Listbox.doc+> -->
+<!-- <+Listbox.__init__+> -->
+
+#### GetListValues
+
+<!-- <+Listbox.GetListValues+> -->
+
+#### SetFocus
+
+<!-- <+Listbox.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Listbox.SetTooltip+> -->
+
+#### SetValue
+
+<!-- <+Listbox.SetValue+> -->
+
+#### Update
+
+<!-- <+Listbox.Update+> -->
+
+### Menu Element
+
+<!-- <+Menu.doc+> -->
+<!-- <+Menu.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Menu.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Menu.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Menu.Update+> -->
+
+### Multiline Element
+
+<!-- <+Multiline.doc+> -->
+<!-- <+Multiline.__init__+> -->
+
+#### Get
+
+<!-- <+Multiline.Get+> -->
+
+#### SetFocus
+
+<!-- <+Multiline.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Multiline.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Multiline.Update+> -->
+
+### OptionMenu Element
+
+<!-- <+OptionMenu.doc+> -->
+<!-- <+OptionMenu.__init__+> -->
+
+#### SetFocus
+
+<!-- <+OptionMenu.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+OptionMenu.SetTooltip+> -->
+
+#### Update
+
+<!-- <+OptionMenu.Update+> -->
+
+### Output Element
+
+<!-- <+Output.doc+> -->
+<!-- <+Output.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Output.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Output.SetTooltip+> -->
+
+#### TKOut
+
+<!-- <+Output.TKOut+> -->
+
+#### Update
+
+<!-- <+Output.Update+> -->
+
+### Pane Element
+
+<!-- <+Pane.doc+> -->
+<!-- <+Pane.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Pane.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Pane.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Pane.Update+> -->
+
+### ProgressBar Element
+
+<!-- <+ProgressBar.doc+> -->
+<!-- <+ProgressBar.__init__+> -->
+
+#### SetFocus
+
+<!-- <+ProgressBar.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+ProgressBar.SetTooltip+> -->
+
+#### Update
+
+<!-- <+ProgressBar.Update+> -->
+
+#### UpdateBar
+
+<!-- <+ProgressBar.UpdateBar+> -->
+
+### Radio Element
+
+<!-- <+Radio.doc+> -->
+<!-- <+Radio.__init__+> -->
+
+#### Get
+
+<!-- <+Radio.Get+> -->
+
+#### ResetGroup
+
+<!-- <+Radio.ResetGroup+> -->
+
+#### SetFocus
+
+<!-- <+Radio.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Radio.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Radio.Update+> -->
+
+### Slider Element
+
+<!-- <+Slider.doc+> -->
+<!-- <+Slider.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Slider.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Slider.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Slider.Update+> -->
+
+### Spin Element
+
+<!-- <+Spin.doc+> -->
+<!-- <+Spin.__init__+> -->
+
+#### Get
+
+<!-- <+Spin.Get+> -->
+
+#### SetFocus
+
+<!-- <+Spin.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Spin.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Spin.Update+> -->
+
+### StatusBar Element
+
+<!-- <+StatusBar.doc+> -->
+<!-- <+StatusBar.__init__+> -->
+
+#### SetFocus
+
+<!-- <+StatusBar.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+StatusBar.SetTooltip+> -->
+
+#### Update
+
+<!-- <+StatusBar.Update+> -->
+
+### Tab Element
+
+<!-- <+Tab.doc+> -->
+<!-- <+Tab.__init__+> -->
+
+#### AddRow
+
+<!-- <+Tab.AddRow+> -->
+
+#### Layout
+
+<!-- <+Tab.Layout+> -->
+
+#### Select
+
+<!-- <+Tab.Select+> -->
+
+#### SetFocus
+
+<!-- <+Tab.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Tab.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Tab.Update+> -->
+
+### TabGroup Element
+
+<!-- <+TabGroup.doc+> -->
+<!-- <+TabGroup.__init__+> -->
+
+#### AddRow
+
+<!-- <+TabGroup.AddRow+> -->
+
+#### FindKeyFromTabName
+
+<!-- <+TabGroup.FindKeyFromTabName+> -->
+
+#### Get
+
+<!-- <+TabGroup.Get+> -->
+
+#### Layout
+
+<!-- <+TabGroup.Layout+> -->
+
+#### SetFocus
+
+<!-- <+TabGroup.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+TabGroup.SetTooltip+> -->
+
+### Table Element
+
+<!-- <+Table.doc+> -->
+<!-- <+Table.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Table.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Table.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Table.Update+> -->
+
+### Text Element
+
+<!-- <+Text.doc+> -->
+<!-- <+Text.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Text.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Text.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Text.Update+> -->
+
+### Tree Element
+
+<!-- <+Tree.doc+> -->
+<!-- <+Tree.__init__+> -->
+
+#### SetFocus
+
+<!-- <+Tree.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+Tree.SetTooltip+> -->
+
+#### Update
+
+<!-- <+Tree.Update+> -->
+
+### TreeData Class For Tree Element
+
+<!-- <+TreeData.doc+> -->
+<!-- <+TreeData.__init__+> -->
+
+#### Insert
+
+<!-- <+TreeData.Insert+> -->
+
+#### Node
+
+<!-- <+TreeData.Node+> -->
+
+### VerticalSeparator Element
+
+<!-- <+VerticalSeparator.doc+> -->
+<!-- <+VerticalSeparator.__init__+> -->
+
+#### SetFocus
+
+<!-- <+VerticalSeparator.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+VerticalSeparator.SetTooltip+> -->
+
+### Window Element
+
+<!-- <+Window.doc+> -->
+<!-- <+Window.__init__+> -->
+
+#### AddRow
+
+<!-- <+Window.AddRow+> -->
+
+#### AddRows
+
+<!-- <+Window.AddRows+> -->
+
+#### AlphaChannel
+
+<!-- <+Window.AlphaChannel+> -->
+
+#### BringToFront
+
+<!-- <+Window.BringToFront+> -->
+
+#### Close
+
+<!-- <+Window.Close+> -->
+
+#### CurrentLocation
+
+<!-- <+Window.CurrentLocation+> -->
+
+#### DecrementOpenCount
+
+<!-- <+Window.DecrementOpenCount+> -->
+
+#### Disable
+
+<!-- <+Window.Disable+> -->
+
+#### DisableDebugger
+
+<!-- <+Window.DisableDebugger+> -->
+
+#### Disappear
+
+<!-- <+Window.Disappear+> -->
+
+#### Elem
+
+<!-- <+Window.Elem+> -->
+
+#### Element
+
+<!-- <+Window.Element+> -->
+
+#### Enable
+
+<!-- <+Window.Enable+> -->
+
+#### EnableDebugger
+
+<!-- <+Window.EnableDebugger+> -->
+
+#### Fill
+
+<!-- <+Window.Fill+> -->
+
+#### Finalize
+
+<!-- <+Window.Finalize+> -->
+
+#### Find
+
+<!-- <+Window.Find+> -->
+
+#### FindElement
+
+<!-- <+Window.FindElement+> -->
+
+#### FindElementWithFocus
+
+<!-- <+Window.FindElementWithFocus+> -->
+
+#### GetScreenDimensions
+
+<!-- <+Window.GetScreenDimensions+> -->
+
+#### GrabAnyWhereOff
+
+<!-- <+Window.GrabAnyWhereOff+> -->
+
+#### GrabAnyWhereOn
+
+<!-- <+Window.GrabAnyWhereOn+> -->
+
+#### Hide
+
+<!-- <+Window.Hide+> -->
+
+#### IncrementOpenCount
+
+<!-- <+Window.IncrementOpenCount+> -->
+
+#### Layout
+
+<!-- <+Window.Layout+> -->
+
+#### LayoutAndRead
+
+<!-- <+Window.LayoutAndRead+> -->
+
+#### LayoutAndShow
+
+<!-- <+Window.LayoutAndShow+> -->
+
+#### LoadFromDisk
+
+<!-- <+Window.LoadFromDisk+> -->
+
+#### Maximize
+
+<!-- <+Window.Maximize+> -->
+
+#### Minimize
+
+<!-- <+Window.Minimize+> -->
+
+#### Move
+
+<!-- <+Window.Move+> -->
+
+#### Normal
+
+<!-- <+Window.Normal+> -->
+
+#### Read
+
+<!-- <+Window.Read+> -->
+
+#### Reappear
+
+<!-- <+Window.Reappear+> -->
+
+#### Refresh
+
+<!-- <+Window.Refresh+> -->
+
+#### SaveToDisk
+
+<!-- <+Window.SaveToDisk+> -->
+
+#### SetAlpha
+
+<!-- <+Window.SetAlpha+> -->
+
+#### SetIcon
+
+<!-- <+Window.SetIcon+> -->
+
+#### SetTransparentColor
+
+<!-- <+Window.SetTransparentColor+> -->
+
+#### Size
+
+<!-- <+Window.Size+> -->
+
+#### UnHide
+
+<!-- <+Window.UnHide+> -->
+
+#### VisibilityChanged
+
+<!-- <+Window.VisibilityChanged+> -->
+
+
+
+<!-- <+func.CButton+> -->
+<!-- <+func.CalendarButton+> -->
+<!-- <+func.Cancel+> -->
+<!-- <+func.ChangeLookAndFeel+> -->
+<!-- <+func.CloseButton+> -->
+<!-- <+func.ColorChooserButton+> -->
+<!-- <+func.Debug+> -->
+<!-- <+func.DummyButton+> -->
+<!-- <+func.EasyPrint+> -->
+<!-- <+func.EasyPrintClose+> -->
+<!-- <+func.Exit+> -->
+<!-- <+func.FileBrowse+> -->
+<!-- <+func.FileSaveAs+> -->
+<!-- <+func.FilesBrowse+> -->
+<!-- <+func.FillFormWithValues+> -->
+<!-- <+func.FolderBrowse+> -->
+<!-- <+func.Help+> -->
+<!-- <+func.ListOfLookAndFeelValues+> -->
+<!-- <+func.No+> -->
+<!-- <+func.OK+> -->
+<!-- <+func.ObjToString+> -->
+<!-- <+func.ObjToStringSingleObj+> -->
+<!-- <+func.Ok+> -->
+<!-- <+func.OneLineProgressMeter+> -->
+<!-- <+func.OneLineProgressMeterCancel+> -->
+<!-- <+func.Open+> -->
+<!-- <+func.PopupQuick+> -->
+<!-- <+func.PopupQuickMessage+> -->
+<!-- <+func.PopupScrolled+> -->
+<!-- <+func.PopupTimed+> -->
+<!-- <+func.PopupYesNo+> -->
+<!-- <+func.Print+> -->
+<!-- <+func.PrintClose+> -->
+<!-- <+func.Quit+> -->
+<!-- <+func.RButton+> -->
+<!-- <+func.ReadButton+> -->
+<!-- <+func.RealtimeButton+> -->
+<!-- <+func.Save+> -->
+<!-- <+func.SaveAs+> -->
+<!-- <+func.ScrolledTextBox+> -->
+<!-- <+func.SetGlobalIcon+> -->
+<!-- <+func.SetOptions+> -->
+<!-- <+func.Submit+> -->
+<!-- <+func.TimerStart+> -->
+<!-- <+func.TimerStop+> -->
+<!-- <+func.Yes+> -->
+<!-- <+func.eprint+> -->
+<!-- <+func.main+> -->
+<!-- <+func.show_debugger_popout_window+> -->
+<!-- <+func.show_debugger_window+> -->
+<!-- <+func.sprint+> -->
