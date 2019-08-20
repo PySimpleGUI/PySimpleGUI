@@ -5943,12 +5943,6 @@ class Window:
     #         for element in row:
     #             element.__del__()
 # -------------------------------- PEP8-ify the Window Class USER Interfaces -------------------------------- #
-    read = Read
-    layout = Layout
-    finalize = Finalize
-    find_element = FindElement
-    element =FindElement
-    close = Close
 
 
 FlexForm = Window
@@ -11064,9 +11058,6 @@ def main():
 
 # ------------------------ PEP8-ify The SDK ------------------------#
 
-Button.button_call_back = Button.ButtonCallBack
-Button.button_press_call_back = Button.ButtonPressCallBack
-Button.button_release_call_back = Button.ButtonReleaseCallBack
 Button.click = Button.Click
 Button.get_text = Button.GetText
 Button.set_focus = Button.SetFocus
@@ -11177,10 +11168,6 @@ ProgressBar.set_tooltip = ProgressBar.SetTooltip
 ProgressBar.update = ProgressBar.Update
 ProgressBar.update_bar = ProgressBar.UpdateBar
 
-QuickMeter.build_window = QuickMeter.BuildWindow
-QuickMeter.compute_progress_stats = QuickMeter.ComputeProgressStats
-QuickMeter.update_meter = QuickMeter.UpdateMeter
-
 Radio.get = Radio.Get
 Radio.reset_group = Radio.ResetGroup
 Radio.set_focus = Radio.SetFocus
@@ -11237,10 +11224,7 @@ Window.add_rows = Window.AddRows
 Window.alpha_channel = Window.AlphaChannel
 Window.bring_to_front = Window.BringToFront
 Window.close = Window.Close
-Window.close_non_blocking = Window.CloseNonBlocking
-Window.close_non_blocking_form = Window.CloseNonBlockingForm
 Window.current_location = Window.CurrentLocation
-Window.decrement_open_count = Window.DecrementOpenCount
 Window.disable = Window.Disable
 Window.disable_debugger = Window.DisableDebugger
 Window.disappear = Window.Disappear
@@ -11253,21 +11237,16 @@ Window.finalize = Window.Finalize
 Window.find = Window.Find
 Window.find_element = Window.FindElement
 Window.find_element_with_focus = Window.FindElementWithFocus
-Window.get_a_container_number = Window.GetAContainerNumber
 Window.get_screen_dimensions = Window.GetScreenDimensions
 Window.grab_any_where_off = Window.GrabAnyWhereOff
 Window.grab_any_where_on = Window.GrabAnyWhereOn
 Window.hide = Window.Hide
-Window.increment_open_count = Window.IncrementOpenCount
 Window.layout = Window.Layout
-Window.layout_and_read = Window.LayoutAndRead
-Window.layout_and_show = Window.LayoutAndShow
 Window.load_from_disk = Window.LoadFromDisk
 Window.maximize = Window.Maximize
 Window.minimize = Window.Minimize
 Window.move = Window.Move
 Window.normal = Window.Normal
-Window.num_open_windows = Window.NumOpenWindows
 Window.read = Window.Read
 Window.reappear = Window.Reappear
 Window.refresh = Window.Refresh
@@ -11322,7 +11301,6 @@ sgprint = Print
 sgprint_close = PrintClose
 quit = Quit
 rgb = RGB
-scrolled_text_box = ScrolledTextBox
 set_global_icon = SetGlobalIcon
 set_options = SetOptions
 
