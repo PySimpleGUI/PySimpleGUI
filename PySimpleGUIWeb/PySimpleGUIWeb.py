@@ -501,6 +501,23 @@ class Element():
         elif visible is True:
             del(widget.attributes['hidden'])
 
+
+    def __call__(self, *args, **kwargs):
+        """
+        Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
+        the Update method for the element.
+        Example:    If this text element was in yoiur layout:
+                    sg.Text('foo', key='T')
+                    Then you can call the Update method for that element by writing:
+                    window.FindElement('T')('new text value')
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.Update(*args, **kwargs)
+
+
     def __del__(self):
         pass
 
@@ -2883,7 +2900,7 @@ class Window:
                  auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, return_key_down_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
-                 disable_minimize=False, background_image=None,
+                 disable_minimize=False, background_image=None, finalize=False,
                  web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False ):
         '''
 
@@ -2992,6 +3009,8 @@ class Window:
 
         if layout is not None:
             self.Layout(layout)
+            if finalize:
+                self.Finalize()
 
     @classmethod
     def IncrementOpenCount(self):

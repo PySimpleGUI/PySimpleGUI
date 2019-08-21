@@ -541,6 +541,8 @@ class Element():
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False
+        self.ParentRowFrame = None          # type tk.Frame
+
 
     def _RightClickMenuCallback(self, event):
         """
@@ -7245,6 +7247,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         tk_row_frame = tk.Frame(containing_frame)
         row_should_expand = False
         for col_num, element in enumerate(flex_row):
+            element.ParentRowFrame = tk_row_frame
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = toplevel_form.Font
@@ -7322,7 +7325,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
-
                 # element.TKColFrame = element.TKColFrame
                 # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                 #     element.TKColFrame.configure(background=element.BackgroundColor,
