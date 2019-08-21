@@ -5934,6 +5934,17 @@ class Window:
         self.TKroot.unbind("<Pause>")
         self.DebuggerEnabled = False
 
+
+    def visibility_changed(self):
+        """
+        This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
+        call and then have that same source run on plain PySimpleGUI.
+        :return:
+        """
+        return
+
+
+
     # def __enter__(self):
     #     """
     #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
@@ -5952,7 +5963,7 @@ class Window:
         :return: Union[Element, None] The element found or None if no element was found
         """
         try:
-            return self.Element(key)
+            return self.FindElement(key)
         except Exception as e:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
             return None
@@ -10810,7 +10821,8 @@ class _Debugger():
         layout = []
         line = []
         col = 0
-        self.popout_choices = self.local_choices
+        # self.popout_choices = self.local_choices
+        self.popout_choices = {}
         if self.popout_choices == {}:           # if nothing chosen, then choose all non-_ variables
             for key in sorted(self.locals.keys()):
                 self.popout_choices[key] = not key.startswith('_')
