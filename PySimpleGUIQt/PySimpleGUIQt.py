@@ -2700,7 +2700,18 @@ class Table(Element):
         super().Update(self.QT_TableWidget, visible=visible)
 
 
+    def Get(self):
+        num_rows = self.QT_TableWidget.rowCount()
+        num_cols = self.QT_TableWidget.columnCount()
+        table = []
+        for row in range(num_rows):
+            row_list = []
+            for col in range(num_cols):
+                item = self.QT_TableWidget.item(row, col).text()
+                row_list.append(item)
+            table.append(row_list)
 
+        return table
 
     def treeview_selected(self, event):
         if self.ChangeSubmits:
