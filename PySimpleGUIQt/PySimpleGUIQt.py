@@ -484,6 +484,20 @@ class Element():
         set_widget_visiblity(widget, visible)
 
 
+    def __call__(self, *args, **kwargs):
+        """
+        Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
+        the Update method for the element.
+        Example:    If this text element was in yoiur layout:
+                    sg.Text('foo', key='T')
+                    Then you can call the Update method for that element by writing:
+                    window.FindElement('T')('new text value')
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.Update(*args, **kwargs)
 
     def __del__(self):
         try:
@@ -3159,7 +3173,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False):
         '''
 
         :param title:
@@ -3250,6 +3264,8 @@ class Window:
 
         if layout is not None:
             self.Layout(layout)
+            if finalize:
+                self.Finalize()
 
     @classmethod
     def IncrementOpenCount(self):
@@ -3835,6 +3851,36 @@ class Window:
             for element in row:
                 element.__del__()
 
+    add_row = AddRow
+    add_rows = AddRows
+    alpha_channel = AlphaChannel
+    bring_to_front = BringToFront
+    close = Close
+    current_location = CurrentLocation
+    disable = Disable
+    disappear = Disappear
+    element = Element
+    enable = Enable
+    fill = Fill
+    finalize = Finalize
+    find_element = FindElement
+    find_element_with_focus = FindElementWithFocus
+    get_screen_dimensions = GetScreenDimensions
+    hide = Hide
+    layout = Layout
+    load_from_disk = LoadFromDisk
+    maximize = Maximize
+    minimize = Minimize
+    move = Move
+    read = Read
+    reappear = Reappear
+    refresh = Refresh
+    save_to_disk = SaveToDisk
+    set_alpha = SetAlpha
+    set_icon = SetIcon
+    size = Size
+    un_hide = UnHide
+    visibility_changed = VisibilityChanged
 
 FlexForm = Window
 
@@ -5071,6 +5117,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TextEdit)
             # ------------------------- OUTPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
+                element = element           # type: MultilineOutput
                 default_text = element.DefaultText
                 width, height = element_size
                 element.Widget = element.QT_TextBrowser = QTextBrowser()
@@ -5102,6 +5149,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_TextBrowser)
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
+                element = element           # type: Checkbox
                 element.QT_Checkbox = QCheckBox(element.Text)
                 element.QT_Checkbox.setChecked(element.InitialState)
                 if element.Disabled:
