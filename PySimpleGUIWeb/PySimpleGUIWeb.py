@@ -2883,7 +2883,7 @@ class Window:
                  auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, return_key_down_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
-                 disable_minimize=False, background_image=None,
+                 disable_minimize=False, background_image=None, finalize=False,
                  web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False ):
         '''
 
@@ -2992,6 +2992,8 @@ class Window:
 
         if layout is not None:
             self.Layout(layout)
+            if finalize:
+                self.Finalize()
 
     @classmethod
     def IncrementOpenCount(self):
