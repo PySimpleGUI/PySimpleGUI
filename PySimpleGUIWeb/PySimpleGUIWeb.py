@@ -501,6 +501,23 @@ class Element():
         elif visible is True:
             del(widget.attributes['hidden'])
 
+
+    def __call__(self, *args, **kwargs):
+        """
+        Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
+        the Update method for the element.
+        Example:    If this text element was in yoiur layout:
+                    sg.Text('foo', key='T')
+                    Then you can call the Update method for that element by writing:
+                    window.FindElement('T')('new text value')
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.Update(*args, **kwargs)
+
+
     def __del__(self):
         pass
 
