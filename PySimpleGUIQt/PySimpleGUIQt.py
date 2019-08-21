@@ -2703,7 +2703,7 @@ class Table(Element):
     def Get(self):
         num_rows = self.QT_TableWidget.rowCount()
         num_cols = self.QT_TableWidget.columnCount()
-        table = [[]]
+        table = []
         for row in range(num_rows):
             row_list = []
             for col in range(num_cols):
