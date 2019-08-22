@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.3.0.2 Unreleased PEP8 SDK Version"
+version = __version__ = "4.2.10 UNreleased PEP8 SDK & Layout Control Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -542,7 +542,6 @@ class Element():
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False
         self.ParentRowFrame = None          # type tk.Frame
-        # self.CenterEverything = False       # used for container frames
 
     def _RightClickMenuCallback(self, event):
         """
@@ -3501,7 +3500,6 @@ class TabGroup(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
-        self.CenterEverything = False
         self.ElementJustification = 'left'
 
         self.Layout(layout)
@@ -3853,7 +3851,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, element_justification='left'):
+                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, justification='left', element_justification='left'):
         """
         :param layout: List[List[Element]] Layout that will be shown in the Column container
         :param background_color: (str) color of background of entire Column
@@ -3884,7 +3882,7 @@ class Column(Element):
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ContainerElemementNumber = Window.GetAContainerNumber()
         self.ElementJustification = element_justification
-
+        self.Justification = justification
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible)
@@ -6018,7 +6016,7 @@ class Window:
         self.DebuggerEnabled = False
 
 
-    def visibility_changed(self):
+    def VisibilityChanged(self):
         """
         This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
         call and then have that same source run on plain PySimpleGUI.
@@ -7330,6 +7328,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(containing_frame)
         row_should_expand = False
+        row_justify = ''
         for col_num, element in enumerate(flex_row):
             element.ParentRowFrame = tk_row_frame
             element.ParentForm = toplevel_form  # save the button's parent form object
@@ -7362,7 +7361,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 element = element           # type: Column
-                print(ObjToStringSingleObj(element))
                 if element.Scrollable:
                     element.TKColFrame = element.Widget = TkScrollableFrame(tk_row_frame,
                                                                             element.VerticalScrollOnly)  # do not use yet!  not working
@@ -7406,8 +7404,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                   highlightthickness=0)
-
-                element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                if element.Justification.lower().startswith('c'):
+                    anchor=tk.N
+                    side=tk.TOP
+                elif element.Justification.lower().startswith('r'):
+                    anchor=tk.NE
+                    side = tk.RIGHT
+                else:
+                    anchor=tk.NW
+                    side = tk.LEFT
+                print(f'Column side, anchor = {side}, {anchor} element ={element.Key}')
+                row_justify = element.Justification
+                element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
                 # element.TKColFrame = element.TKColFrame
@@ -8579,16 +8588,21 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
 
-        # if form.CenterEverything:
-        #     anchor = 'n'
-        # else:
-        #     anchor = 'nw'
-        if form.ElementJustification.lower().startswith('c'):
+        if row_justify.lower().startswith('c'):
             anchor='n'
-        elif form.ElementJustification.lower().startswith('r'):
+        elif row_justify.lower().startswith('r'):
+            print('Right justify this row')
             anchor='ne'
-        else:
+        elif row_justify.lower().startswith('l'):
             anchor='nw'
+        elif form.ElementJustification.lower().startswith('c'):
+            anchor = 'n'
+        elif form.ElementJustification.lower().startswith('r'):
+            anchor = 'ne'
+        else:
+            anchor = 'nw'
+
+
         tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
                           expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -11186,7 +11200,7 @@ def main():
         [Frame('Multiple Choice Group', frame2, title_color='green'),
          Frame('Binary Choice Group', frame3, title_color='purple', tooltip='Binary Choice'),
          Frame('Variable Choice Group', frame4, title_color='blue')],
-        [Frame('Structured Data Group', frame5, title_color='red'), ],
+        [Column([[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], justification='r'), ],
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]],key='_TAB_GROUP_' )],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal'),
@@ -11203,7 +11217,7 @@ def main():
                     resizable=True,
                     debugger_enabled=False,
                     keep_on_top=True,
-
+                    element_justification='c',
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
