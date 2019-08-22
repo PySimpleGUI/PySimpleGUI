@@ -12,7 +12,7 @@ from builtins import str
 from builtins import object
 from future import standard_library
 standard_library.install_aliases()
-version = __version__ = "2.3.0.0 Unreleased"
+version = __version__ = "2.2.1 Released - Patched"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
