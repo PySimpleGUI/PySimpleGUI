@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.11 UNreleased PEP8 SDK & Layout Control Version"
+version = __version__ = "4.3.0 Released PEP8 SDK & Layout Control Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3206,7 +3206,7 @@ class Frame(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
-        :param element_justification: (str) 'left', 'right', 'center' are valid values
+        :param element_justification: (str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.UseDictionary = False
@@ -3345,7 +3345,7 @@ class Tab(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
-        :param element_justification: (str) 'left', 'right', 'center' are valid values
+        :param element_justification: (str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.UseDictionary = False
@@ -3863,7 +3863,8 @@ class Column(Element):
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param visible: (bool) set visibility state of the element
-        :param element_justification: (str) 'left', 'right', 'center' are valid values
+        :param justification: (str) set justification for the Column itself. Note entire row containing the Column will be affected
+        :param element_justification: (str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.UseDictionary = False
@@ -4961,7 +4962,7 @@ class Window:
         :param transparent_color:  (str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
         :param debugger_enabled: (bool) If True then the internal debugger will be enabled
         :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
-        :param element_justification: (str) 'left', 'right', 'center' are valid values
+        :param element_justification: (str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
@@ -7314,7 +7315,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         """ """
         return tkinter.font.Font().measure('A')  # single character width
 
-    print(f'Packing a form... justification = {form.ElementJustification}')
 
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
@@ -7364,7 +7364,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if element_type == ELEM_TYPE_COLUMN:
                 element = element           # type: Column
                 if element.Scrollable:
-                    element.TKColFrame = element.Widget = TkScrollableFrame(tk_row_frame,
+                    element.TKColFrame = TkScrollableFrame(tk_row_frame,
                                                                             element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
@@ -7415,8 +7415,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     anchor=tk.NW
                     side = tk.LEFT
-                print(f'Column side, anchor = {side}, {anchor} element ={element.Key}')
                 row_justify = element.Justification
+                element.Widget = element.TKColFrame
+                print(f'Setting Widget = {element.Widget}')
                 element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
@@ -7451,7 +7452,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.PanedWindow.configure(background=element.BackgroundColor)
                 for pane in element.PaneList:
-                    pane.TKColFrame = tk.Frame(element.PanedWindow)
+                    pane.Widget = pane.TKColFrame = tk.Frame(element.PanedWindow)
                     pane.ParentPanedWindow = element.PanedWindow
                     PackFormIntoFrame(pane, pane.TKColFrame, toplevel_form)
                     if pane.Visible:
@@ -8594,23 +8595,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             anchor='n'
             side=tk.CENTER
         elif row_justify.lower().startswith('r'):
-            print('Right justify this row')
             anchor='ne'
             side = tk.RIGHT
         elif row_justify.lower().startswith('l'):
             anchor='nw'
             side = tk.LEFT
         elif toplevel_form.ElementJustification.lower().startswith('c'):
-            print('Center justify the form')
             anchor = 'n'
             side = tk.TOP
         elif toplevel_form.ElementJustification.lower().startswith('r'):
-            print('right justify the form')
             anchor = 'ne'
             side = tk.TOP
         else:
-            print(f'Form justify = {form.ElementJustification}')
-            print('left justify the form')
             anchor = 'nw'
             side = tk.TOP
 
@@ -11229,7 +11225,7 @@ def main():
                     resizable=True,
                     debugger_enabled=False,
                     keep_on_top=True,
-                    element_justification='c',
+                    element_justification='left',
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
