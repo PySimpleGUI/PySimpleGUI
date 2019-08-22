@@ -6122,6 +6122,9 @@ Window.CloseNonBlocking = Window.Close
 # Button Lazy Functions so the caller doesn't have to define a bunch of stuff #
 # =========================================================================== #
 
+# ------------------------- A fake Element... the Pad Element ------------------------- #
+def Sizer(h_pixels=0, v_pixels=0):
+    return Column([[]], pad=((h_pixels,0),(v_pixels,0)))
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
