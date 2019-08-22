@@ -1071,7 +1071,7 @@ class Listbox(Element):
     when a window.Read() is executed.
     """
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
-                 bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None,
+                 bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
                  visible=True):
         """
@@ -1118,6 +1118,7 @@ class Listbox(Element):
         self.RightClickMenu = right_click_menu
         self.vsb = None  # type: tk.Scrollbar
         self.TKListbox = self.Widget = None         # type: tk.Listbox
+        self.NoScrollbar = no_scrollbar
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
@@ -1158,10 +1159,12 @@ class Listbox(Element):
                     warnings.warn('* Listbox Update selection_set failed with index {}*'.format(set_to_index))
         if visible is False:
             self.TKListbox.pack_forget()
-            self.vsb.pack_forget()
+            if not self.NoScrollbar:
+                self.vsb.pack_forget()
         elif visible is True:
             self.TKListbox.pack()
-            self.vsb.pack()
+            if not self.NoScrollbar:
+                self.vsb.pack()
         if scroll_to_index is not None and len(self.Values):
             self.TKListbox.yview_moveto(scroll_to_index/len(self.Values))
 
@@ -7754,11 +7757,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.configure(fg=text_color)
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
-                element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
-                element.TKListbox.configure(yscrollcommand=element.vsb.set)
-                element.TKListbox.pack(side=tk.LEFT)
-                element.vsb.pack(side=tk.LEFT, fill='y')
+                if not element.NoScrollbar:
+                    element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
+                    element.TKListbox.configure(yscrollcommand=element.vsb.set)
+                    element.vsb.pack(side=tk.RIGHT, fill='y')
                 listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                element.TKListbox.pack(side=tk.LEFT)
                 if element.Visible is False:
                     listbox_frame.pack_forget()
                     element.vsb.pack_forget()
@@ -11042,7 +11046,7 @@ def main():
     ]
 
     frame2 = [
-        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5))],
+        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
         [Combo(['Combo item 1',2,3,4 ], size=(20, 3),readonly=True, text_color='red', background_color='red', key='_COMBO1_')],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='red', background_color='red', key='_COMBO2_')],
         [Spin([1, 2, 3, 'a','b','c'], size=(4, 3))],
