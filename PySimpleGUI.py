@@ -542,7 +542,7 @@ class Element():
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False
         self.ParentRowFrame = None          # type tk.Frame
-
+        # self.CenterEverything = False       # used for container frames
 
     def _RightClickMenuCallback(self, event):
         """
@@ -3190,7 +3190,7 @@ class Frame(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
-                 tooltip=None, right_click_menu=None, visible=True):
+                 tooltip=None, right_click_menu=None, visible=True, center_elements=False):
         """
         :param title: (str) text that is displayed as the Frame's "label" or title
         :param layout: List[List[Elements]] The layout to put inside the Frame
@@ -3207,6 +3207,7 @@ class Frame(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param center_elements: (bool) if True all elements inside will be centered
         """
 
         self.UseDictionary = False
@@ -3225,6 +3226,7 @@ class Frame(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
         self.ContainerElemementNumber = Window.GetAContainerNumber()
+        self.CenterEverything = center_elements
 
         self.Layout(layout)
 
@@ -3331,7 +3333,7 @@ class Tab(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True):
+                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True, center_elements=False):
         """
         :param title: (str) text to show on the tab
         :param layout: List[List[Element]] The element layout that will be shown in the tab
@@ -3345,6 +3347,7 @@ class Tab(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param center_elements: (bool) if True all elements inside the Tab will be centered
         """
 
         self.UseDictionary = False
@@ -3363,7 +3366,7 @@ class Tab(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
         self.ContainerElemementNumber = Window.GetAContainerNumber()
-
+        self.CenterEverything = center_elements
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
@@ -3498,7 +3501,7 @@ class TabGroup(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
-
+        self.CenterEverything = False
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
@@ -3848,7 +3851,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
+                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, center_elements=False):
         """
         :param layout: List[List[Element]] Layout that will be shown in the Column container
         :param background_color: (str) color of background of entire Column
@@ -3860,6 +3863,7 @@ class Column(Element):
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param visible: (bool) set visibility state of the element
+        :param center_elements: (bool) if True all elements contained inside will be centered
         """
 
         self.UseDictionary = False
@@ -3877,7 +3881,7 @@ class Column(Element):
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ContainerElemementNumber = Window.GetAContainerNumber()
-
+        self.CenterEverything = center_elements
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible)
@@ -4920,7 +4924,8 @@ class Window:
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
-                 disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True, finalize=False):
+                 disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
+                 finalize=False, center_elements=False):
         """
         :param title: (str) The title that will be displayed in the Titlebar and on the Taskbar
         :param layout: List[List[Elements]] The layout for the window. Can also be specified in the Layout method
@@ -4953,8 +4958,9 @@ class Window:
         :param disable_minimize:  (bool) if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param transparent_color:  (str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
-        :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
         :param debugger_enabled: (bool) If True then the internal debugger will be enabled
+        :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
+        :param center_elements: (bool) If True then all of the Elements inside will be centered
         """
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
@@ -5017,6 +5023,7 @@ class Window:
         self.UniqueKeyCounter = 0
         self.DebuggerEnabled = debugger_enabled
         self.WasClosed = False
+        self.CenterEverything = center_elements
         if type(title) != str:
             warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
         if layout is not None and type(layout) not in  (list, tuple):
@@ -7349,6 +7356,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 element = element           # type: Column
+                print(ObjToStringSingleObj(element))
                 if element.Scrollable:
                     element.TKColFrame = element.Widget = TkScrollableFrame(tk_row_frame,
                                                                             element.VerticalScrollOnly)  # do not use yet!  not working
@@ -8564,7 +8572,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0],
+        if form.CenterEverything:
+            anchor = 'n'
+        else:
+            anchor = 'nw'
+        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
                           expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
@@ -11178,6 +11190,7 @@ def main():
                     resizable=True,
                     debugger_enabled=False,
                     keep_on_top=True,
+                    center_elements=True,
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
                     ).Finalize()
     graph_elem.DrawCircle((200, 200), 50, 'blue')
