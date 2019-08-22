@@ -10,7 +10,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.2.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.3.0-red.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.2.0-blue.svg?longCache=true&style=for-the-badge)
 
@@ -77,7 +77,7 @@
 
 "I've been pretty amazed at how much more intuitive it is than raw tk/qt. The dude developing it is super active on the project too so if you come across situations that you just can't get the code to do what you want you can make bug/enhancement issues that are almost assured to get a meaningful response."
 
-"This library is the easiest way of gui programming in python! I'm totally in love with it️"
+"This library is the easiest way of gui programming in python! I'm totally in love with it"
 
 "Wow that readme is extensive and great." (hear the love for docs often)
 
@@ -87,11 +87,13 @@
 
 "I love PySimpleGUI! I've been teaching it in my Python classes instead of Tkinter."
 
-#### Quick Links To Help and Read Up on the Latest News and Releases
+### START HERE - User Manual with Table of Contents
 
-[ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.
+[ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.  Easy to remember PySimpleGUI.org.
 
-[Homepage - Lastest Readme and Code - GitHub](http://www.PySimpleGUI.com)
+#### Quick Links To Help and The Latest News and Releases
+
+[Homepage - Lastest Readme and Code - GitHub](http://www.PySimpleGUI.com)  Easy to remember: PySimpleGUI.com
 
 [Announcements of Latest Developments, Release news, Misc](https://github.com/PySimpleGUI/PySimpleGUI/issues/142)
 
@@ -176,14 +178,14 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 * Windows 7, 8, 10
 * Linux on PC - Tested on **many** distributions
 * Linux on Raspbnerry Pi
-* Linux on Android - Must use either Termux or PyDroid3
-* Mac OS (Sorry I don't know much about Macs)
+* Linux on Android - Can use either Termux or PyDroid3
+* Mac OS (Sorry don't know much about Macs other than Macs don't like tkinter)
 
 #### Python versions
 
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported** when using **tkinter version** of PySimpleGUI! The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.  **None** of the other ports can use Python 2.
 
-Note that the 2.7 port will cease to exist on this GitHub on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
+Note that the 2.7 port will *cease to exist on this GitHub* on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
 
 By "will cease to exist on this GitHub" I mean, it will be deleted entirely.  No source code, no supporting programs.  Nothing.  If you're stuck using 2.7 in December, it would behoove you to fork the 2.7 code on Dec 31, 2019.  Legacy Python doesn't have a permanent home here.
 
@@ -2357,11 +2359,47 @@ PySimpleGUI will set a default focus location for you.  This generally means the
 
 ## Window Methods That Complete Formation of Window
 
-There are a number of operations you can do on a window after you've created the window.  You call these after creating your Windows object.  Most Window methods are not usable until you call one of these.
+After you have completed making your layout, stored in a variable called `layout` in these examples, you will create your window.
 
-#### Layout(rows)
+The creation part of a window involves 3 steps.
 
-Call to set the window layout.  Must be called prior to Read.  Most likely "chained" in line with the Window creation.
+1. Create a `Window` object
+2. Adding your Layout to the window
+3. Optional - Finalize if want to make changes prior to `Read` call
+
+Over time the PySimpleGUI code has continued to compact, compress, so that as little code as possible will need to be written by the programmer.
+
+### The Individual Calls
+
+This is the "long form" as each method is called individually.
+
+```python
+window = sg.Window('My Title')
+window.Layout(layout)
+window.Finalize()
+```
+
+### Chaining The Calls
+
+The next level  of compression that was done was to chain the calls together into a single line of code.
+
+```python
+window = sg.Window('My Title').Layout(layout).Finalize()
+```
+
+### Using Parameters Instead of Calls (New Preferred Method)
+
+Here's a novel concept, instead of using chaining, something that's foreign to beginners, use parameters to the `Window` call.  And that is exactly what's happened as of 4.2 of the PySimpleGUI port.
+
+```python
+window = sg.Window('My Title', layout, finalize=True)
+```
+
+Rather than pushing the work onto the user of doing the layout and finalization calls, let the Window initialization code do it for you. Yea, it sounds totally obvious now, but it didn't a few months ago.
+
+This capability has been added to all 4 PySimpleGUI ports but none are on PyPI just yet as there is some runtime required first to make sure nothing truly bad is going to happen.
+
+Call to set the window layout.  Must be called prior to `Read`.  Most likely "chained" in line with the Window creation.
 
 ```python
 window = sg.Window('My window title', layout)
@@ -4496,7 +4534,7 @@ Returns the current text shown on a button
 
 #### SetFocus
 
-Sets the focus to this button.  Can be forced with parameter
+Sets the current focus to be on this element
 
 ```
 SetFocus(force=False)
@@ -4506,7 +4544,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|force|(bool) If True will call focus_force instead of focus_set|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
 
 #### SetTooltip
 
@@ -4805,7 +4843,9 @@ Column(layout,
     vertical_scroll_only=False,
     right_click_menu=None,
     key=None,
-    visible=True)
+    visible=True,
+    justification="left",
+    element_justification="left")
 ```
 
 Parameter Descriptions:
@@ -4821,6 +4861,8 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
 |visible|(bool) set visibility state of the element|
+|justification|(str) set justification for the Column itself. Note entire row containing the Column will be affected|
+|element_justification|(str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values|
 
 #### AddRow
 
@@ -5019,7 +5061,8 @@ Frame(title,
     key=None,
     tooltip=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    element_justification="left")
 ```
 
 Parameter Descriptions:
@@ -5040,6 +5083,7 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|element_justification|(str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values|
 
 #### AddRow
 
@@ -5491,7 +5535,7 @@ Parameter Descriptions:
 
 #### SetFocus
 
-Sets the current focus to be on this Graph Element
+Sets the current focus to be on this element
 
 ```
 SetFocus(force=False)
@@ -5688,7 +5732,7 @@ Read and return the current value of the input element. Must call `Window.Read` 
 
 #### SetFocus
 
-Sets focus to this element using focus_set. Will use focus_force if force flag set. Must call `Window.Read` or `Window.Finalize` prior
+Sets the current focus to be on this element
 
 ```
 SetFocus(force=False)
@@ -5698,7 +5742,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|force|(bool) if True then tkinter's `Entry.focus_force` will be called instead of `Entry.focus_set`|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
 
 #### SetTooltip
 
@@ -5750,6 +5794,7 @@ Listbox(values,
     disabled=False,
     auto_size_text=None,
     font=None,
+    no_scrollbar=False,
     background_color=None,
     text_color=None,
     key=None,
@@ -5793,7 +5838,7 @@ Returns list of Values provided by the user in the user's format
 
 #### SetFocus
 
-Moves the focus to this Listbox
+Sets the current focus to be on this element
 
 ```
 SetFocus(force=False)
@@ -5803,7 +5848,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|force|(bool). If True, will call focus_force instead of focus_set|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
 
 #### SetTooltip
 
@@ -6001,7 +6046,7 @@ Return current contents of the Multiline Element
 
 #### SetFocus
 
-Moves the focus (that little blinking cursor) to this Multiline Element
+Sets the current focus to be on this element
 
 ```
 SetFocus(force=False)
@@ -6011,7 +6056,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|force|(bool). If True, will call focus_force instead of focus_set|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
 
 #### SetTooltip
 
@@ -6794,7 +6839,8 @@ Tab(title,
     key=None,
     tooltip=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    element_justification="left")
 ```
 
 Parameter Descriptions:
@@ -6813,6 +6859,7 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|element_justification|(str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values|
 
 #### AddRow
 
@@ -7470,7 +7517,8 @@ Window(title,
     right_click_menu=None,
     transparent_color=None,
     debugger_enabled=True,
-    finalize=False)
+    finalize=False,
+    element_justification="left")
 ```
 
 Parameter Descriptions:
@@ -7508,8 +7556,9 @@ Parameter Descriptions:
 |disable_minimize|(bool) if True the user won't be able to minimize window. Good for taking over entire screen and staying that way.|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |transparent_color|(str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.|
-|finalize|(bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code|
 |debugger_enabled|(bool) If True then the internal debugger will be enabled|
+|finalize|(bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code|
+|element_justification|(str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values|
 
 #### AddRow
 
@@ -8057,13 +8106,14 @@ UnHide()
 
 #### VisibilityChanged
 
-Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
-        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
-        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
+This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
+call and then have that same source run on plain PySimpleGUI.
 
-```python
-VisibilityChanged()
-```
+`VisibilityChanged()`
+
+|Name|Meaning|
+|---|---|
+| **return** |  |
 
 ```
 CButton(button_text,
@@ -10413,7 +10463,7 @@ Long time coming.  Docstrings continue to be a focus.
 * Fix for debugger trying to execute a REPL comand.  The exec is only avilable in Python 3
 * main() will display the version number in big letters when program is running
 
-### 4.2 PySimpleGUI  2.2 for PySimpleGUI27  8 - Aug 2019
+### 4.2 PySimpleGUI  2.2 for PySimpleGUI27  18 - Aug 2019
 
 The cool lookup release!  No more need for FindElement. You can continue to use FindElement.
 However, your code will look weird and ancient.  ;-)  (i.e. readable)
@@ -10440,6 +10490,40 @@ MORE Docstring and main doc updates!
 * Added finding focus across ALL elements by using the .Widget member variable
 * Fixed sizing Columns!  NOW they will finally be the size specified
 * Fixed not using the initialdir paramter in PopupGetFile if the no_window option is set
+
+## 4.3 PySimpleGUI Release 22-Aug-2019
+
+PEP8 PEP8 PEP8
+Layout controls!  Can finally center stuff
+Some rather impactful changes this time
+Let's hope it doesn't all blow up in our faces!
+
+* PEP8 interfaces added for Class methods & functions
+	* Finally a PEP8 compliant interface for PySimpleGUI!!
+	* The "old CamelCase" are still in place and will be for quite some time
+	* Can mix and match at will if you want, but suggest picking one and sticking with it
+	* All docs and demo programs will need to be changed
+* Internally saving parent row frame for layout checks
+* Warnings on all Update calls - checks if Window.Read or Window.Finalize has been called
+* Warning if a layout is attempted to be used twice
+	* Shows an "Error Popup" to get the user's attention for sure
+* Removed all element-specific SetFocus methods and made it available to ALL elements
+* Listbox - no_scrollbar parameter added. If True then no scrollbar will be shown
+* NEW finalize bool parameter added to Window. Removes need to "chain" .Finalize() call.
+* NEW element_justification parameter for Column, Frame, Tab Elements and Window
+	* Valid values are 'left', 'right', 'center'. Only first letter checked so can use 'l', 'c','r'
+	* Default = 'left'
+	* Result is that all Elements INSIDE of this container will be justified as specified
+	* Works well with new Sizer Elements
+* NEW justification parameter for Column elements.  
+	* Justifies Column AND the row it's on to this setting (left, right, center)
+	* Enables individual rows to be justified in addition to the entire window
+* NEW Sizer Element
+	* Has width and height parameters.  Can set one or both
+	* Causes the element it is contained within to expand according to width and height of Sizer Element
+	* Helps greatly with centering.  Frames will shrink to fit the contents for example. Use Sizer to pad out to right size
+* Added Window.visibility_changed to match the PySimpleGUIQt call
+* Fixed Debugger so that popout window shows any newly added locals
 
 ### Upcoming
 Make suggestions people!  Future release features
