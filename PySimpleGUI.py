@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.3.0.1 Unreleased PEP8 SDK Version"
+version = __version__ = "4.3.0.2 Unreleased PEP8 SDK Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
