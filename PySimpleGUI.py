@@ -824,7 +824,9 @@ class InputText(Element):
         :param select: (bool) if True, then the text will be selected
         :param visible: (bool) change visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if disabled is True:
             self.TKEntry['state'] = 'readonly'
         elif disabled is False:
@@ -918,6 +920,10 @@ class Combo(Element):
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param visible: (bool) control visibility of element
         """
+
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -1026,6 +1032,10 @@ class OptionMenu(Element):
         :param disabled: (bool) disable or enable state of the element
         :param visible: (bool) control visibility of element
         """
+
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             self.Values = values
             self.TKOptionMenu['menu'].delete(0, 'end')
@@ -1134,6 +1144,9 @@ class Listbox(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -1255,6 +1268,9 @@ class Radio(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             try:
                 self.TKIntVar.set(self.EncodedRadioValue)
@@ -1351,6 +1367,9 @@ class Checkbox(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -1430,6 +1449,9 @@ class Spin(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values != None:
             old_value = self.TKStringVar.get()
             self.Values = values
@@ -1548,6 +1570,9 @@ class Multiline(Element):
         :param autoscroll: (bool) if True then contents of element are scrolled down when new text is added to the end
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if autoscroll is not None:
             self.Autoscroll = autoscroll
         if value is not None:
@@ -1651,6 +1676,9 @@ class Text(Element):
         :param visible: (bool) set visibility state of the element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1731,6 +1759,9 @@ class StatusBar(Element):
         :param visible: (bool) set visibility state of the element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1951,7 +1982,9 @@ class Output(Element):
         :param value: (str) string that will replace current contents of the output area
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
@@ -2214,6 +2247,9 @@ class Button(Element):
         :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -2365,6 +2401,9 @@ class ButtonMenu(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         self.MenuDefinition = menu_definition
         if menu_definition is not None:
             self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
@@ -2444,7 +2483,9 @@ class ProgressBar(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             self.TKProgressBar.TKProgressBarForReal.pack_forget()
         elif visible is True:
@@ -2507,6 +2548,9 @@ class Image(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
@@ -3238,7 +3282,9 @@ class Frame(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             self.TKFrame.pack_forget()
         elif visible is True:
@@ -3362,7 +3408,9 @@ class Tab(Element):
         :param disabled: (bool) disable or enable state of the element
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if disabled is None:
             return
         self.Disabled = disabled
@@ -3613,7 +3661,9 @@ class Slider(Element):
         :param visible: (bool) control visibility of element
 
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -3886,7 +3936,9 @@ class Column(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             if self.TKColFrame:
                 self.TKColFrame.pack_forget()
@@ -3963,7 +4015,9 @@ class Pane(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             self.PanedWindow.pack_forget()
         elif visible is True:
@@ -4308,7 +4362,9 @@ class Menu(Element):
         :param menu_definition: List[List[Tuple[str, List[str]]]
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if menu_definition is not None:
             self.MenuDefinition = menu_definition
             self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
@@ -4431,7 +4487,9 @@ class Table(Element):
         :param alternating_row_color: (str) the color to make every other row
         :param row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             for id in self.tree_ids:
                 self.TKTreeview.item(id, tags=())
@@ -4655,7 +4713,9 @@ class Tree(Element):
         :param icon: Union[bytes, str] can be either a base64 icon or a filename for the icon
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -5022,10 +5082,18 @@ class Window:
                       'This means you are missing () from your layout',
                       'The offensive list is:',
                       element,
-                      'This item will be stripped from your layout'
-                      )
+                      'This item will be stripped from your layout')
                 continue
-
+            if element.ParentContainer is not None:
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE A LAYOUT! You must not attempt this kind of re-use ***', UserWarning)
+                PopupError('Error creating layout',
+                      'The layout specified has already been used',
+                      'You MUST start witha "clean", unused layout every time you create a window',
+                      'The offensive Element = ',
+                      element,
+                      'and has a key = ', element.Key,
+                      'This item will be stripped from your layout')
+                continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -5455,8 +5523,8 @@ class Window:
         except KeyError:
             element = None
             if not silent_on_error:
-                print(
-                    '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key)
+                warnings.warn(
+                    '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key, UserWarning)
                 PopupError('Keyword error in FindElement Call',
                            'Bad key = {}'.format(key),
                            'Your bad line of code may resemble this:',
