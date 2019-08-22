@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.2.10 UNreleased PEP8 SDK & Layout Control Version"
+version = __version__ = "4.2.11 UNreleased PEP8 SDK & Layout Control Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -7314,6 +7314,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         """ """
         return tkinter.font.Font().measure('A')  # single character width
 
+    print(f'Packing a form... justification = {form.ElementJustification}')
+
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
@@ -8590,17 +8592,27 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
         if row_justify.lower().startswith('c'):
             anchor='n'
+            side=tk.CENTER
         elif row_justify.lower().startswith('r'):
             print('Right justify this row')
             anchor='ne'
+            side = tk.RIGHT
         elif row_justify.lower().startswith('l'):
             anchor='nw'
-        elif form.ElementJustification.lower().startswith('c'):
+            side = tk.LEFT
+        elif toplevel_form.ElementJustification.lower().startswith('c'):
+            print('Center justify the form')
             anchor = 'n'
-        elif form.ElementJustification.lower().startswith('r'):
+            side = tk.TOP
+        elif toplevel_form.ElementJustification.lower().startswith('r'):
+            print('right justify the form')
             anchor = 'ne'
+            side = tk.TOP
         else:
+            print(f'Form justify = {form.ElementJustification}')
+            print('left justify the form')
             anchor = 'nw'
+            side = tk.TOP
 
 
         tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
@@ -11200,14 +11212,14 @@ def main():
         [Frame('Multiple Choice Group', frame2, title_color='green'),
          Frame('Binary Choice Group', frame3, title_color='purple', tooltip='Binary Choice'),
          Frame('Variable Choice Group', frame4, title_color='blue')],
-        [Column([[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], justification='r'), ],
+        [Column([[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]]), ],
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]],key='_TAB_GROUP_' )],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal'),
          Button('Exit', tooltip='Exit button')],
     ]
 
-    layout = [[Menu(menu_def, key='_MENU_')],[Column(layout1)]]
+    layout = [[Menu(menu_def, key='_MENU_')]] + layout1
 
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
@@ -11219,11 +11231,11 @@ def main():
                     keep_on_top=True,
                     element_justification='c',
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
-                    ).Finalize()
-    graph_elem.DrawCircle((200, 200), 50, 'blue')
+                    )
+    # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
-        event, values = window.Read(timeout=1)
+        event, values = window.Read(timeout=10)
         if event != TIMEOUT_KEY:
             print(event, values)
         if event is None or event == 'Exit':
