@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.3.0 Released PEP8 SDK & Layout Control Version"
+version = __version__ = "4.4.0.1 Unreleased Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -836,6 +836,7 @@ class InputText(Element):
             except:
                 pass
             self.DefaultText = value
+            self.TKEntry.icursor(tk.END)
         if select:
             self.TKEntry.select_range(0, 'end')
         if visible is False:
@@ -7417,7 +7418,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     side = tk.LEFT
                 row_justify = element.Justification
                 element.Widget = element.TKColFrame
-                print(f'Setting Widget = {element.Widget}')
                 element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
