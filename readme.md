@@ -1,16 +1,22 @@
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
+
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
 
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
+
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
+
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.3.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.3.2-red.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.2.0-blue.svg?longCache=true&style=for-the-badge)
 
@@ -1988,13 +1994,13 @@ For Windows that have specifically enabled these.  Please see the appropriate se
 * Table row selected
 * etc
 
-***Most*** of the time the event will be a button click or the window was closed.
+***Most*** of the time the event will be a button click or the window was closed.  The other Element-specific kinds of events happen when you set `enable_events=True` when you create the Element.
 
 ### Window closed event
 
-Another convention to follow is the check for windows being closed with an X.  *This is an important event to catch*.  If you don't check for this and you attempt to use the window, your program will crash.  Please check for closed window and exit your program gracefully.  Your users will like you for it.  
+Another convention to follow is the check for windows being closed with an X.  *This is an critically important event to catch*.  If you don't check for this and you attempt to use the window, your program will crash.  Please check for closed window and exit your program gracefully.  Your users will like you for it.  
 
-Close your windows when you're done with them even though exiting the program will also close them.  tkinter can generate an error/warning sometimes if you don't close the window.
+Close your windows when you're done with them even though exiting the program will also close them.  tkinter can generate an error/warning sometimes if you don't close the window.  For other ports, such as PySimpleGUIWeb, not closing the Window will potentially cause your program to continue to run in the background.
 
 To check for a closed window use this line of code:
 
@@ -2026,7 +2032,7 @@ This if statement is the same as:
 		break
 ```
 
-Instead of `'Exit'` use the name of the button you want to exit the window (Cancel, Quit, etc)
+Instead of `'Exit'` use the name/key of the button you want to exit the window (Cancel, Quit, etc)
 
 ### Button Click Events
 
@@ -2035,10 +2041,10 @@ By default buttons will always return a click event, or in the case of realtime 
 You can enable an additional "Button Modified" event by setting `enable_events=True` in the Button call.  These events are triggered when something 'writes' to a button, ***usually*** it's because the button is listed as a "target" in another button.
 
 The button value from a Read call will be one of 2 values:
-1. The Button's text      - Default
+1. The Button's text     - Default
 2. The Button's key      - If a key is specified
 
-If a button has a key set when it was created, then that key will be returned.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the event value is None.
+If a button has a key set when it was created, then that key will be returned, regardless of what text is shown on the button.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the event value is the key that caused the event to be generated.  For example, if `enable_events` is set on an `Input` Element and someone types a character into that `Input` box, then the event will be the key of the input box.
 
 ### **None is returned when the user clicks the X to close a window.**
 
@@ -2301,6 +2307,7 @@ The first step is to create the window object using the desired window customiza
 **IMPORTANT** - Many of the `Window` methods require you to either call `Window.Read` or `Window.Finalize` before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
 
 ### Window Location
+
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.
 
 ### Window Size
@@ -2311,8 +2318,14 @@ You can get your window's size by access the `Size` property.  The window has to
 
 To finalize your window:
 
-```pytyhon
+```python
 window = Window('My Title', layout).Finalize()
+```
+
+If using PySimpleGUI 4.2 and later:
+
+```python
+window = Window('My Title', layout, finalize=True)
 ```
 
 ### Element Sizes
@@ -2407,9 +2420,9 @@ window = sg.Window('My window title', layout)
 
 #### Finalize()
 
-Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.    This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
+Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.  This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
 
-If you want to call an element's Update method or call a Graph element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
+If you want to call an element's `Update` method or call a `Graph` element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
 #### Read(timeout=None, timeout_key=TIMEOUT_KEY)
 
@@ -2417,13 +2430,345 @@ Read the Window's input values and button clicks in a blocking-fashion
 
 Returns event, values.  Adding a timeout can be achieved by setting timeout=*number of milliseconds* before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event.   If you do not specify a timeout key, then the value `TIMEOUT_KEY` will be returned.
 
-If you set the timeout = 0, then the Read will immediately return rather than waiting for input or for a timeout. This is the same as the old ReadNonBlocking call.
+If you set the timeout = 0, then the Read will immediately return rather than waiting for input or for a timeout.  It's a truly non-blocking "read" of the window.
 
-#### ReadNonBlocking()    (NO LONGER USED)
+# Layouts
 
-Some of the old code examples showed calling this function.  You should now call it now.  If you want to get the same result, call Read with `timeout = 0`.
+While at this point in the documentation you've not been shown very much about each Element available, you should read this section carefully as you can use the techniques you learn in here to build better, shorter, and easier to understand PySimpleGUI code.
 
-Please file an Issue if you see this call in any code or in any documentation.  It must go away never to be seen again.
+While you've not learned about Elements yet, it makes sense for this section to be up front so that you'll have learned how to use the elements prior to learning how each element works.  At this point in your PySimpleGUI education, it is better for you to grasp time efficient ways of working with Elements than what each Element does.  By learning now how to assemble Elements now, you'll have a good model to put the elements you learn into.
+
+There are *several* aspects of PySimpleGUI that make it more "Pythonic" than other Python GUI SDKs.  One of the areas that is unique to PySimpleGUI is how a window's "layout" is defined, specified or built.  A window's "layout" is simply a list of lists of elements.  As you've already learned, these lists combine to form a complete window.  This method of defining a window is super-powerful because lists are core to the Python language as a whole and thus are very easy to create and manupulate.  
+
+Think about that for a moment and compare/contrast with Qt, tkinter, etc.  With PySimpleGUI the location of your element in a matrix determines where that Element is shown in the window.  It's so ***simple*** and that makes it incredibly powerful.  Want to switch a row in your GUI that has text with the one below it that has an input element?  No problem, swap the lines of code and you're done.
+
+Layouts were designed to be visual. The idea is for you to be able to envision how a window will look by simplyh looking at the layout in the code.  The CODE itself matches what is drawn on the screen.  PySimpleGUI is a cross between straight Python code and a visual GUI designer.
+
+In the process of creating your window, you can manipulate these lists of elements without having an impact on the elements or on your window.  Until you perform a "layout" of the list, they are nothing more than lists containing objects (they just happen to be your window's elements).
+
+Many times your window definition / layout will be a static, straightforward to create.  
+
+However, window layouts are not limited to being one of these staticly defined list of Elements.
+
+# Generated Layouts (Please read especially if your GUI has more than 10 Elements)
+
+There are 5 specific techniques of generating layouts discussed in this section. They can be used alone or in combination with each other.
+
+1. Layout + Layout concatenation `[[A]] + [[B]] = [[A], [B]]`
+2. Element Addition on Same Row  `[[A] + [B]] = [[A, B]]`
+3. List Comprehension to generate a row `[A for x in range(10)] = [A,A,A,A,A...]`
+4. List Comprehension to generate multiple rows `[[A] for x in range(10)] = [[A],[A],...]`
+5. User Defined Elements / Comound Elements
+
+## Example - List Comprehension To Concatenate Multiple Rows - "To Do" List Example
+
+Let's create a little layout that will be used to make a to-do list using PySimpleGUI.
+
+### Brute Force
+
+```python
+import PySimpleGUI as sg
+
+layout = [
+            [sg.Text('1. '), sg.In(key=1)],
+            [sg.Text('2. '), sg.In(key=2)],
+            [sg.Text('3. '), sg.In(key=3)],
+            [sg.Text('4. '), sg.In(key=4)],
+            [sg.Text('5. '), sg.In(key=5)],
+            [sg.Button('Save'), sg.Button('Exit')]
+         ]
+
+window = sg.Window('To Do List Example', layout)
+event, values = window.Read()
+```
+
+The output from this script was this window:
+
+![SNAG-0451](https://user-images.githubusercontent.com/46163555/63563849-90cd8180-c530-11e9-80d7-4954b11deebd.jpg)
+
+Take a moment and look at the code and the window that's generated.  Are you able to look at the layout and envision the Window on the screen?
+
+### Build By Concatenating Rows
+
+The brute force method works great on a list that's 5 items long, but what if your todo list had 40 items on it. THEN what?  Well, that's when we turn to a "generated" layout, a layout that is generated by your code.  Replace the layout= stuff from the previous example with this definition of the layout.
+
+```python
+import PySimpleGUI as sg
+
+layout = []
+for i in range(1,6):
+    layout += [sg.Text(f'{i}. '), sg.In(key=i)],
+layout += [[sg.Button('Save'), sg.Button('Exit')]]
+
+window = sg.Window('To Do List Example', layout)
+event, values = window.Read()
+```
+
+It produces the exact same window of course.  That's progress.... went from writing out every row of the GUI to generating every row. If we want 48 items as suggested, change the range(1,6) to range(1,48).  Each time through the list another row is added onto the layout.
+
+### Create Several Rows Using List Comprehension
+
+BUT, we're not done yet!
+
+This is **Python**, we're using lists to build something up, so we should be looking at ****list comprehensions****.  Let's change the `for` loop into a list comprehension.  Recall that our `for` loop was used to concatenate 6 rows into a layout.
+
+```python
+layout =  [[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] 
+```
+
+Here we've moved the `for` loop to inside of the list definition (a list comprehension)
+
+### Concatenating Multiple Rows
+
+We have our rows built using the list comprehension, now we just need the buttons.  They can be easily "tacked onto the end" by simple addition.
+
+```python
+layout =  [[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] 
+layout += [[sg.Button('Save'), sg.Button('Exit')]]
+```
+
+Anytime you have 2 layouts, you can concatenate them by simple addition.  Make sure your layout is a "list of lists" layout.  In the above example, we know the first line is a generated layout of the input rows.  The last line adds onto the layout another layout... note the format being [ [ ] ].
+
+This button definition is an entire layout, making it possible to add to our list comprehension
+
+`[[sg.Button('Save'), sg.Button('Exit')]]`
+
+It's quite readable code.  The 2 layouts line up visually quite well.
+
+But let's not stop there with compressing the code.  How about removing that += and instead change the layout into a single line with just a `+` between the two sets of row.
+
+Doing this concatenation on one line, we end up with this single statement that creates the **entire layout** for the GUI:
+
+```python
+layout =  [[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]
+```
+
+### Final "To Do List" Program
+
+And here we have our final program... all **4** lines.
+
+```python
+import PySimpleGUI as sg
+
+layout  = [[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]
+
+window = sg.Window('To Do List Example', layout)
+
+event, values = window.read()
+```
+
+If you really wanted to crunch things down, you can make it a 2 line program (an import and 1 line of code) by moving the layout into the call to `Window`
+
+```python
+import PySimpleGUI as sg
+
+event, values = sg.Window('To Do List Example', layout=[[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]).Read()
+```
+
+## Example - List Comprehension to Build Rows - Table Simulation - Grid of Inputs
+
+In this example we're building a "table" that is 4 wide by 10 high using `Input` elements 
+
+The end results we're seeking is something like this:
+
+```
+HEADER 1    HEADER 2    HEADER 3    HEADER 4
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+INPUT       INPUT       INPUT       INPUT
+```
+
+Once the code is completed, here is how the result will appear:
+
+![image](https://user-images.githubusercontent.com/46163555/63626328-b4480900-c5d0-11e9-9c81-52e3b0516bde.png)
+
+We're going to be building each row using a list comprehension and we'll build the table by concatenating rows using another list comprehension.  That's a list comprehension that goes across and another list comprehension that goes down the layout, adding one row after another.
+
+### Building the Header
+
+First let's build the header.  There are 2 concepts to notice here:
+
+```python
+import PySimpleGUI as sg
+
+headings = ['HEADER 1', 'HEADER 2', 'HEADER 3','HEADER 4']  # the text of the headings
+header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]  # build header layout
+```
+
+There are 2 things in this code to note
+1. The list comprehension that makes the heading elements
+2. The spaces added onto the front
+
+Let's start with the headers themselves.
+
+This is the code that makes a row of Text Elements containing the text for the headers.  The result is a list of Text Elements, a row.
+
+```python
+[sg.Text(h, size=(14,1)) for h in headings]
+```
+
+Then we add on a few spaces to shift the headers over so they are centered over their columns.  We do this by simply adding a `Text` Element onto the front of that list of headings.
+
+```python
+header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]
+```
+
+This `header` variable is a layout with 1 row that has a bunch of `Text` elements with the headings.
+
+### Building the Input Elements
+
+The `Input` elements are arranged in a grid.  To do this we will be using a double list comprehension.  One will build the row the other will add the rows together to make the grid.  Here's the line of code that does that:
+
+```python
+input_rows = [[sg.Input(size=(15,1), pad=(0,0)) for col in range(4)] for row in range(10)]
+```
+
+This portion of the statement makes a single row of 4 `Input` Elements
+
+```python
+[sg.Input(size=(15,1), pad=(0,0)) for col in range(4)]
+```
+
+Next we take that list of `Input` Elements and make as many of them as there are rows, 10 in this case.  We're again using Python's awesome list comprehensions to add these rows together.
+
+```python
+input_rows = [[sg.Input(size=(15,1), pad=(0,0)) for col in range(4)] for row in range(10)]
+```
+
+The first part should look familiar since it was just discussed as being what builds a single row.  To make the matrix, we simply take that single row and create 10 of them, each being a list.
+
+### Putting it all together
+
+Here is our final program that uses simple addition to add the headers onto the top of the input matrix.
+
+```python
+import PySimpleGUI as sg
+
+headings = ['HEADER 1', 'HEADER 2', 'HEADER 3','HEADER 4']
+header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]
+
+input_rows = [[sg.Input(size=(15,1), pad=(0,0)) for col in range(4)] for row in range(10)]
+
+layout = header + input_rows
+
+window = sg.Window('Table Simulation', layout, font='Courier 12')
+event, values = window.Read()
+```
+
+## User Defined Elements / Compound Elements
+
+"User Defined Elements" and "Compound Elements" are one or more PySimpleGUI Elements that are wrapped in a function definition. In a layout, they have the appearance of being a custom elements of some type.
+
+User Defined Elements are particularly useful when you set a lot of parameters on an element that you use over and over in your layout.
+
+### Example - A Grid of Buttons for Calculator App
+
+Let's say you're making a calculator application with buttons that have these settings:
+
+* font = Helvetica 20
+* size = 5,1
+* button color = white on blue
+
+The code for **one** of these buttons is:
+
+```python
+sg.Button('1', button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20))
+```
+
+If you have 6 buttons across and 5 down, your layout will have 30 of these lines of text.
+
+One row of these buttons could be written:
+```python
+    [sg.Button('1', button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20)),
+     sg.Button('2', button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20)),
+     sg.Button('3', button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20)),
+     sg.Button('log', button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20)),
+     sg.Button('ln', button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20)),
+     sg.Button('-', button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20))],
+```
+
+By using User Defined Elements, you can significantly shorten your layouts.  Let's call our element `CBtn`.  It would be written like this:
+
+```python
+def CBtn(button_text):
+    return sg.Button(button_text, button_color=('white', 'blue'), size=(5, 1), font=("Helvetica", 20))
+```
+
+Using your new `CBtn` Element, you could rewrite the row of buttons above as:
+```python
+[CBtn('1'), CBtn('2'), CBtn('3'), CBtn('log'), CBtn('ln'), CBtn('-')],
+```
+
+See the tremendous amount of code you do not havew to write!  USE this construct any time you find yourself copying an element many times.  
+
+But let's not stop there.  
+
+Since we've been discussing list comprehensions, let's use them to create this row.  The way to do that is to make a list of the symbols that go across the row make a loop that steps through that list.  The result is a list that looks like this:
+
+```python
+[CBtn(t) for t in ('1','2','3', 'log', 'ln', '-')],
+```
+
+That code produces the same list as this one we created by hand:
+
+```python
+[CBtn('1'), CBtn('2'), CBtn('3'), CBtn('log'), CBtn('ln'), CBtn('-')],
+```
+
+### Compound Elements
+
+Just like a `Button` can be returned from a User Defined Element, so can multiple Elements.
+
+Going back to the To-Do List example we did earlier, we could have defined a User Defined Element that represented a To-Do Item and this time we're adding a checkbox. A single line from this list will be:
+
+* The item # (a `Text` Element)
+* A `Checkbox` Element to indicate completed
+* An `Input` Element to type in what to do
+
+The definition of our User Element is this `ToDoItem` function.  It is a single User Element that is a combination of 3 PySimpleGUI Elements.
+
+```python
+def ToDoItem(num):
+    return [sg.Text(f'{num}. '), sg.CBox(''), sg.In()]
+```
+
+This makes creating a list of 5 to-do items downright trivial when combined with the list comprehension techniques we learned earlier.  Here is the code required to create 5 entries in our to-do list.
+
+```python
+layout = [ToDoItem(x) for x in range(1,6)]
+```
+
+We can then literally add on the buttons
+
+```python
+layout = [ToDoItem(x) for x in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]
+```
+
+And here is our final program
+```python
+import PySimpleGUI as sg
+
+def ToDoItem(num):
+    return [sg.Text(f'{num}. '), sg.CBox(''), sg.In()]
+
+layout = [ToDoItem(x) for x in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]
+
+window = sg.Window('To Do List Example', layout)
+event, values = window.read()
+```
+
+And the window it creates looks like this:
+
+![image](https://user-images.githubusercontent.com/46163555/63628682-cda28280-c5db-11e9-92a4-44ec2cb6ccf9.png)
+
+---
 
 # Elements
 
@@ -2588,13 +2933,13 @@ This enables you to code much quicker once you are used to using the SDK.  The T
 It's an ongoing thing.  If you don't stay up to date and one of the newer shortcuts is used, you'll need to simply rename that shortcut. 
 
 ## Text Element | `T == Txt == Text`
-Basic Element. It displays text. That's it.
+
+Basic Element. It displays text.
 
 ```python
 layout = [
-  [sg.Text('This is what a Text Element looks like')],
-  [sg.T('Second label')],
- ]
+            [sg.Text('This is what a Text Element looks like')],
+         ]
 ```
 ![simple text](https://user-images.githubusercontent.com/13696193/44959877-e9d97b00-aec3-11e8-9d24-b4405ee4a148.jpg)
 
@@ -2991,9 +3336,8 @@ window = sg.Window('Robotics Remote Control', gui_rows)
 while (True):
     # This is the code that reads and updates your window
     event, values = window.Read(timeout=50)
-    if event is not None:
-        print(event)
-    if event == 'Quit'  or values is None:
+    print(event)
+    if event in ('Quit', None):
         break
 
 window.Close()  # Don't forget to close your window!
@@ -3182,15 +3526,13 @@ sg.Popup(event, values, line_width=200)
 
 ## Frame Element (Labelled Frames, Frames with a title)
 
-Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.
+Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.  Like a Column element, it's a "Container Element" that holds one or more elements inside.
 
 ![frame element](https://user-images.githubusercontent.com/13696193/45889173-c2245700-bd8d-11e8-8f73-1e5f1be3ddb1.jpg)
 
 Notice how the Frame layout looks identical to a window layout. A window works exactly the same way as a Column and a Frame.  They all are "container elements" - elements that contain other elements.
 
 *These container Elements can be nested as deep as you want.* That's a pretty spiffy feature, right?  Took a lot of work so be appreciative.  Recursive code isn't trivial.
-
----
 
 This code creates a window with a Frame and 2 buttons.
 
@@ -3847,11 +4189,11 @@ One example is you have an input field that changes as you press buttons on an o
 
 ![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)
 
-# Updating Elements (changing elements in active window)
+# Updating Elements (changing element's values in an active window)
 
-If you want to change Elements in your window after the window has been created, then you will call the Element's Update method.
+If you want to change an Element's settings in your window after the window has been created, then you will call the Element's Update method.
 
-**NOTE** a window **must be Read or Finalized** before any Update calls can be made.
+**NOTE** a window **must be Read or Finalized** before any Update calls can be made.  Also, not all settings available to you when you created the Element are available to you via its `Update` method.
 
 Here is an example of updating a Text Element
 
