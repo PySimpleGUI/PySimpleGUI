@@ -4587,10 +4587,22 @@ class Table(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
+    def Get(self):
+        """
+        Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
+        edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
+        user when Table was created or Updated.
+
+        :return: List[List[Any]] the current table values (for now what was originally provided up updated)
+        """
+        return self.Values
+
+
+
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     update = Update
-
+    get = Get
 
 # ---------------------------------------------------------------------- #
 #                           Tree                                         #
@@ -4755,10 +4767,10 @@ class Tree(Element):
             self.TKTreeview.pack()
         return self
 
+
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     update = Update
-
 
 class TreeData(object):
     """
@@ -8357,17 +8369,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                 column_widths[i] = col_width
                         except:
                             column_widths[i] = col_width
+
                 if element.ColumnsToDisplay is None:
                     displaycolumns = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 else:
                     displaycolumns = []
                     for i, should_display in enumerate(element.ColumnsToDisplay):
                         if should_display:
-                            displaycolumns.append(element.ColumnHeadings[i])
-                column_headings = element.ColumnHeadings
+                            if element.ColumnHeadings is not None:
+                                displaycolumns.append(element.ColumnHeadings[i])
+                            else:
+                                displaycolumns.append(str(i))
+
+                column_headings = element.ColumnHeadings if element.ColumnHeadings is not None else displaycolumns
                 if element.DisplayRowNumbers:  # if display row number, tack on the numbers to front of columns
                     displaycolumns = [element.RowHeaderText, ] + displaycolumns
-                    column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
+                    if column_headings is not None:
+                        column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
+                    else:
+                        column_headings = [element.RowHeaderText, ] + displaycolumns
                 element.TKTreeview = element.Widget = ttk.Treeview(frame, columns=column_headings,
                                                                    displaycolumns=displaycolumns, show='headings',
                                                                    height=height,
