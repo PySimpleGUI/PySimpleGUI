@@ -57,7 +57,7 @@ This notice, these first 100 lines of code shall remain unchanged
 88888888 "Y8888P88 888        88888888 "Y8888P"          
       
 
-And just what the fuck is that?  Well, it's LPGL3+ and these FOUR simple stipulations.
+And just what is that?  Well, it's LPGL3+ and these FOUR simple stipulations.
 1. These and all comments are to remain in this document
 2. You will not post this software in a repository or a location for others to download from:
    A. Unless you have made 10 lines of changes
@@ -5232,8 +5232,15 @@ class Window:
             # print(f'icon bitmap = {wicon}')
             self.TKroot.iconbitmap(wicon)
         except:
-            pass
-
+            # if can't set trying any other ways, just default to the built-in icon
+            try:
+                wicon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
+                try:
+                    self.TKroot.tk.call('wm', 'iconphoto', self.TKroot._w, wicon)
+                except:
+                    pass
+            except:
+                pass
 
     def _GetElementAtLocation(self, location):
         """
@@ -8174,6 +8181,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
+                element = element           # type: Frame
                 labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
