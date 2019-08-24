@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.1 Unreleased Version"
+version = __version__ = "4.4.0.2 Unreleased Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -8375,7 +8375,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
                     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
-                    treeview.column(element.RowHeaderText, width=50, anchor=anchor)
+                    treeview.column(element.RowHeaderText, width=50, minwidth=10, anchor=anchor, stretch=0)
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
@@ -8387,7 +8387,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
-                    treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
+                    treeview.column(heading, width=width * CharWidthInPixels(),minwidth=10, anchor=anchor, stretch=0)
 
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
@@ -11185,7 +11185,7 @@ def main():
         [Slider(range=(0, 100), orientation='v', size=(7, 15), default_value=40),
          Slider(range=(0, 100), orientation='h', size=(11, 15), default_value=40), ],
     ]
-    matrix = [[str(x * y) for x in range(4)] for y in range(8)]
+    matrix = [[str(x * y) for x in range(1,5)] for y in range(1,8)]
 
     frame5 = [
         [Table(values=matrix, headings=matrix[0],
