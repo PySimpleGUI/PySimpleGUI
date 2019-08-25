@@ -10,7 +10,7 @@ def readme():
 
 setuptools.setup(
     name="PySimpleGUI",
-    version="4.4.0.X Unreleased",
+    version="4.4.0.999 Unreleased",
     author="PySimpleGUI",
     author_email="PySimpleGUI@PySimpleGUI.org",
     description="GUI SDK Launched in 2018 Actively developed and supported. Super-simple to create custom GUI's.  Python 2.7 & 3 Support. 100 Demo programs & Cookbook for rapid start. Extensive documentation. Examples using Machine Learning(GUI, OpenCV Integration,  Chatterbot), Rainmeter Style Floating Desktop Widgets, Matplotlib + Pyplot integration, add GUI to command line scripts, PDF & Image Viewer. Great for beginners as well as advanced GUI programmers",
