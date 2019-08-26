@@ -56,7 +56,7 @@ The list of Popup output functions are:
 - PopupTimed, PopupAutoClose
 - PopupNoWait, PopupNonBlocking
 
-The trailing portion of the function name after Popup indicates what buttons are shown.  `PopupYesNo` shows a pair of button with Yes and No on them.   `PopupCancel` has a Cancel button, etc.
+The trailing portion of the function name after Popup indicates what buttons are shown.  `PopupYesNo` shows a pair of buttons with Yes and No on them.   `PopupCancel` has a Cancel button, etc.
 
 While these are "output" windows, they do collect input in the form of buttons.  The Popup functions return the button that was clicked.  If the Ok button was clicked, then Popup returns the string 'Ok'.  If the user clicked the X button to close the window, then the button value returned is `None`.
 
@@ -91,10 +91,6 @@ Preview of popups:
 </p>
 
 <!-- <+func.Popup+> -->
-
-The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
-
-
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
 
@@ -1062,7 +1058,7 @@ You will find information on Elements and all other classes and functions are lo
 Some parameters that you  will see on almost all Element creation calls include:
 
 - key   -  Used with window.FindElement and with return values
-- tooltip   - Hover your mouse over the elemnt and you'll get a popup with this text
+- tooltip   - Hover your mouse over the element and you'll get a popup with this text
 - size  - (width, height) - usually measured in characters-wide, rows-high.  Sometimes they mean pixels
 - font - specifies the font family, size, etc
 - colors - Color name or #RRGGBB string
