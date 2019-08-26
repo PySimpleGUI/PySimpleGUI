@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.27.0.4 Unreleased"
+version = __version__ = "0.28.0.1 Unreleased PEP8-ifed"
 
 import sys
 import types
