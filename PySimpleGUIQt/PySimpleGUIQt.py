@@ -23,7 +23,7 @@ FORCE_PYQT5 = False
 
 if not FORCE_PYQT5:
     try:
-        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget, QScrollArea
         from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
@@ -34,7 +34,7 @@ if not FORCE_PYQT5:
         import PySide2.QtWidgets as QtWidgets
         using_pyqt5 = False
     except:
-        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget, QScrollArea
         from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
@@ -46,7 +46,7 @@ if not FORCE_PYQT5:
         using_pyqt5 = True
 else:
     from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-        QHBoxLayout, QListWidget, QDial, QTableWidget
+        QHBoxLayout, QListWidget, QDial, QTableWidget, QScrollArea
     from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, \
         QDialog, QAbstractItemView
     from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, \
@@ -3495,6 +3495,8 @@ class Window:
     def Maximize(self):
         self.QT_QMainWindow.setWindowState(Qt.WindowMaximized)
 
+    def Normal(self):
+        self.QT_QMainWindow.showNormal()
 
     def StartMove(self, event):
         try:
@@ -4683,7 +4685,16 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if not element.Visible:
                     column_widget.setVisible(False)
 
-                qt_row_layout.addWidget(column_widget)
+                if element.Scrollable == True:
+                    width,height = element_size
+                    scroll = QScrollArea()
+                    scroll.setMinimumHeight(height)
+                    scroll.setMinimumWidth(width)
+                    scroll.setWidget(column_widget)
+                    scroll.setWidgetResizable(True)
+                    qt_row_layout.addWidget(scroll)
+                else:
+                    qt_row_layout.addWidget(column_widget)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 element.Widget = element.QT_Label = qlabel = QLabel(element.DisplayText, toplevel_win.QTWindow)
