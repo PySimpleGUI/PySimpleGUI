@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.2 Unreleased Version"
+version = __version__ = "4.4.0.3 Unreleased Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -4669,6 +4669,8 @@ class Tree(Element):
         self.RightClickMenu = right_click_menu
         self.RowHeight = row_height
         self.IconList = {}
+        self.IdToKey = {'':''}
+        self.KeyToID = {'':''}
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip, visible=visible)
@@ -4683,7 +4685,8 @@ class Tree(Element):
         """
 
         selections = self.TKTreeview.selection()
-        self.SelectedRows = [x for x in selections]
+        # self.SelectedRows = [x for x in selections]
+        self.SelectedRows = [self.IdToKey[x] for x in selections]
         if self.ChangeSubmits:
             MyForm = self.ParentForm
             if self.Key is not None:
@@ -4701,7 +4704,6 @@ class Tree(Element):
 
         :param node: (TreeData) The node to insert.  Will insert all nodes from starting point downward, recursively
         """
-        # print(f'Inserting {node.key} under parent {node.parent}')
         if node.key != '':
             if node.icon:
                 try:
@@ -4710,16 +4712,21 @@ class Tree(Element):
                     else:
                         photo = tk.PhotoImage(file=node.icon)
                     node.photo = photo
-                    self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
-                                           open=self.ShowExpanded, image=node.photo)
+                    id = self.TKTreeview.insert(self.KeyToID[node.parent], 'end', iid=None, text=node.text,
+                                         values=node.values, open=self.ShowExpanded, image=node.photo)
+                    self.IdToKey[id] = node.key
+                    self.KeyToID[node.key] = id
                 except:
                     self.photo = None
             else:
-                self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
-                                       open=self.ShowExpanded)
+                id = self.TKTreeview.insert(self.KeyToID[node.parent], 'end', iid=None, text=node.text,
+                                            values=node.values, open=self.ShowExpanded)
+                self.IdToKey[id] = node.key
+                self.KeyToID[node.key] = id
 
         for node in node.children:
             self.add_treeview_data(node)
+
 
     def Update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
         """
@@ -4742,25 +4749,36 @@ class Tree(Element):
                 self.TKTreeview.delete(i)
             children = self.TKTreeview.get_children()
             self.TreeData = values
+            self.IdToKey = {'': ''}
+            self.KeyToID = {'': ''}
             self.add_treeview_data(self.TreeData.root_node)
             self.SelectedRows = []
         if key is not None:
-            item = self.TKTreeview.item(key)
+            for id in self.IdToKey.keys():
+                if key == self.IdToKey[id]:
+                    break
+            else:
+                id = None
+                print('** Key not found **')
+        else:
+            id = None
+        if id:
+            # item = self.TKTreeview.item(id)
             if value is not None:
-                self.TKTreeview.item(key, values=value)
+                self.TKTreeview.item(id, values=value)
             if text is not None:
-                self.TKTreeview.item(key, text=text)
+                self.TKTreeview.item(id, text=text)
             if icon is not None:
                 try:
                     if type(icon) is bytes:
                         photo = tk.PhotoImage(data=icon)
                     else:
                         photo = tk.PhotoImage(file=icon)
-                    self.TKTreeview.item(key, image=photo)
+                    self.TKTreeview.item(id, image=photo)
                     self.IconList[key] = photo  # save so that it's not deleted (save reference)
                 except:
                     pass
-            item = self.TKTreeview.item(key)
+            # item = self.TKTreeview.item(id)
         if visible is False:
             self.TKTreeview.pack_forget()
         elif visible is True:
@@ -6146,6 +6164,14 @@ Window.CloseNonBlocking = Window.Close
 
 # ------------------------- A fake Element... the Pad Element ------------------------- #
 def Sizer(h_pixels=0, v_pixels=0):
+    """
+    "Pushes" out the size of whatever it is placed inside of.  This includes Columns, Frames, Tabs and Windows
+
+    :param h_pixels: (int) number of horizontal pixels
+    :param v_pixels: (int) number of vertical pixels
+    :return: (Column) A column element that has a pad setting set according to parameters
+    """
+
     return Column([[]], pad=((h_pixels,0),(v_pixels,0)))
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
@@ -7452,6 +7478,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKColFrame.bind('<Button-3>', element._RightClickMenuCallback)
+                row_should_expand = True
             # -------------------------  Pane element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
                 bd = element.BorderDepth if element.BorderDepth is not None else border_depth
@@ -7723,7 +7750,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
-                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='x')
+                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill=tk.X)
                 if element.Visible is False:
                     element.TKEntry.pack_forget()
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
@@ -7739,6 +7766,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKEntry.bind('<Button-3>', element._RightClickMenuCallback)
+                row_should_expand = True
+
             # -------------------------  COMBOBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) else 0
@@ -8025,6 +8054,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  SPIN element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
+                element = element               # type: Spin
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.TKStringVar = tk.StringVar()
@@ -8069,6 +8099,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 row_should_expand = True
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
+                element = element           # type: Image
                 if element.Filename is not None:
                     photo = tk.PhotoImage(file=element.Filename)
                 elif element.Data is not None:
@@ -8197,7 +8228,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
-                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.BOTH, expand=True)
                 if not element.Visible:
                     labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
@@ -8220,6 +8251,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     labeled_frame.bind('<Button-3>', element._RightClickMenuCallback)
+                row_should_expand=True
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 element = element               # type: Tab
@@ -8516,11 +8548,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             else:
                                 photo = tk.PhotoImage(file=node.icon)
                             node.photo = photo
-                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                            id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None,  text=node.text, values=node.values,
                                             open=element.ShowExpanded, image=node.photo)
+                            element.IdToKey[id] = node.key
+                            element.KeyToID[node.key] = id
                         else:
-                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                            id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None,  text=node.text, values=node.values,
                                             open=element.ShowExpanded)
+                            element.IdToKey[id] = node.key
+                            element.KeyToID[node.key] = id
 
                     for node in node.children:
                         add_treeview_data(node)
