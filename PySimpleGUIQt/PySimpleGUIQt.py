@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.27.0.4 Unreleased"
+version = __version__ = "0.28.0.1 Unreleased PEP8-ifed"
 
 import sys
 import types
@@ -23,7 +23,7 @@ FORCE_PYQT5 = False
 
 if not FORCE_PYQT5:
     try:
-        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget, QScrollArea
         from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
@@ -34,7 +34,7 @@ if not FORCE_PYQT5:
         import PySide2.QtWidgets as QtWidgets
         using_pyqt5 = False
     except:
-        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget, QScrollArea
         from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
         from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
         from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
@@ -46,7 +46,7 @@ if not FORCE_PYQT5:
         using_pyqt5 = True
 else:
     from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-        QHBoxLayout, QListWidget, QDial, QTableWidget
+        QHBoxLayout, QListWidget, QDial, QTableWidget, QScrollArea
     from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, \
         QDialog, QAbstractItemView
     from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, \
@@ -116,7 +116,9 @@ DEFAULT_MARGINS = (10, 5)  # Margins for each LEFT/RIGHT margin is first term
 DEFAULT_ELEMENT_PADDING = (4, 2)  # Padding between elements (row, col) in pixels
 # DEFAULT_ELEMENT_PADDING = (0, 0)  # Padding between elements (row, col) in pixels
 DEFAULT_PIXELS_TO_CHARS_SCALING = (10,35)      # 1 character represents x by y pixels
+DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT = (10,20)      # 1 character represents x by y pixels
 DEFAULT_PIXEL_TO_CHARS_CUTOFF = 15             # number of chars that triggers using pixels instead of chars
+DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE = 70             # number of chars that triggers using pixels instead of chars
 DEFAULT_AUTOSIZE_TEXT = True
 DEFAULT_AUTOSIZE_BUTTONS = True
 DEFAULT_FONT = ("Helvetica", 10)
@@ -266,7 +268,7 @@ def RGB(red, green, blue): return '#%02x%02x%02x' % (red, green, blue)
 # -------------------------  Button types  ------------------------- #
 # todo Consider removing the Submit, Cancel types... they are just 'RETURN' type in reality
 # uncomment this line and indent to go back to using Enums
-# class ButtonType(Enum):
+# was an Enum previously ButtonType(Enum):
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
 BUTTON_TYPE_BROWSE_FILES = 21
@@ -279,7 +281,7 @@ BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
 
 # -------------------------  Element types  ------------------------- #
-# class ElementType(Enum):
+# Used in Element - Was an enum once ElementType(Enum):
 ELEM_TYPE_TEXT = 'text'
 ELEM_TYPE_INPUT_TEXT = 'input'
 ELEM_TYPE_INPUT_COMBO = 'combo'
@@ -334,12 +336,11 @@ class Element():
     def __init__(self, elem_type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
                  key=None, pad=None, tooltip=None, visible=True, size_px=(None, None)):
 
-        if elem_type != ELEM_TYPE_GRAPH:
-            self.Size = convert_tkinter_size_to_Qt(size)
-        else:
-            self.Size = size
         if size_px != (None, None):
             self.Size = size_px
+        else:
+            self.Size = _convert_tkinter_size_to_Qt(size)
+
         self.Type = elem_type
         self.AutoSizeText = auto_size_text
         # self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
@@ -368,102 +369,36 @@ class Element():
         self.TooltipObject = None
         self.Visible = visible
 
-    def FindReturnKeyBoundButton(self, form):
+    def _FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
             for element in row:
                 if element.Type == ELEM_TYPE_BUTTON:
                     if element.BindReturnKey:
                         return element
                 if element.Type == ELEM_TYPE_COLUMN:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
                 if element.Type == ELEM_TYPE_FRAME:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
                 if element.Type == ELEM_TYPE_TAB_GROUP:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
                 if element.Type == ELEM_TYPE_TAB:
-                    rc = self.FindReturnKeyBoundButton(element)
+                    rc = self._FindReturnKeyBoundButton(element)
                     if rc is not None:
                         return rc
         return None
 
-    def TextClickedHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = self.DisplayText
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def ReturnKeyHandler(self, event):
+    def _ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
-        button_element = self.FindReturnKeyBoundButton(MyForm)
+        button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
-            button_element.ButtonCallBack()
-
-    def ListboxSelectHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
-    def ComboboxSelectHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
-    def RadioHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-    def CheckboxHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-    def TabGroupSelectHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-    def KeyboardHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
+            button_element._ButtonCallBack()
 
 
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None):
@@ -499,23 +434,6 @@ class Element():
         """
         return self.Update(*args, **kwargs)
 
-    def __del__(self):
-        try:
-            self.TKStringVar.__del__()
-        except:
-            pass
-        try:
-            self.TKIntVar.__del__()
-        except:
-            pass
-        try:
-            self.TKText.__del__()
-        except:
-            pass
-        try:
-            self.TKEntry.__del__()
-        except:
-            pass
 
 
 # ---------------------------------------------------------------------- #
@@ -548,13 +466,13 @@ class InputText(Element):
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
 
-    def dragEnterEvent(self, e):
+    def _dragEnterEvent(self, e):
         if e.mimeData().hasText():
             e.accept()
         else:
             e.ignore()
 
-    def dropEvent(self, e):
+    def _dropEvent(self, e):
         self.QT_QLineEdit.setText(e.mimeData().text())
 
 
@@ -573,11 +491,11 @@ class InputText(Element):
 
 
 
-    def QtCallbackFocusInEvent(self,value):
+    def _QtCallbackFocusInEvent(self,value):
         return
 
 
-    def QtCallbackTextChanged(self, value):
+    def _QtCallbackFocusInEvent(self, value):
         if not self.ChangeSubmits:
             return
         # if was changed using an "update" call, then skip the next changed callback
@@ -585,10 +503,10 @@ class InputText(Element):
             self.ValueWasChanged = False
             print('skipping update')
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
-    def QtCallbackReturnPressed(self):
-        self.ReturnKeyHandler(None)
+    def _QtCallbackReturnPressed(self):
+        self._ReturnKeyHandler(None)
         return
 
     def Update(self, value=None, disabled=None, select=None, background_color=None, text_color=None, font=None, visible=None):
@@ -615,9 +533,9 @@ class InputText(Element):
     def SetFocus(self):
         self.QT_QLineEdit.setFocus()
 
-    def __del__(self):
-        super().__del__()
-
+    get = Get
+    set_focus = SetFocus
+    update = Update
 
 # -------------------------  INPUT TEXT lazy functions  ------------------------- #
 In = InputText
@@ -655,14 +573,9 @@ class Combo(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
 
 
-    def QtCurrentItemChanged(self, state):
+    def _QtCurrentItemChanged(self, state):
         if self.ChangeSubmits:
-            element_callback_quit_mainloop(self)
-
-
-    def Qt_init(self):
-        self.QT_ComboBox = QComboBox()
-        self.QT_ComboBox.addItems(self.Values)
+            _element_callback_quit_mainloop(self)
 
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
@@ -687,14 +600,7 @@ class Combo(Element):
 
         super().Update(self.QT_ComboBox, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-
-
-    def __del__(self):
-        try:
-            self.TKCombo.__del__()
-        except:
-            pass
-        super().__del__()
+    update = Update
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
@@ -735,13 +641,7 @@ class OptionMenu(Element):
     def Update(self, value=None, values=None, disabled=None):
         return
 
-    def __del__(self):
-        try:
-            self.TKOptionMenu.__del__()
-        except:
-            pass
-        super().__del__()
-
+    update = Update
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
 InputOptionMenu = OptionMenu
@@ -798,9 +698,9 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=tsize, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
 
-    def QtCurrentRowChanged(self, state):
+    def _QtCurrentRowChanged(self, state):
         if self.ChangeSubmits:
-            element_callback_quit_mainloop(self)
+            _element_callback_quit_mainloop(self)
 
 
     def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None, visible=None):
@@ -830,8 +730,10 @@ class Listbox(Element):
     def GetListValues(self):
         return self.Values
 
-    def __del__(self):
-        super().__del__()
+
+    get_list_values = GetListValues
+    set_value = SetValue
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -885,15 +787,12 @@ class Radio(Element):
         super().Update(self.QT_Radio_Button, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
-    def QtCallbackValueChanged(self, value):
+    def _QtCallbackValueChanged(self, value):
         if not self.ChangeSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
-
-    def __del__(self):
-        super().__del__()
-
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Checkbox                                     #
@@ -931,7 +830,7 @@ class Checkbox(Element):
 
     def QtCallbackStateChanged(self, state):
         if self.ChangeSubmits:
-            element_callback_quit_mainloop(self)
+            _element_callback_quit_mainloop(self)
 
 
     def Get(self):
@@ -945,9 +844,8 @@ class Checkbox(Element):
             self.QT_Checkbox.setDisabled(False)
         super().Update(self.QT_Checkbox, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-    def __del__(self):
-        super().__del__()
-
+    get = Get
+    update = Update
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
 CB = Checkbox
@@ -1012,10 +910,10 @@ class Spin(Element):
             return self._values[text]
 
 
-    def QtCallbackValueChanged(self, value):
+    def _QtCallbackValueChanged(self, value):
         if not self.ChangeSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
     def Update(self, value=None, values=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
         if values != None:
@@ -1038,14 +936,14 @@ class Spin(Element):
     def Get(self):
         return self.QT_Spinner.value()
 
-    def __del__(self):
-        super().__del__()
+    get = Get
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
 # ---------------------------------------------------------------------- #
-class Multiline(Element, QWidget):
+class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=True,
                  key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
@@ -1075,13 +973,12 @@ class Multiline(Element, QWidget):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
-        tsize = size                # convert tkinter size to pixels
-        if size[0] is not None and size[0] < 100:
-            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+        tsize = _convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT,height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE) if size[0] is not None else size_px
+
         self.Widget = self.QT_TextEdit = None               # type: QTextEdit
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=(None, None), auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=tsize)
         return
 
 
@@ -1101,10 +998,10 @@ class Multiline(Element, QWidget):
             return QWidget.eventFilter(self, widget, event)
 
 
-    def QtCallbackTextChanged(self):
+    def _QtCallbackFocusInEvent(self):
         if not self.ChangeSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
@@ -1127,9 +1024,10 @@ class Multiline(Element, QWidget):
     def SetFocus(self):
         self.QT_TextEdit.setFocus()
 
+    get = Get
+    set_focus = SetFocus
+    update = Update
 
-    def __del__(self):
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1164,9 +1062,9 @@ class MultilineOutput(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.Widget = self.QT_TextBrowser = None            # type: QTextBrowser
-
-        super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
+        tsize = _convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT,height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE) if size[0] is not None else size_px
+        super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=(None, None), auto_size_text=auto_size_text, background_color=bg,
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=tsize)
         return
 
 
@@ -1186,12 +1084,8 @@ class MultilineOutput(Element):
     def Get(self):
         self.QT_TextBrowser.toPlainText()
 
-    def __del__(self):
-        super().__del__()
-
-
-
-
+    get = Get
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                                       Text                             #
@@ -1230,10 +1124,10 @@ class Text(Element):
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
         return
 
-    def QtCallbackTextClicked(self, event):
+    def _QtCallbackTextClicked(self, event):
         if not self.ClickSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         '''
@@ -1250,10 +1144,7 @@ class Text(Element):
             self.QT_Label.setText(str(value))
         super().Update(self.QT_Label, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-
-    def __del__(self):
-        super().__del__()
-
+    update = Update
 
 # -------------------------  Text Element lazy functions  ------------------------- #
 Txt = Text
@@ -1282,12 +1173,12 @@ class Output(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Widget = self.QT_TextBrowser = None            # type: QTextBrowser
 
-        tsize = convert_tkinter_size_to_Qt(size) if size[0] is not None and size[0] < 100 else size
+        tsize = _convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT,height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE) if size[0] is not None else size
 
-        super().__init__(ELEM_TYPE_OUTPUT, size=tsize, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key, visible=visible, size_px=size_px)
+        super().__init__(ELEM_TYPE_OUTPUT, size=(None, None), background_color=bg, text_color=fg, pad=pad, font=font,
+                         tooltip=tooltip, key=key, visible=visible, size_px=tsize)
 
-    def reroute_stdout(self):
+    def _reroute_stdout(self):
         self.my_stdout = sys.stdout
         self.my_stderr = sys.stderr
         sys.stdout = self
@@ -1295,6 +1186,11 @@ class Output(Element):
 
 
     def write(self, m):
+        """
+        MUST be called write. Don't mess with. It's called by Python itself because of reroute
+        :param m:
+        :return:
+        """
         self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
         self.QT_TextBrowser.insertPlainText( str(m))
 
@@ -1311,7 +1207,9 @@ class Output(Element):
     def __del__(self):
         sys.stdout = self.my_stdout
         sys.stderr = self.my_stderr
-        super().__del__()
+
+    update = Update
+    write = write
 
 
 # ---------------------------------------------------------------------- #
@@ -1377,12 +1275,12 @@ class Button(Element):
         return
 
     # Realtime button release callback
-    def ButtonReleaseCallBack(self, parm):
+    def _ButtonReleaseCallBack(self, parm):
         self.LastButtonClickedWasRealtime = False
         self.ParentForm.LastButtonClicked = None
 
     # Realtime button callback
-    def ButtonPressCallBack(self, parm):
+    def _ButtonPressCallBack(self, parm):
         self.ParentForm.LastButtonClickedWasRealtime = True
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
@@ -1392,7 +1290,7 @@ class Button(Element):
             pass  # kick out of loop if read was called
 
     # -------  Button Callback  ------- #
-    def ButtonCallBack(self):
+    def _ButtonCallBack(self):
 
         # print('Button callback')
 
@@ -1550,10 +1448,10 @@ class Button(Element):
         except Exception as e:
             print('Exception {} \nclicking button {}'.format(e, self.ButtonText))
 
-
-    def __del__(self):
-        super().__del__()
-
+    click = Click
+    get_text = GetText
+    set_focus = SetFocus
+    update = Update
 
 # -------------------------  Button lazy functions  ------------------------- #
 B = Button
@@ -1614,10 +1512,10 @@ class ButtonMenu(Element):
         return
 
 
-    def QT_MenuItemChosenCallback(self, item_chosen):
+    def _QT_MenuItemChosenCallback(self, item_chosen):
         print('IN BUTTON MENU ITEM CALLBACK', item_chosen)
         self.Key = item_chosen.replace('&','')                   # fool the quit function into thinking this was a key
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
 
     def Update(self, menu_definition=None, text=None, button_color=(None, None), font=None, visible=None):
@@ -1637,10 +1535,8 @@ class ButtonMenu(Element):
         except Exception as e:
             print('Exception {} clicking button. Has your Window been Finalized() or Read()?'.format(e))
 
-    def __del__(self):
-        super().__del__()
-
-
+    click = Click
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           ProgreessBar                                 #
@@ -1692,8 +1588,8 @@ class ProgressBar(Element):
     def Update(self, visible=None):
         super().Update(self.QT_QProgressBar, visible=visible)
 
-    def __del__(self):
-        super().__del__()
+    update = Update
+    update_bar = UpdateBar
 
 
 # ---------------------------------------------------------------------- #
@@ -1729,7 +1625,7 @@ class Image(Element):
     def QtCallbackImageClicked(self, event):
         if not self.ClickSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
 
     def Update(self, filename=None, data=None, data_base64=None, size=(None, None), visible=None):
@@ -1756,8 +1652,7 @@ class Image(Element):
             qlabel.setPixmap(pixmap)
         super().Update(self.QT_QLabel, visible=visible)
 
-    def __del__(self):
-        super().__del__()
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1788,16 +1683,12 @@ class Canvas(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
-    def __del__(self):
-        super().__del__()
-
-
 # ---------------------------------------------------------------------- #
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
 class Graph(Element):
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, key=None,
-                 tooltip=None, visible=True, size_px=(None,None), change_submits=False, enable_events=False, drag_submits=False):
+                 tooltip=None, visible=True, change_submits=False, enable_events=False, drag_submits=False):
         '''
         Graph Element
         :param canvas_size:
@@ -1814,8 +1705,8 @@ class Graph(Element):
         self.x  = self.y = 0
         self.Widget = self.QT_QGraphicsScene = None       # type: QGraphicsScene
 
-        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
-                         tooltip=tooltip, visible=visible, size_px=size_px)
+        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=(None, None), pad=pad, key=key,
+                         tooltip=tooltip, visible=visible, size_px=canvas_size)
         return
 
 
@@ -1981,8 +1872,20 @@ class Graph(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas2
 
-    def __del__(self):
-        super().__del__()
+
+    draw_arc = DrawArc
+    draw_circle = DrawCircle
+    draw_line = DrawLine
+    draw_oval = DrawOval
+    draw_point = DrawPoint
+    draw_rectangle = DrawRectangle
+    draw_rectangle_old = DrawRectangleOld
+    draw_text = DrawText
+    erase = Erase
+    move = Move
+    move_figure = MoveFigure
+    relocate_figure = RelocateFigure
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -2056,12 +1959,9 @@ class Frame(Element):
     def Update(self, visible=None):
         super().Update(self.QT_QGroupBox, visible=visible)
 
-
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+    add_row = AddRow
+    layout = Layout
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -2077,8 +1977,7 @@ class VerticalSeparator(Element):
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
-    def __del__(self):
-        super().__del__()
+
 
 
 VSeperator = VerticalSeparator
@@ -2098,8 +1997,6 @@ class HorizontalSeparator(Element):
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
-    def __del__(self):
-        super().__del__()
 
 
 HSeperator = HorizontalSeparator
@@ -2195,13 +2092,10 @@ class Tab(Element):
         except:
             print('** EXCEPTION while trying to Select tab with key =', self.Key)
 
-
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
-
+    add_row = AddRow
+    layout = Layout
+    select = Select
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           TabGroup                                     #
@@ -2288,7 +2182,7 @@ class TabGroup(Element):
 
     def QtCallbackStateChanged(self, state):
         if self.ChangeSubmits:
-            element_callback_quit_mainloop(self)
+            _element_callback_quit_mainloop(self)
 
     def Get(self):
         """
@@ -2308,11 +2202,10 @@ class TabGroup(Element):
             value = None
         return value
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+    add_row = AddRow
+    find_key_from_tab_name = FindKeyFromTabName
+    get = Get
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -2362,10 +2255,10 @@ class Slider(Element):
         return
 
 
-    def QtCallbackValueChanged(self, value):
+    def _QtCallbackValueChanged(self, value):
         if not self.ChangeSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
     def Update(self, value=None, range=(None, None), disabled=None, visible=None):
         if value is not None:
@@ -2378,19 +2271,9 @@ class Slider(Element):
         super().Update(self.QT_Slider, visible=visible)
 
 
-    def SliderChangedHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            pass # TODO  # kick the users out of the mainloop
+    update = Update
 
-    def __del__(self):
-        super().__del__()
+
 
 # ---------------------------------------------------------------------- #
 #                           Dial                                         #
@@ -2448,15 +2331,12 @@ class Dial(Element):
         super().Update(self.QT_Dial, visible=visible)
 
 
-    def QtCallbackValueChanged(self, value):
+    def _QtCallbackValueChanged(self, value):
         if not self.ChangeSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
-    def __del__(self):
-        super().__del__()
-
-
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Stretch                                       #
@@ -2479,8 +2359,6 @@ class Stretch(Element):
         return
 
 
-    def __del__(self):
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -2547,14 +2425,9 @@ class Column(Element):
 
         super().Update(self.QT_QGroupBox, visible=visible)
 
-
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
-
-
+    add_row = AddRow
+    layout = Layout
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Menu                                       #
@@ -2581,10 +2454,10 @@ class Menu(Element):
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key, visible=visible)
 
 
-    def QT_MenuItemChosenCallback(self, item_chosen):
+    def _QT_MenuItemChosenCallback(self, item_chosen):
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&','')
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
         # self.ParentForm.LastButtonClicked = item_chosen
         # self.ParentForm.FormRemainedOpen = True
         # if self.ParentForm.CurrentlyRunningMainloop:
@@ -2610,10 +2483,7 @@ class Menu(Element):
             self.ParentForm.QT_QMainWindow.setMenuBar(self.QT_QMenuBar)
         super().Update(self.QT_QMenuBar, visible=visible)
 
-
-    def __del__(self):
-        super().__del__()
-
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Table                                        #
@@ -2669,16 +2539,16 @@ class Table(Element):
         return
 
 
-    def QtCallbackCellActivated(self, value=None):
+    def _QtCallbackCellActivated(self, value=None):
         # print('CELL ACTIVATED ', value)
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if not self.ChangeSubmits:
             return
-        element_callback_quit_mainloop(self)
+        _element_callback_quit_mainloop(self)
 
 
-    def QtCallbackVerticalHeader(self, value):
+    def _QtCallbackVerticalHeader(self, value):
         print('Vertical Header value ', value)
 
 
@@ -2713,7 +2583,7 @@ class Table(Element):
 
         return table
 
-    def treeview_selected(self, event):
+    def _treeview_selected(self, event):
         if self.ChangeSubmits:
             MyForm = self.ParentForm
             if self.Key is not None:
@@ -2766,10 +2636,8 @@ class Table(Element):
                     self.Window.QTApplication.exit()
             return QWidget.eventFilter(self, widget, event)
 
-
-    def __del__(self):
-        super().__del__()
-
+    get = Get
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Tree                                         #
@@ -2822,7 +2690,7 @@ class Tree(Element):
                          key=key, tooltip=tooltip, size=size, visible=visible, size_px=size_px)
         return
 
-    def treeview_selected(self, event):
+    def _treeview_selected(self, event):
         selections = 000000
         self.SelectedRows = [x for x in selections]
         if self.ChangeSubmits:
@@ -2890,9 +2758,7 @@ class Tree(Element):
 
         return self
 
-    def __del__(self):
-        super().__del__()
-
+    update = Update
 
 class TreeData(object):
     class Node(object):
@@ -2929,6 +2795,8 @@ class TreeData(object):
             [str(node.key) + ' : ' + str(node.text)] +
             [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
 
+    insert = Insert
+
 
 # ---------------------------------------------------------------------- #
 #                           Error Element                                #
@@ -2956,9 +2824,8 @@ class ErrorElement(Element):
     def Get(self):
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-    def __del__(self):
-        super().__del__()
-
+    get = Get
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -3023,22 +2890,22 @@ class SystemTray:
         if tooltip is not None:
             self.TrayIcon.setToolTip(str(tooltip))
 
-        self.TrayIcon.messageClicked.connect(self.messageClicked)
-        self.TrayIcon.activated.connect(self.doubleClicked)
+        self.TrayIcon.messageClicked.connect(self._message_clicked)
+        self.TrayIcon.activated.connect(self._double_clicked)
 
         self.TrayIcon.show()
 
-    def QT_MenuItemChosenCallback(self, item_chosen):
+    def _QT_MenuItemChosenCallback(self, item_chosen):
         self.MenuItemChosen = item_chosen.replace('&','')
         self.App.exit()                         # kick the users out of the mainloop
 
     # callback function when message is clicked
-    def messageClicked(self):
+    def _message_clicked(self):
         self.MenuItemChosen = EVENT_SYSTEM_TRAY_MESSAGE_CLICKED
         self.App.exit()
 
 
-    def doubleClicked(self, reason):
+    def _double_clicked(self, reason):
         # print(reason)
         if reason == QSystemTrayIcon.DoubleClick:
             self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED
@@ -3072,7 +2939,7 @@ class SystemTray:
         self.MenuItemChosen = TIMEOUT_KEY
         return item
 
-    def timer_timeout(self):
+    def _timer_timeout(self):
         self.App.exit()  # kick the users out of the mainloop
 
     def Hide(self):
@@ -3166,7 +3033,12 @@ class SystemTray:
         if qicon is not None:
             self.TrayIcon.setIcon(qicon)
 
-
+    close = Close
+    hide = Hide
+    read = Read
+    show_message = ShowMessage
+    un_hide = UnHide
+    update = Update
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
@@ -3219,8 +3091,8 @@ class Window:
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
         self.Rows = []  # a list of ELEMENTS for this row
-        self.DefaultElementSize = convert_tkinter_size_to_Qt(default_element_size)
-        self.DefaultButtonElementSize = convert_tkinter_size_to_Qt(default_button_element_size) if default_button_element_size != (
+        self.DefaultElementSize = _convert_tkinter_size_to_Qt(default_element_size)
+        self.DefaultButtonElementSize = _convert_tkinter_size_to_Qt(default_button_element_size) if default_button_element_size != (
             None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
@@ -3310,7 +3182,7 @@ class Window:
 
     def Layout(self, rows):
         self.AddRows(rows)
-        self.BuildKeyDict()
+        self._BuildKeyDict()
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
@@ -3386,7 +3258,7 @@ class Window:
         except:
             pass
 
-    def timer_timeout(self):
+    def _timer_timeout(self):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.TimerCancelled:
@@ -3396,7 +3268,7 @@ class Window:
         if self.CurrentlyRunningMainloop:
             self.QTApplication.exit()  # kick the users out of the mainloop
 
-    def autoclose_timer_callback(self):
+    def _autoclose_timer_callback(self):
         # print('*** TIMEOUT CALLBACK ***')
         self.autoclose_timer.stop()
         self.QT_QMainWindow.close()
@@ -3547,7 +3419,7 @@ class Window:
 
     Element =  FindElement          # Shortcut function
 
-    def BuildKeyDict(self):
+    def _BuildKeyDict(self):
         dict = {}
         self.AllKeysDict = self._BuildKeyDictForWindow(self,self, dict)
 
@@ -3622,7 +3494,7 @@ class Window:
 
     def Maximize(self):
         self.QT_QMainWindow.setWindowState(Qt.WindowMaximized)
-    
+
     def Normal(self):
         self.QT_QMainWindow.showNormal()
 
@@ -3682,7 +3554,6 @@ class Window:
             return None
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
-        self.__del__()
         return None
 
     def Close(self):
@@ -3851,18 +3722,7 @@ class Window:
             print('The key you passed in is no good. Key = {}*'.format(key))
             return None
 
-    def __enter__(self):
-        return self
 
-    def __exit__(self, *a):
-        self.__del__()
-        return False
-
-    def __del__(self):
-        # print(f'+++++ Window {self.Title} being deleted +++++')
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
 
     add_row = AddRow
     add_rows = AddRows
@@ -3903,7 +3763,7 @@ FlexForm = Window
 # Stops the mainloop and sets the event information                           #
 # =========================================================================== #
 
-def element_callback_quit_mainloop(element):
+def _element_callback_quit_mainloop(element):
     if element.Key is not None:
         element.ParentForm.LastButtonClicked = element.Key
     else:
@@ -3916,15 +3776,15 @@ def element_callback_quit_mainloop(element):
 # =========================================================================== #
 # Stops the mainloop and sets the event information                           #
 # =========================================================================== #
-def convert_tkinter_size_to_Qt(size):
+def _convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING, height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF):
     """
     Converts size in characters to size in pixels
     :param size:  size in characters, rows
     :return: size in pixels, pixels
     """
     qtsize = size
-    if size[1] is not None and size[1] < DEFAULT_PIXEL_TO_CHARS_CUTOFF:        # change from character based size to pixels (roughly)
-        qtsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+    if size[1] is not None and size[1] < height_cutoff:        # change from character based size to pixels (roughly)
+        qtsize = size[0]*scaling[0], size[1]*scaling[1]
     return qtsize
 
 
@@ -4576,7 +4436,7 @@ def AddTrayMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=Fa
                     action.setDisabled(True)
                 else:
                     action.setText(item_without_key)
-                action.triggered.connect(lambda: SystemTray.QT_MenuItemChosenCallback(element, sub_menu_info))
+                action.triggered.connect(lambda: SystemTray._QT_MenuItemChosenCallback(element, sub_menu_info))
             top_menu.addAction(action)
     else:
         i = 0
@@ -4626,7 +4486,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                     action.setDisabled(True)
                 else:
                     action.setText(item_without_key)
-                action.triggered.connect(lambda: Menu.QT_MenuItemChosenCallback(element, sub_menu_info))
+                action.triggered.connect(lambda: Menu._QT_MenuItemChosenCallback(element, sub_menu_info))
             top_menu.addAction(action)
     else:
         i = 0
@@ -4825,7 +4685,16 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if not element.Visible:
                     column_widget.setVisible(False)
 
-                qt_row_layout.addWidget(column_widget)
+                if element.Scrollable == True:
+                    width,height = element_size
+                    scroll = QScrollArea()
+                    scroll.setMinimumHeight(height)
+                    scroll.setMinimumWidth(width)
+                    scroll.setWidget(column_widget)
+                    scroll.setWidgetResizable(True)
+                    qt_row_layout.addWidget(scroll)
+                else:
+                    qt_row_layout.addWidget(column_widget)
             # -------------------------  TEXT element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 element.Widget = element.QT_Label = qlabel = QLabel(element.DisplayText, toplevel_win.QTWindow)
@@ -4852,7 +4721,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_Label.setStyleSheet(style.content)
 
                 if element.ClickSubmits:
-                    element.QT_Label.mousePressEvent = element.QtCallbackTextClicked
+                    element.QT_Label.mousePressEvent = element._QtCallbackTextClicked
 
                 if element.Relief is not None:
                     if element.Relief in (RELIEF_RIDGE, RELIEF_RAISED):
@@ -4919,7 +4788,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Tooltip:
                     element.QT_QPushButton.setToolTip(element.Tooltip)
-                element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
+                element.QT_QPushButton.clicked.connect(element._ButtonCallBack)
                 if not element.Visible:
                     element.QT_QPushButton.setVisible(False)
 
@@ -4930,8 +4799,8 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.Widget = element.QT_QLineEdit = qlineedit = QLineEdit()
 
                 qlineedit.setAcceptDrops(True)
-                qlineedit.dragEnterEvent = element.dragEnterEvent
-                qlineedit.dropEvent = element.dropEvent
+                qlineedit.dragEnterEvent = element._dragEnterEvent
+                qlineedit.dropEvent = element._dropEvent
 
                 if element.Justification[0] == 'c':
                     element.QT_QLineEdit.setAlignment(Qt.AlignCenter)
@@ -4961,9 +4830,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QLineEdit.setDisabled(True)
 
                 if element.ChangeSubmits:
-                    element.QT_QLineEdit.textChanged.connect(element.QtCallbackTextChanged)
+                    element.QT_QLineEdit.textChanged.connect(element._QtCallbackFocusInEvent)
 
-                element.QT_QLineEdit.returnPressed.connect(element.QtCallbackReturnPressed)
+                element.QT_QLineEdit.returnPressed.connect(element._QtCallbackReturnPressed)
 
                 if element.PasswordCharacter != '':
                     qlineedit.setEchoMode(QLineEdit.Password)
@@ -5015,7 +4884,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                             break
 
                 if element.ChangeSubmits:
-                    element.QT_ComboBox.currentIndexChanged.connect(element.QtCurrentItemChanged)
+                    element.QT_ComboBox.currentIndexChanged.connect(element._QtCurrentItemChanged)
                 if element.Tooltip:
                     element.QT_ComboBox.setToolTip(element.Tooltip)
                 if not element.Readonly:
@@ -5070,7 +4939,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_ListWidget.setDisabled(True)
 
                 if element.ChangeSubmits:
-                    element.QT_ListWidget.currentRowChanged.connect(element.QtCurrentRowChanged)
+                    element.QT_ListWidget.currentRowChanged.connect(element._QtCurrentRowChanged)
                 # add all Values to the ListWidget
                 items = [str(v) for v in element.Values]
                 element.QT_ListWidget.addItems(items)
@@ -5115,7 +4984,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TextEdit.installEventFilter(element.MultiQWidget)
 
                 if element.ChangeSubmits:
-                    element.QT_TextEdit.textChanged.connect(element.QtCallbackTextChanged)
+                    element.QT_TextEdit.textChanged.connect(element._QtCallbackFocusInEvent)
 
                 if (element.Focus or toplevel_win.UseDefaultFocus) and not focus_set:
                     focus_set = True
@@ -5256,7 +5125,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 QT_RadioButtonGroup.addButton(element.QT_Radio_Button)
 
                 if element.ChangeSubmits:
-                    element.QT_Radio_Button.toggled.connect(element.QtCallbackValueChanged)
+                    element.QT_Radio_Button.toggled.connect(element._QtCallbackValueChanged)
 
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 if element.Tooltip:
@@ -5294,7 +5163,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.Disabled:
                     element.QT_Spinner.setDisabled(True)
                 if element.ChangeSubmits:
-                    element.QT_Spinner.valueChanged.connect(element.QtCallbackValueChanged)
+                    element.QT_Spinner.valueChanged.connect(element._QtCallbackValueChanged)
                 if element.Tooltip:
                     element.QT_Spinner.setToolTip(element.Tooltip)
                 if not element.Visible:
@@ -5328,7 +5197,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         element.QT_TextBrowser.setFixedHeight(element_size[1])
 
                 element.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
-                element.reroute_stdout()
+                element._reroute_stdout()
                 if element.Tooltip:
                     element.QT_TextBrowser.setToolTip(element.Tooltip)
                 if not element.Visible:
@@ -5449,7 +5318,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
                 if element.Tooltip:
                     element.QT_QPushButton.setToolTip(element.Tooltip)
-                # element.QT_QPushButton.clicked.connect(element.ButtonCallBack)
+                # element.QT_QPushButton.clicked.connect(element._ButtonCallBack)
 
                 menu_def = element.MenuDefinition
 
@@ -5589,7 +5458,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_Slider.setValue(element.DefaultValue)
 
                 if element.ChangeSubmits:
-                    element.QT_Slider.valueChanged.connect(element.QtCallbackValueChanged)
+                    element.QT_Slider.valueChanged.connect(element._QtCallbackValueChanged)
                 if element.Tooltip:
                     element.QT_Slider.setToolTip(element.Tooltip)
                 if not element.Visible:
@@ -5624,7 +5493,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_Dial.setValue(element.DefaultValue)
 
                 if element.ChangeSubmits:
-                    element.QT_Dial.valueChanged.connect(element.QtCallbackValueChanged)
+                    element.QT_Dial.valueChanged.connect(element._QtCallbackValueChanged)
                 if element.Tooltip:
                     element.QT_Dial.setToolTip(element.Tooltip)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
@@ -5660,7 +5529,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 element.QT_TableWidget.setStyleSheet(style)
 
                 if element.ChangeSubmits:
-                    element.QT_TableWidget.itemSelectionChanged.connect(element.QtCallbackCellActivated)
+                    element.QT_TableWidget.itemSelectionChanged.connect(element._QtCallbackCellActivated)
                 element.QT_TableWidget.setRowCount(len(element.Values))
                 element.QT_TableWidget.setColumnCount(len(element.Values[0]))
                 for rownum, rows in enumerate(element.Values):
@@ -5819,14 +5688,14 @@ def ConvertFlexToTK(window):
 
 def start_window_read_timer(window, amount):
     timer = QtCore.QTimer()
-    timer.timeout.connect(window.timer_timeout)
+    timer.timeout.connect(window._timer_timeout)
     timer.start(amount)
     return timer
 
 
 def start_systray_read_timer(tray, amount):
     timer = QtCore.QTimer()
-    timer.timeout.connect(tray.timer_timeout)
+    timer.timeout.connect(tray._timer_timeout)
     timer.start(amount)
     return timer
 
@@ -5834,7 +5703,7 @@ def start_systray_read_timer(tray, amount):
 def start_window_autoclose_timer(window, amount):
     timer = QtCore.QTimer()
     window.autoclose_timer = timer
-    timer.timeout.connect(window.autoclose_timer_callback)
+    timer.timeout.connect(window._autoclose_timer_callback)
     timer.start(amount)
     return timer
 
@@ -6215,7 +6084,6 @@ class DebugWin():
 
     def Close(self):
         self.window.Close()
-        self.window.__del__()
         self.window = None
 
 
@@ -6359,10 +6227,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
         DEFAULT_BUTTON_COLOR = button_color
 
     if element_size != (None, None):
-        DEFAULT_ELEMENT_SIZE = convert_tkinter_size_to_Qt(element_size)
+        DEFAULT_ELEMENT_SIZE = _convert_tkinter_size_to_Qt(element_size)
 
     if button_element_size != (None, None):
-        DEFAULT_BUTTON_ELEMENT_SIZE = convert_tkinter_size_to_Qt(button_element_size)
+        DEFAULT_BUTTON_ELEMENT_SIZE = _convert_tkinter_size_to_Qt(button_element_size)
 
     if margins != (None, None):
         DEFAULT_MARGINS = margins
@@ -7555,6 +7423,48 @@ def main():
     # event, values = window.Read()
     # print(event, values)
     # window.Close()
+
+#------------------------------------------------------------------#
+#------------------------ PEP8-ify The SDK ------------------------#
+#------------------------------------------------------------------#
+
+change_look_and_feel = ChangeLookAndFeel
+easy_print = EasyPrint
+easy_print_close = EasyPrintClose
+get_complimentary_hex = GetComplimentaryHex
+list_of_look_and_feel_values = ListOfLookAndFeelValues
+obj_to_string = ObjToString
+obj_to_string_single_obj = ObjToStringSingleObj
+one_line_progress_meter = OneLineProgressMeter
+one_line_progress_meter_cancel = OneLineProgressMeterCancel
+popup = Popup
+popup_annoying = PopupAnnoying
+popup_auto_close = PopupAutoClose
+popup_cancel = PopupCancel
+popup_error = PopupError
+popup_get_file = PopupGetFile
+popup_get_folder = PopupGetFolder
+popup_get_text = PopupGetText
+popup_no_border = PopupNoBorder
+popup_no_buttons = PopupNoButtons
+popup_no_frame = PopupNoFrame
+popup_no_titlebar = PopupNoTitlebar
+popup_no_wait = PopupNoWait
+popup_non_blocking = PopupNonBlocking
+popup_ok = PopupOK
+popup_ok_cancel = PopupOKCancel
+popup_quick = PopupQuick
+popup_quick_message = PopupQuickMessage
+popup_scrolled = PopupScrolled
+popup_timed = PopupTimed
+popup_yes_no = PopupYesNo
+rgb = RGB
+scrolled_text_box = ScrolledTextBox
+set_global_icon = SetGlobalIcon
+set_options = SetOptions
+timer_start = TimerStart
+timer_stop = TimerStop
+
 
 
 if __name__ == '__main__':
