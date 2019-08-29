@@ -58,7 +58,7 @@ def the_gui():
               [sg.Text('', size=(25, 1), key='_OUTPUT_')],
               [sg.Text('', size=(25, 1), key='_OUTPUT2_')],
               [sg.Graph((10,10),(0,0),(10,10),background_color='black',key=i) for i in range(20)],
-              [sg.Button('Go'), sg.Button('Stop'), sg.Button('Popup'), sg.Button('Exit')], ]
+              [sg.Button('Go'), sg.Button('Popup'), sg.Button('Exit')], ]
 
     window = sg.Window('Multithreaded Window').Layout(layout)
     # --------------------- EVENT LOOP ---------------------
@@ -75,8 +75,6 @@ def the_gui():
             thread_id = threading.Thread(target=long_function_wrapper, args=(work_id, gui_queue,), daemon=True)
             thread_id.start()
             work_id = work_id+1 if work_id < 19 else 0
-        elif event == 'Stop':
-            thread_id.exit
         # --------------- Read next message coming in from threads ---------------
         try:
             message = gui_queue.get_nowait()    # see if something has been posted to Queue
