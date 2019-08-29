@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 if sys.version_info[0] >= 3:
-    import PySimpleGUIQt as sg
+    import PySimpleGUI as sg
 else:
     import PySimpleGUI27 as sg
 
@@ -691,7 +691,7 @@ for rows in range(40):
     for i in range(12):
         try:
             color = color_list[rows+40*i]
-            row.append(sg.Button(color, button_color=('black', color), key=color))
+            row.append(sg.Button(color, button_color=('black', color), key=color, tooltip=color_map[color]))
         except:
             pass
     layout.append(row)
