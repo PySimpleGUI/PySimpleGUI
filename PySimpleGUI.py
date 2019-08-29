@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.3 Unreleased Version"
+version = __version__ = "4.4.0.4 Unreleased Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -1627,7 +1627,6 @@ class Text(Element):
     """
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
     """
-
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True):
@@ -1701,8 +1700,9 @@ class Text(Element):
 
 
 # -------------------------  Text Element lazy functions  ------------------------- #
-Txt = Text
-T = Text
+
+Txt = Text  # type: Text.__init__
+T = Text    # type: Text
 
 
 # ---------------------------------------------------------------------- #
@@ -1992,6 +1992,14 @@ class Output(Element):
             self._TKOut.frame.pack_forget()
         elif visible is True:
             self._TKOut.frame.pack()
+
+    def Get(self):
+        """
+        Returns the current contents of the output.  Similar to Get method other Elements
+        :return: (str) the current value of the output
+        """
+        return self._TKOut.output.get(1.0, tk.END)
+
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -2371,8 +2379,8 @@ class ButtonMenu(Element):
         self.IsButtonMenu = True
         self.MenuItemChosen = None
         self.Tearoff = tearoff
-        self.TKButtonMenu = None
-        self.TKMenu = None
+        self.TKButtonMenu = None        # type: tk.Menubutton
+        self.TKMenu = None              # type: tk.Menu
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip,
@@ -2413,6 +2421,17 @@ class ButtonMenu(Element):
             self.TKButtonMenu.pack_forget()
         elif visible is True:
             self.TKButtonMenu.pack()
+
+    def Click(self):
+        """
+        Generates a click of the button as if the user clicked the button
+        Calls the tkinter invoke method for the button
+        """
+        try:
+            self.TKMenu.invoke(1)
+        except:
+            print('Exception clicking button')
+
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -7655,6 +7674,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  BUTTONMENU element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTONMENU:
+                element = element                               # type: ButtonMenu
                 element.Location = (row_num, col_num)
                 btext = element.ButtonText
                 if element.AutoSizeButton is not None:
@@ -7717,7 +7737,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 AddMenuItem(top_menu, menu_def[1], element)
 
                 tkbutton.configure(menu=top_menu)
-
+                element.TKMenu = top_menu
                 if element.Visible is False:
                     tkbutton.pack_forget()
                 if element.Disabled == True:
@@ -8261,7 +8281,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
                 else:
                     form.TKNotebook.add(element.TKFrame, text=element.Title)
-                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.BOTH, expand=True)
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
                 form.TabCount += 1
@@ -8288,6 +8308,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKFrame.bind('<Button-3>', element._RightClickMenuCallback)
+                row_should_expand = True
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element=element     # type: TabGroup
@@ -8333,6 +8354,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                row_should_expand = True
                 # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -11287,7 +11309,6 @@ def main():
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     resizable=True,
-                    debugger_enabled=False,
                     keep_on_top=True,
                     element_justification='left',
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
@@ -11295,7 +11316,7 @@ def main():
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
-        event, values = window.Read(timeout=10)
+        event, values = window.Read(timeout=20)
         if event != TIMEOUT_KEY:
             print(event, values)
         if event is None or event == 'Exit':
