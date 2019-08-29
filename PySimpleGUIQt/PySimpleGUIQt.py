@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.28.0.1 Unreleased PEP8-ifed"
+version = __version__ = "0.28.0.2 Unreleased PEP8-ifed"
 
 import sys
 import types
@@ -3792,8 +3792,8 @@ def _convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING, h
 # =========================================================================== #
 def convert_tkinter_filetypes_to_qt(filetypes):
     qt_filetypes = ''
-    for item in filetypes:
-        filetype = item[0] + ' (' + item[1] + ');;'
+    for i, item in enumerate(filetypes):
+        filetype = item[0] + ' (' + item[1] + ')' + (';;' if i != len(filetypes)-1 else '')
         qt_filetypes += filetype
     return qt_filetypes
 
