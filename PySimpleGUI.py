@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.4 Unreleased Version"
+version = __version__ = "4.4.0.5 Unreleased Version"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -5076,6 +5076,7 @@ class Window:
         self.DebuggerEnabled = debugger_enabled
         self.WasClosed = False
         self.ElementJustification = element_justification
+        self.FocusSet = False
         if type(title) != str:
             warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
         if layout is not None and type(layout) not in  (list, tuple):
@@ -7386,7 +7387,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
     # Building is done row by row.                                                #
     # --------------------------------------------------------------------------- #
-    focus_set = False
     ######################### LOOP THROUGH ROWS #########################
     # *********** -------  Loop through ROWS  ------- ***********#
     for row_num, flex_row in enumerate(form.Rows):
@@ -7662,8 +7662,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
-                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                    focus_set = True
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
+                    toplevel_form.FocusSet = True
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
@@ -7773,8 +7773,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill=tk.X)
                 if element.Visible is False:
                     element.TKEntry.pack_forget()
-                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                    focus_set = True
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
+                    toplevel_form.FocusSet = True
                     element.TKEntry.focus_set()
                 if element.Disabled:
                     element.TKEntry['state'] = 'readonly'
@@ -7963,8 +7963,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.bind('<Key>', element._KeyboardHandler)
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element._ReturnKeyHandler)
-                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                    focus_set = True
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
+                    toplevel_form.FocusSet = True
                     element.TKText.focus_set()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(fg=text_color)
