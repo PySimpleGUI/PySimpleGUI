@@ -12,7 +12,7 @@ from builtins import str
 from builtins import object
 from future import standard_library
 standard_library.install_aliases()
-version = __version__ = "2.2.1 Released - Patched"
+version = __version__ = "2.3.0.0 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -4874,7 +4874,7 @@ class Window(object):
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
-        self.Title = title
+        self.Title = str(title)
         self.Rows = []  # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
         self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
@@ -4932,8 +4932,7 @@ class Window(object):
         self.UniqueKeyCounter = 0
         self.DebuggerEnabled = debugger_enabled
         self.WasClosed = False
-        if not isinstance(title, str):
-            warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
+
         if layout is not None and type(layout) not in  (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
