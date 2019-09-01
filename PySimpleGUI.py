@@ -1209,6 +1209,17 @@ class Listbox(Element):
         """
         return self.Values
 
+
+    def GetIndexes(self):
+        """
+        Returns the items currently selected as a list of indexes
+
+        :return: List[int] A list of offsets into values that is currently selected
+        """
+        return self.TKListbox.curselection()
+
+
+    get_indexes = GetIndexes
     get_list_values = GetListValues
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -2048,12 +2059,14 @@ class Button(Element):
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
         self.FileTypes = file_types
-        self.TKButton = None  # type: tk.Button
+        self.Widget = self.TKButton = None  # type: tk.Button
         self.Target = target
         self.ButtonText = str(button_text)
         if sys.platform == 'darwin' and button_color is not None:
             print('Button *** WARNING - Button colors are not supported on the Mac ***')
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+            self.ButtonColor = DEFAULT_BUTTON_COLOR
+        else:
+            self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -5658,7 +5671,7 @@ class Window:
                     if element.Key in key_dict.keys():
                         print('*** Duplicate key found in your layout {} ***'.format(
                             element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
-                        element.Key = element.Key + str(self.UniqueKeyCounter)
+                        element.Key = str(element.Key) + str(self.UniqueKeyCounter)
                         self.UniqueKeyCounter += 1
                         print('*** Replaced new key with {} ***'.format(
                             element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
@@ -7482,7 +7495,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     side = tk.LEFT
                 row_justify = element.Justification
                 element.Widget = element.TKColFrame
-                element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=False, fill='both')
                 # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
@@ -7667,6 +7680,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
+                # else:
+                #     element.TKButton.config(takefocus=0)
+                #     print('** skipping focus **')
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
@@ -8248,7 +8264,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
-                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.BOTH, expand=True)
+                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
                 if not element.Visible:
                     labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
@@ -8696,6 +8712,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             anchor = 'nw'
             side = tk.TOP
 
+        # row_should_expand = False
 
         tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
                           expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
