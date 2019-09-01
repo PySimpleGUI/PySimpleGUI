@@ -1,7 +1,7 @@
 #usr/bin/python3
 from clint import Args
 
-version = __version__ = "0.31.0.2 Unreleased"
+version = __version__ = "0.31.0.3 Unreleased"
 
 import sys
 import datetime
