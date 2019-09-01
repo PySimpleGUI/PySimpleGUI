@@ -1,8 +1,9 @@
 #usr/bin/python3
+from clint import Args
+
 version = __version__ = "0.31.0.2 Unreleased"
 
 import sys
-import types
 import datetime
 import textwrap
 import pickle
@@ -15,6 +16,9 @@ import traceback
 import os
 import base64, binascii
 import mimetypes
+
+from typing import List, Any, Union, Tuple, Dict    # For doing types in comments
+
 
 try:
     from io import StringIO
@@ -217,17 +221,17 @@ MENU_KEY_SEPARATOR = '::'
 # a shameful global variable. This represents the top-level window information. Needed because opening a second window is different than opening the first.
 class MyWindows():
     def __init__(self):
-        self.NumOpenWindows = 0
+        self._NumOpenWindows = 0
         self.user_defined_icon = None
         self.hidden_master_root = None
 
     def Decrement(self):
-        self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
-        # print('---- DECREMENTING Num Open Windows = {} ---'.format(self.NumOpenWindows))
+        self._NumOpenWindows -= 1 * (self._NumOpenWindows != 0)  # decrement if not 0
+        # print('---- DECREMENTING Num Open Windows = {} ---'.format(self._NumOpenWindows))
 
     def Increment(self):
-        self.NumOpenWindows += 1
-        # print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self.NumOpenWindows))
+        self._NumOpenWindows += 1
+        # print('++++ INCREMENTING Num Open Windows = {} ++++'.format(self._NumOpenWindows))
 
 
 _my_windows = MyWindows()  # terrible hack using globals... means need a class for collecing windows
@@ -245,7 +249,7 @@ def RGB(red, green, blue): return '#%02x%02x%02x' % (red, green, blue)
 # -------------------------  Button types  ------------------------- #
 # todo Consider removing the Submit, Cancel types... they are just 'RETURN' type in reality
 # uncomment this line and indent to go back to using Enums
-# class ButtonType(Enum):
+# Was enum previously ButtonType(Enum):
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
 BUTTON_TYPE_BROWSE_FILES = 21
@@ -258,7 +262,7 @@ BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
 
 # -------------------------  Element types  ------------------------- #
-# class ElementType(Enum):
+# These used to be enums ElementType(Enum):
 ELEM_TYPE_TEXT = 'text'
 ELEM_TYPE_INPUT_TEXT = 'input'
 ELEM_TYPE_INPUT_COMBO = 'combo'
@@ -345,115 +349,14 @@ class Element():
         self.TooltipObject = None
         self.Visible = visible
 
-    def FindReturnKeyBoundButton(self, form):
-        for row in form.Rows:
-            for element in row:
-                if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BindReturnKey:
-                        return element
-                if element.Type == ELEM_TYPE_COLUMN:
-                    rc = self.FindReturnKeyBoundButton(element)
-                    if rc is not None:
-                        return rc
-                if element.Type == ELEM_TYPE_FRAME:
-                    rc = self.FindReturnKeyBoundButton(element)
-                    if rc is not None:
-                        return rc
-                if element.Type == ELEM_TYPE_TAB_GROUP:
-                    rc = self.FindReturnKeyBoundButton(element)
-                    if rc is not None:
-                        return rc
-                if element.Type == ELEM_TYPE_TAB:
-                    rc = self.FindReturnKeyBoundButton(element)
-                    if rc is not None:
-                        return rc
-        return None
 
     # -------------------------  REMI CHANGED CALLBACK -----------------------
     # called when a widget has changed and the element has events enabled
-    def ChangedCallback(self, widget:remi.Widget, *args):
+    def _ChangedCallback(self, widget, *args):
+        # type: (Element, remi.Widget, Any) -> None
         # print(f'Callback {args}')
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
-
-    def TextClickedHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = self.DisplayText
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
-    def ReturnKeyHandler(self, event):
-        MyForm = self.ParentForm
-        button_element = self.FindReturnKeyBoundButton(MyForm)
-        if button_element is not None:
-            button_element.ButtonCallBack(event)
-
-    def ListboxSelectHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
-    def ComboboxSelectHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
-    def RadioHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-    def CheckboxHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-    def TabGroupSelectHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-
-    def KeyboardHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-
-    def WxCallbackKeyboard(self, value):
-        element_callback_quit_mainloop(self)
-
 
     def Update(self, widget, background_color=None, text_color=None, font=None, visible=None, disabled=None, tooltip=None):
         if font is not None:
@@ -506,7 +409,7 @@ class Element():
         """
         Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
         the Update method for the element.
-        Example:    If this text element was in yoiur layout:
+        Example:    If this text element was in your layout:
                     sg.Text('foo', key='T')
                     Then you can call the Update method for that element by writing:
                     window.FindElement('T')('new text value')
@@ -517,9 +420,6 @@ class Element():
         """
         return self.Update(*args, **kwargs)
 
-
-    def __del__(self):
-        pass
 
 # ---------------------------------------------------------------------- #
 #                           Input Class                                  #
@@ -551,7 +451,7 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
-    def InputTextCallback(self,widget, key, keycode, ctrl, shift, alt):
+    def _InputTextCallback(self,widget, key, keycode, ctrl, shift, alt):
         # print(f'text widget value = {widget.get_value()}')
         # widget.set_value('')
         # widget.set_value(value)
@@ -571,12 +471,9 @@ class InputText(Element):
     def Get(self):
         return self.Widget.get_value()
 
-    def SetFocus(self):
-        try:
-            # TODO NOT IMPLEMENTED YET
-            pass
-        except:
-            pass
+
+    get = Get
+    update = Update
 
     class TextInput_raw_onkeyup(remi.gui.TextInput):
         @remi.gui.decorate_set_on_listener("(self, emitter, key, keycode, ctrl, shift, alt)")
@@ -600,11 +497,6 @@ class InputText(Element):
                 event.stopPropagation();event.preventDefault();return false;""")
         def onkeydown(self, key, keycode, ctrl, shift, alt):
             return (key, keycode, ctrl, shift, alt)
-
-
-
-    def __del__(self):
-        super().__del__()
 
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
@@ -657,11 +549,7 @@ class Combo(Element):
 
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible, disabled=disabled)
 
-
-
-    def __del__(self):
-
-        super().__del__()
+    update = Update
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
@@ -716,12 +604,6 @@ class OptionMenu(Element):
         elif disabled == False:
             self.TKOptionMenu['state'] = 'normal'
 
-    def __del__(self):
-        try:
-            self.TKOptionMenu.__del__()
-        except:
-            pass
-        super().__del__()
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
@@ -798,19 +680,20 @@ class Listbox(Element):
 
         return
 
-    def SetValue(self, values):
-        # for index, item in enumerate(self.Values):
-        for index, value in enumerate(self.Values):
-            item = self.QT_ListWidget.item(index)
-            if value in values:
-                self.QT_ListWidget.setItemSelected(item, True)
+    # def SetValue(self, values):
+    #     # for index, item in enumerate(self.Values):
+    #     for index, value in enumerate(self.Values):
+    #         item = self.QT_ListWidget.item(index)
+    #         if value in values:
+    #             self.QT_ListWidget.setItemSelected(item, True)
 
 
     def GetListValues(self):
         return self.Values
 
-    def __del__(self):
-        super().__del__()
+    get_list_values = GetListValues
+    update = Update
+
 
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
@@ -844,11 +727,14 @@ class Radio(Element):
         self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits
 
+        print('*** WARNING - Radio Buttons are not yet available on PySimpleGUIWeb ***')
+
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip)
 
     def Update(self, value=None, disabled=None):
+        print('*** NOT IMPLEMENTED ***')
         location = EncodeRadioRowCol(self.Position[0], self.Position[1])
         if value is not None:
             try:
@@ -861,12 +747,7 @@ class Radio(Element):
         elif disabled == False:
             self.TKRadio['state'] = 'normal'
 
-    def __del__(self):
-        try:
-            self.TKRadio.__del__()
-        except:
-            pass
-        super().__del__()
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -901,10 +782,12 @@ class Checkbox(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, size_px=size_px)
 
-    def ChangedCallback(self, widget:remi.Widget, value):
+    def _ChangedCallback(self, widget, value):
+        # type: (remi.Widget, Any) -> None
         # print(f'text widget value = {widget.get_value()}')
         self.ParentForm.LastButtonClicked = self.Key
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
+
 
     def Get(self):
         return self.Widget.get_value()
@@ -917,9 +800,8 @@ class Checkbox(Element):
         elif disabled == False:
             self.Widget.set_enabled(True)
 
-    def __del__(self):
-        super().__del__()
-
+    get = Get
+    update = Update
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -974,8 +856,8 @@ class Spin(Element):
     def Get(self):
         return self.Widget.get_value()
 
-    def __del__(self):
-        super().__del__()
+    get = Get
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1019,7 +901,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
-    def InputTextCallback(self, widget:remi.Widget, value, keycode):
+    def _InputTextCallback(self, widget:remi.Widget, value, keycode):
         # print(f'text widget value = {widget.get_value()}')
         self.ParentForm.LastButtonClicked = chr(int(keycode))
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
@@ -1042,30 +924,8 @@ class Multiline(Element):
             #     self.WxTextCtrl.Enable(False)
             super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-    #
-    # def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-    #     if value is not None and not append:
-    #         self.DefaultText = value
-    #         self.QT_TextEdit.setText(str(value))
-    #     elif value is not None and append:
-    #         self.DefaultText = value
-    #         self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
-    #     if disabled == True:
-    #         self.QT_TextEdit.setDisabled(True)
-    #     elif disabled == False:
-    #         self.QT_TextEdit.setDisabled(False)
-    #     super().Update(self.QT_TextEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-
-    def Get(self):
-        self.WxTextCtrl.GetValue()
-
-    def SetFocus(self):
-        self.WxTextCtrl.SetFocus()
-
-
-    def __del__(self):
-        super().__del__()
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1125,16 +985,7 @@ class MultilineOutput(Element):
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
-    def Get(self):
-        self.WxTextCtrl.GetValue()
-
-    def SetFocus(self):
-        self.WxTextCtrl.SetFocus()
-
-    def __del__(self):
-        super().__del__()
-
-
+    update = Update
 
 
 
@@ -1188,9 +1039,6 @@ class Text(Element):
         if value is not None:
             self.Widget.set_text(str(value))
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
-
-    def __del__(self):
-        super().__del__()
 
 
 # -------------------------  Text Element lazy functions  ------------------------- #
@@ -1255,41 +1103,6 @@ class TKProgressBar():
                 return False
         return True
 
-    def __del__(self):
-        try:
-            self.TKProgressBarForReal.__del__()
-        except:
-            pass
-
-
-# ---------------------------------------------------------------------- #
-#                           TKOutput                                     #
-#   New Type of TK Widget that's a Text Widget in disguise               #
-#       Note that it's inherited from the TKFrame class so that the      #
-#       Scroll bar will span the length of the frame                     #
-# ---------------------------------------------------------------------- #
-class TKOutput():
-    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
-        self.previous_stdout = sys.stdout
-        self.previous_stderr = sys.stderr
-
-        sys.stdout = self
-        sys.stderr = self
-
-    def write(self, txt):
-        pass
-
-    def Close(self):
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
-
-    def flush(self):
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
-
-    def __del__(self):
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
 
 
 # ---------------------------------------------------------------------- #
@@ -1336,9 +1149,7 @@ class Output(Element):
 
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-
-    def __del__(self):
-        super().__del__()
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1404,17 +1215,10 @@ class Button(Element):
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, size_px=size_px)
         return
 
-    # Realtime button release callback
-    def ButtonReleaseCallBack(self, parm):
-        self.LastButtonClickedWasRealtime = False
-        self.ParentForm.LastButtonClicked = None
 
-    # Realtime button callback
-    def ButtonPressCallBack(self, parm):
-        pass
 
     # -------  Button Callback  ------- #
-    def ButtonCallBack(self, event):
+    def _ButtonCallBack(self, event):
 
         # print('Button callback')
 
@@ -1532,7 +1336,7 @@ class Button(Element):
             self.ParentForm.IgnoreClose = True
             self.ParentForm.MasterFrame.Close()
             if self.ParentForm.NonBlocking:
-                Window.DecrementOpenCount()
+                Window._DecrementOpenCount()
             self.ParentForm._Close()
         elif self.BType == BUTTON_TYPE_READ_FORM:                       # Read Button
             # first, get the results table built
@@ -1546,7 +1350,7 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             element_callback_quit_mainloop(self)
             self.ParentForm._Close()
-            Window.DecrementOpenCount()
+            Window._DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             should_submit_window = False
 
@@ -1580,13 +1384,8 @@ class Button(Element):
     def GetText(self):
         return self.Widget.get_text()
 
-    def SetFocus(self):
-        self.QT_QPushButton.setFocus()
-
-
-    def __del__(self):
-        super().__del__()
-
+    get_text = GetText
+    update = Update
 
 # -------------------------  Button lazy functions  ------------------------- #
 B = Button
@@ -1638,6 +1437,8 @@ class ProgressBar(Element):
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
+        print('*** NOT IMPLEMENTED ***')
+        return
         if self.ParentForm.TKrootDestroyed:
             return False
         self.TKProgressBar.Update(current_count, max=max)
@@ -1648,13 +1449,7 @@ class ProgressBar(Element):
             return False
         return True
 
-    def __del__(self):
-        try:
-            self.TKProgressBar.__del__()
-        except:
-            pass
-        super().__del__()
-
+    update_bar = UpdateBar
 
 # ---------------------------------------------------------------------- #
 #                           Image                                        #
@@ -1701,8 +1496,8 @@ class Image(Element):
         #     self.Widget.style['width'] = '{}px'.format(size[0])
         super().Update(self.Widget,  visible=visible)
 
-    def __del__(self):
-        super().__del__()
+    update = Update
+
 
 
 class SuperImage(remi.gui.Image):
@@ -1787,6 +1582,7 @@ class SuperImagenew(remi.gui.Image):
         return [self.imagedata, headers]
 
 
+
 # ---------------------------------------------------------------------- #
 #                           Graph                                        #
 # ---------------------------------------------------------------------- #
@@ -1806,8 +1602,6 @@ class Graph(Element):
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
-        self._TKCanvas = None
-        self._TKCanvas2 = None
         self.ChangeSubmits = change_submits or enable_events
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
@@ -1891,15 +1685,15 @@ class Graph(Element):
         return
 
 
-    def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
-        converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
-        converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
-        tkstyle = tk.PIESLICE if style is None else style
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
-        return
+    # def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
+    #     converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
+    #     converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
+    #     tkstyle = tk.PIESLICE if style is None else style
+    #     if self._TKCanvas2 is None:
+    #         print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+    #         print('Call Window.Finalize() prior to this operation')
+    #         return None
+    #     return
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color='black'):
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -2049,11 +1843,11 @@ class Graph(Element):
 
 
 
-    def MouseDownCallback(self, widget, x,y, *args):
+    def _MouseDownCallback(self, widget, x,y, *args):
         # print(f'Mouse down {x,y}')
         self.MouseButtonDown = True
 
-    def MouseUpCallback(self, widget, x,y, *args):
+    def _MouseUpCallback(self, widget, x,y, *args):
         self.ClickPosition = self._convert_canvas_xy_to_xy(int(x), int(y))
         self.MouseButtonDown = False
         if self.ChangeSubmits:
@@ -2068,7 +1862,7 @@ class Graph(Element):
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
-    def DragCallback(self, emitter, x, y):
+    def _DragCallback(self, emitter, x, y):
         if not self.MouseButtonDown:        # only return drag events when mouse is down
             return
         # print(f'In Drag Callback')
@@ -2077,68 +1871,23 @@ class Graph(Element):
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
-    def MotionCallBack(self, event):
-        if not self.MouseButtonDown:
-            return
-        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
-        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = '__GRAPH__'     # need to put something rather than None
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()           # kick out of loop if read was called
 
 
-
-    @property
-    def TKCanvas(self):
-        if self._TKCanvas2 is None:
-            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
-        return self._TKCanvas2
-
-    # Realtime button release callback
-    def ButtonReleaseCallBack(self, event):
-        self.ClickPosition = (None, None)
-        self.LastButtonClickedWasRealtime = not self.DragSubmits
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-        if self.DragSubmits:
-            self.ParentForm.LastButtonClicked = None
-        self.MouseButtonDown = False
-
-    # Realtime button callback
-    def ButtonPressCallBack(self, event):
-        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
-        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick out of loop if read was called
-        self.MouseButtonDown = True
-
-    # Realtime button callback
-    def MotionCallBack(self, event):
-        if not self.MouseButtonDown:
-            return
-        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
-        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick out of loop if read was called
-
-    def __del__(self):
-        super().__del__()
+    click_callback = ClickCallback
+    delete_figure = DeleteFigure
+    draw_circle = DrawCircle
+    draw_image = DrawImage
+    draw_line = DrawLine
+    draw_oval = DrawOval
+    draw_point = DrawPoint
+    draw_rectangle = DrawRectangle
+    draw_text = DrawText
+    erase = Erase
+    move = Move
+    move_figure = MoveFigure
+    relocate = Relocate
+    relocate_figure = RelocateFigure
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -2210,11 +1959,8 @@ class Frame(Element):
         element = row[col_num]
         return element
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+    add_row = AddRow
+    layout = Layout
 
 
 # ---------------------------------------------------------------------- #
@@ -2230,9 +1976,6 @@ class VerticalSeparator(Element):
         self.Orientation = 'vertical'  # for now only vertical works
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
-
-    def __del__(self):
-        super().__del__()
 
 
 VSeperator = VerticalSeparator
@@ -2274,13 +2017,13 @@ class Tab(Element):
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.Widget = None          # type: remi.gui.HBox
-        self.Layout(layout)
+        self._Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
         return
 
-    def AddRow(self, *args):
+    def _AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -2295,30 +2038,26 @@ class Tab(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def _Layout(self, rows):
         for row in rows:
-            self.AddRow(*row)
+            self._AddRow(*row)
         return self
 
-    def Update(self, disabled=None):  # TODO Disable / enable of tabs is not complete
-        if disabled is None:
-            return
-        self.Disabled = disabled
-        state = 'disabled' if disabled is True else 'normal'
-        self.ParentNotebook.tab(self.TabID, state=state)
-        return self
+    # def Update(self, disabled=None):  # TODO Disable / enable of tabs is not complete
+    #     print('*** Tab.Update is not implemented ***')
+    #     return
+    #     if disabled is None:
+    #         return
+    #     self.Disabled = disabled
+    #     state = 'disabled' if disabled is True else 'normal'
+    #     self.ParentNotebook.tab(self.TabID, state=state)
+    #     return self
 
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
         element = row[col_num]
         return element
-
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -2361,13 +2100,13 @@ class TabGroup(Element):
         self.TabLocation = tab_location
         self.Visible = visible
         self.Disabled = False
-        self.Layout(layout)
+        self._Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
                          pad=pad, key=key, tooltip=tooltip)
         return
 
-    def AddRow(self, *args):
+    def _AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -2382,9 +2121,9 @@ class TabGroup(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def _Layout(self, rows):
         for row in rows:
-            self.AddRow(*row)
+            self._AddRow(*row)
 
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
@@ -2399,11 +2138,7 @@ class TabGroup(Element):
                     return element.Key
         return None
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+    find_key_from_tab_name = FindKeyFromTabName
 
 
 # ---------------------------------------------------------------------- #
@@ -2458,14 +2193,11 @@ class Slider(Element):
             self.Widget.attributes['max'] = '{}'.format(range[1])
         super().Update(self.Widget, disabled=disabled, visible=visible)
 
-    def SliderCallback(self, widget:remi.Widget, value):
+    def _SliderCallback(self, widget:remi.Widget, value):
         self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
-    def __del__(self):
-        super().__del__()
-
-
+    update = Update
 
 #
 # ---------------------------------------------------------------------- #
@@ -2529,15 +2261,8 @@ class Column(Element):
         element = row[col_num]
         return element
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        try:
-            del (self.TKFrame)
-        except:
-            pass
-        super().__del__()
+    add_row = AddRow
+    layout = Layout
 
 
 # ---------------------------------------------------------------------- #
@@ -2567,16 +2292,12 @@ class Menu(Element):
 
 
 
-    def ChangedCallbackMenu(self,  widget, *user_data):
+    def _ChangedCallbackMenu(self,  widget, *user_data):
         widget = widget     # type: remi.gui.MenuItem
         chosen = user_data[0]
         self.MenuItemChosen = chosen
         self.ParentForm.LastButtonClicked = chosen
         self.ParentForm.MessageQueue.put(chosen)
-
-
-    def __del__(self):
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -2649,6 +2370,8 @@ class Table(Element):
         return
 
     def Update(self, values=None):
+        print('*** Table Update not yet supported ***')
+        return
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -2666,7 +2389,7 @@ class Table(Element):
             self.SelectedRows = []
 
 
-    def on_table_row_click(self, table, row, item):
+    def _on_table_row_click(self, table, row, item):
         # self.SelectedRow = row          # type: remi.gui.TableRow
         self.SelectedItem = item.get_text()
         index = -1
@@ -2686,34 +2409,6 @@ class Table(Element):
             self.ParentForm.LastButtonClicked = ''
 
 
-    def treeview_selected(self, event):
-        selections = self.TKTreeview.selection()
-        self.SelectedRows = [int(x) - 1 for x in selections]
-        if self.ChangeSubmits:
-            MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
-            self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
-
-    def treeview_double_click(self, event):
-        selections = self.TKTreeview.selection()
-        self.SelectedRows = [int(x) - 1 for x in selections]
-        if self.BindReturnKey:
-            MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
-            self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
-
-    def __del__(self):
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -2762,24 +2457,11 @@ class Tree(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits
 
+        print('*** Tree Element not yet supported ***')
+
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
-        return
 
-
-
-    def treeview_selected(self, event):
-        selections = self.TKTreeview.selection()
-        self.SelectedRows = [x for x in selections]
-        if self.ChangeSubmits:
-            MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
-            self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
 
     def add_treeview_data(self, node):
         # print(f'Inserting {node.key} under parent {node.parent}')
@@ -2790,6 +2472,7 @@ class Tree(Element):
             self.add_treeview_data(node)
 
     def Update(self, values=None, key=None, value=None, text=None):
+        print('*** Tree Element not yet supported ***')
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -2808,8 +2491,7 @@ class Tree(Element):
             item = self.TKTreeview.item(key)
         return self
 
-    def __del__(self):
-        super().__del__()
+    update = Update
 
 
 class TreeData(object):
@@ -2846,6 +2528,7 @@ class TreeData(object):
             [str(node.key) + ' : ' + str(node.text)] +
             [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
 
+    insert = Insert
 
 # ---------------------------------------------------------------------- #
 #                           Error Element                                #
@@ -2872,15 +2555,16 @@ class ErrorElement(Element):
     def Get(self):
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-    def __del__(self):
-        super().__del__()
+    get = Get
+    update = Update
+
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                      #
 # ------------------------------------------------------------------------- #
 class Window:
 
-    NumOpenWindows = 0
+    _NumOpenWindows = 0
     user_defined_icon = None
     hidden_master_root = None
     QTApplication = None
@@ -3014,13 +2698,13 @@ class Window:
 
     @classmethod
     def IncrementOpenCount(self):
-        self.NumOpenWindows += 1
-        # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
+        self._NumOpenWindows += 1
+        # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window._NumOpenWindows))
 
     @classmethod
-    def DecrementOpenCount(self):
-        self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
-        # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
+    def _DecrementOpenCount(self):
+        self._NumOpenWindows -= 1 * (self._NumOpenWindows != 0)  # decrement if not 0
+        # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window._NumOpenWindows))
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
@@ -3043,7 +2727,7 @@ class Window:
 
     def Layout(self, rows):
         self.AddRows(rows)
-        self.BuildKeyDict()
+        self._BuildKeyDict()
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
@@ -3118,7 +2802,7 @@ class Window:
                 rc = self.TKroot.update()
             except:
                 self.TKrootDestroyed = True
-                Window.DecrementOpenCount()
+                Window._DecrementOpenCount()
             results = BuildResults(self, False, self)
             if results[0] != None and results[0] != timeout_key:
                 return results
@@ -3158,10 +2842,10 @@ class Window:
             #     self.MasterFrame.Close()
             # except:
             #     pass
-            # Window.DecrementOpenCount()
+            # Window._DecrementOpenCount()
         # if form was closed with X
         # if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
-        #     Window.DecrementOpenCount()
+        #     Window._DecrementOpenCount()
         # Determine return values
         # if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
         #     results = BuildResults(self, False, self)
@@ -3296,7 +2980,7 @@ class Window:
         #     except:
         #         print('* ERROR FINALIZING *')
         #         self.TKrootDestroyed = True
-        #         Window.DecrementOpenCount()
+        #         Window._DecrementOpenCount()
         return self
 
     def Refresh(self):
@@ -3308,7 +2992,7 @@ class Window:
         return self
 
     def Fill(self, values_dict):
-        FillFormWithValues(self, values_dict)
+        _FillFormWithValues(self, values_dict)
         return self
 
     def FindElement(self, key, silent_on_error=False):
@@ -3330,7 +3014,7 @@ class Window:
 
     Element = FindElement  # shortcut function definition
 
-    def BuildKeyDict(self):
+    def _BuildKeyDict(self):
         dict = {}
         self.AllKeysDict = self._BuildKeyDictForWindow(self,self, dict)
         # print(f'keys built = {self.AllKeysDict}')
@@ -3385,8 +3069,8 @@ class Window:
         except:
             print('*** Error loading form to disk ***')
 
-    def GetScreenDimensions(self):
-        size = wx.GetDisplaySize()
+    def GetScreenDimensions(self):      # TODO - Not sure what to return so (0,0) for now
+        size = (0,0)
         return size
 
     def Move(self, x, y):
@@ -3406,7 +3090,6 @@ class Window:
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
         self.Close()
-        self.__del__()
 
     def Close(self):
         if len(Window.active_windows) != 0:
@@ -3475,26 +3158,6 @@ class Window:
         location = self.MasterFrame.GetPosition()
         return location
 
-    def OnClose(self, event):
-        # print(f'CLOSE EVENT! event = {event}')
-        if self.DisableClose:
-            return
-        # print('GOT A CLOSE EVENT!', event, self.Window.Title)
-        if not self.IgnoreClose:
-            self.LastButtonClicked = None
-            self.XFound = True
-        if not self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
-            self.RootNeedsDestroying = True
-        else:
-            self.RootNeedsDestroying = True
-            self.App.ExitMainLoop()  # kick the users out of the mainloop
-        self.MasterFrame.Destroy()
-        self.TKrootDestroyed = True
-        self.RootNeedsDestroying = True
-
-    # if self.CurrentlyRunningMainloop:
-    #     print("quitting window")
-    #     self.QTApplication.exit()  # kick the users out of the mainloop
 
     @property
     def Size(self):
@@ -3527,18 +3190,45 @@ class Window:
             print('The key you passed in is no good. Key = {}*'.format(key))
             return None
 
-    def __enter__(self):
-        return self
+    add_row = AddRow
+    add_rows = AddRows
+    alpha_channel = AlphaChannel
+    bring_to_front = BringToFront
+    close = Close
+    current_location = CurrentLocation
+    disable = Disable
+    disappear = Disappear
+    element = Element
+    enable = Enable
+    fill = Fill
+    finalize = Finalize
+    find_element = FindElement
+    find_element_with_focus = FindElementWithFocus
+    get_screen_dimensions = GetScreenDimensions
+    hide = Hide
+    increment_open_count = IncrementOpenCount
+    layout = Layout
+    layout_and_read = LayoutAndRead
+    layout_and_show = LayoutAndShow
+    load_from_disk = LoadFromDisk
+    maximize = Maximize
+    minimize = Minimize
+    move = Move
+    num_open_windows = _NumOpenWindows
+    read = Read
+    reappear = Reappear
+    refresh = Refresh
+    save_to_disk = SaveToDisk
+    set_alpha = SetAlpha
+    set_icon = SetIcon
+    show = Show
+    size = Size
+    size_changed = SizeChanged
+    un_hide = UnHide
+    visibility_changed = VisibilityChanged
 
-    def __exit__(self, *a):
-        self.__del__()
-        return False
 
-    def __del__(self):
-        # print(f'+++++ Window {self.Title} being deleted +++++')
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
+
 
 
     def remi_thread(self):
@@ -3586,7 +3276,7 @@ class Window:
             else:
                 self.window = userdata2         # type: Window
             self.master_widget = None
-            print("new App instance %s" % str(id(self)))
+            # print("new App instance %s" % str(id(self)))
             # self.window.App = self
             #Window.App = self
             self.lines_shown = []
@@ -4236,22 +3926,22 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
     return form.ReturnValues
 
 
-def FillFormWithValues(form, values_dict):
-    FillSubformWithValues(form, values_dict)
+def _FillFormWithValues(form, values_dict):
+    _FillSubformWithValues(form, values_dict)
 
 
-def FillSubformWithValues(form, values_dict):
+def _FillSubformWithValues(form, values_dict):
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             value = None
             if element.Type == ELEM_TYPE_COLUMN:
-                FillSubformWithValues(element, values_dict)
+                _FillSubformWithValues(element, values_dict)
             if element.Type == ELEM_TYPE_FRAME:
-                FillSubformWithValues(element, values_dict)
+                _FillSubformWithValues(element, values_dict)
             if element.Type == ELEM_TYPE_TAB_GROUP:
-                FillSubformWithValues(element, values_dict)
+                _FillSubformWithValues(element, values_dict)
             if element.Type == ELEM_TYPE_TAB:
-                FillSubformWithValues(element, values_dict)
+                _FillSubformWithValues(element, values_dict)
             try:
                 value = values_dict[element.Key]
             except:
@@ -4361,7 +4051,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                 else:
                     menu_item =  remi.gui.MenuItem(item_without_key, width=100, height=30)
                     top_menu.append([menu_item,])
-                menu_item.set_on_click_listener(element.ChangedCallbackMenu, sub_menu_info)
+                menu_item.set_on_click_listener(element._ChangedCallbackMenu, sub_menu_info)
     else:
         i = 0
         while i < (len(sub_menu_info)):
@@ -4540,7 +4230,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     elif element.Justification.startswith('r'):
                         element.Widget.style['text-align'] = 'right'
                 if element.ClickSubmits:
-                    element.Widget.onclick.connect(element.ChangedCallback)
+                    element.Widget.onclick.connect(element._ChangedCallback)
                 tk_row_frame.append(element.Widget)
 
             # -------------------------  BUTTON element  ------------------------- #
@@ -4548,7 +4238,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Button
                 size = convert_tkinter_size_to_Wx(element_size)
                 element.Widget = remi.gui.Button(element.ButtonText, width=size[0], height=size[1], margin='10px')
-                element.Widget.onclick.connect(element.ButtonCallBack)
+                element.Widget.onclick.connect(element._ButtonCallBack)
                 do_font_and_color(element.Widget)
                 if element.AutoSizeButton or (toplevel_form.AutoSizeButtons and element.AutoSizeButton is not False) and element.Size == (None, None):
                     del (element.Widget.style['width'])
@@ -4637,8 +4327,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # element.Widget = remi.gui.TextInput(hint=element.DefaultText)
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onkeyup.connect(element.InputTextCallback)
-                    # element.Widget.onkeydown.connect(element.InputTextCallback)
+                    element.Widget.onkeyup.connect(element._InputTextCallback)
+                    # element.Widget.onkeydown.connect(element._InputTextCallback)
                 tk_row_frame.append(element.Widget)
 
                 # show = element.PasswordCharacter if element.PasswordCharacter else ""
@@ -4673,7 +4363,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.Widget.select_by_value(element.DefaultValue)
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onchange.connect(element.ChangedCallback)
+                    element.Widget.onchange.connect(element._ChangedCallback)
                 tk_row_frame.append(element.Widget)
 
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
@@ -4689,7 +4379,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget = remi.gui.ListView.new_from_list(element.Values)
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onselection.connect(element.ChangedCallback)
+                    element.Widget.onselection.connect(element._ChangedCallback)
                 tk_row_frame.append(element.Widget)
             #     max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
             #     if auto_size_text is False:
@@ -4729,7 +4419,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget = remi.gui.TextInput(single_line=False, hint=element.DefaultText)
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onkeydown.connect(element.InputTextCallback)
+                    element.Widget.onkeydown.connect(element._InputTextCallback)
                 tk_row_frame.append(element.Widget)
                 # default_text = element.DefaultText
                 # width, height = element_size
@@ -4761,7 +4451,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.InitialState:
                     element.Widget.set_value(element.InitialState)
                 if element.ChangeSubmits:
-                    element.Widget.onchange.connect(element.ChangedCallback)
+                    element.Widget.onchange.connect(element._ChangedCallback)
                 do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
 
@@ -4848,7 +4538,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.Widget.set_value(element.DefaultValue)
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onchange.connect(element.ChangedCallback)
+                    element.Widget.onchange.connect(element._ChangedCallback)
                 tk_row_frame.append(element.Widget)
                 # width, height = element_size
                 # width = 0 if auto_size_text else element_size[0]
@@ -4904,7 +4594,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget = SuperImage(element.Filename if element.Filename is not None else element.Data)
                 do_font_and_color(element.Widget)
                 if element.EnableEvents:
-                    element.Widget.onclick.connect(element.ChangedCallback)
+                    element.Widget.onclick.connect(element._ChangedCallback)
                 tk_row_frame.append(element.Widget)
                 # if element.Filename is not None:
                 #     photo = tk.PhotoImage(file=element.Filename)
@@ -4957,12 +4647,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget.append([element.SvgGroup,])
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onmouseup.connect(element.MouseUpCallback)
+                    element.Widget.onmouseup.connect(element._MouseUpCallback)
                     # element.Widget.onclick.connect(element.ClickCallback)
                 if element.DragSubmits:
-                    element.Widget.onmousedown.connect(element.MouseDownCallback)
-                    element.Widget.onmouseup.connect(element.MouseUpCallback)
-                    element.Widget.onmousemove.connect(element.DragCallback)
+                    element.Widget.onmousedown.connect(element._MouseDownCallback)
+                    element.Widget.onmouseup.connect(element._MouseUpCallback)
+                    element.Widget.onmousemove.connect(element._DragCallback)
 
                 tk_row_frame.append(element.Widget)
                 # width, height = element_size
@@ -5156,7 +4846,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.Widget.layout_orientation = remi.gui.Widget.LAYOUT_VERTICAL
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
-                    element.Widget.onchange.connect(element.SliderCallback)
+                    element.Widget.onchange.connect(element._SliderCallback)
                 element.Widget.style['orientation'] = 'vertical'
                 element.Widget.attributes['orientation'] = 'vertical'
                 # print(f'slider = {element.Widget.style, element.Widget.attributes}')
@@ -5174,7 +4864,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget = remi.gui.Table.new_from_list(new_table)
                 do_font_and_color(element.Widget)
                 tk_row_frame.append(element.Widget)
-                element.Widget.on_table_row_click.connect(element.on_table_row_click)
+                element.Widget.on_table_row_click.connect(element._on_table_row_click)
                 # frame = tk.Frame(tk_row_frame)
                 #
                 # height = element.NumRows
@@ -5485,7 +5175,6 @@ def setup_remi_window(app:Window.MyApp, window:Window):
 def StartupTK(window:Window):
     global _my_windows
 
-    ow = _my_windows.NumOpenWindows
 
     # print('Starting TK open Windows = {}'.format(ow))
 
@@ -5645,7 +5334,6 @@ def _ProgressMeterUpdate(bar, value, text_elem, *args):
         except:
             pass
         bar.ParentForm.RootNeedsDestroying = False
-        bar.ParentForm.__del__()
         return False
 
     return rc
@@ -5891,7 +5579,6 @@ class DebugWin():
 
     def Close(self):
         self.window.Close()
-        self.window.__del__()
         self.window = None
 
 
@@ -6949,7 +6636,7 @@ def PopupGetFolder(message, default_path='', no_window=False, size=(None, None),
     global _my_windows
 
     if no_window:
-        if _my_windows.NumOpenWindows:
+        if _my_windows._NumOpenWindows:
             root = tk.Toplevel()
         else:
             root = tk.Tk()
@@ -7009,7 +6696,7 @@ def PopupGetFile(message, default_path='', default_extension='', save_as=False, 
     global _my_windows
 
     if no_window:
-        if _my_windows.NumOpenWindows:
+        if _my_windows._NumOpenWindows:
             root = tk.Toplevel()
         else:
             root = tk.Tk()
@@ -7087,6 +6774,44 @@ def PopupGetText(message, default_text='', password_char='', size=(None, None), 
         return path
 
 
+change_look_and_feel = ChangeLookAndFeel
+easy_print = EasyPrint
+easy_print_close = EasyPrintClose
+get_complimentary_hex = GetComplimentaryHex
+list_of_look_and_feel_values = ListOfLookAndFeelValues
+obj_to_string = ObjToString
+obj_to_string_single_obj = ObjToStringSingleObj
+one_line_progress_meter = OneLineProgressMeter
+one_line_progress_meter_cancel = OneLineProgressMeterCancel
+popup = Popup
+popup_annoying = PopupAnnoying
+popup_auto_close = PopupAutoClose
+popup_cancel = PopupCancel
+popup_error = PopupError
+popup_get_file = PopupGetFile
+popup_get_folder = PopupGetFolder
+popup_get_text = PopupGetText
+popup_no_border = PopupNoBorder
+popup_no_buttons = PopupNoButtons
+popup_no_frame = PopupNoFrame
+popup_no_titlebar = PopupNoTitlebar
+popup_no_wait = PopupNoWait
+popup_non_blocking = PopupNonBlocking
+popup_ok = PopupOK
+popup_ok_cancel = PopupOKCancel
+popup_quick = PopupQuick
+popup_quick_message = PopupQuickMessage
+popup_scrolled = PopupScrolled
+popup_timed = PopupTimed
+popup_yes_no = PopupYesNo
+print_close = PrintClose
+rgb = RGB
+scrolled_text_box = ScrolledTextBox
+set_global_icon = SetGlobalIcon
+set_options = SetOptions
+timer_start = TimerStart
+timer_stop = TimerStop
+sprint = sprint
 
 
 def main():
