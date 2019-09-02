@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.5 Unreleased Version"
+version = __version__ = "4.4.0.6 Unreleased Scrollable Columns"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3818,10 +3818,20 @@ class TkScrollableFrame(tk.Frame):
 
         self.bind('<Configure>', self.set_scrollregion)
 
-        self.bind_mouse_scroll(self.canvas, self.yscroll)
-        if not vertical_only:
-            self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
-        self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
+        self.TKFrame.bind_all("<MouseWheel>", self.yscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+
+
+
+        # def _on_mousewheel(self, event):
+        #     self.canv.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+
+            # self.bind_mouse_scroll(self.canvas, self.yscroll)
+        # if not vertical_only:
+        #     self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
+        # self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
+        # self.bind_mouse_scroll(self.TKFrame, self.yscroll)
+        # self.bind_mouse_scroll(self, self.yscroll)
 
     def resize_frame(self, e):
         """
@@ -3873,6 +3883,8 @@ class TkScrollableFrame(tk.Frame):
 
         """
         self.canvas.configure(scrollregion=self.canvas.bbox('all'))
+        # self.TKFrame.configure(scrollregion=self.TKFrame.bbox('all'))
+        # self.configure(scrollregion=self.bbox('all'))
 
 
 # ---------------------------------------------------------------------- #
@@ -7442,8 +7454,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if element_type == ELEM_TYPE_COLUMN:
                 element = element           # type: Column
                 if element.Scrollable:
-                    element.TKColFrame = TkScrollableFrame(tk_row_frame,
-                                                                            element.VerticalScrollOnly)  # do not use yet!  not working
+                    element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
