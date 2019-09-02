@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.6 Unreleased Scrollable Columns"
+version = __version__ = "4.4.0.7 Unreleased Scrollable Columns, ML, window()"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -1629,6 +1629,10 @@ class Multiline(Element):
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     update = Update
+
+
+ML = Multiline
+MLine = Multiline
 
 
 # ---------------------------------------------------------------------- #
@@ -6132,6 +6136,21 @@ class Window:
         except Exception as e:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
             return None
+
+    def __call__(self, *args, **kwargs):
+        """
+        Call window.Read but without having to type it out.
+        window() == window.Read()
+        window(timeout=50) == window.Read(timeout=50)
+
+        :param args:
+        :param kwargs:
+        :return: Tuple[Any, Dict[Any:Any]] The famous event, values that Read returns.
+        """
+        return self.Read(*args, **kwargs)
+
+
+
 
     add_row = AddRow
     add_rows = AddRows
