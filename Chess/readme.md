@@ -1,5 +1,8 @@
 # PySimpleGUI-Chess A Chess Game Playback Program
 
+![image](https://user-images.githubusercontent.com/46163555/64135781-4c58a600-cdba-11e9-968d-60ddfb4c8952.png)
+
+
 ## Introduction
 This is the start of a front-end GUI for an AI engine that plays chess.  It simply reads moves the a PGN file and steps through it showing each of the moves on the board.
 
