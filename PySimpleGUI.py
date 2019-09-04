@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.7 Unreleased Scrollable Columns, ML, window()"
+version = __version__ = "4.4.0.8 Unreleased Scrollable Columns, ML, window()"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -986,7 +986,7 @@ class Combo(Element):
 InputCombo = Combo
 DropDown = InputCombo
 Drop = InputCombo
-
+DD = Combo
 
 # ---------------------------------------------------------------------- #
 #                           Option Menu                                  #
@@ -1070,7 +1070,7 @@ class OptionMenu(Element):
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
 InputOptionMenu = OptionMenu
-
+OM = OptionMenu
 
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
@@ -1227,6 +1227,9 @@ class Listbox(Element):
     update = Update
 
 
+LBox = Listbox
+
+
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
 # ---------------------------------------------------------------------- #
@@ -1318,6 +1321,10 @@ class Radio(Element):
     set_tooltip = Element.SetTooltip
     update = Update
 
+R = Radio
+Rad = Radio
+
+
 
 # ---------------------------------------------------------------------- #
 #                           Checkbox                                     #
@@ -1330,7 +1337,6 @@ class Checkbox(Element):
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, visible=True):
         """
-
         :param text: (str) Text to display next to checkbox
         :param default: (bool). Set to True if you want this checkbox initially checked
         :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
@@ -1512,6 +1518,10 @@ class Spin(Element):
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     update = Update
+
+SpinBox = Spin
+Spinner = Spin
+
 
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
@@ -1716,7 +1726,7 @@ class Text(Element):
 
 # -------------------------  Text Element lazy functions  ------------------------- #
 
-Txt = Text  # type: Text.__init__
+Txt = Text  # type: Text
 T = Text    # type: Text
 
 
@@ -1795,6 +1805,9 @@ class StatusBar(Element):
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     update = Update
+
+Status = StatusBar
+
 
 # ---------------------------------------------------------------------- #
 #                       TKProgressBar                                    #
@@ -2021,6 +2034,8 @@ class Output(Element):
     tk_out = TKOut
     update = Update
 
+Out = Output
+
 # ---------------------------------------------------------------------- #
 #                           Button Class                                 #
 # ---------------------------------------------------------------------- #
@@ -2028,7 +2043,6 @@ class Button(Element):
     """
     Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
     """
-
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
@@ -2454,6 +2468,7 @@ class ButtonMenu(Element):
     set_tooltip = Element.SetTooltip
     update = Update
 
+BMenu = ButtonMenu
 
 
 # ---------------------------------------------------------------------- #
@@ -2531,6 +2546,10 @@ class ProgressBar(Element):
     set_tooltip = Element.SetTooltip
     update = Update
     update_bar = UpdateBar
+
+PBar = ProgressBar
+Prog = ProgressBar
+
 
 
 # ---------------------------------------------------------------------- #
@@ -2695,7 +2714,7 @@ class Canvas(Element):
         """ """
         if self._TKCanvas is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
+            print('*** window = sg.Window("My Form", layout, finalize=True) ***')
         return self._TKCanvas
 
     set_focus = Element.SetFocus
@@ -3326,6 +3345,7 @@ class Frame(Element):
             self.TKFrame.pack_forget()
         elif visible is True:
             self.TKFrame.pack()
+
 
     add_row = AddRow
     layout = Layout
@@ -4011,6 +4031,7 @@ class Column(Element):
     set_tooltip = Element.SetTooltip
     update = Update
 
+Col = Column
 
 # ---------------------------------------------------------------------- #
 #                           Pane                                         #
@@ -6148,8 +6169,6 @@ class Window:
         :return: Tuple[Any, Dict[Any:Any]] The famous event, values that Read returns.
         """
         return self.Read(*args, **kwargs)
-
-
 
 
     add_row = AddRow
