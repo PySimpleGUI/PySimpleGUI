@@ -7,7 +7,7 @@ else:
     import PySimpleGUI27 as sg
 
 def Everything():
-    sg.ChangeLookAndFeel('TanBlue')
+    sg.ChangeLookAndFeel('BlueMono')
 
     column1 = [
         [sg.Text('Column 1', background_color=sg.DEFAULT_BACKGROUND_COLOR, justification='center', size=(10, 1))],

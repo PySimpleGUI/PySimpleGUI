@@ -18,6 +18,7 @@ import PySimpleGUI as sg
     5 - Questionnaire - Using a double list comprehension to build both rows and columns in a single line of code
     6 - Questionnaire - Unwinding the comprehensions into 2 for loops instead
     7 - Using the * operator to unpack generated items onto a single row 
+    8 - Multiple Choice Test - a practical use showing list comprehension and concatenated layout
 """
 
 """
@@ -39,7 +40,7 @@ def layout0():
     window.Close()
 
 """
-    Construct #1 - List comprehension to generate rows of Buttons
+    Construct #1 - List comprehension to generate a Column of Buttons
 
     More list super-power, this time used to build a series of buttons doing DOWN the window instead of across
 
@@ -239,6 +240,42 @@ def layout7():
     window.Close()
 
 
+"""
+    Construct #8 - Computed layout using list comprehension and concatenation
+    This layout shows one practical use, a multiple choice test.  It's been left parse as to focus on the generation
+    part of the program.  For example, default keys are used on the Radio elements.  In reality you would likely
+    use a tuple of the question number and the answer number.
+
+    In this example we start with a "Header" Text element and build from there.
+"""
+
+def layout8():
+    # The questions and answers
+    q_and_a = [
+        ['1. What is the thing that makes light in our solar system', ['A. The Moon', 'B. Jupiter', 'C. I dunno']],
+        ['2. What is Pluto', ['A. The 9th planet', 'B. A dwarf-planet', 'C. The 8th planet', 'D. Goofies pet dog']],
+        ['3. When did man step foot on the moon', ['A. 1969', 'B. 1960', 'C. 1970', 'D. 1869']], ]
+
+    layout = [[sg.Text('Astronomy Quiz #1', font='ANY 15', size=(30, 2))]]  # make Header larger
+
+    # "generate" the layout for the window based on the Question and Answer information
+    for qa in q_and_a:
+        q = qa[0]
+        a_list = qa[1]
+        layout += [[sg.Text(q)]] + [[sg.Radio(a, group_id=q)] for a in a_list] + [[sg.Text('_' * 50)]]
+
+    layout += [[sg.Button('Submit Answers', key='SUBMIT')]]
+
+    window = sg.Window('Multiple Choice Test', layout)
+
+    while True:  # Event Loop
+        event, values = window.read()
+        if event in (None, 'SUBMIT'):
+            break
+    sg.popup('The answers submitted were', values)
+    window.close()
+
+
 # ------------------------- Call each of the Constructs -------------------------
 
 layout0()
@@ -249,3 +286,4 @@ layout4()
 layout5()
 layout6()
 layout7()
+layout8()
