@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.28.0.2 Unreleased PEP8-ifed"
+version = __version__ = "0.28.0.3 Unreleased PEP8-ifed"
 
 import sys
 import types
@@ -3720,6 +3720,17 @@ class Window:
             print('The key you passed in is no good. Key = {}*'.format(key))
             return None
 
+    def __call__(self, *args, **kwargs):
+        """
+        Call window.Read but without having to type it out.
+        window() == window.Read()
+        window(timeout=50) == window.Read(timeout=50)
+
+        :param args:
+        :param kwargs:
+        :return: Tuple[Any, Dict[Any:Any]] The famous event, values that Read returns.
+        """
+        return self.Read(*args, **kwargs)
 
 
     add_row = AddRow
@@ -3772,7 +3783,7 @@ def _element_callback_quit_mainloop(element):
 
 
 # =========================================================================== #
-# Stops the mainloop and sets the event information                           #
+# Convert from characters to pixels                                           #
 # =========================================================================== #
 def _convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING, height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF):
     """
