@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.8 Unreleased Scrollable Columns, ML, window()"
+version = __version__ = "4.4.0.9 Unreleased Scrollable Columns, shortcuts, column sizing, window()"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -1070,7 +1070,6 @@ class OptionMenu(Element):
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
 InputOptionMenu = OptionMenu
-OM = OptionMenu
 
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
@@ -1228,7 +1227,7 @@ class Listbox(Element):
 
 
 LBox = Listbox
-
+LB = Listbox
 
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
@@ -1806,7 +1805,6 @@ class StatusBar(Element):
     set_tooltip = Element.SetTooltip
     update = Update
 
-Status = StatusBar
 
 
 # ---------------------------------------------------------------------- #
@@ -2034,7 +2032,6 @@ class Output(Element):
     tk_out = TKOut
     update = Update
 
-Out = Output
 
 # ---------------------------------------------------------------------- #
 #                           Button Class                                 #
@@ -2360,7 +2357,6 @@ class Button(Element):
 # -------------------------  Button lazy functions  ------------------------- #
 B = Button
 Btn = Button
-Butt = Button
 
 
 # ---------------------------------------------------------------------- #
@@ -6158,6 +6154,7 @@ class Window:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
             return None
 
+
     def __call__(self, *args, **kwargs):
         """
         Call window.Read but without having to type it out.
@@ -7544,7 +7541,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     side = tk.LEFT
                 row_justify = element.Justification
                 element.Widget = element.TKColFrame
-                element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=False, fill='both')
+                element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
                 # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
@@ -8314,6 +8311,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
                 labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+                if element.Size != (None,None):
+                    labeled_frame.config(width=element.Size[0], height=element.Size[1])
                 if not element.Visible:
                     labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
