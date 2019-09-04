@@ -1,7 +1,6 @@
 #usr/bin/python3
-from clint import Args
 
-version = __version__ = "0.31.0.3 Unreleased"
+version = __version__ = "0.31.0.4 Unreleased"
 
 import sys
 import datetime
@@ -1040,68 +1039,11 @@ class Text(Element):
             self.Widget.set_text(str(value))
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
+    update = Update
 
 # -------------------------  Text Element lazy functions  ------------------------- #
 Txt = Text
 T = Text
-
-
-# ---------------------------------------------------------------------- #
-#                       TKProgressBar                                    #
-#  Emulate the TK ProgressBar using canvas and rectangles
-# ---------------------------------------------------------------------- #
-
-class TKProgressBar():
-    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
-                 relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
-                 orientation='horizontal', BarColor=(None, None), key=None):
-        self.Length = length
-        self.Width = width
-        self.Max = max
-        self.Orientation = orientation
-        self.Count = None
-        self.PriorCount = 0
-
-        if orientation[0].lower() == 'h':
-            s = ttk.Style()
-            s.theme_use(style)
-            if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(key) + "my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1],
-                            troughrelief=relief, borderwidth=border_width, thickness=width)
-            else:
-                s.configure(str(key) + "my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width,
-                            thickness=width)
-
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=str(key) + 'my.Horizontal.TProgressbar', length=length,
-                                                        orient=tk.HORIZONTAL, mode='determinate')
-        else:
-            s = ttk.Style()
-            s.theme_use(style)
-            if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(length) + str(width) + "my.Vertical.TProgressbar", background=BarColor[0],
-                            troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
-            else:
-                s.configure(str(length) + str(width) + "my.Vertical.TProgressbar", troughrelief=relief,
-                            borderwidth=border_width, thickness=width)
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=str(length) + str(width) + 'my.Vertical.TProgressbar',
-                                                        length=length, orient=tk.VERTICAL, mode='determinate')
-
-    def Update(self, count=None, max=None):
-        if max is not None:
-            self.Max = max
-            try:
-                self.TKProgressBarForReal.config(maximum=max)
-            except:
-                return False
-        if count is not None and count > self.Max: return False
-        if count is not None:
-            try:
-                self.TKProgressBarForReal['value'] = count
-            except:
-                return False
-        return True
 
 
 
@@ -3189,6 +3131,20 @@ class Window:
         except Exception as e:
             print('The key you passed in is no good. Key = {}*'.format(key))
             return None
+
+    def __call__(self, *args, **kwargs):
+        """
+        Call window.Read but without having to type it out.
+        window() == window.Read()
+        window(timeout=50) == window.Read(timeout=50)
+
+        :param args:
+        :param kwargs:
+        :return: Tuple[Any, Dict[Any:Any]] The famous event, values that Read returns.
+        """
+        return self.Read(*args, **kwargs)
+
+
 
     add_row = AddRow
     add_rows = AddRows
