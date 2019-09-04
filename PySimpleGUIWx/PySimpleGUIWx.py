@@ -1,6 +1,9 @@
 #!/usr/bin/python3
-import sys
+from sphinx.ext.autosummary import autosummary_table
 
+version = __version__ = "0.13.0.1 Unreleased PEP8-ified"
+
+import sys
 import wx
 import wx.adv
 import wx.lib.inspection
@@ -86,8 +89,9 @@ DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
 DEFAULT_PIXELS_TO_CHARS_SCALING = (10,26)      # 1 character represents x by y pixels
+DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT = (10,20)      # 1 character represents x by y pixels
 DEFAULT_PIXEL_TO_CHARS_CUTOFF = 20             # number of chars that triggers using pixels instead of chars
-
+DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE = 70             # number of chars that triggers using pixels instead of chars
 MENU_DISABLED_CHARACTER = '!'
 MENU_KEY_SEPARATOR = '::'
 
@@ -296,62 +300,6 @@ POPUP_BUTTONS_OK = 0
 POPUP_BUTTONS_NO_BUTTONS = 5
 
 
-# ------------------------------------------------------------------------- #
-#                       ToolTip used by the Elements                        #
-# ------------------------------------------------------------------------- #
-
-class ToolTip:
-    """ Create a tooltip for a given widget
-
-    (inspired by https://stackoverflow.com/a/36221216)
-    """
-
-    def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME):
-        self.widget = widget
-        self.text = text
-        self.timeout = timeout
-        # self.wraplength = wraplength if wraplength else widget.winfo_screenwidth() // 2
-        self.tipwindow = None
-        self.id = None
-        self.x = self.y = 0
-        self.widget.bind("<Enter>", self.enter)
-        self.widget.bind("<Leave>", self.leave)
-        self.widget.bind("<ButtonPress>", self.leave)
-
-    def enter(self, event=None):
-        self.schedule()
-
-    def leave(self, event=None):
-        self.unschedule()
-        self.hidetip()
-
-    def schedule(self):
-        self.unschedule()
-        self.id = self.widget.after(self.timeout, self.showtip)
-
-    def unschedule(self):
-        if self.id:
-            self.widget.after_cancel(self.id)
-        self.id = None
-
-    def showtip(self):
-        if self.tipwindow:
-            return
-        x = self.widget.winfo_rootx() + 20
-        y = self.widget.winfo_rooty() + self.widget.winfo_height() - 20
-        self.tipwindow = tk.Toplevel(self.widget)
-        self.tipwindow.wm_overrideredirect(True)
-        self.tipwindow.wm_geometry("+%d+%d" % (x, y))
-        label = ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT,
-                          background="#ffffe0", relief=tk.SOLID, borderwidth=1)
-        label.pack()
-
-    def hidetip(self):
-        if self.tipwindow:
-            self.tipwindow.destroy()
-        self.tipwindow = None
-
-
 # ---------------------------------------------------------------------- #
 # Cascading structure.... Objects get larger                             #
 #   Button                                                               #
@@ -366,12 +314,17 @@ class Element():
     def __init__(self, elem_type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
                  key=None, pad=None, tooltip=None, visible=True, size_px=(None, None)):
 
-        if elem_type != ELEM_TYPE_GRAPH:
-            self.Size = convert_tkinter_size_to_Wx(size)
-        else:
-            self.Size = size
-        if size_px != (None, None):
-            self.Size = size_px
+
+        # if elem_type != ELEM_TYPE_GRAPH:
+        #     self.Size = convert_tkinter_size_to_Wx(size)
+        # else:
+        #     self.Size = size
+        self.Size = size_px
+        if size_px == (None, None) and size != (None, None):
+            if elem_type in (ELEM_TYPE_MULTILINE_OUTPUT, ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_OUTPUT, ELEM_TYPE_TABLE, ELEM_TYPE_TREE, ELEM_TYPE_TAB, ELEM_TYPE_COLUMN):
+                self.Size = _convert_tkinter_size_to_Wx(size, DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT, DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE)
+            else:
+                self.Size = _convert_tkinter_size_to_Wx(size, DEFAULT_PIXELS_TO_CHARS_SCALING, DEFAULT_PIXEL_TO_CHARS_CUTOFF)
         self.Type = elem_type
         self.AutoSizeText = auto_size_text
         # self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
@@ -424,7 +377,7 @@ class Element():
                         return rc
         return None
 
-    def TextClickedHandler(self, event):
+    def _TextClickedHandler(self, event):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -433,13 +386,13 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def ReturnKeyHandler(self, event):
+    def _ReturnKeyHandler(self, event):
         MyForm = self.ParentForm
         button_element = self.FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
             button_element.ButtonCallBack(event)
 
-    def ListboxSelectHandler(self, event):
+    def _ListboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -450,7 +403,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def ComboboxSelectHandler(self, event):
+    def _ComboboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
         if self.Key is not None:
@@ -461,7 +414,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def RadioHandler(self):
+    def _RadioHandler(self):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -470,7 +423,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
-    def CheckboxHandler(self):
+    def _CheckboxHandler(self):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -479,17 +432,7 @@ class Element():
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
-    def TabGroupSelectHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()
-
-
-    def KeyboardHandler(self, event):
+    def _TabGroupSelectHandler(self, event):
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
@@ -499,7 +442,17 @@ class Element():
             self.ParentForm.TKroot.quit()
 
 
-    def WxCallbackKeyboard(self, value):
+    def _KeyboardHandler(self, event):
+        if self.Key is not None:
+            self.ParentForm.LastButtonClicked = self.Key
+        else:
+            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+
+
+    def _WxCallbackKeyboard(self, value):
         element_callback_quit_mainloop(self)
 
 
@@ -523,9 +476,22 @@ class Element():
         if tooltip is not None:
             widget.SetToolTip(tooltip)
 
+    def __call__(self, *args, **kwargs):
+        """
+        Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
+        the Update method for the element.
+        Example:    If this text element was in yoiur layout:
+                    sg.Text('foo', key='T')
+                    Then you can call the Update method for that element by writing:
+                    window.FindElement('T')('new text value')
 
-    def __del__(self):
-        pass
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.Update(*args, **kwargs)
+
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Input Class                                  #
@@ -542,8 +508,8 @@ class InputText(Element):
         :param password_char: If non-blank, will display this character for every character typed
         :param background_color: Color for Element. Text or RGB Hex
         '''
-        self.DefaultText = default_text
-        self.PasswordCharacter = password_char
+        self.DefaultText = str(default_text)
+        self.PasswordCharacter = str(password_char)
         bg = background_color if background_color is not None else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Focus = focus
@@ -554,32 +520,11 @@ class InputText(Element):
         self.QT_QLineEdit = None
         self.ValueWasChanged = False
         self.WxTextCtrl = None
-        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
+
+
+        super().__init__(ELEM_TYPE_INPUT_TEXT,size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, size_px=size_px)
 
-
-    def dragEnterEvent(self, e):
-        if e.mimeData().hasText():
-            e.accept()
-        else:
-            e.ignore()
-
-    def dropEvent(self, e):
-        self.QT_QLineEdit.setText(e.mimeData().text())
-
-
-    def QtCallbackFocusInEvent(self,value):
-        return
-
-
-    # def WxCallbackKeyboard(self, value):
-    #     if not self.ChangeSubmits:
-    #         return
-    #     element_callback_quit_mainloop(self)
-
-    def QtCallbackReturnPressed(self):
-        self.ReturnKeyHandler(None)
-        return
 
     def Update(self, value=None, disabled=None, select=None, background_color=None, text_color=None, font=None, visible=None):
         if disabled is True:
@@ -605,8 +550,9 @@ class InputText(Element):
     def SetFocus(self):
         self.WxTextCtrl.SetFocus()
 
-    def __del__(self):
-        super().__del__()
+    get = Get
+    set_focus = SetFocus
+    update = Update
 
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
@@ -639,13 +585,10 @@ class Combo(Element):
         self.VisibleItems = visible_items
         self.AutoComplete = auto_complete
         self.WxComboBox = None     # type: wx.ComboBox
+
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
 
-
-    def QtCurrentItemChanged(self, state):
-        if self.ChangeSubmits:
-            element_callback_quit_mainloop(self)
 
 
 
@@ -665,11 +608,7 @@ class Combo(Element):
 
         super().Update(self.WxComboBox, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-
-
-    def __del__(self):
-
-        super().__del__()
+    update = Update
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
@@ -725,12 +664,7 @@ class OptionMenu(Element):
         elif disabled == False:
             self.TKOptionMenu['state'] = 'normal'
 
-    def __del__(self):
-        try:
-            self.TKOptionMenu.__del__()
-        except:
-            pass
-        super().__del__()
+    update = Update
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
@@ -742,7 +676,7 @@ InputOptionMenu = OptionMenu
 # ---------------------------------------------------------------------- #
 class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, bind_return_key=False,
-                 size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None,
+                 size=(None, None), disabled=False, auto_size_text=None, font=None, background_color=None, size_px=(None, None),
                  text_color=None, key=None, pad=None, tooltip=None):
         '''
         Listbox Element
@@ -781,7 +715,7 @@ class Listbox(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
-                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip)
+                         background_color=bg, text_color=fg, key=key, pad=pad, size_px=size_px, tooltip=tooltip)
 
     def Update(self, values=None, disabled=None):
         if disabled == True:
@@ -809,13 +743,9 @@ class Listbox(Element):
     def GetListValues(self):
         return self.Values
 
-    def __del__(self):
-        try:
-            self.TKListBox.__del__()
-        except:
-            pass
-        super().__del__()
-
+    get_list_values = GetListValues
+    set_value = SetValue
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
@@ -865,10 +795,7 @@ class Radio(Element):
         super().Update(self.WxRadioButton, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
-
-    def __del__(self):
-        super().__del__()
-
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Checkbox                                     #
@@ -898,7 +825,8 @@ class Checkbox(Element):
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
+
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size,  auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, size_px=size_px)
 
@@ -917,8 +845,8 @@ class Checkbox(Element):
         elif disabled == False:
             self.WxCheckbox.Enable()
 
-    def __del__(self):
-        super().__del__()
+    get = Get
+    update = Update
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -934,8 +862,7 @@ Check = Checkbox
 class Spin(Element):
     # Values = None
     # TKSpinBox = None
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,  enable_events=False, size=(None, None), readonly=True, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None,
-                 tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False,  enable_events=False, size=(None, None), readonly=True, auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Spinner Element
         :param values:
@@ -962,12 +889,13 @@ class Spin(Element):
         self.CurrentValue = self.DefaultValue
         self.ReadOnly = readonly
 
-        super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
+
+        super().__init__(ELEM_TYPE_INPUT_SPIN, size=size, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg,
                          key=key, pad=pad, tooltip=tooltip, visible=visible, size_px=size_px)
         return
 
 
-    def WxSpinCallback(self, event):
+    def _WxSpinCallback(self, event):
         event = event       # type:wx.SpinEvent
         print(f'spin event {event.GetInt()} {self.WxSpinCtrl.GetValue()}')
         offset = event.GetInt()
@@ -997,8 +925,10 @@ class Spin(Element):
     def Get(self):
         return self.WxSpinCtrl.GetValue()
 
-    def __del__(self):
-        super().__del__()
+    get = Get
+    update = Update
+
+
 
 # ---------------------------------------------------------------------- #
 #                           Multiline                                    #
@@ -1033,12 +963,10 @@ class Multiline(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
-        tsize = size                # convert tkinter size to pixels
-        if size[0] is not None and size[0] < 100:
-            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
-        self.WxTextCtrl = None
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=tsize, auto_size_text=auto_size_text, background_color=bg,
+        self.Widget = self.WxTextCtrl = None
+
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
@@ -1085,9 +1013,10 @@ class Multiline(Element):
     def SetFocus(self):
         self.WxTextCtrl.SetFocus()
 
+    get = Get
+    set_focus = SetFocus
+    update = Update
 
-    def __del__(self):
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -1121,12 +1050,10 @@ class MultilineOutput(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
-        tsize = size                # convert tkinter size to pixels
-        if size[0] is not None and size[0] < 100:
-            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+
         self.WxTextCtrl = None
 
-        super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=tsize, auto_size_text=auto_size_text, background_color=bg,
+        super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
@@ -1155,9 +1082,9 @@ class MultilineOutput(Element):
     def SetFocus(self):
         self.WxTextCtrl.SetFocus()
 
-    def __del__(self):
-        super().__del__()
-
+    get = Get
+    set_focus = SetFocus
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                                       Text                             #
@@ -1219,78 +1146,13 @@ class Text(Element):
         super().Update(self.WxStaticText, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
-
-    def __del__(self):
-        super().__del__()
+    update = Update
 
 
 # -------------------------  Text Element lazy functions  ------------------------- #
 Txt = Text
 T = Text
 
-
-# ---------------------------------------------------------------------- #
-#                       TKProgressBar                                    #
-#  Emulate the TK ProgressBar using canvas and rectangles
-# ---------------------------------------------------------------------- #
-
-class TKProgressBar():
-    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
-                 relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
-                 orientation='horizontal', BarColor=(None, None), key=None):
-        self.Length = length
-        self.Width = width
-        self.Max = max
-        self.Orientation = orientation
-        self.Count = None
-        self.PriorCount = 0
-
-        if orientation[0].lower() == 'h':
-            s = ttk.Style()
-            s.theme_use(style)
-            if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(key) + "my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1],
-                            troughrelief=relief, borderwidth=border_width, thickness=width)
-            else:
-                s.configure(str(key) + "my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width,
-                            thickness=width)
-
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=str(key) + 'my.Horizontal.TProgressbar', length=length,
-                                                        orient=tk.HORIZONTAL, mode='determinate')
-        else:
-            s = ttk.Style()
-            s.theme_use(style)
-            if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(length) + str(width) + "my.Vertical.TProgressbar", background=BarColor[0],
-                            troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
-            else:
-                s.configure(str(length) + str(width) + "my.Vertical.TProgressbar", troughrelief=relief,
-                            borderwidth=border_width, thickness=width)
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=str(length) + str(width) + 'my.Vertical.TProgressbar',
-                                                        length=length, orient=tk.VERTICAL, mode='determinate')
-
-    def Update(self, count=None, max=None):
-        if max is not None:
-            self.Max = max
-            try:
-                self.TKProgressBarForReal.config(maximum=max)
-            except:
-                return False
-        if count is not None and count > self.Max: return False
-        if count is not None:
-            try:
-                self.TKProgressBarForReal['value'] = count
-            except:
-                return False
-        return True
-
-    def __del__(self):
-        try:
-            self.TKProgressBarForReal.__del__()
-        except:
-            pass
 
 class RedirectText(object):
     def __init__(self, aWxTextCtrl):
@@ -1327,13 +1189,10 @@ class Output(Element):
         self.output = None
         self.Disabled = disabled
 
-
-        tsize = convert_tkinter_size_to_Wx(size) if size[0] is not None and size[0] < 100 else size
-
-        super().__init__(ELEM_TYPE_OUTPUT, size=tsize, background_color=bg, text_color=fg, pad=pad, font=font,
+        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible, size_px=size_px)
 
-    def reroute_stdout(self):
+    def _reroute_stdout(self):
         self.my_stdout = sys.stdout
         self.my_stderr = sys.stderr
         self.redir = RedirectText(self.WxTextCtrl)
@@ -1342,7 +1201,7 @@ class Output(Element):
         Window.stdout_is_rerouted = True
         Window.stdout_location = self.redir
 
-    def reroute_again(self):
+    def _reroute_again(self):
         sys.stdout = self.redir
 
     def Update(self,value=None, background_color=None, text_color=None, font=None, visible=None):
@@ -1356,8 +1215,11 @@ class Output(Element):
             sys.stdout = self.my_stdout
             sys.stderr = self.my_stderr
         except: pass
-        super().__del__()
+        # super().__del__()
 
+
+
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           Button Class                                 #
@@ -1558,7 +1420,7 @@ class Button(Element):
             self.ParentForm.MasterFrame.Close()
             if self.ParentForm.NonBlocking:
                 Window.DecrementOpenCount()
-            # self.ParentForm._Close()
+            self.ParentForm._Close()
         elif self.BType == BUTTON_TYPE_READ_FORM:                       # Read Button
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -1607,9 +1469,10 @@ class Button(Element):
     def SetFocus(self):
         self.QT_QPushButton.setFocus()
 
+    get_text = GetText
+    set_focus = SetFocus
+    update = Update
 
-    def __del__(self):
-        super().__del__()
 
 
 def convert_tkinter_filetypes_to_wx(filetypes):
@@ -1678,9 +1541,8 @@ class ProgressBar(Element):
     def Update(self, visible=None):
         super().Update(self.WxGauge, visible=visible)
 
-    def __del__(self):
-        super().__del__()
-
+    update = Update
+    update_bar = UpdateBar
 
 
 # ---------------------------------------------------------------------- #
@@ -1706,7 +1568,7 @@ class Image(Element):
         if data is None and filename is None:
             print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
-                         tooltip=tooltip)
+                         tooltip=tooltip, size_px=size)
         return
 
     def Update(self, filename=None, data=None, size=(None, None)):
@@ -1726,8 +1588,8 @@ class Image(Element):
         self.tktext_label.configure(image=image, width=width, height=height)
         self.tktext_label.image = image
 
-    def __del__(self):
-        super().__del__()
+
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1758,8 +1620,7 @@ class Canvas(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKCanvas
 
-    def __del__(self):
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -1767,8 +1628,7 @@ class Canvas(Element):
 # ---------------------------------------------------------------------- #
 class Graph(Element):
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
-                 change_submits=False, drag_submits=False, key=None,
-                 tooltip=None):
+                 change_submits=False, drag_submits=False, key=None, tooltip=None):
         '''
         Graph Element
         :param canvas_size:
@@ -1788,7 +1648,7 @@ class Graph(Element):
         self.DragSubmits = drag_submits
         self.ClickPosition = (None, None)
         self.MouseButtonDown = False
-        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
+        super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size_px=canvas_size, pad=pad, key=key,
                          tooltip=tooltip)
         return
 
@@ -1970,16 +1830,12 @@ class Graph(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick out of loop if read was called
 
-    def __del__(self):
-        super().__del__()
-
-
 # ---------------------------------------------------------------------- #
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), size_px=(None,None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None):
         '''
         Frame Element
@@ -2011,13 +1867,13 @@ class Frame(Element):
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
-        self.Layout(layout)
+        self._Layout(layout)
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
-                         font=font, pad=pad, key=key, tooltip=tooltip)
+                         font=font, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
         return
 
-    def AddRow(self, *args):
+    def _AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -2032,9 +1888,9 @@ class Frame(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def _Layout(self, rows):
         for row in rows:
-            self.AddRow(*row)
+            self._AddRow(*row)
 
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
@@ -2042,11 +1898,7 @@ class Frame(Element):
         element = row[col_num]
         return element
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+
 
 
 # ---------------------------------------------------------------------- #
@@ -2064,8 +1916,6 @@ class VerticalSeparator(Element):
         self.WxStaticLine = None        # type: wx.StaticLine
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, size=size, size_px=size_px)
 
-    def __del__(self):
-        super().__del__()
 
 
 VSeperator = VerticalSeparator
@@ -2088,8 +1938,6 @@ class HorizontalSeparator(Element):
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, size=size, size_px=size_px)
 
-    def __del__(self):
-        super().__del__()
 
 
 HSeperator = HorizontalSeparator
@@ -2132,13 +1980,13 @@ class Tab(Element):
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
-        self.Layout(layout)
+        self._Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
                          key=key, tooltip=tooltip)
         return
 
-    def AddRow(self, *args):
+    def _AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -2153,9 +2001,9 @@ class Tab(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def _Layout(self, rows):
         for row in rows:
-            self.AddRow(*row)
+            self._AddRow(*row)
         return self
 
     def Update(self, disabled=None):  # TODO Disable / enable of tabs is not complete
@@ -2172,11 +2020,7 @@ class Tab(Element):
         element = row[col_num]
         return element
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -2216,13 +2060,13 @@ class TabGroup(Element):
         self.ChangeSubmits = change_submits
         self.TabLocation = tab_location
 
-        self.Layout(layout)
+        self._Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
                          pad=pad, key=key, tooltip=tooltip)
         return
 
-    def AddRow(self, *args):
+    def _AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -2237,9 +2081,9 @@ class TabGroup(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def _Layout(self, rows):
         for row in rows:
-            self.AddRow(*row)
+            self._AddRow(*row)
 
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
@@ -2254,11 +2098,7 @@ class TabGroup(Element):
                     return element.Key
         return None
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        super().__del__()
+    find_key_from_tab_name = FindKeyFromTabName
 
 
 # ---------------------------------------------------------------------- #
@@ -2266,7 +2106,7 @@ class TabGroup(Element):
 # ---------------------------------------------------------------------- #
 class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
-                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), font=None,
+                 border_width=None, relief=None, change_submits=False, disabled=False, size=(None, None), size_px=(None,None), font=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None):
         '''
         Slider Element
@@ -2301,7 +2141,7 @@ class Slider(Element):
             temp_size = (20, 20) if orientation.startswith('h') else (8, 20)
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
-                         text_color=text_color, key=key, pad=pad, tooltip=tooltip)
+                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, size_px=size_px)
         return
 
     def Update(self, value=None, range=(None, None), disabled=None):
@@ -2318,19 +2158,9 @@ class Slider(Element):
         elif disabled == False:
             self.TKScale['state'] = 'normal'
 
-    def SliderChangedHandler(self, event):
-        # first, get the results table built
-        # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
-        self.ParentForm.FormRemainedOpen = True
-        if self.ParentForm.CurrentlyRunningMainloop:
-            self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def __del__(self):
-        super().__del__()
+    update = Update
+
 
 
 #
@@ -2361,12 +2191,13 @@ class Column(Element):
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.WxBoxSizer = None      # type: wx.BoxSizer
         self.WxHSizer = None        # type: wx.BoxSizer
-        self.Layout(layout)
+        self._Layout(layout)
+        tsize = size_px if size_px != (None, None) else size
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size=size, size_px=size_px, pad=pad, key=key, visible=visible)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size_px=tsize, pad=pad, key=key, visible=visible)
         return
 
-    def AddRow(self, *args):
+    def _AddRow(self, *args):
         ''' Parms are a variable number of Elements '''
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -2381,9 +2212,9 @@ class Column(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def _Layout(self, rows):
         for row in rows:
-            self.AddRow(*row)
+            self._AddRow(*row)
 
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
@@ -2400,15 +2231,7 @@ class Column(Element):
             self.WxHSizer.Hide(self.WxBoxSizer, recursive=True)
             self.ParentForm.VisibilityChanged()
 
-    def __del__(self):
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
-        try:
-            del (self.TKFrame)
-        except:
-            pass
-        super().__del__()
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -2433,15 +2256,13 @@ class Menu(Element):
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key)
         return
 
-    def MenuItemChosenCallback(self, item_chosen):
+    def _MenuItemChosenCallback(self, item_chosen):
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.ParentForm.LastButtonClicked = item_chosen
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def __del__(self):
-        super().__del__()
 
 
 # ---------------------------------------------------------------------- #
@@ -2514,34 +2335,7 @@ class Table(Element):
             self.Values = values
             self.SelectedRows = []
 
-    def treeview_selected(self, event):
-        selections = self.TKTreeview.selection()
-        self.SelectedRows = [int(x) - 1 for x in selections]
-        if self.ChangeSubmits:
-            MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
-            self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
-
-    def treeview_double_click(self, event):
-        selections = self.TKTreeview.selection()
-        self.SelectedRows = [int(x) - 1 for x in selections]
-        if self.BindReturnKey:
-            MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
-            self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
-
-    def __del__(self):
-        super().__del__()
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -2550,8 +2344,7 @@ class Table(Element):
 class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
-                 change_submits=False, font=None,
-                 justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
+                 change_submits=False, font=None, justification='right', text_color=None, background_color=None, num_rows=None, pad=None, key=None,
                  tooltip=None):
         '''
         Tree Element
@@ -2594,19 +2387,6 @@ class Tree(Element):
                          key=key, tooltip=tooltip)
         return
 
-    def treeview_selected(self, event):
-        selections = self.TKTreeview.selection()
-        self.SelectedRows = [x for x in selections]
-        if self.ChangeSubmits:
-            MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
-            self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
-
     def add_treeview_data(self, node):
         # print(f'Inserting {node.key} under parent {node.parent}')
         if node.key != '':
@@ -2634,8 +2414,7 @@ class Tree(Element):
             item = self.TKTreeview.item(key)
         return self
 
-    def __del__(self):
-        super().__del__()
+    update = Update
 
 
 class TreeData(object):
@@ -2698,8 +2477,8 @@ class ErrorElement(Element):
     def Get(self):
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-    def __del__(self):
-        super().__del__()
+    update = Update
+    get = Get
 
 Stretch = ErrorElement
 
@@ -2843,10 +2622,15 @@ class SystemTray:
         self.RunningMainLoop = False
         if self.timer:
             self.timer.Stop()
+            self.TaskBarIcon.Unbind(wx.EVT_TIMER)
+            del(self.timer)
+            self.timer = None
         self.MenuItemChosen = self.TaskBarIcon.menu_item_chosen
         return self.MenuItemChosen
 
     def timer_timeout(self, event):
+        self.TaskBarIcon.Unbind(wx.EVT_TIMER)
+        del (self.timer)
         self.timer = None
         self.TaskBarIcon.menu_item_chosen = TIMEOUT_KEY
         self.App.ExitMainLoop()
@@ -2887,7 +2671,7 @@ class SystemTray:
         # Don't close app because windows could be depending on it
         # self.App.quit()
 
-    def DisableAsserts(self):
+    def _DisableAsserts(self):
         wx.DisableAsserts()
 
 
@@ -2911,7 +2695,7 @@ class SystemTray:
         elif not self.icon:
             self.icon = PyEmbeddedImage(DEFAULT_BASE64_ICON).GetIcon()
         if self.icon:
-            self.Tooltip = tooltip or self.Tooltip
+            self.Tooltip = tooltip or self.Tooltip or self.TaskBarIcon.tooltip or wx.EmptyString
             self.TaskBarIcon.SetIcon(self.icon, tooltip=self.Tooltip)
         # Tooltip
         # if tooltip is not None:
@@ -2937,7 +2721,12 @@ class SystemTray:
         # if qicon is not None:
         #     self.TrayIcon.setIcon(qicon)
 
-
+    close = Close
+    hide = Hide
+    read = Read
+    show_message = ShowMessage
+    un_hide = UnHide
+    update = Update
 
 
 class DragFrame(wx.Frame):
@@ -2980,7 +2769,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False):
         '''
 
         :param title:
@@ -3015,9 +2804,9 @@ class Window:
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = title
         self.Rows = []  # a list of ELEMENTS for this row
-        self.DefaultElementSize = convert_tkinter_size_to_Wx(default_element_size)
-        self.DefaultButtonElementSize = convert_tkinter_size_to_Wx(default_button_element_size) if default_button_element_size != (
-            None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
+        self.DefaultElementSize = _convert_tkinter_size_to_Wx(default_element_size)
+        self.DefaultButtonElementSize = _convert_tkinter_size_to_Wx(default_button_element_size) if default_button_element_size != (
+            None, None) else _convert_tkinter_size_to_Wx(DEFAULT_BUTTON_ELEMENT_SIZE)
         self.Location = location
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
@@ -3071,8 +2860,12 @@ class Window:
         self.MasterFrame =  None    # type: wx.Frame
         self.MasterPanel = None     # type: wx.Panel
         self.IgnoreClose = False
+        self.UniqueKeyCounter = 0
+
         if layout is not None:
             self.Layout(layout)
+            if finalize:
+                self.Finalize()
 
     @classmethod
     def IncrementOpenCount(self):
@@ -3106,6 +2899,7 @@ class Window:
 
     def Layout(self, rows):
         self.AddRows(rows)
+        self.BuildKeyDict()
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
@@ -3205,7 +2999,7 @@ class Window:
             frame.Close()
         except:
             pass        # if user has already closed the frame will get an error
-
+        # TODO Sept - does this need adding back?
         # if self.CurrentlyRunningMainloop:
         #     self.App.ExitMainLoop()
 
@@ -3362,18 +3156,61 @@ class Window:
         FillFormWithValues(self, values_dict)
         return self
 
-    def FindElement(self, key):
-        element = _FindElementFromKeyInSubForm(self, key)
+    def FindElement(self, key, silent_on_error=False):
+        try:
+            element = self.AllKeysDict[key]
+        except KeyError:
+            element = None
+        # element = _FindElementFromKeyInSubForm(self, key)
         if element is None:
-            print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
-            PopupError('Keyword error in FindElement Call',
-                       'Bad key = {}'.format(key),
-                       'Your bad line of code may resemble this:',
-                       'window.FindElement("{}")'.format(key))
-            return ErrorElement(key=key)
+            if not silent_on_error:
+                print('*** WARNING = FindElement did not find the key. Please check your key\'s spelling ***')
+                PopupError('Keyword error in FindElement Call',
+                           'Bad key = {}'.format(key),
+                           'Your bad line of code may resemble this:',
+                           'window.FindElement("{}")'.format(key))
+                return ErrorElement(key=key)
+            else:
+                return False
         return element
 
     Element = FindElement       # shortcut function definition
+
+
+    def BuildKeyDict(self):
+        dict = {}
+        self.AllKeysDict = self._BuildKeyDictForWindow(self,self, dict)
+        # print(f'keys built = {self.AllKeysDict}')
+
+    def _BuildKeyDictForWindow(self, top_window, window, key_dict):
+        for row_num, row in enumerate(window.Rows):
+            for col_num, element in enumerate(row):
+                if element.Type == ELEM_TYPE_COLUMN:
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                if element.Type == ELEM_TYPE_FRAME:
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                if element.Type == ELEM_TYPE_TAB_GROUP:
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                if element.Type == ELEM_TYPE_TAB:
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                if element.Key is None:   # if no key has been assigned.... create one for input elements
+                    if element.Type == ELEM_TYPE_BUTTON:
+                        element.Key = element.ButtonText
+                    if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU, ELEM_TYPE_CANVAS,
+                                        ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
+                                        ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
+                                        ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
+                                        ELEM_TYPE_INPUT_TEXT):
+                        element.Key = top_window.DictionaryKeyCounter
+                        top_window.DictionaryKeyCounter += 1
+                if element.Key is not None:
+                    if element.Key in key_dict.keys():
+                        print('*** Duplicate key found in your layout {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
+                        element.Key = element.Key + str(self.UniqueKeyCounter)
+                        self.UniqueKeyCounter += 1
+                        print('*** Replaced new key with {} ***'.format(element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
+                    key_dict[element.Key] = element
+        return key_dict
 
     def FindElementWithFocus(self):
         return self.FocusElement
@@ -3496,10 +3333,11 @@ class Window:
         else:
             self.RootNeedsDestroying = True
             self.App.ExitMainLoop()  # kick the users out of the mainloop
-            print('exiting mainloop')
+            # print('exiting mainloop')
 
         self.MasterFrame.Destroy()
-
+        # TODO - Sept - This is all new from prior release... comment out?
+        """
         timer = wx.Timer(self.App)
         self.App.Bind(wx.EVT_TIMER, self.timer_timeout)
         timer.Start(milliseconds=100, oneShot=wx.TIMER_ONE_SHOT)
@@ -3511,6 +3349,9 @@ class Window:
         # self.CurrentlyRunningMainloop = False
         timer.Stop()
         print('after mainloop in close')
+        # TODO end
+        """
+
         self.TKrootDestroyed = True
         self.RootNeedsDestroying = True
 
@@ -3531,18 +3372,65 @@ class Window:
         self.MasterFrame.SetSizer(self.OuterSizer)
         self.OuterSizer.Fit(self.MasterFrame)
 
-    def __enter__(self):
-        return self
+    def __getitem__(self, key):
+        """
+        Returns Element that matches the passed in key.
+        This is "called" by writing code as thus:
+        window['element key'].Update
 
-    def __exit__(self, *a):
-        self.__del__()
-        return False
+        :param key: (Any) The key to find
+        :return: Union[Element, None] The element found or None if no element was found
+        """
+        try:
+            return self.Element(key)
+        except Exception as e:
+            print('The key you passed in is no good. Key = {}*'.format(key))
+            return None
 
-    def __del__(self):
-        # print(f'+++++ Window {self.Title} being deleted +++++')
-        for row in self.Rows:
-            for element in row:
-                element.__del__()
+
+    def __call__(self, *args, **kwargs):
+        """
+        Call window.Read but without having to type it out.
+        window() == window.Read()
+        window(timeout=50) == window.Read(timeout=50)
+
+        :param args:
+        :param kwargs:
+        :return: Tuple[Any, Dict[Any:Any]] The famous event, values that Read returns.
+        """
+        return self.Read(*args, **kwargs)
+
+    add_row = AddRow
+    add_rows = AddRows
+    alpha_channel = AlphaChannel
+    bring_to_front = BringToFront
+    close = Close
+    current_location = CurrentLocation
+    disable = Disable
+    disappear = Disappear
+    element = Element
+    enable = Enable
+    fill = Fill
+    finalize = Finalize
+    find_element = FindElement
+    find_element_with_focus = FindElementWithFocus
+    get_screen_dimensions = GetScreenDimensions
+    hide = Hide
+    layout = Layout
+    load_from_disk = LoadFromDisk
+    maximize = Maximize
+    minimize = Minimize
+    move = Move
+    read = Read
+    reappear = Reappear
+    refresh = Refresh
+    save_to_disk = SaveToDisk
+    set_alpha = SetAlpha
+    set_icon = SetIcon
+    size = Size
+    size_changed = SizeChanged
+    un_hide = UnHide
+    visibility_changed = VisibilityChanged
 
 FlexForm = Window
 
@@ -3565,18 +3453,34 @@ def quit_mainloop(window):
 
 
 # =========================================================================== #
-# Stops the mainloop and sets the event information                           #
+# Convert from characters to pixels                                           #
 # =========================================================================== #
-def convert_tkinter_size_to_Wx(size):
+# def convert_tkinter_size_to_Wx(size):
+#     """
+#     Converts size in characters to size in pixels
+#     :param size:  size in characters, rows
+#     :return: size in pixels, pixels
+#     """
+#     qtsize = size
+#     if size[1] is not None and size[1] < DEFAULT_PIXEL_TO_CHARS_CUTOFF:        # change from character based size to pixels (roughly)
+#         qtsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+#     return qtsize
+
+
+# =========================================================================== #
+# Convert from characters to pixels                                           #
+# =========================================================================== #
+def _convert_tkinter_size_to_Wx(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING, height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF):
     """
     Converts size in characters to size in pixels
     :param size:  size in characters, rows
     :return: size in pixels, pixels
     """
     qtsize = size
-    if size[1] is not None and size[1] < DEFAULT_PIXEL_TO_CHARS_CUTOFF:        # change from character based size to pixels (roughly)
-        qtsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+    if size[1] is not None and size[1] < height_cutoff:        # change from character based size to pixels (roughly)
+        qtsize = size[0]*scaling[0], size[1]*scaling[1]
     return qtsize
+
 
 
 def font_to_wx_font(font):
@@ -3881,6 +3785,8 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
+    form.ReturnValuesDictionary[element.Key] = value
+    return
     if element.Key is None:
         form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
         element.Key = form.DictionaryKeyCounter
@@ -4295,7 +4201,7 @@ else:
                     top_menu.add('separator')
                 else:
                     top_menu.add_command(label=sub_menu_info, underline=pos,
-                                         command=lambda: Menu.MenuItemChosenCallback(element, sub_menu_info))
+                                         command=lambda: Menu._MenuItemChosenCallback(element, sub_menu_info))
         else:
             i = 0
             while i < (len(sub_menu_info)):
@@ -4555,7 +4461,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     height = num_lines
 
                 if element.ClickSubmits:                # bind events
-                    statictext.Bind(wx.EVT_LEFT_UP, element.WxCallbackKeyboard)
+                    statictext.Bind(wx.EVT_LEFT_UP, element._WxCallbackKeyboard)
 
                 hsizer.Add(pad_widget(element.WxStaticText), 0)
 
@@ -4595,7 +4501,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if auto_size:
                     element.WxButton.SetWindowStyleFlag(element.WxButton.GetWindowStyleFlag() | wx.BU_EXACTFIT)
                 else:
-                    element.WxButton.SetMinSize(convert_tkinter_size_to_Wx((width,height)))
+                    element.WxButton.SetMinSize(convert_tkinter_size_to_Wx((width,height), PIXEL))
                 if element.ButtonColor != (None, None) and element.ButtonColor != DEFAULT_BUTTON_COLOR:
                     bc = element.ButtonColor
                 elif toplevel_form.ButtonColor != (None, None) and toplevel_form.ButtonColor != DEFAULT_BUTTON_COLOR:
@@ -4649,10 +4555,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             #         tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
             #     tkbutton.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1])
             #     if element.BindReturnKey:
-            #         element.TKButton.bind('<Return>', element.ReturnKeyHandler)
+            #         element.TKButton.bind('<Return>', element._ReturnKeyHandler)
             #     if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
             #         focus_set = True
-            #         element.TKButton.bind('<Return>', element.ReturnKeyHandler)
+            #         element.TKButton.bind('<Return>', element._ReturnKeyHandler)
             #         element.TKButton.focus_set()
             #         toplevel_form.TKroot.focus_force()
             #     if element.Disabled == True:
@@ -4688,8 +4594,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled:
                     text_ctrl.Enable(False)
                 if element.ChangeSubmits:
-                    text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
-                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element.ReturnKeyHandler)
+                    text_ctrl.Bind(wx.EVT_KEY_UP, element._WxCallbackKeyboard)
+                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element._ReturnKeyHandler)
 
                 sizer = pad_widget(text_ctrl)
 
@@ -4724,7 +4630,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 sizer = pad_widget(element.WxComboBox)
 
                 if element.ChangeSubmits:
-                    element.WxComboBox.Bind(wx.EVT_COMBOBOX, element.WxCallbackKeyboard)
+                    element.WxComboBox.Bind(wx.EVT_COMBOBOX, element._WxCallbackKeyboard)
 
                 hsizer.Add(sizer, 0)
 
@@ -4841,9 +4747,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled:
                     text_ctrl.Enable(False)
                 if element.ChangeSubmits:
-                    text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
+                    text_ctrl.Bind(wx.EVT_KEY_UP, element._WxCallbackKeyboard)
                 if element.EnterSubmits:
-                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element.ReturnKeyHandler)
+                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element._ReturnKeyHandler)
 
                 sizer = pad_widget(text_ctrl)
                 hsizer.Add(sizer, 0)
@@ -4870,9 +4776,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 do_font_and_color(element.WxTextCtrl)
                 
                 if element.ChangeSubmits:
-                    text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
+                    text_ctrl.Bind(wx.EVT_KEY_UP, element._WxCallbackKeyboard)
                 if element.EnterSubmits:
-                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element.ReturnKeyHandler)
+                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element._ReturnKeyHandler)
 
                 sizer = pad_widget(text_ctrl)
 
@@ -4896,7 +4802,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 hsizer.Add(sizer, 0)
 
-                element.reroute_stdout()
+                element._reroute_stdout()
             # -------------------------  INPUT CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 element = element                   # type:Checkbox
@@ -4907,7 +4813,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 sizer = pad_widget(widget)
 
                 if element.ChangeSubmits:
-                    widget.Bind(wx.EVT_CHECKBOX, element.WxCallbackKeyboard)
+                    widget.Bind(wx.EVT_CHECKBOX, element._WxCallbackKeyboard)
 
                 hsizer.Add(sizer, 0)
 
@@ -4934,7 +4840,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 do_font_and_color(element.WxRadioButton)
                 sizer = pad_widget(widget)
                 if element.ChangeSubmits:
-                    widget.Bind(wx.EVT_RADIOBUTTON, element.WxCallbackKeyboard)
+                    widget.Bind(wx.EVT_RADIOBUTTON, element._WxCallbackKeyboard)
                 hsizer.Add(sizer, 0)
                 if element.InitialState:
                     widget.SetValue(True)
@@ -4949,10 +4855,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.WxTextCtrl = text_ctrl = wx.TextCtrl(toplevel_form.MasterPanel, style=style)
                 do_font_and_color(element.WxTextCtrl)
                 if element.ChangeSubmits:
-                    text_ctrl.Bind(wx.EVT_KEY_UP, element.WxCallbackKeyboard)
-                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element.ReturnKeyHandler)
+                    text_ctrl.Bind(wx.EVT_KEY_UP, element._WxCallbackKeyboard)
+                    text_ctrl.Bind(wx.EVT_TEXT_ENTER, element._ReturnKeyHandler)
                 if element.DefaultValue:
-                    text_ctrl.SetValue(element.DefaultValue)
+                    text_ctrl.SetValue(str(element.DefaultValue))
                     element.CurrentValue = element.DefaultValue
                 saved_pad = full_element_pad
                 full_element_pad[3] = 0             # set right padding to 0
@@ -4968,7 +4874,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.WxSpinCtrl.SetValue(element.Values.index(element.DefaultValue))
                 widget.SetMinSize((25,25))
 
-                widget.Bind(wx.EVT_SPIN, element.WxSpinCallback)
+                widget.Bind(wx.EVT_SPIN, element._WxSpinCallback)
                 saved_pad = full_element_pad
                 full_element_pad[1] = 0             # trying to set left pad to 0 but doesn't seem to work
                 hsizer.Add(pad_widget(widget), 0)
@@ -5342,7 +5248,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Orientation.lower().startswith('v'):
                     element.WxStaticLine = static_line = wx.StaticLine(toplevel_form.MasterPanel, style=wx.LI_VERTICAL)
                 else:
-                    print('*** HORIZONTAL LINE ****')
                     element.WxStaticLine = static_line = wx.StaticLine(toplevel_form.MasterPanel, style=wx.LI_HORIZONTAL)
 
                 do_font_and_color(element.WxStaticLine)
@@ -5381,7 +5286,7 @@ def StartupTK(window:Window):
         frame = wx.Frame(None, title=window.Title)
 
     panel = wx.Panel(frame, -1,  style=wx.TRANSPARENT_WINDOW)
-    panel.SetTransparent(.5)
+    # panel.SetTransparent(.5)
     if window.GrabAnywhere:
         panel.Bind(wx.EVT_MOTION, frame.on_mouse)
 
@@ -5737,7 +5642,6 @@ class DebugWin():
 
     def Close(self):
         self.window.Close()
-        self.window.__del__()
         self.window = None
 
 
@@ -6803,22 +6707,24 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
 
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=size), FolderBrowse(initial_folder=initial_folder)],
+              [InputText(default_text=default_path, size=size, key='_INPUT_'), FolderBrowse(initial_folder=initial_folder)],
               [Button('Ok', size=(60, 20), bind_return_key=True), Button('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
-    window = Window(title=_title, icon=icon, auto_size_text=True, button_color=button_color,
+    window = Window(title=_title, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
+    button, values = window.Read()
     window.Close()
     if button != 'Ok':
         return None
     else:
-        path = input_values[0]
+        path = values['_INPUT_']
         return path
+
+
 
 
 # --------------------------- PopupGetFile ---------------------------
@@ -6869,23 +6775,24 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
         file_types=file_types, initial_folder=initial_folder)
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-              [InputText(default_text=default_path, size=(30,1)), browse_button],
+              [InputText(default_text=default_path, size=(30,1), key='_INPUT_'), browse_button],
               [Button('Ok', size=(60, 20), bind_return_key=True), Button('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
 
-    window = Window(title=_title, icon=icon, auto_size_text=True, button_color=button_color, font=font,
+    window = Window(title=_title, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
+    button, values = window.Read()
     window.Close()
-    # window.Close()
     if button != 'Ok':
         return None
     else:
-        path = input_values[0]
+        path = values['_INPUT_']
         return path
+
+
 
 
 # --------------------------- PopupGetText ---------------------------
@@ -6912,21 +6819,67 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     """
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
-              [InputText(default_text=default_text, size=size, password_char=password_char)],
+              [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
               [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
 
-    window = Window(title=_title, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
+    window = Window(title=_title, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location)
 
-    (button, input_values) = window.Layout(layout).Read()
-
+    button, values = window.Read()
+    window.Close()
     if button != 'Ok':
         return None
     else:
-        return input_values[0]
+        path = values['_INPUT_']
+        return path
+
+
+
+
+# ------------------------ PEP8-ify The SDK ------------------------#
+change_look_and_feel = ChangeLookAndFeel
+easy_print = EasyPrint
+easy_print_close = EasyPrintClose
+fill_form_with_values = FillFormWithValues
+get_complimentary_hex = GetComplimentaryHex
+list_of_look_and_feel_values = ListOfLookAndFeelValues
+obj_to_string = ObjToString
+obj_to_string_single_obj = ObjToStringSingleObj
+one_line_progress_meter = OneLineProgressMeter
+one_line_progress_meter_cancel = OneLineProgressMeterCancel
+popup = Popup
+popup_annoying = PopupAnnoying
+popup_auto_close = PopupAutoClose
+popup_cancel = PopupCancel
+popup_error = PopupError
+popup_get_file = PopupGetFile
+popup_get_folder = PopupGetFolder
+popup_get_text = PopupGetText
+popup_no_border = PopupNoBorder
+popup_no_buttons = PopupNoButtons
+popup_no_frame = PopupNoFrame
+popup_no_titlebar = PopupNoTitlebar
+popup_no_wait = PopupNoWait
+popup_non_blocking = PopupNonBlocking
+popup_ok = PopupOK
+popup_ok_cancel = PopupOKCancel
+popup_quick = PopupQuick
+popup_quick_message = PopupQuickMessage
+popup_scrolled = PopupScrolled
+popup_timed = PopupTimed
+popup_yes_no = PopupYesNo
+print_close = PrintClose
+scrolled_text_box = ScrolledTextBox
+set_global_icon = SetGlobalIcon
+set_options = SetOptions
+timer_start = TimerStart
+timer_stop = TimerStop
+
+
+
 
 
 """
@@ -6947,10 +6900,10 @@ def main():
 
     layout = [
               [Text('Welcome to PySimpleGUI!', font='Arial 15', text_color='red')],
+              [Text('You are running version {}'.format(version), font='Arial 20', text_color='red')],
               [Text('You should be importing this module rather than running it', justification='l', size=(50, 1))],
               [Text('Here is your sample input window....')],
-              [InputText('Source', focus=True),
-               FileBrowse()],
+              [InputText('Source', focus=True, size_px=(200,80)), FileBrowse()],
               [InputText('Dest'), FolderBrowse()],
               [Checkbox('Checkbox 1', size=(15,1)), Checkbox('Checkbox 2')],
               [Radio('Radio 1', 'group', size=(15,1)), Radio('Radio 2', 'group')],
@@ -6963,15 +6916,15 @@ def main():
               [Spin(values=['Spin a', 'Spin b', 'Spin c'], font='ANY 15', key='_SPIN_', size=(10, 1), enable_events=True)],
               [Button('Ok'), Button('Exit')]]
 
-    window = Window('Demo window..',
-                    default_element_size=(35,1),
+    window = Window('Demo window..', layout,
+                    # default_element_size=(35,1),
                     auto_size_text=True,
                     auto_size_buttons=True,
                     no_titlebar=False,
                     disable_close=False,
                     disable_minimize=True,
                     grab_anywhere=True,
-                    ).Layout(layout)
+                    )
 
     while True:
         event, values = window.Read()
