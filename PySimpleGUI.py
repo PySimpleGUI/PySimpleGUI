@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.9 Unreleased Scrollable Columns, shortcuts, column sizing, window()"
+version = __version__ = "4.4.0.10 Unreleased Scrollable Columns, shortcuts, column sizing, window()"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3839,6 +3839,7 @@ class TkScrollableFrame(tk.Frame):
         self.bind('<Configure>', self.set_scrollregion)
 
         self.TKFrame.bind_all("<MouseWheel>", self.yscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+        self.TKFrame.bind_all("<Shift-MouseWheel>", self.xscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
 
 
 
