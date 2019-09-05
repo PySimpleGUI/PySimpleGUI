@@ -51,11 +51,10 @@ def worker_thread(thread_name, run_freq,  gui_queue):
     :param gui_queue: Queue used to communicate with the GUI
     :return:
     """
-    print('Starting thread - {} that runds every {} ms'.format(thread_name, run_freq))
+    print('Starting thread - {} that runs every {} ms'.format(thread_name, run_freq))
     for i in itertools.count():                             # loop forever, keeping count in i as it loops
         time.sleep(run_freq/1000)                           # sleep for a while
         gui_queue.put('{} - {}'.format(thread_name, i))     # put a message into queue for GUI
-        print('..')
 
  ######   ##     ## ####
 ##    ##  ##     ##  ##
@@ -95,7 +94,7 @@ def the_gui(gui_queue):
             if message:
                 window.Element('_OUTPUT_').Update(message)
                 window.Refresh()    # do a refresh because could be showing multiple messages before next Read
-
+                print(message)
     # if user exits the window, then close the window and exit the GUI func
     window.Close()
 
