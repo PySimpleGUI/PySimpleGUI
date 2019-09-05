@@ -3839,6 +3839,7 @@ class TkScrollableFrame(tk.Frame):
         self.bind('<Configure>', self.set_scrollregion)
 
         self.TKFrame.bind_all("<MouseWheel>", self.yscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+        self.TKFrame.bind_all("<Shift-MouseWheel>", self.xscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
 
 
 
