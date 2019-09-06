@@ -12,7 +12,7 @@ from builtins import str
 from builtins import object
 from future import standard_library
 standard_library.install_aliases()
-version = __version__ = "2.3.0.0 Unreleased"
+version = __version__ = "2.4.1 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -70,7 +70,7 @@ This notice, these first 100 lines of code shall remain unchanged
 88888888 "Y8888P88 888        88888888 "Y8888P"          
       
 
-And just what the fuck is that?  Well, it's LPGL3+ and these FOUR simple stipulations.
+And just what is that?  Well, it's LPGL3+ and these FOUR simple stipulations.
 1. These and all comments are to remain in this document
 2. You will not post this software in a repository or a location for others to download from:
    A. Unless you have made 10 lines of changes
@@ -133,7 +133,8 @@ import pickle
 import calendar
 import textwrap
 import inspect
-# from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+from random import randint
 import warnings
 
 g_time_start = 0
@@ -517,7 +518,7 @@ class Element(object):
         """
         Element base class. Only used internally.  User will not create an Element object by itself
 
-        :param type: (int - could be enum) The type of element. These constants all start with "ELEM_TYPE_"
+        :param type: (int) (could be enum) The type of element. These constants all start with "ELEM_TYPE_"
         :param size: Tuple[int, int]  (width ,height ) w=characters-wide, h=rows-high
         :param auto_size_text: (bool) True if the Widget should be shrunk to exactly fit the number of chars to show
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc (see docs for exact formats)
@@ -553,6 +554,7 @@ class Element(object):
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False
+        self.ParentRowFrame = None          # type tk.Frame
 
     def _RightClickMenuCallback(self, event):
         """
@@ -584,7 +586,7 @@ class Element(object):
         "Container Element" is encountered. Func has to walk entire window including these "sub-forms"
 
         :param form: the Window object to search
-        :return: union[Button, None] Button Object if a button is found, else None if no button found
+        :return: Union[Button, None] Button Object if a button is found, else None if no button found
         """
         for row in form.Rows:
             for element in row:
@@ -834,7 +836,9 @@ class InputText(Element):
         :param select: (bool) if True, then the text will be selected
         :param visible: (bool) change visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if disabled is True:
             self.TKEntry['state'] = 'readonly'
         elif disabled is False:
@@ -845,6 +849,7 @@ class InputText(Element):
             except:
                 pass
             self.DefaultText = value
+            self.TKEntry.icursor(tk.END)
         if select:
             self.TKEntry.select_range(0, 'end')
         if visible is False:
@@ -864,19 +869,11 @@ class InputText(Element):
             text = ''
         return text
 
-    def SetFocus(self, force=False):
-        """
-        Sets focus to this element using focus_set. Will use focus_force if force flag set. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param force: (bool) if True then tkinter's `Entry.focus_force` will be called instead of `Entry.focus_set`
-        """
-        try:
-            if force:
-                self.TKEntry.focus_force()
-            else:
-                self.TKEntry.focus_set()
-        except:
-            pass
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
@@ -936,6 +933,10 @@ class Combo(Element):
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param visible: (bool) control visibility of element
         """
+
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -989,13 +990,16 @@ class Combo(Element):
             value = None                      # only would happen if user closes window
         return value
 
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
 InputCombo = Combo
 DropDown = InputCombo
 Drop = InputCombo
-
+DD = Combo
 
 # ---------------------------------------------------------------------- #
 #                           Option Menu                                  #
@@ -1041,6 +1045,10 @@ class OptionMenu(Element):
         :param disabled: (bool) disable or enable state of the element
         :param visible: (bool) control visibility of element
         """
+
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             self.Values = values
             self.TKOptionMenu['menu'].delete(0, 'end')
@@ -1068,12 +1076,13 @@ class OptionMenu(Element):
         elif visible is True:
             self.TKOptionMenu.pack()
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
 InputOptionMenu = OptionMenu
-
 
 # ---------------------------------------------------------------------- #
 #                           Listbox                                      #
@@ -1084,7 +1093,7 @@ class Listbox(Element):
     when a window.Read() is executed.
     """
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
-                 bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None,
+                 bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
                  visible=True):
         """
@@ -1131,6 +1140,7 @@ class Listbox(Element):
         self.RightClickMenu = right_click_menu
         self.vsb = None  # type: tk.Scrollbar
         self.TKListbox = self.Widget = None         # type: tk.Listbox
+        self.NoScrollbar = no_scrollbar
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
 
@@ -1146,6 +1156,9 @@ class Listbox(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -1171,10 +1184,12 @@ class Listbox(Element):
                     warnings.warn('* Listbox Update selection_set failed with index {}*'.format(set_to_index))
         if visible is False:
             self.TKListbox.pack_forget()
-            self.vsb.pack_forget()
+            if not self.NoScrollbar:
+                self.vsb.pack_forget()
         elif visible is True:
             self.TKListbox.pack()
-            self.vsb.pack()
+            if not self.NoScrollbar:
+                self.vsb.pack()
         if scroll_to_index is not None and len(self.Values):
             self.TKListbox.yview_moveto(scroll_to_index/len(self.Values))
 
@@ -1207,23 +1222,25 @@ class Listbox(Element):
         return self.Values
 
 
-    def SetFocus(self, force=False):
+    def GetIndexes(self):
         """
-        Moves the focus to this Listbox
+        Returns the items currently selected as a list of indexes
 
-        :param force: (bool). If True, will call focus_force instead of focus_set
+        :return: List[int] A list of offsets into values that is currently selected
         """
-        try:
-            if force:
-                self.TKListbox.focus_force()
-            else:
-                self.TKListbox.focus_set()
-        except:
-            pass
+        return self.TKListbox.curselection()
 
 
+    get_indexes = GetIndexes
+    get_list_values = GetListValues
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    set_value = SetValue
+    update = Update
 
 
+LBox = Listbox
+LB = Listbox
 
 # ---------------------------------------------------------------------- #
 #                           Radio                                        #
@@ -1277,6 +1294,9 @@ class Radio(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             try:
                 self.TKIntVar.set(self.EncodedRadioValue)
@@ -1307,7 +1327,14 @@ class Radio(Element):
         """
         return self.TKIntVar.get() == self.EncodedRadioValue
 
+    get = Get
+    reset_group = ResetGroup
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
+R = Radio
+Rad = Radio
 
 
 
@@ -1322,7 +1349,6 @@ class Checkbox(Element):
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, visible=True):
         """
-
         :param text: (str) Text to display next to checkbox
         :param default: (bool). Set to True if you want this checkbox initially checked
         :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
@@ -1370,6 +1396,9 @@ class Checkbox(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -1385,7 +1414,10 @@ class Checkbox(Element):
         elif visible is True:
             self.TKCheckbutton.pack()
 
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -1446,6 +1478,9 @@ class Spin(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values != None:
             old_value = self.TKStringVar.get()
             self.Values = values
@@ -1490,6 +1525,11 @@ class Spin(Element):
         :return: (Any) The currently visible entry
         """
         return self.TKStringVar.get()
+
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 
@@ -1561,6 +1601,9 @@ class Multiline(Element):
         :param autoscroll: (bool) if True then contents of element are scrolled down when new text is added to the end
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if autoscroll is not None:
             self.Autoscroll = autoscroll
         if value is not None:
@@ -1601,21 +1644,15 @@ class Multiline(Element):
 
         return self.TKText.get(1.0, tk.END)
 
-    def SetFocus(self, force=False):
-        """
-        Moves the focus (that little blinking cursor) to this Multiline Element
 
-        :param force: (bool). If True, will call focus_force instead of focus_set
-        """
-        try:
-            if force:
-                self.TKText.focus_force()
-            else:
-                self.TKText.focus_set()
-        except:
-            pass
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
+ML = Multiline
+MLine = Multiline
 
 
 # ---------------------------------------------------------------------- #
@@ -1625,7 +1662,6 @@ class Text(Element):
     """
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
     """
-
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True):
@@ -1674,6 +1710,9 @@ class Text(Element):
         :param visible: (bool) set visibility state of the element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1689,14 +1728,16 @@ class Text(Element):
         elif visible is True:
             self.TKText.pack()
 
-
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 
 # -------------------------  Text Element lazy functions  ------------------------- #
-Txt = Text
-T = Text
+
+Txt = Text  # type: Text
+T = Text    # type: Text
 
 
 # ---------------------------------------------------------------------- #
@@ -1753,6 +1794,9 @@ class StatusBar(Element):
         :param visible: (bool) set visibility state of the element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             self.DisplayText = value
             stringvar = self.TKStringVar
@@ -1767,6 +1811,10 @@ class StatusBar(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack()
+
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 
@@ -1971,7 +2019,9 @@ class Output(Element):
         :param value: (str) string that will replace current contents of the output area
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
@@ -1980,6 +2030,18 @@ class Output(Element):
         elif visible is True:
             self._TKOut.frame.pack()
 
+    def Get(self):
+        """
+        Returns the current contents of the output.  Similar to Get method other Elements
+        :return: (str) the current value of the output
+        """
+        return self._TKOut.output.get(1.0, tk.END)
+
+
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    tk_out = TKOut
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -1989,7 +2051,6 @@ class Button(Element):
     """
     Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
     """
-
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
@@ -2024,12 +2085,14 @@ class Button(Element):
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
         self.FileTypes = file_types
-        self.TKButton = None  # type: tk.Button
+        self.Widget = self.TKButton = None  # type: tk.Button
         self.Target = target
         self.ButtonText = str(button_text)
         if sys.platform == 'darwin' and button_color is not None:
             print('Button *** WARNING - Button colors are not supported on the Mac ***')
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+            self.ButtonColor = DEFAULT_BUTTON_COLOR
+        else:
+            self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -2231,6 +2294,9 @@ class Button(Element):
         :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
@@ -2280,20 +2346,6 @@ class Button(Element):
         """
         return self.ButtonText
 
-    def SetFocus(self, force=False):
-        """
-        Sets the focus to this button.  Can be forced with parameter
-
-        :param force: (bool) If True will call focus_force instead of focus_set
-        """
-        try:
-            if force:
-                self.TKButton.focus_force()
-            else:
-                self.TKButton.focus_set()
-        except:
-            pass
-
 
     def Click(self):
         """
@@ -2306,10 +2358,16 @@ class Button(Element):
             print('Exception clicking button')
 
 
+    click = Click
+    get_text = GetText
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
+
+
 # -------------------------  Button lazy functions  ------------------------- #
 B = Button
 Btn = Button
-Butt = Button
 
 
 # ---------------------------------------------------------------------- #
@@ -2359,8 +2417,8 @@ class ButtonMenu(Element):
         self.IsButtonMenu = True
         self.MenuItemChosen = None
         self.Tearoff = tearoff
-        self.TKButtonMenu = None
-        self.TKMenu = None
+        self.TKButtonMenu = None        # type: tk.Menubutton
+        self.TKMenu = None              # type: tk.Menu
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip,
@@ -2389,6 +2447,9 @@ class ButtonMenu(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         self.MenuDefinition = menu_definition
         if menu_definition is not None:
             self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
@@ -2399,7 +2460,22 @@ class ButtonMenu(Element):
         elif visible is True:
             self.TKButtonMenu.pack()
 
+    def Click(self):
+        """
+        Generates a click of the button as if the user clicked the button
+        Calls the tkinter invoke method for the button
+        """
+        try:
+            self.TKMenu.invoke(1)
+        except:
+            print('Exception clicking button')
 
+
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
+
+BMenu = ButtonMenu
 
 
 # ---------------------------------------------------------------------- #
@@ -2465,12 +2541,21 @@ class ProgressBar(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             self.TKProgressBar.TKProgressBarForReal.pack_forget()
         elif visible is True:
             self.TKProgressBar.TKProgressBarForReal.pack()
 
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
+    update_bar = UpdateBar
+
+PBar = ProgressBar
+Prog = ProgressBar
 
 
 
@@ -2525,6 +2610,9 @@ class Image(Element):
         :param visible: (bool) control visibility of element
         """
 
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if filename is not None:
             image = tk.PhotoImage(file=filename)
         elif data is not None:
@@ -2594,7 +2682,10 @@ class Image(Element):
         except:
             pass
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
+    update_animation = UpdateAnimation
 
 
 # ---------------------------------------------------------------------- #
@@ -2630,10 +2721,12 @@ class Canvas(Element):
         """ """
         if self._TKCanvas is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
+            print('*** window = sg.Window("My Form", layout, finalize=True) ***')
         return self._TKCanvas
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    tk_canvas = TKCanvas
 
 
 # ---------------------------------------------------------------------- #
@@ -3124,22 +3217,28 @@ class Graph(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick out of loop if read was called
 
-    def SetFocus(self, force=False):
-        """
-        Sets the current focus to be on this Graph Element
-
-        :param force: (bool) if True will call focus_force otherwise calls focus_set
-        """
-
-        try:
-            if force:
-                self._TKCanvas2.focus_force()
-            else:
-                self._TKCanvas2.focus_set()
-        except:
-            pass
-
-
+    bring_figure_to_front = BringFigureToFront
+    button_press_call_back = ButtonPressCallBack
+    button_release_call_back = ButtonReleaseCallBack
+    delete_figure = DeleteFigure
+    draw_arc = DrawArc
+    draw_circle = DrawCircle
+    draw_image = DrawImage
+    draw_line = DrawLine
+    draw_oval = DrawOval
+    draw_point = DrawPoint
+    draw_rectangle = DrawRectangle
+    draw_text = DrawText
+    erase = Erase
+    motion_call_back = MotionCallBack
+    move = Move
+    move_figure = MoveFigure
+    relocate_figure = RelocateFigure
+    send_figure_to_back = SendFigureToBack
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    tk_canvas = TKCanvas
+    update = Update
 
 
 
@@ -3153,7 +3252,7 @@ class Frame(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
-                 tooltip=None, right_click_menu=None, visible=True):
+                 tooltip=None, right_click_menu=None, visible=True, element_justification='left'):
         """
         :param title: (str) text that is displayed as the Frame's "label" or title
         :param layout: List[List[Elements]] The layout to put inside the Frame
@@ -3170,6 +3269,7 @@ class Frame(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param element_justification: (str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.UseDictionary = False
@@ -3188,7 +3288,7 @@ class Frame(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
         self.ContainerElemementNumber = Window.GetAContainerNumber()
-
+        self.ElementJustification = element_justification
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
@@ -3245,13 +3345,20 @@ class Frame(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             self.TKFrame.pack_forget()
         elif visible is True:
             self.TKFrame.pack()
 
 
+    add_row = AddRow
+    layout = Layout
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -3272,12 +3379,11 @@ class VerticalSeparator(Element):
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
-
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
 
 VSeperator = VerticalSeparator
 VSep = VerticalSeparator
-
 
 # ---------------------------------------------------------------------- #
 #                           Tab                                          #
@@ -3289,7 +3395,7 @@ class Tab(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True):
+                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True, element_justification='left'):
         """
         :param title: (str) text to show on the tab
         :param layout: List[List[Element]] The element layout that will be shown in the tab
@@ -3303,6 +3409,7 @@ class Tab(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param element_justification: (str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.UseDictionary = False
@@ -3321,6 +3428,7 @@ class Tab(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
         self.ContainerElemementNumber = Window.GetAContainerNumber()
+        self.ElementJustification = element_justification
 
         self.Layout(layout)
 
@@ -3366,7 +3474,9 @@ class Tab(Element):
         :param disabled: (bool) disable or enable state of the element
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if disabled is None:
             return
         self.Disabled = disabled
@@ -3403,8 +3513,12 @@ class Tab(Element):
         except Exception as e:
             print('Exception Selecting Tab {}'.format(e))
 
-
-
+    add_row = AddRow
+    layout = Layout
+    select = Select
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 # ---------------------------------------------------------------------- #
 #                           TabGroup                                     #
@@ -3450,6 +3564,7 @@ class TabGroup(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
+        self.ElementJustification = 'left'
 
         self.Layout(layout)
 
@@ -3534,7 +3649,12 @@ class TabGroup(Element):
             value = None
         return value
 
-
+    add_row = AddRow
+    find_key_from_tab_name = FindKeyFromTabName
+    get = Get
+    layout = Layout
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
 
 
 
@@ -3608,7 +3728,9 @@ class Slider(Element):
         :param visible: (bool) control visibility of element
 
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -3641,7 +3763,9 @@ class Slider(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -3725,10 +3849,21 @@ class TkScrollableFrame(tk.Frame):
 
         self.bind('<Configure>', self.set_scrollregion)
 
-        self.bind_mouse_scroll(self.canvas, self.yscroll)
-        if not vertical_only:
-            self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
-        self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
+        self.TKFrame.bind_all("<MouseWheel>", self.yscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+        self.TKFrame.bind_all("<Shift-MouseWheel>", self.xscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+
+
+
+        # def _on_mousewheel(self, event):
+        #     self.canv.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+
+            # self.bind_mouse_scroll(self.canvas, self.yscroll)
+        # if not vertical_only:
+        #     self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
+        # self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
+        # self.bind_mouse_scroll(self.TKFrame, self.yscroll)
+        # self.bind_mouse_scroll(self, self.yscroll)
 
     def resize_frame(self, e):
         """
@@ -3791,7 +3926,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
+                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, justification='left', element_justification='left'):
         """
         :param layout: List[List[Element]] Layout that will be shown in the Column container
         :param background_color: (str) color of background of entire Column
@@ -3803,6 +3938,8 @@ class Column(Element):
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param visible: (bool) set visibility state of the element
+        :param justification: (str) set justification for the Column itself. Note entire row containing the Column will be affected
+        :param element_justification: (str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.UseDictionary = False
@@ -3820,7 +3957,8 @@ class Column(Element):
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ContainerElemementNumber = Window.GetAContainerNumber()
-
+        self.ElementJustification = element_justification
+        self.Justification = justification
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible)
@@ -3879,7 +4017,9 @@ class Column(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             if self.TKColFrame:
                 self.TKColFrame.pack_forget()
@@ -3891,10 +4031,13 @@ class Column(Element):
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
 
+    add_row = AddRow
+    layout = Layout
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
-
-
-
+Col = Column
 
 # ---------------------------------------------------------------------- #
 #                           Pane                                         #
@@ -3954,11 +4097,17 @@ class Pane(Element):
 
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if visible is False:
             self.PanedWindow.pack_forget()
         elif visible is True:
             self.PanedWindow.pack()
+
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -4295,7 +4444,9 @@ class Menu(Element):
         :param menu_definition: List[List[Tuple[str, List[str]]]
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if menu_definition is not None:
             self.MenuDefinition = menu_definition
             self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
@@ -4322,7 +4473,9 @@ class Menu(Element):
         elif self.TKMenu is not None:
             self.ParentForm.TKroot.configure(menu=self.TKMenu)
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
@@ -4416,7 +4569,9 @@ class Table(Element):
         :param alternating_row_color: (str) the color to make every other row
         :param row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             for id in self.tree_ids:
                 self.TKTreeview.item(id, tags=())
@@ -4507,7 +4662,22 @@ class Table(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
+    def Get(self):
+        """
+        Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
+        edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
+        user when Table was created or Updated.
 
+        :return: List[List[Any]] the current table values (for now what was originally provided up updated)
+        """
+        return self.Values
+
+
+
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
+    get = Get
 
 # ---------------------------------------------------------------------- #
 #                           Tree                                         #
@@ -4574,6 +4744,8 @@ class Tree(Element):
         self.RightClickMenu = right_click_menu
         self.RowHeight = row_height
         self.IconList = {}
+        self.IdToKey = {'':''}
+        self.KeyToID = {'':''}
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
                          key=key, tooltip=tooltip, visible=visible)
@@ -4588,7 +4760,8 @@ class Tree(Element):
         """
 
         selections = self.TKTreeview.selection()
-        self.SelectedRows = [x for x in selections]
+        # self.SelectedRows = [x for x in selections]
+        self.SelectedRows = [self.IdToKey[x] for x in selections]
         if self.ChangeSubmits:
             MyForm = self.ParentForm
             if self.Key is not None:
@@ -4606,7 +4779,6 @@ class Tree(Element):
 
         :param node: (TreeData) The node to insert.  Will insert all nodes from starting point downward, recursively
         """
-        # print(f'Inserting {node.key} under parent {node.parent}')
         if node.key != '':
             if node.icon:
                 try:
@@ -4615,16 +4787,21 @@ class Tree(Element):
                     else:
                         photo = tk.PhotoImage(file=node.icon)
                     node.photo = photo
-                    self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
-                                           open=self.ShowExpanded, image=node.photo)
+                    id = self.TKTreeview.insert(self.KeyToID[node.parent], 'end', iid=None, text=node.text,
+                                         values=node.values, open=self.ShowExpanded, image=node.photo)
+                    self.IdToKey[id] = node.key
+                    self.KeyToID[node.key] = id
                 except:
                     self.photo = None
             else:
-                self.TKTreeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
-                                       open=self.ShowExpanded)
+                id = self.TKTreeview.insert(self.KeyToID[node.parent], 'end', iid=None, text=node.text,
+                                            values=node.values, open=self.ShowExpanded)
+                self.IdToKey[id] = node.key
+                self.KeyToID[node.key] = id
 
         for node in node.children:
             self.add_treeview_data(node)
+
 
     def Update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
         """
@@ -4637,7 +4814,9 @@ class Tree(Element):
         :param icon: Union[bytes, str] can be either a base64 icon or a filename for the icon
         :param visible: (bool) control visibility of element
         """
-
+        if self.Widget is None:
+            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            return
         if values is not None:
             children = self.TKTreeview.get_children()
             for i in children:
@@ -4645,25 +4824,36 @@ class Tree(Element):
                 self.TKTreeview.delete(i)
             children = self.TKTreeview.get_children()
             self.TreeData = values
+            self.IdToKey = {'': ''}
+            self.KeyToID = {'': ''}
             self.add_treeview_data(self.TreeData.root_node)
             self.SelectedRows = []
         if key is not None:
-            item = self.TKTreeview.item(key)
+            for id in self.IdToKey.keys():
+                if key == self.IdToKey[id]:
+                    break
+            else:
+                id = None
+                print('** Key not found **')
+        else:
+            id = None
+        if id:
+            # item = self.TKTreeview.item(id)
             if value is not None:
-                self.TKTreeview.item(key, values=value)
+                self.TKTreeview.item(id, values=value)
             if text is not None:
-                self.TKTreeview.item(key, text=text)
+                self.TKTreeview.item(id, text=text)
             if icon is not None:
                 try:
                     if type(icon) is bytes:
                         photo = tk.PhotoImage(data=icon)
                     else:
                         photo = tk.PhotoImage(file=icon)
-                    self.TKTreeview.item(key, image=photo)
+                    self.TKTreeview.item(id, image=photo)
                     self.IconList[key] = photo  # save so that it's not deleted (save reference)
                 except:
                     pass
-            item = self.TKTreeview.item(key)
+            # item = self.TKTreeview.item(id)
         if visible is False:
             self.TKTreeview.pack_forget()
         elif visible is True:
@@ -4671,7 +4861,9 @@ class Tree(Element):
         return self
 
 
-
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 class TreeData(object):
     """
@@ -4760,6 +4952,8 @@ class TreeData(object):
             [str(node.key) + ' : ' + str(node.text)] +
             [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
 
+    insert = Insert
+
 
 # ---------------------------------------------------------------------- #
 #                           Error Element                                #
@@ -4802,7 +4996,10 @@ class ErrorElement(Element):
         """
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-
+    get = Get
+    set_focus = Element.SetFocus
+    set_tooltip = Element.SetTooltip
+    update = Update
 
 
 # ---------------------------------------------------------------------- #
@@ -4835,7 +5032,8 @@ class Window(object):
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
-                 disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True, finalize=False):
+                 disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
+                 finalize=False, element_justification='left'):
         """
         :param title: (str) The title that will be displayed in the Titlebar and on the Taskbar
         :param layout: List[List[Elements]] The layout for the window. Can also be specified in the Layout method
@@ -4868,8 +5066,9 @@ class Window(object):
         :param disable_minimize:  (bool) if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param transparent_color:  (str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
-        :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
         :param debugger_enabled: (bool) If True then the internal debugger will be enabled
+        :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
+        :param element_justification: (str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
         """
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
@@ -4932,7 +5131,8 @@ class Window(object):
         self.UniqueKeyCounter = 0
         self.DebuggerEnabled = debugger_enabled
         self.WasClosed = False
-
+        self.ElementJustification = element_justification
+        self.FocusSet = False
         if layout is not None and type(layout) not in  (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
@@ -4996,10 +5196,18 @@ class Window(object):
                       'This means you are missing () from your layout',
                       'The offensive list is:',
                       element,
-                      'This item will be stripped from your layout'
-                      )
+                      'This item will be stripped from your layout')
                 continue
-
+            if element.ParentContainer is not None:
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE A LAYOUT! You must not attempt this kind of re-use ***', UserWarning)
+                PopupError('Error creating layout',
+                      'The layout specified has already been used',
+                      'You MUST start witha "clean", unused layout every time you create a window',
+                      'The offensive Element = ',
+                      element,
+                      'and has a key = ', element.Key,
+                      'This item will be stripped from your layout')
+                continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -5128,8 +5336,15 @@ class Window(object):
             # print(f'icon bitmap = {wicon}')
             self.TKroot.iconbitmap(wicon)
         except:
-            pass
-
+            # if can't set trying any other ways, just default to the built-in icon
+            try:
+                wicon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
+                try:
+                    self.TKroot.tk.call('wm', 'iconphoto', self.TKroot._w, wicon)
+                except:
+                    pass
+            except:
+                pass
 
     def _GetElementAtLocation(self, location):
         """
@@ -5429,8 +5644,8 @@ class Window(object):
         except KeyError:
             element = None
             if not silent_on_error:
-                print(
-                    '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key)
+                warnings.warn(
+                    '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key, UserWarning)
                 PopupError('Keyword error in FindElement Call',
                            'Bad key = {}'.format(key),
                            'Your bad line of code may resemble this:',
@@ -5497,7 +5712,7 @@ class Window(object):
                     if element.Key in key_dict.keys():
                         print('*** Duplicate key found in your layout {} ***'.format(
                             element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
-                        element.Key = element.Key + str(self.UniqueKeyCounter)
+                        element.Key = str(element.Key) + str(self.UniqueKeyCounter)
                         self.UniqueKeyCounter += 1
                         print('*** Replaced new key with {} ***'.format(
                             element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
@@ -5913,6 +6128,17 @@ class Window(object):
         self.TKroot.unbind("<Pause>")
         self.DebuggerEnabled = False
 
+
+    def VisibilityChanged(self):
+        """
+        This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
+        call and then have that same source run on plain PySimpleGUI.
+        :return:
+        """
+        return
+
+
+
     # def __enter__(self):
     #     """
     #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
@@ -5931,10 +6157,63 @@ class Window(object):
         :return: Union[Element, None] The element found or None if no element was found
         """
         try:
-            return self.Element(key)
+            return self.FindElement(key)
         except Exception as e:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
             return None
+
+
+    def __call__(self, *args, **kwargs):
+        """
+        Call window.Read but without having to type it out.
+        window() == window.Read()
+        window(timeout=50) == window.Read(timeout=50)
+
+        :param args:
+        :param kwargs:
+        :return: Tuple[Any, Dict[Any:Any]] The famous event, values that Read returns.
+        """
+        return self.Read(*args, **kwargs)
+
+
+    add_row = AddRow
+    add_rows = AddRows
+    alpha_channel = AlphaChannel
+    bring_to_front = BringToFront
+    close = Close
+    current_location = CurrentLocation
+    disable = Disable
+    disable_debugger = DisableDebugger
+    disappear = Disappear
+    elem = Elem
+    element = Element
+    enable = Enable
+    enable_debugger = EnableDebugger
+    fill = Fill
+    finalize = Finalize
+    find = Find
+    find_element = FindElement
+    find_element_with_focus = FindElementWithFocus
+    get_screen_dimensions = GetScreenDimensions
+    grab_any_where_off = GrabAnyWhereOff
+    grab_any_where_on = GrabAnyWhereOn
+    hide = Hide
+    layout = Layout
+    load_from_disk = LoadFromDisk
+    maximize = Maximize
+    minimize = Minimize
+    move = Move
+    normal = Normal
+    read = Read
+    reappear = Reappear
+    refresh = Refresh
+    save_to_disk = SaveToDisk
+    set_alpha = SetAlpha
+    set_icon = SetIcon
+    set_transparent_color = SetTransparentColor
+    size = Size
+    un_hide = UnHide
+    visibility_changed = VisibilityChanged
 
     #
     # def __exit__(self, *a):
@@ -5954,12 +6233,6 @@ class Window(object):
     #         for element in row:
     #             element.__del__()
 # -------------------------------- PEP8-ify the Window Class USER Interfaces -------------------------------- #
-    read = Read
-    layout = Layout
-    finalize = Finalize
-    find_element = FindElement
-    element =FindElement
-    close = Close
 
 
 FlexForm = Window
@@ -5977,6 +6250,17 @@ Window.CloseNonBlocking = Window.Close
 # Button Lazy Functions so the caller doesn't have to define a bunch of stuff #
 # =========================================================================== #
 
+# ------------------------- A fake Element... the Pad Element ------------------------- #
+def Sizer(h_pixels=0, v_pixels=0):
+    """
+    "Pushes" out the size of whatever it is placed inside of.  This includes Columns, Frames, Tabs and Windows
+
+    :param h_pixels: (int) number of horizontal pixels
+    :param v_pixels: (int) number of vertical pixels
+    :return: (Column) A column element that has a pad setting set according to parameters
+    """
+
+    return Column([[]], pad=((h_pixels,0),(v_pixels,0)))
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
@@ -7165,12 +7449,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         """ """
         return tkinter.font.Font().measure('A')  # single character width
 
+
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
     # Building is done row by row.                                                #
     # --------------------------------------------------------------------------- #
-    focus_set = False
     ######################### LOOP THROUGH ROWS #########################
     # *********** -------  Loop through ROWS  ------- ***********#
     for row_num, flex_row in enumerate(form.Rows):
@@ -7179,7 +7463,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(containing_frame)
         row_should_expand = False
+        row_justify = ''
         for col_num, element in enumerate(flex_row):
+            element.ParentRowFrame = tk_row_frame
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = toplevel_form.Font
@@ -7211,8 +7497,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if element_type == ELEM_TYPE_COLUMN:
                 element = element           # type: Column
                 if element.Scrollable:
-                    element.TKColFrame = element.Widget = TkScrollableFrame(tk_row_frame,
-                                                                            element.VerticalScrollOnly)  # do not use yet!  not working
+                    element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
@@ -7253,11 +7538,21 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                   highlightthickness=0)
-
-                element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                if element.Justification.lower().startswith('c'):
+                    anchor=tk.N
+                    side=tk.TOP
+                elif element.Justification.lower().startswith('r'):
+                    anchor=tk.NE
+                    side = tk.RIGHT
+                else:
+                    anchor=tk.NW
+                    side = tk.LEFT
+                row_justify = element.Justification
+                element.Widget = element.TKColFrame
+                element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
+                # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
-
                 # element.TKColFrame = element.TKColFrame
                 # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                 #     element.TKColFrame.configure(background=element.BackgroundColor,
@@ -7269,6 +7564,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKColFrame.bind('<Button-3>', element._RightClickMenuCallback)
+                # row_should_expand = True
             # -------------------------  Pane element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
                 bd = element.BorderDepth if element.BorderDepth is not None else border_depth
@@ -7288,7 +7584,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.PanedWindow.configure(background=element.BackgroundColor)
                 for pane in element.PaneList:
-                    pane.TKColFrame = tk.Frame(element.PanedWindow)
+                    pane.Widget = pane.TKColFrame = tk.Frame(element.PanedWindow)
                     pane.ParentPanedWindow = element.PanedWindow
                     PackFormIntoFrame(pane, pane.TKColFrame, toplevel_form)
                     if pane.Visible:
@@ -7433,8 +7729,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
-                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                    focus_set = True
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
+                    toplevel_form.FocusSet = True
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
@@ -7445,6 +7741,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  BUTTONMENU element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTONMENU:
+                element = element                               # type: ButtonMenu
                 element.Location = (row_num, col_num)
                 btext = element.ButtonText
                 if element.AutoSizeButton is not None:
@@ -7507,7 +7804,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 AddMenuItem(top_menu, menu_def[1], element)
 
                 tkbutton.configure(menu=top_menu)
-
+                element.TKMenu = top_menu
                 if element.Visible is False:
                     tkbutton.pack_forget()
                 if element.Disabled == True:
@@ -7540,11 +7837,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
-                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='x')
+                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
                 if element.Visible is False:
                     element.TKEntry.pack_forget()
-                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                    focus_set = True
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
+                    toplevel_form.FocusSet = True
                     element.TKEntry.focus_set()
                 if element.Disabled:
                     element.TKEntry['state'] = 'readonly'
@@ -7556,6 +7853,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKEntry.bind('<Button-3>', element._RightClickMenuCallback)
+                # row_should_expand = True
+            #
             # -------------------------  COMBOBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) else 0
@@ -7687,11 +7986,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.configure(fg=text_color)
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
-                element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
-                element.TKListbox.configure(yscrollcommand=element.vsb.set)
-                element.TKListbox.pack(side=tk.LEFT)
-                element.vsb.pack(side=tk.LEFT, fill='y')
+                if not element.NoScrollbar:
+                    element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
+                    element.TKListbox.configure(yscrollcommand=element.vsb.set)
+                    element.vsb.pack(side=tk.RIGHT, fill='y')
                 listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                element.TKListbox.pack(side=tk.LEFT)
                 if element.Visible is False:
                     listbox_frame.pack_forget()
                     element.vsb.pack_forget()
@@ -7723,15 +8023,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.configure(background=element.BackgroundColor)
                 if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
                 if element.Visible is False:
                     element.TKText.pack_forget()
                 if element.ChangeSubmits:
                     element.TKText.bind('<Key>', element._KeyboardHandler)
                 if element.EnterSubmits:
                     element.TKText.bind('<Return>', element._ReturnKeyHandler)
-                if element.Focus is True or (toplevel_form.UseDefaultFocus and not focus_set):
-                    focus_set = True
+                if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
+                    toplevel_form.FocusSet = True
                     element.TKText.focus_set()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(fg=text_color)
@@ -7745,7 +8045,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKText.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand = True
+                # row_should_expand = True
             # -------------------------  CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
@@ -7841,6 +8141,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  SPIN element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
+                element = element               # type: Spin
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.TKStringVar = tk.StringVar()
@@ -7871,7 +8172,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                            text_color=text_color, font=font,
                                                            pad=elementpad)
                 element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
-                element._TKOut.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+                element._TKOut.pack(side=tk.LEFT, expand=False, fill=tk.NONE)
                 if element.Visible is False:
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
@@ -7882,9 +8183,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element._TKOut.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand = True
+                # row_should_expand = True
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
+                element = element           # type: Image
                 if element.Filename is not None:
                     photo = tk.PhotoImage(file=element.Filename)
                 elif element.Data is not None:
@@ -8009,10 +8311,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
+                element = element           # type: Frame
                 labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
-                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+                if element.Size != (None,None):
+                    labeled_frame.config(width=element.Size[0], height=element.Size[1])
                 if not element.Visible:
                     labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
@@ -8035,6 +8340,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     labeled_frame.bind('<Button-3>', element._RightClickMenuCallback)
+                # row_should_expand=True
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 element = element               # type: Tab
@@ -8044,7 +8350,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
                 else:
                     form.TKNotebook.add(element.TKFrame, text=element.Title)
-                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
                 form.TabCount += 1
@@ -8071,6 +8377,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKFrame.bind('<Button-3>', element._RightClickMenuCallback)
+                # row_should_expand = True
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element=element     # type: TabGroup
@@ -8116,6 +8423,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                # row_should_expand = True
                 # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -8184,17 +8492,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                 column_widths[i] = col_width
                         except:
                             column_widths[i] = col_width
+
                 if element.ColumnsToDisplay is None:
                     displaycolumns = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 else:
                     displaycolumns = []
                     for i, should_display in enumerate(element.ColumnsToDisplay):
                         if should_display:
-                            displaycolumns.append(element.ColumnHeadings[i])
-                column_headings = element.ColumnHeadings
+                            if element.ColumnHeadings is not None:
+                                displaycolumns.append(element.ColumnHeadings[i])
+                            else:
+                                displaycolumns.append(str(i))
+
+                column_headings = element.ColumnHeadings if element.ColumnHeadings is not None else displaycolumns
                 if element.DisplayRowNumbers:  # if display row number, tack on the numbers to front of columns
                     displaycolumns = [element.RowHeaderText, ] + displaycolumns
-                    column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
+                    if column_headings is not None:
+                        column_headings = [element.RowHeaderText, ] + element.ColumnHeadings
+                    else:
+                        column_headings = [element.RowHeaderText, ] + displaycolumns
                 element.TKTreeview = element.Widget = tkinter.ttk.Treeview(frame, columns=column_headings,
                                                                    displaycolumns=displaycolumns, show='headings',
                                                                    height=height,
@@ -8202,7 +8518,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
                     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
-                    treeview.column(element.RowHeaderText, width=50, anchor=anchor)
+                    treeview.column(element.RowHeaderText, width=50, minwidth=10, anchor=anchor, stretch=0)
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
@@ -8214,7 +8530,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
-                    treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
+                    treeview.column(heading, width=width * CharWidthInPixels(),minwidth=10, anchor=anchor, stretch=0)
 
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
@@ -8323,11 +8639,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             else:
                                 photo = tk.PhotoImage(file=node.icon)
                             node.photo = photo
-                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                            id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None,  text=node.text, values=node.values,
                                             open=element.ShowExpanded, image=node.photo)
+                            element.IdToKey[id] = node.key
+                            element.KeyToID[node.key] = id
                         else:
-                            treeview.insert(node.parent, 'end', node.key, text=node.text, values=node.values,
+                            id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None,  text=node.text, values=node.values,
                                             open=element.ShowExpanded)
+                            element.IdToKey[id] = node.key
+                            element.KeyToID[node.key] = id
 
                     for node in node.children:
                         add_treeview_data(node)
@@ -8425,7 +8745,29 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=toplevel_form.Margins[0],
+
+        if row_justify.lower().startswith('c'):
+            anchor='n'
+            side=tk.CENTER
+        elif row_justify.lower().startswith('r'):
+            anchor='ne'
+            side = tk.RIGHT
+        elif row_justify.lower().startswith('l'):
+            anchor='nw'
+            side = tk.LEFT
+        elif toplevel_form.ElementJustification.lower().startswith('c'):
+            anchor = 'n'
+            side = tk.TOP
+        elif toplevel_form.ElementJustification.lower().startswith('r'):
+            anchor = 'ne'
+            side = tk.TOP
+        else:
+            anchor = 'nw'
+            side = tk.TOP
+
+        row_should_expand = False
+
+        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
                           expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
@@ -8483,10 +8825,14 @@ def ConvertFlexToTK(MyFlexForm):
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(my_flex_form):
     """
+    NOT user callable
+    Creates the window (for real) lays out all the elements, etc.  It's a HUGE set of things it does.  It's the basic
+    "porting layer" that will change depending on the GUI framework PySimpleGUI is running on top of.
 
     :param my_flex_form: (Window):
 
     """
+    my_flex_form = my_flex_form        # type: Window
     # global _my_windows
     # ow = _my_windows.NumOpenWindows
     ow = Window.NumOpenWindows
@@ -10585,14 +10931,18 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             root.withdraw()
         except:
             pass
+        # TODO - Macs will not like this code because of the filetypes being used.  Need another Darwin check.
         if save_as:
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
+                                                       initialdir = initial_folder,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
             filename = tk.filedialog.askopenfilenames(filetypes=file_types,
+                                                      initialdir=initial_folder,
                                                       defaultextension=default_extension)  # show the 'get file' dialog box
         else:
             filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                     initialdir=initial_folder,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
 
         root.destroy()
@@ -11123,7 +11473,8 @@ class _Debugger(object):
         layout = []
         line = []
         col = 0
-        self.popout_choices = self.local_choices
+        # self.popout_choices = self.local_choices
+        self.popout_choices = {}
         if self.popout_choices == {}:           # if nothing chosen, then choose all non-_ variables
             for key in sorted(self.locals.keys()):
                 self.popout_choices[key] = not key.startswith('_')
@@ -11341,7 +11692,7 @@ def main():
     ]
 
     frame2 = [
-        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5))],
+        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
         [Combo(['Combo item 1',2,3,4 ], size=(20, 3),readonly=True, text_color='red', background_color='red', key='_COMBO1_')],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='red', background_color='red', key='_COMBO2_')],
         [Spin([1, 2, 3, 'a','b','c'], size=(4, 3))],
@@ -11357,7 +11708,7 @@ def main():
         [Slider(range=(0, 100), orientation='v', size=(7, 15), default_value=40),
          Slider(range=(0, 100), orientation='h', size=(11, 15), default_value=40), ],
     ]
-    matrix = [[str(x * y) for x in range(4)] for y in range(8)]
+    matrix = [[str(x * y) for x in range(1,5)] for y in range(1,8)]
 
     frame5 = [
         [Table(values=matrix, headings=matrix[0],
@@ -11388,14 +11739,14 @@ def main():
         [Frame('Multiple Choice Group', frame2, title_color='green'),
          Frame('Binary Choice Group', frame3, title_color='purple', tooltip='Binary Choice'),
          Frame('Variable Choice Group', frame4, title_color='blue')],
-        [Frame('Structured Data Group', frame5, title_color='red'), ],
+        [Column([[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]]), ],
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]],key='_TAB_GROUP_' )],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal'),
          Button('Exit', tooltip='Exit button')],
     ]
 
-    layout = [[Menu(menu_def, key='_MENU_')],[Column(layout1)]]
+    layout = [[Menu(menu_def, key='_MENU_')]] + layout1
 
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
@@ -11403,14 +11754,14 @@ def main():
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     resizable=True,
-                    debugger_enabled=False,
                     keep_on_top=True,
+                    element_justification='left',
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
-                    ).Finalize()
-    graph_elem.DrawCircle((200, 200), 50, 'blue')
+                    )
+    # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
-        event, values = window.Read(timeout=1)
+        event, values = window.Read(timeout=20)
         if event != TIMEOUT_KEY:
             print(event, values)
         if event is None or event == 'Exit':
@@ -11437,6 +11788,51 @@ def main():
         elif event == 'Launch Debugger':
             show_debugger_window()
     window.Close()
+
+
+
+# ------------------------ PEP8-ify The SDK ------------------------#
+
+change_look_and_feel = ChangeLookAndFeel
+convert_args_to_single_string = ConvertArgsToSingleString
+convert_flex_to_tk = ConvertFlexToTK
+easy_print = EasyPrint
+easy_print_close = EasyPrintClose
+fill_form_with_values = FillFormWithValues
+get_complimentary_hex = GetComplimentaryHex
+list_of_look_and_feel_values = ListOfLookAndFeelValues
+obj_to_string = ObjToString
+obj_to_string_single_obj = ObjToStringSingleObj
+one_line_progress_meter = OneLineProgressMeter
+one_line_progress_meter_cancel = OneLineProgressMeterCancel
+popup = Popup
+popup_animated = PopupAnimated
+popup_annoying = PopupAnnoying
+popup_auto_close = PopupAutoClose
+popup_cancel = PopupCancel
+popup_error = PopupError
+popup_get_file = PopupGetFile
+popup_get_folder = PopupGetFolder
+popup_get_text = PopupGetText
+popup_no_border = PopupNoBorder
+popup_no_buttons = PopupNoButtons
+popup_no_frame = PopupNoFrame
+popup_no_titlebar = PopupNoTitlebar
+popup_no_wait = PopupNoWait
+popup_non_blocking = PopupNonBlocking
+popup_ok = PopupOK
+popup_ok_cancel = PopupOKCancel
+popup_quick = PopupQuick
+popup_quick_message = PopupQuickMessage
+popup_scrolled = PopupScrolled
+popup_timed = PopupTimed
+popup_yes_no = PopupYesNo
+sgprint = Print
+sgprint_close = PrintClose
+quit = Quit
+rgb = RGB
+set_global_icon = SetGlobalIcon
+set_options = SetOptions
 
 
 
