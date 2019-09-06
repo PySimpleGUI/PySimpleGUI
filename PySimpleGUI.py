@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.0.10 Unreleased Scrollable Columns, shortcuts, column sizing, window()"
+version = __version__ = "4.4.1 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -1518,8 +1518,6 @@ class Spin(Element):
     set_tooltip = Element.SetTooltip
     update = Update
 
-SpinBox = Spin
-Spinner = Spin
 
 
 # ---------------------------------------------------------------------- #
@@ -3904,8 +3902,6 @@ class TkScrollableFrame(tk.Frame):
 
         """
         self.canvas.configure(scrollregion=self.canvas.bbox('all'))
-        # self.TKFrame.configure(scrollregion=self.TKFrame.bbox('all'))
-        # self.configure(scrollregion=self.bbox('all'))
 
 
 # ---------------------------------------------------------------------- #
@@ -7557,7 +7553,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKColFrame.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand = True
+                # row_should_expand = True
             # -------------------------  Pane element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
                 bd = element.BorderDepth if element.BorderDepth is not None else border_depth
@@ -7727,9 +7723,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
-                # else:
-                #     element.TKButton.config(takefocus=0)
-                #     print('** skipping focus **')
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
@@ -7833,7 +7826,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
-                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill=tk.X)
+                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
                 if element.Visible is False:
                     element.TKEntry.pack_forget()
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
@@ -7849,7 +7842,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKEntry.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand = True
+                # row_should_expand = True
 
             # -------------------------  COMBOBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
@@ -8019,7 +8012,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.configure(background=element.BackgroundColor)
                 if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKText.pack_forget()
                 if element.ChangeSubmits:
@@ -8041,7 +8034,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKText.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand = True
+                # row_should_expand = True
             # -------------------------  CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 width = 0 if auto_size_text else element_size[0]
@@ -8168,7 +8161,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                            text_color=text_color, font=font,
                                                            pad=elementpad)
                 element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
-                element._TKOut.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+                element._TKOut.pack(side=tk.LEFT, expand=False, fill=tk.NONE)
                 if element.Visible is False:
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
@@ -8179,7 +8172,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element._TKOut.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand = True
+                # row_should_expand = True
                 # -------------------------  IMAGE element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element           # type: Image
@@ -8336,7 +8329,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     labeled_frame.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand=True
+                # row_should_expand=True
             # -------------------------  Tab element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 element = element               # type: Tab
@@ -8346,7 +8339,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
                 else:
                     form.TKNotebook.add(element.TKFrame, text=element.Title)
-                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.BOTH, expand=True)
+                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
                 form.TabCount += 1
@@ -8373,7 +8366,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKFrame.bind('<Button-3>', element._RightClickMenuCallback)
-                row_should_expand = True
+                # row_should_expand = True
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element=element     # type: TabGroup
@@ -8419,7 +8412,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                row_should_expand = True
+                # row_should_expand = True
                 # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 slider_length = element_size[0] * CharWidthInPixels()
