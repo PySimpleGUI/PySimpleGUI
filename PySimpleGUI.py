@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.1 Unreleased"
+version = __version__ = "4.4.1 Released"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
