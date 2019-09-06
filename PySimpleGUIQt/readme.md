@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-00.26.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.28.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -26,12 +26,13 @@
 "Qt without the ugly"
 
 
- ## The Alpha Release    
+## The Alpha Release    
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
               
   
         
-  ----- ## Getting Started with PySimpleGUIQt  
+  ----- 
+## Getting Started with PySimpleGUIQt  
   
 Welcome to the Alpha Release of PySimpleGUI for Qt!  
   
@@ -48,7 +49,7 @@ To "port" your code from the tkinter implementation. Follow these steps:
   
 1. Change `import PySimpleGUI` to `PySimpleGUIQt`  
   
-That's it!  OK, maybe I should have said step instead of steps.  
+That's it!  OK, maybe I should have said step instead of steps.  It may not be that simple in all cases, but it's pretty simple generally speaking.
   
   
 ## Differences between PySimpleGUI and PySimpleGUIQt  
@@ -113,6 +114,10 @@ PySide2 or PyQt5   (experimental)
   
   
 ## Status  
+
+### Documentation
+
+For the primary PySimpleGUI documentation go to http://www.PySimpleGUI.org.  HOWEVER, bear in mind that is the tkinter version.  But it's the best documentation for the package at the moment.  Docstrings are coming to this Qt Release, but it's going to take some time to get them done.  When they are, then this readme will also be fabulous.s
   
 ### FEATURE COMPLETE!   
 All of the major features are DONE.  They may not have all of their options working, but they can be added to your windows.  It's been an amazing week to get here.  
@@ -683,15 +688,59 @@ Dial - disable
 
 * NEW Window parameter layout so can skip calling Layout
 
+## 0.28.0 PySimpleGUIQt 5-Sep-2019
+
+It's been a LONG LONG LONG time coming
+
+* PEP8-ified!  All methods and functions have PEP8 equivalents!! It's a BFD
+* Version numbers in the code
+* New key dictionary - Window.AllKeysDict has all of the windows keys in 1 place for FASTER lookups
+* Element.Widget provides access to low level Qt Widget
+* Multiline scaling in addition to single line
+* Raised default pixel cutoff for single line scaling to 15 from 12
+* Pixel conversion done in Elements and passed through to Element class as size_px
+* Renamed lots of private functions and methods to begin with _
+* "Callable" Elements - element(new_value) will cause element.update(new_value) to be called
+* Removed all __del__ except for the Output Element one
+* Button - Click method added.  Your program can click a button as if a user did
+* ButtonbMenu - Click mehtod also added like in Button element
+* Graph Element
+	* Added DrawRectangle method
+	* Added RelocateFigure method
+	* Added return of ID to DrawLine, DrawCircle, DrawText
+	* Added Erase method to erase entire graph
+* Tab - added Select method so can select a Tab as if user clicked it
+* TabGroup - added Get method. Returns key of currently selected Tab, or text of Tab if no key set
+* Table - Get method returns the table - GREAT way to enable users to edit a table and get the results
+* SystemTray - uses default base64 icon if no icon supplied when creating
+* Window - new finalize parameter removes need to add chained call to finalize
+* Window.FindElement - added silent_on_error parameter
+* Window[key] is the same as Window.FindElement(key)
+* Calling a Window object calls Read for that window
+* Fix for filetypes. Bug caused (*) to be added onto filetypes when browsing for files
+* Combo returns exact value that was provided using an index into Values list instead of string from Qt
+* Listbox returns actual supplied items
+* Spinner returns avtual supplied item
+* Tabgroup returns Tab key
+* Finding element with focus now returns element regardless of type (any type of element can be returned)
+* Radio Buttons now return events if enabled
+* Graph element background colors added, uses new style class
+* Table headings supported (where not supported before??)
+* Popups switched to using new layout parm in Window call and uses keys too
+
 
 
 # Design        
  ## Author 
- Mike B.        
+ 
+The PySimpleGUI Organization 
+PySimpleGUI.org
         
 # Demo Code Contributors        
    
 # License        
- GNU Lesser General Public License (LGPL 3) +        
-        
+GNU Lesser General Public License (LGPL 3) +        
+
+Copytight 2018, 2019 PySimpleGUI
+
 # Acknowledgments

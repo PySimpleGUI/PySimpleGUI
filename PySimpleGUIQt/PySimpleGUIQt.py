@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.28.0.3 Unreleased PEP8-ifed"
+version = __version__ = "0.28.0 Released PEP8-ifed"
 
 import sys
 import types
@@ -1727,6 +1727,7 @@ class Graph(Element):
         pen = QPen(qcolor, width)
         line = self.QT_QGraphicsScene.addLine(self.x+converted_point_from[0],self.y+ converted_point_from[1], self.x+converted_point_to[0],self.y+ converted_point_to[1], pen=pen)
         # self.QT_QGraphicsItemGroup.addToGroup(line)
+        return line
 
     def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
         converted_point_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
