@@ -10,8 +10,9 @@ There are too many to list!!
 
 There are over 170 sample programs to give you a jump start.
 
+These programs are an integral part of the overall PySimpleGUI documentation and learning system.  They will give you a headstart in a way you can learn from and understand.  They also show you integration techiques to other packages that have been figured out for you.
 
-You will find Demo Programs located in a subfolder named "Demo Programs" under each of the PySimpleGUI ports on GitHub.
+You will find Demo Programs located in a subfolder named "Demo Programs" under the top level and each of the PySimpleGUI ports on GitHub.
 
 Demo programs for plain PySimpleGUI (tkinter)
 https://github.com/PySimpleGUI/PySimpleGUI/tree/master/DemoPrograms
@@ -37,6 +38,12 @@ There are not many programs under each of the port's folders because the main De
   * [Mido](https://github.com/olemb/mido)
   * [Matplotlib](https://matplotlib.org/)
   * [PyMuPDF](https://github.com/rk700/PyMuPDF)
+  * OpenCV
+  * pymunk
+  * psutil
+  * pygame
+  * Forecastio
+
 
 
 # Creating a Windows .EXE File
@@ -99,33 +106,55 @@ For a fun time, add these lines to the top of your script
 ```
 This will turn all of your print statements into prints that display in a window on your screen rather than to the terminal.
 
-# Look and Feel (`ChangleLookAndFeel`)
+# Look and Feel
 
-While you can define colors for each individual element and you can even define some on a windows wide basis, but it requires setting a lot of different settings.
-Dial in the look and feel that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
-Or beginning in version 2.9 you can choose from a look and feel using pre-defined color schemes.   Call ChangeLookAndFeel with a description string.
+You can change defaults and colors of a large number of things in PySimpleGUI quite easily.
+
+##  `ChangleLookAndFeel`
+
+Want a quick way of making your windows look a LOT better?  Try calling `ChangeLookAndFeel`.  It will, in a single call, set various color values to widgets, background, text, etc.
+
+Or dial in the look and feel (and a whole lot more) that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
+
 
 ```python
     sg.ChangeLookAndFeel('GreenTan')
-
 ```
 
-Valid values for the  description string are:
+Valid look and feel values are currently:
 
-      GreenTan
-      LightGreen
-      BluePurple
-      Purple
-      BlueMono
-      GreenMono
-      BrownBlue
-      BrightColors
-      NeutralBlue
-      Kayak
-      SandyBeach
-      TealMono
+```python
+SystemDefault
+Reddit
+Topanga
+GreenTan
+Dark
+LightGreen
+Dark2
+Black
+Tan
+TanBlue
+DarkTanBlue
+DarkAmber
+DarkBlue
+Reds
+Green
+BluePurple
+Purple
+BlueMono
+GreenMono
+BrownBlue
+BrightColors
+NeutralBlue
+Kayak
+SandyBeach
+TealMono
+```
+
 
 The way this call actually works is that it calls `SetOptions` with a LOT of color settings.  Here is the actual call that's made.  As you can see lots of stuff is defined for you.
+
+
 
 ```python
 SetOptions(background_color=colors['BACKGROUND'],
@@ -151,9 +180,11 @@ SetOptions(background_color=colors['BACKGROUND'],
 <!-- <+func.ChangeLookAndFeel+> -->
 
 
-To see the latest list of color choices, take a look at the bottom of the `PySimpleGUI.py` file where you'll find the `ChangLookAndFeel` function.
+To see the latest list of color choices you can call `ListOfLookAndFeelValues()`
 
 You can also combine the `ChangeLookAndFeel` function with the `SetOptions` function to quickly modify one of the canned color schemes.  Maybe you like the colors but was more depth to your bezels.  You can dial in exactly what you want.
+
+
 
 **ObjToString**
 Ever wanted to easily display an objects contents easily?  Use ObjToString to get a nicely formatted recursive walk of your objects.
@@ -179,16 +210,39 @@ You'll quickly wonder how you ever coded without it.
 
 ---
 # Known Issues
+
+Well, there are a few quirks, and problems of course.  Check the [GitHub Issues database](https://github.com/PySimpleGUI/PySimpleGUI/issues) for a list of them.
+
+As previously mentioned this is also where you should post all problems and enhancements.
+
+
+## MACS + tkinter = SUCKS
+
+Not sure why, but for over a year and a half, setting the color of buttons does not work on Macs.  There have been numerous other problems.  Checking the Issues database is the best place to see what they are.  If there was a magic wand it would have been used long ago to fix these problems, but there does not appear to be a magic fix.
+
+This was already mentioned at the top of this document but want to make sure it's covered as a "known issue"
+
+## Multiple threads
+
 While not an "issue" this is a ***stern warning***
 
 ## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
 
-**Progress Meters** - the visual graphic portion of the meter may be off.  May return to the native tkinter progress meter solution in the future.  Right now a "custom" progress meter is used.  On the bright side, the statistics shown are extremely accurate and can tell you something about the performance of your code.    If you are running 2 or more progress meters at the same time using `OneLineProgressMeter`, you need to close the meter by using the "Cancel" button rather than the X
+Tkinter also wants to be the MAIN thread in your code.  So, if you have to run multiple threads, make sure the GUI is the main thread.
 
-**Async windows** - these include the 'easy' windows (`OneLineProgressMeter` and EasyPrint/Print). If you start overlapping having Async windows open with normal windows then things get a littler squirrelly.  Still tracking down the issues and am making it more solid every day possible.  You'll know there's an issue when you see blank window.
+Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`
 
-**EasyPrint** - EasyPrint is a new feature that's pretty awesome.  You print and the output goes to a window, with a scroll bar, that you can copy and paste from.  Being a new feature, it's got some potential problems.  There are known interaction problems with other GUI windows.  For example, closing a Print window can also close other windows you have open.  For now, don't close your debug print window until other windows are closed too.
 
-## Contributing
+# Contributing
 
-Core code pull requests are not being accepted at this time.
+## Core Code
+
+***Core code changes/pull requests are not being accepted at this time.***
+
+## Demos
+
+You're welcome to share a PySimpleGUI program you've written that you think fits the model of a PySimpleGUI Demo Program.
+
+## GitHub Repos
+
+If you've created a GitHub for your project that uses PySimpleGUI then please submit it to be included in this document or on the PySimpleGUI GitHub site.  Also, you'll find a lot more people will look at your code, explore your repo if you have posted **screen shots in your readme**.  People *love* success stories and showing your GUI's screen shows you've been successful.  Everyone wins!

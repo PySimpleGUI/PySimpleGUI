@@ -707,7 +707,7 @@ Long time coming.  Docstrings continue to be a focus.
 * Fix for debugger trying to execute a REPL comand.  The exec is only avilable in Python 3
 * main() will display the version number in big letters when program is running
 
-### 4.2 PySimpleGUI  2.2 for PySimpleGUI27  8 - Aug 2019
+### 4.2 PySimpleGUI  2.2 for PySimpleGUI27  18 - Aug 2019
 
 The cool lookup release!  No more need for FindElement. You can continue to use FindElement.
 However, your code will look weird and ancient.  ;-)  (i.e. readable)
@@ -734,6 +734,74 @@ MORE Docstring and main doc updates!
 * Added finding focus across ALL elements by using the .Widget member variable
 * Fixed sizing Columns!  NOW they will finally be the size specified
 * Fixed not using the initialdir paramter in PopupGetFile if the no_window option is set
+
+## 4.3 PySimpleGUI Release 22-Aug-2019
+
+PEP8 PEP8 PEP8
+Layout controls!  Can finally center stuff
+Some rather impactful changes this time
+Let's hope it doesn't all blow up in our faces!
+
+* PEP8 interfaces added for Class methods & functions
+	* Finally a PEP8 compliant interface for PySimpleGUI!!
+	* The "old CamelCase" are still in place and will be for quite some time
+	* Can mix and match at will if you want, but suggest picking one and sticking with it
+	* All docs and demo programs will need to be changed
+* Internally saving parent row frame for layout checks
+* Warnings on all Update calls - checks if Window.Read or Window.Finalize has been called
+* Warning if a layout is attempted to be used twice
+	* Shows an "Error Popup" to get the user's attention for sure
+* Removed all element-specific SetFocus methods and made it available to ALL elements
+* Listbox - no_scrollbar parameter added. If True then no scrollbar will be shown
+* NEW finalize bool parameter added to Window. Removes need to "chain" .Finalize() call.
+* NEW element_justification parameter for Column, Frame, Tab Elements and Window
+	* Valid values are 'left', 'right', 'center'. Only first letter checked so can use 'l', 'c','r'
+	* Default = 'left'
+	* Result is that all Elements INSIDE of this container will be justified as specified
+	* Works well with new Sizer Elements
+* NEW justification parameter for Column elements.  
+	* Justifies Column AND the row it's on to this setting (left, right, center)
+	* Enables individual rows to be justified in addition to the entire window
+* NEW Sizer Element
+	* Has width and height parameters.  Can set one or both
+	* Causes the element it is contained within to expand according to width and height of Sizer Element
+	* Helps greatly with centering.  Frames will shrink to fit the contents for example. Use Sizer to pad out to right size
+* Added Window.visibility_changed to match the PySimpleGUIQt call
+* Fixed Debugger so that popout window shows any newly added locals
+
+
+## 4.4 PySimpleGUI Release 5-Sep-2019
+
+* window() - "Calling" your Window object will perform a Read call
+* InputText - move cursor to end following Update
+* Shortcuts - trying to get a manageable and stable set of Normal, Short, Super-short
+	* DD - DropDown (Combo)
+	* LB, LBox - Listbox
+	* R, Rad - Radio
+	* ML, MLine - Multiline
+	* BMenu - ButtonMenu
+	* PBar, Prog - ProgressBar
+	* Col - Column
+* Listbox - new method GetIndexes returns currently selected items as a list of indexes
+* Output - new method Get returns the contents of the output element
+* Button - For Macs don't don't allow setting button color. Previously only warned
+* ButtonMenu - new Click method will click the button just like a normal Button's Click method
+* Column scrolling finally works correctly with mousewheel. Shift+Mouse Scroll will scroll horizontally
+* Table - Get method is a dummy version a Get because Qt port got a real Get method
+* Table - Will add numerical column headers if Column Headsing is set to None when creating Table Element
+* Table - FIXED the columns crazily resizing themselves bug!!
+* Table - Can resize individual columns now
+* Tree - was not returning Keys but instead the string representation of the key
+* SetIcon will set to default base64 icon if there's an error loading icon
+* Fix for duplicate key error. Was attempting to add a "unique key counter" onto end of keys if duplicate, but needed to turn into string first
+* Columns
+	* No longer expand nor fill
+	* Sizing works for both scrolled and normal
+* Setting focus - fixed bug when have tabs, columns, frames that have elements that can get the focus. Setting focus on top-level window
+* InputText elements will now cause rows to expand due to X direction expansion
+* Frame - Trying to set the size but doesn't seem to be setting it correctly
+* Tabs will now expand & fill now (I hope this is OK!!!)
+
 
 
 ### Upcoming
@@ -785,7 +853,7 @@ The PySimpleGUI Organization
 
 This documentation as well as all PySimpleGUI code is Copyright 2018, 2019 by PySimpleGUI.org
 
-PySimpleGUI@PySimpleGUI.org
+Send correspondance to PySimpleGUI@PySimpleGUI.com
 
 ## License
 

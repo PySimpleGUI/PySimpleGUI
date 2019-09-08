@@ -1,4 +1,4 @@
-from inspect import getmembers, isfunction, isclass, getsource, signature, _empty
+from inspect import getmembers, isfunction, isclass, getsource, signature, _empty, isdatadescriptor
 from datetime import datetime
 import PySimpleGUIlib
 import click
@@ -6,6 +6,17 @@ import logging
 import json
 import re
 import os
+
+########################################################
+#     _                       _       _                #
+#    | |                     | |     | |               #
+#    | |_ ___ _ __ ___  _ __ | | __ _| |_ ___  ___     #
+#    | __/ _ \ '_ ` _ \| '_ \| |/ _` | __/ _ \/ __|    #
+#    | ||  __/ | | | | | |_) | | (_| | ||  __/\__ \    #
+#     \__\___|_| |_| |_| .__/|_|\__,_|\__\___||___/    #
+#                      | |                             #
+#                      |_|                             #
+########################################################
 TAB_char = '    '
 TABLE_TEMPLATE='''
                     Parameter Descriptions:
@@ -18,7 +29,18 @@ TABLE_TEMPLATE='''
                         '''
 TABLE_ROW_TEMPLATE = '|{name}|{desc}|'
 TABLE_RETURN_TEMPLATE = '|||\n| **return** | {return_guy} |'
-TABLE_Only_table_RETURN_TEMPLATE = '''|Name|Meaning|\n|---|---|\n| **return** | $ |'''
+TABLE_Only_table_RETURN_TEMPLATE = '''|Name|Meaning|\n|---|---|\n| **return** | $ |''' # $ - is the part for return value
+
+##############################################################################
+#                    _                         _                             #
+#                   | |                       | |                            #
+#      ___ _   _ ___| |_ ___  _ __ ___     ___| | __ _ ___ ___  ___  ___     #
+#     / __| | | / __| __/ _ \| '_ ` _ \   / __| |/ _` / __/ __|/ _ \/ __|    #
+#    | (__| |_| \__ \ || (_) | | | | | | | (__| | (_| \__ \__ \  __/\__ \    #
+#     \___|\__,_|___/\__\___/|_| |_| |_|  \___|_|\__,_|___/___/\___||___/    #
+#                                                                            #
+#                                                                            #
+##############################################################################
 
 from collections import namedtuple
 special_case = namedtuple('special_case', 'ok sig table just_text'.split(' '))
@@ -67,7 +89,7 @@ CLASS
     }
 """
 
-def get_params_part(code: str) -> dict:
+def get_params_part(code: str, versbose=True) -> dict:
     """
     Find ":param " part in given "doc string".
 
@@ -80,16 +102,15 @@ def get_params_part(code: str) -> dict:
     code = code.strip()
     
     # if doc_string is empty
-    if code == None:           return {}
-    elif '' == code.strip():   return {}
-    elif ':param' not in code: return {}
+    if code == None or code == '' or ':param' not in code:
+        return {}
     elif ':return' in code: # strip ':return:'
         new_code = code[:code.index(':return:')]
         
         regg_ = re.compile(r':return[\d\D]*?:param', flags=re.MULTILINE)
         if len(list(regg_.finditer(new_code))) > 0:
             if versbose:
-                print(f'warning-> ":return" MUST BY AT THE END. FIX IT NOW in {name_}!!!\nBut i will try to parse it...')
+                print(f'warning-> ":return" MUST BY AT THE END. FIX IT NOW in "{code}"!!!\nBut i will try to parse it...')
             code = re.sub(regg_, r':param', code)
         else:
             code = new_code
@@ -97,12 +118,9 @@ def get_params_part(code: str) -> dict:
     try:
         only_params = code[code.index(':param'):]  # get_only_params_string(code)
     except Exception as e:
-        if versbose: print(f'SORRY, fail at parsing that stuff in {name_}')
+        if versbose:
+            print(f'SORRY, fail at parsing that stuff in "{code}"')
         return {}
-
-
-
-
 
     # making dict
     param_lines = only_params.split(':param ')
@@ -110,7 +128,7 @@ def get_params_part(code: str) -> dict:
                    for i in param_lines if i.strip()]  # filter empty lines
 
     args_kwargs_pairs = {}
-    for index, i in enumerate(param_lines):
+    for i in param_lines:
 
         cols = i.split(':')
         param_name, els = cols[0], '\n'.join(
@@ -130,137 +148,177 @@ def get_return_part(code: str, line_break=None) -> str:
 
     if ':return:' not in code:
         return ''
+
     return code[code.index(':return:')+len(':return:'):].strip().replace('\n', line_break)
 
 
-def special_cases(function_name, sig, doc_string, line_break=None):
-
+def special_cases(function_name, function_obj, sig, doc_string, line_break=None):
 
     doca, params_names = doc_string.strip(), list(dict(sig).keys())
-    if 'self' in params_names and len(params_names) == 1 and not doca:
-        """
-        def Get(self):
-            ''' '''
+    only_self = 'self' in params_names and len(params_names) == 1
 
-        ->
-        ```python
-        Get()
-        ```
-        """
-        return special_case(ok=True, just_text=f'\n\n```python\n{function_name}()\n```\n\n', sig='', table='')
+    ############################################################################
+    #          _                                                 _             #
+    #         | |                                               | |            #
+    #      ___| | __ _ ___ ___   _ __  _ __ ___  _ __   ___ _ __| |_ _   _     #
+    #     / __| |/ _` / __/ __| | '_ \| '__/ _ \| '_ \ / _ \ '__| __| | | |    #
+    #    | (__| | (_| \__ \__ \ | |_) | | | (_) | |_) |  __/ |  | |_| |_| |    #
+    #     \___|_|\__,_|___/___/ | .__/|_|  \___/| .__/ \___|_|   \__|\__, |    #
+    #                           | |             | |                   __/ |    #
+    #                           |_|             |_|                  |___/     #
+    ############################################################################
 
-    # -return -param
-    elif 'self' in params_names and len(params_names) == 1 and doca and ':param' not in doca and ':return:' not in doca:
-        """
+    """
+    # TEMPLATE1
+
         def Get(self):
-            ''' 
+           ''' '''
+    # TEMPLATE2 -return -param
+        def Get(self):
+            '''
             blah blah blah
             '''
-
-        ->
-
-        ```python
-        Get() # blah blah blah
-        ```
-
-        """
-        return special_case(ok=True, just_text=f'\n\n{doca}\n\n```python\n{function_name}()\n```\n\n', sig='', table='')
-
-    # +return -param
-    elif 'self' in params_names and len(params_names) == 1 and doca and ':param' not in doca and ':return:' in doca:
-        """
+    # TEMPLATE3  +return -param
         def Get(self):
             ''' 
             blah blah blah
             :return: blah-blah
             '''
+    """
+    
+    if is_propery(function_obj):
+        # TEMPLATE1
+        if only_self and not doca:
+            return special_case(ok=True, just_text=f'\n\n#### property: {function_name}\n\n',              sig='', table='')
+        # TEMPLATE2
+        elif only_self and doca and ':param' not in doca and ':return:' not in doca:
+            return special_case(ok=True, just_text=f'\n\n#### property: {function_name}\n{get_doc_desc(doca, function_obj)}\n\n',              sig='', table='')
+        # TEMPLATE3
+        elif only_self and doca and ':param' not in doca and ':return:' in doca:
+            return_part, desc = get_return_part(doca, line_break=line_break), get_doc_desc(doca, function_obj)
+            return special_case(ok=True, just_text='', 
+                                         sig=f'\n\n#### property: {function_name}\n{desc}\n\n',
+                                         table=TABLE_Only_table_RETURN_TEMPLATE.replace('$', return_part) + '\n\n')
 
-        ->
+    ################################################################################################################
+    #                                      _        _                                _   _               _         #
+    #                                     | |      | |                              | | | |             | |        #
+    #     _ __   ___  _ __ _ __ ___   __ _| |   ___| | __ _ ___ ___   _ __ ___   ___| |_| |__   ___   __| |___     #
+    #    | '_ \ / _ \| '__| '_ ` _ \ / _` | |  / __| |/ _` / __/ __| | '_ ` _ \ / _ \ __| '_ \ / _ \ / _` / __|    #
+    #    | | | | (_) | |  | | | | | | (_| | | | (__| | (_| \__ \__ \ | | | | | |  __/ |_| | | | (_) | (_| \__ \    #
+    #    |_| |_|\___/|_|  |_| |_| |_|\__,_|_|  \___|_|\__,_|___/___/ |_| |_| |_|\___|\__|_| |_|\___/ \__,_|___/    #
+    #                                                                                                              #
+    #                                                                                                              #
+    ################################################################################################################
 
-        ```python
-        Get()
-        ```
+    """
+    # TEMPLATE1
 
-        *table*
-
-        """
-        return_part, desc = get_return_part(doca, line_break=line_break), get_doc_desc(doca)
-        return special_case(ok=True, just_text='',
-                                     sig=f'\n\n{desc}\n\n`{function_name}()`\n\n',
-                                     table=TABLE_Only_table_RETURN_TEMPLATE.replace('$', return_part) + '\n\n')
-
-    # +return -param
-    elif 'self' in params_names and len(params_names) == 1 and doca and ':param' not in doca and ':return:' in doca:
-        """
+        def Get(self):
+           ''' '''
+    # TEMPLATE2 -return -param
+        def Get(self):
+            '''
+            blah blah blah
+            '''
+    # TEMPLATE3  +return -param
+        def Get(self):
+            ''' 
+            blah blah blah
+            :return: blah-blah
+            '''
+    # TEMPLATE4  -return +param
         def SetFocus(self, elem):
             ''' 
             blah blah blah
-            
             :param elem: qwerty
             '''
-        """
+    """
+
+    # TEMPLATE1
+    if only_self and not doca:
+        return special_case(ok=True, just_text=f'\n\n```python\n{function_name}()\n```\n\n', sig='', table='')
+    # TEMPLATE2
+    elif only_self and doca and ':param' not in doca and ':return:' not in doca:
+        return special_case(ok=True, just_text=f'\n\n{doca}\n\n```python\n{function_name}()\n```\n\n', sig='', table='')
+    # TEMPLATE3
+    elif only_self and doca and ':param' not in doca and ':return:' in doca:
+        return_part, desc = get_return_part(doca, line_break=line_break), get_doc_desc(doca, function_obj)
+        return special_case(ok=True, just_text='',  sig=f'\n\n{desc}\n\n`{function_name}()`\n\n',
+                                     table=TABLE_Only_table_RETURN_TEMPLATE.replace('$', return_part) + '\n\n')
+    # TEMPLATE4
+    elif only_self and doca and ':param' not in doca and ':return:' in doca:
         return special_case(ok=False, just_text='', sig='', table='')
+
+
     return special_case(ok=False, just_text='', sig='', table='')
 
 
-def get_doc_desc(doc_string):
+def get_doc_desc(doc, original_obj):
 
-    if ':param' in doc_string:  doc_string = doc_string[:doc_string.index(':param')]
-    if ':return:' in doc_string: doc_string = doc_string[:doc_string.index(':return:')]
-    if ':param' in doc_string:  doc_string = doc_string[:doc_string.index(':param')]
-    if ':return:' in doc_string: doc_string = doc_string[:doc_string.index(':return:')]
+    return_in = ':return' in doc
+    param_in = ':param' in doc
+    
+    if return_in and param_in and doc.index(':return') < doc.index(':param'):
+        logging.error(f'BS. You need to FIX IT. PROBLEM ":return:" BEFORE ":param:" in "{original_obj.__name__}"')
 
-    desc = doc_string.strip().replace('    ', '')
+    if ':param'  in doc: doc = doc[:doc.index(':param')]
+    if ':return' in doc: doc = doc[:doc.index(':return:')]
+    if ':param'  in doc: doc = doc[:doc.index(':param')]
+    if ':return' in doc: doc = doc[:doc.index(':return:')]
+
+    desc = doc.strip().replace('    ', '')
 
     return f'\n{desc}' if desc else ''
 
+def is_propery(func):
+    return isdatadescriptor(func) and not isfunction(func)
 
 def get_sig_table_parts(function_obj, function_name, doc_string, logger=None, is_method=False, line_break=None, insert_md_section_for__class_methods=False):
-    """
-    Convert "function + __doc__" tp "method call + params table" in MARKDOWN
-    """
-
+    """ Convert "function + __doc__" tp "method call + params table" in MARKDOWN """
     doc_string = doc_string.strip()
-
     # qpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqp
     # 0   0            Making INIT_CALL          0   0 #
     # qpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqp
 
     try:
-        sig, rows = signature(function_obj).parameters, []
+        rows = []
+        sig = {'self': None} if is_propery(function_obj) else signature(function_obj).parameters
     except Exception as e:
         if logger: logger.error(f'PROBLEM WITH "{function_obj}" "{function_name}":\nit\'s signature is BS. Ok, I will just return \'\' for \'signature\' and \'param_table\'\nOR BETTER - delete it from the 2_readme.md.\n======')
         return '', ''
-    for index, key in enumerate(sig):
-        val = sig[key].default
-        if 'self' == str(key):
-            continue
-        if val == _empty:        rows.append(key)
-        elif val == None:        rows.append(f'{key}=None')
-        elif type(val) is int:   rows.append(f'{key}={val}')
-        elif type(val) is str:   rows.append(f'{key}="{val}"')
-        elif type(val) is tuple: rows.append(f'{key}={val}')
-        elif type(val) is bool:  rows.append(f'{key}={val}')
-        else:
-            raise Exception(f'IDK this type -> {key, val}')
+    if not is_propery(function_obj):
+        for key in sig:
+            val = sig[key].default
+            if 'self' == str(key):
+                continue
+            if val == _empty:        rows.append(key)
+            elif val == None:        rows.append(f'{key}=None')
+            elif type(val) is int:   rows.append(f'{key}={val}')
+            elif type(val) is str:   rows.append(f'{key}="{val}"')
+            elif type(val) is tuple: rows.append(f'{key}={val}')
+            elif type(val) is bool:  rows.append(f'{key}={val}')
+            else:
+                raise Exception(f'IDK this type -> {key, val}')
 
 
-    sig_content = f',\n{TAB_char}'.join(rows) if len(rows) > 2 else f', '.join(rows)
+    sig_content = f',\n{TAB_char}'.join(rows) if len(rows) > 2 else f', '.join(rows) if rows else ''
     # # # make 2 line signature into 1-line
     # # # sig_content = f',\n{TAB_char}'.join(rows)
     # # # if sig_content.count('\n') < 3: sig_content = re.sub(r'\n[ \t]{,8}', ' ', sig_content, flags=re.MULTILINE)
 
-    sign = "\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string), function_name, sig_content)
+    sign = "\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
 
     if is_method:
         if insert_md_section_for__class_methods:
-            sign = "#### {1}\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string), function_name, sig_content)
+            # sign = "#### {1}\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
+            sign = "\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
         else:
-            sign = "{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string), function_name, sig_content)
+            sign = "{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
     # --------------
     # SPECIAL CASES
     # --------------
-    result = special_cases(function_name, sig, doc_string, line_break=line_break)
+    result = special_cases(function_name, function_obj, sig, doc_string, line_break=line_break)
     if result.ok:
         if result.just_text:
             return result.just_text, ''
@@ -308,6 +366,13 @@ def pad_n(text): return f'\n{text}\n'
 
 
 def render(injection, logger=None, line_break=None, insert_md_section_for__class_methods=False):
+    
+    try:
+        if 'skip readme' in injection['function_object'].__doc__:
+            return ''
+    except Exception as e:
+        return ''
+
     if injection['part1'] == 'func':  # function
         sig, table = get_sig_table_parts(function_obj=injection['function_object'],
                                          function_name=injection['part2'],
@@ -336,8 +401,7 @@ def readfile(fname):
         return ff.read()
 
 
-def main(do_full_readme=False, files_to_include: list = [], logger=None, output_name=None, delete_html_comments=True, delete_x3_newlines=True, allow_multiple_tags=True, line_break=None, insert_md_section_for__class_methods=True, remove_repeated_sections_classmethods=False):
-
+def main(do_full_readme=False, files_to_include: list = [], logger:object=None, output_name:str=None, delete_html_comments:bool=True, delete_x3_newlines:bool=True, allow_multiple_tags:bool=True, line_break:str=None, insert_md_section_for__class_methods:bool=True, remove_repeated_sections_classmethods:bool=False, output_repeated_tags:bool=False, skip_dunder_method:bool=True):
     """
     Goal is:
     1) load 1_.md 2_.md 3_.md 4_.md
@@ -347,63 +411,84 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
     5) replaces classes, functions.
     6) join 1 big readme file
 
-    :param do_full_readme: if False - use only 2_readme.md
-    :param files_to_include: list of markdown files to include in output markdown
-    :param logger: logger object from logging module
-    :param delete_html_comments: flag for preprocessing input markwon text e.g. deleting every html tag, that is injection_point
-    :param allow_multiple_tags: flag for replacing every tag in "input markdown text"
-    :param delete_x3_newlines: flag for deleting '\\n\\n\\n' in final output makrdown text
-    :param output_name: base filename of output markdown file
-    :param line_break: linebreak_character in "return part"
+    :param do_full_readme: (bool=True) if False - use only 2_readme.md
+    :param files_to_include: (list=[]) list of markdown files to include in output markdown
+    :param logger: (object=None) logger object from logging module
+    :param output_name: (str=None) base filename of output markdown file
+    :param delete_html_comments: (bool=True) flag for preprocessing input markwon text e.g. deleting every html tag, that is injection_point
+    :param delete_x3_newlines: (bool=True) flag for deleting '\\n\\n\\n' in final output makrdown text
+    :param allow_multiple_tags: (bool=True) flag for replacing every tag in "input markdown text"
+    :param line_break: (str=None) linebreak_character in "return part"
+    :param insert_md_section_for__class_methods: (bool=True) insert '###' sign to class_methods when outputing in markdown
+    :param remove_repeated_sections_classmethods: (bool=True)
+    :param output_repeated_tags: (bool=True) log REPEATED tags in file
+    :param skip_dunder_method: (bool=True) skip __something__ methods in classes
     """
+
     if logger: logger.info(f'STARTING')
 
     # 888888888888888888888888888888888888888888
     # ===========  1 loading files =========== #
     # 888888888888888888888888888888888888888888
-    HEADER_top_part = readfile('1_HEADER_top_part.md')  # 1
-    readme          = readfile('2_readme.md')           # 2
-    FOOTER          = readfile('3_FOOTER.md')           # 3
-    Release_notes   = readfile('4_Release_notes.md')    # 4
-
-
+    readme  = readfile('2_readme.md')
     # 8888888888888888888888888888888888888888888888888888888888888888888888888
     # ===========  2 GET classes, funcions, varialbe a.k.a. memes =========== #
     # 8888888888888888888888888888888888888888888888888888888888888888888888888
-    psg_members = getmembers(PySimpleGUIlib)
+    psg_members = getmembers(PySimpleGUIlib) # variables, functions, classes
 
-    psg_funcs = [o for o in psg_members if isfunction(o[1])]
-    psg_classes = [o for o in psg_members if isclass(o[1])]
-    psg_classes_ = list(set([i[1] for i in psg_classes]))  # filtering
+    psg_funcs = [o for o in psg_members if isfunction(o[1])] # only functions
+    psg_classes = [o for o in psg_members if isclass(o[1])]  # only classes
+    psg_classes_ = list(set([i[1] for i in psg_classes]))    # boildown B,Btn,Butt -into-> Button
     psg_classes = list(zip([i.__name__ for i in psg_classes_], psg_classes_))
-
-    # IlilIlilIlilIlilIlilIlilIlilIlilIlilIlIlIl
-    # ilIli-                       | |    -ilIli
-    # ilIli-   _ __ ___   ___  __ _| |_   -ilIli
-    # ilIli-  | '_ ` _ \ / _ \/ _` | __|  -ilIli
-    # ilIli-  | | | | | |  __/ (_| | |_   -ilIli
-    # ilIli-  |_| |_| |_|\___|\__,_|\__|  -ilIli
 
     # 8888888888888888888888888888888888888888888888888888888
     # ===========  3 find all tags in 2_readme  =========== #
     # 8888888888888888888888888888888888888888888888888888888
+    # PLAN:
+    # (1) REMOVE HEADER
 
-    # strip top of the file head
+    # (2) find good tags e.g.   <!-- <+func.PopupScrolled+> -->
+
+    # (3) (optional) find '_' tags e.g.
+    #     '_' tag - is a tag, that has '_' after '.'
+    #                                               
+    #     Example:  <!-- <+func._PopupScrolled+> -->
+    #                          /\                   
+    #                          |---that's sign of a bad tags
+
+    # (4) (optional) log repeated tags.
+    #      like <!-- <+class.B+> -->
+    #                  and
+    #           <!-- <+class.Button+> -->
+    # 8888888888888888888888888888888888888888888888888888888
+
+    # >1 REMOVE HEADER
     started_mark = '<!-- Start from here -->'
     if started_mark in readme:
         readme = readme[readme.index(started_mark)+len(started_mark):]
 
-    # find with regex
-    regex_pattern = re.compile(r'<!-- <\+[a-zA-Z_]+[\d\w_]*\.([a-zA-Z_]+[\d\w_]*)\+> -->')
-    mark_points = [i for i in readme.split('\n') if regex_pattern.match(i)]
+    # 2> find good tags
+    re_tags     = re.compile(r'<!-- <\+[a-zA-Z_]+[\d\w_]*\.([a-zA-Z_]+[\d\w_]*)\+> -->')
+    mark_points = [i for i in readme.split('\n') if re_tags.match(i)]
+    
+    special_dunder_methods = ['init', 'repr', 'str', 'next']
+    # 3> find '_' tags OPTION
+    if skip_dunder_method:
+        re_bad_tags = re.compile(r'<!-- <\+[a-zA-Z_]+[\d\w_]*\.([_]+[\d\w_]*)\+> -->')
+        for i in readme.split('\n'):
+            if re_bad_tags.match(i.strip()):
+                if not [s_tag for s_tag in special_dunder_methods if s_tag in i.strip()]:
+                    readme = readme.replace(i, '\n')
 
-    # if there are REPEATED tags -> show them.
-    # if not allow_multiple_tags and len(list(set(mark_points))) != len(mark_points):
-    #     [mark_points.remove(x) for x in set(mark_points)]
-    #     if logger:
-    #         logger.error("You have repeated tags! \n {0}".format(
-    #             ','.join(mark_points)))
-    #     return ''
+    # 4> log repeated tags
+    if output_repeated_tags:
+        if not allow_multiple_tags and len(list(set(mark_points))) != len(mark_points):
+            mark_points_copy = mark_points[:]
+            [mark_points_copy.remove(x) for x in set(mark_points)]
+            if logger:
+                logger.error("You have repeated tags! \n {0}".format(
+                    ','.join(mark_points_copy)))
+            return ''
 
     # 8888888888888888888888888888888888888888888888888888888888888
     # ===========  4 structure tags and REAL objects  =========== #
@@ -417,9 +502,7 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
     for tag in func_tags:
 
         try:
-            __, function_name = tag.split('.')
-            function_name = function_name.split('+')[0]
-            part2 = function_name
+            function_name = part2 = tag.split('.')[1].split('+')[0]
 
             # {{{{{{{{{ filter number }}}}}}}}}
             number = ''
@@ -430,10 +513,12 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
             founded_function = [func for func_name,
                                 func in psg_funcs if func_name == function_name]
             if not founded_function:
-                if logger: logger.error(f'function "{function_name}" not found in PySimpleGUI')
+                if logger:
+                    logger.error(f'function "{function_name}" not found in PySimpleGUI')
                 continue
             if len(founded_function) > 1:
-                if logger: logger.error(f'more than 1 function named "{function_name}" found in PySimpleGUI')
+                if logger:
+                    logger.error(f'more than 1 function named "{function_name}" found in PySimpleGUI')
                 continue
 
             # {{{{{{{{{ collect }}}}}}}}}
@@ -447,15 +532,14 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
             })
         except Exception as e:
             if logger:
-                logger.error(f'               {str(e)}')
+                logger.error(f' General error in parsing function tag: tag = "{tag}"; error="{str(e)}"')
             continue
 
     # 0===0 classes 0===0
     for tag in classes_method_tags:
         try:
             class_name, method_name = tag.split('.')
-            class_name, method_name = class_name.split('+')[-1], method_name.split('+')[0]
-            part1, part2 = class_name, method_name
+            class_name, method_name = part1, part2 = class_name.split('+')[-1], method_name.split('+')[0]
 
             # {{{{{{{{{ filter number }}}}}}}}}
             number = ''
@@ -463,34 +547,29 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
                 number, method_name = part2[0], part2[1:]
 
             # {{{{{{{{{ find class }}}}}}}}}
-            founded_class = [a_class_obj for a_class_name,
-                             a_class_obj in psg_classes if a_class_name == class_name]
+            founded_class = [a_class_obj
+                            for a_class_name, a_class_obj in psg_classes
+                            if a_class_name == class_name]
             if not founded_class:
-                if logger: logger.error(f'class "{tag}" not found in PySimpleGUI')
+                if logger: logger.error(f'skipping tag "{tag}", WHY: not found in PySimpleGUI')
                 continue
             if len(founded_class) > 1:
-                if logger: logger.error(f'more than 1 class named "{tag}" found in PySimpleGUI')
+                if logger: logger.error(f'skipping tag "{tag}", WHY: found more than 1 class in PySimpleGUI')
                 continue
 
             # {{{{{{{{{ find method }}}}}}}}}
             try:
                 if method_name != 'doc':
                     founded_method = getattr(founded_class[0], method_name)
-                    # GLG.append([founded_method, founded_class[0], method_name])
-                    # string_type = str(type(founded_method))
-                    # if 'property' in string_type or 'bound' in string_type:
-                    #     print(string_type)
-                    #     # import pdb; pdb.set_trace();
-                    #     if logger:
-                    #         logger.error(f'Property "{founded_method}" is not parsed.')
-                    #     continue
                 else:
                     founded_method = None
             except AttributeError as e:
-                if logger: logger.error(f'METHOD not found!: {str(e)}')
+                if logger:
+                    logger.error(f'METHOD not found!: {str(e)}')
                 continue
             except Exception as e:
-                if logger: logger.error(str(e))
+                if logger:
+                    logger.error(f'Error in finding the METHOD: {str(e)}')
                 continue
 
             # {{{{{{{{{ collect }}}}}}}}}
@@ -504,66 +583,86 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
             })
         except Exception as e:
             if logger:
-                logger.error(f'```````````````````````{str(e)}')
+                logger.error(f' General error in parsing class_method tag: tag = "{tag}"; error="{str(e)}"')
             continue
 
     # 888888888888888888888888888888888888888
     # ===========  5 injecting  =========== #
     # 888888888888888888888888888888888888888
+    # PLAN:
+    # (1) replace tags in 2_readme
+    #      with properly formateed text
+    # (2) log some data
+    # 8888888888888888888888888888888888888888888888888888888
 
+
+    # 1> log some data
     success_tags = []
     bad_tags = []
     for injection in injection_points:
-        if injection['part2'] == 'doc':  # our special snowflake "doc"
+        
+        # SPECIAL CASE: X.doc tag
+        if injection['part2'] == 'doc':
             readme = readme.replace(injection['tag'], injection['parent_class'].__doc__)
+        
         else:
-            tag = injection['tag']
-            content = render(injection, logger=logger, line_break=line_break, insert_md_section_for__class_methods=insert_md_section_for__class_methods,)
+            content = render(injection, logger=logger, line_break=line_break,
+                insert_md_section_for__class_methods=insert_md_section_for__class_methods,)
+        
+            tag = injection["tag"]
             if content:
                 success_tags.append(f'{tag} - COMPLETE')
             else:
                 bad_tags.append(f'{tag} - FAIL')
-            readme = readme.replace(injection['tag'], content)
+
+            readme = readme.replace(tag, content)
+
+    # 2> log some data
     if logger:
         success_tags_str    = '\n'.join(success_tags).strip()
         bad_tags_str        = '\n'.join(bad_tags).strip()
+        
+        # good message
         good_message        = f'DONE {len(success_tags)} TAGS:\n' + '\n'.join(success_tags) if success_tags_str else 'All tags are wrong//'
+        # bad  message
         bad_message         = f'FAIL WITH {len(bad_tags)} TAGS:\n' + '\n'.join(bad_tags) if bad_tags_str else 'No bad tags, YES!'
+
         logger.info(good_message)
         logger.info(bad_message)
+
+
     # 8888888888888888888888888888888888
     # ===========  6 join  =========== #
     # 8888888888888888888888888888888888
 
     files = []
-    if 0 in files_to_include: files.append(HEADER_top_part)
+    if 0 in files_to_include: files.append(readfile('1_HEADER_top_part.md'))
     if 1 in files_to_include: files.append(readme)
-    if 2 in files_to_include: files.append(FOOTER)
-    if 3 in files_to_include: files.append(Release_notes)
+    if 2 in files_to_include: files.append(readfile('3_FOOTER.md'))
+    if 3 in files_to_include: files.append(readfile('4_Release_notes.md'))
 
     Joined_MARKDOWN = '\n\n'.join(files) if do_full_readme or files else readme
 
     if output_name:
         with open(output_name, 'w', encoding='utf-8') as ff:
-            curr_dt = datetime.today().strftime('<!-- CREATED: %Y-%m-%d %H.%M.%S -->\n')
-            content = curr_dt + Joined_MARKDOWN
+            CURR_DT = datetime.today().strftime('<!-- CREATED: %Y-%m-%d %H.%M.%S -->\n')
+            content = CURR_DT + Joined_MARKDOWN
 
             # {{{{{{{{{ html removing }}}}}}}}}
             if delete_html_comments:
-                if logger: logger.info('Deleting html comments')
+                if logger:
+                    logger.info('Deleting html comments')
 
                 # remove html comments
-                filt_readme = re.sub(
-                    r'<!--([\s\S]*?)-->', '\n', content, flags=re.MULTILINE)
+                filt_readme = re.sub(r'<!--([\s\S]*?)-->', '\n', content, flags=re.MULTILINE)
 
                 for i in range(5):
                     filt_readme = filt_readme.replace('\n\n\n', '\n\n')
 
                 # add staked_edit
                 if '<!--stackedit_data:' in content:
-                    stackedit_data = content[content.index(
-                        '<!--stackedit_data:'):]
-                    filt_readme += stackedit_data
+                    stackedit_text = content[content.index('<!--stackedit_data:'):]
+                    filt_readme += stackedit_text
 
                 content = filt_readme
 
@@ -573,12 +672,10 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
                 # removing spaces
                 content = re.sub(r'^[ ]+$', '', content, flags=re.MULTILINE)
                 # removing \n
-                content = re.sub(r'\n{3,}', '\n\n',
-                                 content, flags=re.MULTILINE)
+                content = re.sub(r'\n{3,}', '\n\n', content, flags=re.MULTILINE)
 
             # {{{{{{{{{ remove repeated sections classmethods }}}}}}}}}
             if remove_repeated_sections_classmethods:
-
                 rega = re.compile(r'((\#+\s\w+)\n\s){2}', flags=re.MULTILINE)
                 for index, i in enumerate(re.finditer(rega, content)):
                     print(f'{index} - > {i.group(0)}')
@@ -587,14 +684,16 @@ def main(do_full_readme=False, files_to_include: list = [], logger=None, output_
                 # re
                 # content = re.sub(rega, r'\1', content, flags=re.MULTILINE)
 
-            # FINISH
-            content = content.strip()
-            ff.write(content)
+            # Write into a file
+            ff.write(content.strip())
 
-        if logger: logger.info(f'ending. writing to a file///////////////')
+        if logger:
+            logger.info(f'ending. writing to a file///////////////')
+
         return content
 
-    if logger: logger.error(f'Error in main')
+    if logger:
+        logger.error(f'Error in main')
 
 
 @click.command()
@@ -650,13 +749,27 @@ if __name__ == '__main__':
         cli()
     elif my_mode == 'debug-mode':
         main(files_to_include=[0, 1, 2, 3],
-             output_name='johnson_n_johnson.txt',
+             output_name='OUTPUT.txt',
              delete_html_comments=True)
     elif my_mode == 'debug-mode2':
-        import logging; logger = logging.getLogger(__name__); logger.setLevel(logging.DEBUG)
-        my_file = logging.FileHandler('usage.log.txt', mode='w'); my_file.setLevel(logging.DEBUG)
+        log_file_name = 'usage.log.txt'
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.DEBUG)
+
+        my_file = logging.FileHandler(log_file_name, mode='w')
+        my_file.setLevel(logging.DEBUG)
+
         formatter = logging.Formatter('%(asctime)s>%(levelname)s: %(message)s')
-        my_file.setFormatter(formatter); logger.addHandler(my_file);
+        my_file.setFormatter(formatter); logger.addHandler(my_file)
+
         main(logger=logger, files_to_include=[1],
-             output_name='johnson_n_johnson.txt',
+             output_name='OUTPUT.txt',
              delete_html_comments=True)
+
+'''
+notes:
+
+Как оказалось, декоратор @property делает из метода вот что:
+- isdatadescriptor(class.method_as_property) вернет True
+'''

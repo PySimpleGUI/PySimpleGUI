@@ -28,19 +28,25 @@ HOW DO I INSERT IMAGES ???
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
+
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
 
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
+
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
+
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.2.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.4.0-red.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.2.0-blue.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.0-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)
 
@@ -119,11 +125,15 @@ HOW DO I INSERT IMAGES ???
 
 
 
-#### Quick Links To Help and Read Up on the Latest News and Releases
 
-[ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.
+### START HERE - User Manual with Table of Contents
 
-[Homepage - Lastest Readme and Code - GitHub](http://www.PySimpleGUI.com)
+[ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.  Easy to remember PySimpleGUI.org.
+
+#### Quick Links To Help and The Latest News and Releases
+
+
+[Homepage - Lastest Readme and Code - GitHub](http://www.PySimpleGUI.com)  Easy to remember: PySimpleGUI.com
 
 [Announcements of Latest Developments, Release news, Misc](https://github.com/PySimpleGUI/PySimpleGUI/issues/142)
 
@@ -211,15 +221,15 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 * Windows 7, 8, 10
 * Linux on PC - Tested on **many** distributions
 * Linux on Raspbnerry Pi
-* Linux on Android - Must use either Termux or PyDroid3
-* Mac OS (Sorry I don't know much about Macs)
+* Linux on Android - Can use either Termux or PyDroid3
+* Mac OS (Sorry don't know much about Macs other than Macs don't like tkinter)
 
 
 #### Python versions
 
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported** when using **tkinter version** of PySimpleGUI! The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.  **None** of the other ports can use Python 2.
 
-Note that the 2.7 port will cease to exist on this GitHub on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
+Note that the 2.7 port will *cease to exist on this GitHub* on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
 
 By "will cease to exist on this GitHub" I mean, it will be deleted entirely.  No source code, no supporting programs.  Nothing.  If you're stuck using 2.7 in December, it would behoove you to fork the 2.7 code on Dec 31, 2019.  Legacy Python doesn't have a permanent home here.
 
@@ -949,6 +959,7 @@ Features of PySimpleGUI include:
 - Movable windows
 - Animated GIFs
 - No async programming required (no callbacks to worry about)
+- Built-in debugger and REPL
 - User expandable by accessing underlying GUI Framework widgets directly
 
 ---
@@ -986,7 +997,7 @@ The Single Line Progress Meter is a good example. It requires one and only 1 lin
 
 Be Pythonic... 
 
-This one is difficult for me to define.  The code implementing PySimpleGUI isn't PEP8 compliant, but it is consistent.  The important thing was what the user saw and experienced while coding, NOT the choices for naming conventions in the implementation code.
+This one is difficult for me to define.  The code implementing PySimpleGUI isn't PEP8 compliant, but it is consistent.  The important thing was what the user saw and experienced while coding, NOT the choices for naming conventions in the implementation code.  The user interface to PySimpleGUI now has a PEP8 compliant interface.  The methods are snake_case now (in addition to retaining the older CamelCase names)
 
 I ended up defining it as - attempt to use language constructs in a natural way and to exploit some of Python's interesting features.  It's Python's lists and optional parameters make PySimpleGUI work smoothly. 
 
@@ -1001,9 +1012,11 @@ Here are some Python-friendly aspects to PySimpleGUI:
 
 #### Lofty Goals
 
->  Change Python
+> Teach GUI Programming to Beginners
 
-The hope is **not** that ***this*** package will become part of the Python Standard Library.  The hope is that Python will become ***the*** go-to language for creating GUI programs that run on Windows, Mac, and Linux *for all levels of developer*.  Perhaps this sort of package is needed to make that happen.  It would be nice if there was a "unified interface" for GUIs like PySimpleGUI presents, along with the vendor specific calls.
+By and large PySimpleGUI is a "pattern based" SDK.  Complete beginners can copy these standard design patterns or demo programs and modify them without necessarily understanding all of the nuts and bolts of what's happening.  For example, they can modify a layout by adding elements even though they may not yet grasp the list of lists concept of layouts.  
+
+Beginners certainly can add more `if event == 'my button':` statements to the event loop that they copied from the same design pattern.  They will not have to write classes to use this package.
 
 > Capture Budding Graphic Designers & Non-Programmers
 
@@ -1131,12 +1144,13 @@ When you type sg, Python will tell you the full patch to your PySimpleGUI file /
 
 ### Finding Out Where Your PySimpleGUI Is Coming From (from within your code)
 
-If you continue to have troubles with getting the right version of PySimpleGUI loaded, THE ***definitive*** way to determine where your program is getting PySimpleGUI from is to add a print to your program.  It's that *simple*!
+If you continue to have troubles with getting the right version of PySimpleGUI loaded, THE ***definitive*** way to determine where your program is getting PySimpleGUI from is to add a print to your program.  It's that *simple*!  You can also get the version you are running by also printing
 
 ```python
 import PySimpleGUI as sg
 
 print(sg)
+print(sg.version)
 ```
 
 Just like when using the REPL >>> to determine the location, this `print` in your code will display the same path information.
@@ -1149,6 +1163,7 @@ If you're not connected to the net on your target machine, or pip isn't working,
 Be ***sure*** that you delete this PySimpleGUI.py file if you install a newer pip version.  Often the sequence of events is that a bug you've reported was fixed and checked into GitHub.  You download the PySimpleGUI.py file (or the appropriately named one for your port) and put with your app.  Then later your fix is posted with a new release on PyPI.  You'll want to delete the GitHub one before you install from pip.
 
 ### Prerequisites
+
 Python 2.7 or Python 3
 tkinter
 
@@ -1214,12 +1229,11 @@ Then use either "high level" API calls or build your own windows.
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom window appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
-***WARNING*** Do NOT use PySimpleGUI with Python 3.7.4.  tkiter is having issues with that release.  Things like Table colors stopped working entirely.
+***WARNING*** Do NOT use PySimpleGUI with Python 3.7.3 and 3.7.4.  tkiter is having issues with that release.  Things like Table colors stopped working entirely.  None of us want to debug tkinter code.  It's difficult enough debugging your code and PySimpleGUI code.  A lot of time has already been spent debugging this one so no need for you to suffer too.
 
 ### Python 3.7
 
-It puzzles me why a beginner would install 3.7.  Or even a seasoned programmer.  What specific feature of 3.7 are you using that is not in 3.6?  If you are unable to answer this, then ***you should be running 3.6***, an immensely solid release of Python.  If you must run 3.7, try 3.7.2 instead.  It does work with PySimpleGUI with no known issues.
-
+It puzzles me why a beginner would install 3.7.  Or even a seasoned programmer.  What specific feature of 3.7 are you using that is not in 3.6?  If you are unable to answer this, then ***it's strongly suggested that you run 3.6***, an immensely solid release of Python with all those goodie inside like f-strings.  If you must run 3.7, try 3.7.2 instead.  It does work with PySimpleGUI with no known issues.
 
 
 ## Using  - Python 2.7
@@ -1246,6 +1260,7 @@ else:
 
 This will automatically import the correct library based on the Python version number reported by the Python interpreter.
 
+NOTE: It's 2019 and 2.7 support is being systematically removed.  This construct will be removed from the demo programs shortly.  2.7 users can still run these demos, but they will need to change the import from PySimpleGUI to PySimpleGUI27.  It save 4 lines of code and an import from sys in the process.
 
 ---
 

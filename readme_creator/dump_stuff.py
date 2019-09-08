@@ -1,7 +1,7 @@
 import inspect
-import PySimpleGUIlib as sg
+import PySimpleGUI as sg
 
-psg_members = inspect.getmembers(sg)
+psg_members = inspect.getmembers(PySimpleGUI)
 
 psg_funcs    = [o for o in psg_members if inspect.isfunction(o[1])]
 psg_classes  = [o for o in psg_members if inspect.isclass(o[1])]
