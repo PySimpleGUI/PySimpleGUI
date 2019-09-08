@@ -16,11 +16,11 @@
 
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.3.2-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.4.1-red.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.2.0-blue.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.26.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.28.0-orange.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
 
@@ -31,7 +31,44 @@
 
 ## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
-#### July-2019 Note - This readme is being generated from the PySimpleGUI.py file located on GitHub.  As a result, some of the calls or parameters may not match the PySimpleGUI that you pip installed.
+---
+
+# Jump-Start
+
+## Install
+
+```
+pip install pysimplegui
+or
+pip3 install pysimplegui
+```
+
+### This Code
+
+```python
+import PySimpleGUI as sg
+# All the stuff inside your window. 
+layout = [  [sg.Text('Some text on Row 1')],
+            [sg.Text('Enter something on Row 2'), sg.InputText()],
+            [sg.Button('Ok'), sg.Button('Cancel')] ]
+
+# Create the Window
+window = sg.Window('Window Title', layout)
+# Event Loop to process "events" and get the "values" of the inputs
+while True:             
+    event, values = window.read()
+    if event in (None, 'Cancel'):	# if user closes window or clicks cancel
+        break
+
+window.close()
+```
+
+### Makes This Window
+
+![image](https://user-images.githubusercontent.com/13696193/61077153-cdfc0b00-a3eb-11e9-9e93-d6ec2ffb442a.png)
+
+### Any Questions?
+---
 
 #### Looking for a GUI package?     Are you....
 
@@ -71,6 +108,8 @@
 * The focus is entirely on the developer (you) and making their life easier, simplified, and in control.
 * 170+ Demo Programs teach you how to integrate with many popular packages like OpenCV, Matplotlib, PyGame, etc. 
 * 200 pages of documentation, a Cookbook, built-in help using docstrings, in short it's heavily documented
+
+#### July-2019 Note - This readme is being generated from the PySimpleGUI.py file located on GitHub.  As a result, some of the calls or parameters may not match the PySimpleGUI that you pip installed.
 
 ## GUI Development does not have to be difficult nor painful.  It can be FUN
 
@@ -5371,6 +5410,8 @@ Parameter Descriptions:
 
 #### TKCanvas
 
+#### property: TKCanvas
+
 ### Checkbox Element
 
     Checkbox Element - Displays a checkbox and text next to it
@@ -6201,6 +6242,8 @@ Parameter Descriptions:
 
 #### TKCanvas
 
+#### property: TKCanvas
+
 #### Update
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
@@ -6892,6 +6935,8 @@ Parameter Descriptions:
 |tooltip_text|(str) the text to show in tooltip.|
 
 #### TKOut
+
+#### property: TKOut
 
 #### Update
 
@@ -8128,7 +8173,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-### Window Element
+### Window
 
     Represents a single Window
 
@@ -8241,6 +8286,14 @@ Parameter Descriptions:
 |rows|List[List[Elements]] A list of a list of elements|
 
 #### AlphaChannel
+
+#### property: AlphaChannel
+
+A property that changes the current alpha channel value (internal value)
+
+|Name|Meaning|
+|---|---|
+| **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
 
 #### BringToFront
 
@@ -8743,6 +8796,14 @@ Parameter Descriptions:
 |color|(str) Color string that defines the transparent color|
 
 #### Size
+
+#### property: Size
+
+Return the current size of the window in pixels
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[(int), (int)] the (width, height) of the window |
 
 #### UnHide
 
@@ -11218,6 +11279,38 @@ Let's hope it doesn't all blow up in our faces!
 	* Helps greatly with centering.  Frames will shrink to fit the contents for example. Use Sizer to pad out to right size
 * Added Window.visibility_changed to match the PySimpleGUIQt call
 * Fixed Debugger so that popout window shows any newly added locals
+
+## 4.4 PySimpleGUI Release 5-Sep-2019
+
+* window() - "Calling" your Window object will perform a Read call
+* InputText - move cursor to end following Update
+* Shortcuts - trying to get a manageable and stable set of Normal, Short, Super-short
+	* DD - DropDown (Combo)
+	* LB, LBox - Listbox
+	* R, Rad - Radio
+	* ML, MLine - Multiline
+	* BMenu - ButtonMenu
+	* PBar, Prog - ProgressBar
+	* Col - Column
+* Listbox - new method GetIndexes returns currently selected items as a list of indexes
+* Output - new method Get returns the contents of the output element
+* Button - For Macs don't don't allow setting button color. Previously only warned
+* ButtonMenu - new Click method will click the button just like a normal Button's Click method
+* Column scrolling finally works correctly with mousewheel. Shift+Mouse Scroll will scroll horizontally
+* Table - Get method is a dummy version a Get because Qt port got a real Get method
+* Table - Will add numerical column headers if Column Headsing is set to None when creating Table Element
+* Table - FIXED the columns crazily resizing themselves bug!!
+* Table - Can resize individual columns now
+* Tree - was not returning Keys but instead the string representation of the key
+* SetIcon will set to default base64 icon if there's an error loading icon
+* Fix for duplicate key error. Was attempting to add a "unique key counter" onto end of keys if duplicate, but needed to turn into string first
+* Columns
+	* No longer expand nor fill
+	* Sizing works for both scrolled and normal
+* Setting focus - fixed bug when have tabs, columns, frames that have elements that can get the focus. Setting focus on top-level window
+* InputText elements will now cause rows to expand due to X direction expansion
+* Frame - Trying to set the size but doesn't seem to be setting it correctly
+* Tabs will now expand & fill now (I hope this is OK!!!)
 
 ### Upcoming
 Make suggestions people!  Future release features
