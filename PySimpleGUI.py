@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.4.1 Released"
+version = __version__ = "4.5.0.1 Unreleased Columns Scroll"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3836,8 +3836,8 @@ class TkScrollableFrame(tk.Frame):
 
         self.bind('<Configure>', self.set_scrollregion)
 
-        self.TKFrame.bind_all("<MouseWheel>", self.yscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
-        self.TKFrame.bind_all("<Shift-MouseWheel>", self.xscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+        self.canvas.bind("<MouseWheel>", self.yscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+        self.canvas.bind("<Shift-MouseWheel>", self.xscroll)     # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
 
 
 
@@ -9813,6 +9813,7 @@ def ChangeLookAndFeel(index):
                    input_text_color=colors['TEXT_INPUT'])
     except:  # most likely an index out of range
         print('** Warning - Look and Feel value not valid. Change your ChangeLookAndFeel call. **')
+        print('valid values are', list_of_look_and_feel_values())
 
 
 
@@ -11448,6 +11449,7 @@ rgb = RGB
 set_global_icon = SetGlobalIcon
 set_options = SetOptions
 
+test = main
 
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
