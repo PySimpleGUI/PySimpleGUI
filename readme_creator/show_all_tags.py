@@ -34,8 +34,7 @@ for i in sorted(psg_classes):
 print('\n------------------------- Functions start here -------------------------\n')
 
 for f in psg_funcs:
-    if f[0][0] == '_':
-        continue
-    print(f"<!-- <+func.{f[0]}+> -->")
+    if '_' != f[0][0]:          # if doesn't START with _
+        print(f"<!-- <+func.{f[0]}+> -->")
 
 window.Read()
