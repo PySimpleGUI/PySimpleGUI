@@ -17,9 +17,8 @@ This conversation is targeted at user code, not library code.  In other words, t
 
 To be a "GUI" in this discussion:
 * A library needs to provide access to all of the well-known GUI widgets 
-* Allows the user to place them in any arrangement desired by the user
+* Allows the user to place Widgets in any arrangement desired by the user
  (i.e. they are not dumbed down nor are they templates you choose from)
-* The primary purpose is to 
 * The primary use is User Interface to a Python application (as opposed to serving up web pages)
 
 ### Pythonic
