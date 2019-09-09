@@ -209,9 +209,9 @@ This unpacks the 2 values in to 2 variables `event` representing the event that 
 
 #### `Window.read()` is Like `Queue.get()`
 
-\* Recall earlier in the Queue example I said the `Queue.get` model would be seen again.  You just saw it in the `window.read()` call.  The default action is to block on that read.  Just like `Queue.get()` you can put a timeout value on the call and make it a non-blocking call.
+\* Recall earlier in the Queue example I said the `Queue.get` model would be seen again.  You just saw it in the `window.read()` call.  The default action is to block on that read.  Just like `Queue.get()` you can put a timeout value on the call so that the block will end after the timeout and return back to you.
 
-Here is how you can get a window's events in a non-blocking way.  In this example, the `timeout` or 100 means "wait for up to 100 ms" for an event to take place.
+Here is how you can get a window's events in the same block with a timeout way.  In this example, the `timeout` of 100 means "block for up to 100 ms" for an event to take place, then return.
 
 ```python
 event, values = window.read(timeout=100)
