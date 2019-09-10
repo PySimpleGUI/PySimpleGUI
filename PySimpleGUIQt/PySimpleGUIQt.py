@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.28.0 Released PEP8-ifed"
+version = __version__ = "0.29.0.1 Unreleased"
 
 import sys
 import types
@@ -368,6 +368,7 @@ class Element():
         self.Tooltip = tooltip
         self.TooltipObject = None
         self.Visible = visible
+        self.metadata = None                # type: Any
 
     def _FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
