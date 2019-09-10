@@ -1,11 +1,12 @@
 # A Case for a Pythonic Python GUI
 
-Quiz - Who said
-"Creating GUIs in Python is amazingly intuitive, straightforward, and FUN!"
+**Quiz** - Who said:
 
-Answer - no one (that is a normal person)...
+>       "Creating GUIs in Python is amazingly intuitive, straightforward, and FUN!"
 
-Yet for almost everything else that Python is used for, the intuitive and straightforward (and fun) adjectives are used.
+**Answer** - no one (that I've ever heard)
+
+Yet for almost everything else that Python is used for, the intuitive, straightforward, and fun adjectives are used.
 
 ## Definitions, generalities & boundaries
 
