@@ -238,8 +238,8 @@ Since we're storing our window's GUI layout in a Python list, that means we can 
 ```python
 from PySimpleGUI import Text, CBox, Input, Button, Window
 
-layout = [[Text(f'{i}. '), CBox(''), Input()] for i in range(1,6)] +\
-         [[Button('Save'), Button('Exit')]]
+layout =  [[Text(f'{i}. '), CBox(''), Input()] for i in range(1,6)]
+layout += [[Button('Save'), Button('Exit')]]
 
 window = Window('To Do List Example', layout)
 event, values = window.read()
