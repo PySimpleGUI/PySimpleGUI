@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from sphinx.ext.autosummary import autosummary_table
 
-version = __version__ = "0.13.0.1 Unreleased PEP8-ified"
+version = __version__ = "0.13.0.2 Unreleased"
 
 import sys
 import wx
@@ -352,6 +352,9 @@ class Element():
         self.Tooltip = tooltip
         self.TooltipObject = None
         self.Visible = visible
+        self.metadata = None                # type: Any
+
+
 
     def FindReturnKeyBoundButton(self, form):
         for row in form.Rows:

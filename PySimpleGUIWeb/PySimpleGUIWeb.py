@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0.4 Unreleased"
+version = __version__ = "0.31.0.5 Unreleased"
 
 import sys
 import datetime
@@ -347,6 +347,7 @@ class Element():
         self.Tooltip = tooltip
         self.TooltipObject = None
         self.Visible = visible
+        self.metadata = None                # type: Any
 
 
     # -------------------------  REMI CHANGED CALLBACK -----------------------

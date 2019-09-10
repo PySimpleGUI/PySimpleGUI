@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.1 Unreleased Columns Scroll"
+version = __version__ = "4.5.0.2 Unreleased"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -542,6 +542,7 @@ class Element():
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False
         self.ParentRowFrame = None          # type tk.Frame
+        self.metadata = None                # type: Any
 
     def _RightClickMenuCallback(self, event):
         """
