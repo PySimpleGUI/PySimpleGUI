@@ -230,11 +230,38 @@ if event == 'My Button':                    # if the button was clicked then
 Experience has shown, however, that these "callbacks" are not used by most people.  Often times the event is handled right on the spot, especially if the action to take is short.
 
 
+## The Fun Begins - Applying Python's Capabilities with GUIs
+
+
+Since we're storing our window's GUI layout in a Python list, that means we can do fun Pythony things to create these layouts.  One such activity is utilizing List Comprehensions to generate a layout.
+
+```python
+from PySimpleGUI import Text, CBox, Input, Button, Window
+
+layout = [[Text(f'{i}. '), CBox(''), Input()] for i in range(1,6)] +\
+         [[Button('Save'), Button('Exit')]]
+
+window = Window('To Do List Example', layout)
+event, values = window.read()
+```
+
+![GeneratedToDo](https://user-images.githubusercontent.com/46163555/64574224-930b4a80-d33c-11e9-93be-beac8fa2065d.jpg)
+
+
+In addition to building the of items using the List Comprehension, we were able to simply "tack on" the two buttons at the bottom of the window.
+
+
 ## Summary
 
 If you've tried Python GUI programming and gave up, or if you like what you see proposed here, then you can experience this kind of Python GUI development today!  PySimpleGUI has been out for a little over a year and will "render" your GUI window **using** any of the Big 3 GUI packages as the backend as well as being able to show your window in your browser by using Remi as the backend.
 
-As was recently pointed out
+The super-simple examples shown in this article are just that, super-simple examples.  The "Simple" of PySimpleGUI does not describe the problem space, but rather the  difficultly in solving your GUI problems.  Not many people would describe this PySimpleGUI creation as "simple".
+
+![concurrent_windows](https://user-images.githubusercontent.com/13696193/62832448-3eb96180-bbfc-11e9-8777-6f2669566c93.png)
+
+
+Finally, as was recently noticed
+
 > It's syntax is unique to PySimpleGUI. Nowhere else will you have that kind of syntax to build GUI applications.
 
 If you're ready to experience GUI building in Python in a completely different and unique way that takes advantage of Python's unique syntax, types, and features that make it the magic language it is, then hop on over to http://www.PySimpleGUI.org and get started having fun building GUIs.
