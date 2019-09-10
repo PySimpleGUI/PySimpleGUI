@@ -28,8 +28,8 @@ Now there's a loaded word. It's subjective to be sure, but there are certain tra
 A few traits that I find particularly enjoyable about the language and perhaps fall into the "Pythonic" category are:
 
 * User code is often short
-* Code can be simultaneusly compact and readable (and beautiful too)
-* Python emphasises simplicity
+* Code can be simultaneously compact and readable (and beautiful too)
+* Python emphasizes simplicity
 * It's modular and has namespaces
 * List and Dictionary containers are hecka-powerful (this was surprising)
 
@@ -70,7 +70,7 @@ There are plenty others, but for this discussion, this is our list.
 
 ### Not From Here
 
-One interesting and problematic fact about the top 3 GUI pacakges in Python is that they were not written for Python. They were designed, written, and used with C++ prior to being adapted to be used with Python.  
+One interesting and problematic fact about the top 3 GUI packages in Python is that they were not written for Python. They were designed, written, and used with C++ prior to being adapted to be used with Python.  
 
 Bringing an existing GUI library into Python isn't the problem here. The problem is that they also brought a rigid definition of how a user's GUI code is be architected. All three of these packages require the user to write their GUI code using an Object Oriented architecture.
 
@@ -80,7 +80,7 @@ Classes are a way to create new types in Python. They are also used, heavily, in
 
 The "preferred" (only practical) way to use these GUI packages require the end user to design and write their GUI in an object oriented manner.  Pick up a book on any of these GUI libraries and you'll see in every exercise the word Class.  It's just how it is.
 
-Sure, you can, with some effort, "get around" using classes, but it's not straightforward nor easy, a couple of the defining characteristics of being "pythonic".
+Sure, you can, with some effort, "get around" using classes, but it's not straightforward nor easy, a couple of the defining characteristics of being "Pythonic".
 
 Think through the Python standard library and it's many packages.  Do any of these packages require you to design large sections of your code in a particular way in order to use them?
 
@@ -96,7 +96,7 @@ In Python, if you want something called, you call it.
 
 ### Events - Queues
 
-Let's take queues as an example for handling "events".  In the Python library there is a `queue` module that has an object called, you guesded it, a `Queue`.  In some languages or libraries, a Queue object like this one would generate a callback when something arrives in the queue.
+Let's take queues as an example for handling "events".  In the Python library there is a `queue` module that has an object called, you guessed it, a `Queue`.  In some languages or libraries, a Queue object like this one would generate a callback when something arrives in the queue.
 
 The way this `Queue` works in Python is that you `get` an item from the Queue.  There are 2 modes you can use, blocking and non-blocking.  Additionally, if blocking is specified, you can set a timeout value that will raise an Empty Exception when nothing is found in the queue within the timeout. 
 
@@ -129,7 +129,7 @@ Remember this model, you'll be seeing it again later.
 
 When thinking about making a GUI module in Python, from scratch, what would be some of the defining characteristics?  Here's my short list:
 
-* Be accessable to everyone
+* Be accessible to everyone
 * Make it "Pythonic", of course
 * Make use of the Python language's unique constructs
 
@@ -141,11 +141,11 @@ Let's get concrete so that these concepts and characteristics can be demonstrate
 
 Let's talk about these characteristics individually.
 
-#### Be Accessable to Everyone
+#### Be Accessible to Everyone
 
 Since everything's an object in Python and Python programmers are comfortable using objects, use objects in a way that's logical and simple, but don't require the user to create new objects of their own (i.e. they don't have to write the word class).
 
-In order to make a button, users use the `Button` object.  To show some text in the window it's a `Text` object, etc.  We're just talking about using these objects, just like Theads or Queues.
+In order to make a button, users use the `Button` object.  To show some text in the window it's a `Text` object, etc.  We're just talking about using these objects, just like Threads or Queues.
 
 #### Python's Core Types
 
@@ -162,11 +162,11 @@ layout = [  [Text('This is some text on the first row')],
             [Text('And text on second row'), Button('Our Button')]  ]   
 ```
 
-What we have is a list, with two lists inside of it.  Each of the interrior lists represents one row of the GUI.  Looking at this layout, it's probably obvious what this window will look like.
+What we have is a list, with two lists inside of it.  Each of the interior lists represents one row of the GUI.  Looking at this layout, it's probably obvious what this window will look like.
 
 #### Making a Window
 
-We've got our window's interrior, now let's make a window.  Like other std lib calls, such as Threads, mentioned before, it's a simple object that users interact with.
+We've got our window's interior, now let's make a window.  Like other std lib calls, such as Threads, mentioned before, it's a simple object that users interact with.
 
 ```python
 window = Window('Title of window', layout)
