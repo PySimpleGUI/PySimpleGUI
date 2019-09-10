@@ -12,23 +12,23 @@ Yet for almost everything else that Python is used for, the intuitive, straightf
 
 This article includes observations, conclusions, and recommendations that are not meant to cover or represent 100% of the possible situations.  In terms of GUIs, the benchmark is 80% of the use cases.  
 
-Corner cases exist in all areas of problems.  There are "yea but what about...." questions you can ask about anything and everything in the universe.  There's no attempt being made nor claimed that the proposal solves every GUI problem, every programmer's educational level, every runtime environment, etc.
+Corner cases exist in all areas of problems.  There are "yea but what about...." questions you can ask about anything and everything in the universe.  There's no attempt being made nor claimed that this proposal solves every GUI problem, every programmer's educational level, every runtime environment, etc.
 
 This conversation is targeted at user code, not library code.  In other words, the person writing the code and using the code is a user, not a person writing a library module.
 
-To be a "GUI" in this discussion:
-* A library needs to provide access to all of the well-known GUI widgets 
-* Allows the user to place Widgets in any arrangement desired by the user
- (i.e. they are not dumbed down nor are they templates you choose from)
-* The primary use is User Interface to a Python application (as opposed to serving up web pages)
+To be a "GUI" module in this discussion:
+* The module needs to provide access to all of the well-known GUI widgets 
+* The user can place Widgets in any arrangement desired
+* The primary use is as a User Interface to the Python application that is running
 
 ### Pythonic
  
 Now there's a loaded word. It's subjective to be sure, but there are certain traits, patterns or pieces of code that make them more or less Pythonic "feeling".  Another way of putting it is "I can't define it, but I know it when I see it".
 
-A few traits that I find particularly enjoyable about the language are:
+A few traits that I find particularly enjoyable about the language and perhaps fall into the "Pythonic" category are:
+
 * User code is often short
-* Code can be simultaneusly compact and readable
+* Code can be simultaneusly compact and readable (and beautiful too)
 * Python emphasises simplicity
 * It's modular and has namespaces
 * List and Dictionary containers are hecka-powerful (this was surprising)
@@ -36,7 +36,7 @@ A few traits that I find particularly enjoyable about the language are:
 Perhaps not part of the normal definition, but a trait just as important:
 * It's within the reach of a beginner
 
-Few things are truly out of reach of the beginner in Python.  Look at Threads for example.  After reading the 2 pages on Threads from the Python documentation, someone within the first couple of months of starting their Python education can figure out how to create and start a thread.
+Few things are truly out of reach of the beginner in Python.  Look at Threads for example.  After reading the two pages on Threads from the Python documentation, someone within the first  month of starting their Python education can figure out how to create and start a thread.  Maybe they don't know how to fully use one, but they can make and start it.
 
 Here is what a beginner needs to do in order to run their first thread in Python
 
@@ -47,19 +47,20 @@ my_thread = threading.Thread(target=my_thread_func)
 my_thread.start()
 ```
 
-It seems like this is often the case, a couple of lines is all you need to get a lot accomplished.
+It seems like this is often the case, in Python, a couple of lines is all you need to get a lot accomplished.
 
 
 ## The Python GUI Libraries
 
-There are a lot of choices for GUI libraries in  Python.  Here are the top 3 in terms of use/popularity
+There are a lot of choices for GUI libraries in  Python.  Here are the "Top 3" in terms of use and popularity
 
 * tkinter - the defacto standard
-* Qt (in its many forms) - the 800 pound gorilla
-* WxPython - a nice, slightly smaller gorilla
+* Qt - the 800 pound gorilla
+* WxPython - a nicer, slightly slimmer gorilla
 
 Then there are the Python GUI libraries written in Python for Python
-* Kivy - The first / only one of all GUIs listed that runs on mobile devices
+
+* Kivy - The first / only of all GUIs listed here that runs on mobile devices
 * Remi - A web GUI that's tiny (100k) and runs everywhere including Raspberry Pi's
 * PySimpleGUI - A unified GUI SDK that offers a single set of calls that can hook to multiple "renderers"
 
@@ -69,7 +70,9 @@ There are plenty others, but for this discussion, this is our list.
 
 ### Not From Here
 
-One interesting and problematic fact about the top 3 GUI pacakges in Python is that they were not written for Python.  They were designed and used with C++ prior to being brought over to Python.  Bringing an existing GUI library into Python isn't the problem here.  The problem is that they also brought a rigid definition of how a user's code is be architected, at least the GUI portion.
+One interesting and problematic fact about the top 3 GUI pacakges in Python is that they were not written for Python. They were designed, written, and used with C++ prior to being adapted to be used with Python.  
+
+Bringing an existing GUI library into Python isn't the problem here. The problem is that they also brought a rigid definition of how a user's GUI code is be architected. All three of these packages require the user to write their GUI code using an Object Oriented architecture.
 
 ### The Object Oriented GUI
 
@@ -83,9 +86,9 @@ Think through the Python standard library and it's many packages.  Do any of the
 
 ### Programming For Events
 
-Some programming languages, like C#, utilize events and callbacks heavily.  Some designs also utilize callbacks.  The top 3 GUI packages all handle events by calling a user's callback function.
+Some programming languages, like C#, utilize events and callbacks heavily.  Some designs also utilize callbacks.  The top three GUI packages all handle events by calling a user's callback function.
 
-When a button is pressed in tkinter, for example, the function specified when the user created the button is called.  All of the top 3 GUIs work this way, calling a user's function when an event happens.
+When a button is pressed in tkinter, for example, the function specified when the user created the button is called.  All of the top three GUIs work this way, calling a user's function when an event happens.
 
 Callbacks are normal for some languages, but Python isn't one of them when it comes to the way the standard library is concerned.
 
@@ -93,7 +96,7 @@ In Python, if you want something called, you call it.
 
 ### Events - Queues
 
-Let's take queues as an example for handling "events".  In the Python library there is a `queue` module that has an object called, you guesded it, `Queue`.  In some languages or libraries, a Queue object like this one would generate a callback when something arrives in the queue.
+Let's take queues as an example for handling "events".  In the Python library there is a `queue` module that has an object called, you guesded it, a `Queue`.  In some languages or libraries, a Queue object like this one would generate a callback when something arrives in the queue.
 
 The way this `Queue` works in Python is that you `get` an item from the Queue.  There are 2 modes you can use, blocking and non-blocking.  Additionally, if blocking is specified, you can set a timeout value that will raise an Empty Exception when nothing is found in the queue within the timeout. 
 
@@ -119,7 +122,7 @@ print(item)
 my_function(item)       # calling a function as if it were a "callback function"
 ```
 
-\* Remember this model, you'll be seeing it again later.
+Remember this model, you'll be seeing it again later.
 
 
 ## A Proposed GUI Model for Python
@@ -134,7 +137,7 @@ When thinking about making a GUI module in Python, from scratch, what would be s
 
 PySimpleGUI has made an attempt at creating a logical, Pythonic model for creating and using GUIs in Python.
 
-Let's get concrete so that these concepts and characteristics can be demonstrated.  If you're reading this, you've likely already read about or experienced the concepts and characteristics of the 3 packages already discussed so no need to fill up the page with examples from the Top 3 packages.
+Let's get concrete so that these concepts and characteristics can be demonstrated.  If you're reading this, you've likely already read about or experienced the concepts and characteristics of the three packages already discussed so no need to fill up the page with examples from the Top 3 packages.
 
 Let's talk about these characteristics individually.
 
@@ -150,16 +153,16 @@ Python's `List` and `Dictionary` types are fundamental to say the least. When fi
 
 #### Defining a Window's "Layout"
 
-OK, so how about we define our window using nothing but lists?  Everyone that programs Python knows what a list is and how to operate on them too. Our window's "layout" is a "list of lists".  What I mean by that is that 1 "row" of a GUI is a list.
+OK, so how about we define our window using nothing but lists?  Everyone that programs Python knows what a list is and how to operate on them too. Our window's "layout" is a "list of lists".  What I mean by that is that one "row" of a GUI is a list.
 
-Example time.... let's use the 2 objects mentioned already, Text and Button, to make a window.
+Example time.... let's use the two objects mentioned already, Text and Button, to make a window.
 
 ```python
 layout = [  [Text('This is some text on the first row')],
             [Text('And text on second row'), Button('Our Button')]  ]   
 ```
 
-What we have is a list, with 2 lists inside of it.  Each of the interrior lists represents 1 row of the GUI.  Looking at this layout, it's probably obvious what this window will look like.
+What we have is a list, with two lists inside of it.  Each of the interrior lists represents one row of the GUI.  Looking at this layout, it's probably obvious what this window will look like.
 
 #### Making a Window
 
@@ -205,11 +208,11 @@ Normally the `read` call is written this way in PySimpleGUI:
 event, values = window.read()
 ```
 
-This unpacks the tuple in to 2 variables, `event`, representing the event that caused the `read` to return, and `values`, the variable contains all of the values in the input fields for the window.
+This unpacks the tuple in to 2 variables, `event`, representing the event that caused the `read` to return, and `values`, the dictionary containing all of the values in the input fields for the window.
 
-#### `Window.read()` is Like `Queue.get()`
+#### `Window.read()` is like `Queue.get()`
 
-Recall earlier in the Queue example I said the `Queue.get` model would be seen again.  You just saw it in the `window.read()` call.  The default action is to block on that read.  Just like `Queue.get()` you can put a timeout value on the call so that the block will end after the timeout and return back to you.
+Recall earlier in the Queue example I said the `Queue.get` model would be seen again.  You just saw it in the `window.read()` call.  The default action is to block on that `read`.  Just like `Queue.get()` you can put a timeout value on the call so that the block will end after the timeout and return back to you.
 
 Here is how you can get a window's events in the same block with a timeout way.  In this example, the `timeout` of 100 means "block for up to 100 ms" for an event to take place, then return.
 
@@ -228,8 +231,7 @@ if event == 'My Button':                    # if the button was clicked then
     my_callback('My Button', values, ....)  # make your callback 
 ```
 
-Experience has shown, however, that these "callbacks" are not used by most people.  Often times the event is handled right on the spot, especially if the action to take is short.
-
+Experience has shown, however, that these "callbacks" are not used by most people using PySimpleGUI.  Often the event is handled right on the spot, especially if the action to take is short and simple.
 
 ## The Fun Begins - Applying Python's Capabilities with GUIs
 
@@ -254,11 +256,11 @@ In addition to building the items using the List Comprehension, we were able to 
 
 ## Summary
 
-If you've tried Python GUI programming and gave up, or if you like what you see proposed here, then you can experience this kind of Python GUI development today!  PySimpleGUI has been out for a little over a year and will "render" your GUI window **using** any of the big 3 GUI packages as the backend as well as being able to show your window in your browser by using Remi as the backend.
+If you've tried Python GUI programming and gave up, or if you like what you see proposed here, then you can experience this kind of Python GUI development today.  PySimpleGUI has been out for a little over a year and will "render" your GUI window **using** any of the big 3 GUI packages as the backend as well as being able to show your window in a browser by using Remi as the backend.
 
-The super-simple examples shown in this article are just that, super-simple examples.  The "Simple" of PySimpleGUI does not describe the problem space, but rather the  difficultly in solving your GUI problems.  Not many people would describe this PySimpleGUI creation as "simple".
+The super-simple examples shown in this article are just that, super-simple examples.  The "Simple" of PySimpleGUI does not describe the problem space, but rather the  difficultly in solving your GUI problems.  Not many people would describe this PySimpleGUI Download Manager application as a "simple" program.
 
 ![concurrent_windows](https://user-images.githubusercontent.com/13696193/62832448-3eb96180-bbfc-11e9-8777-6f2669566c93.png)
 
 
-If you're ready to experience GUI building in Python in a completely different and unique way that takes advantage of Python's unique syntax, types, and features that make it the magic language it is, then hop on over to http://www.PySimpleGUI.org and get started having fun building GUIs.
+So try GUI building in Python in a completely different way than you may have tried in the past.  A way that takes advantage of Python's unique syntax, types, and features that make it the magic language it is.  Hop on over to http://www.PySimpleGUI.org and get started having fun building GUIs.
