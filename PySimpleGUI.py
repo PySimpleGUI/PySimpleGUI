@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.2 Unreleased"
+version = __version__ = "4.5.0.3 Unreleased Metadata"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -501,7 +501,7 @@ class Element():
     The base class for all Elements.
     Holds the basic description of an Element like size and colors
     """
-    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+    def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         Element base class. Only used internally.  User will not create an Element object by itself
 
@@ -542,7 +542,7 @@ class Element():
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False
         self.ParentRowFrame = None          # type tk.Frame
-        self.metadata = None                # type: Any
+        self.metadata = metadata                # type: Any
 
     def _RightClickMenuCallback(self, event):
         """
@@ -780,7 +780,7 @@ class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None,   text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
-                 right_click_menu=None, visible=True):
+                 right_click_menu=None, visible=True, metadata=None):
         """
 
         :param default_text: (str) Text initially shown in the input box as a default value(Default value = '')
@@ -813,7 +813,7 @@ class InputText(Element):
         self.RightClickMenu = right_click_menu
         self.TKEntry = self.Widget = None          # type: tk.Entry
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
-                         font=font, tooltip=tooltip, visible=visible)
+                         font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
     def Update(self, value=None, disabled=None, select=None, visible=None):
         """
@@ -879,7 +879,7 @@ class Combo(Element):
     """
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
-                 tooltip=None, readonly=False, font=None, visible=True):
+                 tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values: List[Any]  values to choose. While displayed as text, the items returned are what the caller supplied, not text
         :param default_value: (Any) Choice to be displayed as initial value. Must match one of values variable contents
@@ -907,7 +907,7 @@ class Combo(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
         """
@@ -1000,7 +1000,7 @@ class OptionMenu(Element):
     it looks like a Combo Box that you scroll to select a choice.
     """
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True):
+                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: List[Any] Values to be displayed
         :param default_value: (Any) the value to choose by default
@@ -1022,7 +1022,7 @@ class OptionMenu(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
     def Update(self, value=None, values=None, disabled=None, visible=None):
         """
@@ -1083,7 +1083,7 @@ class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
-                 visible=True):
+                 visible=True, metadata=None):
         """
         :param values: List[Any] list of values to display. Can be any type including mixed types as long as they have __str__ method
         :param default_values: List[Any] which values should be initially selected
@@ -1130,7 +1130,7 @@ class Listbox(Element):
         self.TKListbox = self.Widget = None         # type: tk.Listbox
         self.NoScrollbar = no_scrollbar
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
-                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
 
     def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, visible=None):
@@ -1240,7 +1240,7 @@ class Radio(Element):
     """
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
-                 change_submits=False, enable_events=False, visible=True):
+                 change_submits=False, enable_events=False, visible=True, metadata=None):
         """
 
         :param text: (str) Text to display next to button
@@ -1271,7 +1271,7 @@ class Radio(Element):
         self.EncodedRadioValue = None
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, metadata=metadata)
 
     def Update(self, value=None, disabled=None, visible=None):
         """
@@ -1335,7 +1335,7 @@ class Checkbox(Element):
     """
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
-                 tooltip=None, visible=True):
+                 tooltip=None, visible=True, metadata=None):
         """
         :param text: (str) Text to display next to checkbox
         :param default: (bool). Set to True if you want this checkbox initially checked
@@ -1363,7 +1363,7 @@ class Checkbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, metadata=metadata)
 
     def Get(self):
         # type: (Checkbox) -> bool
@@ -1425,7 +1425,7 @@ class Spin(Element):
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False,
                  size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None,
-                 pad=None, tooltip=None, visible=True):
+                 pad=None, tooltip=None, visible=True, metadata=None):
         """
 
         :param values: List[Any] List of valid values
@@ -1453,7 +1453,7 @@ class Spin(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
-                         key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def Update(self, value=None, values=None, disabled=None, visible=None):
@@ -1534,7 +1534,7 @@ class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
-                 right_click_menu=None, visible=True):
+                 right_click_menu=None, visible=True, metadata=None):
         """
 
         :param default_text: (str) Initial text to show
@@ -1571,7 +1571,7 @@ class Multiline(Element):
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TKText = self.Widget = None            # type: tkst.ScrolledText
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
     def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None,
@@ -1652,7 +1652,7 @@ class Text(Element):
     """
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
-                 right_click_menu=None, tooltip=None, visible=True):
+                 right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: (str) The text to display. Can include /n to achieve multiple lines
         :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
@@ -1684,7 +1684,7 @@ class Text(Element):
         self.TKRightClickMenu = None
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible)
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
 
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
@@ -1737,7 +1737,7 @@ class StatusBar(Element):
     """
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
-                 key=None, tooltip=None, visible=True):
+                 key=None, tooltip=None, visible=True, metadata=None):
         """
 
         :param text: (str) Text that is to be displayed in the widget
@@ -1768,7 +1768,7 @@ class StatusBar(Element):
         self.TKText = self.Widget = None        # type: tk.Label
         super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg,
                          font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip,
-                         visible=visible)
+                         visible=visible, metadata=metadata)
         return
 
 
@@ -1971,7 +1971,7 @@ class Output(Element):
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
     """
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None, right_click_menu=None, visible=True):
+                 key=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param size: Tuple[int, int]  (w,h) w=characters-wide, h=rows-high
         :param background_color: (str) color of background
@@ -1990,7 +1990,7 @@ class Output(Element):
         self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key, visible=visible)
+                         tooltip=tooltip, key=key, visible=visible, metadata=metadata)
 
     @property
     def TKOut(self):
@@ -2043,7 +2043,7 @@ class Button(Element):
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None,
-                 font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True):
+                 font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True, metadata=None):
         """
         :param button_text: (str) Text to be displayed on the button
         :param button_type: (int) You  should NOT be setting this directly. ONLY the shortcut functions set this
@@ -2095,7 +2095,7 @@ class Button(Element):
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
-        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible)
+        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     # Realtime button release callback
@@ -2369,7 +2369,7 @@ class ButtonMenu(Element):
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None,
-                 tearoff=False, visible=True):
+                 tearoff=False, visible=True, metadata=None):
         """
         :param button_text: (str) Text to be displayed on the button
         :param menu_def: List[List[str]] A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types
@@ -2410,7 +2410,7 @@ class ButtonMenu(Element):
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip,
-                         text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible)
+                         text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, metadata=metadata)
         return
 
     def _MenuItemChosenCallback(self, item_chosen):  # ButtonMenu Menu Item Chosen Callback
@@ -2474,7 +2474,7 @@ class ProgressBar(Element):
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
     """
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None),
-                 style=None, border_width=None, relief=None, key=None, pad=None, visible=True):
+                 style=None, border_width=None, relief=None, key=None, pad=None, visible=True, metadata=None):
         """
         :param max_value: (int) max value of progressbar
         :param orientation: (str) 'horizontal' or 'vertical'
@@ -2500,7 +2500,7 @@ class ProgressBar(Element):
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad,
-                         visible=visible)
+                         visible=visible, metadata=metadata)
 
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
@@ -2556,7 +2556,7 @@ class Image(Element):
     """
 
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None, right_click_menu=None, visible=True, enable_events=False):
+                 tooltip=None, right_click_menu=None, visible=True, enable_events=False, metadata=None):
         """
         :param filename:  (str) image filename if there is a button image. GIFs and PNGs only.
         :param data:  Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
@@ -2585,7 +2585,7 @@ class Image(Element):
         self.Source = filename if filename is not None else data
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def Update(self, filename=None, data=None, size=(None, None), visible=None):
@@ -2683,7 +2683,7 @@ class Canvas(Element):
     """ """
 
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None,
-                 right_click_menu=None, visible=True):
+                 right_click_menu=None, visible=True, metadata=None):
         """
 
         :param canvas: (tk.Canvas) Your own tk.Canvas if you already created it. Leave blank to create a Canvas
@@ -2701,7 +2701,7 @@ class Canvas(Element):
         self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     @property
@@ -2735,7 +2735,7 @@ class Graph(Element):
 
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None,
-                 right_click_menu=None, visible=True, float_values=False):
+                 right_click_menu=None, visible=True, float_values=False, metadata=None):
         """
         :param canvas_size: Tuple[int, int] (width, height) size of the canvas area in pixels
         :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
@@ -2766,7 +2766,7 @@ class Graph(Element):
         self.FloatValues = float_values
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
-                         tooltip=tooltip, visible=visible)
+                         tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
@@ -3240,7 +3240,7 @@ class Frame(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
-                 tooltip=None, right_click_menu=None, visible=True, element_justification='left'):
+                 tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
         """
         :param title: (str) text that is displayed as the Frame's "label" or title
         :param layout: List[List[Elements]] The layout to put inside the Frame
@@ -3280,7 +3280,7 @@ class Frame(Element):
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
-                         font=font, pad=pad, key=key, tooltip=tooltip, visible=visible)
+                         font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def AddRow(self, *args):
@@ -3383,7 +3383,7 @@ class Tab(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True, element_justification='left'):
+                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
         """
         :param title: (str) text to show on the tab
         :param layout: List[List[Element]] The element layout that will be shown in the tab
@@ -3421,7 +3421,7 @@ class Tab(Element):
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip, visible=visible)
+                         key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def AddRow(self, *args):
@@ -3518,7 +3518,7 @@ class TabGroup(Element):
 
     def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
                  font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
-                 key=None, tooltip=None, visible=True):
+                 key=None, tooltip=None, visible=True, metadata=None):
         """
         :param layout: List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :param tab_location: (str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
@@ -3557,7 +3557,7 @@ class TabGroup(Element):
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
-                         pad=pad, key=key, tooltip=tooltip, visible=visible)
+                         pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def AddRow(self, *args):
@@ -3657,7 +3657,7 @@ class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
                  enable_events=False, disabled=False, size=(None, None), font=None, background_color=None,
-                 text_color=None, key=None, pad=None, tooltip=None, visible=True):
+                 text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
 
         :param range: Union[Tuple[int, int], Tuple[float, float]] slider's range (min value, max value)
@@ -3703,7 +3703,7 @@ class Slider(Element):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
-                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible)
+                         text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def Update(self, value=None, range=(None, None), disabled=None, visible=None):
@@ -3914,7 +3914,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, justification='left', element_justification='left'):
+                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, justification='left', element_justification='left', metadata=None):
         """
         :param layout: List[List[Element]] Layout that will be shown in the Column container
         :param background_color: (str) color of background of entire Column
@@ -3949,7 +3949,7 @@ class Column(Element):
         self.Justification = justification
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
         return
 
     def AddRow(self, *args):
@@ -4036,7 +4036,7 @@ class Pane(Element):
     """
 
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
-                 show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True):
+                 show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True, metadata=None):
         """
         :param pane_list: List[Column] Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
         :param background_color: (str) color of background
@@ -4076,7 +4076,7 @@ class Pane(Element):
 
         self.Rows = [pane_list]
 
-        super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible)
+        super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
         return
 
     def Update(self, visible=None):
@@ -4391,7 +4391,7 @@ class Menu(Element):
     """
 
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None,
-                 visible=True):
+                 visible=True, metadata=None):
         """
         :param menu_definition: List[List[Tuple[str, List[str]]]
         :param background_color: (str) color of the background
@@ -4409,7 +4409,7 @@ class Menu(Element):
         self.MenuItemChosen = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key,
-                         visible=visible)
+                         visible=visible, metadata=metadata)
         return
 
     def _MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
@@ -4480,7 +4480,7 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
-                 key=None, tooltip=None, right_click_menu=None, visible=True):
+                 key=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param values: List[List[Union[str, int, float]]]
         :param headings: List[str] The headings to show on the top line
@@ -4543,7 +4543,7 @@ class Table(Element):
         self.RowColors = row_colors
         self.tree_ids = []          # ids returned when inserting items into table - will use to delete colors
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
-                         size=size, pad=pad, key=key, tooltip=tooltip, visible=visible)
+                         size=size, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def Update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
@@ -4680,7 +4680,7 @@ class Tree(Element):
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
                  background_color=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,
-                 right_click_menu=None, visible=True):
+                 right_click_menu=None, visible=True, metadata=None):
         """
 
         :param data: (TreeData) The data represented using a PySimpleGUI provided TreeData class
@@ -4736,7 +4736,7 @@ class Tree(Element):
         self.KeyToID = {'':''}
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip, visible=visible)
+                         key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def treeview_selected(self, event):
@@ -4950,13 +4950,13 @@ class ErrorElement(Element):
     """
     A "dummy Element" that is returned when there are error conditions, like trying to find an element that's invalid
     """
-    def __init__(self, key=None):
+    def __init__(self, key=None, metadata=None):
         """
         :param key:  Used with window.FindElement and with return values to uniquely identify this element
         """
         self.Key = key
 
-        super().__init__(ELEM_TYPE_ERROR, key=key)
+        super().__init__(ELEM_TYPE_ERROR, key=key, metadata=metadata)
 
 
     def Update(self, silent_on_error=True, *args, **kwargs):
@@ -5021,7 +5021,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
-                 finalize=False, element_justification='left'):
+                 finalize=False, element_justification='left', metadata=None):
         """
         :param title: (str) The title that will be displayed in the Titlebar and on the Taskbar
         :param layout: List[List[Elements]] The layout for the window. Can also be specified in the Layout method
@@ -5121,6 +5121,7 @@ class Window:
         self.WasClosed = False
         self.ElementJustification = element_justification
         self.FocusSet = False
+        self.metadata = metadata
         if type(title) != str:
             warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
         if layout is not None and type(layout) not in  (list, tuple):
@@ -6255,7 +6256,7 @@ def Sizer(h_pixels=0, v_pixels=0):
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
-                 font=None, pad=None, key=None):
+                 font=None, pad=None, key=None, metadata=None):
     """
     :param button_text: text in the button (Default value = 'Browse')
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
@@ -6276,14 +6277,14 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key)
+                  enable_events=enable_events, font=font, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
                tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                enable_events=False, font=None, disabled=False,
-               pad=None, key=None):
+               pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Browse')
@@ -6305,14 +6306,14 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   change_submits=change_submits, enable_events=enable_events, disabled=disabled,
-                  button_color=button_color, font=font, pad=pad, key=key)
+                  button_color=button_color, font=font, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
-                font=None, pad=None, key=None):
+                font=None, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Browse')
@@ -6334,14 +6335,14 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                   initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
                   tooltip=tooltip, size=size, auto_size_button=auto_size_button,
-                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key)
+                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
                disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
-               pad=None, key=None):
+               pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Save As...')
@@ -6363,14 +6364,14 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key)
+                  enable_events=enable_events, font=font, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
            disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
-           pad=None, key=None):
+           pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Save As...')
@@ -6392,12 +6393,12 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key)
+                  enable_events=enable_events, font=font, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
-         disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None):
+         disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Save')
@@ -6415,12 +6416,12 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Submit')
@@ -6438,13 +6439,13 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Open')
@@ -6462,12 +6463,12 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'OK')
@@ -6485,12 +6486,12 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Ok')
@@ -6508,12 +6509,12 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None):
+           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Cancel')
@@ -6531,12 +6532,12 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, key=None):
+         font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Quit')
@@ -6554,12 +6555,12 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
 def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, key=None):
+         font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Exit')
@@ -6577,12 +6578,12 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, key=None):
+        font=None, bind_return_key=True, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Yes')
@@ -6600,12 +6601,12 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-       font=None, bind_return_key=False, focus=False, pad=None, key=None):
+       font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'No')
@@ -6623,12 +6624,12 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-         tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
+         tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Help')
@@ -6646,12 +6647,12 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Debug(button_text='', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None):
+          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = '')
@@ -6670,13 +6671,13 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=COLOR_SYSTEM_DEFAULT, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, image_data=PSG_DEBUGGER_LOGO,
-                  image_subsample=4, border_width=0)
+                  image_subsample=4, border_width=0, metadata=metadata)
 
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                  border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
-                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -6701,13 +6702,13 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  CLOSE BUTTON Element lazy function  ------------------------- #
 def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
-                bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+                bind_return_key=False, disabled=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -6732,7 +6733,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 CButton = CloseButton
@@ -6741,7 +6742,7 @@ CButton = CloseButton
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
-               bind_return_key=False, disabled=False, focus=False, pad=None, key=None):
+               bind_return_key=False, disabled=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -6766,7 +6767,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 ReadFormButton = ReadButton
@@ -6776,7 +6777,7 @@ RButton = ReadFormButton
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                    border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
-                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -6801,13 +6802,13 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
-                disabled=False, bind_return_key=False, focus=False, pad=None, key=None):
+                disabled=False, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -6832,7 +6833,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus,
-                  pad=pad, key=key)
+                  pad=pad, key=key, metadata=metadata)
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
@@ -6840,7 +6841,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                   key=None, locale=None, format=None):
+                   key=None, locale=None, format=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -6871,7 +6872,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                    bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                    bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
     button.CalendarCloseWhenChosen = close_when_date_chosen
     button.DefaultDate_M_D_Y = default_date_m_d_y
     button.CalendarLocale = locale
@@ -6883,7 +6884,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
 def ColorChooserButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                       key=None):
+                       key=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -6909,7 +6910,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
 
 
 #####################################  -----  RESULTS   ------ ##################################################
@@ -11260,7 +11261,6 @@ def _refresh_debugger():
 
 
 
-
 #                        d8b
 #                        Y8P
 #
@@ -11358,7 +11358,7 @@ def main():
         [Column([[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]]), ],
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]],key='_TAB_GROUP_' )],
-        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal'),
+        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal', metadata='my metadata'),
          Button('Exit', tooltip='Exit button')],
     ]
 
@@ -11372,6 +11372,7 @@ def main():
                     resizable=True,
                     keep_on_top=True,
                     element_justification='left',
+                    metadata='My window metadata'
                     # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
@@ -11379,7 +11380,7 @@ def main():
     while True:  # Event Loop
         event, values = window.Read(timeout=20)
         if event != TIMEOUT_KEY:
-            print(event, values)
+            print(event, values, window[event].metadata)
         if event is None or event == 'Exit':
             break
         if i < 800:
@@ -11387,7 +11388,6 @@ def main():
         else:
             graph_elem.Move(-1, 0)
             graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))
-
         window['+PROGRESS+'].UpdateBar(i % 800)
         window.Element('_IMAGE_').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
         i += 1
