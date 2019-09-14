@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.3 Unreleased Metadata"
+version = __version__ = "4.5.0.4 Unreleased Metadata & Mac Color Force"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -9783,7 +9783,7 @@ def ListOfLookAndFeelValues():
     return list(LOOK_AND_FEEL_TABLE.keys())
 
 
-def ChangeLookAndFeel(index):
+def ChangeLookAndFeel(index, force=False):
     """
 
     :param index:
@@ -9791,7 +9791,7 @@ def ChangeLookAndFeel(index):
     """
     # global LOOK_AND_FEEL_TABLE
 
-    if sys.platform == 'darwin':
+    if sys.platform == 'darwin' and not force:
         print('*** Changing look and feel is not supported on Mac platform ***')
         return
 
