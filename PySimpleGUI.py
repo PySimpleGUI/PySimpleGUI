@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.4 Unreleased Metadata & Mac Color Force"
+version = __version__ = "4.5.0.5 Unreleased Metadata & Mac Button Test"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -2076,11 +2076,12 @@ class Button(Element):
         self.Widget = self.TKButton = None  # type: tk.Button
         self.Target = target
         self.ButtonText = str(button_text)
-        if sys.platform == 'darwin' and button_color is not None:
-            print('Button *** WARNING - Button colors are not supported on the Mac ***')
-            self.ButtonColor = DEFAULT_BUTTON_COLOR
-        else:
-            self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        # if sys.platform == 'darwin' and button_color is not None:
+        #     print('Button *** WARNING - Button colors are not supported on the Mac ***')
+        #     self.ButtonColor = DEFAULT_BUTTON_COLOR
+        # else:
+        #     self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
