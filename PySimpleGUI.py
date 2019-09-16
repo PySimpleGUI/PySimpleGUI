@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.7 Unreleased Mac Buttons Justify fix"
+version = __version__ = "4.5.0.8 Unreleased Mac Buttons Justify fix"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -212,12 +212,12 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]),
                       (YELLOWS[0], BLUES[2]))
 
 COLOR_SYSTEM_DEFAULT = '1234567890'  # Colors should never be this long
-if sys.platform == 'darwin':
-    DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Foreground, Background (None, None) == System Default
-    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Colors should never be this long
-else:
-    DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
-    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never be this long
+# if sys.platform == 'darwin':
+#     DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Foreground, Background (None, None) == System Default
+#     OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Colors should never be this long
+# else:
+DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
+OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never be this long
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
@@ -7685,7 +7685,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     if sys.platform.startswith('darwin'):
-                        tkbutton.config(foreground=bc[0], highlightbackground=bc[1], activebackground=bc[1])
+                        print('*** USING MAC BUTTON COLORS ****', bc)
+                        tkbutton.config(foreground=bc[0], highlightbackground=bc[1], highlightcolor=bc[1], highlightthickness=0)
                     else:
                         tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
@@ -9795,9 +9796,9 @@ def ChangeLookAndFeel(index, force=False):
     """
     # global LOOK_AND_FEEL_TABLE
 
-    if sys.platform == 'darwin' and not force:
-        print('*** Changing look and feel is not supported on Mac platform ***')
-        return
+    # if sys.platform == 'darwin' and not force:
+    #     print('*** Changing look and feel is not supported on Mac platform ***')
+    #     return
 
     # look and feel table
 
