@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.5 Unreleased Metadata & Mac Button Test"
+version = __version__ = "4.5.0.6 Unreleased Mac Buttons Justify fix"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
