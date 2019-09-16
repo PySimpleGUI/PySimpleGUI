@@ -5062,7 +5062,7 @@ class Window:
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
-        self.Title = title
+        self.Title = str(title)
         self.Rows = []  # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size
         self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
@@ -5123,8 +5123,6 @@ class Window:
         self.ElementJustification = element_justification
         self.FocusSet = False
         self.metadata = metadata
-        if type(title) != str:
-            warnings.warn('Your title is not a string.  Are you passing in the right parameters?', UserWarning)
         if layout is not None and type(layout) not in  (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
@@ -7455,7 +7453,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(containing_frame)
         row_should_expand = False
-        row_justify = ''
+        row_justify = form.ElementJustification
         for col_num, element in enumerate(flex_row):
             element.ParentRowFrame = tk_row_frame
             element.ParentForm = toplevel_form  # save the button's parent form object
@@ -7539,6 +7537,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     anchor=tk.NW
                     side = tk.LEFT
+                # anchor=tk.NW
+                # side = tk.LEFT
                 row_justify = element.Justification
                 element.Widget = element.TKColFrame
                 element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
@@ -7684,7 +7684,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
-                    tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                    if sys.platform.startswith('darwin'):
+                        tkbutton.config(foreground=bc[0], highlightbackground=bc[1], activebackground=bc[1])
+                    else:
+                        tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
                 if border_depth == 0:
