@@ -31,12 +31,25 @@ The one-shot window is one that pops up, collects some data, and then disappears
 
 The "Persistent" window is one that sticks around.  With these programs, you loop, reading and processing "events" such as button clicks. 
       
+NOTE - The concept of "keys" is explained below. While they are shown as strings in the examples, they can be ANYTHING (ints, tuples, lists, objects, ....)
       
-## Pattern 1 - "One-shot Window" - Read int list (The Most Common Pattern)    
-      
-This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and then closes.
+## Pattern 1 - "One-shot Window" - (The Simplest Pattern)    
+
+![Pattern1](https://user-images.githubusercontent.com/46163555/64929604-0c4fe500-d7f6-11e9-9dc1-bb34d5aafd23.jpg)   
+
+
+![Pattern1 Popup](https://user-images.githubusercontent.com/46163555/64929603-0c4fe500-d7f6-11e9-8309-68a9279c6c72.jpg)
+
+
+This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and then closed.
     
- Because no "keys" were specified in the window layout, the return values will be a list of values.  If a key is present, then the values are a dictionary.  See the main readme document or further down in this document for more on these 2 ways of reading window values.
+When you "read" a window, you are returned a tuple consisting of an `event` and a dictionary of `values`.  
+
+The`event` is what caused the read to return. It could be a button press, some text clicked, a list item chosen, etc, or None if the user closes the window.
+
+The `values` is a dictionary of values of all the input-style elements.  Dictionaries use keys to define entries. If your elements do not specificy a key, one is provided for you. These auto-numbered keys are ints starting at zero.
+
+This design pattern does not specify a `key` for the `InputText` element, so its key will be auto-numbered and is specifically zero.  Thus the design pattern can get the value of whatever was input by referencing `values[0]`
    
 ```python    
 import PySimpleGUI as sg      
@@ -51,56 +64,97 @@ event, values = window.Read()
 window.Close()
     
 text_input = values[0]    
-print(text_input)
+sg.Popup('You entered', text_input)
 ```    
 
+If you want to use a key instead of an auto-generated key:
+
+```python    
+import PySimpleGUI as sg      
     
-    
-## Pattern 2 A - Persistent window (multiple reads using an event loop)      
+layout = [[sg.Text('My one-shot window.')],      
+                 [sg.InputText(key='-IN-')],      
+                 [sg.Submit(), sg.Cancel()]]      
       
-Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.      
+window = sg.Window('Window Title', layout)    
+    
+event, values = window.Read()    
+window.Close()
+    
+text_input = values['-IN-']    
+sg.Popup('You entered', text_input)
+``` 
+
+
+
+## Pattern 2 A - Persistent window (multiple reads using an event loop)      
+
+
+![Pattern2](https://user-images.githubusercontent.com/46163555/64929605-0c4fe500-d7f6-11e9-8c00-b74988a706e3.jpg)
+
+
+Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.  In other words, a typical Window, Mac or Linux window.  You are writing ***real GUI code*** that will look and act like other windows you're used to using.
     
 This code will present a window and will print values until the user clicks the exit button or closes window using an X.    
 
-Note the `do_not_clear` parameter that is described in the next design pattern.
       
 ```python    
 import PySimpleGUI as sg      
       
 layout = [[sg.Text('Persistent window')],      
-          [sg.Input(do_not_clear=True)],      
+          [sg.Input(key='-IN-')],      
           [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open', layout)      
       
 while True:      
-    event, values = window.Read()      
-    if event is None or event == 'Exit':      
+    event, values = window.Read() 
+    print(event, values)       
+    if event in (None, 'Exit'):      
         break      
-    print(event, values)    
 
 window.Close()
 ```    
 
 
+Here is some sample output from this code:
+
+```
+Read {'-IN-': 'typed into input field'}
+Read {'-IN-': 'More typing'}
+Exit {'-IN-': 'clicking the exit button this time'}
+```
+
+The first thing printed is the "event" which in this program is the buttons.  The next thing printed is the `values` variable that holds the dictionary of return values from the read.  This dictionary has only 1 entry.  The "key" for the entry is `'-IN-'` and matches the key passed into the `Input` element creation on this line of code:
+```python
+          [sg.Input(key='-IN-')],      
+```
+
+If the window was close using the X, then the output of the code will be:
+```
+None {'-IN-': None}
+```
+
+The `event` returned from the read is set to `None` and so are the input fields in the window.  This `None` event is super-important to check for.  It must be detected in your windows or else you'll be trying to work with a window that's been destroyed and your code will crash.  This is why you will find this check after ***every*** `window.Read()` call you'll find in sample PySimpleGUI code.
 
 
 ## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
+
+![Pattern2B](https://user-images.githubusercontent.com/46163555/64929632-7c5e6b00-d7f6-11e9-90b3-70e79cd2547c.jpg)
 
 This is a slightly more complex, but maybe more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
 
 Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
-A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False. The default setting is True so they are not cleared.  Some older programs may explicitly set this parameter to True.
 
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(15,1), key='_OUTPUT_')],
-          [sg.Input(key='_IN_')],
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(15,1), key='-OUTPUT-')],
+          [sg.Input(key='-IN-')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
-window = sg.Window('Window Title', layout)
+window = sg.Window('Pattern 2B', layout)
 
 while True:  # Event Loop
     event, values = window.Read()
@@ -108,11 +162,47 @@ while True:  # Event Loop
     if event is None or event == 'Exit':
         break
     if event == 'Show':
-        # Update the "output" element to be the value of "input" element
-        window.Element('_OUTPUT_').Update(values['_IN_'])
+        # Update the "output" text element to be the value of "input" element
+        window['-OUTPUT-'].Update(values['-IN-'])
+
+        # A shortened version of this update can be written without the ".Update"
+        # window['-OUTPUT-'](values['-IN-'])     
+        # In older code you'll find it written using FindElement or Element
+        # window.FindElement('-OUTPUT-').Update(values['-IN-'])
 
 window.Close()
 ```
+
+As you can see in the comments, there are multiple ways out "outputting" to an element, or changing an element in some way, in a window.  The way we're achieving output here is by changing a Text Element.
+
+The original / old-style way of doing this was to call `window.FindElement` or the shortened `window.Element`
+
+```python
+window.FindElement('-OUTPUT-').Update(values['-IN-'])
+or
+window.Element('-OUTPUT-').Update(values['-IN-'])
+```
+
+That technique has been recently replaced with a shortened version that looks more like a dictionary lookup using the `window` variable.  You can think of the operation as "lookup the element in this window that has this key".  Once you have that element, then this statement is calling that element's `Update` method.
+
+```python
+window['-OUTPUT-'].Update(values['-IN-'])
+```
+
+Even this can be further shortened.  If you "call" an existing element, then it is the same as calling that element's `Update` method.  To do this, you simply delete the `.Update` from the statement and you're left with:
+
+```python
+window['-OUTPUT-'](values['-IN-'])
+```
+
+Yes, it looks a little strange, but now that you've seen these variations, you'll immediately know that seeing `window[key]` means you're finding an element in that window.  Anything after that part of the statement means you're working directly with an element.  Maybe the element has another method besides `Update` you want to call, like `Get()`.  If so, then it is written simply as:
+
+
+```python
+window[my_key].Get()
+```
+
+----
 
 
 # 1 Shot - Simple Data Entry - Return Values - Auto Numbered   
@@ -145,34 +235,6 @@ print(event, values)
 ```    
       
 
-# Simple data entry - Explicit Keys
-
-A simple GUI with default values in input elements, and uses user defined keys.  You will normally use keys like in this example.  If you use autonumbering, then if you add an element between other elements, then your numbering will shift and you'll have to modify your code quite a bit.  By naming them yourself, you can use the key to store data and be more descriptive.
-      
-![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)      
-      
-```python
-    import PySimpleGUI as sg      
-      
-    # Very basic window.  Explicityly named keys     
-    
-    layout = [      
-              [sg.Text('Please enter your Name, Address, Phone')],      
-              [sg.Text('Name', size=(15, 1)), sg.InputText('name', key='_NAME_')],      
-              [sg.Text('Address', size=(15, 1)), sg.InputText('address', key='_ADDRESS_')],      
-              [sg.Text('Phone', size=(15, 1)), sg.InputText('phone', key='_PHONE_')],      
-              [sg.Submit(), sg.Cancel()]      
-             ]      
-    
-    window = sg.Window('Simple data entry GUI', layout)
-      
-    event, values = window.Read()  
-    
-    window.Close()
-    
-    print(event, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])    
-    print(event, values)        # print so that you can see the format of the dictionary  
-```      
 
 --------------------------      
 ## Add GUI to Front-End of Script      
