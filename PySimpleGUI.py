@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.8 Unreleased Mac Buttons Justify fix"
+version = __version__ = "4.5.0.13 Unreleased Mac Buttons experimental Justify fix"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -7686,12 +7686,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     if sys.platform.startswith('darwin'):
                         print('*** USING MAC BUTTON COLORS ****', bc)
-                        tkbutton.config(foreground=bc[0], highlightbackground=bc[1], highlightcolor=bc[1], highlightthickness=0)
+                        tkbutton.config(foreground=bc[0], highlightbackground=bc[1],background=bc[1], activebackground=bc[1], highlightcolor=bc[1], activeforeground=bc[1], highlightthickness=-10, bd=0, relief='solid')
                     else:
                         tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-                if border_depth == 0:
+                if border_depth == 0 and not sys.platform.startswith('darwin'):
                     tkbutton.config(relief=tk.FLAT)
                     tkbutton.config(highlightthickness=0)
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
