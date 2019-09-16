@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.29.0.1 Unreleased"
+version = __version__ = "0.29.0.2 Unreleased"
 
 import sys
 import types
@@ -1092,7 +1092,7 @@ class MultilineOutput(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, text='', size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Text Element
         :param text:

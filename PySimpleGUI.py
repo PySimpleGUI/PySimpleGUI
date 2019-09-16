@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.6 Unreleased Mac Buttons Justify fix"
+version = __version__ = "4.5.0.7 Unreleased Mac Buttons Justify fix"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -1650,7 +1650,7 @@ class Text(Element):
     """
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
     """
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
+    def __init__(self, text='', size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
                  relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from sphinx.ext.autosummary import autosummary_table
 
-version = __version__ = "0.13.0.2 Unreleased"
+version = __version__ = "0.13.0.3 Unreleased"
 
 import sys
 import wx
@@ -1093,7 +1093,7 @@ class MultilineOutput(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text, size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, border_width=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, text='', size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, border_width=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
         """
         Text
         :param text:
