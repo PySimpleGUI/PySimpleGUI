@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.13 Unreleased Mac Buttons experimental Justify fix"
+version = __version__ = "4.5.0.14 Unreleased Mac Buttons experimental Justify fix"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -9513,6 +9513,32 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                             'PROGRESS': COLOR_SYSTEM_DEFAULT,
                             'BORDER': 1, 'SLIDER_DEPTH': 1,
                             'PROGRESS_DEPTH': 0},
+
+                    'Material1': {'BACKGROUND': '#E3F2FD',
+                                      'TEXT': '#000000',
+                                      'INPUT': '#86A8FF',
+                                      'TEXT_INPUT': '#000000',
+                                      'SCROLL': '#86A8FF', #I can't see it change, so I don't know it is good color.
+                                      'BUTTON': ('#FFFFFF', '#5079D3'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 0, 'SLIDER_DEPTH': 0,
+                                      'PROGRESS_DEPTH': 0,
+                                      'ACCENT1': '#FF0266',
+                                      'ACCENT2': '#FF5C93',
+                                      'ACCENT3': '#C5003C'},
+
+                    'Material2': {'BACKGROUND': '#FAFAFA',
+                                      'TEXT': '#000000',
+                                      'INPUT': '#004EA1',
+                                      'TEXT_INPUT': '#FFFFFF',
+                                      'SCROLL': '#5EA7FF', #I can't see it change, so I don't know it is good color.
+                                      'BUTTON': ('#FFFFFF', '#0079D3'), #based on Reddit color
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                      'BORDER': 0, 'SLIDER_DEPTH': 0,
+                                      'PROGRESS_DEPTH': 0,
+                                      'ACCENT1': '#FF0266',
+                                      'ACCENT2': '#FF5C93',
+                                      'ACCENT3': '#C5003C'},
 
                        'Reddit': {'BACKGROUND': '#ffffff',
                                   'TEXT': '#1a1a1b',
