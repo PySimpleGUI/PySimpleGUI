@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.14 Unreleased Mac Buttons experimental Justify fix"
+version = __version__ = "4.5.0.15 Unreleased Mac Buttons experimental Justify fix"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -515,6 +515,7 @@ class Element():
         :param pad: (int, int) or ((int,int),(int,int))  Amount of padding to put around element in pixels (left/right, top/bottom)
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element (Default = True)
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
         self.Size = size
         self.Type = type
@@ -800,6 +801,7 @@ class InputText(Element):
         :param pad:  (int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element (Default = True)
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
@@ -815,7 +817,7 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, disabled=None, select=None, visible=None):
+    def Update(self, value=None, disabled=None, select=None, visible=None, move_cursor_to='end'):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -823,6 +825,7 @@ class InputText(Element):
         :param disabled: (bool) disable or enable state of the element (sets Entry Widget to readonly or normal)
         :param select: (bool) if True, then the text will be selected
         :param visible: (bool) change visibility of element
+        :param move_cursor_to: Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -837,7 +840,10 @@ class InputText(Element):
             except:
                 pass
             self.DefaultText = value
-            self.TKEntry.icursor(tk.END)
+            if move_cursor_to == 'end':
+                self.TKEntry.icursor(tk.END)
+            elif move_cursor_to is not None:
+                self.TKEntry.icursor(move_cursor_to)
         if select:
             self.TKEntry.select_range(0, 'end')
         if visible is False:
@@ -896,6 +902,7 @@ class Combo(Element):
         :param readonly: (bool) make element readonly (user can't change). True means user cannot change
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
         self.Values = values
         self.DefaultValue = default_value
@@ -1013,6 +1020,7 @@ class OptionMenu(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text that will appear when mouse hovers over this element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
         self.Values = values
         self.DefaultValue = default_value
@@ -1106,6 +1114,7 @@ class Listbox(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
         self.Values = values
         self.DefaultValues = default_values
@@ -1258,6 +1267,7 @@ class Radio(Element):
         :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. Radio Button events happen when an item is selected
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.InitialState = default
@@ -1351,6 +1361,7 @@ class Checkbox(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.Text = text
@@ -1442,6 +1453,7 @@ class Spin(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.Values = values
@@ -1556,6 +1568,7 @@ class Multiline(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.DefaultText = default_text
@@ -1651,8 +1664,7 @@ class Text(Element):
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
     """
     def __init__(self, text='', size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
-                 relief=None, font=None, text_color=None, background_color=None, justification=None, pad=None, key=None,
-                 right_click_menu=None, tooltip=None, visible=True, metadata=None):
+                 relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: (str) The text to display. Can include /n to achieve multiple lines
         :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
@@ -1663,12 +1675,14 @@ class Text(Element):
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
+        :param border_width: (int) number of pixels for the border (if using a relief)
         :param justification: (str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.DisplayText = str(text)
@@ -1682,6 +1696,7 @@ class Text(Element):
             bg = background_color
         self.RightClickMenu = right_click_menu
         self.TKRightClickMenu = None
+        self.BorderWidth = border_width
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -1754,6 +1769,7 @@ class StatusBar(Element):
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.DisplayText = text
@@ -1982,6 +1998,7 @@ class Output(Element):
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self._TKOut = self.Widget = None        # type: TKOutput
@@ -2068,6 +2085,7 @@ class Button(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.AutoSizeButton = auto_size_button
@@ -2389,6 +2407,7 @@ class ButtonMenu(Element):
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param tearoff: (bool) Determines if menus should allow them to be torn off
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.MenuDefinition = menu_def
@@ -2488,6 +2507,7 @@ class ProgressBar(Element):
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param visible: (bool)  set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.MaxValue = max_value
@@ -2569,6 +2589,7 @@ class Image(Element):
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         :param enable_events: (bool) Turns on the element specific events. For an Image element, the event is "image clicked"
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.Filename = filename
@@ -2695,6 +2716,7 @@ class Canvas(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -2751,6 +2773,7 @@ class Graph(Element):
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element (Default = True)
         :param float_values: (bool) If True x,y coordinates are returned as floats, not ints
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.CanvasSize = canvas_size
@@ -3259,6 +3282,7 @@ class Frame(Element):
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         :param element_justification: (str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.UseDictionary = False
@@ -3399,6 +3423,7 @@ class Tab(Element):
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
         :param element_justification: (str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.UseDictionary = False
@@ -3535,6 +3560,7 @@ class TabGroup(Element):
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.UseDictionary = False
@@ -3686,6 +3712,7 @@ class Slider(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.TKScale = self.Widget = None  # type: tk.Scale
@@ -3929,6 +3956,7 @@ class Column(Element):
         :param visible: (bool) set visibility state of the element
         :param justification: (str) set justification for the Column itself. Note entire row containing the Column will be affected
         :param element_justification: (str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.UseDictionary = False
@@ -4056,6 +4084,7 @@ class Pane(Element):
         :param border_width: (int)  width of border around element in pixels
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.UseDictionary = False
@@ -4401,6 +4430,7 @@ class Menu(Element):
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -4514,6 +4544,7 @@ class Table(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.Values = values
@@ -4710,6 +4741,7 @@ class Tree(Element):
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.TreeData = data
@@ -5058,6 +5090,7 @@ class Window:
         :param debugger_enabled: (bool) If True then the internal debugger will be enabled
         :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
         :param element_justification: (str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
+        :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
@@ -5249,7 +5282,6 @@ class Window:
         """
         Deprecated - do not use any longer.  Layout your window and then call Read.  Or can add a Finalize call before the Read
         :param rows:
-
         """
         raise DeprecationWarning('LayoutAndShow is no longer supported... ')
 
@@ -7606,6 +7638,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width = max_line_len
                     height = num_lines
                 # ---===--- LABEL widget create and place --- #
+                element = element           # type: Text
+                bd = element.BorderWidth if element.BorderWidth is not None else border_depth
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 stringvar.set(str(display_text))
@@ -7621,7 +7655,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
 
                 tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width,
-                                                         height=height, justify=justify, bd=border_depth, font=font)
+                                                         height=height, justify=justify, bd=bd, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
                 if not auto_size_text and height == 1:   # if just 1 line high, ensure no wrap happens
@@ -7672,15 +7706,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = toplevel_form.ButtonColor
                 else:
                     bc = DEFAULT_BUTTON_COLOR
-                border_depth = element.BorderWidth
+                bd = element.BorderWidth
                 if btype != BUTTON_TYPE_REALTIME:
                     tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
                                                           command=element.ButtonCallBack, justify=tk.LEFT,
-                                                          bd=border_depth, font=font)
+                                                          bd=bd, font=font)
                 else:
                     tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
                                                           justify=tk.LEFT,
-                                                          bd=border_depth, font=font)
+                                                          bd=bd, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
@@ -7691,7 +7725,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-                if border_depth == 0 and not sys.platform.startswith('darwin'):
+                if bd == 0 and not sys.platform.startswith('darwin'):
                     tkbutton.config(relief=tk.FLAT)
                     tkbutton.config(highlightthickness=0)
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
@@ -7755,15 +7789,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = toplevel_form.ButtonColor
                 else:
                     bc = DEFAULT_BUTTON_COLOR
-                border_depth = element.BorderWidth
+                bd = element.BorderWidth
                 tkbutton = element.Widget = tk.Menubutton(tk_row_frame, text=btext, width=width, height=height,
-                                                          justify=tk.LEFT, bd=border_depth, font=font)
+                                                          justify=tk.LEFT, bd=bd, font=font)
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-                if border_depth == 0:
+                if bd == 0:
                     tkbutton.config(relief=tk.FLAT)
                     tkbutton.config(highlightthickness=0)
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
@@ -8010,9 +8044,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Multiline
                 default_text = element.DefaultText
                 width, height = element_size
-                border_depth = element.BorderWidth
+                bd = element.BorderWidth
                 element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height,
-                                                                               wrap='word', bd=border_depth, font=font,
+                                                                               wrap='word', bd=bd, font=font,
                                                                                relief=RELIEF_SUNKEN)
                 element.TKText.insert(1.0, default_text)  # set the default text
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -11411,7 +11445,7 @@ def main():
     while True:  # Event Loop
         event, values = window.Read(timeout=20)
         if event != TIMEOUT_KEY:
-            print(event, values, window[event].metadata)
+            print(event, values)
         if event is None or event == 'Exit':
             break
         if i < 800:
@@ -11483,6 +11517,7 @@ set_options = SetOptions
 
 test = main
 
+__all__ = ['** YOUR from PySimpleGUI import * HAS BEEN BLOCKED. YOU ARE NOT ALLOWED THIS KIND OF IMPORT WITH THIS LIBRARY **']            # do not allow import *
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
