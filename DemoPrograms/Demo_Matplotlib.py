@@ -1,15 +1,10 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
 import matplotlib
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasAgg
-import matplotlib.backends.tkagg as tkagg
-import tkinter as Tk
+
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 """
 Demonstrates one way of embedding Matplotlib figures into a PySimpleGUI window.
@@ -20,6 +15,9 @@ Basic steps are:
  * Display form (NON BLOCKING)
  * Draw plots onto convas
  * Display form (BLOCKING)
+ 
+ Based on information from: https://matplotlib.org/3.1.0/gallery/user_interfaces/embedding_in_tk_sgskip.html
+ (Thank you dirck)
 """
 
 
@@ -83,20 +81,9 @@ figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
 
 def draw_figure(canvas, figure, loc=(0, 0)):
-    """ Draw a matplotlib figure onto a Tk canvas
-
-    loc: location of top-left corner of figure on canvas in pixels.
-
-    Inspired by matplotlib source: lib/matplotlib/backends/backend_tkagg.py
-    """
-    figure_canvas_agg = FigureCanvasAgg(figure)
+    figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
     figure_canvas_agg.draw()
-    figure_x, figure_y, figure_w, figure_h = figure.bbox.bounds
-    figure_w, figure_h = int(figure_w), int(figure_h)
-    photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
-    canvas.create_image(loc[0] + figure_w/2, loc[1] + figure_h/2, image=photo)
-    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-    return photo
+    figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
 
 #------------------------------- Beginning of GUI CODE -------------------------------
 
@@ -111,5 +98,4 @@ window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', for
 # add the plot to the window
 fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)
 
-# show it all again and get buttons
 event, values = window.Read()
