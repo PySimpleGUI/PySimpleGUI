@@ -93,9 +93,9 @@ layout = [[sg.Text('Plot test', font='Any 18')],
           [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
 
 # create the form and show it without the plot
-window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', force_toplevel=True).Layout(layout).Finalize()
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout, force_toplevel=True, finalize=True)
 
 # add the plot to the window
-fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)
+fig_photo = draw_figure(window['canvas'].TKCanvas, fig)
 
-event, values = window.Read()
+event, values = window.read()
