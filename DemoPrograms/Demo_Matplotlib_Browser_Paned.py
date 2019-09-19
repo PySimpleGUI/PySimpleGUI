@@ -1,16 +1,12 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-    import tkinter as Tk
-else:
-    import PySimpleGUI27 as sg
-    import Tkinter as Tk
+#!/usr/bin/env python
+import PySimpleGUI as sg
 import matplotlib
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasAgg
-import matplotlib.backends.tkagg as tkagg
 import inspect
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 """
 Demonstrates one way of embedding Matplotlib figures into a PySimpleGUI window.
@@ -827,28 +823,15 @@ def AxesGrid():
     return plt.gcf()
 
 #  The magic function that makes it possible.... glues together tkinter and pyplot using Canvas Widget
-def draw_figure(canvas, figure, loc=(0, 0)):
-    """ Draw a matplotlib figure onto a Tk canvas
-
-    loc: location of top-left corner of figure on canvas in pixels.
-
-    Inspired by matplotlib source: lib/matplotlib/backends/backend_tkagg.py
-    """
-    figure_canvas_agg = FigureCanvasAgg(figure)
+def draw_figure(canvas, figure):
+    figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
     figure_canvas_agg.draw()
-    figure_x, figure_y, figure_w, figure_h = figure.bbox.bounds
-    figure_w, figure_h = int(figure_w), int(figure_h)
-    photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
+    figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
+    return figure_canvas_agg
 
-    # Position: convert from top-left anchor to center anchor
-    canvas.create_image(loc[0] + figure_w/2, loc[1] + figure_h/2, image=photo)
-
-    # Unfortunately, there's no accessor for the pointer to the native renderer
-    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-
-    # Return a handle which contains a reference to the photo object
-    # which must be kept live or else the picture disappears
-    return photo
+def delete_figure_agg(figure_agg):
+    figure_agg.get_tk_widget().forget()
+    plt.close('all')
 
 
 # -------------------------------- GUI Starts Here -------------------------------#
@@ -871,40 +854,36 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
 sg.ChangeLookAndFeel('LightGreen')
 figure_w, figure_h = 650, 650
 # define the form layout
-listbox_values = [key for key in fig_dict.keys()]
-col_listbox = [[sg.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='func')],
+listbox_values = list(fig_dict)
+col_listbox = [[sg.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='-LISTBOX-')],
                [sg.T(' ' * 12), sg.Exit(size=(5, 2))]]
 
-col_multiline = sg.Column([[sg.Multiline(size=(70, 35), key='multiline')]])
-col_canvas = sg.Column([[ sg.Canvas(size=(figure_w, figure_h), key='canvas')]])
+col_multiline = sg.Column([[sg.Multiline(size=(70, 35), key='-MULTILINE-')]])
+col_canvas = sg.Column([[ sg.Canvas(size=(figure_w, figure_h), key='-CANVAS-')]])
+col_instructions = sg.Column([[sg.Pane([col_canvas, col_multiline], size=(800,600))],
+                              [sg.Text('Grab square above and slide upwards to view source code for graph')]])
 
-layout = [[sg.Text('Matplotlib Plot Test', font=('current 18'))],
-          [sg.Column(col_listbox), sg.Pane([col_canvas, col_multiline], size=(800,600))],
-          ]
+layout = [[sg.Text('Matplotlib Plot Test', font=('ANY 18'))],
+          [sg.Column(col_listbox), col_instructions],]
 
 # create the form and show it without the plot
-window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI',resizable=True, grab_anywhere=False).Layout(layout)
-window.Finalize()
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI',layout, resizable=True, finalize=True)
 
-canvas_elem = window.FindElement('canvas')
-multiline_elem= window.FindElement('multiline')
+canvas_elem = window.FindElement('-CANVAS-')
+multiline_elem= window.FindElement('-MULTILINE-')
+figure_agg = None
 
 while True:
     event, values = window.Read()
-    # print(event)
-    # show it all again and get buttons
     if event in (None, 'Exit'):
         break
 
-    try:
-        choice = values['func'][0]
-        func = fig_dict[choice]
-    except:
-        pass
-
-    multiline_elem.Update(inspect.getsource(func))
-    plt.clf()
-    fig = func()
-    fig_photo = draw_figure(canvas_elem.TKCanvas, fig)
-
+    if figure_agg:
+        # ** IMPORTANT ** Clean up previous drawing before drawing again
+        delete_figure_agg(figure_agg)
+    choice = values['-LISTBOX-'][0]                 # get first listbox item chosen (returned as a list)
+    func = fig_dict[choice]                         # get function to call from the dictionary
+    window['-MULTILINE-'].Update(inspect.getsource(func))  # show source code to function in multiline
+    fig = func()                                    # call function to get the figure
+    figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)  # draw the figure
 

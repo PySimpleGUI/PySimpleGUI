@@ -27,8 +27,8 @@ def PyplotSimple():
     import numpy as np
     import matplotlib.pyplot as plt
 
-    # evenly sampled time at 200ms intervals
-    t = np.arange(0., 5., 0.2)
+    # evenly sampled time .2 intervals
+    t = np.arange(0., 5., 0.2)          # go from 0 to 5 using .2 intervals
 
     # red dashes, blue squares and green triangles
     plt.plot(t, t, 'r--', t, t ** 2, 'bs', t, t ** 3, 'g^')
@@ -823,7 +823,7 @@ def AxesGrid():
 
 
 #  The magic function that makes it possible.... glues together tkinter and pyplot using Canvas Widget
-def draw_figure(canvas, figure, loc=(0, 0)):
+def draw_figure(canvas, figure):
     figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
     figure_canvas_agg.draw()
     figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
@@ -851,7 +851,7 @@ sg.ChangeLookAndFeel('LightGreen')
 figure_w, figure_h = 650, 650
 # define the form layout
 listbox_values = list(fig_dict)
-col_listbox = [[sg.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='-LISTBOX-')],
+col_listbox = [[sg.Listbox(values=listbox_values, enable_events=True, size=(28, len(listbox_values)), key='-LISTBOX-')],
                [sg.T(' ' * 12), sg.Exit(size=(5, 2))]]
 
 layout = [[sg.Text('Matplotlib Plot Test', font=('current 18'))],
