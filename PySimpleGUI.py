@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.17 Unreleased Mac Buttons. Element Resizing"
+version = __version__ = "4.5.0.18 Unreleased Mac Buttons. Element Resizing. Screen Size"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -5205,6 +5205,14 @@ class Window:
         """
         self.NumOpenWindows -= 1 * (self.NumOpenWindows != 0)  # decrement if not 0
         # print('----- DECREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
+
+    @classmethod
+    def get_screen_size(self):
+        root = tk.Tk()
+        screen_width = root.winfo_screenwidth()  # get window info to move to middle of screen
+        screen_height = root.winfo_screenheight()
+        root.destroy()
+        return screen_width, screen_height
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def AddRow(self, *args):
