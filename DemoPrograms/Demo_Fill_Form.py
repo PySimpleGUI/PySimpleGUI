@@ -7,7 +7,7 @@ else:
     import PySimpleGUI27 as sg
 
 def Everything():
-    sg.ChangeLookAndFeel('BlueMono')
+    sg.ChangeLookAndFeel('TanBlue')
 
     column1 = [
         [sg.Text('Column 1', background_color=sg.DEFAULT_BACKGROUND_COLOR, justification='center', size=(10, 1))],
@@ -37,8 +37,8 @@ def Everything():
         [sg.Text('Choose A Folder', size=(35, 1))],
         [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
          sg.InputText('Default Folder', key='folder', do_not_clear=True), sg.FolderBrowse()],
-        [sg.ReadButton('Exit'),
-         sg.Text(' ' * 40), sg.ReadButton('SaveSettings'), sg.ReadButton('LoadSettings')]
+        [sg.Button('Exit'),
+         sg.Text(' ' * 40), sg.Button('SaveSettings'), sg.Button('LoadSettings')]
     ]
 
     window = sg.Window('Form Fill Demonstration', default_element_size=(40, 1), grab_anywhere=False)

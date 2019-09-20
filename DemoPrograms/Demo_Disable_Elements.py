@@ -17,10 +17,10 @@ layout = [
           [sg.Spin((1,2,3,4),1,disabled=True, key='spin'), sg.OptionMenu((1,2,3,4),disabled=True, key='option'), sg.Combo(values=(1,2,3,4),disabled=True,key='combo')],
           [sg.Multiline('Multiline', size=(20,3),disabled=True, key='multi')],
           [sg.Slider((1,10), size=(20,20), orientation='h', disabled=True, key='slider')],
-          [sg.ReadButton('Enable', button_color=('white', 'black')),
-           sg.ReadButton('Disable', button_color=('white', 'black')),
-           sg.ReadButton('Reset', button_color=('white', '#9B0023'), key='reset'),
-           sg.ReadButton('Values', button_color=('white', 'springgreen4')),
+          [sg.Button('Enable', button_color=('white', 'black')),
+           sg.Button('Disable', button_color=('white', 'black')),
+           sg.Button('Reset', button_color=('white', '#9B0023'), key='reset'),
+           sg.Button('Values', button_color=('white', 'springgreen4')),
            sg.Button('Exit', disabled=True, button_color=('white', '#00406B'), key='exit')]]
 
 window = sg.Window("Disable Elements Demo", default_element_size=(12, 1), text_justification='r', auto_size_text=False,

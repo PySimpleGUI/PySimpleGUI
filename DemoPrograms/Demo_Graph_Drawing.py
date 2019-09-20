@@ -6,7 +6,7 @@ else:
     import PySimpleGUI27 as sg
 
 layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0,0), graph_top_right=(400, 400), background_color='red', key='graph')],
-           [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue'), sg.ReadButton('Move')]]
+           [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue'), sg.Button('Move')]]
 
 window = sg.Window('Graph test').Layout(layout).Finalize()
 

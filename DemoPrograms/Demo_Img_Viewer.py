@@ -77,7 +77,7 @@ col = [[filename_display_elem],
           [image_elem]]
 
 col_files = [[sg.Listbox(values = fnames, change_submits=True, size=(60, 30), key='listbox')],
-             [sg.ReadButton('Next', size=(8,2)), sg.ReadButton('Prev',
+             [sg.Button('Next', size=(8,2)), sg.Button('Prev',
                              size=(8,2)), file_num_display_elem]]
 
 layout = [[sg.Column(col_files), sg.Column(col)]]

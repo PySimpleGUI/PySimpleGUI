@@ -16,10 +16,10 @@ sg.SetOptions(element_padding=(0,0))
 layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User 2'), size=(20,1)), sg.T('0', size=(8,1))],
           [sg.T('Customer:', pad=((3,0),0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20,1)), sg.T('1', size=(8,1))],
           [sg.T('Notes:', pad=((3,0),0)), sg.In(size=(44,1), background_color='white', text_color='black')],
-          [sg.ReadButton('Start', button_color=('white', 'black'), key='_Start_'),
-           sg.ReadButton('Stop', button_color=('white', 'black'), key='_Stop_'),
-           sg.ReadButton('Reset', button_color=('white', 'firebrick3'), key='_Reset_'),
-           sg.ReadButton('Submit', button_color=('white', 'springgreen4'), key='_Submit_')]]
+          [sg.Button('Start', button_color=('white', 'black'), key='_Start_'),
+           sg.Button('Stop', button_color=('white', 'black'), key='_Stop_'),
+           sg.Button('Reset', button_color=('white', 'firebrick3'), key='_Reset_'),
+           sg.Button('Submit', button_color=('white', 'springgreen4'), key='_Submit_')]]
 
 window = sg.Window("Time Tracker", default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,
                    default_button_element_size=(12,1)).Layout(layout).Finalize()

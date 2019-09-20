@@ -103,8 +103,8 @@ class GameOfLife:
             [sg.Text('Game of Life    ', font='ANY 15'), sg.Text('', key='_OUTPUT_', size=(30,1), font='ANY 15')],
             [self.graph],
             [sg.Button('Go!', key='_DONE_'),
-             sg.Text('  Delay (ms)') , sg.Slider([0,400], orientation='h', key='_SLIDER_', enable_events=True, size=(15,15)), sg.T('', size=(3,1), key='_S1_OUT_'),
-             sg.Text('  Num Generations'), sg.Slider([0, 3000],default_value=400, orientation='h',size=(15,15),enable_events=True, key='_SLIDER2_'), sg.T('', size=(3,1), key='_S2_OUT_')]
+             sg.Text('  Delay (ms)') , sg.Slider([0,800], orientation='h', key='_SLIDER_', enable_events=True, size=(15,15)), sg.T('', size=(3,1), key='_S1_OUT_'),
+             sg.Text('  Num Generations'), sg.Slider([0, 20000],default_value=4000, orientation='h',size=(15,15),enable_events=True, key='_SLIDER2_'), sg.T('', size=(3,1), key='_S2_OUT_')]
         ]
 
         self.window = sg.Window('Window Title', ).Layout(layout).Finalize()

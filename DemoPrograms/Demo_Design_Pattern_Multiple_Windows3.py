@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 
 layout = [[sg.Text('Window 1'), ],
           [sg.Input(do_not_clear=True)],
-          [sg.Text('', key='_OUTPUT_')],
+          [sg.Text('',size=(20,1),  key='_OUTPUT_')],
           [sg.Button('Next >'), sg.Button('Exit')]]
 
 win1 = sg.Window('Window 1').Layout(layout)

@@ -7,13 +7,13 @@ EDGE_OFFSET = 3
 GRAPH_SIZE = (500,500)
 DATA_SIZE = (500,500)
 
-graph = sg.Graph(GRAPH_SIZE, (0, 0), DATA_SIZE)
+graph = sg.Graph(GRAPH_SIZE, (0,0), DATA_SIZE)
 
 layout = [[sg.Text('Bar graphs using PySimpleGUI')],
           [graph],
           [sg.Button('OK')]]
 
-window = sg.Window('Window Title').Layout(layout)
+window = sg.Window('Window Title', layout)
 
 while True:
     event, values = window.Read()
@@ -26,3 +26,4 @@ while True:
         graph.DrawRectangle(top_left=(i * BAR_SPACING + EDGE_OFFSET, graph_value),
                             bottom_right=(i * BAR_SPACING + EDGE_OFFSET + BAR_WIDTH, 0), fill_color='blue')
         graph.DrawText(text=graph_value, location=(i*BAR_SPACING+EDGE_OFFSET+25, graph_value+10))
+window.Close()
