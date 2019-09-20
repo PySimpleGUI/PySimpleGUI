@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.16 Unreleased Mac Buttons experimental Justify fix"
+version = __version__ = "4.5.0.17 Unreleased Mac Buttons. Element Resizing"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -754,6 +754,22 @@ class Element():
         except:
             print('Was unable to set focus.  The Widget passed in was perhaps not present in this element?  Check your elements .Widget property')
 
+
+    def set_size(self, size=(None, None)):
+        """
+        Changes the size of an element to a specific size.
+        :param size: Tuple[int, int] The size in characters, rows typically
+        """
+        try:
+            if size[0] != None:
+                self.Widget.config(width=size[0])
+        except:
+            print('Warning, error setting width on element with key=', self.Key)
+        try:
+            if size[1] != None:
+                self.Widget.config(height=size[1])
+        except:
+            print('Warning, error setting height on element with key=', self.Key)
 
     def __call__(self, *args, **kwargs):
         """
@@ -11517,7 +11533,7 @@ set_options = SetOptions
 
 test = main
 
-__all__ = ['** YOUR from PySimpleGUI import * HAS BEEN BLOCKED. YOU ARE NOT ALLOWED THIS KIND OF IMPORT WITH THIS LIBRARY **']            # do not allow import *
+# __all__ = ['** YOUR from PySimpleGUI import * HAS BEEN BLOCKED. YOU ARE NOT ALLOWED THIS KIND OF IMPORT WITH THIS LIBRARY **']            # do not allow import *
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
