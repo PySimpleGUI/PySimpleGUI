@@ -1,13 +1,12 @@
 import sys
-
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
 else:
     import PySimpleGUI27 as sg
 
 layout =    [
-            [sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
-            [sg.Input(do_not_clear=True, key='_IN_')],
+            [sg.Text('Your typed chars appear here:'), sg.Text('', size=(20,1), key='-OUTPUT-')],
+            [sg.Input(do_not_clear=True, key='-IN-')],
             [sg.Button('Show'), sg.Button('Exit')]
             ]
 
@@ -20,6 +19,6 @@ while True:  # Event Loop
         break
     if event == 'Show':
         # change the "output" element to be the value of "input" element  
-        window.FindElement('_OUTPUT_').Update(values['_IN_'])
+        window.FindElement('-OUTPUT-').Update(values['-IN-'])
 
 window.Close()
