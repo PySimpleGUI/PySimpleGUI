@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from sphinx.ext.autosummary import autosummary_table
 
-version = __version__ = "0.13.0.3 Unreleased"
+version = __version__ = "0.13.0.4 Unreleased"
 
 import sys
 import wx
@@ -4504,7 +4504,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if auto_size:
                     element.WxButton.SetWindowStyleFlag(element.WxButton.GetWindowStyleFlag() | wx.BU_EXACTFIT)
                 else:
-                    element.WxButton.SetMinSize(convert_tkinter_size_to_Wx((width,height), PIXEL))
+                    element.WxButton.SetMinSize(_convert_tkinter_size_to_Wx((width,height), DEFAULT_PIXEL_TO_CHARS_CUTOFF))
                 if element.ButtonColor != (None, None) and element.ButtonColor != DEFAULT_BUTTON_COLOR:
                     bc = element.ButtonColor
                 elif toplevel_form.ButtonColor != (None, None) and toplevel_form.ButtonColor != DEFAULT_BUTTON_COLOR:
