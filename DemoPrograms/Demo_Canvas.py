@@ -7,7 +7,7 @@ else:
 
 layout = [
            [sg.Canvas(size=(150, 150), background_color='red', key='canvas')],
-           [sg.T('Change circle color to:'), sg.ReadButton('Red'), sg.ReadButton('Blue')]
+           [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue')]
            ]
 
 window = sg.Window('Canvas test').Layout(layout).Finalize()

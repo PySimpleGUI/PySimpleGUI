@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
+    import PySimpleGUIQt as sg
 else:
     import PySimpleGUI27 as sg
 import subprocess
@@ -26,12 +26,12 @@ def HowDoI():
 
     layout =  [
                 [sg.Text('Ask and your answer will appear here....', size=(40, 1))],
-                [sg.Output(size=(127, 30), font=('Helvetica 10'))],
+                [sg.Output(size=(120, 30), font=('Helvetica 10'))],
                 [ sg.Spin(values=(1, 2, 3, 4), initial_value=1, size=(2, 1), key='Num Answers', font='Helvetica 15'),
                   sg.Text('Num Answers',font='Helvetica 15'), sg.Checkbox('Display Full Text', key='full text', font='Helvetica 15'),
                 sg.T('Command History', font='Helvetica 15'), sg.T('', size=(40,3), text_color=sg.BLUES[0], key='history')],
                 [sg.Multiline(size=(85, 5), enter_submits=True, key='query', do_not_clear=False),
-                sg.ReadButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
+                sg.Button('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
                 sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]
               ]
 

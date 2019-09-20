@@ -23,7 +23,7 @@ def ChatBotWithHistory():
                 [sg.Output(size=(127, 30), font=('Helvetica 10'))],
                 [sg.T('Command History'), sg.T('', size=(20,3), key='history')],
                 [sg.Multiline(size=(85, 5), enter_submits=True, key='query', do_not_clear=False),
-                sg.ReadButton('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
+                sg.Button('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
                 sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
 
     window = sg.Window('Chat window with history', default_element_size=(30, 2), font=('Helvetica',' 13'), default_button_element_size=(8,2), return_keyboard_events=True).Layout(layout)

@@ -17,10 +17,10 @@ layout = [[sg.T('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User
           [sg.T('Customer:', pad=((3, 0), 0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20, 1)),
            sg.T('1', size=(8, 1))],
           [sg.T('Notes:', pad=((3, 0), 0)), sg.In(size=(44, 1), background_color='white', text_color='black')],
-          [sg.ReadButton('Start', button_color=('white', 'black')),
-           sg.ReadButton('Stop', button_color=('gray50', 'black')),
-           sg.ReadButton('Reset', button_color=('white', '#9B0023')),
-           sg.ReadButton('Submit', button_color=('gray60', 'springgreen4')),
+          [sg.Button('Start', button_color=('white', 'black')),
+           sg.Button('Stop', button_color=('gray50', 'black')),
+           sg.Button('Reset', button_color=('white', '#9B0023')),
+           sg.Button('Submit', button_color=('gray60', 'springgreen4')),
            sg.Button('Exit', button_color=('white', '#00406B'))]]
 
 window = sg.Window("Borderless Window",

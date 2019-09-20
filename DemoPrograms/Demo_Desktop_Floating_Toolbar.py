@@ -35,10 +35,10 @@ def Launcher():
     sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)
 
     layout =  [[sg.Combo(values=namesonly, size=(35,30), key='demofile'),
-                sg.ReadButton('Run', button_color=('white', '#00168B')),
-                sg.ReadButton('Program 1'),
-                sg.ReadButton('Program 2'),
-                sg.ReadButton('Program 3', button_color=('white', '#35008B')),
+                sg.Button('Run', button_color=('white', '#00168B')),
+                sg.Button('Program 1'),
+                sg.Button('Program 2'),
+                sg.Button('Program 3', button_color=('white', '#35008B')),
                 sg.Button('EXIT', button_color=('white','firebrick3'))],
                 [sg.T('', text_color='white', size=(50,1), key='output')]]
 

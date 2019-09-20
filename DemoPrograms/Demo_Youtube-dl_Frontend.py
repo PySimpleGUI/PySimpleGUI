@@ -21,8 +21,8 @@ def DownloadSubtitlesGUI():
                 [sg.Text('Subtitle Grabber', size=(40, 1), font=('Any 15'))],
                 [sg.T('YouTube Link'),sg.In(default_text='',size=(60,1), key='link', do_not_clear=True) ],
                 [sg.Output(size=(90,20), font='Courier 12')],
-                [sg.ReadButton('Get List')],
-                [sg.T('Language Code'), combobox, sg.ReadButton('Download')],
+                [sg.Button('Get List')],
+                [sg.T('Language Code'), combobox, sg.Button('Download')],
                 [sg.Button('Exit', button_color=('white', 'firebrick3'))]
                 ]
 
