@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.18 Unreleased Mac Buttons. Element Resizing. Screen Size"
+version = __version__ = "4.5.0.19 Unreleased Mac Buttons. Element Resizing. Screen Size"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -5805,7 +5805,7 @@ class Window:
         :return: Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels
         """
         if self.TKrootDestroyed:
-            return None, None
+            return Window.get_screen_size()
         screen_width = self.TKroot.winfo_screenwidth()  # get window info to move to middle of screen
         screen_height = self.TKroot.winfo_screenheight()
         return screen_width, screen_height
@@ -5960,6 +5960,8 @@ class Window:
                 Window.NumOpenWindows = 0  # if no hidden window, then this won't execute
             except:
                 pass
+        self.TKrootDestroyed = True
+
 
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
