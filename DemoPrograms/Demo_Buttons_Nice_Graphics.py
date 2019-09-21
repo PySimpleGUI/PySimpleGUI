@@ -29,29 +29,29 @@ def ShowMeTheButtons():
     toolbar_buttons = [ [sg.Text('Who says Windows have to be ugly when using tkinter?', size=(45,3))],
                          [sg.Text('All of these buttons are part of the code itself', size=(45,2))],
 
-        [sg.Button('Next', image_data=image_file_to_bytes(button64, (100,50)),button_color=wcolor, font='Any 15', pad=(0,0), key='_close_'),
+        [sg.Button('Next', image_data=image_file_to_bytes(button64, (100,50)),button_color=wcolor, font='Any 15', pad=(0,0), key='-NEXT-'),
         # [sg.Button('Exit', image_data=image_file_to_bytes(black64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='_close_'),],
-        sg.Button('Submit', image_data=image_file_to_bytes(red_pill64, (100,50)),button_color=wcolor, font='Any 15', pad=(0,0), key='_close_'),
-        sg.Button('OK', image_data=image_file_to_bytes(green_pill64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='_close_'),
-        sg.Button('Exit', image_data=image_file_to_bytes(orange64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='_close_'),],
+        sg.Button('Submit', image_data=image_file_to_bytes(red_pill64, (100,50)),button_color=wcolor, font='Any 15', pad=(0,0), key='-SUBMIT-'),
+        sg.Button('OK', image_data=image_file_to_bytes(green_pill64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='-OK-'),
+        sg.Button('Exit', image_data=image_file_to_bytes(orange64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='-EXIT-'),],
                         ]
 
     # layout = toolbar_buttons
     layout =  [[sg.Frame('Nice Buttons', toolbar_buttons, font=('any 18'), background_color='black')]]
 
-    window = sg.Window('Demo of Nice Looking Buttons',
+    window = sg.Window('Demo of Nice Looking Buttons', layout,
                        no_titlebar=False,
                        grab_anywhere=True,
                        keep_on_top=True,
                        use_default_focus=False,
                        font='any 15',
-                       background_color='black').Layout(layout).Finalize()
+                       background_color='black', finalize=True)
 
     # ---===--- Loop taking in user input --- #
     while True:
-        button, value = window.Read()
-        print(button)
-        if button == '_close_' or button is None:
+        event, values = window.Read()
+        print(event)
+        if event in ('-EXIT-', None):
             break           # exit button clicked
 
 if __name__ == '__main__':
