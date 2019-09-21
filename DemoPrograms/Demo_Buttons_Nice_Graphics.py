@@ -9,7 +9,7 @@ from PIL import Image
 import base64
 
 
-def image_file_to_bytes(image64, size):
+def resize_base64_image(image64, size):
     image_file = io.BytesIO(base64.b64decode(image64))
     img = Image.open(image_file)
     img.thumbnail(size, Image.ANTIALIAS)
@@ -29,11 +29,11 @@ def ShowMeTheButtons():
     toolbar_buttons = [ [sg.Text('Who says Windows have to be ugly when using tkinter?', size=(45,3))],
                          [sg.Text('All of these buttons are part of the code itself', size=(45,2))],
 
-        [sg.Button('Next', image_data=image_file_to_bytes(button64, (100,50)),button_color=wcolor, font='Any 15', pad=(0,0), key='-NEXT-'),
-        # [sg.Button('Exit', image_data=image_file_to_bytes(black64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='_close_'),],
-        sg.Button('Submit', image_data=image_file_to_bytes(red_pill64, (100,50)),button_color=wcolor, font='Any 15', pad=(0,0), key='-SUBMIT-'),
-        sg.Button('OK', image_data=image_file_to_bytes(green_pill64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='-OK-'),
-        sg.Button('Exit', image_data=image_file_to_bytes(orange64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='-EXIT-'),],
+        [sg.Button('Next', image_data=resize_base64_image(button64, (100, 50)), button_color=wcolor, font='Any 15', pad=(0, 0), key='-NEXT-'),
+         # [sg.Button('Exit', image_data=image_file_to_bytes(black64, (100,50)),button_color=bcolor, font='Any 15', pad=(0,0), key='_close_'),],
+         sg.Button('Submit', image_data=resize_base64_image(red_pill64, (100, 50)), button_color=wcolor, font='Any 15', pad=(0, 0), key='-SUBMIT-'),
+         sg.Button('OK', image_data=resize_base64_image(green_pill64, (100, 50)), button_color=bcolor, font='Any 15', pad=(0, 0), key='-OK-'),
+         sg.Button('Exit', image_data=resize_base64_image(orange64, (100, 50)), button_color=bcolor, font='Any 15', pad=(0, 0), key='-EXIT-'), ],
                         ]
 
     # layout = toolbar_buttons
