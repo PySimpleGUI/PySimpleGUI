@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.29.0.2 Unreleased"
+version = __version__ = "0.29.0.3 Unreleased Menu color"
 
 import sys
 import types
@@ -5272,6 +5272,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_QGraphicsView)
             # -------------------------  MENUBAR element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
+                element = element           # type: Menu
                 menu_def = element.MenuDefinition
                 element.Widget = element.QT_QMenuBar = QMenuBar(toplevel_win.QT_QMainWindow)
 
@@ -5285,6 +5286,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                         baritem.setTitle(menu_entry[0])
                     element.QT_QMenuBar.addAction(baritem.menuAction())
                     AddMenuItem(baritem, menu_entry[1], element)
+                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    style = Style('QMenuBar')
+                    style.add(background_color=(element.BackgroundColor))
+                    element.QT_QMenuBar.setStyleSheet(style.content)
                 if not element.Visible:
                     element.QT_QMenuBar.setVisible(False)
                 toplevel_win.QT_QMainWindow.setMenuBar(element.QT_QMenuBar)
