@@ -1,11 +1,6 @@
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUIWeb as sg
-    # import PySimpleGUIQt as sg
-    # import PySimpleGUI as sg
-
-else:
-    import PySimpleGUI27 as sg
+# import PySimpleGUIWeb as sg
+# import PySimpleGUIQt as sg
+import PySimpleGUI as sg
 import math
 
 SIZE_X = 200
