@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.19 Unreleased Mac Buttons. Element Resizing. Screen Size"
+version = __version__ = "4.5.0.20 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -770,6 +770,29 @@ class Element():
                 self.Widget.config(height=size[1])
         except:
             print('Warning, error setting height on element with key=', self.Key)
+
+    def get_size(self):
+        try:
+            w = self.Widget.winfo_width()
+            h = self.Widget.winfo_height()
+        except:
+            print('Warning, error getting size of element', self.Key)
+            w = h = None
+        return w,h
+
+
+    def hide_row(self):
+        try:
+            self.ParentRowFrame.pack_forget()
+        except:
+            print('Warning, error hiding element row for key =', self.Key)
+
+    def unhide_row(self):
+        try:
+            self.ParentRowFrame.pack()
+        except:
+            print('Warning, error hiding element row for key =', self.Key)
+
 
     def __call__(self, *args, **kwargs):
         """
@@ -7930,13 +7953,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                     unique_field = str(element.Key) + '.TCombobox.field'
 
-                    # unique_field = str(time.time()).replace('.', '') + str(element.Key) + '.TCombobox.field'
-
-                    # unique_field = str(time.time()).replace('.','') + '.TCombobox.field'
-                    # unique_field = str(datetime.datetime.today().timestamp()).replace('.','') + '.TCombobox.field'
-                    # unique_field = str(randint(1,50000000)) + '.TCombobox.field'
-
-                    # print(unique_field)
                     # Clones over the TCombobox.field element from the "alt" theme.
                     # This is what will allow us to change the background color without altering the whole programs theme
 
@@ -9307,7 +9323,6 @@ class DebugWin():
     def Close(self):
         """ """
         self.window.Close()
-        self.window.__del__()
         self.window = None
 
 
