@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.20 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row"
+version = __version__ = "4.5.0.21 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row. Button rebinding"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -730,6 +730,20 @@ class Element():
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
+
+    def ButtonReboundCallback(self, event):
+        """
+        Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+        callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+        callback function that is normally called.
+
+        :param event: (unknown) Not used in this function.
+        """
+        try:
+            self.ButtonCallBack()
+        except:
+            print('** ButtonReboundCallback - warning your element does not have a ButtonCallBack method **')
+
 
     def SetTooltip(self, tooltip_text):
         """
