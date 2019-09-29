@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.29.0.3 Unreleased Menu color"
+version = __version__ = "0.30.01 Unreleased Menu color Bye bye PyQt5"
 
 import sys
 import types
@@ -19,46 +19,18 @@ from random import randint
 #          #    #     #  #  #    #  #       #       #       #     #  #     #   #   #    #     #
 #          #     #####   #  #    #  #       ######  ######   #####    #####   ###   #### #    #
 
-FORCE_PYQT5 = False
+from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
+from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
+from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
+from PySide2.QtCore import Qt,QProcess, QEvent, QSize
+import PySide2.QtGui as QtGui
+import PySide2.QtCore as QtCore
+import PySide2.QtWidgets as QtWidgets
 
-if not FORCE_PYQT5:
-    try:
-        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
-        from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-        from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-        from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
-        from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-        from PySide2.QtCore import Qt,QProcess, QEvent, QSize
-        import PySide2.QtGui as QtGui
-        import PySide2.QtCore as QtCore
-        import PySide2.QtWidgets as QtWidgets
-        using_pyqt5 = False
-    except:
-        from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
-        from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-        from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-        from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
-        from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-        from PyQt5.QtCore import Qt,QProcess, QEvent, QSize
-        import PyQt5.QtGui as QtGui
-        import PyQt5.QtCore as QtCore
-        import PyQt5.QtWidgets as QtWidgets
-        using_pyqt5 = True
-else:
-    from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, \
-        QHBoxLayout, QListWidget, QDial, QTableWidget
-    from PyQt5.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, \
-        QDialog, QAbstractItemView
-    from PyQt5.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, \
-        QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar, QColorDialog
-    from PyQt5.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, \
-        QAction, QSystemTrayIcon
-    from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-    from PyQt5.QtCore import Qt, QProcess, QEvent
-    import PyQt5.QtGui as QtGui
-    import PyQt5.QtCore as QtCore
-    import PyQt5.QtWidgets as QtWidgets
-    using_pyqt5 = True
+using_pyqt5 = False
+
 
 """
     The QT version if PySimpleGUI.
@@ -7353,7 +7325,7 @@ def main():
     tab2 = Tab('Graph Number 2', [[]])
 
     layout = [
-        [Menu(menu_def, key='_REALMENU_')],
+        [Menu(menu_def, key='_REALMENU_', background_color='white')],
         [Text('You are running the PySimpleGUI.py file itself', font=('ANY', 15, 'Bold'), text_color='red')],
                   [Text('You should be importing it rather than running it', font='ANY 15')],
         [Text('VERSION {}'.format(__version__), text_color='red', font='ANY 24')],
