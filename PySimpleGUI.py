@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.21 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row. Button rebinding"
+version = __version__ = "4.5.0.22 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row. Button rebinding"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -10688,7 +10688,8 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             Window.hidden_master_root.destroy()
             Window.hidden_master_root = None
         if not multiple_files and type(filename) in (tuple, list):
-            filename = filename[0]
+            if len(filename):       # only if not 0 length, otherwise will get an error
+                filename = filename[0]
         return filename
 
     if save_as:
