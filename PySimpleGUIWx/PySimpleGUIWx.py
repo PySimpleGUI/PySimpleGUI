@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from sphinx.ext.autosummary import autosummary_table
 
-version = __version__ = "0.13.0.4 Unreleased"
+version = __version__ = "0.13.0. Released"
 
 import sys
 import wx
@@ -1489,7 +1489,6 @@ def convert_tkinter_filetypes_to_wx(filetypes):
 # -------------------------  Button lazy functions  ------------------------- #
 B = Button
 Btn = Button
-Butt = Button
 
 
 # ---------------------------------------------------------------------- #
@@ -2864,6 +2863,7 @@ class Window:
         self.MasterPanel = None     # type: wx.Panel
         self.IgnoreClose = False
         self.UniqueKeyCounter = 0
+        self.AllKeysDict = {}       # dictionary containing all the keys and elements in this window
 
         if layout is not None:
             self.Layout(layout)

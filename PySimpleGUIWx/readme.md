@@ -7,7 +7,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0..0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.13.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -41,7 +41,7 @@ This simple list is another way of looking at the question....
 4.  It's fun to program GUIs again
 
 
- ## Engineering Pre-Release   Version 0.7.0
+ ## Engineering Pre-Release   Version 0.13.0
  
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
 
@@ -68,9 +68,11 @@ Remember, these are Engineering Releases.  Not all features are complete, but ge
 * Radio Button
 * Combobox
 * Spinner
+* Vertical and Horizontal Separators
 
 
 #### Features
+
 * System Tray
 * Debug Print
 * Invisible/Visible Elements
@@ -102,8 +104,7 @@ Remember, these are Engineering Releases.  Not all features are complete, but ge
 * Look and Feel settings
 * Default Icon
 * Base64 Icons
-
-
+* PEP8 bindings for all element methods and functions
 
 
 It won't take long to poke at these and hit errors.  For example, the code to do Button Updates is not complete.  Most of the time you won't be doing this. 
@@ -364,6 +365,38 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 
 * NEW Window parameter layout so can skip calling Layout
 
+## 0.13.0 1-OCT-2019 PySimpleGUIWx
+
+* Version numbering using sg.version string
+* PEP8 bindings!
+* Improved scaling of character to pixel sizes of elements that are multilined
+* Added Metadata variable to all elements
+* Renamed element callback functions to start with _
+* Removed __del__ methods everywhere except Output Element
+* Can "Call" an element which will call its Update method
+* InputText element - convert default text and password char to string 
+* Removed old code such as tkinter's tooltip and drag and drop from Qt
+* Shortcut I for InputText
+* Listbox added size_px parm
+* Changed type checking to use the comment style types
+* Added Element.Widget to all Elements so can access the Wx widgets directly
+* Text Element now defaults to '' so no need to specify anything if a blank Text Element (often used for output)
+* Button text converted to string when creating button
+* New Button shortcuts - B, Btn
+* VerticalSeparator - Newly supported Element
+* HorizontalSeparator - Newly supported Element
+* Slider - added size_px parm
+* Fixed leak caused by System Tray not cleaning up the timer
+* Window - added finalize paramter so can skip using chained .Finalize()
+* Window - AllKeysDict now used like other PySimpleGUI ports. Has all the keys and elements in a window
+* Window.FindElement - added silent_on_error parm like other ports have
+* Window[key] construct added that calls FindElement
+* window() - can "Call" a window you've created. Will call Window.Read()
+* Popup buttons no longer use CloseButtons for normal popups.  Calls window.Close manually
+* PopupGetFolder changed to use keys, normal button, new window design patterns
+* PopupGetFile changed to use keys, normal buttons, new window design patterns
+* PopupGetText changed to use keys, normal buttons, new window design patterns
+* Default application (PySimpleGUI.main) now shows the version number like other PySimpleGUI ports
 
 
 # Design        
@@ -376,6 +409,5 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyMzExNjg0MDAsLTIxNDIwNTI0ODQsOD
-g2MzA1Mjk2XX0=
+eyJoaXN0b3J5IjpbLTIxNDIwNTI0ODQsODg2MzA1Mjk2XX0=
 -->
