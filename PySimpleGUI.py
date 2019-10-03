@@ -5160,7 +5160,12 @@ class Window:
         self.Font = font if font else DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
-        self.WindowIcon = Window.user_defined_icon if Window.user_defined_icon is not None else icon if icon is not None else DEFAULT_WINDOW_ICON
+        if icon:
+            self.WindowIcon = icon
+        elif Window.user_defined_icon is not None:
+            self.WindowIcon = Window.user_defined_icon
+        else:
+            self.WindowIcon = DEFAULT_WINDOW_ICON
         self.AutoClose = auto_close
         self.NonBlocking = False
         self.TKroot = None
@@ -9385,20 +9390,13 @@ def EasyPrintClose():
 # ===================================================#
 def SetGlobalIcon(icon):
     """
+    Sets the icon which will be used any time a window is created if an icon is not provided when the
+    window is created.
 
-    :param icon:
-
+    :param icon: Union[bytes, str] Either a Base64 byte string or a filename
     """
-    # global _my_windows
 
-    try:
-        with open(icon, 'r') as icon_file:
-            pass
-    except:
-        raise FileNotFoundError
-    # _my_windows.user_defined_icon = icon
     Window.user_defined_icon = icon
-    return True
 
 
 # ============================== SetOptions =========#
