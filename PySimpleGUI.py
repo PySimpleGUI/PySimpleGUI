@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.22 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row. Button rebinding"
+version = __version__ = "4.5.0.23 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row. Button rebinding. Element.expand"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -772,7 +772,9 @@ class Element():
     def set_size(self, size=(None, None)):
         """
         Changes the size of an element to a specific size.
-        :param size: Tuple[int, int] The size in characters, rows typically
+        It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+        :param size: Tuple[int, int] The size in characters, rows typically. In some cases they are pixels
         """
         try:
             if size[0] != None:
@@ -785,7 +787,12 @@ class Element():
         except:
             print('Warning, error setting height on element with key=', self.Key)
 
+
     def get_size(self):
+        """
+        Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+        :return: Tuple[int, int] - Width, Height of the element
+        """
         try:
             w = self.Widget.winfo_width()
             h = self.Widget.winfo_height()
@@ -801,11 +808,32 @@ class Element():
         except:
             print('Warning, error hiding element row for key =', self.Key)
 
+
     def unhide_row(self):
         try:
             self.ParentRowFrame.pack()
         except:
             print('Warning, error hiding element row for key =', self.Key)
+
+    def expand(self, expand_x=False, expand_y=False):
+        """
+        Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
+
+        :param expand_x: (Bool) If True Element will expand in the Horizontal directions
+        :param expand_y:  (Bool) If True Element will expand in the Vertical directions
+        """
+
+        if expand_x and expand_y:
+            fill = tk.BOTH
+        elif expand_x:
+            fill = tk.X
+        elif expand_y:
+            fill = tk.Y
+        else:
+            return
+
+        self.Widget.pack(expand=True, fill=fill)
+        self.ParentRowFrame.pack(expand=True, fill=fill)
 
 
     def __call__(self, *args, **kwargs):
@@ -2094,6 +2122,29 @@ class Output(Element):
         :return: (str) the current value of the output
         """
         return self._TKOut.output.get(1.0, tk.END)
+
+
+    def expand(self, expand_x=False, expand_y=False):
+        """
+        Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
+
+        :param expand_x: (Bool) If True Element will expand in the Horizontal directions
+        :param expand_y:  (Bool) If True Element will expand in the Vertical directions
+        """
+
+        if expand_x and expand_y:
+            fill = tk.BOTH
+        elif expand_x:
+            fill = tk.X
+        elif expand_y:
+            fill = tk.Y
+        else:
+            return
+
+        self._TKOut.output.pack(expand=True, fill=fill)
+        self._TKOut.frame.pack(expand=True, fill=fill)
+        self.ParentRowFrame.pack(expand=True, fill=fill)
+
 
 
     set_focus = Element.SetFocus
@@ -5663,6 +5714,7 @@ class Window:
         except:
             self.TKrootDestroyed = True
             Window.DecrementOpenCount()
+            print('** Finalize failed **')
             # _my_windows.Decrement()
             # return None, None
         return self
