@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0.6 Unreleased"
+version = __version__ = "0.31.0.7 Unreleased New SuperImage means no flicker!"
 
 import sys
 import datetime
@@ -1443,39 +1443,39 @@ class Image(Element):
 
 
 
+# class SuperImageOld(remi.gui.Image):
+#     def __init__(self, file_path_name=None, **kwargs):
+#         image = file_path_name
+#         super(SuperImage, self).__init__(image, **kwargs)
+#
+#         self.imagedata = None
+#         self.mimetype = None
+#         self.encoding = None
+#         if image is None:
+#             return
+#         self.load(image)
+#
+#     def load(self, file_path_name):
+#         if type(file_path_name) is bytes or len(file_path_name) > 200:
+#             try:
+#                 self.imagedata = base64.b64decode(file_path_name, validate=True)
+#             except binascii.Error:
+#                 self.imagedata = file_path_name
+#         else:
+#             self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
+#             with open(file_path_name, 'rb') as f:
+#                 self.imagedata = f.read()
+#         self.refresh()
+#
+#     def refresh(self):
+#         i = int(time.time() * 1e6)
+#         self.attributes['src'] = "/%s/get_image_data?update_index=%d" % (id(self), i)
+#
+#     def get_image_data(self, update_index):
+#         headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
+#         return [self.imagedata, headers]
+
 class SuperImage(remi.gui.Image):
-    def __init__(self, file_path_name=None, **kwargs):
-        image = file_path_name
-        super(SuperImage, self).__init__(image, **kwargs)
-
-        self.imagedata = None
-        self.mimetype = None
-        self.encoding = None
-        if image is None:
-            return
-        self.load(image)
-
-    def load(self, file_path_name):
-        if type(file_path_name) is bytes or len(file_path_name) > 200:
-            try:
-                self.imagedata = base64.b64decode(file_path_name, validate=True)
-            except binascii.Error:
-                self.imagedata = file_path_name
-        else:
-            self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
-            with open(file_path_name, 'rb') as f:
-                self.imagedata = f.read()
-        self.refresh()
-
-    def refresh(self):
-        i = int(time.time() * 1e6)
-        self.attributes['src'] = "/%s/get_image_data?update_index=%d" % (id(self), i)
-
-    def get_image_data(self, update_index):
-        headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
-        return [self.imagedata, headers]
-
-class SuperImagenew(remi.gui.Image):
     def __init__(self, file_path_name=None, **kwargs):
         """
         This new app_instance variable is causing lots of problems.  I do not know the value of the App
@@ -1496,7 +1496,9 @@ class SuperImagenew(remi.gui.Image):
 
     def load(self, file_path_name):
         if type(file_path_name) is bytes or len(file_path_name) > 200:
-            self.imagedata = base64.b64decode(file_path_name)
+            # print("image data")
+            self.mimetype = 'image/png'
+            self.imagedata = file_path_name #base64.b64decode(file_path_name)
         else:
             self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
             with open(file_path_name, 'rb') as f:
@@ -1504,6 +1506,7 @@ class SuperImagenew(remi.gui.Image):
         self.refresh()
 
     def refresh(self):
+        # print("refresh")
         i = int(time.time() * 1e6)
         # self.app_instance.execute_javascript("""
         if Window.App is not None:
@@ -1521,10 +1524,9 @@ class SuperImagenew(remi.gui.Image):
                 """ % {'id': id(self), 'frame_index':i})
 
     def get_image_data(self, update_index):
+        # print("get image data")
         headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
         return [self.imagedata, headers]
-
-
 
 # ---------------------------------------------------------------------- #
 #                           Graph                                        #
