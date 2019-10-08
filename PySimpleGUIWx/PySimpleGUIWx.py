@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-from sphinx.ext.autosummary import autosummary_table
-
-version = __version__ = "0.13.0. Released"
+version = __version__ = "0.13.1 Released"
 
 import sys
 import wx
