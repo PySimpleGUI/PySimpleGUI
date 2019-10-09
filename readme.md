@@ -38,7 +38,7 @@ pip3 install pysimplegui
 
 ```python
 import PySimpleGUI as sg
-# All the stuff inside your window. 
+# All the stuff inside your window.
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
             [sg.Button('Ok'), sg.Button('Cancel')] ]
@@ -46,10 +46,11 @@ layout = [  [sg.Text('Some text on Row 1')],
 # Create the Window
 window = sg.Window('Window Title', layout)
 # Event Loop to process "events" and get the "values" of the inputs
-while True:             
+while True:
     event, values = window.read()
     if event in (None, 'Cancel'):	# if user closes window or clicks cancel
         break
+    print('You entered ', values[0])
 
 window.close()
 ```
@@ -59,6 +60,7 @@ window.close()
 ![image](https://user-images.githubusercontent.com/13696193/61077153-cdfc0b00-a3eb-11e9-9e93-d6ec2ffb442a.png)
 
 ### Any Questions?
+
 ---
 
 #### Looking for a GUI package?     Are you....
@@ -137,7 +139,7 @@ window.close()
 
 [Brief Tutorial](http://Tutorial.PySimpleGUI.org)
 
-[Latest Demos and Master Branch on GitHub](http//www.PySimpleGUI.com)
+[Latest Demos and Master Branch on GitHub](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/DemoPrograms)
 
 [Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
 
@@ -165,7 +167,7 @@ Bluntness is required here as the subtle approach has not worked in the past:
 
 Re-read that statement.  This **will** be a serious problem for you if you're the type of person that finds it "quicker and easier to post on StackOverflow rather than reading documentation".  
 
-If you have not yet matured to the point you are able to undertand this skill or choose to not follow it, then please save ***everyone*** the pain of doing **for you** what you, as a developer, software engineer, or wanna be coder, must do on your own.  It's a vital skill for you to learn.  
+If you have not yet matured to the point you are able to understand this skill or choose to not follow it, then please save ***everyone*** the pain of doing **for you** what you, as a developer, software engineer, or wanna be coder, must do on your own.  It's a vital skill for you to learn.  
 
 Want to be a "real engineer"? Then follow "real engineering practices" such as "reading".  You are learning a NEW GUI package.  You've not seen anything like it.  Don't be so arrogant as to believe you will never need to read documentation.
 
@@ -461,21 +463,39 @@ So, [open an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/new/choose
 
 ### PySimpleGUI Trolls
 
-Yea, they're out there.  Would have NEVER in a billion years guessed that there would be objection to this package, coming from a small, but vocal, number of people.  I naively believed everyone would be supportive, see the value, hold hands around the fire, sing songs, and in the very least be truthful.  But, this ain't Kansas and the Internet is well...  WTF is it with people?
+Yea, they're out there.  Would have NEVER in a billion years guessed that there would be objection to this package, coming from a small, but vocal, number of people.  I naively believed everyone would be supportive, see the value, hold hands around the fire, sing songs, and in the very least be truthful.  But, this ain't Kansas and the Internet is well...  
 
-If someone is actively discouraging you from using this package, then know you are on the right track and you should give it a try.  Stuff like this sometimes happens because the person works for a particular company or they have a GUI package of their own.... that's not popuplar, or they just like to tear things down.
+If someone is actively discouraging you from using this package, then know you are on the right track and you should give it a try.  Stuff like this sometimes happens because the person works for a particular company or they have a GUI package of their own.... that's not popuplar, or they like to tear things down or I dunno... people can be really weird and emotional.
 
-I promise you're not going to be wrecked for life (as has been claimed).  It will not cause you to be a bad programmer with bad habits.  It will not ruin your career.  It's not going to teach you bad habits.  One person I know got a bonus based on a PySimpleGUI program he wrote.
+I promise you're not going to be wrecked for life.  It will not cause you to be a bad programmer with bad habits.  It will not ruin your career.  It's not going to teach you bad habits.  One person I know got a bonus based on a PySimpleGUI program he wrote.
 
-So fear not.  ***How about success being the goal?***  Spend time polishing your GUI and working on your primary code instead of struggling your way through the mountains of documentation in the Qt library, trying to set the color of something.  
+***How about success being the goal?***  Spend time polishing your GUI and working on your primary code instead of struggling your way through the mountains of documentation in the Qt library, trying to set the color of something.  How about getting your program done, working, and in use?
 
-Start with PySimpleGUI, then in the future if you want to code directly in Qt to get more control, it's not like you won't be able to pick up Qt due to your PySimpleGUI knowledge.  If anything, you'll have more knowledge going it than most people that are just starting because you'll have already built working GUIs, perhaps many of them and understand how to layout an efficient interface as well as having a good education in GUI Widgets and how they work.
+Start with PySimpleGUI, then in the future if you want to code directly in Qt, it's not like you won't be able to learn something else due to your PySimpleGUI knowledge.  Unable to write a `while` loop because you already learned using a `for` loop?  That seems to be the logic.
+
+If anything, you'll have more knowledge than most people that are just starting because you'll have already built working GUIs, perhaps many of them and understand how to layout an efficient interface as well as having a good education in GUI Widgets and how they work.
+
+Here are the forces likely at work.... said Troll has been programming for a while now and really knows these GUI frameworks. Probably invested a lot of hours learning them and thus has some marketable skills (yes, follow the money).  
+
+Enter snotty-nosed high-shool or first year programmer using PySimpleGUI that manages to make GUI windows with great ease... that look, well, pretty much the **same** as the windows Sir Troll ***was*** used to getting paid big bucks to make.  What used to be a skill only a select few can do, now 1,000's, 10,000's, or 100,000s more programmers can do, quicker and easier.  Bummer Mr. Troll.  Bummer.
+
+"***It's supposed to be difficult to write a GUI***" was an actual reason listed why not to use PySimpleGUI by one person offering to help junior programmers learn Qt. Really?  It's supposed to be difficult.  Huh.  Well, not in this Python universe.  Maybe in C++ world it works that way??
+
+Just know you're safe in trying and possibly even succeeding in the process.
 
 ### Target Audience
 
-PySimpleGUI is trying to serve the 80% of GUI *problems*. The other 20% go straight to tkinter, Qt, WxPython, Remi, or whatever fills that need.  That 80% is a huge problem space.  Again, the "Simple" of PySimpleGUI describes how easy it is to use, not the nature of the problem space it solves.  Note that people are not part of that description.  It's not trying to solve GUI problems for 80% of the people trying it.  PySimpleGUI tries to solve 80% of GUI ***problems***, regardless of the programmer's experience level.
+PySimpleGUI is trying to serve the 80% of GUI *problems*. The other 20% go straight to tkinter, Qt, WxPython, Remi, or whatever fills that need.  That 80% is **a huge problem space**.  
 
-PySimpleGUI is designed with both the beginner and the experienceed developer in mind.  Why?  Because both tend to like compact code.  Most like people, we just want to get sh\*t done, right?  
+***The "Simple" of PySimpleGUI describes how easy it is to use, not the nature of the problem space it solves.***  Note that people are not part of that description.  It's not trying to solve GUI problems for 80% of the people trying it.  PySimpleGUI tries to solve 80% of GUI ***problems***, regardless of the programmer's experience level.
+
+Is file I/O in Python limited to only certain people?  Is starting a thread, building a multi-threaded Python program incredibly difficult such that it takes a year to learn?  No.  It's quite easy.  Like most things Python, you import the object from package and you use it.  It is 2 lines of Python code to create and start a thread.
+
+Why can't it be 2 lines of code to show a GUI window?  What's SO special about the Python GUI libraries that they require you to follow a specific Object Oriented model of development?  Other parts and packages of Python don't tend to do that.  
+
+The reason is because they didn't originate in Python. They are strangers in a strange land and they had to be "adapted".  They started as C++ programs / SDKs, and remain that way too.  There's a vaneer of Python slapped onto the top of them, but that sure didn't make them fit the language as well as they could have.
+
+PySimpleGUI is designed with both the beginner and the experienceed developer in mind.  Why?  Because both tend to like compact code.  Most like people, we just want to get sh\*t done, right?  And, why not do it in a way that's like how most of Python works?
 
 The beginners can begin working with GUIs ***in their first week of Python education***.  The professionals can jump right into the deep end of the pool to use the entire array of Elements and their capabilities to build stuff like a database application.
 
@@ -2141,7 +2161,6 @@ Some elements are capable of generating events when something happens to them.  
 | ---  | --- |
 | InputText | any change |
 | Combo | item chosen |
-| Option menu | item chosen |
 | Listbox | selection changed |
 | Radio | selection changed |
 | Checkbox | selection changed |
@@ -2150,6 +2169,8 @@ Some elements are capable of generating events when something happens to them.  
 | Text | clicked |
 | Status Bar | clicked |
 | Graph | clicked |
+| Graph | dragged |
+| Graph | drag ended (mouse up) |
 | TabGroup | tab clicked |
 | Slider | slider moved |
 | Table | row selected |
@@ -5150,7 +5171,8 @@ Button(button_text="",
     focus=False,
     pad=None,
     key=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5180,6 +5202,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Click
 
@@ -5277,7 +5300,8 @@ ButtonMenu(button_text,
     pad=None,
     key=None,
     tearoff=False,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5301,6 +5325,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |tearoff|(bool) Determines if menus should allow them to be torn off|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -5355,7 +5380,8 @@ Canvas(canvas=None,
     key=None,
     tooltip=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5370,6 +5396,7 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -5421,7 +5448,8 @@ Checkbox(text,
     key=None,
     pad=None,
     tooltip=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5442,6 +5470,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Get
 
@@ -5515,7 +5544,8 @@ Column(layout,
     key=None,
     visible=True,
     justification="left",
-    element_justification="left")
+    element_justification="left",
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5533,6 +5563,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |justification|(str) set justification for the Column itself. Note entire row containing the Column will be affected|
 |element_justification|(str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### AddRow
 
@@ -5625,7 +5656,8 @@ Combo(values,
     tooltip=None,
     readonly=False,
     font=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5647,6 +5679,7 @@ Parameter Descriptions:
 |readonly|(bool) make element readonly (user can't change). True means user cannot change|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Get
 
@@ -5732,7 +5765,8 @@ Frame(title,
     tooltip=None,
     right_click_menu=None,
     visible=True,
-    element_justification="left")
+    element_justification="left",
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5754,6 +5788,7 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
 |element_justification|(str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### AddRow
 
@@ -5852,7 +5887,8 @@ Graph(canvas_size,
     tooltip=None,
     right_click_menu=None,
     visible=True,
-    float_values=False)
+    float_values=False,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -5872,6 +5908,7 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element (Default = True)|
 |float_values|(bool) If True x,y coordinates are returned as floats, not ints|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### BringFigureToFront
 
@@ -6264,7 +6301,8 @@ Image(filename=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
-    enable_events=False)
+    enable_events=False,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6281,6 +6319,7 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
 |enable_events|(bool) Turns on the element specific events. For an Image element, the event is "image clicked"|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -6367,7 +6406,8 @@ InputText(default_text="",
     focus=False,
     pad=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6391,6 +6431,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element (Default = True)|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Get
 
@@ -6438,7 +6479,8 @@ Changes some of the settings for the Input Element. Must call `Window.Read` or `
 Update(value=None,
     disabled=None,
     select=None,
-    visible=None)
+    visible=None,
+    move_cursor_to="end")
 ```
 
 Parameter Descriptions:
@@ -6449,6 +6491,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element (sets Entry Widget to readonly or normal)|
 |select|(bool) if True, then the text will be selected|
 |visible|(bool) change visibility of element|
+|move_cursor_to|Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'|
 
 ### Listbox Element
 
@@ -6473,7 +6516,8 @@ Listbox(values,
     pad=None,
     tooltip=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6497,6 +6541,7 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### GetListValues
 
@@ -6596,7 +6641,8 @@ Menu(menu_definition,
     tearoff=False,
     pad=None,
     key=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6610,6 +6656,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -6679,7 +6726,8 @@ Multiline(default_text="",
     pad=None,
     tooltip=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6705,6 +6753,7 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Get
 
@@ -6790,7 +6839,8 @@ OptionMenu(values,
     key=None,
     pad=None,
     tooltip=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6808,6 +6858,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text that will appear when mouse hovers over this element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -6870,7 +6921,8 @@ Output(size=(None, None),
     tooltip=None,
     key=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6886,6 +6938,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Get
 
@@ -6959,7 +7012,8 @@ Pane(pane_list,
     handle_size=None,
     border_width=None,
     key=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -6977,6 +7031,7 @@ Parameter Descriptions:
 |border_width|(int) width of border around element in pixels|
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -7035,7 +7090,8 @@ ProgressBar(max_value,
     relief=None,
     key=None,
     pad=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7053,6 +7109,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -7131,7 +7188,8 @@ Radio(text,
     tooltip=None,
     change_submits=False,
     enable_events=False,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7153,6 +7211,7 @@ Parameter Descriptions:
 |change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
 |enable_events|(bool) Turns on the element specific events. Radio Button events happen when an item is selected|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Get
 
@@ -7241,7 +7300,8 @@ Slider(range=(None, None),
     key=None,
     pad=None,
     tooltip=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7267,6 +7327,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -7334,7 +7395,8 @@ Spin(values,
     key=None,
     pad=None,
     tooltip=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7355,6 +7417,7 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### Get
 
@@ -7434,7 +7497,8 @@ StatusBar(text,
     pad=None,
     key=None,
     tooltip=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7455,6 +7519,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -7524,7 +7589,8 @@ Tab(title,
     tooltip=None,
     right_click_menu=None,
     visible=True,
-    element_justification="left")
+    element_justification="left",
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7544,6 +7610,7 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
 |element_justification|(str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### AddRow
 
@@ -7644,7 +7711,8 @@ TabGroup(layout,
     theme=None,
     key=None,
     tooltip=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7665,6 +7733,7 @@ Parameter Descriptions:
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### AddRow
 
@@ -7783,7 +7852,8 @@ Table(values,
     key=None,
     tooltip=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7818,6 +7888,7 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -7876,7 +7947,7 @@ Parameter Descriptions:
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
 
 ```
-Text(text,
+Text(text="",
     size=(None, None),
     auto_size_text=None,
     click_submits=False,
@@ -7885,12 +7956,14 @@ Text(text,
     font=None,
     text_color=None,
     background_color=None,
+    border_width=None,
     justification=None,
     pad=None,
     key=None,
     right_click_menu=None,
     tooltip=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -7906,12 +7979,14 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |text_color|(str) color of the text|
 |background_color|(str) color of background|
+|border_width|(int) number of pixels for the border (if using a relief)|
 |justification|(str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -7991,7 +8066,8 @@ Tree(data=None,
     key=None,
     tooltip=None,
     right_click_menu=None,
-    visible=True)
+    visible=True,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -8021,6 +8097,7 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### SetFocus
 
@@ -8202,7 +8279,8 @@ Window(title,
     transparent_color=None,
     debugger_enabled=True,
     finalize=False,
-    element_justification="left")
+    element_justification="left",
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -8243,6 +8321,7 @@ Parameter Descriptions:
 |debugger_enabled|(bool) If True then the internal debugger will be enabled|
 |finalize|(bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code|
 |element_justification|(str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values|
+|metadata|(Any) User metadata that can be set to ANYTHING|
 
 #### AddRow
 
@@ -8831,7 +8910,8 @@ CButton(button_text,
     disabled=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -8878,7 +8958,8 @@ CalendarButton(button_text,
     pad=None,
     key=None,
     locale=None,
-    format=None)
+    format=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -8921,7 +9002,8 @@ Cancel(button_text="Cancel",
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -8941,7 +9023,7 @@ Parameter Descriptions:
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 
 ```
-ChangeLookAndFeel(index)
+ChangeLookAndFeel(index, force=False)
 ```
 
 Parameter Descriptions:
@@ -8966,7 +9048,8 @@ CloseButton(button_text,
     disabled=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9009,7 +9092,8 @@ ColorChooserButton(button_text,
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9047,7 +9131,8 @@ Debug(button_text="",
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9084,7 +9169,8 @@ DummyButton(button_text,
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9154,7 +9240,8 @@ Exit(button_text="Exit",
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9187,7 +9274,8 @@ FileBrowse(button_text="Browse",
     font=None,
     disabled=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9225,7 +9313,8 @@ FileSaveAs(button_text="Save As...",
     enable_events=False,
     font=None,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9263,7 +9352,8 @@ FilesBrowse(button_text="Browse",
     enable_events=False,
     font=None,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9313,7 +9403,8 @@ FolderBrowse(button_text="Browse",
     enable_events=False,
     font=None,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9347,7 +9438,8 @@ Help(button_text="Help",
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9383,7 +9475,8 @@ No(button_text="No",
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9413,7 +9506,8 @@ OK(button_text="OK",
     font=None,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9466,7 +9560,8 @@ Ok(button_text="Ok",
     font=None,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9538,7 +9633,8 @@ Open(button_text="Open",
     font=None,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9796,7 +9892,8 @@ Quit(button_text="Quit",
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9833,7 +9930,8 @@ RButton(button_text,
     disabled=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9873,7 +9971,8 @@ ReadButton(button_text,
     disabled=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9913,7 +10012,8 @@ RealtimeButton(button_text,
     bind_return_key=False,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9948,7 +10048,8 @@ Save(button_text="Save",
     font=None,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -9983,7 +10084,8 @@ SaveAs(button_text="Save As...",
     enable_events=False,
     font=None,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -10038,6 +10140,9 @@ Parameter Descriptions:
 |||
 | **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
 
+Sets the icon which will be used any time a window is created if an icon is not provided when the
+window is created.
+
 ```
 SetGlobalIcon(icon)
 ```
@@ -10046,7 +10151,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|icon||
+|icon|Union[bytes, str] Either a Base64 byte string or a filename|
 
 ```
 SetOptions(icon=None,
@@ -10133,7 +10238,8 @@ Submit(button_text="Submit",
     font=None,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -10177,7 +10283,8 @@ Yes(button_text="Yes",
     bind_return_key=True,
     focus=False,
     pad=None,
-    key=None)
+    key=None,
+    metadata=None)
 ```
 
 Parameter Descriptions:
@@ -11216,11 +11323,11 @@ However, your code will look weird and ancient.  ;-)  (i.e. readable)
 MORE Docstring and main doc updates!
 
 * Finally 2.7 gets an upgrade and with it doc strings.  It however doesn't get a full-version bump like main PySimpleGUI as this may be its last release.
-* New window[key] == window.FindElement(key)
+* New `window[key] == window.FindElement(key)`
 * New Update calling method. Can directly call an Element and it will call its Update method
-	* window[key](value=new_value)    ==     window.FindElement(key).Update(value=new_value)
+	* `window[key](value=new_value)    ==     window.FindElement(key).Update(value=new_value)`
 * Made Tearoff part of element so anything can be a menu in theory
-* Removed a bunch of __del__ calls. Hoping it doesn't bite me in memory leaks
+* Removed a bunch of `__del__` calls. Hoping it doesn't bite me in memory leaks
 * Combo.Get method added
 * Combo.GetSelectedItemsIndexes removed
 * New Graph methods SendFigureToBack, BringFigureToFront
@@ -11329,7 +11436,7 @@ While not the best programming practice, the implementation resulted in a single
 In Python, functions behave just like object. When you're placing a Text Element into your form, you may be sometimes calling a function and other times declaring an object.  If you use the word Text, then you're getting an object.  If you're using `Txt`, then you're calling a function that returns a `Text` object.
 
 **Lists**
-It seemed quite natural to use Python's powerful list constructs when possible.  The form is specified as a series of lists.  Each "row" of the GUI is represented as a list of Elements. When the form read returns the results to the user, all of the results are presented as a single list.  This makes reading a form's values super-simple to do in a single line of Python code.
+It seemed quite natural to use Python's powerful list constructs when possible.  The form is specified as a series of lists.  Each "row" of the GUI is represented as a list of Elements. 
 
 **Dictionaries**
 Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.
