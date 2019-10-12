@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0.7 Unreleased New SuperImage means no flicker!"
+version = __version__ = "0.31.0.8 Unreleased No flicker, fixed multiline not in values"
 
 import sys
 import datetime
@@ -1496,9 +1496,10 @@ class SuperImage(remi.gui.Image):
 
     def load(self, file_path_name):
         if type(file_path_name) is bytes or len(file_path_name) > 200:
-            # print("image data")
-            self.mimetype = 'image/png'
+            print("image data")
+            # self.mimetype = 'image/png'
             self.imagedata = file_path_name #base64.b64decode(file_path_name)
+            # self.imagedata = base64.b64decode(file_path_name, validate=True)
         else:
             self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
             with open(file_path_name, 'rb') as f:
@@ -3818,8 +3819,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     element = element       # type: Slider
                     value = element.DefaultValue
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
-                    element = element  # type: Multiline
-                    value = element.DefaultText
+                    element = element # type: Multiline
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
                         value = element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
@@ -6803,24 +6804,25 @@ def main():
     layout = [
         [Menu(menu_def, key='_MENU_', text_color='yellow', background_color='#475841',  font='Courier 14')],
         # [T('123435', size=(1,8))],
-        [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=True, key='_PySimpleGUIWeb_')],
+        [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=False, key='_PySimpleGUIWeb_')],
         # [OptionMenu([])],
         [T('System platform = %s'%sys.platform)],
-        [Image(data=DEFAULT_BASE64_ICON, enable_events=True)],
+        [Image(data=DEFAULT_BASE64_ICON, enable_events=False)],
+        [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo200.png')],
         [Text('VERSION {}'.format(version), text_color='red', font='Courier 24')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
-        [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=True, key='_MULTI_IN_')],
-        [Output(size=(60,10))],
+        [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=False, key='_MULTI_IN_')],
+        # [Output(size=(60,10))],
         [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
-        [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
-        [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
+        [Checkbox('Checkbox 1', enable_events=False, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=False)],
+        [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=False,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
-        # [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo200.png', enable_events=True)],
-        [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True, orientation='v')],
-        [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
+        # [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo200.png', enable_events=False)],
+        [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=False, orientation='v')],
+        [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=False)],
         [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide'), B('Popup')]
     ]
 
@@ -6832,7 +6834,7 @@ def main():
 
     start_time = datetime.datetime.now()
     while True:
-        event, values = window.Read(timeout=5)
+        event, values = window.Read(timeout=None)
         window.Element('_TEXT_').Update(str(datetime.datetime.now()))
         window.Element('_TEXT_UPTIME_').Update(str(datetime.datetime.now()-start_time))
         print(event, values) if event != TIMEOUT_KEY else None
