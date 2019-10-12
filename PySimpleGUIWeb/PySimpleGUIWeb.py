@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0.7 Unreleased New SuperImage means no flicker!"
+version = __version__ = "0.31.0.8 Unreleased No flicker, fixed multiline not in values"
 
 import sys
 import datetime
