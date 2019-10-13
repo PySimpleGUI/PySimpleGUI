@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.23 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row. Button rebinding. Element.expand"
+version = __version__ = "4.5.0.24 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -627,6 +627,7 @@ class Element():
         :param event:
 
         """
+        print(f'In return handler. event = {event}')
         MyForm = self.ParentForm
         button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
@@ -1378,7 +1379,8 @@ class Radio(Element):
             return
         if value is not None:
             try:
-                self.TKIntVar.set(self.EncodedRadioValue)
+                if value:
+                    self.TKIntVar.set(self.EncodedRadioValue)
             except:
                 pass
             self.InitialState = value
@@ -5707,6 +5709,9 @@ class Window:
 
         if self.TKrootDestroyed:
             return self
+        self.Read(timeout=1)
+        return self
+        # OLD CODE FOLLOWS
         if not self.Shown:
             self._Show(non_blocking=True)
         try:
