@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-version = __version__ = "4.5.0.24 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize"
+
+version = __version__ = "4.5.0.25 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -8075,8 +8076,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if v == element.DefaultValue:
                             element.TKCombo.current(i)
                             break
-                elif element.Values:
-                    element.TKCombo.current(0)
+                # elif element.Values:
+                #     element.TKCombo.current(0)
                 if element.ChangeSubmits:
                     element.TKCombo.bind('<<ComboboxSelected>>', element._ComboboxSelectHandler)
                 if element.Readonly:
@@ -11485,7 +11486,7 @@ def main():
 
     frame2 = [
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
-        [Combo(['Combo item 1',2,3,4 ], size=(20, 3),readonly=True, text_color='red', background_color='red', key='_COMBO1_')],
+        [Combo(['Combo item 1',2,3,4 ], size=(20, 3), default_value=2, readonly=True, text_color='red', background_color='red', key='_COMBO1_')],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='red', background_color='red', key='_COMBO2_')],
         [Spin([1, 2, 3, 'a','b','c'], size=(4, 3))],
     ]
