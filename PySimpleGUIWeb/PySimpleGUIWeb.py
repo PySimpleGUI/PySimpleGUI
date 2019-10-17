@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0.8 Unreleased No flicker, fixed multiline not in values"
+version = __version__ = "0.31.0.9 Unreleased No flicker, fixed multiline not in values, Oct 17"
 
 import sys
 import datetime
@@ -1474,7 +1474,6 @@ class Image(Element):
 #     def get_image_data(self, update_index):
 #         headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
 #         return [self.imagedata, headers]
-
 class SuperImage(remi.gui.Image):
     def __init__(self, file_path_name=None, **kwargs):
         """
@@ -1496,18 +1495,24 @@ class SuperImage(remi.gui.Image):
 
     def load(self, file_path_name):
         if type(file_path_name) is bytes or len(file_path_name) > 200:
-            print("image data")
-            # self.mimetype = 'image/png'
-            self.imagedata = file_path_name #base64.b64decode(file_path_name)
-            # self.imagedata = base64.b64decode(file_path_name, validate=True)
+            try:
+                #here a base64 image is received
+                self.imagedata = base64.b64decode(file_path_name, validate=True)
+                self.attributes['src'] = "/%s/get_image_data?update_index=%s" % (id(self), str(time.time()))
+            except binascii.Error:
+                #here an image data is received (opencv image)
+                self.imagedata = file_path_name
+                self.refresh()
+            self.refresh()
         else:
+            #here a filename is received
+            print(f'***** Loading file = {file_path_name}')
             self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
             with open(file_path_name, 'rb') as f:
                 self.imagedata = f.read()
-        self.refresh()
+            self.refresh()
 
     def refresh(self):
-        # print("refresh")
         i = int(time.time() * 1e6)
         # self.app_instance.execute_javascript("""
         if Window.App is not None:
@@ -1525,7 +1530,6 @@ class SuperImage(remi.gui.Image):
                 """ % {'id': id(self), 'frame_index':i})
 
     def get_image_data(self, update_index):
-        # print("get image data")
         headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
         return [self.imagedata, headers]
 
@@ -4552,6 +4556,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Image
                 # element.Widget = remi.gui.Image(element.Filename)
                 element.Widget = SuperImage(element.Filename if element.Filename is not None else element.Data)
+                if element.Filename is not None:
+                    print(f'loading image filename in pack frame {element.Filename}')
+                    element.Widget.load(element.Filename)
                 do_font_and_color(element.Widget)
                 if element.EnableEvents:
                     element.Widget.onclick.connect(element._ChangedCallback)
@@ -6808,7 +6815,7 @@ def main():
         # [OptionMenu([])],
         [T('System platform = %s'%sys.platform)],
         [Image(data=DEFAULT_BASE64_ICON, enable_events=False)],
-        [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo200.png')],
+        [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo500.png', key='-IMAGE-')],
         [Text('VERSION {}'.format(version), text_color='red', font='Courier 24')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
@@ -6836,6 +6843,7 @@ def main():
     while True:
         event, values = window.Read(timeout=None)
         window.Element('_TEXT_').Update(str(datetime.datetime.now()))
+        window['-IMAGE-'].Update(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo500.png')
         window.Element('_TEXT_UPTIME_').Update(str(datetime.datetime.now()-start_time))
         print(event, values) if event != TIMEOUT_KEY else None
         if event in (None, 'Exit'):
