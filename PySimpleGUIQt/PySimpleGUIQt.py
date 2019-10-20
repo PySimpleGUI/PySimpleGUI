@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.30.01 Unreleased Menu color Bye bye PyQt5"
+version = __version__ = "0.30.02 Unreleased Menu color Bye bye PyQt5, added 5 extra pixels to window size"
 
 import sys
 import types
@@ -5803,7 +5803,7 @@ def StartupTK(window):
     # add 5 pixels onto it because stuff was getting cut off
     qsize = window.QT_QMainWindow.sizeHint()
     size = [qsize.width(), qsize.height()]
-    size[0] += 5
+    size[0] += 10
     window.QT_QMainWindow.resize(*size)
 
     if window._Size != (None, None):
