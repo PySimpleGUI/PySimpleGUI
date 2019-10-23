@@ -30,9 +30,9 @@ while (True):
     if event == 'button':
         event = window.FindElement(event).GetText()
     # --------- Do Button Operations --------
-    if event is None or event == 'Exit':        # ALWAYS give a way out of program
+    if event in (None, 'Exit'):        # ALWAYS give a way out of program
         break
-    if event is 'Reset':
+    if event == 'Reset':
         start_time = int(round(time.time() * 100))
         current_time = 0
         paused_time = start_time

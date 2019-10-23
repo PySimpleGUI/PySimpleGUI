@@ -21,8 +21,7 @@ graph = window['-GRAPH-']
 # -------------- Magic code to integrate PyGame with tkinter -------
 embed = graph.TKCanvas
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
-# change this to 'x11' to make it work on Linux
-os.environ['SDL_VIDEODRIVER'] = 'windib'
+os.environ['SDL_VIDEODRIVER'] = 'windib' # change this to 'x11' to make it work on Linux
 
 # ----------------------------- PyGame Code -----------------------------
 
