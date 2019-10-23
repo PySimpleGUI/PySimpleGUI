@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-
+import PySimpleGUI as sg
 
 """
    
@@ -671,17 +666,18 @@ color_map = {
 }
 
 
-sg.SetOptions(button_element_size=(12,1), element_padding=(0,0), auto_size_buttons=False, border_width=1, tooltip_time=100)
+sg.set_options(button_element_size=(12, 1),
+               element_padding=(0, 0),
+               auto_size_buttons=False,
+               border_width=1, tooltip_time=100)
 
-#start layout with the tittle
-layout = [[sg.Text('Hover mouse to see RGB value, click for white & black text',
-                   text_color='blue',
-                   font='Any 15',
-                   relief=sg.RELIEF_SUNKEN,
-                   justification='center',
-                   size=(100,1),
-                   background_color='light green',
-                   pad=(0,(0,20))),]]
+# start layout with the tittle
+layout = [
+    [sg.Text('Hover mouse to see RGB value, click for white & black text',
+          justification='center',
+          text_color='blue', background_color='light green',
+          size=(100, 1), pad=(0, (0, 20)))]
+]
 
 # -- Create primary color viewer window --
 color_list = [key for key in color_map]
@@ -691,19 +687,25 @@ for rows in range(40):
     for i in range(12):
         try:
             color = color_list[rows+40*i]
-            row.append(sg.Button(color, button_color=('black', color), key=color, tooltip=color_map[color]))
+            row.append(sg.Button(color, button_color=('black', color),
+                            key=color, tooltip=color_map[color]))
         except:
             pass
     layout.append(row)
 
 
-window = sg.Window('Color Viewer', grab_anywhere=False, font=('any 9')).Layout(layout)
+window = sg.Window('Color Viewer', layout, grab_anywhere=False, font=('any 9'))
 
 # -- Event loop --
 while True:
-    event, values = window.Read()
+    event, values = window.read()
     if event is None:
         break
     # -- Create a secondary window that shows white and black text on chosen color
-    layout2 =[[sg.DummyButton(event, button_color=('white', event), tooltip=color_map[event]), sg.DummyButton(event, button_color=('black', event), tooltip=color_map[event])] ]
-    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).Read(timeout=0)
+    layout2 = [[
+            sg.DummyButton(event, button_color=(
+                'white', event), tooltip=color_map[event]),
+            sg.DummyButton(event, button_color=('black', event), tooltip=color_map[event])
+        ]]
+    sg.Window('Buttons with white and black text',
+              layout2, keep_on_top=True).read(timeout=0)

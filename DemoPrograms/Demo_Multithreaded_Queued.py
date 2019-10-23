@@ -8,13 +8,7 @@ import queue
 import threading
 import time
 import itertools
-
-# This program has been tested on all flavors of PySimpleGUI and it works with no problems at all
-# To try something other than tkinter version, just comment out the first import and uncomment the one you want
 import PySimpleGUI as sg
-# import PySimpleGUIQt as sg
-# import PySimpleGUIWx as sg
-# import PySimpleGUIWeb as sg
 
 """
     DESIGN PATTERN - Multithreaded GUI
@@ -33,13 +27,13 @@ import PySimpleGUI as sg
 """
 
 
-######## ##     ## ########  ########    ###    ########
-   ##    ##     ## ##     ## ##         ## ##   ##     ##
-   ##    ##     ## ##     ## ##        ##   ##  ##     ##
-   ##    ######### ########  ######   ##     ## ##     ##
-   ##    ##     ## ##   ##   ##       ######### ##     ##
-   ##    ##     ## ##    ##  ##       ##     ## ##     ##
-   ##    ##     ## ##     ## ######## ##     ## ########
+# ######## ##     ## ########  ########    ###    ########
+#    ##    ##     ## ##     ## ##         ## ##   ##     ##
+#    ##    ##     ## ##     ## ##        ##   ##  ##     ##
+#    ##    ######### ########  ######   ##     ## ##     ##
+#    ##    ##     ## ##   ##   ##       ######### ##     ##
+#    ##    ##     ## ##    ##  ##       ##     ## ##     ##
+#    ##    ##     ## ##     ## ######## ##     ## ########
 
 def worker_thread(thread_name, run_freq,  gui_queue):
     """
@@ -54,15 +48,17 @@ def worker_thread(thread_name, run_freq,  gui_queue):
     print('Starting thread - {} that runs every {} ms'.format(thread_name, run_freq))
     for i in itertools.count():                             # loop forever, keeping count in i as it loops
         time.sleep(run_freq/1000)                           # sleep for a while
-        gui_queue.put('{} - {}'.format(thread_name, i))     # put a message into queue for GUI
+        # put a message into queue for GUI
+        gui_queue.put('{} - {}'.format(thread_name, i))
 
- ######   ##     ## ####
-##    ##  ##     ##  ##
-##        ##     ##  ##
-##   #### ##     ##  ##
-##    ##  ##     ##  ##
-##    ##  ##     ##  ##
- ######    #######  ####
+#  ######   ##     ## ####
+# ##    ##  ##     ##  ##
+# ##        ##     ##  ##
+# ##   #### ##     ##  ##
+# ##    ##  ##     ##  ##
+# ##    ##  ##     ##  ##
+#  ######    #######  ####
+
 
 def the_gui(gui_queue):
     """
@@ -73,18 +69,19 @@ def the_gui(gui_queue):
     :param gui_queue: Queue the GUI should read from
     :return:
     """
-    layout = [ [sg.Text('Multithreaded Window Example')],
-               [sg.Text('', size=(15,1), key='_OUTPUT_')],
-               [sg.Output(size=(40,6))],
-               [sg.Button('Exit')],]
+    layout = [[sg.Text('Multithreaded Window Example')],
+              [sg.Text('', size=(15, 1), key='-OUTPUT-')],
+              [sg.Output(size=(40, 6))],
+              [sg.Button('Exit')], ]
 
-    window = sg.Window('Multithreaded Window').Layout(layout)
+    window = sg.Window('Multithreaded Window', layout)
     # --------------------- EVENT LOOP ---------------------
     while True:
-        event, values = window.Read(timeout=100)        # wait for up to 100 ms for a GUI event
-        if event is None or event == 'Exit':
+        # wait for up to 100 ms for a GUI event
+        event, values = window.read(timeout=100)
+        if event in (None, 'Exit'):
             break
-        #--------------- Loop through all messages coming in from threads ---------------
+        # --------------- Loop through all messages coming in from threads ---------------
         while True:                 # loop executes until runs out of messages in Queue
             try:                    # see if something has been posted to Queue
                 message = gui_queue.get_nowait()
@@ -92,11 +89,12 @@ def the_gui(gui_queue):
                 break               # break from the loop if no more messages are queued up
             # if message received from queue, display the message in the Window
             if message:
-                window.Element('_OUTPUT_').Update(message)
-                window.Refresh()    # do a refresh because could be showing multiple messages before next Read
+                window['-OUTPUT-'].update(message)
+                # do a refresh because could be showing multiple messages before next Read
+                window.refresh()
                 print(message)
     # if user exits the window, then close the window and exit the GUI func
-    window.Close()
+    window.close()
 
 
 ##     ##    ###    #### ##    ##
@@ -108,12 +106,16 @@ def the_gui(gui_queue):
 ##     ## ##     ## #### ##    ##
 
 if __name__ == '__main__':
-    #-- Create a Queue to communicate with GUI --
-    gui_queue = queue.Queue()             # queue used to communicate between the gui and the threads
-    #-- Start worker threads, one runs twice as often as the other
-    threading.Thread(target=worker_thread, args=('Thread 1', 500, gui_queue,),  daemon=True).start()
-    threading.Thread(target=worker_thread, args=('Thread 2', 200, gui_queue,),  daemon=True).start()
-    threading.Thread(target=worker_thread, args=('Thread 3', 1000, gui_queue,),  daemon=True).start()
-    #-- Start the GUI passing in the Queue --
+    # -- Create a Queue to communicate with GUI --
+    # queue used to communicate between the gui and the threads
+    gui_queue = queue.Queue()
+    # -- Start worker threads, one runs twice as often as the other
+    threading.Thread(target=worker_thread, args=(
+        'Thread 1', 500, gui_queue,),  daemon=True).start()
+    threading.Thread(target=worker_thread, args=(
+        'Thread 2', 200, gui_queue,),  daemon=True).start()
+    threading.Thread(target=worker_thread, args=(
+        'Thread 3', 1000, gui_queue,),  daemon=True).start()
+    # -- Start the GUI passing in the Queue --
     the_gui(gui_queue)
     print('Exiting Program')

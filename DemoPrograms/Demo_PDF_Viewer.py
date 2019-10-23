@@ -34,19 +34,16 @@ pixmaps and page re-visits will re-use a once-created display list.
 """
 import sys
 import fitz
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-from sys import exit as exit
-from binascii import hexlify
+import PySimpleGUI as sg
+from sys import exit
 
-sg.ChangeLookAndFeel('GreenTan')
+sg.change_look_and_feel('GreenTan')
 
 if len(sys.argv) == 1:
-    fname = sg.PopupGetFile('PDF Browser', 'PDF file to open', file_types=(("PDF Files", "*.pdf"),))
+    fname = sg.popup_get_file(
+        'PDF Browser', 'PDF file to open', file_types=(("PDF Files", "*.pdf"),))
     if fname is None:
-        sg.PopupCancel('Cancelling')
+        sg.popup_cancel('Cancelling')
         exit(0)
 else:
     fname = sys.argv[1]
@@ -90,12 +87,13 @@ def get_page(pno, zoom=0):
     return pix.getPNGData()  # return the PNG image
 
 
-window = sg.Window(title, return_keyboard_events=True, use_default_focus=False)
+window = sg.Window(title, layout,
+                   return_keyboard_events=True, use_default_focus=False)
 
 cur_page = 0
 data = get_page(cur_page)  # show page 1 for start
 image_elem = sg.Image(data=data)
-goto = sg.InputText(str(cur_page + 1), size=(5, 1), do_not_clear=True)
+goto = sg.InputText(str(cur_page + 1), size=(5, 1))
 
 layout = [
     [
@@ -113,8 +111,6 @@ layout = [
     ],
     [image_elem],
 ]
-
-window.Layout(layout)
 my_keys = ("Next", "Next:34", "Prev", "Prior:33", "Top-L", "Top-R",
            "Bot-L", "Bot-R", "MouseWheel:Down", "MouseWheel:Up")
 zoom_buttons = ("Top-L", "Top-R", "Bot-L", "Bot-R")
@@ -124,7 +120,7 @@ old_zoom = 0  # used for zoom on/off
 # the zoom buttons work in on/off mode.
 
 while True:
-    event, values = window.Read(timeout=100)
+    event, values = window.read(timeout=100)
     zoom = 0
     force_page = False
     if event is None:
@@ -132,7 +128,6 @@ while True:
 
     if event in ("Escape:27",):  # this spares me a 'Quit' button!
         break
-    # print("hex(button)", hexlify(button.encode()))
     if event[0] == chr(13):  # surprise: this is 'Enter'!
         try:
             cur_page = int(values[0]) - 1  # check if valid
@@ -140,7 +135,7 @@ while True:
                 cur_page += page_count
         except:
             cur_page = 0  # this guy's trying to fool me
-        goto.Update(str(cur_page + 1))
+        goto.update(str(cur_page + 1))
         # goto.TKStringVar.set(str(cur_page + 1))
 
     elif event in ("Next", "Next:34", "MouseWheel:Down"):
@@ -177,11 +172,11 @@ while True:
 
     if force_page:
         data = get_page(cur_page, zoom)
-        image_elem.Update(data=data)
+        image_elem.update(data=data)
         old_page = cur_page
     old_zoom = zoom
 
     # update page number field
     if event in my_keys or not values[0]:
-        goto.Update(str(cur_page + 1))
+        goto.update(str(cur_page + 1))
         # goto.TKStringVar.set(str(cur_page + 1))

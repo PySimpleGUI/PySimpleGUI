@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-
+import PySimpleGUI as sg
 import turtle
 
 """
@@ -17,41 +12,41 @@ import turtle
 """
 
 
-layout = [[ sg.Text('My layout') ],
-          [sg.Canvas(size=(800,800), key='_canvas_')],
-          [ sg.Button('F'), sg.Button('B'), sg.Button('L'), sg.Button('R')],
+layout = [[sg.Text('My layout')],
+          [sg.Canvas(size=(800, 800), key='-canvas-')],
+          [sg.Button('F'), sg.Button('B'), sg.Button('L'), sg.Button('R')],
           [sg.Button('Spiral'), sg.Button('Inside Out'), sg.Button('Circles')]]
 
-window = sg.Window('My new window').Layout(layout).Finalize()
+window = sg.Window('My new window', layout, finalize=True)
 
-canvas = window.FindElement('_canvas_').TKCanvas
+canvas = window['-canvas-'].TKCanvas
 
-t = turtle.RawTurtle(canvas)
-t.pencolor("#ff0000") # Red
-
-t.penup()
-t.pendown()
+a_turtle = turtle.RawTurtle(canvas)
+a_turtle.pencolor("#ff0000")  # Red
+a_turtle.penup()
+a_turtle.pendown()
 
 while True:     # Event Loop
-    event, values = window.Read()
+    event, values = window.read()
     if event is None:
         break
 
     if event == 'F':
-        t.forward(100)
+        a_turtle.forward(100)
     elif event == 'B':
-        t.back(100)
+        a_turtle.back(100)
     elif event == 'L':
-        t.left(90)
+        a_turtle.left(90)
     elif event == 'R':
-        t.right(90)
+        a_turtle.right(90)
     elif event == 'Spiral':
         canvas.config(bg='light green')
-        t.color("blue")
+        a_turtle.color("blue")
+
         def sqrfunc(size):
             for i in range(4):
-                t.fd(size)
-                t.left(90)
+                a_turtle.fd(size)
+                a_turtle.left(90)
                 size = size - 5
         sqrfunc(146)
         sqrfunc(126)
@@ -61,12 +56,13 @@ while True:     # Event Loop
         sqrfunc(46)
         sqrfunc(26)
     elif event == 'Inside Out':
-        canvas.config(bg = "light green")
-        t.color("blue")
+        canvas.config(bg="light green")
+        a_turtle.color("blue")
+
         def sqrfunc(size):
             for i in range(4):
-                t.fd(size)
-                t.left(90)
+                a_turtle.fd(size)
+                a_turtle.left(90)
                 size = size + 5
         sqrfunc(6)
         sqrfunc(26)
@@ -77,8 +73,9 @@ while True:     # Event Loop
         sqrfunc(126)
         sqrfunc(146)
     elif event == 'Circles':
-        t.speed(0)
+        a_turtle.speed(0)
         for i in range(400):
-            t.circle(2 * i*.25)
-            t.circle(-2 * i*.25)
-            t.left(i)
+            a_turtle.circle(2 * i*.25)
+            a_turtle.circle(-2 * i*.25)
+            a_turtle.left(i)
+window.close()

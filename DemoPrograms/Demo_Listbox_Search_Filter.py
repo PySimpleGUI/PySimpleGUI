@@ -1,27 +1,29 @@
 import PySimpleGUI as sg
 
 names = ['Roberta', 'Kylie', 'Jenny', 'Helen',
-        'Andrea', 'Meredith','Deborah','Pauline',
-        'Belinda', 'Wendy']
+         'Andrea', 'Meredith', 'Deborah', 'Pauline',
+         'Belinda', 'Wendy']
 
-layout = [  [sg.Text('Listbox with search')],
-            [sg.Input(do_not_clear=True, size=(20,1),enable_events=True, key='_INPUT_')],
-            [sg.Listbox(names, size=(20,4), enable_events=True, key='_LIST_')],
-            [sg.Button('Chrome'), sg.Button('Exit')]]
+layout = [[sg.Text('Listbox with search')],
+          [sg.Input(size=(20, 1), enable_events=True, key='-INPUT-')],
+          [sg.Listbox(names, size=(20, 4), enable_events=True, key='-LIST-')],
+          [sg.Button('Chrome'), sg.Button('Exit')]]
 
-window = sg.Window('Listbox with Search').Layout(layout)
+window = sg.Window('Listbox with Search', layout)
 # Event Loop
 while True:
-    event, values = window.Read()
-    if event is None or event == 'Exit':                # always check for closed window
+    event, values = window.read()
+    if event in (None, 'Exit'):                # always check for closed window
         break
-    if values['_INPUT_'] != '':                         # if a keystroke entered in search field
-        search = values['_INPUT_']
+    if values['-INPUT-'] != '':                         # if a keystroke entered in search field
+        search = values['-INPUT-']
         new_values = [x for x in names if search in x]  # do the filtering
-        window.Element('_LIST_').Update(new_values)     # display in the listbox
+        window['-LIST-'].update(new_values)     # display in the listbox
     else:
-        window.Element('_LIST_').Update(names)          # display original unfiltered list
-    if event == '_LIST_' and len(values['_LIST_']):     # if a list item is chosen
-        sg.Popup('Selected ', values['_LIST_'])
+        # display original unfiltered list
+        window['-LIST-'].update(names)
+    # if a list item is chosen
+    if event == '-LIST-' and len(values['-LIST-']):
+        sg.popup('Selected ', values['-LIST-'])
 
-window.Close()
+window.close()

@@ -1,35 +1,39 @@
+import PySimpleGUI as sg
 """
     PySimpleGUI The Complete Course
     Lesson 7 - Multiple Windows
+    1-lvl nested window
 """
-import PySimpleGUI as sg
 
 # Design pattern 1 - First window does not remain active
 
 layout = [[ sg.Text('Window 1'),],
-          [sg.Input(do_not_clear=True)],
-          [sg.Text('', size=(20,1), key='_OUTPUT_')],
+          [sg.Input()],
+          [sg.Text('', size=(20,1), key='-OUTPUT-')],
           [sg.Button('Launch 2')]]
 
-win1 = sg.Window('Window 1').Layout(layout)
-win2_active=False
-while True:
-    ev1, vals1 = win1.Read(timeout=100)
-    if ev1 is None:
-        break
-    win1.FindElement('_OUTPUT_').Update(vals1[0])
+window1 = sg.Window('Window 1', layout)
+window2_active=False
 
-    if ev1 == 'Launch 2' and not win2_active:
-        win2_active = True
-        win1.Hide()
+while True:
+    event1, values1 = window1.read(timeout=100)
+    if event1 is None:
+        break
+    window1['-OUTPUT-'].update(values1[0])
+
+    if event1 == 'Launch 2' and not window2_active:
+        window2_active = True
+        window1.hide()
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2').Layout(layout2)
+        window2 = sg.Window('Window 2', layout2)
         while True:
-            ev2, vals2 = win2.Read()
+            ev2, vals2 = window2.read()
             if ev2 is None or ev2 == 'Exit':
-                win2.Close()
-                win2_active = False
-                win1.UnHide()
+                window2.close()
+                window2_active = False
+                window1.un_hide()
                 break
+window1.close()
+

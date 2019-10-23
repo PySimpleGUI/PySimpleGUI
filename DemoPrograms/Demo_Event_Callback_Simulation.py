@@ -1,6 +1,4 @@
 import PySimpleGUI as sg
-# import PySimpleGUIQt as sg
-# import PySimpleGUIWx as sg
 
 '''
     Event Callback Simulation
@@ -15,17 +13,28 @@ import PySimpleGUI as sg
 
 # The callback functions
 # These callbacks all display a message in a non-blocking way and immediately return
+
+
 def button1(event, values):
-    sg.popup_quick_message('Button 1 callback', background_color='red', text_color='white')
+    sg.popup_quick_message('Button 1 callback',
+                           background_color='red',
+                           text_color='white')
+
 
 def button2(event, values):
-    sg.popup_quick_message('Button 2 callback', background_color='green', text_color='white')
+    sg.popup_quick_message('Button 2 callback',
+                           background_color='green',
+                           text_color='white')
+
 
 def catch_all(event, values):
-    sg.popup_quick_message(f'An unplanned event = "{event}" happend', background_color='blue', text_color='white', auto_close_duration=6)
+    sg.popup_quick_message(f'An unplanned event = "{event}" happend',
+                           background_color='blue',
+                           text_color='white', auto_close_duration=6)
+
 
 # Lookup dictionary that maps event to function to call. In this case, only 2 event have defined callbacks
-func_dict = {'1':button1, '2':button2}
+func_dict = {'1': button1, '2': button2}
 
 # Layout the design of the GUI
 layout = [[sg.Text('Please click a button')],

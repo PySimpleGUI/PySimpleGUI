@@ -1,11 +1,6 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import hashlib
-from sys import exit as exit
 
 """
     Create a secure login for your scripts without having to include your password 
@@ -19,47 +14,59 @@ from sys import exit as exit
        matching password to the hash code in this example gets a $5 PayPal payment
 """
 
-# Use this GUI to get your password's hash code
-def HashGeneratorGUI():
-    layout = [[sg.T('Password Hash Generator', size=(30,1), font='Any 15')],
-              [sg.T('Password'), sg.In(key='password')],
-              [sg.T('SHA Hash'), sg.In('', size=(40,1), key='hash')],
-              ]
 
-    window = sg.Window('SHA Generator', auto_size_text=False, default_element_size=(10,1),
-                       text_justification='r', return_keyboard_events=True, grab_anywhere=False).Layout(layout)
+def main():
+    # Use this GUI to get your password's hash code
+    def HashGeneratorGUI():
+        layout = [
+            [sg.Text('Password Hash Generator', size=(30, 1), font='Any 15')],
+            [sg.Text('Password'), sg.Input(key='-password-')],
+            [sg.Text('SHA Hash'), sg.Input('', size=(40, 1), key='hash')],
+        ]
 
-    while True:
-        event, values = window.Read()
-        if event is None:
-              exit(69)
+        window = sg.Window('SHA Generator', layout,
+                           auto_size_text=False,
+                           default_element_size=(10, 1),
+                           text_justification='r',
+                           return_keyboard_events=True,
+                           grab_anywhere=False)
 
-        password = values['password']
-        try:
-            password_utf = password.encode('utf-8')
-            sha1hash = hashlib.sha1()
-            sha1hash.update(password_utf)
-            password_hash = sha1hash.hexdigest()
-            window.FindElement('hash').Update(password_hash)
-        except:
-            pass
+        while True:
+            event, values = window.read()
+            if event is None:
+                break
 
-# ----------------------------- Paste this code into your program / script -----------------------------
-# determine if a password matches the secret password by comparing SHA1 hash codes
-def PasswordMatches(password, hash):
-    password_utf = password.encode('utf-8')
-    sha1hash = hashlib.sha1()
-    sha1hash.update(password_utf)
-    password_hash = sha1hash.hexdigest()
-    return password_hash == hash
+            password = values['-password-']
+            try:
+                password_utf = password.encode('utf-8')
+                sha1hash = hashlib.sha1()
+                sha1hash.update(password_utf)
+                password_hash = sha1hash.hexdigest()
+                window['hash'].update(password_hash)
+            except:
+                pass
+        window.close()
+
+    # ----------------------------- Paste this code into your program / script -----------------------------
+    # determine if a password matches the secret password by comparing SHA1 hash codes
+    def PasswordMatches(password, a_hash):
+        password_utf = password.encode('utf-8')
+        sha1hash = hashlib.sha1()
+        sha1hash.update(password_utf)
+        password_hash = sha1hash.hexdigest()
+        return password_hash == a_hash
+
+    login_password_hash = '6adfb183a4a2c94a2f92dab5ade762a47889a5a1'  # helloworld
+    password = sg.popup_get_text(
+        'Password: (type gui for other window)', password_char='*')
+    if password and password == 'gui':                # Remove when pasting into your program
+        HashGeneratorGUI()               # Remove when pasting into your program
+        return                         # Remove when pasting into your program
+    if PasswordMatches(password, login_password_hash):
+        print('Login SUCCESSFUL')
+    else:
+        print('Login FAILED!!')
 
 
-login_password_hash = 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4'
-password = sg.PopupGetText('Password', password_char='*')
-if password == 'gui':                # Remove when pasting into your program
-    HashGeneratorGUI()               # Remove when pasting into your program
-    exit(69)                         # Remove when pasting into your program
-if PasswordMatches(password, login_password_hash):
-    print('Login SUCCESSFUL')
-else:
-    print('Login FAILED!!')
+if __name__ == '__main__':
+    main()

@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-import sys
-
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import time
 import random
 
@@ -23,9 +18,9 @@ def LEDIndicator(key=None, radius=30):
              pad=(0, 0), key=key)
 
 def SetLED(window, key, color):
-    graph = window.FindElement(key)
-    graph.Erase()
-    graph.DrawCircle((0, 0), 12, fill_color=color, line_color=color)
+    graph = window[key]
+    graph.erase()
+    graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
 
 
 layout = [[sg.Text('My LED Status Indicators', size=(20,1))],
@@ -35,11 +30,11 @@ layout = [[sg.Text('My LED Status Indicators', size=(20,1))],
           [sg.Text('Server 1'), LEDIndicator('_server1_')],
           [sg.Button('Exit')]]
 
-window = sg.Window('My new window', default_element_size=(12, 1), auto_size_text=False).Layout(layout).Finalize()
+window = sg.Window('My new window', layout, default_element_size=(12, 1), auto_size_text=False, finalize=True)
 
 i = 0
 while True:  # Event Loop
-    event, value = window.Read(timeout=400)
+    event, value = window.read(timeout=400)
     if event == 'Exit' or event is None:
         break
     if value is None:
@@ -49,3 +44,4 @@ while True:  # Event Loop
     SetLED(window, '_ram_', 'green' if random.randint(1, 10) > 5 else 'red')
     SetLED(window, '_temp_', 'green' if random.randint(1, 10) > 5 else 'red')
     SetLED(window, '_server1_', 'green' if random.randint(1, 10) > 5 else 'red')
+window.close()

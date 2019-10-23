@@ -1,24 +1,21 @@
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
-layout =    [
-            [sg.Text('Your typed chars appear here:'), sg.Text('', size=(20,1), key='-OUTPUT-')],
-            [sg.Input(do_not_clear=True, key='-IN-')],
-            [sg.Button('Show'), sg.Button('Exit')]
-            ]
+layout = [
+    [sg.Text('Your typed chars appear here:'),
+     sg.Text(size=(20, 1), key='-OUTPUT-')],
+    [sg.Input('', key='-IN-')],
+    [sg.Button('Show'), sg.Button('Exit')]
+]
 
-window = sg.Window('Window Title').Layout(layout)
+window = sg.Window('Window Title', layout)
 
-while True:  # Event Loop
-    event, values = window.Read()
+while True:
+    event, values = window.read()
     print(event, values)
-    if event is None or event == 'Exit':
+    if event in (None, 'Exit'):
         break
     if event == 'Show':
-        # change the "output" element to be the value of "input" element  
-        window.FindElement('-OUTPUT-').Update(values['-IN-'])
+        # change the "output" element to be the value of "input" element
+        window['-OUTPUT-'].update(values['-IN-'])
 
-window.Close()
+window.close()

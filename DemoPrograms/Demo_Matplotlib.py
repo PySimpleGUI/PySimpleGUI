@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+from matplotlib.ticker import NullFormatter  # useful for `logit` scale
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import PySimpleGUI as sg
-
 import matplotlib
 matplotlib.use('TkAgg')
-
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 """
 Demonstrates one way of embedding Matplotlib figures into a PySimpleGUI window.
@@ -21,12 +22,7 @@ Basic steps are:
 """
 
 
-#------------------------------- PASTE YOUR MATPLOTLIB CODE HERE -------------------------------
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-from matplotlib.ticker import NullFormatter  # useful for `logit` scale
+# ------------------------------- PASTE YOUR MATPLOTLIB CODE HERE -------------------------------
 
 # Fixing random state for reproducibility
 np.random.seed(19680801)
@@ -75,9 +71,9 @@ plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25,
 fig = plt.gcf()      # if using Pyplot then get the figure from the plot
 figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
-#------------------------------- END OF YOUR MATPLOTLIB CODE -------------------------------
+# ------------------------------- END OF YOUR MATPLOTLIB CODE -------------------------------
 
-#------------------------------- Beginning of Matplotlib helper code -----------------------
+# ------------------------------- Beginning of Matplotlib helper code -----------------------
 
 
 def draw_figure(canvas, figure, loc=(0, 0)):
@@ -85,7 +81,8 @@ def draw_figure(canvas, figure, loc=(0, 0)):
     figure_canvas_agg.draw()
     figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
     return figure_canvas_agg
-#------------------------------- Beginning of GUI CODE -------------------------------
+# ------------------------------- Beginning of GUI CODE -------------------------------
+
 
 # define the window layout
 layout = [[sg.Text('Plot test', font='Any 18')],
@@ -93,9 +90,12 @@ layout = [[sg.Text('Plot test', font='Any 18')],
           [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
 
 # create the form and show it without the plot
-window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout, finalize=True)
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI',
+                   layout, finalize=True)
 
 # add the plot to the window
 fig_canvas_agg = draw_figure(window['canvas'].TKCanvas, fig)
 
 event, values = window.read()
+
+window.close()

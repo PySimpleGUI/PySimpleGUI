@@ -7,12 +7,13 @@ import PySimpleGUI as sg
     In this program, as soon as a listbox entry is clicked, the read returns.
 """
 
-sg.ChangeLookAndFeel('GreenTan')
+sg.change_look_and_feel('GreenTan')
 
-layout = [  [sg.Text('Look and Feel Browser')],
-            [sg.Text('Click a look and feel color to see demo window')],
-            [sg.Listbox(values=sg.list_of_look_and_feel_values(), size=(20,12), key='-LIST-', enable_events=True)],
-            [sg.Button('Show Window'), sg.Button('Exit')]  ]
+layout = [[sg.Text('Look and Feel Browser')],
+          [sg.Text('Click a look and feel color to see demo window')],
+          [sg.Listbox(values=sg.list_of_look_and_feel_values(),
+                      size=(20, 12), key='-LIST-', enable_events=True)],
+          [sg.Button('Show Window'), sg.Button('Exit')]]
 
 window = sg.Window('Look and Feel Browser', layout)
 
@@ -22,4 +23,5 @@ while True:             # Event Loop
         break
     sg.change_look_and_feel(values['-LIST-'][0])
     sg.popup_get_text('This is {}'.format(values['-LIST-'][0]))
+    
 window.close()

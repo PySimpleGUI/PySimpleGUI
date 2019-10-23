@@ -1,35 +1,37 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-import matplotlib.pyplot as plt
-import ping
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 import matplotlib.backends.tkagg as tkagg
+import matplotlib.pyplot as plt
+import PySimpleGUI as sg
 import tkinter as tk
+import ping
 
-#================================================================================
+# ================================================================================
 #   Globals
 #       These are needed because callback functions are used.
 #       Need to retain state across calls
-#================================================================================
+# ================================================================================
+
+
 class MyGlobals:
     axis_pings = None
     ping_x_array = []
     ping_y_array = []
 
+
 g_my_globals = MyGlobals()
 
-#================================================================================
+# ================================================================================
 #       Performs *** PING! ***
-#================================================================================
+# ================================================================================
+
+
 def run_a_ping_and_graph():
-    global g_my_globals                 # graphs are global so that can be retained across multiple calls to this callback
+    # graphs are global so that can be retained across multiple calls to this callback
+    global g_my_globals
 
     #===================== Do the ping =====================#
-    response = ping.quiet_ping('google.com',timeout=1000)
+    response = ping.quiet_ping('google.com', timeout=1000)
     if response[0] == 0:
         ping_time = 1000
     else:
@@ -46,21 +48,26 @@ def run_a_ping_and_graph():
         y_array = g_my_globals.ping_y_array
 
     # ===================== Call graphinc functions =====================#
-    g_my_globals.axis_ping.clear()                                                              # clear before graphing
-    g_my_globals.axis_ping.plot(x_array,y_array)                                                # graph the ping values
+    # clear before graphing
+    g_my_globals.axis_ping.clear()
+    # graph the ping values
+    g_my_globals.axis_ping.plot(x_array, y_array)
 
-#================================================================================
+# ================================================================================
 #   Function:   Set graph titles and Axis labels
 #       Sets the text for the subplots
 #       Have to do this in 2 places... initially when creating and when updating
 #       So, putting into a function so don't have to duplicate code
-#================================================================================
+# ================================================================================
+
+
 def set_chart_labels():
     global g_my_globals
 
     g_my_globals.axis_ping.set_xlabel('Time')
     g_my_globals.axis_ping.set_ylabel('Ping (ms)')
-    g_my_globals.axis_ping.set_title('Current Ping Duration', fontsize = 12)
+    g_my_globals.axis_ping.set_title('Current Ping Duration', fontsize=12)
+
 
 def draw(fig, canvas):
     # Magic code that draws the figure onto the Canvas Element's canvas
@@ -73,30 +80,34 @@ def draw(fig, canvas):
     tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
     return photo
 
-#================================================================================
+# ================================================================================
 #   Function:   MAIN
-#================================================================================
+# ================================================================================
+
+
 def main():
     global g_my_globals
 
     # define the form layout
-    layout = [[sg.Text('Animated Ping', size=(40, 1), justification='center', font='Helvetica 20')],
+    layout = [[sg.Text('Animated Ping', size=(40, 1),
+                    justification='center', font='Helvetica 20')],
               [sg.Canvas(size=(640, 480), key='canvas')],
               [sg.Button('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI').Layout(layout).Finalize()
+    window = sg.Window(
+        'Demo Application - Embedding Matplotlib In PySimpleGUI', layout, finalize=True)
 
-    canvas_elem = window.FindElement('canvas')
+    canvas_elem = window['canvas']
     canvas = canvas_elem.TKCanvas
 
     fig = plt.figure()
-    g_my_globals.axis_ping = fig.add_subplot(1,1,1)
+    g_my_globals.axis_ping = fig.add_subplot(1, 1, 1)
     set_chart_labels()
     plt.tight_layout()
 
     while True:
-        event, values = window.Read(timeout=0)
+        event, values = window.read(timeout=0)
         if event in ('Exit', None):
             break
 

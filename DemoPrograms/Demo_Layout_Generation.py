@@ -34,10 +34,11 @@ def layout0():
 
     window = sg.Window('Generated Layouts', layout)
 
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
+    window.close()
+
 
 """
     Construct #1 - List comprehension to generate a Column of Buttons
@@ -46,15 +47,17 @@ def layout0():
 
 """
 
+
 def layout1():
-    layout = [[sg.Button(i)] for i in range(4)]    # a List of lists of buttons.  Notice the ] after Button
+    # a List of lists of buttons.  Notice the ] after Button
+    layout = [[sg.Button(i)] for i in range(4)]
 
     window = sg.Window('Generated Layouts', layout)
 
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
+    window.close()
 
 
 """
@@ -70,15 +73,17 @@ def layout1():
     See next Construct on how to not use a \ that also results in a VISUALLY similar to a norma layout
 """
 
+
 def layout2():
-    layout = [[sg.Button(i) for i in range(4)]] + [[sg.OK()]]  # if want to split, can't add newline after + to do it
+    # if want to split, can't add newline after + to do it
+    layout = [[sg.Button(i) for i in range(4)]] + [[sg.OK()]]
 
     window = sg.Window('Generated Layouts', layout)
 
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
+    window.close()
 
 
 """
@@ -94,18 +99,21 @@ def layout2():
     use this way because it modifies the layout list directly.
 """
 
+
 def layout3():
     # in terms of formatting, the layout to the RIGHT of the = sign looks like a 2-line GUI (ignore the layout +=
-    layout =  [[sg.Button(i) for i in range(4)]]
-    layout += [[sg.OK()]]               # this row is better than, but is the same as
-    layout.append([sg.Cancel()])        # .. this row in that they both add a new ROW with a button on it
+    layout = [[sg.Button(i) for i in range(4)]]
+    # this row is better than, but is the same as
+    layout += [[sg.OK()]]
+    # .. this row in that they both add a new ROW with a button on it
+    layout.append([sg.Cancel()])
 
     window = sg.Window('Generated Layouts', layout)
 
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
+    window.close()
 
 
 """
@@ -115,15 +123,16 @@ def layout3():
     items in one list are added to the items in another.  That's true for all these contructs using +
 """
 
+
 def layout4():
-    layout =  [[sg.Text('Enter some info')] + [sg.Input()] + [sg.Exit()]]
+    layout = [[sg.Text('Enter some info')] + [sg.Input()] + [sg.Exit()]]
 
     window = sg.Window('Generated Layouts', layout)
 
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
+    window.close()
 
 
 """
@@ -147,20 +156,24 @@ def layout4():
     Works as long as the things you are adding together look like this [[ ]]  (the famous double bracket layouts of PSG)
 """
 
+
 def layout5():
     questions = ('Managing your day-to-day life', 'Coping with problems in your life?', 'Concentrating?',
                  'Get along with people in your family?', 'Get along with people outside your family?',
                  'Get along well in social situations?', 'Feel close to another person',
                  'Feel like you had someone to turn to if you needed help?', 'Felt confident in yourself?')
 
-    layout = [[sg.T(qnum + 1, size=(2, 2)), sg.T(q, size=(30, 2))] + [sg.Radio('', group_id=qnum, size=(7, 2), key=(qnum, col)) for col in range(5)] for qnum, q in enumerate(questions)]
+    layout = [[sg.Text(qnum + 1, size=(2, 2)), sg.Text(q, size=(30, 2))] +
+              [sg.Radio('', group_id=qnum, size=(7, 2),
+                        key=(qnum, col)) for col in range(5)]
+              for qnum, q in enumerate(questions)]
     layout += [[sg.OK()]]
 
     window = sg.Window('Computed Layout Questionnaire', layout)
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
+    window.close()
 
 
 """
@@ -181,20 +194,26 @@ def layout6():
                  'Feel like you had someone to turn to if you needed help?', 'Felt confident in yourself?')
 
     layout = [[]]
-    for qnum, question in enumerate(questions):     # loop through questions
-        row_layout = [sg.T(qnum + 1, size=(2, 2)), sg.T(question, size=(30, 2))]    # rows start with # and question
-        for radio_num in range(5):                  # loop through 5 radio buttons and add to row
-            row_layout += [sg.Radio('', group_id=qnum, size=(7, 2), key=(qnum, radio_num))]
-        layout += [row_layout]                      # after row is completed layout, tack it onto the end of final layout
+    for qnum, question in enumerate(questions):
+        # rows start with # and question
+        row_layout = [sg.Text(qnum + 1, size=(2, 2)),
+                      sg.Text(question, size=(30, 2))]
 
-    layout += [[sg.OK()]]                           # and finally, add a row to the bottom that has an OK button
+        # loop through 5 radio buttons and add to row
+        for radio_num in range(5):
+            row_layout += [sg.Radio('', group_id=qnum,
+                                    size=(7, 2), key=(qnum, radio_num))]
+        # after row is completed layout, tack it onto the end of final layout
+        layout += [row_layout]
+
+    # and finally, add a row to the bottom that has an OK button
+    layout += [[sg.OK()]]
 
     window = sg.Window('Computed Layout Questionnaire', layout)
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
-
+    window.close()
 
 
 """
@@ -223,21 +242,24 @@ def layout6():
     variable number of rows and a variable number of columns in each row.
 """
 
+
 def layout7():
     questions = ('Managing your day-to-day life', 'Coping with problems in your life?', 'Concentrating?',
                  'Get along with people in your family?', 'Get along with people outside your family?',
                  'Get along well in social situations?', 'Feel close to another person',
                  'Feel like you had someone to turn to if you needed help?', 'Felt confident in yourself?')
 
-    layout = [[*[sg.T(qnum + 1, size=(2, 2)), sg.T(q, size=(30, 2))], # These are the question # and the question text
-               *[sg.Radio('', group_id=qnum, size=(7, 2), key=(qnum, col)) for col in range(5)]] for qnum, q in enumerate(questions)] + [[sg.OK()]]     # finally add an OK button at the very bottom by using the '+' operator
+    # These are the question # and the question text
+    layout = [[*[sg.Text(qnum + 1, size=(2, 2)), sg.Text(q, size=(30, 2))],
+               # finally add an OK button at the very bottom by using the '+' operator
+               *[sg.Radio('', group_id=qnum, size=(7, 2), key=(qnum, col)) for col in range(5)]] for qnum, q in enumerate(questions)] + [[sg.OK()]]
 
     window = sg.Window('Questionnaire', layout)
 
-    event, values = window.Read()
+    event, values = window.read()
 
     print(event, values)
-    window.Close()
+    window.close()
 
 
 """
@@ -249,20 +271,25 @@ def layout7():
     In this example we start with a "Header" Text element and build from there.
 """
 
+
 def layout8():
     # The questions and answers
     q_and_a = [
-        ['1. What is the thing that makes light in our solar system', ['A. The Moon', 'B. Jupiter', 'C. I dunno']],
-        ['2. What is Pluto', ['A. The 9th planet', 'B. A dwarf-planet', 'C. The 8th planet', 'D. Goofies pet dog']],
+        ['1. What is the thing that makes light in our solar system',
+            ['A. The Moon', 'B. Jupiter', 'C. I dunno']],
+        ['2. What is Pluto', ['A. The 9th planet', 'B. A dwarf-planet',
+                              'C. The 8th planet', 'D. Goofies pet dog']],
         ['3. When did man step foot on the moon', ['A. 1969', 'B. 1960', 'C. 1970', 'D. 1869']], ]
 
-    layout = [[sg.Text('Astronomy Quiz #1', font='ANY 15', size=(30, 2))]]  # make Header larger
+    # make Header larger
+    layout = [[sg.Text('Astronomy Quiz #1', font='ANY 15', size=(30, 2))]]
 
     # "generate" the layout for the window based on the Question and Answer information
     for qa in q_and_a:
         q = qa[0]
         a_list = qa[1]
-        layout += [[sg.Text(q)]] + [[sg.Radio(a, group_id=q)] for a in a_list] + [[sg.Text('_' * 50)]]
+        layout += [[sg.Text(q)]] + [[sg.Radio(a, group_id=q)]
+                                 for a in a_list] + [[sg.Text('_' * 50)]]
 
     layout += [[sg.Button('Submit Answers', key='SUBMIT')]]
 
@@ -279,11 +306,11 @@ def layout8():
 # ------------------------- Call each of the Constructs -------------------------
 
 layout0()
-layout1()
-layout2()
-layout3()
-layout4()
-layout5()
-layout6()
-layout7()
-layout8()
+# layout1()
+# layout2()
+# layout3()
+# layout4()
+# layout5()
+# layout6()
+# layout7()
+# layout8()

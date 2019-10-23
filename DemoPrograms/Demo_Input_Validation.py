@@ -1,8 +1,4 @@
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
 """
     Simple field validation
@@ -11,15 +7,18 @@ else:
 """
 
 layout = [[sg.Text('Enter digits:')],
-            [sg.Input(do_not_clear=True, enable_events=True,  key='_INPUT_')],
-            [sg.Button('Ok', key='_OK_'),sg.Button('Exit')]]
+          [sg.Input('', enable_events=True,  key='-INPUT-')],
+          [sg.Button('Ok', key='-OK-'), sg.Button('Exit')]]
 
-window = sg.Window('Window Title').Layout(layout)
+window = sg.Window('Window Title', layout)
 
 while True:             # Event Loop
-    event, values = window.Read()
-    if event in  (None, 'Exit'):
+    event, values = window.read()
+    if event in (None, 'Exit'):
         break
-    if len(values['_INPUT_']) and values['_INPUT_'][-1] not in ('0123456789'):  # if last char entered not a digit
-        window.Element('_INPUT_').Update(values['_INPUT_'][:-1])                # delete last char from input
-window.Close()
+    # if last char entered not a digit
+    if len(values['-INPUT-']) and values['-INPUT-'][-1] not in ('0123456789'):
+        # delete last char from input
+        window['-INPUT-'].update(values['-INPUT-'][:-1])
+
+window.close()

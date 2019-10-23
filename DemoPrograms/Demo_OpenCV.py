@@ -1,13 +1,8 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-import cv2 as cv
+import PySimpleGUI as sg
 from PIL import Image
+import cv2 as cv
 import io
-from sys import exit as exit
 
 """
 Demo program to open and play a file using OpenCV
@@ -18,55 +13,70 @@ It's main purpose is to show you:
 For added fun, you can reposition the video using the slider.
 """
 
+
 def main():
     # ---===--- Get the filename --- #
-    filename = sg.PopupGetFile('Filename to play')
+    filename = sg.popup_get_file('Filename to play')
     if filename is None:
-        exit(69)
+        return
     vidFile = cv.VideoCapture(filename)
     # ---===--- Get some Stats --- #
     num_frames = vidFile.get(cv.CAP_PROP_FRAME_COUNT)
     fps = vidFile.get(cv.CAP_PROP_FPS)
 
-    sg.ChangeLookAndFeel('Black')
+    sg.change_look_and_feel('Black')
 
     # ---===--- define the window layout --- #
     layout = [[sg.Text('OpenCV Demo', size=(15, 1), font='Helvetica 20')],
-              [sg.Image(filename='', key='_image_')],
-              [sg.Slider(range=(0, num_frames), size=(60, 10), orientation='h', key='_slider_')],
+              [sg.Image(filename='', key='-image-')],
+              [sg.Slider(range=(0, num_frames),
+                        size=(60, 10), orientation='h', key='-slider-')],
               [sg.Button('Exit', size=(7, 1), pad=((600, 0), 3), font='Helvetica 14')]]
 
     # create the window and show it without the plot
-    window = sg.Window('Demo Application - OpenCV Integration', no_titlebar=False, location=(0,0)).Layout(layout)
+    window = sg.Window('Demo Application - OpenCV Integration',
+                       layout,
+                       no_titlebar=False,
+                       location=(0, 0))
 
-    image_elem = window.Element('_image_')    # locate the elements we'll be updating. Does the search only 1 time
-    slider_elem = window.Element('_slider_')
+    # locate the elements we'll be updating. Does the search only 1 time
+    image_elem = window['-image-']
+    slider_elem = window['-slider-']
 
     # ---===--- LOOP through video file by frame --- #
     cur_frame = 0
     while vidFile.isOpened():
-        event, values = window.Read(timeout=0)
+        event, values = window.read(timeout=0)
         if event in ('Exit', None):
-            exit(69)
+            break
         ret, frame = vidFile.read()
         if not ret:  # if out of data stop looping
             break
-        if int(values['_slider_']) != cur_frame-1:        # if someone moved the slider manually, the jump to that frame
-            cur_frame = int(values['_slider_'])
+        # if someone moved the slider manually, the jump to that frame
+        if int(values['-slider-']) != cur_frame-1:
+            cur_frame = int(values['-slider-'])
             vidFile.set(cv.CAP_PROP_POS_FRAMES, cur_frame)
-        slider_elem.Update(cur_frame)
+        slider_elem.update(cur_frame)
         cur_frame += 1
 
         imgbytes = cv.imencode('.png', frame)[1].tobytes()  # ditto
-        image_elem.Update(data=imgbytes)
+        image_elem.update(data=imgbytes)
 
-"""
+            #############
+            #    | |    #
+            #    | |    #
+            #    |_|    #
+            #  __   __  #
+            #  \ \ / /  #
+            #   \ V /   #
+            #    \_/    #
+"""         #############
         # This was another way updates were being done, but seems slower than the above
         img = Image.fromarray(frame)    # create PIL image from frame
         bio = io.BytesIO()              # a binary memory resident stream
         img.save(bio, format= 'PNG')    # save image as png to it
         imgbytes = bio.getvalue()       # this can be used by OpenCV hopefully
-        image_elem.Update(data=imgbytes)
+        image_elem.update(data=imgbytes)
 """
 
 main()

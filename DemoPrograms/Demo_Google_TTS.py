@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 from gtts import gTTS
 from pygame import mixer
 import time
@@ -19,16 +15,16 @@ import os
 '''
 
 layout = [[sg.Text('What would you like me to say?')],
-          [sg.Multiline(size=(60,10), enter_submits=True)],
+          [sg.MLine(size=(60,10), enter_submits=True)],
           [sg.Button('Speak', bind_return_key=True), sg.Exit()]]
 
-window = sg.Window('Google Text to Speech').Layout(layout)
+window = sg.Window('Google Text to Speech', layout)
 
 i = 0
 mixer.init()
 while True:
-    event, values = window.Read()
-    if event is None or event == 'Exit':
+    event, values = window.read()
+    if event in (None, 'Exit'):
         break
     # Get the text and convert to mp3 file
     tts = gTTS(text=values[0], lang='en',slow=False)
@@ -41,6 +37,8 @@ while True:
         time.sleep(.1)
     mixer.stop()
     i += 1
+
+window.close()
 
 # try to remove the temp files. You'll likely be left with 1 to clean up
 try:

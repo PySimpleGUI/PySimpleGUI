@@ -10,29 +10,28 @@ import cv2
 """
 
 def main():
-    layout = [[sg.Graph((600,450),(0,450), (600,0), key='_GRAPH_', enable_events=True, drag_submits=True)],]
+    layout = [[sg.Graph((600,450),(0,450), (600,0), key='-GRAPH-', enable_events=True, drag_submits=True)],]
 
     window = sg.Window('Demo Application - OpenCV Integration', layout)
-
-    graph_elem = window.Element('_GRAPH_')      # type: sg.Graph
-
-    id = None
+    graph_elem = window['-GRAPH-']      # type: sg.Graph
+    a_id = None
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
     cap = cv2.VideoCapture(0)
     while True:
-        event, values = window.Read(timeout=0)
+        event, values = window.read(timeout=0)
         if event in ('Exit', None):
             break
 
         ret, frame = cap.read()
         imgbytes=cv2.imencode('.png', frame)[1].tobytes()
-        if id:
-            graph_elem.DeleteFigure(id)             # delete previous image
-        id = graph_elem.DrawImage(data=imgbytes, location=(0,0))    # draw new image
-        graph_elem.TKCanvas.tag_lower(id)           # move image to the "bottom" of all other drawings
+        if a_id:
+            graph_elem.delete_figure(a_id)             # delete previous image
+        a_id = graph_elem.draw_image(data=imgbytes, location=(0,0))    # draw new image
+        graph_elem.TKCanvas.tag_lower(a_id)           # move image to the "bottom" of all other drawings
 
-        if event == '_GRAPH_':
-            graph_elem.DrawCircle(values['_GRAPH_'], 5, fill_color='red', line_color='red')
-    window.Close()
+        if event == '-GRAPH-':
+            graph_elem.draw_circle(values['-GRAPH-'], 5, fill_color='red', line_color='red')
+
+    window.close()
 
 main()

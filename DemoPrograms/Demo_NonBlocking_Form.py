@@ -1,21 +1,21 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import time
 
-# Window that doen't block
-# good for applications with an loop that polls hardware
+'''
+    Window that doesn't block
+    good for applications with an loop that polls hardware
+'''
+
 def StatusOutputExample():
     # Create a text element that will be updated with status information on the GUI itself
     # Create the rows
     layout = [[sg.Text('Non-blocking GUI with updates')],
-                 [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='output')],
-                 [sg.Button('LED On'), sg.Button('LED Off'), sg.Button('Quit')]]
+              [sg.Text('', size=(8, 2), font=('Helvetica', 20),
+                    justification='center', key='output')],
+              [sg.Button('LED On'), sg.Button('LED Off'), sg.Button('Quit')]]
     # Layout the rows of the Window and perform a read. Indicate the Window is non-blocking!
-    window = sg.Window('Running Timer', auto_size_text=True).Layout(layout)
+    window = sg.Window('Running Timer', layout, auto_size_text=True)
 
     #
     # Some place later in your code...
@@ -23,11 +23,12 @@ def StatusOutputExample():
     # else it won't refresh.
     #
     # your program's main loop
-    i=0
-    while (True):
+    i = 0
+    while True:
         # This is the code that reads and updates your window
-        event, values = window.Read(timeout=10)
-        window.FindElement('output').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+        event, values = window.read(timeout=10)
+        window['output'].update('{:02d}:{:02d}.{:02d}'.format(
+            (i // 100) // 60, (i // 100) % 60, i % 100))
         if event in ('Quit', None):
             break
         if event == 'LED On':
@@ -39,20 +40,22 @@ def StatusOutputExample():
         # Your code begins here
 
     # Broke out of main loop. Close the window.
-    window.Close()
+    window.close()
 
 
 def RemoteControlExample():
 
     layout = [[sg.Text('Robotics Remote Control')],
-                 [sg.T(' '*10), sg.RealtimeButton('Forward')],
-                 [ sg.RealtimeButton('Left'), sg.T(' '*15), sg.RealtimeButton('Right')],
-                 [sg.T(' '*10), sg.RealtimeButton('Reverse')],
-                 [sg.T('')],
-                 [sg.Quit(button_color=('black', 'orange'))]
-                 ]
+              [sg.Text(' '*10), sg.RealtimeButton('Forward')],
+              [sg.RealtimeButton('Left'), sg.Text(' '*15),
+               sg.RealtimeButton('Right')],
+              [sg.Text(' '*10), sg.RealtimeButton('Reverse')],
+              [sg.Text('')],
+              [sg.Quit(button_color=('black', 'orange'))]
+              ]
 
-    window = sg.Window('Robotics Remote Control', auto_size_text=True).Layout(layout).Finalize()
+    window = sg.Window('Robotics Remote Control', layout,
+                       auto_size_text=True, finalize=True)
 
     #
     # Some place later in your code...
@@ -60,21 +63,21 @@ def RemoteControlExample():
     # else it won't refresh.
     #
     # your program's main loop
-    while (True):
+    while True:
         # This is the code that reads and updates your window
-        event, values = window.Read(timeout=0, timeout_key='timeout')
+        event, values = window.read(timeout=0, timeout_key='timeout')
         if event != 'timeout':
             print(event)
         if event in ('Quit', None):
             break
 
-    window.Close()
+    window.close()
 
 
 def main():
     RemoteControlExample()
     StatusOutputExample()
-    sg.Popup('End of non-blocking demonstration')
+    sg.popup('End of non-blocking demonstration')
 
 
 if __name__ == '__main__':

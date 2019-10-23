@@ -1,8 +1,6 @@
 # !/usr/bin/env python
 # Based on work by - Siddharth Natamai
 # At the moment, this source file runs on TWO of the 4 PySimpleGUI ports with a third one coming soon (Qt).
-# import PySimpleGUIQt as sg            # not quite working on Qt yet... needs Graph.Relocate fixed first
-# import PySimpleGUIWeb as sg
 import PySimpleGUI as sg
 import random
 
@@ -19,7 +17,8 @@ BALL_COLOR = 'green1'
 num_rounds = 0
 while num_rounds == 0:
     try:
-        num_rounds = int(sg.PopupGetText('How many rounds would you like to play?'))
+        num_rounds = int(sg.popup_get_text(
+            'How many rounds would you like to play?'))
     except Exception as e:
         num_rounds = 0
 
@@ -33,9 +32,10 @@ class Ball:
         self.player_2_Score = player_2_Starting_Score
         self.draw_P1 = None
         self.draw_P2 = None
-        self.id = self.graph.DrawCircle(STARTING_BALL_POSITION, BALL_RADIUS, line_color=colour, fill_color=colour)
+        self.id = self.graph.draw_circle(
+            STARTING_BALL_POSITION, BALL_RADIUS, line_color=colour, fill_color=colour)
         self.curx, self.cury = STARTING_BALL_POSITION
-        # self.graph.RelocateFigure(self.id, STARTING_BALL_POSITION[0], STARTING_BALL_POSITION[1])
+        # self.graph.relocate_figure(self.id, STARTING_BALL_POSITION[0], STARTING_BALL_POSITION[1])
         self.x = random.choice([-2.5, 2.5])
         self.y = -2.5
 
@@ -48,12 +48,14 @@ class Ball:
         return winner
 
     def update_player1_score(self, val):
-        self.graph.DeleteFigure(self.draw_P1)
-        self.draw_P1 = self.graph.DrawText(str(val), (170, 50), font=('Courier 60'), color='white')
+        self.graph.delete_figure(self.draw_P1)
+        self.draw_P1 = self.graph.draw_text(
+            str(val), (170, 50), font=('Courier 60'), color='white')
 
     def update_player2_score(self, val):
-        self.graph.DeleteFigure(self.draw_P2)
-        self.draw_P2 = self.graph.DrawText(str(val), (550, 50), font=('courier 40'), color='white')
+        self.graph.delete_figure(self.draw_P2)
+        self.draw_P2 = self.graph.draw_text(
+            str(val), (550, 50), font=('courier 40'), color='white')
 
     def hit_bat(self, pos):
         bat_pos = (self.bat_1.curx, self.bat_1.cury)
@@ -69,11 +71,10 @@ class Ball:
                 return True
             return False
 
-
     def draw(self):
         self.curx += self.x
         self.cury += self.y
-        self.graph.RelocateFigure(self.id, self.curx, self.cury)
+        self.graph.relocate_figure(self.id, self.curx, self.cury)
         if self.cury <= 0:            # see if hit top or bottom of play area. If so, reverse y direction
             self.y = 4
             self.cury = 0
@@ -82,13 +83,15 @@ class Ball:
             self.cury = GAMEPLAY_SIZE[1]-BALL_RADIUS/2
         if self.curx <= 0:                     # see if beyond player
             self.player_1_Score += 1
-            self.graph.RelocateFigure(self.id, STARTING_BALL_POSITION[0], STARTING_BALL_POSITION[1])
+            self.graph.relocate_figure(
+                self.id, STARTING_BALL_POSITION[0], STARTING_BALL_POSITION[1])
             self.x = 4
             self.update_player2_score(self.player_1_Score)
             self.curx, self.cury = STARTING_BALL_POSITION
         if self.curx >= GAMEPLAY_SIZE[0]:
             self.player_2_Score += 1
-            self.graph.RelocateFigure(self.id, STARTING_BALL_POSITION[0], STARTING_BALL_POSITION[1])
+            self.graph.relocate_figure(
+                self.id, STARTING_BALL_POSITION[0], STARTING_BALL_POSITION[1])
             self.x = -4
             self.update_player1_score(self.player_2_Score)
             self.curx, self.cury = STARTING_BALL_POSITION
@@ -98,10 +101,11 @@ class Ball:
             self.x = -4
 
 
-class PongBat():
-    def __init__(self, graph:sg.Graph, colour, x, width=BAT_SIZE[0], height=BAT_SIZE[1]):
+class PongBall():
+    def __init__(self, graph: sg.Graph, colour, x, width=BAT_SIZE[0], height=BAT_SIZE[1]):
         self.graph = graph
-        self.id = graph.DrawRectangle((x - width / 2, 200), (x + width / 2, 200 + height), fill_color=colour)
+        self.id = graph.draw_rectangle(
+            (x - width / 2, 200), (x + width / 2, 200 + height), fill_color=colour)
         self.y = 0
         self.x = x
         self.curx = x
@@ -119,7 +123,7 @@ class PongBat():
         return pos
 
     def draw(self):
-        self.graph.RelocateFigure(self.id, self.curx, self.cury)
+        self.graph.relocate_figure(self.id, self.curx, self.cury)
         if self.cury + self.y + BAT_SIZE[1] <= GAMEPLAY_SIZE[1] and self.cury + self.y + BAT_SIZE[1] >= 0:
             self.cury += self.y
         if self.cury <= 0:
@@ -131,16 +135,28 @@ class PongBat():
 
 
 def pong():
-    layout = [[sg.Graph(GAMEPLAY_SIZE, (0,GAMEPLAY_SIZE[1]), (GAMEPLAY_SIZE[0],0), background_color=BACKGROUND_COLOR, key='_GRAPH_')],
-              [sg.T(''), sg.Button('Exit'), sg.T('Speed'), sg.Slider((0,20),default_value=10, orientation='h', enable_events=True, key='_SPEED_')]]
+    layout = [[sg.Graph(GAMEPLAY_SIZE,
+                        (0, GAMEPLAY_SIZE[1]),
+                        (GAMEPLAY_SIZE[0], 0),
+                        background_color=BACKGROUND_COLOR,
+                        key='-GRAPH-')],
+              [sg.Text(''),
+               sg.Button('Exit'),
+               sg.Text('Speed'),
+               sg.Slider((0, 20),
+                         default_value=10,
+                         orientation='h',
+                         enable_events=True,
+                         key='-SPEED-')]
+              ]
 
-    window = sg.Window('Pong', layout, return_keyboard_events=True).Finalize()
+    window = sg.Window(
+        'Pong', layout, return_keyboard_events=True, finalize=True)
 
-    graph_elem = window.FindElement('_GRAPH_')                  # type: sg.Graph
+    graph_elem = window['-GRAPH-']                  # type: sg.Graph
 
-    bat_1 = PongBat(graph_elem, 'red', 30)
-    bat_2 = PongBat(graph_elem, 'blue', 670)
-
+    bat_1 = PongBall(graph_elem, 'red', 30)
+    bat_2 = PongBall(graph_elem, 'blue', 670)
     ball_1 = Ball(graph_elem, bat_1, bat_2, 'green1')
     sleep_time = 10
 
@@ -149,8 +165,9 @@ def pong():
         bat_1.draw()
         bat_2.draw()
 
-        event, values = window.Read(timeout=sleep_time)         # type: str, str
-        if event is None or event == 'Exit':
+        event, values = window.read(
+            timeout=sleep_time)         # type: str, str
+        if event in (None, 'Exit'):
             break
         elif event.startswith('Up') or event.endswith('Up'):
             bat_2.up(5)
@@ -160,13 +177,14 @@ def pong():
             bat_1.up(5)
         elif event == 's':
             bat_1.down(5)
-        elif event == '_SPEED_':
-            sleep_time = int(values['_SPEED_'])
+        elif event == '-SPEED-':
+            sleep_time = int(values['-SPEED-'])
 
         if ball_1.win_loss_check():
-            sg.Popup('Game Over', ball_1.win_loss_check() + ' won!!')
+            sg.popup('Game Over', ball_1.win_loss_check() + ' won!!')
             break
-    window.Close()
+    window.close()
+
 
 if __name__ == '__main__':
     pong()

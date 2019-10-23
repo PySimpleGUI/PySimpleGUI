@@ -39,10 +39,13 @@ import PySimpleGUI as sg
 # Put your long running code inside this "wrapper"
 # NEVER make calls to PySimpleGUI from this thread (or any thread)!
 # Create one of these functions for EVERY long-running call you want to make
+
+
 def long_function_wrapper(work_id, gui_queue):
     # LOCATION 1
     # this is our "long running function call"
-    time.sleep(5)  # sleep for a while as a simulation of a long-running computation
+    # sleep for a while as a simulation of a long-running computation
+    time.sleep(5)
     # at the end of the work, before exiting, send a message back to the GUI indicating end
     gui_queue.put('{} ::: done'.format(work_id))
     # at this point, the thread exits
@@ -51,28 +54,34 @@ def long_function_wrapper(work_id, gui_queue):
 
 ############################# Begin GUI code #############################
 def the_gui():
-    gui_queue = queue.Queue()  # queue used to communicate between the gui and long-running code
+    # queue used to communicate between the gui and long-running code
+    gui_queue = queue.Queue()
 
     layout = [[sg.Text('Multithreaded Work Example')],
               [sg.Text('Click Go to start a long-running function call')],
-              [sg.Text('', size=(25, 1), key='_OUTPUT_')],
-              [sg.Text('', size=(25, 1), key='_OUTPUT2_')],
-              [sg.Graph((10,10),(0,0),(10,10),background_color='black',key=i) for i in range(20)],
+              [sg.Text('', size=(25, 1), key='-OUTPUT-')],
+              [sg.Text('', size=(25, 1), key='-OUTPUT2-')],
+              [sg.Graph((10, 10), (0, 0), (10, 10),
+                        background_color='black', key=i) for i in range(20)],
               [sg.Button('Go'), sg.Button('Popup'), sg.Button('Exit')], ]
 
-    window = sg.Window('Multithreaded Window').Layout(layout)
+    window = sg.Window('Multithreaded Window', layout)
     # --------------------- EVENT LOOP ---------------------
     work_id = 0
     while True:
-        event, values = window.Read(timeout=100)  # wait for up to 100 ms for a GUI event
-        if event is None or event == 'Exit':
+        # wait for up to 100 ms for a GUI event
+        event, values = window.read(timeout=100)
+        if event in (None, 'Exit'):
             break
         if event == 'Go':           # clicking "Go" starts a long running work item by starting thread
-            window.Element('_OUTPUT_').Update('Starting long work %s'%work_id)
-            window.Element(work_id).Update(background_color='red')
+            window['-OUTPUT-'].update('Starting long work %s' % work_id)
+            window[work_id].update(background_color='red')
             # LOCATION 2
             # STARTING long run by starting a thread
-            thread_id = threading.Thread(target=long_function_wrapper, args=(work_id, gui_queue,), daemon=True)
+            thread_id = threading.Thread(
+                target=long_function_wrapper,
+                args=(work_id, gui_queue,),
+                daemon=True)
             thread_id.start()
             work_id = work_id+1 if work_id < 19 else 0
         # --------------- Read next message coming in from threads ---------------
@@ -85,17 +94,20 @@ def the_gui():
         if message is not None:
             # LOCATION 3
             # this is the place you would execute code at ENDING of long running task
-            # You can check the completed_work_id variable to see exactly which long-running function completed
+            # You can check the completed_work_id variable
+            # to see exactly which long-running function completed
             completed_work_id = int(message[:message.index(' :::')])
-            window.Element('_OUTPUT2_').Update('Complete Work ID "{}"'.format(completed_work_id))
-            window.Element(completed_work_id).Update(background_color='green')
+            window['-OUTPUT2-'].update(
+                'Complete Work ID "{}"'.format(completed_work_id))
+            window[completed_work_id].update(background_color='green')
 
         if event == 'Popup':
-            sg.Popup('This is a popup showing that the GUI is running')
+            sg.popup('This is a popup showing that the GUI is running')
     # if user exits the window, then close the window and exit the GUI func
-    window.Close()
+    window.close()
 
 ############################# Main #############################
+
 
 if __name__ == '__main__':
     the_gui()

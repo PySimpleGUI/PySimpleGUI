@@ -23,10 +23,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy
-import PySimpleGUI as sg                # Take your pick!  Tkinter
-# import PySimpleGUIWeb as sg           # Or the Web!  (Remi!)
+import PySimpleGUI as sg
 
 BOX_SIZE = 15
+
 
 class GameOfLife:
 
@@ -98,40 +98,56 @@ class GameOfLife:
             self.t += 1
 
     def init_graphics(self):
-        self.graph = sg.Graph((600, 600), (0, 0), (450, 450), key='_GRAPH_', change_submits=True, drag_submits=False, background_color='lightblue')
+        self.graph = sg.Graph((600, 600), (0, 0), (450, 450),
+                              key='-GRAPH-',
+                              change_submits=True,
+                              drag_submits=False,
+                              background_color='lightblue')
         layout = [
-            [sg.Text('Game of Life    ', font='ANY 15'), sg.Text('', key='_OUTPUT_', size=(30,1), font='ANY 15')],
+            [sg.Text('Game of Life', font='ANY 15'),
+             sg.Text('', key='-OUTPUT-', size=(30, 1), font='ANY 15')],
             [self.graph],
-            [sg.Button('Go!', key='_DONE_'),
-             sg.Text('  Delay (ms)') , sg.Slider([0,800], orientation='h', key='_SLIDER_', enable_events=True, size=(15,15)), sg.T('', size=(3,1), key='_S1_OUT_'),
-             sg.Text('  Num Generations'), sg.Slider([0, 20000],default_value=4000, orientation='h',size=(15,15),enable_events=True, key='_SLIDER2_'), sg.T('', size=(3,1), key='_S2_OUT_')]
+            [sg.Button('Go!', key='-DONE-'),
+             sg.Text('  Delay (ms)'),
+             sg.Slider([0, 800],
+                       orientation='h',
+                       key='-SLIDER-',
+                       enable_events=True,
+                       size=(15, 15)),
+             sg.Text('', size=(3, 1), key='-S1-OUT-'),
+             sg.Text('  Num Generations'), sg.Slider([0, 20000],
+                                                  default_value=4000,
+                                                  orientation='h',
+                                                  size=(15, 15),
+                                                  enable_events=True,
+                                                  key='-SLIDER2-'),
+             sg.Text('', size=(3, 1), key='-S2-OUT-')]
         ]
 
-        self.window = sg.Window('Window Title', ).Layout(layout).Finalize()
-        event, values = self.window.Read(timeout=0)
-        self.delay = values['_SLIDER_']
-        self.window.Element('_S1_OUT_').Update(values['_SLIDER_'])
-        self.window.Element('_S2_OUT_').Update(values['_SLIDER2_'])
-
+        self.window = sg.Window('Window Title', layout, finalize=True)
+        event, values = self.window.read(timeout=0)
+        self.delay = values['-SLIDER-']
+        self.window['-S1-OUT-'].update(values['-SLIDER-'])
+        self.window['-S2-OUT-'].update(values['-SLIDER2-'])
 
     def draw_board(self):
         BOX_SIZE = 15
-        self.graph.Erase()
+        self.graph.erase()
         for i in range(self.N):
             for j in range(self.N):
                 if self.old_grid[i][j]:
-                    self.graph.DrawRectangle((i * BOX_SIZE, j * BOX_SIZE),
-                                             (i * BOX_SIZE + BOX_SIZE, j * (BOX_SIZE) + BOX_SIZE),
-                                             line_color='black', fill_color='yellow')
-        event, values = self.window.Read(timeout=self.delay)
-        if event in (None, '_DONE_'):
-            exit()
-        self.delay = values['_SLIDER_']
-        self.T = int(values['_SLIDER2_'])
-        self.window.Element('_S1_OUT_').Update(values['_SLIDER_'])
-        self.window.Element('_S2_OUT_').Update(values['_SLIDER2_'])
-        self.window.Element('_OUTPUT_').Update('Generation {}'.format(self.t))
-
+                    self.graph.draw_rectangle((i * BOX_SIZE, j * BOX_SIZE),
+                                              (i * BOX_SIZE + BOX_SIZE,
+                                               j * (BOX_SIZE) + BOX_SIZE),
+                                              line_color='black', fill_color='yellow')
+        event, values = self.window.read(timeout=self.delay)
+        if event in (None, '-DONE-'):
+            return
+        self.delay = values['-SLIDER-']
+        self.T = int(values['-SLIDER2-'])
+        self.window['-S1-OUT-'].update(values['-SLIDER-'])
+        self.window['-S2-OUT-'].update(values['-SLIDER2-'])
+        self.window['-OUTPUT-'].update('Generation {}'.format(self.t))
 
     def manual_board_setup(self):
         ids = []
@@ -140,31 +156,33 @@ class GameOfLife:
             for j in range(self.N):
                 ids[i].append(0)
         while True:  # Event Loop
-            event, values = self.window.Read()
-            if event is None or event == '_DONE_':
+            event, values = self.window.read()
+            if event is None or event == '-DONE-':
                 break
-            self.window.Element('_S1_OUT_').Update(values['_SLIDER_'])
-            self.window.Element('_S2_OUT_').Update(values['_SLIDER2_'])
-            mouse = values['_GRAPH_']
+            self.window['-S1-OUT-'].update(values['-SLIDER-'])
+            self.window['-S2-OUT-'].update(values['-SLIDER2-'])
+            mouse = values['-GRAPH-']
 
-            if event == '_GRAPH_':
+            if event == '-GRAPH-':
                 if mouse == (None, None):
                     continue
                 box_x = mouse[0] // BOX_SIZE
                 box_y = mouse[1] // BOX_SIZE
                 if self.old_grid[box_x][box_y] == 1:
-                    id = ids[box_x][box_y]
-                    self.graph.DeleteFigure(id)
+                    id_val = ids[box_x][box_y]
+                    self.graph.delete_figure(id_val)
                     self.old_grid[box_x][box_y] = 0
                 else:
-                    id = self.graph.DrawRectangle((box_x * BOX_SIZE, box_y * BOX_SIZE),
-                                                  (box_x * BOX_SIZE + BOX_SIZE, box_y * (BOX_SIZE) + BOX_SIZE),
-                                                  line_color='black', fill_color='yellow')
-                    ids[box_x][box_y] = id
+                    id_val = self.graph.draw_rectangle((box_x * BOX_SIZE, box_y * BOX_SIZE),
+                                                       (box_x * BOX_SIZE + BOX_SIZE,
+                                                        box_y * (BOX_SIZE) + BOX_SIZE),
+                                                       line_color='black', fill_color='yellow')
+                    ids[box_x][box_y] = id_val
                     self.old_grid[box_x][box_y] = 1
-        self.window.Element('_DONE_').Update(text='Exit')
+        self.window['-DONE-'].update(text='Exit')
+
 
 if (__name__ == "__main__"):
     game = GameOfLife(N=35, T=200)
     game.play()
-    game.window.Close()
+    game.window.close()

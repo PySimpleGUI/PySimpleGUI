@@ -1,31 +1,30 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-# GUI for switching an LED on and off to GPIO14
-
-# GPIO and time library:
+import PySimpleGUI as sg
 import time
 
+# App for Raspberry Pi.
+
 if sys.platform == 'win32':
-    from random import randint
 
     class GPIO():
         LOW = 0
         HIGH = 1
         BCM = OUT = 0
         current_value = 0
+
         @classmethod
         def setmode(self, mode):
             return
+
         @classmethod
         def setup(self, arg1, arg2):
             return
+
         @classmethod
         def output(self, port, value):
             self.current_value = value
+
         @classmethod
         def input(self, port):
             return self.current_value
@@ -35,6 +34,7 @@ else:
 # determine that GPIO numbers are used:
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(14, GPIO.OUT)
+
 
 def SwitchLED():
     varLedStatus = GPIO.input(14)
@@ -53,26 +53,26 @@ def FlashLED():
         GPIO.output(14, GPIO.LOW)
         time.sleep(0.5)
 
-layout = [[sg.T('Raspberry Pi LEDs')],
-           [sg.T('', size=(20, 1), key='output')],
-           [sg.Button('Switch LED')],
-           [sg.Button('Flash LED')],
-           [sg.Exit()]]
+
+layout = [[sg.Text('Raspberry Pi LEDs')],
+          [sg.Text('', size=(20, 1), key='output')],
+          [sg.Button('Switch LED')],
+          [sg.Button('Flash LED')],
+          [sg.Exit()]]
 
 window = sg.Window('Raspberry Pi GUI', layout, grab_anywhere=False)
 
 while True:
-    event, values = window.Read()
+    event, values = window.read()
     if event in (None, 'Exit'):
         break
 
     if event == 'Switch LED':
-        window.FindElement('output').Update(SwitchLED())
+        window['output'].update(SwitchLED())
     elif event == 'Flash LED':
-        window.FindElement('output').Update('LED is Flashing')
-        window.Refresh()
+        window['output'].update('LED is Flashing')
+        window.refresh()
         FlashLED()
-        window.FindElement('output').Update('')
+        window['output'].update('')
 
-window.Close()
-sg.Popup('Done... exiting')
+window.close()

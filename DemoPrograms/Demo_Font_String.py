@@ -1,34 +1,37 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
-layout = [[sg.Text('This is my sample text',size=(20,1), key='_text_') ],
-          [sg.CB('Bold', key='_bold_', change_submits=True),
-           sg.CB('Italics', key='_italics_', change_submits=True),
-           sg.CB('Underline', key='_underline_', change_submits=True)],
-          [sg.Slider((6,50), default_value=12, size=(14,20), orientation='h', key='_slider_', change_submits=True),
+'''
+    App that shows "how fonts work in PySimpleGUI".
+'''
+
+layout = [[sg.Text('This is my sample text', size=(20, 1), key='-text-')],
+          [sg.CB('Bold', key='-bold-', change_submits=True),
+           sg.CB('Italics', key='-italics-', change_submits=True),
+           sg.CB('Underline', key='-underline-', change_submits=True)],
+          [sg.Slider((6, 50), default_value=12, size=(14, 20),
+                     orientation='h', key='-slider-', change_submits=True),
            sg.Text('Font size')],
-          [sg.Text('Font string = '), sg.Text('', size=(25,1), key='_fontstring_')],
-          [ sg.Button('Exit')]]
+          [sg.Text('Font string = '), sg.Text('', size=(25, 1), key='-fontstring-')],
+          [sg.Button('Exit')]]
 
-window = sg.Window('Font string builder').Layout(layout)
+window = sg.Window('Font string builder', layout)
 
-text_elem = window.FindElement('_text_')
+text_elem = window['-text-']
 while True:     # Event Loop
-    event, values = window.Read()
+    event, values = window.read()
     if event in (None, 'Exit'):
         break
     font_string = 'Helvitica '
-    font_string += str(values['_slider_'])
-    if values['_bold_']:
+    font_string += str(values['-slider-'])
+    if values['-bold-']:
         font_string += ' bold'
-    if values['_italics_']:
+    if values['-italics-']:
         font_string += ' italic'
-    if values['_underline_']:
+    if values['-underline-']:
         font_string += ' underline'
-    text_elem.Update(font=font_string)
-    window.FindElement('_fontstring_').Update('"'+font_string+'"')
+    text_elem.update(font=int(font_string.split(' ')[1].split('.')[0]))
+    window['-fontstring-'].update('"'+font_string+'"')
     print(event, values)
+
+window.close()
