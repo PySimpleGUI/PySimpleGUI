@@ -1,18 +1,15 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
+
 import random
 import time
-from sys import exit as exit
 
 
 """
     Pong code supplied by Daniel Young (Neonzz)
     Modified.  Original code: https://www.pygame.org/project/3649/5739
 """
+
 
 class Ball:
     def __init__(self, canvas, bat, bat2, color):
@@ -38,14 +35,15 @@ class Ball:
             winner = 'Player Right'
         return winner
 
-
     def updatep(self, val):
         self.canvas.delete(self.drawP)
-        self.drawP = self.canvas.create_text(170, 50, font=('freesansbold.ttf', 40), text=str(val), fill='white')
+        self.drawP = self.canvas.create_text(170, 50, font=(
+            'freesansbold.ttf', 40), text=str(val), fill='white')
 
     def updatep1(self, val):
         self.canvas.delete(self.drawP1)
-        self.drawP1 = self.canvas.create_text(550, 50, font=('freesansbold.ttf', 40), text=str(val), fill='white')
+        self.drawP1 = self.canvas.create_text(550, 50, font=(
+            'freesansbold.ttf', 40), text=str(val), fill='white')
 
     def hit_bat(self, pos):
         bat_pos = self.canvas.coords(self.bat.id)
@@ -132,14 +130,15 @@ class pongbat2():
 
 def pong():
     # ------------- Define GUI layout -------------
-    layout = [[sg.Canvas(size=(700, 400), background_color='black', key='canvas')],
-              [sg.T(''), sg.Button('Quit')]]
+    layout = [[sg.Canvas(size=(700, 400),
+                         background_color='black',
+                         key='canvas')],
+              [sg.Text(''), sg.Button('Quit')]]
     # ------------- Create window -------------
-    window = sg.Window('The Classic Game of Pong', return_keyboard_events=True).Layout(layout).Finalize()
-    # window.Finalize()                  # TODO Replace with call to window.Finalize once code released
+    window = sg.Window('The Classic Game of Pong', layout,
+                       return_keyboard_events=True, finalize=True)
 
-    # ------------- Get the tkinter Canvas we're drawing on -------------
-    canvas = window.FindElement('canvas').TKCanvas
+    canvas = window['canvas'].TKCanvas
 
     # ------------- Create line down center, the bats and ball -------------
     canvas.create_line(350, 0, 350, 400, fill='white')
@@ -155,10 +154,10 @@ def pong():
         bat2.draw()
 
         # ------------- Read the form, get keypresses -------------
-        event, values = window.Read(timeout=0)
+        event, values = window.read(timeout=0)
         # ------------- If quit  -------------
         if event is None or event == 'Quit':
-            exit(69)
+            break
         # ------------- Keypresses -------------
         if event is not None:
             if event.startswith('Up'):
@@ -171,16 +170,14 @@ def pong():
                 bat1.down(1)
 
         if ball1.checkwin():
-            sg.Popup('Game Over', ball1.checkwin() + ' won!!')
+            sg.popup('Game Over', ball1.checkwin() + ' won!!')
             break
-
 
         # ------------- Bottom of loop, delay between animations -------------
         # time.sleep(.01)
         canvas.after(10)
 
+    window.close()
+
 if __name__ == '__main__':
     pong()
-
-
-

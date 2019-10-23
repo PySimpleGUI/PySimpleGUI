@@ -1,6 +1,8 @@
 import PySimpleGUI as sg
-# import PySimpleGUIQt as sg            # 100% portable to Qt by changing to this import
 
+'''
+    Example of on-screen keyboard.
+'''
 
 class keyboard():
     def __init__(self, location=(None, None), font=('Arial', 16)):
@@ -12,21 +14,16 @@ class keyboard():
         keyboard_layout = [[sg.Button(c, key=c, size=(4, 2), font=self.font) for c in numberRow] + [
             sg.Button('⌫', key='back', size=(4, 2), font=self.font),
             sg.Button('Esc', key='close', size=(4, 2), font=self.font)],
-                           [sg.T(' ' * 4)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
-                                              topRow] + [sg.Stretch()],
-                           [sg.T(' ' * 11)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
-                                               midRow] + [sg.Stretch()],
-                           [sg.T(' ' * 18)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
-                                               bottomRow] + [sg.Stretch()]]
+            [sg.Text(' ' * 4)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
+                               topRow] + [sg.Stretch()],
+            [sg.Text(' ' * 11)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
+                                midRow] + [sg.Stretch()],
+            [sg.Text(' ' * 18)] + [sg.Button(c, key=c, size=(4, 2), font=self.font) for c in
+                                bottomRow] + [sg.Stretch()]]
 
-        self.window = sg.Window('keyboard',
-                                grab_anywhere=True,
-                                keep_on_top=True,
-                                alpha_channel=0,
-                                no_titlebar=True,
-                                element_padding=(0,0),
-                                location=location
-                                ).Layout(keyboard_layout).Finalize()
+        self.window = sg.Window('keyboard', keyboard_layout,
+                                grab_anywhere=True, keep_on_top=True, alpha_channel=0,
+                                no_titlebar=True, element_padding=(0, 0), location=location, finalize=True)
         self.hide()
 
     def _keyboardhandler(self):
@@ -34,12 +31,12 @@ class keyboard():
             if self.event == 'close':
                 self.hide()
             elif len(self.event) == 1:
-                self.focus.Update(self.focus.Get() + self.event)
+                self.focus.update(self.focus.Get() + self.event)
             elif self.event == 'back':
                 Text = self.focus.Get()
                 if len(Text) > 0:
                     Text = Text[:-1]
-                    self.focus.Update(Text)
+                    self.focus.update(Text)
 
     def hide(self):
         self.visible = False
@@ -56,38 +53,37 @@ class keyboard():
             self.show()
 
     def update(self, focus):
-        self.event, _ = self.window.Read(timeout=0)
+        self.event, _ = self.window.read(timeout=0)
         if focus is not None:
             self.focus = focus
         self._keyboardhandler()
 
     def close(self):
-        self.window.Close()
+        self.window.close()
 
 
 class GUI():
     def __init__(self):
         layout = [[sg.Text('Enter Text')],
-                  [sg.Input(size=(17, 1), key='input1', do_not_clear=True)],
-                  [sg.InputText(size=(17, 1), key='input2', do_not_clear=True)],
+                  [sg.Input('', size=(17, 1), key='input1')],
+                  [sg.InputText('', size=(17, 1), key='input2')],
                   [sg.Button('on-screen keyboard', key='keyboard')],
                   [sg.Button('close', key='close')]]
 
-        self.mainWindow = sg.Window('On-screen test',
-                                    grab_anywhere=True,
-                                    no_titlebar=False,
-                                    ).Layout(layout).Finalize()
-        location = self.mainWindow.CurrentLocation()
+        self.mainWindow = sg.Window('On-screen test', layout,
+                                    grab_anywhere=True, no_titlebar=False, finalize=True)
+        location = self.mainWindow.current_location()
         location = location[0]-200, location[1]+200
         self.keyboard = keyboard(location)
         self.focus = None
 
     def run(self):
         while True:
-            cur_focus = self.mainWindow.FindElementWithFocus()
+            cur_focus = self.mainWindow.find_element_with_focus()
             if cur_focus is not None:
                 self.focus = cur_focus
-            event, values = self.mainWindow.Read(timeout=200, timeout_key='timeout')
+            event, values = self.mainWindow.read(
+                timeout=200, timeout_key='timeout')
             if self.focus is not None:
                 self.keyboard.update(self.focus)
             if event == 'keyboard':

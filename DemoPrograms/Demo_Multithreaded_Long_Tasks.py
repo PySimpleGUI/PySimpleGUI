@@ -1,15 +1,11 @@
 #!/usr/bin/python3
-
 import queue
 import threading
 import time
+import PySimpleGUI as sg
 
 # This program has been tested on all flavors of PySimpleGUI and it works with no problems at all
 # To try something other than tkinter version, just comment out the first import and uncomment the one you want
-import PySimpleGUI as sg
-# import PySimpleGUIQt as sg
-# import PySimpleGUIWx as sg
-# import PySimpleGUIWeb as sg
 
 """
     DESIGN PATTERN - Multithreaded Long Tasks GUI
@@ -41,14 +37,6 @@ def long_operation_thread(seconds, gui_queue):
     gui_queue.put('** Done **')  # put a message into queue for GUI
 
 
-######   ##     ## ####
-##    ##  ##     ##  ##
-##        ##     ##  ##
-##   #### ##     ##  ##
-##    ##  ##     ##  ##
-##    ##  ##     ##  ##
-######    #######  ####
-
 def the_gui():
     """
     Starts and executes the GUI
@@ -60,23 +48,27 @@ def the_gui():
 
     layout = [[sg.Text('Long task to perform example')],
               [sg.Output(size=(70, 12))],
-              [sg.Text('Number of seconds your task will take'),sg.Input(key='_SECONDS_', size=(5,1)), sg.Button('Do Long Task', bind_return_key=True)],
+              [sg.Text('Number of seconds your task will take'),
+                  sg.Input(key='-SECONDS-', size=(5, 1)),
+                  sg.Button('Do Long Task', bind_return_key=True)],
               [sg.Button('Click Me'), sg.Button('Exit')], ]
 
-    window = sg.Window('Multithreaded Window').Layout(layout)
+    window = sg.Window('Multithreaded Window', layout)
 
     # --------------------- EVENT LOOP ---------------------
     while True:
-        event, values = window.Read(timeout=100)       # wait for up to 100 ms for a GUI event
-        if event is None or event == 'Exit':
+        event, values = window.read(timeout=100)
+        if event in (None, 'Exit'):
             break
         elif event.startswith('Do'):
             try:
-                seconds = int(values['_SECONDS_'])
-                print('Starting thread to do long work....sending value of {} seconds'.format(seconds))
-                threading.Thread(target=long_operation_thread, args=(seconds , gui_queue,), daemon=True).start()
+                seconds = int(values['-SECONDS-'])
+                print('Thread ALIVE! Long work....sending value of {} seconds'.format(seconds))
+                threading.Thread(target=long_operation_thread,
+                                 args=(seconds, gui_queue,), daemon=True).start()
             except Exception as e:
-                print('Error starting work thread. Did you input a valid # of seconds? You entered: %s' % values['_SECONDS_'])
+                print('Error starting work thread. Bad seconds input: "%s"' %
+                      values['-SECONDS-'])
         elif event == 'Click Me':
             print('Your GUI is alive and well')
         # --------------- Check for incoming messages from threads  ---------------
@@ -90,16 +82,7 @@ def the_gui():
             print('Got a message back from the thread: ', message)
 
     # if user exits the window, then close the window and exit the GUI func
-    window.Close()
-
-
-##     ##    ###    #### ##    ##
-###   ###   ## ##    ##  ###   ##
-#### ####  ##   ##   ##  ####  ##
-## ### ## ##     ##  ##  ## ## ##
-##     ## #########  ##  ##  ####
-##     ## ##     ##  ##  ##   ###
-##     ## ##     ## #### ##    ##
+    window.close()
 
 if __name__ == '__main__':
     the_gui()

@@ -628,7 +628,7 @@ class Element():
         :param event:
 
         """
-        print(f'In return handler. event = {event}')
+        # print(f'In return handler. event = {event}')
         MyForm = self.ParentForm
         button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:

@@ -1,25 +1,28 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
-tab1_layout =  [[sg.T('Tab 1')],
-                [sg.T('Put your layout in here')],
-                [sg.T('Input something'),sg.In(key='_IN0_')]]
+# Simple example of TabGroup element
 
-tab2_layout = [[sg.T('Tab2')]]
+tab1_layout = [[sg.Text('Tab 1')],
+               [sg.Text('Put your layout in here')],
+               [sg.Text('Input something'), sg.Input(key='-IN0-')]]
+
+tab2_layout = [[sg.Text('Tab2')]]
 
 
-layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout), sg.Tab('Tab 2', tab2_layout)]], key='_TABGROUP_')],
-                         [sg.Button('Read')]]
+layout = [[sg.TabGroup([[
+                sg.Tab('Tab 1', tab1_layout),
+                sg.Tab('Tab 2', tab2_layout)]], key='-TABGROUP-')],
+          [sg.Button('Read')]]
 
-window = sg.Window('My window with tabs', default_element_size=(12,1)).Layout(layout)
+window = sg.Window('My window with tabs', layout
+                   default_element_size=(12, 1))
 
 
 while True:
-    event, values = window.Read()
-    sg.PopupNonBlocking('button = %s' % event, 'Values dictionary', values)
+    event, values = window.read()
+    sg.popup_non_blocking('button = %s' % event, 'Values dictionary', values)
     if event is None:           # always,  always give a way out!
         break
+        
+window.close()

@@ -14,30 +14,38 @@ import time
 
 """
 
+
 def time_as_int():
     return int(round(time.time() * 100))
 
+
 # ----------------  Create Form  ----------------
-sg.ChangeLookAndFeel('Black')
+sg.change_look_and_feel('Black')
 
 layout = [[sg.Text('')],
-         [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-         [sg.Button('Pause', key='-RUN-PAUSE-', button_color=('white', '#001480')),
-          sg.Button('Reset', button_color=('white', '#007339'), key='-RESET-'),
-          sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
+          [sg.Text('', size=(8, 2), font=('Helvetica', 20),
+                justification='center', key='text')],
+          [sg.Button('Pause', key='-RUN-PAUSE-', button_color=('white', '#001480')),
+           sg.Button('Reset', button_color=('white', '#007339'), key='-RESET-'),
+           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
-window = sg.Window('Running Timer', layout, no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True, element_padding=(0,0))
+window = sg.Window('Running Timer', layout,
+                   no_titlebar=True,
+                   auto_size_buttons=False,
+                   keep_on_top=True,
+                   grab_anywhere=True,
+                   element_padding=(0, 0))
 
-# ----------------  main loop  ----------------
 current_time, paused_time, paused = 0, 0, False
 start_time = time_as_int()
-while (True):
+
+while True:
     # --------- Read and update window --------
     if not paused:
-        event, values = window.Read(timeout=10)
+        event, values = window.read(timeout=10)
         current_time = time_as_int() - start_time
     else:
-        event, values = window.Read()
+        event, values = window.read()
     # --------- Do Button Operations --------
     if event in (None, 'Exit'):        # ALWAYS give a way out of program
         break
@@ -50,10 +58,11 @@ while (True):
             paused_time = time_as_int()
         else:
             start_time = start_time + time_as_int() - paused_time
-        window['-RUN-PAUSE-'].Update('Run' if paused else 'Pause')      # Change button's text
+        # Change button's text
+        window['-RUN-PAUSE-'].update('Run' if paused else 'Pause')
 
     # --------- Display timer in window --------
-    window['text'].Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
-                                                                  (current_time // 100) % 60,
-                                                                  current_time % 100))
+    window['text'].update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+                                                        (current_time // 100) % 60,
+                                                        current_time % 100))
 window.close()

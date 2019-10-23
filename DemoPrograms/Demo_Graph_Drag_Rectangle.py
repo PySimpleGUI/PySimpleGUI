@@ -19,20 +19,22 @@ layout = [[sg.Graph(
             key="-GRAPH-",
             change_submits=True,  # mouse click events
             drag_submits=True),],
-            [sg.Text("", key="info", size=(60, 1))]]
+            [sg.Text(key='info', size=(60, 1))]]
 
 window = sg.Window("draw rect on image", layout, finalize=True)
 # get the graph element for ease of use later
 graph = window["-GRAPH-"]     # type: sg.Graph
 
-graph.DrawImage(image_file, location=(0,0)) if image_file else None
+graph.draw_image(image_file, location=(0,0)) if image_file else None
 dragging = False
 start_point = end_point = prior_rect = None
 
 while True:
-    event, values = window.Read()
+    event, values = window.read()
+
     if event is None:
         break  # exit
+    
     if event == "-GRAPH-":                      # if there's a "Graph" event, then it's a mouse
         x, y = values["-GRAPH-"]
         if not dragging:
@@ -41,13 +43,15 @@ while True:
         else:
             end_point = (x, y)
         if prior_rect:
-            graph.DeleteFigure(prior_rect)
+            graph.delete_figure(prior_rect)
         if None not in (start_point, end_point):
-            prior_rect = graph.DrawRectangle(start_point, end_point, line_color='red')
+            prior_rect = graph.draw_rectangle(start_point, end_point, line_color='red')
+    
     elif event.endswith('+UP'):                 # The drawing has ended because mouse up
-        info = window.Element("info")
-        info.Update(value=f"grabbed rectangle from {start_point} to {end_point}")
+        info = window["info"]
+        info.update(value=f"grabbed rectangle from {start_point} to {end_point}")
         start_point, end_point = None, None     # enable grabbing a new rect
         dragging = False
+    
     else:
         print("unhandled event", event, values)

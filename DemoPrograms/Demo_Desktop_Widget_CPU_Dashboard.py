@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import psutil
 
 """
@@ -32,14 +28,17 @@ class DashGraph(object):
         self.color = color
 
     def graph_percentage_abs(self, value):
-        self.graph_elem.DrawLine((self.graph_current_item, 0), (self.graph_current_item, value), color=self.color)
+        self.graph_elem.draw_line(
+                (self.graph_current_item, 0),
+                (self.graph_current_item, value),
+                color=self.color)
         if self.graph_current_item >= GRAPH_WIDTH:
-            self.graph_elem.Move(-1,0)
+            self.graph_elem.move(-1,0)
         else:
             self.graph_current_item += 1
 
     def text_display(self, text):
-        self.text_elem.Update(text)
+        self.text_elem.update(text)
 
 def main():
     # A couple of "Uber Elements" that combine several elements and enable bulk edits
@@ -47,7 +46,7 @@ def main():
         return(sg.Text(text, font=('Helvetica 8'), **kwargs))
 
     def GraphColumn(name, key):
-        col = sg.Column([[Txt(name, key=key+'_TXT_'), ],
+        col = sg.Col([[Txt(name, key=key+'_TXT_'), ],
                     [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black',
                               key=key+'_GRAPH_')]], pad=(2, 2))
         return col
@@ -55,10 +54,11 @@ def main():
 
     num_cores = len(psutil.cpu_percent(percpu=True))        # get the number of cores in the CPU
 
-    sg.ChangeLookAndFeel('Black')
-    sg.SetOptions(element_padding=(0,0), margins=(1,1), border_width=0)
+    sg.change_look_and_feel('Black')
+    sg.set_options(element_padding=(0,0), margins=(1,1), border_width=0)
 
-    # ----------------  Create Layout  ----------------
+    # the clever Red X graphic
+    red_x = "R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
     layout = [[ sg.Button('', image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window'),
                 sg.Text('     CPU Core Usage')] ]
 
@@ -70,7 +70,7 @@ def main():
         layout.append(row)
 
     # ----------------  Create Window  ----------------
-    window = sg.Window('PSG System Dashboard',
+    window = sg.Window('PSG System Dashboard', layout,
                        keep_on_top=True,
                        auto_size_buttons=False,
                        grab_anywhere=True,
@@ -79,32 +79,31 @@ def main():
                        return_keyboard_events=True,
                        alpha_channel=TRANSPARENCY,
                        use_default_focus=False,
-                       ).Layout(layout).Finalize()
+                       finalize=True)
 
     # setup graphs & initial values
     graphs = []
     for i in range(num_cores):
-        graphs.append(DashGraph(window.FindElement('_CPU_'+str(i)+'_GRAPH_'),
-                                window.FindElement('_CPU_'+str(i) + '_TXT_'),
+        graphs.append(DashGraph(window['_CPU_'+str(i)+'_GRAPH_'],
+                                window['_CPU_'+str(i) + '_TXT_'],
                                 0, colors[i%6]))
 
     # ----------------  main loop  ----------------
-    while (True):
+    while True :
         # --------- Read and update window once every Polling Frequency --------
-        event, values = window.Read(timeout=POLL_FREQUENCY)
+        event, values = window.read(timeout=POLL_FREQUENCY)
         if event in (None, 'Exit'):         # Be nice and give an exit
             break
         # read CPU for each core
         stats = psutil.cpu_percent(percpu=True)
-        # Update each graph
+
+        # update each graph
         for i in range(num_cores):
             graphs[i].graph_percentage_abs(stats[i])
             graphs[i].text_display('{} CPU {:2.0f}'.format(i, stats[i]))
-    window.Close()
+
+    window.close()
 
 if __name__ == "__main__":
-    # the clever Red X graphic
-    red_x = "R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
 
     main()
-    sys.exit(69)

@@ -20,11 +20,15 @@ import imwatchingyou  # STEP 1
 """
 
 layout = [
-    [sg.T('A typical PSG application')],
-    [sg.In(key='_IN_')],
-    [sg.T('        ', key='_OUT_', size=(30, 1))],
-    [sg.Radio('a', 1, key='_R1_'), sg.Radio('b', 1, key='_R2_'), sg.Radio('c', 1, key='_R3_')],
-    [sg.Combo(['c1', 'c2', 'c3'], size=(6, 3), key='_COMBO_')],
+    [sg.Text('A typical PSG application')],
+    [sg.Input(key='-IN-')],
+    [sg.Text('        ', key='-OUT-', size=(30, 1))],
+    [
+     sg.Rad('a', 1, key='-R1-'),
+     sg.Rad('b', 1, key='-R2-'),
+     sg.Rad('c', 1, key='-R3-')
+     ],
+    [sg.Combo(['c1', 'c2', 'c3'], size=(6, 3), key='-COMBO-')],
     [sg.Output(size=(50, 6))],
     [sg.Ok(), sg.Exit(), sg.Button('Debug'), sg.Button('Popout')],
 ]
@@ -32,10 +36,9 @@ layout = [
 window = sg.Window('This is your Application Window', layout)
 
 counter = 0
-timeout = 100
 
 while True:  # Your Event Loop
-    event, values = window.Read(timeout=timeout)
+    event, values = window.read(timeout=100)
     if event in (None, 'Exit'):
         break
     elif event == 'Ok':
@@ -46,9 +49,9 @@ while True:  # Your Event Loop
         imwatchingyou.show_debugger_popout_window()  # STEP 2
     counter += 1
     # to prove window is operating, show the input in another area in the window.
-    window.Element('_OUT_').Update(values['_IN_'])
+    window['-OUT-'].update(values['-IN-'])
 
     # don't worry about the "state" of things, just call this function "frequently"
     imwatchingyou.refresh_debugger()  # STEP 3 - refresh debugger
 
-window.Close()
+window.close()

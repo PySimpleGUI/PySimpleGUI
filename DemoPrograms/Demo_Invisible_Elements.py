@@ -9,19 +9,19 @@ import PySimpleGUI as sg
 
 """
 
-layout = [[sg.Column([[sg.Text('My Window')],[sg.Input(key='_IN_'), sg.B('My button', key='_OUT_')]], key='_COL_')],
-            [sg.Button('Invisible'), sg.B('Visible'), sg.Button('Exit')]]
+layout = [[sg.Col([[sg.Text('My Window')], [sg.Input(key='-IN-'), sg.Button('My button', key='-OUT-')]], key='-COL-')],
+          [sg.Button('Invisible'), sg.Button('Visible'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout)
 
 while True:             # Event Loop
-    event, values = window.Read()
+    event, values = window.read()
     print(event, values)
     if event in (None, 'Exit'):
         break
     if event == 'Invisible':
-        window.Elem('_COL_').Update(visible=False)
+        window['-COL-'].update(visible=False)
     elif event == 'Visible':
-        window.Elem('_COL_').Update(visible=True)
+        window['-COL-'].update(visible=True)
 
-window.Close()
+window.close()

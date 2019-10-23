@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
 import matplotlib
-matplotlib.use('TkAgg')
 import inspect
+matplotlib.use('TkAgg')
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -846,17 +846,17 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
             'Pyplot Scatter With Legend' :PyplotScatterWithLegend, 'Artist Customized Box Plots' : PyplotArtistBoxPlots,
             'Artist Customized Box Plots 2' : ArtistBoxplot2, 'Pyplot Histogram' : PyplotHistogram}
 
-sg.ChangeLookAndFeel('LightGreen')
+sg.change_look_and_feel('LightGreen')
 
 figure_w, figure_h = 650, 650
 # define the form layout
 listbox_values = list(fig_dict)
 col_listbox = [[sg.Listbox(values=listbox_values, enable_events=True, size=(28, len(listbox_values)), key='-LISTBOX-')],
-               [sg.T(' ' * 12), sg.Exit(size=(5, 2))]]
+               [sg.Text(' ' * 12), sg.Exit(size=(5, 2))]]
 
 layout = [[sg.Text('Matplotlib Plot Test', font=('current 18'))],
-          [sg.Column(col_listbox, pad=(5, (3, 330))), sg.Canvas(size=(figure_w, figure_h), key='-CANVAS-') ,
-           sg.Multiline(size=(70, 35), pad=(5, (3, 90)), key='-MULTILINE-')],]
+          [sg.Col(col_listbox, pad=(5, (3, 330))), sg.Canvas(size=(figure_w, figure_h), key='-CANVAS-') ,
+           sg.MLine(size=(70, 35), pad=(5, (3, 90)), key='-MULTILINE-')],]
 
 # create the form and show it without the plot
 window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout, grab_anywhere=False, finalize=True)
@@ -872,7 +872,7 @@ while True:
         delete_figure_agg(figure_agg)
     choice = values['-LISTBOX-'][0]                 # get first listbox item chosen (returned as a list)
     func = fig_dict[choice]                         # get function to call from the dictionary
-    window['-MULTILINE-'].Update(inspect.getsource(func))  # show source code to function in multiline
+    window['-MULTILINE-'].update(inspect.getsource(func))  # show source code to function in multiline
     fig = func()                                    # call function to get the figure
     figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)  # draw the figure
 window.close()

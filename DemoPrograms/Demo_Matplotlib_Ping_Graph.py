@@ -1,14 +1,9 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
 import matplotlib.backends.tkagg as tkagg
+import matplotlib.pyplot as plt
+import PySimpleGUI as sg
 import tkinter as tk
-
 
 """
 A graph of time to ping Google.com
@@ -646,12 +641,15 @@ def main():
     global g_my_globals
 
     # define the form layout
-    layout = [[ sg.Canvas(size=SIZE, background_color='white',key='canvas') , sg.Button('Exit', pad=(0, (210, 0)))]]
+    layout = [
+        [ sg.Canvas(size=SIZE, background_color='white',key='canvas'),
+            sg.Button('Exit', pad=(0, (210, 0)))]
+    ]
 
     # create the form and show it without the plot
-    window = sg.Window('Ping Graph', background_color='white', grab_anywhere=True).Layout(layout).Finalize()
+    window = sg.Window('Ping Graph', layout, background_color='white', grab_anywhere=True, finalize=True)
 
-    canvas_elem = window.FindElement('canvas')
+    canvas_elem = window['canvas']
     canvas = canvas_elem.TKCanvas
 
     fig = plt.figure(figsize=(3.1, 2.25), tight_layout={'pad':0})
@@ -662,13 +660,14 @@ def main():
     plt.tight_layout()
 
     while True:
-        event, values = window.Read(timeout=0)
+        event, values = window.read(timeout=0)
         if event in ('Exit', None):
-            exit(0)
+            break
 
         run_a_ping_and_graph()
         photo = draw(fig, canvas)
-
+    
+    window.close()
 
 if __name__ == '__main__':
     main()

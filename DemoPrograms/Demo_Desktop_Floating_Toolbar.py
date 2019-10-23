@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-
+import PySimpleGUI as sg
 import subprocess
 import os
 
@@ -20,34 +16,36 @@ import os
 
 ROOT_PATH = './'
 
+
 def Launcher():
 
-    # def print(line):
-    #     window.FindElement('output').Update(line)
+    sg.change_look_and_feel('Dark')
 
-    sg.ChangeLookAndFeel('Dark')
-
-    namesonly = [f for f in os.listdir(ROOT_PATH) if f.endswith('.py') ]
+    namesonly = [f for f in os.listdir(ROOT_PATH) if f.endswith('.py')]
 
     if len(namesonly) == 0:
         namesonly = ['test 1', 'test 2', 'test 3']
 
-    sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)
+    sg.set_options(element_padding=(0, 0),
+        button_element_size=(12, 1), auto_size_buttons=False)
 
-    layout =  [[sg.Combo(values=namesonly, size=(35,30), key='demofile'),
-                sg.Button('Run', button_color=('white', '#00168B')),
-                sg.Button('Program 1'),
-                sg.Button('Program 2'),
-                sg.Button('Program 3', button_color=('white', '#35008B')),
-                sg.Button('EXIT', button_color=('white','firebrick3'))],
-                [sg.T('', text_color='white', size=(50,1), key='output')]]
+    layout = [[sg.Combo(values=namesonly, size=(35, 30), key='demofile'),
+               sg.Button('Run', button_color=('white', '#00168B')),
+               sg.Button('Program 1'),
+               sg.Button('Program 2'),
+               sg.Button('Program 3', button_color=('white', '#35008B')),
+               sg.Button('EXIT', button_color=('white', 'firebrick3'))],
+              [sg.Text('', text_color='white', size=(50, 1), key='output')]]
 
-    window = sg.Window('Floating Toolbar', no_titlebar=True, grab_anywhere=True, keep_on_top=True).Layout(layout)
-
+    window = sg.Window('Floating Toolbar',
+                       layout,
+                       no_titlebar=True,
+                       grab_anywhere=True,
+                       keep_on_top=True)
 
     # ---===--- Loop taking in user input and executing appropriate program --- #
     while True:
-        (event, values) = window.Read()
+        event, values = window.read()
         if event == 'EXIT' or event is None:
             break           # exit button clicked
         if event == 'Program 1':
@@ -56,10 +54,13 @@ def Launcher():
             print('Run your program 2 here!')
         elif event == 'Run':
             file = values['demofile']
-            print('Launching %s'%file)
+            print('Launching %s' % file)
             ExecuteCommandSubprocess('python', os.path.join(ROOT_PATH, file))
         else:
             print(event)
+
+    window.close()
+
 
 def ExecuteCommandSubprocess(command, *args, wait=False):
     try:
@@ -69,10 +70,16 @@ def ExecuteCommandSubprocess(command, *args, wait=False):
             # for arg in args:
             #     arg_string += ' ' + str(arg)
             print('python3 ' + arg_string)
-            sp = subprocess.Popen(['python3 ', arg_string ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            sp = subprocess.Popen(['python3 ', arg_string],
+                                  shell=True,
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE)
         else:
             arg_string = ' '.join([str(arg) for arg in args])
-            sp = subprocess.Popen([command, arg_string], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            sp = subprocess.Popen([command, arg_string],
+                                  shell=True,
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE)
             # sp = subprocess.Popen([command, list(args)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         if wait:
@@ -81,10 +88,9 @@ def ExecuteCommandSubprocess(command, *args, wait=False):
                 print(out.decode("utf-8"))
             if err:
                 print(err.decode("utf-8"))
-    except: pass
-
+    except:
+        pass
 
 
 if __name__ == '__main__':
     Launcher()
-

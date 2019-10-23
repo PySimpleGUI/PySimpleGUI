@@ -1,26 +1,25 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+from PIL import Image
+from sys import exit
+import PySimpleGUI as sg
 import os
-from sys import exit as exit
-from  PIL import Image
 import io
 import numpy as np
 
-thumbnails = {}
 
+
+thumbnails = {}
 ROWS = 8
 COLUMNS = 8
-sg.SetOptions(border_width=0)
+sg.set_options(border_width=0)
 # Get the folder containing the images from the user
 # folder = 'A:/TEMP/pdfs'
-folder = sg.PopupGetFolder('Image folder to open')
+folder = sg.popup_get_folder('Image folder to open')
 if folder is None:
-    sg.PopupCancel('Cancelling')
+    sg.popup_cancel('Cancelling')
     exit(0)
+
+
 def image_file_to_bytes(filename, size):
     try:
         image = Image.open(filename)
@@ -32,65 +31,72 @@ def image_file_to_bytes(filename, size):
         imgbytes = None
     return imgbytes
 
+
 def set_image_to_blank(key):
     img = Image.new('RGB', (100, 100), (255, 255, 255))
     img.thumbnail((1, 1), Image.ANTIALIAS)
     bio = io.BytesIO()
     img.save(bio, format='PNG')
     imgbytes = bio.getvalue()
-    window.FindElement(key).Update(image_data=imgbytes)
-
+    window[key].update(image_data=imgbytes)
 
 
 # get list of PNG files in folder
-png_files = [os.path.join(folder, f) for f in os.listdir(folder) if '.png' in f]
+png_files = [os.path.join(folder, f)
+             for f in os.listdir(folder) if '.png' in f]
 filenames_only = [f for f in os.listdir(folder) if '.png' in f]
 
 if len(png_files) == 0:
-    sg.Popup('No PNG images in folder')
+    sg.popup('No PNG images in folder')
     exit(0)
 
 # define menu layout
-menu = [['&File', ['&Open Folder', 'E&xit']], ['&Help', ['&About',]]]
+menu = [['&File', ['&Open Folder', 'E&xit']], ['&Help', ['&About', ]]]
 
 buttons = []
 for display_index in range(ROWS):
     row = []
     for j in range(COLUMNS):
-        row.append(sg.Button('',border_width=0,button_color=sg.COLOR_SYSTEM_DEFAULT, key=(display_index, j)))
+        row.append(sg.Button('', border_width=0,
+                        button_color=sg.COLOR_SYSTEM_DEFAULT, key=(display_index, j)))
     buttons.append(row)
 
 col_buttons = [[]]
 
 # define layout, show and read the window
 col = [[sg.Text(png_files[0], size=(80, 3), key='filename')],
-          [sg.Image(data=image_file_to_bytes(png_files[0], (500,500)), key='image')],]
+       [sg.Image(data=image_file_to_bytes(png_files[0], (500, 500)), key='image')], ]
 
-layout = [[sg.Menu(menu)], [sg.Column(buttons), sg.Column([[sg.Slider((len(png_files),0),default_value=0,size=(38,20),orientation='v', key='_slider_', change_submits=True)]]), sg.Column(col)]]
-window = sg.Window('Image Browser',
+layout = [
+    [sg.Menu(menu)],
+    [sg.Col(buttons), sg.Col([[sg.Slider((len(png_files), 0), default_value=0, size=(38, 20), orientation='v', key='-slider-', change_submits=True)]]), sg.Col(col)]
+]
+
+window = sg.Window('Image Browser', layout,
                    return_keyboard_events=True,
-                   use_default_focus=False ).Layout(layout).Finalize()
+                   use_default_focus=False, finalize=True)
 
 # -------========= Event Loop =========--------
-display_index=0
+display_index = 0
 while True:
+    
     for x in range(ROWS):               # update thumbnails
         for y in range(COLUMNS):
             cur_index = display_index + (x * 4) + y
             if cur_index < len(png_files):
                 filename = png_files[cur_index]
                 if filename not in thumbnails:
-                    imgbytes = image_file_to_bytes(filename, (100,100))
+                    imgbytes = image_file_to_bytes(filename, (100, 100))
                     thumbnails[filename] = imgbytes
                 else:
                     imgbytes = thumbnails[filename]
-                button_elem = window.FindElement(key=(x,y))
-                button_elem.Update(image_data=imgbytes)
+                button_elem = window[(x, y)]
+                button_elem.update(image_data=imgbytes)
             else:
-                set_image_to_blank((x,y))
+                set_image_to_blank((x, y))
 
-    event, values = window.Read()
-    display_index = values['_slider_']
+    event, values = window.read()
+    display_index = values['-slider-']
     # --------------------- Button & Keyboard ---------------------
     if event in (None, 'Exit'):
         break
@@ -103,28 +109,30 @@ while True:
     elif event in ('Next:34', 'Next'):
         display_index += 16
 
-    window.FindElement('_slider_').Update(display_index)
+    window['-slider-'].update(display_index)
     # ----------------- Menu choices -----------------
     if event == 'Open Folder':
-        newfolder = sg.PopupGetFolder('New folder', no_window=True)
+        newfolder = sg.popup_get_folder('New folder', no_window=True)
         if newfolder is None:
             continue
         folder = newfolder
-        png_files = [os.path.join(folder, f) for f in os.listdir(folder) if '.png' in f]
+        png_files = [os.path.join(folder, f)
+                     for f in os.listdir(folder) if '.png' in f]
         filenames_only = [f for f in os.listdir(folder) if '.png' in f]
         display_index = 0
         thumbnail = {}
         for j in range(ROWS):
             for i in range(COLUMNS):
-                set_image_to_blank((i,j))
+                set_image_to_blank((i, j))
     elif event == 'About':
-        sg.Popup('Demo PNG Viewer Program', 'Please give PySimpleGUI a try!')
+        sg.popup('Demo PNG Viewer Program', 'Please give PySimpleGUI a try!')
     elif type(event) is tuple:
         x, y = event
         image_index = display_index + (x * 4) + y
         if image_index < len(png_files):
             filename = png_files[image_index]
             imgbytes = image_file_to_bytes(filename, (500, 500))
-            window.FindElement('image').Update(data=imgbytes)
-            window.FindElement('filename').Update(filename)
+            window['image'].update(data=imgbytes)
+            window['filename'].update(filename)
 
+window.close()

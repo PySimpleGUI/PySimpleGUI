@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
-MY_WINDOW_ICON = 'E:\\TheRealMyDocs\\Icons\\The Planets\\jupiter.ico'
 reverse = {}
 colorhex = {}
 
 colors = {
-      "abbey"                     : ( 76,  79,  86),
+    "abbey"                     : ( 76,  79,  86),
     "acadia"                    : ( 27,  20,   4),
     "acapulco"                  : (124, 176, 161),
     "aero blue"                 : (201, 255, 229),
@@ -1583,9 +1579,9 @@ def build_reverse_dict():
     global colors
     for color in colors:
         rgb = colors[color]
-        hex = '#%02X%02X%02X' % (rgb)
-        reverse[hex] = color
-        colorhex[color] = hex
+        hex_val = '#%02X%02X%02X' % (rgb)
+        reverse[hex_val] = color
+        colorhex[color] = hex_val
     return
 
 
@@ -1621,9 +1617,9 @@ def get_name_from_hex(hex):
     global colorhex
     global colors
 
-    hex = hex.upper()
+    hex_val = hex.upper()
     try:
-        name = reverse[hex]
+        name = reverse[hex_val]
     except:
         name = 'No Hex For Name'
     return name
@@ -1635,22 +1631,22 @@ def get_hex_from_name(name):
 
     name = name.lower()
     try:
-        hex = colorhex[name]
+        hex_val = colorhex[name]
     except:
-        hex = '#000000'
-    return hex
+        hex_val = '#000000'
+    return hex_val
 
 def show_all_colors_on_buttons():
     global reverse
     global colorhex
     global colors
-    window = sg.Window('Colors on Buttons Demo', default_element_size=(3, 1), location=(0, 0), icon=MY_WINDOW_ICON, font=("Helvetica", 7))
+    window = sg.Window('Colors on Buttons Demo', default_element_size=(3, 1), location=(0, 0), font=("Helvetica", 7))
     row = []
     row_len = 20
     for i, c in enumerate(colors):
-        hex = get_hex_from_name(c)
-        button1 = sg.CButton(button_text=c, button_color=(get_complementary_hex(hex), hex), size=(8, 1))
-        button2 = sg.CButton(button_text=c, button_color=(hex, get_complementary_hex(hex)), size=(8, 1))
+        hex_val = get_hex_from_name(c)
+        button1 = sg.CButton(button_text=c, button_color=(get_complementary_hex(hex_val), hex_val), size=(8, 1))
+        button2 = sg.CButton(button_text=c, button_color=(hex_val, get_complementary_hex(hex_val)), size=(8, 1))
         row.append(button1)
         row.append(button2)
         if (i+1) % row_len == 0:
@@ -1678,18 +1674,18 @@ def main():
     list_of_colors = [c for c in colors]
     printable = '\n'.join(map(str, list_of_colors))
     # show_all_colors_on_buttons()
-    sg.SetOptions(element_padding=(0,0))
+    sg.set_options(element_padding=(0,0))
     while True:
         # -------  Form show  ------- #
         layout = [[sg.Text('Find color')],
                   [sg.Text('Demonstration of colors')],
                   [sg.Text('Enter a color name in text or hex #RRGGBB format')],
                   [sg.InputText(key='hex')],
-                  [sg.Listbox(list_of_colors, size=(20, 30), bind_return_key=True, key='listbox'), sg.T('Or choose from list')],
+                  [sg.Listbox(list_of_colors, size=(20, 30), bind_return_key=True, key='listbox'), sg.Text('Or choose from list')],
                   [sg.Submit(), sg.Button('Many buttons', button_color=('white', '#0e6251'), key='Many buttons'), sg.ColorChooserButton( 'Chooser', target=(3,0), key='Chooser'),  sg.Quit(),],
                   ]
                   # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
-        event, values = sg.Window('Color Demo', auto_size_buttons=False).Layout(layout).Read()
+        event, values = sg.Window('Color Demo', layout, auto_size_buttons=False).read()
 
         # -------  OUTPUT results portion  ------- #
         if event == 'Quit' or event is None:
@@ -1720,7 +1716,8 @@ def main():
                   [sg.CloseButton(button_text=color_name, button_color=(color_hex, complementary_hex))],
                   [sg.CloseButton(button_text=complementary_hex + ' ' + complementary_color, button_color=(complementary_hex , color_hex), size=(30, 1))],
                   ]
-        sg.Window('Color demo', default_element_size=(100, 1), auto_size_text=True, auto_close=True, auto_close_duration=5, icon=MY_WINDOW_ICON).Layout(layout).Read()
+        sg.Window('Color demo', layout, default_element_size=(100, 1),
+                        auto_close=True, auto_close_duration=5).read()
 
 
 

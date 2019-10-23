@@ -1,9 +1,4 @@
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUIQt as sg
-else:
-    import PySimpleGUI27 as sg
-
+import PySimpleGUI as sg
 import queue
 import logging
 import threading
@@ -49,15 +44,18 @@ class QueueHandler(logging.Handler):
 
 
 def main():
-    window = sg.FlexForm('Log window', default_element_size=(30, 2), font=('Helvetica', ' 10'), default_button_element_size=(8, 2), return_keyboard_events=True)
 
-    layout =  \
-        [
-            [sg.Multiline(size=(50, 15), key='Log')],
-            [sg.Button('Start', bind_return_key=True, key='_START_'), sg.Button('Exit')]
+    layout = [
+            [sg.MLine(size=(50, 15), key='Log')],
+            [sg.Button('Start', bind_return_key=True, key='-START-'), sg.Button('Exit')]
         ]
 
-    window.Layout(layout).Read(timeout=0)
+    window = sg.FlexForm('Log window', layout,
+            default_element_size=(30, 2),
+            font=('Helvetica', ' 10'),
+            default_button_element_size=(8, 2),
+            return_keyboard_events=True)
+    window.read(timeout=0)
     appStarted = False
 
     # Setup logging and start app
@@ -70,13 +68,13 @@ def main():
     # Loop taking in user input and querying queue
     while True:
         # Wake every 100ms and look for work
-        event, values = window.Read(timeout=100)
+        event, values = window.read(timeout=100)
 
-        if event == '_START_':
+        if event == '-START-':
             if appStarted is False:
                 threadedApp.start()
                 logger.debug('App started')
-                window.FindElement('_START_').Update(disabled=True)
+                window['-START-'].update(disabled=True)
                 appStarted = True
         elif event in  (None, 'Exit'):
             break
@@ -88,10 +86,9 @@ def main():
             pass
         else:
             msg = queue_handler.format(record)
-            window.FindElement('Log').Update(msg+'\n', append=True)
+            window['Log'].update(msg+'\n', append=True)
 
-    window.Close()
-    exit()
+    window.close()
 
 
 if __name__ == '__main__':

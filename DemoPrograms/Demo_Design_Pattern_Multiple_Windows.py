@@ -1,9 +1,4 @@
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-
+import PySimpleGUI as sg
 """
     Demo - Running 2 windows with both being active at the same time
     Three important things to note about this design patter:
@@ -15,45 +10,44 @@ else:
 
 # Window 1 layout
 layout = [
-            [sg.Text('This is the FIRST WINDOW'), sg.Text('      ', key='_OUTPUT_')],
+            [sg.Text('This is the FIRST WINDOW'), sg.Text('      ', key='-OUTPUT-')],
             [sg.Text('')],
-            [sg.Button('Launch 2nd Window'),sg.Button('Popup'), sg.Button('Exit')]
+            [sg.Button('Launch 2nd Window'), sg.Button('Popup'), sg.Button('Exit')]
          ]
 
-window = sg.Window('Window Title', location=(800,600)).Layout(layout)
+window = sg.Window('Window Title', layout, location=(800,600))
 win2_active = False
 i=0
 while True:             # Event Loop
-    event, values = window.Read(timeout=100)
+    event, values = window.read(timeout=100)
     if event != sg.TIMEOUT_KEY:
         print(i, event, values)
-
-    if event is None or event == 'Exit':
+    if event in (None, 'Exit'):
         break
     elif event == 'Popup':
-        sg.Popup('This is a BLOCKING popup','all windows remain inactive while popup active')
+        sg.popup('This is a BLOCKING popup','all windows remain inactive while popup active')
     i+=1
     if event == 'Launch 2nd Window' and not win2_active:     # only run if not already showing a window2
         win2_active = True
         # window 2 layout - note - must be "new" every time a window is created
         layout2 = [
-            [sg.Text('The second window'), sg.Text('', key='_OUTPUT_')],
-            [sg.Input(do_not_clear=True, key='_IN_')],
+            [sg.Text('The second window'), sg.Text('', key='-OUTPUT-')],
+            [sg.Input('', key='-IN-')],
             [sg.Button('Show'), sg.Button('Exit')]
                 ]
-        window2 = sg.Window('Second Window').Layout(layout2)
+        window2 = sg.Window('Second Window', layout2)
     # Read window 2's events.  Must use timeout of 0
     if win2_active:
         # print("reading 2")
-        event, values = window2.Read(timeout=100)
+        event, values = window2.read(timeout=100)
         # print("win2 ", event)
         if event != sg.TIMEOUT_KEY:
             print("win2 ", event)
         if event == 'Exit' or event is None:
             # print("Closing window 2", event)
             win2_active = False
-            window2.Close()
+            window2.close()
         if event == 'Show':
-            sg.Popup('You entered ', values['_IN_'])
+            sg.popup('You entered ', values['-IN-'])
 
-window.Close()
+window.close()

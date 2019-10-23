@@ -31,6 +31,7 @@ class Segment(pygame.sprite.Sprite):
     """ Class to represent one segment of the snake. """
     # -- Methods
     # Constructor function
+
     def __init__(self, x, y):
         # Call the parent's constructor
         super().__init__()
@@ -46,14 +47,17 @@ class Segment(pygame.sprite.Sprite):
 
 # --------------------------- GUI Setup & Create Window -------------------------------
 
-layout = [[sg.T('Snake Game - PySimpleGUI + PyGame')],
-          [sg.Graph((800,600), (0,0), (800,600), background_color='lightblue', key='_GRAPH_')],
+
+layout = [[sg.Text('Snake Game - PySimpleGUI + PyGame')],
+          [sg.Graph((800, 600), (0, 0), (800, 600),
+                    background_color='lightblue', key='-GRAPH-')],
           [sg.Exit()]]
 
-window = sg.Window('Snake Game using PySimpleGUI and PyGame', layout).Finalize()
+window = sg.Window('Snake Game using PySimpleGUI and PyGame',
+                   layout, finalize=True)
 
 # ------------------------ Do the magic that integrates PyGame and Graph Element ------------------
-graph = window.Element('_GRAPH_')           # type: sg.Graph
+graph = window['-GRAPH-']           # type: sg.Graph
 embed = graph.TKCanvas
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
 os.environ['SDL_VIDEODRIVER'] = 'windib'
@@ -61,8 +65,8 @@ os.environ['SDL_VIDEODRIVER'] = 'windib'
 # ----------------------------- PyGame Code -----------------------------
 # Call this function so the Pygame library can initialize itself
 # pygame.init()
-screen = pygame.display.set_mode((800,600))
-screen.fill(pygame.Color(255,255,255))
+screen = pygame.display.set_mode((800, 600))
+screen.fill(pygame.Color(255, 255, 255))
 
 pygame.display.init()
 pygame.display.update()
@@ -84,7 +88,7 @@ for i in range(15):
 clock = pygame.time.Clock()
 
 while True:
-    event, values = window.Read(timeout=10)
+    event, values = window.read(timeout=10)
     if event in (None, 'Exit'):
         break
     pygame.display.update()
@@ -135,4 +139,4 @@ while True:
     # Pause
     clock.tick(5)
 
-window.Close()
+window.close()

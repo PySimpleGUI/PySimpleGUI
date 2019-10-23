@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
+
 
 # Robotics design pattern
 # Uses Realtime Buttons to simulate the controls for a robot
@@ -13,25 +11,26 @@ else:
 
 def RemoteControlExample():
     # Make a form, but don't use context manager
-    sg.SetOptions(element_padding=(0,0))
-    back ='#eeeeee'
-    image_forward = 'ButtonGraphics/RobotForward.png'
-    image_backward = 'ButtonGraphics/RobotBack.png'
-    image_left = 'ButtonGraphics/RobotLeft.png'
-    image_right = 'ButtonGraphics/RobotRight.png'
+    sg.set_options(element_padding=(0,0))
+    back = '#eeeeee'
 
-    sg.SetOptions(border_width=0, button_color=('black', back), background_color=back, element_background_color=back, text_element_background_color=back)
+    sg.set_options(border_width=0,
+        button_color=('black', back),
+        background_color=back,
+        element_background_color=back,
+        text_element_background_color=back)
 
+    mypad = ((50,0),0)
     layout = [[sg.Text('Robotics Remote Control')],
-                 [sg.T('', justification='center', size=(19,1), key='status')],
-                 [ sg.RealtimeButton('', key='Forward', image_filename=image_forward, pad=((50,0),0))],
-                 [ sg.RealtimeButton('', key='Left', image_filename=image_left),
-                   sg.RealtimeButton('', key='Right', image_filename=image_right, pad=((50,0), 0))],
-                 [ sg.RealtimeButton('', key='Reverse', image_filename=image_backward, pad=((50,0),0))],
-                 [sg.T('')],
+                 [sg.Text('', justification='center', size=(19,1), key='status')],
+                 [ sg.RealtimeButton('', key='Forward', pad=mypad)],
+                 [ sg.RealtimeButton('', key='Left', ),
+                   sg.RealtimeButton('', key='Right', pad=mypad)],
+                 [ sg.RealtimeButton('', key='Reverse', pad=mypad)],
+                 [sg.Text('')],
                  [sg.Quit(button_color=('black', 'orange'))]]
 
-    window = sg.Window('Robotics Remote Control', auto_size_text=True, grab_anywhere=False).Layout(layout)
+    window = sg.Window('Robotics Remote Control', layout, grab_anywhere=False)
 
     #
     # Some place later in your code...
@@ -39,32 +38,32 @@ def RemoteControlExample():
     # else it won't refresh.
     #
     # your program's main loop
-    while (True):
+    while True:
         # This is the code that reads and updates your window
-        event, values = window.Read(timeout=0, timeout_key='timeout')
+        event, values = window.read(timeout=0, timeout_key='timeout')
         if event is not None:
-            window.FindElement('status').Update(event)
+            window['status'].update(event)
         elif event != 'timeout':
-            window.FindElement('status').Update('')
+            window['status'].update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
         if event == 'Quit' or values is None:
             break
 
-    window.Close()
+    window.close()
 
 
 def RemoteControlExample_NoGraphics():
     # Make a form, but don't use context manager
 
     layout = [[sg.Text('Robotics Remote Control', justification='center')],
-                 [sg.T('', justification='center', size=(19,1), key='status')],
-                 [sg.T(' '*8), sg.RealtimeButton('Forward')],
-                 [ sg.RealtimeButton('Left'), sg.T('              '), sg.RealtimeButton('Right')],
-                 [sg.T(' '*8), sg.RealtimeButton('Reverse')],
-                 [sg.T('')],
+                 [sg.Text('', justification='center', size=(19,1), key='status')],
+                 [sg.Text(' '*8), sg.RealtimeButton('Forward')],
+                 [ sg.RealtimeButton('Left'), sg.Text('              '), sg.RealtimeButton('Right')],
+                 [sg.Text(' '*8), sg.RealtimeButton('Reverse')],
+                 [sg.Text('')],
                  [sg.Quit(button_color=('black', 'orange'))]]
     # Display form to user
-    window = sg.Window('Robotics Remote Control', auto_size_text=True, grab_anywhere=False).Layout(layout)
+    window = sg.Window('Robotics Remote Control', layout, grab_anywhere=False)
 
     #
     # Some place later in your code...
@@ -75,26 +74,26 @@ def RemoteControlExample_NoGraphics():
     # responsive the GUI itself will be  Match your timeout with your hardware's capabilities
     #
     # your program's main loop
-    while (True):
+    while True :
         # This is the code that reads and updates your window
-        event, values = window.Read(timeout=100, timeout_key='timeout')
+        event, values = window.read(timeout=100, timeout_key='timeout')
         # print(event, values)
         if event != 'timeout':
-            window.FindElement('status').Update(event)
+            window['status'].update(event)
         else:
-            window.FindElement('status').Update('')
+            window['status'].update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
         if event in (None, 'Quit'):
             break
 
-    window.Close()
+    window.close()
 
 # ------------------------------------- main -------------------------------------
 def main():
     RemoteControlExample_NoGraphics()
     # Uncomment to get the fancy graphics version.  Be sure and download the button images!
     RemoteControlExample()
-    # sg.Popup('End of non-blocking demonstration')
+    # sg.popup('End of non-blocking demonstration')
 
 if __name__ == '__main__':
 

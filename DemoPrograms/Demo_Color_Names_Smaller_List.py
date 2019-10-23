@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
 """
     Color names courtesy of Big Daddy's Wiki-Python
@@ -13,7 +9,6 @@ else:
     Once large window is shown, you can click on any color and another window will popup 
     showing both white and black text on that color
 """
-
 
 
 COLORS = ['snow', 'ghost white', 'white smoke', 'gainsboro', 'floral white', 'old lace',
@@ -93,17 +88,18 @@ COLORS = ['snow', 'ghost white', 'white smoke', 'gainsboro', 'floral white', 'ol
           'grey84', 'grey85', 'grey86', 'grey87', 'grey88', 'grey89', 'grey90', 'grey91', 'grey92',
           'grey93', 'grey94', 'grey95', 'grey97', 'grey98', 'grey99']
 
+sg.set_options(button_element_size=(12, 1),
+               element_padding=(0, 0),
+               auto_size_buttons=False,
+               border_width=0)
 
-
-
-sg.SetOptions(button_element_size=(12,1), element_padding=(0,0), auto_size_buttons=False, border_width=0)
-
-layout = [[sg.Text('Click on a color square to see both white and black text on that color', text_color='blue', font='Any 15')]]
+layout = [[sg.Text('Click on a color square to see both white and black text on that color',
+                text_color='blue', font='Any 15')]]
 row = []
 layout = []
+
 # -- Create primary color viewer window --
 for rows in range(40):
-
     row = []
     for i in range(12):
         try:
@@ -113,20 +109,16 @@ for rows in range(40):
             pass
     layout.append(row)
 
-
-# for i, color in enumerate(COLORS):
-#     row.append(sg.Button(color, button_color=('black', color), key=color))
-#     if (i+1) % 12 == 0:
-#         layout.append(row)
-#         row = []
-
-window = sg.Window('Color Viewer', grab_anywhere=False, font=('any 9')).Layout(layout)
+window = sg.Window('Color Viewer', layout, grab_anywhere=False, font=('any 9'))
 
 # -- Event loop --
 while True:
-    event, values = window.Read()
+    event, values = window.read()
     if event is None:
         break
     # -- Create a secondary window that shows white and black text on chosen color
-    layout2 =[[sg.DummyButton(event, button_color=('white', event)), sg.DummyButton(event, button_color=('black', event))]]
-    sg.Window('Buttons with white and black text', keep_on_top=True).Layout(layout2).Read(timeout=0)
+    layout2 = [[sg.DummyButton(event, button_color=('white', event)),
+                sg.DummyButton(event, button_color=('black', event))]]
+    sg.Window('Buttons with white and black text', layout2, keep_on_top=True).read(timeout=0)
+
+window.close()

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
-
 from random import randint
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 from matplotlib.figure import Figure
+
+# Yet another usage of MatPlotLib with animations.
 
 def draw_figure(canvas, figure, loc=(0, 0)):
     figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
@@ -15,19 +16,23 @@ def main():
 
     NUM_DATAPOINTS = 10000
     # define the form layout
-    layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', font='Helvetica 20')],
+    layout = [[sg.Text('Animated Matplotlib', size=(40, 1),
+                justification='center', font='Helvetica 20')],
               [sg.Canvas(size=(640, 480), key='-CANVAS-')],
               [sg.Text('Progress through the data')],
-              [sg.Slider(range=(0, NUM_DATAPOINTS), size=(60, 10), orientation='h', key='-SLIDER-')],
+              [sg.Slider(range=(0, NUM_DATAPOINTS), size=(60, 10),
+                orientation='h', key='-SLIDER-')],
               [sg.Text('Number of data points to display on screen')],
-               [sg.Slider(range=(10, 500), default_value=40, size=(40, 10), orientation='h', key='-SLIDER-DATAPOINTS-')],
+               [sg.Slider(range=(10, 500), default_value=40, size=(40, 10),
+                    orientation='h', key='-SLIDER-DATAPOINTS-')],
               [sg.Button('Exit', size=(10, 1), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
-    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout, finalize=True)
+    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI',
+                layout, finalize=True)
 
-    canvas_elem = window.FindElement('-CANVAS-')
-    slider_elem = window.FindElement('-SLIDER-')
+    canvas_elem = window['-CANVAS-']
+    slider_elem = window['-SLIDER-']
     canvas = canvas_elem.TKCanvas
 
     # draw the initial plot in the window
@@ -41,16 +46,18 @@ def main():
     dpts = [randint(0, 10) for x in range(NUM_DATAPOINTS)]
 
     for i in range(len(dpts)):
-        event, values = window.Read(timeout=10)
+
+        event, values = window.read(timeout=10)
         if event in ('Exit', None):
             exit(69)
-        slider_elem.Update(i)       # slider shows "progress" through the data points
+        slider_elem.update(i)       # slider shows "progress" through the data points
         ax.cla()                    # clear the subplot
         ax.grid()                   # draw the grid
         data_points = int(values['-SLIDER-DATAPOINTS-']) # draw this many data points (on next line)
         ax.plot(range(data_points), dpts[i:i+data_points],  color='purple')
         fig_agg.draw()
 
+    window.close()
 
 if __name__ == '__main__':
     main()

@@ -1,21 +1,21 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
+
+# Example .disappear() .reappear() methods in window
+
 
 layout = [[ sg.Text('My Window') ],
           [ sg.Button('Disappear')]]
 
-window = sg.Window('My window').Layout(layout)
+window = sg.Window('My window', layout)
 
 while True:
-    event, values = window.Read()
+    event, values = window.read()
     if event is None:
         break
     if event == 'Disappear':
-        window.Disappear()
-        sg.Popup('Click OK to make window reappear')
-        window.Reappear()
+        window.disappear()
+        sg.popup('Click OK to make window reappear')
+        window.reappear()
 
+window.close()

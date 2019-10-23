@@ -1,37 +1,34 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
-from PySimpleGUI import Print as print
+'''
+    Usage of all Popups in PSG
+'''
 
-
-print('test')
-sg.PopupGetFile('Get file', save_as=True,file_types=(("ALL Files", "*.jpg"),))
+sg.Print('test')
+sg.popup_get_file('Get file', save_as=True,
+                  file_types=(("ALL Files", "*.jpg"),))
 
 # Here, have some windows on me....
-[sg.PopupNoWait('No-wait Popup', location=(500+100*x,500)) for x in range(10)]
-
-answer = sg.PopupYesNo('Do not worry about all those open windows... they will disappear at the end', 'Are you OK with that?')
+[sg.popup_no_wait('No-wait Popup', location=(500+100*x, 500))
+ for x in range(10)]
+answer = sg.popup_yes_no(
+    'Do not worry about all those open windows... they will disappear at the end', 'Are you OK with that?')
 
 if answer == 'No':
-    sg.PopupCancel('OK, we will destroy those windows as soon as you close this window')
+    sg.popup_cancel(
+        'OK, we will destroy those windows as soon as you close this window')
     sys.exit()
 
-sg.PopupNonBlocking('Your answer was',answer, location=(1000,600))
-
-text = sg.PopupGetText('This is a call to PopopGetText', location=(1000,200))
-sg.PopupGetFile('Get file')
-sg.PopupGetFolder('Get folder')
-
-
-sg.Popup('Simple popup')
-
-sg.PopupNoTitlebar('No titlebar')
-sg.PopupNoBorder('No border')
-sg.PopupNoFrame('No frame')
-sg.PopupCancel('Cancel')
-sg.PopupOKCancel('OK Cancel')
-sg.PopupAutoClose('Autoclose')
+sg.popup_non_blocking('Your answer was', answer, location=(1000, 600))
+text = sg.popup_get_text(
+    'This is a call to PopopGetText', location=(1000, 200))
+sg.popup_get_file('Get file')
+sg.popup_get_folder('Get folder')
+sg.popup('Simple popup')
+sg.popup_no_titlebar('No titlebar')
+sg.popup_no_border('No border')
+sg.popup_no_frame('No frame')
+sg.popup_cancel('Cancel')
+sg.popup_okCancel('OK Cancel')
+sg.popup_auto_close('Autoclose')

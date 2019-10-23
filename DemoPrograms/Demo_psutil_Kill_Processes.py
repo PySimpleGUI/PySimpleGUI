@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-import sys
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import os
 import signal
 import psutil
@@ -45,38 +40,38 @@ def show_list_by_name(window):
     display_list = []
     for process in sorted_by_cpu_procs:
         display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0] / 10, process[1]))
-    window.FindElement('_processes_').Update(display_list)
+    window['-processes-'].update(display_list)
     return display_list
 
 def main():
 
     # ----------------  Create Form  ----------------
-    # sg.ChangeLookAndFeel('Topanga')
+    # sg.change_look_and_feel('Topanga')
 
     layout = [[sg.Text('Process Killer - Choose one or more processes',
                        size=(45,1), font=('Helvetica', 15), text_color='red')],
-              [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='_processes_')],
+              [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='-processes-')],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
-              [sg.T('Filter by typing name', font='ANY 14'), sg.In(size=(15,1), font='any 14', key='_filter_')],
+              [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15,1), font='any 14', key='-filter-')],
               [sg.Button('Sort by Name', ),
                sg.Button('Sort by % CPU', button_color=('white', 'DarkOrange2')),
                sg.Button('Kill', button_color=('white','red'), bind_return_key=True),
                sg.Exit(button_color=('white', 'sea green'))]]
 
-    window = sg.Window('Process Killer',
+    window = sg.Window('Process Killer', layout,
                        keep_on_top=True,
                        auto_size_buttons=False,
                        default_button_element_size=(12,1),
                        return_keyboard_events=True,
-                       ).Layout(layout).Finalize()
+                       finalize=True)
 
 
     display_list = show_list_by_name(window)
     # ----------------  main loop  ----------------
-    while (True):
+    while True:
         # --------- Read and update window --------
-        event, values = window.Read()
-        if event is None or event == 'Exit':
+        event, values = window.read()
+        if event in (None, 'Exit'):
             break
 
         # skip mouse, control key and shift key events entirely
@@ -93,16 +88,16 @@ def main():
             # display_list = []
             # for process in sorted_by_cpu_procs:
             #     display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
-            # window.FindElement('_processes_').Update(display_list)
+            # window['-processes-'].update(display_list)
         elif event == 'Kill':
-            processes_to_kill = values['_processes_']
+            processes_to_kill = values['-processes-']
             for proc in processes_to_kill:
                 pid = int(proc[0:5])
-                # if sg.PopupYesNo('About to kill {} {}'.format(pid, proc[12:]), keep_on_top=True) == 'Yes':
+                # if sg.popup_yes_no('About to kill {} {}'.format(pid, proc[12:]), keep_on_top=True) == 'Yes':
                 try:
                     kill_proc_tree(pid=pid)
                 except:
-                    sg.PopupNoWait('Error killing process', auto_close_duration=1, auto_close=True)
+                    sg.popup_no_wait('Error killing process', auto_close_duration=1, auto_close=True)
         elif event == 'Sort by % CPU':
             psutil.cpu_percent(interval=.1)
             procs = psutil.process_iter()
@@ -111,16 +106,17 @@ def main():
             display_list = []
             for process in sorted_by_cpu_procs:
                 display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
-            window.FindElement('_processes_').Update(display_list)
+            window['-processes-'].update(display_list)
         else:                   # was a typed character
             if display_list is not None:
                 new_output = []
                 for line in display_list:
-                    if values['_filter_'] in line.lower():
+                    if values['-filter-'] in line.lower():
                         new_output.append(line)
-                window.FindElement('_processes_').Update(new_output)
+                window['-processes-'].update(new_output)
+        window.close()
 
 
 if __name__ == "__main__":
     main()
-    sys.exit(0)
+    

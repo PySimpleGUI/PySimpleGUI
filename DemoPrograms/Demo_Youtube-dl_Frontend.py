@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import subprocess
 
 """
@@ -12,50 +9,60 @@ Paste the youtube link into the GUI. The GUI link is queried when you click Get 
 Get List will populate the pulldown list with the language options available for the video.
 Choose the language to download and click Download
 """
+youtube_executable = 'path/to/youtube-dl'
+
 
 def DownloadSubtitlesGUI():
-    sg.ChangeLookAndFeel('Dark')
+    sg.change_look_and_feel('Dark')
 
-    combobox = sg.InputCombo(values=['',], size=(10,1), key='lang')
-    layout =  [
-                [sg.Text('Subtitle Grabber', size=(40, 1), font=('Any 15'))],
-                [sg.T('YouTube Link'),sg.In(default_text='',size=(60,1), key='link', do_not_clear=True) ],
-                [sg.Output(size=(90,20), font='Courier 12')],
-                [sg.Button('Get List')],
-                [sg.T('Language Code'), combobox, sg.Button('Download')],
-                [sg.Button('Exit', button_color=('white', 'firebrick3'))]
-                ]
+    combobox = sg.Combo(values=['', ], size=(10, 1), key='lang')
+    layout = [
+        [sg.Text('Subtitle Grabber', size=(40, 1), font=('Any 15'))],
+        [sg.Text('YouTube Link'), sg.Input(default_text='', size=(60, 1), key='link')],
+        [sg.Output(size=(90, 20), font='Courier 12')],
+        [sg.Button('Get List')],
+        [sg.Text('Language Code'), combobox, sg.Button('Download')],
+        [sg.Button('Exit', button_color=('white', 'firebrick3'))]
+    ]
 
-    window = sg.Window('Subtitle Grabber launcher', text_justification='r', default_element_size=(15,1), font=('Any 14')).Layout(layout)
+    window = sg.Window('Subtitle Grabber launcher', layout,
+                       text_justification='r',
+                       default_element_size=(15, 1),
+                       font=('Any 14'))
 
     # ---===--- Loop taking in user input and using it to query HowDoI --- #
     while True:
-        event, values = window.Read()
+        event, values = window.read()
         if event in ('Exit', None):
             break           # exit button clicked
         link = values['link']
         if event == 'Get List':
             print('Getting list of subtitles....')
-            window.Refresh()
-            command = [f'C:\\Python\\Anaconda3\\Scripts\\youtube-dl.exe --list-subs {link}',]
+            window.refresh()
+            command = [youtube_executable + f' --list-subs {link}']
             output = ExecuteCommandSubprocess(command, wait=True, quiet=True)
-            lang_list = [o[:5].rstrip() for o in output.split('\n') if 'vtt' in o]
+            lang_list = [o[:5].rstrip()
+                         for o in output.split('\n') if 'vtt' in o]
             lang_list = sorted(lang_list)
-            combobox.Update(values=lang_list)
+            combobox.update(values=lang_list)
             print('Done')
 
         elif event == 'Download':
             lang = values['lang'] or 'en'
             print(f'Downloading subtitle for {lang}...')
-            window.Refresh()
-            command = [f'C:\\Python\\Anaconda3\\Scripts\\youtube-dl.exe --sub-lang {lang} --write-sub {link}',]
+            window.refresh()
+            command = [youtube_executable + f' --sub-lang {lang} --write-sub {link}', ]
             print(ExecuteCommandSubprocess(command, wait=True, quiet=False))
             print('Done')
+    window.close()
 
 
 def ExecuteCommandSubprocess(command, wait=False, quiet=True, *args):
     try:
-        sp = subprocess.Popen([command,*args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen([command, *args],
+                              shell=True,
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
         if wait:
             out, err = sp.communicate()
             if not quiet:
@@ -72,4 +79,3 @@ def ExecuteCommandSubprocess(command, wait=False, quiet=True, *args):
 
 if __name__ == '__main__':
     DownloadSubtitlesGUI()
-

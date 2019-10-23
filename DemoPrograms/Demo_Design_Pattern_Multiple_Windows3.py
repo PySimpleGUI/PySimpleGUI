@@ -1,48 +1,54 @@
 import PySimpleGUI as sg
 
+'''
+    Example of wizard-like PySimpleGUI windows
+'''
+
 layout = [[sg.Text('Window 1'), ],
-          [sg.Input(do_not_clear=True)],
-          [sg.Text('',size=(20,1),  key='_OUTPUT_')],
+          [sg.Input('')],
+          [sg.Text('',size=(20,1),  key='-OUTPUT-')],
           [sg.Button('Next >'), sg.Button('Exit')]]
 
-win1 = sg.Window('Window 1').Layout(layout)
+window = sg.Window('Window 1', layout)
 
-win3_active = win2_active = False
+window3_active = window2_active = False
 while True:
-    if not win2_active:
-        ev1, vals1 = win1.Read()
-        if ev1 is None or ev1 == 'Exit':
+    if not window2_active:
+        event1, values1 = window.read()
+        if event1 is None or event1 == 'Exit':
             break
-        win1.FindElement('_OUTPUT_').Update(vals1[0])
+        window['-OUTPUT-'].update(values1[0])
 
-    if not win2_active and ev1 == 'Next >':
-        win2_active = True
-        win1.Hide()
+    if not window2_active and event1 == 'Next >':
+        window2_active = True
+        window.hide()
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('< Prev'), sg.Button('Next >')]]
 
-        win2 = sg.Window('Window 2').Layout(layout2)
+        window2 = sg.Window('Window 2', layout2)
 
-    if win2_active:
-        ev2, vals2 = win2.Read()
-        if ev2 in (None, 'Exit', '< Prev'):
-            win2_active = False
-            win2.Close()
-            win1.UnHide()
-        elif ev2 == 'Next >':
-            win3_active = True
-            win2_active = False
-            win2.Hide()
+    if window2_active:
+        event2 = window2.read()[0]
+        if event2 in (None, 'Exit', '< Prev'):
+            window2_active = False
+            window2.close()
+            window.un_hide()
+        elif event2 == 'Next >':
+            window3_active = True
+            window2_active = False
+            window2.hide()
             layout3 = [[sg.Text('Window 3')],
                        [sg.Button('< Prev'), sg.Button('Exit')]]
-            win3 = sg.Window('Window 3').Layout(layout3)
+            window3 = sg.Window('Window 3', layout3)
 
-    if win3_active:
-        ev3, vals3 = win3.Read()
+    if window3_active:
+        ev3, vals3 = window3.read()
         if ev3 == '< Prev':
-            win3.Close()
-            win3_active = False
-            win2_active = True
-            win2.UnHide()
+            window3.close()
+            window3_active = False
+            window2_active = True
+            window2.un_hide()
         elif ev3 in (None, 'Exit'):
             break
+
+window.close()

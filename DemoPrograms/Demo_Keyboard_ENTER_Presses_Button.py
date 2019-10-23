@@ -1,6 +1,4 @@
 import PySimpleGUI as sg
-# import PySimpleGUIQt as sg
-
 """
     tkinter and Qt do not "activate" buttons by pressing the ENTER key with the button highlighted / in focus
     This demo will enable the application to click on a button if the button has focus (is highlighted) and the
@@ -18,29 +16,32 @@ import PySimpleGUI as sg
 
 """
 
-QT_ENTER_KEY1 =  'special 16777220'
-QT_ENTER_KEY2 =  'special 16777221'
+QT_ENTER_KEY1 = 'special 16777220'
+QT_ENTER_KEY2 = 'special 16777221'
 
-layout = [  [sg.T('Test of Enter Key use')],
-            [sg.In(key='_IN_')],
-            [sg.Button('Button 1', key='_1_')],
-            [sg.Button('Button 2', key='_2_')],
-            [sg.Button('Button 3', key='_3_')],  ]
+layout = [[sg.Text('Test of Enter Key use')],
+          [sg.Input(key='-IN-')],
+          [sg.Button('Button 1', key='-1-')],
+          [sg.Button('Button 2', key='-2-')],
+          [sg.Button('Button 3', key='-3-')], ]
 
 window = sg.Window('My new window', layout,
                    return_keyboard_events=True)
 while True:             # Event Loop
-    event, values = window.Read()
+    event, values = window.read()
     if event is None:
         break
     if event in ('\r', QT_ENTER_KEY1, QT_ENTER_KEY2):         # Check for ENTER key
-        elem = window.FindElementWithFocus()                            # go find element with Focus
+        # go find element with Focus
+        elem = window.find_element_with_focus()
         if elem is not None and elem.Type == sg.ELEM_TYPE_BUTTON:       # if it's a button element, click it
             elem.Click()
         # check for buttons that have been clicked
-    elif event == '_1_':
+    elif event == '-1-':
         print('Button 1 clicked')
-    elif event == '_2_':
+    elif event == '-2-':
         print('Button 2 clicked')
-    elif event == '_3_':
+    elif event == '-3-':
         print('Button 3 clicked')
+
+window.close()

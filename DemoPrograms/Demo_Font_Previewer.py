@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-
+import PySimpleGUI as sg
 from tkinter import font
 import tkinter
 root = tkinter.Tk()
@@ -12,38 +8,38 @@ fonts = list(font.families())
 fonts.sort()
 root.destroy()
 
-sg.ChangeLookAndFeel('Black')
+'''
+    Showing fonts in PSG / tk
+'''
 
-layout = [[ sg.Text('My Text Element',
-                    size=(20,1),
-                    auto_size_text=False,
-                    click_submits=True,
-                    relief=sg.RELIEF_GROOVE,
-                    font = 'Courier` 25',
-                    text_color='#FF0000',
-                    background_color='white',
-                    justification='center',
-                    pad=(5,3),
-                    key='_text_',
-                    tooltip='This is a text element',
-                    ) ],
-            [sg.Listbox(fonts, size=(30,20), change_submits=True, key='_list_')],
-            [sg.Input(key='_in_')],
-          [ sg.Button('Read', bind_return_key=True), sg.Exit()]]
+sg.change_look_and_feel('Black')
 
-window = sg.Window('My new window',
-                   # grab_anywhere=True,
-                   # force_toplevel=True,
-                   ).Layout(layout)
+layout = [[sg.Text('My Text Element',
+                size=(20, 1),
+                click_submits=True,
+                relief=sg.RELIEF_GROOVE,
+                font='Courier` 25',
+                text_color='#FF0000',
+                background_color='white',
+                justification='center',
+                pad=(5, 3),
+                key='-text-',
+                tooltip='This is a text element',
+                )],
+          [sg.Listbox(fonts, size=(30, 20), change_submits=True, key='-list-')],
+          [sg.Input(key='-in-')],
+          [sg.Button('Read', bind_return_key=True), sg.Exit()]]
 
+window = sg.Window('My new window', layout)
 
 while True:     # Event Loop
-    event, values = window.Read()
-    if event is None or event == 'Exit':
+    event, values = window.read()
+    if event in (None, 'Exit'):
         break
-    text_elem = window.FindElement('_text_')
+    text_elem = window['-text-']
     print(event, values)
-    if values['_in_'] != '':
-        text_elem.Update(font=values['_in_'])
+    if values['-in-'] != '':
+        text_elem.update(font=values['-in-'])
     else:
-        text_elem.Update(font=(values['_list_'][0], 25))
+        text_elem.update(font=(values['-list-'][0], 25))
+window.close()

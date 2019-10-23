@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
 """
     Demo program that reroutes stdout and stderr.
@@ -16,16 +12,17 @@ else:
 
 
 layout = [
-            [sg.Text('Type something in input field and click print')],
-            [sg.In()],
-            [sg.Output()],
-            [sg.Button('Print')]
-         ]
+    [sg.Text('Type something in input field and click print')],
+    [sg.Input()],
+    [sg.Output()],
+    [sg.Button('Print')]
+]
 
-window = sg.Window('Reroute stdout').Layout(layout)
+window = sg.Window('Reroute stdout', layout)
 
 while True:     # Event Loop
-    event, values = window.Read()
+    event, values = window.read()
     if event is None:
         break
     print('You typed: ', values[0])
+window.close()

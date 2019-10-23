@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-import sys
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import psutil
 import time
 from threading import Thread
@@ -29,6 +24,7 @@ g_cpu_percent = 0
 g_procs = None
 g_exit = False
 
+
 def CPU_thread(args):
     global g_interval, g_cpu_percent, g_procs, g_exit
 
@@ -44,30 +40,30 @@ def main():
     global g_interval,  g_procs, g_exit
 
     # ----------------  Create Form  ----------------
-    sg.ChangeLookAndFeel('Black')
-    layout = [[sg.Text('', size=(8,1), font=('Helvetica', 20),text_color=sg.YELLOWS[0],
-                       justification='center', key='text')],
-                 [sg.Text('', size=(30, 8), font=('Courier New', 12),text_color='white', justification='left', key='processes')],
-                 [sg.Exit(button_color=('white', 'firebrick4'), pad=((15,0), 0), size=(9,1)),
-                  sg.Spin([x+1 for x in range(10)], 3, key='spin')],]
+    sg.change_look_and_feel('Black')
+    layout = [
+        [sg.Text('', size=(8, 1), font=('Helvetica', 20),
+              text_color=sg.YELLOWS[0], justification='center', key='text')],
+        [sg.Text('', size=(30, 8), font=('Courier New', 12),
+              text_color='white', justification='left', key='processes')],
+        [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0), size=(9, 1)),
+         sg.Spin([x+1 for x in range(10)], 3, key='spin')]
+    ]
 
-    window = sg.Window('CPU Utilization',
-                       no_titlebar=True,
-                       keep_on_top=True,
-                       alpha_channel=.8,
-                       grab_anywhere=True).Layout(layout)
+    window = sg.Window('CPU Utilization', layout
+                       no_titlebar=True, keep_on_top=True, alpha_channel=.8, grab_anywhere=True)
 
     # start cpu measurement thread
-    thread = Thread(target=CPU_thread,args=(None,))
+    thread = Thread(target=CPU_thread, args=(None,))
     thread.start()
     timeout_value = 1             # make first read really quick
     g_interval = 1
     # ----------------  main loop  ----------------
-    while (True):
+    while True:
         # --------- Read and update window --------
-        event, values = window.Read(timeout=timeout_value, timeout_key='Timeout')
+        event, values = window.read(timeout=timeout_value, timeout_key='Timeout')
         # --------- Do Button Operations --------
-        if event is None or event == 'Exit':
+        if event in (None, 'Exit'):
             break
 
         timeout_value = int(values['spin']) * 1000
@@ -77,11 +73,12 @@ def main():
         if g_procs:
             # --------- Create list of top % CPU porocesses --------
             try:
-                top = {proc.name() : proc.cpu_percent() for proc in g_procs}
-            except: pass
+                top = {proc.name(): proc.cpu_percent() for proc in g_procs}
+            except:
+                pass
 
-
-            top_sorted = sorted(top.items(), key=operator.itemgetter(1), reverse=True)
+            top_sorted = sorted(
+                top.items(), key=operator.itemgetter(1), reverse=True)
             if top_sorted:
                 top_sorted.pop(0)
             display_string = ''
@@ -89,11 +86,14 @@ def main():
                 display_string += '{:2.2f} {}\n'.format(cpu/10, proc)
 
         # --------- Display timer and proceses in window --------
-        window.FindElement('text').Update('CPU {}'.format(cpu_percent))
-        window.FindElement('processes').Update(display_string)
+        window['text'].update('CPU ' + str(cpu_percent))
+        window['processes'].update(display_string)
 
     g_exit = True
     thread.join()
+
+    window.close()
+
 
 if __name__ == "__main__":
     main()

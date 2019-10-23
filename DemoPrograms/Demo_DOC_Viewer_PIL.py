@@ -32,31 +32,30 @@ pixmaps and page re-visits will re-use a once-created display list.
 import sys
 import fitz
 import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
+
 import tkinter as tk
 from PIL import Image, ImageTk
 import time
 
 if len(sys.argv) == 1:
-    fname = sg.PopupGetFile('Document Browser', 'Document file to open', no_window=True,
-                              file_types = (
-                                            ("PDF Files",     "*.pdf"),
-                                            ("XPS Files",     "*.*xps"),
-                                            ("Epub Files",    "*.epub"),
-                                            ("Fiction Books", "*.fb2"),
-                                            ("Comic Books",   "*.cbz"),
-                                            ("HTML",   "*.htm*")
-                                            # add more document types here
-                                           )
-                             )
+    fname = sg.popup_get_file('Document Browser', 'Document file to open',
+                              no_window=True,
+                              file_types=(
+                                  ("PDF Files",     "*.pdf"),
+                                  ("XPS Files",     "*.*xps"),
+                                  ("Epub Files",    "*.epub"),
+                                  ("Fiction Books", "*.fb2"),
+                                  ("Comic Books",   "*.cbz"),
+                                  ("HTML",   "*.htm*")
+                                  # add more document types here
+                              )
+                              )
 else:
     fname = sys.argv[1]
 
 if not fname:
-    sg.Popup("Cancelling:", "No filename supplied")
+    sg.popup("Cancelling:", "No filename supplied")
     raise SystemExit("Cancelled: no filename supplied")
 
 doc = fitz.open(fname)
@@ -64,15 +63,16 @@ page_count = len(doc)
 
 # used for response time statistics only
 fitz_img_time = 0.0
-tk_img_time   = 0.0
-img_count     = 1
+tk_img_time = 0.0
+img_count = 1
 
 # allocate storage for page display lists
 dlist_tab = [None] * page_count
 
 title = "PyMuPDF display of '%s', pages: %i" % (fname, page_count)
 
-def get_page(pno, zoom = False, max_size = None, first = False):
+
+def get_page(pno, zoom=False, max_size=None, first=False):
     """Return a PNG image for a document page number.
     """
     dlist = dlist_tab[pno]   # get display list of page number
@@ -91,7 +91,7 @@ def get_page(pno, zoom = False, max_size = None, first = False):
     mat_0 = fitz.Matrix(zoom_0, zoom_0)
 
     if not zoom:             # show total page
-        pix = dlist.getPixmap(matrix = mat_0, alpha=False)
+        pix = dlist.getPixmap(matrix=mat_0, alpha=False)
     else:
         mp = r.tl + (r.br - r.tl) * 0.5     # page rect center
         w2 = r.width / 2
@@ -125,22 +125,15 @@ max_size = (max_width, max_height)
 root.destroy()
 del root
 
-window = sg.Window(title, return_keyboard_events = True,
-                   location = (0,0), use_default_focus = False, no_titlebar=False)
 
 cur_page = 0
-data, clip_pos = get_page(cur_page,
-                          zoom = False,
-                          max_size = max_size,
-                          first = True)
+data, clip_pos = get_page(cur_page, zoom=False, max_size=max_size, first=True)
 
-image_elem = sg.Image(data = data)
+image_elem = sg.Image(data=data)
 
-goto = sg.InputText(str(cur_page + 1), size=(5, 1), do_not_clear=True,
-                    key = "PageNumber")
+goto = sg.InputText(str(cur_page + 1), size=(5, 1), key="-PageNumber-")
 
-layout = [
-    [
+layout = [[
         sg.ReadButton('Next'),
         sg.ReadButton('Prev'),
         sg.Text('Page:'),
@@ -152,17 +145,18 @@ layout = [
     [image_elem],
 ]
 
-window.Layout(layout)
+window = sg.Window(title, layout, return_keyboard_events=True,
+                   location=(0, 0), use_default_focus=False, no_titlebar=False)
 
 # now define the buttons / events we want to handle
 enter_buttons = [chr(13), "Return:13"]
 quit_buttons = ["Escape:27", chr(27)]
 next_buttons = ["Next", "Next:34", "MouseWheel:Down"]
 prev_buttons = ["Prev", "Prior:33", "MouseWheel:Up"]
-Up    = "Up:38"
-Left  = "Left:37"
+Up = "Up:38"
+Left = "Left:37"
 Right = "Right:39"
-Down  = "Down:40"
+Down = "Down:40"
 zoom_buttons = ["Zoom", Up, Down, Left, Right]
 
 # all the buttons we will handle
@@ -173,8 +167,8 @@ old_page = 0
 old_zoom = False
 
 while True:
-    event, value = window.Read()
-    if event is None and (value is None or value['PageNumber'] is None):
+    event, value = window.read()
+    if event is None and (value is None or value['-PageNumber-'] is None):
         break
     if event in quit_buttons:
         break
@@ -184,7 +178,7 @@ while True:
 
     if event in enter_buttons:
         try:
-            cur_page = int(value['PageNumber']) - 1  # check if valid
+            cur_page = int(value['-PageNumber-']) - 1  # check if valid
             while cur_page < 0:
                 cur_page += page_count
         except:
@@ -216,21 +210,22 @@ while True:
         zoom = zoom_pressed = old_zoom = False
 
     t0 = time.perf_counter()
-    data, clip_pos = get_page(cur_page, zoom = zoom, max_size = max_size,
-                              first = False)
+    data, clip_pos = get_page(cur_page, zoom=zoom, max_size=max_size,
+                              first=False)
     t1 = time.perf_counter()
-    image_elem.Update(data = data)
+    image_elem.update(data=data)
     t2 = time.perf_counter()
     fitz_img_time += t1 - t0
-    tk_img_time   += t2 - t1
-    img_count     += 1
+    tk_img_time += t2 - t1
+    img_count += 1
     old_page = cur_page
     old_zoom = zoom_pressed or zoom
 
     # update page number field
     if event in my_keys:
-        goto.Update(str(cur_page + 1))
+        goto.update(str(cur_page + 1))
 
+window.close()
 
 # print some response time statistics
 if img_count > 0:

@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 import csv
 
 
@@ -11,70 +7,77 @@ def TableSimulation():
     """
     Display data in a table format
     """
-    sg.SetOptions(element_padding=(0,0))
+    sg.set_options(element_padding=(0, 0))
 
     menu_def = [['File', ['Open', 'Save', 'Exit']],
-                ['Edit', ['Paste', ['Special', 'Normal',], 'Undo'],],
-                ['Help', 'About...'],]
+                ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['Help', 'About...'], ]
 
     columm_layout = [[]]
 
     MAX_ROWS = 20
     MAX_COL = 10
     for i in range(MAX_ROWS):
-        inputs = [sg.T('{}'.format(i), size=(4,1), justification='right')] + [sg.In(size=(10, 1), pad=(1, 1), justification='right', key=(i,j), do_not_clear=True) for j in range(MAX_COL)]
+        inputs = [sg.Text(str(i), size=(4, 1), justification='right')] + [sg.Input(size=(10, 1), pad=(
+            1, 1), justification='right', key=(i, j)) for j in range(MAX_COL)]
         columm_layout.append(inputs)
 
-    layout = [ [sg.Menu(menu_def)],
-               [sg.T('Table Using Combos and Input Elements', font='Any 18')],
-               [sg.T('Type in a row, column and value. The form will update the values in realtime as you type'),
-               sg.In(key='inputrow', justification='right', size=(8,1), pad=(1,1), do_not_clear=True),
-               sg.In(key='inputcol', size=(8,1), pad=(1,1), justification='right', do_not_clear=True),
-               sg.In(key='value', size=(8,1), pad=(1,1), justification='right', do_not_clear=True)],
-               [sg.Column(columm_layout, size=(800,600), scrollable=True)] ]
+    layout = [[sg.Menu(menu_def)],
+              [sg.Text('Table Using Combos and Input Elements', font='Any 18')],
+              [sg.Text('Type in a row, column and value. The form will update the values in realtime as you type'),
+               sg.Input(key='inputrow', justification='right', size=(8, 1), pad=(1, 1)),
+               sg.Input(key='inputcol', size=(8, 1), pad=(1, 1), justification='right'),
+               sg.Input(key='value', size=(8, 1), pad=(1, 1), justification='right')],
+              [sg.Col(columm_layout, size=(800, 600), scrollable=True)]]
 
-    window = sg.Window('Table', return_keyboard_events=True).Layout(layout)
+    window = sg.Window('Table', layout, return_keyboard_events=True)
 
     while True:
-        event, values = window.Read()
+        event, values = window.read()
         # --- Process buttons --- #
-        if event is None or event == 'Exit':
+        if event in (None, 'Exit'):
             break
         elif event == 'About...':
-            sg.Popup('Demo of table capabilities')
+            sg.popup('Demo of table capabilities')
         elif event == 'Open':
-            filename = sg.PopupGetFile('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
+            filename = sg.popup_get_file(
+                'filename to open', no_window=True, file_types=(("CSV Files", "*.csv"),))
             # --- populate table with file contents --- #
             if filename is not None:
                 with open(filename, "r") as infile:
                     reader = csv.reader(infile)
                     try:
-                        data = list(reader)  # read everything else into a list of rows
+                        # read everything else into a list of rows
+                        data = list(reader)
                     except:
-                        sg.PopupError('Error reading file')
+                        sg.popup_error('Error reading file')
                         continue
                 # clear the table
-                [window.FindElement((i,j)).Update('') for j in range(MAX_COL) for i in range(MAX_ROWS)]
+                [window[(i, j)].update('') for j in range(MAX_COL)
+                 for i in range(MAX_ROWS)]
 
                 for i, row in enumerate(data):
                     for j, item in enumerate(row):
-                        location = (i,j)
+                        location = (i, j)
                         try:            # try the best we can at reading and filling the table
-                            target_element = window.FindElement(location)
+                            target_element = window[location]
                             new_value = item
                             if target_element is not None and new_value != '':
-                                target_element.Update(new_value)
+                                target_element.update(new_value)
                         except:
                             pass
 
         # if a valid table location entered, change that location's value
         try:
             location = (int(values['inputrow']), int(values['inputcol']))
-            target_element = window.FindElement(location)
+            target_element = window[location]
             new_value = values['value']
             if target_element is not None and new_value != '':
-                target_element.Update(new_value)
+                target_element.update(new_value)
         except:
             pass
+
+    window.close()
+
 
 TableSimulation()
