@@ -14,7 +14,7 @@ import time
   of the timer that is displayed comes from the system timer, time.time().  This guarantees an
   accurate time value is displayed regardless of the accuracy of the PySimpleGUI timer tick. If
   this design were not used, then the time value displayed would slowly drift by the amount of time
-  it takes to execute the PySimpleGUI read and update calls (not good!)     
+  it takes to execute the PySimpleGUI read and update calls (not good!)
 
  NOTE - you will get a warning message printed when you exit using exit button.
  It will look something like: invalid command name \"1616802625480StopMove\"
@@ -48,9 +48,9 @@ while (True):
     if event == 'button':
         event = window.FindElement(event).GetText()
     # --------- Do Button Operations --------
-    if event is None or event == 'Exit':  # ALWAYS give a way out of program
+    if event in (None, 'Exit'):  # ALWAYS give a way out of program
         break
-    if event is 'Reset':
+    if event == 'Reset':
         start_time = int(round(time.time() * 100))
         current_time = 0
         paused_time = start_time
