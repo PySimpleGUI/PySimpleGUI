@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.5.0.25 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize"
+version = __version__ = "4.5.0.25 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize, Update parms added for Input, Frame, delete window when close"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -900,7 +900,7 @@ class InputText(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, disabled=None, select=None, visible=None, move_cursor_to='end'):
+    def Update(self, value=None, disabled=None, select=None, visible=None,text_color=None, background_color=None, move_cursor_to='end'):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -908,6 +908,8 @@ class InputText(Element):
         :param disabled: (bool) disable or enable state of the element (sets Entry Widget to readonly or normal)
         :param select: (bool) if True, then the text will be selected
         :param visible: (bool) change visibility of element
+        :param text_color: (str) change color of text being typed
+        :param background_color: (str) change color of the background
         :param move_cursor_to: Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'
         """
         if self.Widget is None:
@@ -917,6 +919,10 @@ class InputText(Element):
             self.TKEntry['state'] = 'readonly'
         elif disabled is False:
             self.TKEntry['state'] = 'normal'
+        if background_color is not None:
+            self.TKEntry.configure(background=background_color)
+        if text_color is not None:
+            self.TKEntry.configure(fg=text_color)
         if value is not None:
             try:
                 self.TKStringVar.set(value)
@@ -3459,10 +3465,11 @@ class Frame(Element):
         element = row[col_num]
         return element
 
-    def Update(self, visible=None):
+    def Update(self, value=None, visible=None):
         """
         Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
+        :param value: (Any) New text value to show on frame
         :param visible: (bool) control visibility of element
         """
         if self.Widget is None:
@@ -3472,6 +3479,8 @@ class Frame(Element):
             self.TKFrame.pack_forget()
         elif visible is True:
             self.TKFrame.pack()
+        if value is not None:
+            self.TKFrame.config(text=str(value))
 
 
     add_row = AddRow
@@ -5628,6 +5637,7 @@ class Window:
             #     print(f'Window {self.Title} Last button clicked = {self.LastButtonClicked}')
             try:
                 self.TKroot.after_cancel(self.TKAfterID)
+                del self.TKAfterID
             except:
                 pass
                 # print('** tkafter cancel failed **')
@@ -5656,8 +5666,7 @@ class Window:
             if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[
                 0] is None:  # Special Qt case because returning for no reason so fake timeout
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
-            elif not self.XFound and self.ReturnValues[
-                0] is None:  # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
+            elif not self.XFound and self.ReturnValues[0] is None:  # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
                 # print("*** Faking timeout ***")
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             return self.ReturnValues
@@ -6061,7 +6070,7 @@ class Window:
             except:
                 pass
         self.TKrootDestroyed = True
-
+        del self
 
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
@@ -9961,15 +9970,42 @@ def ListOfLookAndFeelValues():
 
 def ChangeLookAndFeel(index, force=False):
     """
-
-    :param index:
-
+    Change the "color scheme" of all future PySimpleGUI Windows.
+    The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
+    There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
+    The look and feel table itself has these indexe into the dictionary LOOK_AND_FEEL_TABLE
+        SystemDefault
+        Reddit
+        Topanga
+        GreenTan
+        Dark
+        LightGreen
+        Dark2
+        Black
+        Tan
+        TanBlue
+        DarkTanBlue
+        DarkAmber
+        DarkBlue
+        Reds
+        Green
+        BluePurple
+        Purple
+        BlueMono
+        GreenMono
+        BrownBlue
+        BrightColors
+        NeutralBlue
+        Kayak
+        SandyBeach
+        TealMono
+    :param index: (str) the name of the index into the Look and Feel table
+    :param force: (bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors
     """
-    # global LOOK_AND_FEEL_TABLE
 
-    # if sys.platform == 'darwin' and not force:
-    #     print('*** Changing look and feel is not supported on Mac platform ***')
-    #     return
+    if sys.platform == 'darwin' and not force:
+        print('*** Changing look and feel is not supported on Mac platform ***')
+        return
 
     # look and feel table
 
