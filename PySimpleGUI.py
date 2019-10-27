@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.5.0.25 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize, Update parms added for Input, Frame, delete window when close"
+version = __version__ = "4.5.0.26 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize, Update parms added for Input, Frame, delete window when close"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
