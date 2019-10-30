@@ -9,6 +9,7 @@
 """
 import PySimpleGUI as sg
 import vlc
+from sys import platform as PLATFORM
 
 #------- GUI definition & setup --------#
 
@@ -31,7 +32,10 @@ list_player = inst.media_list_player_new()
 media_list = inst.media_list_new([])
 list_player.set_media_list(media_list)
 player = list_player.get_media_player()
-player.set_hwnd(window['-VID_OUT-'].Widget.winfo_id())
+if PLATFORM.startswith('linux'):
+    player.set_xwindow(window['-VID_OUT-'].Widget.winfo_id())
+else:
+    player.set_hwnd(window['-VID_OUT-'].Widget.winfo_id())
 
 #------------ The Event Loop ------------#
 while True:
@@ -53,7 +57,7 @@ while True:
         list_player.previous()      # second call moves back 1 video from current
         list_player.play()
     if event == 'load':
-        if not 'Video URL' in values['-VIDEO_LOCATION-']:
+        if values['-VIDEO_LOCATION-'] and not 'Video URL' in values['-VIDEO_LOCATION-']:
             media_list.add_media(values['-VIDEO_LOCATION-'])
             list_player.set_media_list(media_list)
             window['-VIDEO_LOCATION-'].update('Video URL or Local Path:') # only add a legit submit
