@@ -23,32 +23,39 @@ class MyApp(App):
 
     def idle(self):
         self.counter.set_text('Running Time: ' + str(self.count))
-        self.progress.set_value(self.count%100)
+        self.progress.set_value(self.count % 100)
 
     def main(self):
         # the margin 0px auto centers the main container
-        verticalContainer = gui.Widget(width=540, margin='0px auto', style={'display': 'block', 'overflow': 'hidden'})
+        verticalContainer = gui.Widget(width=540, margin='0px auto', style={
+                                       'display': 'block', 'overflow': 'hidden'})
 
-        horizontalContainer = gui.Widget(width='100%', layout_orientation=gui.Widget.LAYOUT_HORIZONTAL, margin='0px', style={'display': 'block', 'overflow': 'auto'})
-        
-        subContainerLeft = gui.Widget(width=320, style={'display': 'block', 'overflow': 'auto', 'text-align': 'center'})
+        horizontalContainer = gui.Widget(width='100%', layout_orientation=gui.Widget.LAYOUT_HORIZONTAL,
+                                         margin='0px', style={'display': 'block', 'overflow': 'auto'})
+
+        subContainerLeft = gui.Widget(width=320,
+                                      style={'display': 'block', 'overflow': 'auto', 'text-align': 'center'})
         self.img = gui.Image('/res:logo.png', height=100, margin='10px')
         self.img.onclick.connect(self.on_img_clicked)
 
         self.table = gui.Table.new_from_list([('ID', 'First Name', 'Last Name'),
-                                   ('101', 'Danny', 'Young'),
-                                   ('102', 'Christine', 'Holand'),
-                                   ('103', 'Lars', 'Gordon'),
-                                   ('104', 'Roberto', 'Robitaille'),
-                                   ('105', 'Maria', 'Papadopoulos')], width=300, height=200, margin='10px')
+                                              ('101', 'Danny', 'Young'),
+                                              ('102', 'Christine', 'Holand'),
+                                              ('103', 'Lars', 'Gordon'),
+                                              ('104', 'Roberto', 'Robitaille'),
+                                              ('105', 'Maria', 'Papadopoulos')],
+                                             width=300, height=200, margin='10px')
         self.table.on_table_row_click.connect(self.on_table_row_click)
 
-        # the arguments are	width - height - layoutOrientationOrizontal
-        subContainerRight = gui.Widget(style={'width': '220px', 'display': 'block', 'overflow': 'auto', 'text-align': 'center'})
+        # the arguments are width - height - layoutOrientationOrizontal
+        subContainerRight = gui.Widget(
+            style={'width': '220px', 'display': 'block',
+                   'overflow': 'auto', 'text-align': 'center'})
         self.count = 0
         self.counter = gui.Label('', width=200, height=30, margin='10px')
 
-        self.lbl = gui.Label('This is a LABEL!', width=200, height=30, margin='10px')
+        self.lbl = gui.Label('This is a LABEL!', width=200,
+                             height=30, margin='10px')
 
         self.bt = gui.Button('Press me!', width=200, height=30, margin='10px')
         # setting the listener for the onclick event of the button
@@ -63,46 +70,56 @@ class MyApp(App):
 
         self.progress = gui.Progress(1, 100, width=200, height=5)
 
-        self.check = gui.CheckBoxLabel('Label checkbox', True, width=200, height=30, margin='10px')
+        self.check = gui.CheckBoxLabel(
+            'Label checkbox', True, width=200, height=30, margin='10px')
         self.check.onchange.connect(self.on_check_change)
 
-        self.btInputDiag = gui.Button('Open InputDialog', width=200, height=30, margin='10px')
+        self.btInputDiag = gui.Button(
+            'Open InputDialog', width=200, height=30, margin='10px')
         self.btInputDiag.onclick.connect(self.open_input_dialog)
 
-        self.btFileDiag = gui.Button('File Selection Dialog', width=200, height=30, margin='10px')
+        self.btFileDiag = gui.Button(
+            'File Selection Dialog', width=200, height=30, margin='10px')
         self.btFileDiag.onclick.connect(self.open_fileselection_dialog)
 
-        self.btUploadFile = gui.FileUploader('./', width=200, height=30, margin='10px')
+        self.btUploadFile = gui.FileUploader(
+            './', width=200, height=30, margin='10px')
         self.btUploadFile.onsuccess.connect(self.fileupload_on_success)
         self.btUploadFile.onfailed.connect(self.fileupload_on_failed)
 
-        items = ('Danny Young','Christine Holand','Lars Gordon','Roberto Robitaille')
-        self.listView = gui.ListView.new_from_list(items, width=300, height=120, margin='10px')
+        items = ('Danny Young', 'Christine Holand',
+                 'Lars Gordon', 'Roberto Robitaille')
+        self.listView = gui.ListView.new_from_list(
+            items, width=300, height=120, margin='10px')
         self.listView.onselection.connect(self.list_view_on_selected)
 
-        self.link = gui.Link("http://localhost:8081", "A link to here", width=200, height=30, margin='10px')
+        self.link = gui.Link("http://localhost:8081", "A link to here",
+                             width=200, height=30, margin='10px')
 
-        self.dropDown = gui.DropDown.new_from_list(('DropDownItem 0', 'DropDownItem 1'),
-                                                   width=200, height=20, margin='10px')
+        self.dropDown = gui.DropDown.new_from_list(
+            ('DropDownItem 0', 'DropDownItem 1'), width=200, height=20, margin='10px')
         self.dropDown.onchange.connect(self.drop_down_changed)
         self.dropDown.select_by_value('DropDownItem 0')
 
-        self.slider = gui.Slider(10, 0, 100, 5, width=200, height=20, margin='10px')
+        self.slider = gui.Slider(
+            10, 0, 100, 5, width=200, height=20, margin='10px')
         self.slider.onchange.connect(self.slider_changed)
 
-        self.colorPicker = gui.ColorPicker('#ffbb00', width=200, height=20, margin='10px')
+        self.colorPicker = gui.ColorPicker(
+            '#ffbb00', width=200, height=20, margin='10px')
         self.colorPicker.onchange.connect(self.color_picker_changed)
 
         self.date = gui.Date('2015-04-13', width=200, height=20, margin='10px')
         self.date.onchange.connect(self.date_changed)
 
-        self.video = gui.Widget( _type='iframe', width=290, height=200, margin='10px')
+        self.video = gui.Widget(_type='iframe', width=290,
+                                height=200, margin='10px')
         self.video.attributes['src'] = "https://drive.google.com/file/d/0B0J9Lq_MRyn4UFRsblR3UTBZRHc/preview"
         self.video.attributes['width'] = '100%'
         self.video.attributes['height'] = '100%'
         self.video.attributes['controls'] = 'true'
         self.video.style['border'] = 'none'
-                                     
+
         self.tree = gui.TreeView(width='100%', height=300)
         ti1 = gui.TreeItem("Item1")
         ti2 = gui.TreeItem("Item2")
@@ -117,16 +134,20 @@ class MyApp(App):
         self.tree.append([ti1, ti2, ti3])
         ti2.append([subti1, subti2, subti3, subti4])
         subti4.append([subsubti1, subsubti2, subsubti3])
-        
+
         # appending a widget to another, the first argument is a string key
-        subContainerRight.append([self.counter, self.lbl, self.bt, self.txt, self.spin, self.progress, self.check, self.btInputDiag, self.btFileDiag])
+        subContainerRight.append([self.counter, self.lbl, self.bt, self.txt,
+                                  self.spin, self.progress, self.check, self.btInputDiag, self.btFileDiag])
         # use a defined key as we replace this widget later
-        fdownloader = gui.FileDownloader('download test', '../remi/res/logo.png', width=200, height=30, margin='10px')
+        fdownloader = gui.FileDownloader(
+            'download test', '../remi/res/logo.png', width=200, height=30, margin='10px')
         subContainerRight.append(fdownloader, key='file_downloader')
-        subContainerRight.append([self.btUploadFile, self.dropDown, self.slider, self.colorPicker, self.date, self.tree])
+        subContainerRight.append(
+            [self.btUploadFile, self.dropDown, self.slider, self.colorPicker, self.date, self.tree])
         self.subContainerRight = subContainerRight
 
-        subContainerLeft.append([self.img, self.table, self.listView, self.link, self.video])
+        subContainerLeft.append(
+            [self.img, self.table, self.listView, self.link, self.video])
 
         horizontalContainer.append([subContainerLeft, subContainerRight])
 
@@ -153,8 +174,8 @@ class MyApp(App):
 
         verticalContainer.append([menubar, horizontalContainer])
 
-        #this flag will be used to stop the display_counter Timer
-        self.stop_flag = False 
+        # this flag will be used to stop the display_counter Timer
+        self.stop_flag = False
 
         # kick of regular display of counter
         self.display_counter()
@@ -168,20 +189,28 @@ class MyApp(App):
             Timer(1, self.display_counter).start()
 
     def menu_dialog_clicked(self, widget):
-        self.dialog = gui.GenericDialog(title='Dialog Box', message='Click Ok to transfer content to main page', width='500px')
+        self.dialog = gui.GenericDialog(
+            title='Dialog Box',
+            message='Click Ok to transfer content to main page', width='500px')
         self.dtextinput = gui.TextInput(width=200, height=30)
         self.dtextinput.set_value('Initial Text')
-        self.dialog.add_field_with_label('dtextinput', 'Text Input', self.dtextinput)
+        self.dialog.add_field_with_label(
+            'dtextinput', 'Text Input', self.dtextinput)
 
         self.dcheck = gui.CheckBox(False, width=200, height=30)
-        self.dialog.add_field_with_label('dcheck', 'Label Checkbox', self.dcheck)
-        values = ('Danny Young', 'Christine Holand', 'Lars Gordon', 'Roberto Robitaille')
-        self.dlistView = gui.ListView.new_from_list(values, width=200, height=120)
-        self.dialog.add_field_with_label('dlistView', 'Listview', self.dlistView)
+        self.dialog.add_field_with_label(
+            'dcheck', 'Label Checkbox', self.dcheck)
+        values = ('Danny Young', 'Christine Holand',
+                  'Lars Gordon', 'Roberto Robitaille')
+        self.dlistView = gui.ListView.new_from_list(
+            values, width=200, height=120)
+        self.dialog.add_field_with_label(
+            'dlistView', 'Listview', self.dlistView)
 
         self.ddropdown = gui.DropDown.new_from_list(('DropDownItem 0', 'DropDownItem 1'),
                                                     width=200, height=20)
-        self.dialog.add_field_with_label('ddropdown', 'Dropdown', self.ddropdown)
+        self.dialog.add_field_with_label(
+            'ddropdown', 'Dropdown', self.ddropdown)
 
         self.dspinbox = gui.SpinBox(min=0, max=5000, width=200, height=20)
         self.dspinbox.set_value(50)
@@ -193,7 +222,8 @@ class MyApp(App):
 
         self.dcolor = gui.ColorPicker(width=200, height=20)
         self.dcolor.set_value('#ffff00')
-        self.dialog.add_field_with_label('dcolor', 'Colour Picker', self.dcolor)
+        self.dialog.add_field_with_label(
+            'dcolor', 'Colour Picker', self.dcolor)
 
         self.ddate = gui.Date(width=200, height=20)
         self.ddate.set_value('2000-01-01')
@@ -249,8 +279,7 @@ class MyApp(App):
 
     def open_input_dialog(self, widget):
         self.inputDialog = gui.InputDialog('Input Dialog', 'Your name?',
-                                           initial_value='type here', 
-                                           width=500, height=160)
+                                           initial_value='type here', width=500, height=160)
         self.inputDialog.confirm_value.connect(
             self.on_input_dialog_confirm)
 
@@ -261,8 +290,8 @@ class MyApp(App):
         self.lbl.set_text('Hello ' + value)
 
     def open_fileselection_dialog(self, widget):
-        self.fileselectionDialog = gui.FileSelectionDialog('File Selection Dialog', 'Select files and folders', False,
-                                                           '.')
+        self.fileselectionDialog = gui.FileSelectionDialog('File Selection Dialog',
+                                                           'Select files and folders', False, '.')
         self.fileselectionDialog.confirm_value.connect(
             self.on_fileselection_dialog_confirm)
 
@@ -275,14 +304,16 @@ class MyApp(App):
         if len(filelist):
             f = filelist[0]
             # replace the last download link
-            fdownloader = gui.FileDownloader("download selected", f, width=200, height=30)
+            fdownloader = gui.FileDownloader(
+                "download selected", f, width=200, height=30)
             self.subContainerRight.append(fdownloader, key='file_downloader')
 
     def list_view_on_selected(self, widget, selected_item_key):
         """ The selection event of the listView, returns a key of the clicked event.
             You can retrieve the item rapidly
         """
-        self.lbl.set_text('List selection: ' + self.listView.children[selected_item_key].get_text())
+        self.lbl.set_text('List selection: ' +
+                          self.listView.children[selected_item_key].get_text())
 
     def drop_down_changed(self, widget, value):
         self.lbl.set_text('New Combo value: ' + value)
@@ -326,4 +357,5 @@ if __name__ == "__main__":
     # optional parameters
     # start(MyApp,address='127.0.0.1', port=8081, multiple_instance=False,enable_file_cache=True, update_interval=0.1, start_browser=True)
     import ssl
-    start(MyApp, debug=True, address='0.0.0.0', port=8081, start_browser=True, multiple_instance=True)
+    start(MyApp, debug=True, address='0.0.0.0', port=8081,
+          start_browser=True, multiple_instance=True)

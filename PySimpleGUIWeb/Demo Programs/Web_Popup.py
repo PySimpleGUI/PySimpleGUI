@@ -16,19 +16,20 @@ print('Starting up...')
 
 layout = [
     [sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
-    [sg.Input(do_not_clear=True, key='_IN_')],
+    [sg.Input('', key='_IN_')],
     [sg.Button('Show'), sg.Button('Exit'), sg.Button('Blank')]
 ]
 
-window = sg.Window('Window Title').Layout(layout)
+window = sg.Window('Window Title', layout)
 
 while True:  # Event Loop
     print('in event loop')
-    event, values = window.Read()
+    event, values = window.read()
+
     print(event, values)
-    if event is None or event == 'Exit':
+    if event in (None, 'Exit'):
         break
     if event == 'Show':
-        sg.Popup('A popup!', ' You typed ', values['_IN_'])
+        sg.popup('A popup!', ' You typed ', values['_IN_'])
 
-window.Close()
+window.close()
