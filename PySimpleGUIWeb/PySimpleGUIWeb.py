@@ -1474,7 +1474,71 @@ class Image(Element):
 #     def get_image_data(self, update_index):
 #         headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
 #         return [self.imagedata, headers]
+
+
 class SuperImage(remi.gui.Image):
+    def __init__(self, file_path_name=None, **kwargs):
+        """
+        This new app_instance variable is causing lots of problems.  I do not know the value of the App
+        when I create this image.
+        :param app_instance:
+        :param file_path_name:
+        :param kwargs:
+        """
+        # self.app_instance = app_instance
+        image = file_path_name
+        super(SuperImage, self).__init__(image, **kwargs)
+
+        self.imagedata = None
+        self.mimetype = None
+        self.encoding = None
+        if not image: return
+        self.load(image)
+
+    def load(self, file_path_name):
+        if type(file_path_name) is bytes or len(file_path_name) > 200:
+            try:
+                #here a base64 image is received
+                self.imagedata = base64.b64decode(file_path_name, validate=True)
+                self.attributes['src'] = "/%s/get_image_data?update_index=%s" % (id(self), str(time.time()))
+            except binascii.Error:
+                #here an image data is received (opencv image)
+                self.imagedata = file_path_name
+                self.refresh()
+            self.refresh()
+        else:
+            #here a filename is received
+            self.attributes['src'] = remi.gui.load_resource(file_path_name)
+            """print(f'***** Loading file = {file_path_name}')
+            self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
+            with open(file_path_name, 'rb') as f:
+                self.imagedata = f.read()"""
+            self.refresh()
+
+    def refresh(self):
+        i = int(time.time() * 1e6)
+        # self.app_instance.execute_javascript("""
+        if Window.App is not None:
+            Window.App.execute_javascript("""
+                var url = '/%(id)s/get_image_data?update_index=%(frame_index)s';
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'blob'
+                xhr.onload = function(e){
+                    var urlCreator = window.URL || window.webkitURL;
+                    var imageUrl = urlCreator.createObjectURL(this.response);
+                    document.getElementById('%(id)s').src = imageUrl;
+                }
+                xhr.send();
+                """ % {'id': id(self), 'frame_index':i})
+
+    def get_image_data(self, update_index):
+        headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
+        return [self.imagedata, headers]
+
+
+
+class SuperImage_OLD(remi.gui.Image):
     def __init__(self, file_path_name=None, **kwargs):
         """
         This new app_instance variable is causing lots of problems.  I do not know the value of the App

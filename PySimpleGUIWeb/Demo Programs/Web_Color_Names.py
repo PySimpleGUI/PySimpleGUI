@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 import PySimpleGUIWeb as sg
-# import PySimpleGUI as sg
-
 
 """
    
@@ -669,25 +667,26 @@ color_map = {
 
 
 def detailed_view(window):
-    layout2 = [[sg.Button(event, button_color=('white', color_map[event]), key=event, tooltip=color_map[color]),
-                sg.Button(event, button_color=('black', color_map[event]), key=event+'1', tooltip=color_map[color])],
-               [sg.Txt('Hover over button to see color value. Click to clocse and return to main interface.')], ]
-    sg.Window('Buttons with white and black text', layout2, keep_on_top=True).Read()
-    window.Close()
+    layout2 = [[sg.Button(event, button_color=('white', color_map[event]),
+                     key=event, tooltip=color_map[color]),
+                sg.Button(event, button_color=('black', color_map[event]),
+                     key=event+'1', tooltip=color_map[color])],
+               [sg.Text('Hover over button to see color value. Click to clocse and return to main interface.')], ]
+    sg.Window('Buttons with white and black text',
+              layout2, keep_on_top=True).Read()
+    window.close()
     return
 
 
-sg.SetOptions(button_element_size=(16,1), auto_size_buttons=False, border_width=0, tooltip_time=100)
+sg.set_options(button_element_size=(16, 1),
+               auto_size_buttons=False, border_width=0, tooltip_time=100)
 
-#start layout with the tittle
+# start layout with the tittle
 layout = [[sg.Text('Hover mouse to see RGB value. Click to see Button with White or Black text.',
-                   text_color='blue',
-                   font=('Hevletica', 20),
-                   relief=sg.RELIEF_SUNKEN,
-                   justification='center',
-                   size=(90,2),
-                   background_color='#90EE90',
-                   pad=(0,0)),]]
+                text_color='blue', background_color='#90EE90',
+                font=('Hevletica', 20),
+                relief=sg.RELIEF_SUNKEN, justification='center',
+                size=(90, 2), pad=(0, 0))]]
 
 # -- Create primary color viewer window by building rows and appending to layout --
 color_list = [key for key in color_map]
@@ -696,14 +695,16 @@ for rows in range(40):
     for i in range(12):
         try:
             color = color_list[rows+40*i]
-            row.append(sg.Button(color, button_color=('black', color_map[color]), key=color, tooltip=color_map[color]),)
+            row.append(sg.Button(color,
+                    button_color=('black', color_map[color]), key=color, tooltip=color_map[color]),)
         except:
             pass
     layout.append(row)
 
 while True:
-    window = sg.Window('Color Viewer', layout, font=('any 12'), default_button_element_size=(12,1), element_padding=(0,0))
-    event, values = window.Read()
+    window = sg.Window('Color Viewer', layout, font=('any 12'),
+            default_button_element_size=(12, 1), element_padding=(0, 0))
+    event, values = window.read()
     if event is None:
         break
     detailed_view(window)

@@ -9,21 +9,30 @@ In other words, the slider and the spinner are essentially connected together
 
 fontsize = 12       # initial and smallest font size to show
 
-layout = [[sg.Spin([sz for sz in range(6, 172)], size=(6,1), font=('Helvetica 20'), initial_value=fontsize, change_submits=True, key='spin'),
-           sg.Slider(range=(6,172), orientation='h', size=(10,20), change_submits=True, key='slider', font=('Helvetica 20')),
-           sg.Text("Aa", size=(2, 1), font="Helvetica " + str(fontsize), key='text')],]
+layout = [
+        [sg.Spin([sz for sz in range(6, 172)], size=(6, 1),
+            font=('Helvetica 20'), initial_value=fontsize,
+            change_submits=True, key='spin'),
+           sg.Slider(range=(6, 172), orientation='h', size=(10, 20),
+                     change_submits=True, key='slider', font=('Helvetica 20')),
+           sg.Text("Aa", size=(2, 1), font="Helvetica " + str(fontsize), key='text')]
+    ]
 
-window = sg.Window("Font size selector").Layout(layout)
+window = sg.Window("Font size selector", layout)
 
 while True:         # the event loop
-    event, values= window.Read()
+    event, values = window.read()
     if event is None or event == 'Quit':
         break
-    fontsize = int(values['spin']) if int(values['spin']) != fontsize else int(values['slider'])
-    font = "Helvetica " + str(fontsize)
-    window.FindElement('text').Update(font=font)
-    window.FindElement('slider').Update(fontsize, range=(10,20))
-    window.FindElement('spin').Update(fontsize)
-window.Close()
+    
+    if int(values['spin']) != fontsize:
+        fontsize = int(values['spin'])
+    else:
+        fontsize = int(values['slider'])
+    
+    window['text'].update(font="Helvetica " + str(fontsize))
+    window['slider'].update(fontsize, range=(10, 20))
+    window['spin'].update(fontsize)
+window.close()
 
 print("Done.")
