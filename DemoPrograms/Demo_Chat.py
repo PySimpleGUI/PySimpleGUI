@@ -2,36 +2,27 @@
 import PySimpleGUI as sg
 
 '''
-A chat window.  Add call to your send-routine, print the response and you're done
-
-To see this program RUN on the web go here:
-https://repl.it/@PySimpleGUI/Chat-Application-Demo
-
-Note that the size of the display on repl.it is smaller than most, so the sizes of the
-Multiline and Output text areas were reduced in the online version.  Nothing else was changed
+A simple send/response chat window.  Add call to your send-routine and print the response
+If async responses can come in, then will need to use a different design that uses PySimpleGUI async design pattern
 '''
 
-# give our window a spiffy set of colors
-sg.change_look_and_feel('GreenTan')
+sg.change_look_and_feel('GreenTan') # give our window a spiffy set of colors
 
 layout = [[sg.Text('Your output will go here', size=(40, 1))],
-          [sg.Output(size=(127, 30), font=('Helvetica 10'))],
-          [sg.MLine(size=(85, 5), enter_submits=True, key='query'),
+          [sg.Output(size=(110, 20), font=('Helvetica 10'))],
+          [sg.Multiline(size=(70, 5), enter_submits=True, key='-QUERY-', do_not_clear=False),
            sg.Button('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0]), bind_return_key=True),
            sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
 
-window = sg.Window('Chat window',
-                   layout,
-                   default_element_size=(30, 2),
-                   font=('Helvetica', ' 13'),
-                   default_button_element_size=(8, 2))
+window = sg.Window('Chat window', layout, font=('Helvetica', ' 13'), default_button_element_size=(8,2))
 
-# ---===--- Loop taking in user input and using it  --- #
-while True:
+while True:     # The Event Loop
     event, value = window.read()
+    if event in (None, 'EXIT'):            # quit if exit button or X
+        break
     if event == 'SEND':
-        query = value['query'].rstrip()
+        query = value['-QUERY-'].rstrip()
         # EXECUTE YOUR COMMAND HERE
         print('The command you entered was {}'.format(query))
-    elif event in (None, 'EXIT'):            # quit if exit button or X
-        break
+
+window.close()
