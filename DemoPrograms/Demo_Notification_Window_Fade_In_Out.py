@@ -61,7 +61,8 @@ def display_notification(title, message, icon, display_duration_in_ms=DEFAULT_DI
     window["-GRAPH-"].draw_text(title, location=(64, 20), color=TEXT_COLOR, font=("Arial", 12, "bold"), text_location=sg.TEXT_LOCATION_TOP_LEFT)
     window["-GRAPH-"].draw_text(message, location=(64, 44), color=TEXT_COLOR, font=("Arial", 9), text_location=sg.TEXT_LOCATION_TOP_LEFT)
 
-    # window["-GRAPH-"].Widget.config(cursor="hand2")
+    # change the cursor into a "hand" when hovering over the window. This is a direct call into tkinter, going around PySimpleGUI
+    window["-GRAPH-"].Widget.config(cursor="hand2")
 
     if use_fade_in == True:
         for i in range(1, int(WINDOW_ALPHA * 100)):  # fade in
