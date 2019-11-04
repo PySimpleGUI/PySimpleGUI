@@ -741,6 +741,7 @@ class Element():
 
         :param event: (unknown) Not used in this function.
         """
+        # print(f'Button callback event = {obj_to_string_single_obj(event)}')
         try:
             self.ButtonCallBack()
         except:
@@ -5153,7 +5154,6 @@ class Window:
     """
     Represents a single Window
     """
-
     NumOpenWindows = 0
     user_defined_icon = None
     hidden_master_root = None
@@ -5284,6 +5284,7 @@ class Window:
             self.Layout(layout)
             if finalize:
                 self.Finalize()
+
 
     @classmethod
     def GetAContainerNumber(cls):
@@ -6070,7 +6071,8 @@ class Window:
             except:
                 pass
         self.TKrootDestroyed = True
-        del self
+        del self.TKroot
+        del self.Rows
 
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
@@ -7337,6 +7339,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
+                    print(f'Building results. Menu item chosen = {element.MenuItemChosen}')
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
 
