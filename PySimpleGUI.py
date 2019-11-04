@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.5.0.26 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize, Update parms added for Input, Frame, delete window when close"
+version = __version__ = "4.5.0.27 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize, Update parms added for Input, Frame, delete window when close, Slider.Update range parm"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -3867,8 +3867,6 @@ class Slider(Element):
         if value is not None:
             try:
                 self.TKIntVar.set(value)
-                if range != (None, None):
-                    self.TKScale.config(from_=range[0], to_=range[1])
             except:
                 pass
             self.DefaultValue = value
@@ -3880,6 +3878,10 @@ class Slider(Element):
             self.TKScale.pack_forget()
         elif visible is True:
             self.TKScale.pack()
+        if range != (None, None):
+            self.TKScale.config(from_=range[0], to_=range[1])
+
+
 
     def _SliderChangedHandler(self, event):
         """
