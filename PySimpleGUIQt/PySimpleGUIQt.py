@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.30.02 Unreleased Menu color Bye bye PyQt5, added 5 extra pixels to window size"
+version = __version__ = "0.30.04 Unreleased Menu color Bye bye PyQt5, added 5 extra pixels to window size, FilesBrowse fix, Slider.Update range"
 
 import sys
 import types
@@ -1328,7 +1328,7 @@ class Button(Element):
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
                 else:
-                    target_element.Update(file_name[0])
+                    target_element.Update(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             qt_types = convert_tkinter_filetypes_to_qt(self.FileTypes)
             file_name = QFileDialog.getSaveFileName(dir=self.InitialFolder, filter=qt_types)
@@ -1486,7 +1486,7 @@ class ButtonMenu(Element):
 
 
     def _QT_MenuItemChosenCallback(self, item_chosen):
-        print('IN BUTTON MENU ITEM CALLBACK', item_chosen)
+        # print('IN BUTTON MENU ITEM CALLBACK', item_chosen)
         self.Key = item_chosen.replace('&','')                   # fool the quit function into thinking this was a key
         _element_callback_quit_mainloop(self)
 
@@ -2242,6 +2242,10 @@ class Slider(Element):
             self.QT_Slider.setDisabled(True)
         elif disabled == False:
             self.QT_Slider.setDisabled(False)
+        if range != (None, None):
+            self.Range = range
+            self.QT_Slider.setMinimum(range[0])
+            self.QT_Slider.setMaximum(range[1])
         super().Update(self.QT_Slider, visible=visible)
 
 
