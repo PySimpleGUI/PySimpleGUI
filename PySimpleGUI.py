@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.5.0.27 Unreleased Mac Buttons. Element size get/set. Screen Size. hide/unhide row, Button rebinding, Element.expand, Experimental Finalize, Update parms added for Input, Frame, delete window when close, Slider.Update range parm"
+version = __version__ = "4.5.0.0.1 The ALMOST Released but still un-released version 04-Nov-2019"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -213,11 +213,11 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]),
                       (YELLOWS[0], BLUES[2]))
 
 COLOR_SYSTEM_DEFAULT = '1234567890'  # Colors should never be this long
-# if sys.platform == 'darwin':
-#     DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Foreground, Background (None, None) == System Default
-#     OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Colors should never be this long
-# else:
-DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
+if sys.platform == 'darwin':
+    DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Foreground, Background (None, None) == System Default
+    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Colors should never be this long
+else:
+    DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
 OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never be this long
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
@@ -628,7 +628,6 @@ class Element():
         :param event:
 
         """
-        # print(f'In return handler. event = {event}')
         MyForm = self.ParentForm
         button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
@@ -2208,12 +2207,11 @@ class Button(Element):
         self.Widget = self.TKButton = None  # type: tk.Button
         self.Target = target
         self.ButtonText = str(button_text)
-        # if sys.platform == 'darwin' and button_color is not None:
-        #     print('Button *** WARNING - Button colors are not supported on the Mac ***')
-        #     self.ButtonColor = DEFAULT_BUTTON_COLOR
-        # else:
-        #     self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        if sys.platform == 'darwin' and button_color is not None:
+            print('Button *** WARNING - Button colors are not supported on the Mac ***')
+            self.ButtonColor = DEFAULT_BUTTON_COLOR
+        else:
+            self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -5463,42 +5461,44 @@ class Window:
     def SetIcon(self, icon=None, pngbase64=None):
         """
         Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
-        * a filename which must be a .ICO icon file.
+        * a filename which must be a .ICO icon file for windows
         * a bytes object
         * a BASE64 encoded file held in a variable
 
         :param icon: (str) Filename or bytes object
         :param pngbase64: (str) Base64 encoded GIF or PNG file
         """
-        if type(icon) is bytes:
-            wicon = tkinter.PhotoImage(data=icon)
+        if type(icon) is bytes or pngbase64 is not None:
+            wicon = tkinter.PhotoImage(data=icon if icon is not None else pngbase64)
             try:
                 self.TKroot.tk.call('wm', 'iconphoto', self.TKroot._w, wicon)
             except:
-                pass
-        elif pngbase64 != None:
-            wicon = tkinter.PhotoImage(data=pngbase64)
-            try:
-                self.TKroot.tk.call('wm', 'iconphoto', self.TKroot._w, wicon)
-            except:
-                pass
-        else:
-            wicon = icon
-
-        self.WindowIcon = wicon
-        try:
-            # print(f'icon bitmap = {wicon}')
-            self.TKroot.iconbitmap(wicon)
-        except:
-            # if can't set trying any other ways, just default to the built-in icon
-            try:
                 wicon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
                 try:
                     self.TKroot.tk.call('wm', 'iconphoto', self.TKroot._w, wicon)
                 except:
                     pass
+            self.WindowIcon = wicon
+            return
+
+        try:
+            self.TKroot.iconbitmap(icon)
+            wicon = icon
+        except:
+            try:
+                wicon = tkinter.PhotoImage(file=icon)
+                self.TKroot.tk.call('wm', 'iconphoto', self.TKroot._w, wicon)
             except:
-                pass
+                try:
+                    wicon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
+                    try:
+                        self.TKroot.tk.call('wm', 'iconphoto', self.TKroot._w, wicon)
+                    except:
+                        pass
+                except:
+                    pass
+        self.WindowIcon = wicon
+
 
     def _GetElementAtLocation(self, location):
         """
@@ -7341,7 +7341,6 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
-                    print(f'Building results. Menu item chosen = {element.MenuItemChosen}')
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
 
@@ -7858,11 +7857,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
-                    if sys.platform.startswith('darwin'):
-                        print('*** USING MAC BUTTON COLORS ****', bc)
-                        tkbutton.config(foreground=bc[0], highlightbackground=bc[1],background=bc[1], activebackground=bc[1], highlightcolor=bc[1], activeforeground=bc[1], highlightthickness=-10, bd=0, relief='solid')
-                    else:
-                        tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                    # if sys.platform.startswith('darwin'):
+                    #     print('*** USING MAC BUTTON COLORS ****', bc)
+                    #     tkbutton.config(foreground=bc[0], highlightbackground=bc[1],background=bc[1], activebackground=bc[1], highlightcolor=bc[1], activeforeground=bc[1], highlightthickness=-10, bd=0, relief='solid')
+                    # else:
+                    tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
                 if bd == 0 and not sys.platform.startswith('darwin'):
@@ -9414,6 +9413,7 @@ class DebugWin():
     def Close(self):
         """ """
         self.window.Close()
+        del self.window
         self.window = None
 
 
@@ -9980,6 +9980,8 @@ def ChangeLookAndFeel(index, force=False):
     There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
     The look and feel table itself has these indexe into the dictionary LOOK_AND_FEEL_TABLE
         SystemDefault
+        Material1
+        Material2
         Reddit
         Topanga
         GreenTan
@@ -11581,7 +11583,6 @@ def main():
     ]
 
     layout = [[Menu(menu_def, key='_MENU_')]] + layout1
-
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
                     # background_color='black',
@@ -11590,8 +11591,8 @@ def main():
                     resizable=True,
                     keep_on_top=True,
                     element_justification='left',
-                    metadata='My window metadata'
-                    # icon=r'X:\VMWare Virtual Machines\SHARED FOLDER\kingb.ico'
+                    metadata='My window metadata',
+                    # icon=PSG_DEBUGGER_LOGO
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
@@ -11621,6 +11622,8 @@ def main():
             show_debugger_popout_window()
         elif event == 'Launch Debugger':
             show_debugger_window()
+        elif event == 'About...':
+            popup('About this program...')
     window.Close()
 
 
