@@ -15,7 +15,7 @@ layout = [[sg.TabGroup([[
                 sg.Tab('Tab 2', tab2_layout)]], key='-TABGROUP-')],
           [sg.Button('Read')]]
 
-window = sg.Window('My window with tabs', layout
+window = sg.Window('My window with tabs', layout,
                    default_element_size=(12, 1))
 
 
