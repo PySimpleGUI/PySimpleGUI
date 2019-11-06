@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0..0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.31.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -19,8 +19,6 @@ PySimpleGUI running in your web browser!
 Your source code will work on tkinter, Qt, WxPython and now in a browser (thanks to Remi)
 
 Check out [repl.it](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos), the new way to run your PySimpleGUI code in a browser!
-
-![image](https://user-images.githubusercontent.com/46163555/63650157-a223b300-c715-11e9-9a96-7c8961298065.png)
 
 ## Primary PySimpleGUI Documentation
 
@@ -371,7 +369,7 @@ One-time patch to remove a debug print
 	* click events works
 	
 
-## 0.28.0 PySimpleGUIWeb 15-May-2019
+## 0.28.1 PySimpleGUIWeb 15-May-2019
 
 * Menus
 	* Yes, the full Menu Bar across the top of the window!
@@ -393,8 +391,28 @@ One-time patch to remove a debug print
 	* Behaves like a Column element for now since no official Remi Frame
 * Fix for popups that get data - New dictionary return values messed up popups. Needed to use keys internally
 
-	
-  
+## 0.31.0 PySimpleGUIWeb 04-Nov-2019
+
+* PEP8 bindings!
+* Window - NEW way of finding elements
+	* Use window[key] instead of window.FindElement(key)!!
+* Winow - "calling" an existing window object will call its read method
+* Version number added both dunder version and version work
+* Renamed some variables to be private by adding _ to the front
+* METADATA added to all elements and Window
+* Ability to "call" an element.  The effect is to call that element's update method
+* Removed all delete functions in the classes.  Were poorly done and not consistent
+* Output element - fix for color defaults, CurrentValue contains all of the text currently shown
+* Image Element
+	* Rewrite done by Remi team!!! 
+	* Fixes flicker when using with OpenCV
+* Removed quite a bit of unused code
+* Added prints where items are not yet implemented
+* Window - finalize parameter added
+* Get screen dimensions always returns (0,0) for now until can figure it out
+* Made return values computation easier
+* Two new look and feel color settings - Material1, Material2
+
 
 # Design        
 # Author 
@@ -406,7 +424,6 @@ One-time patch to remove a debug print
         
 # Acknowledgments
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA1OTc2NTUwMywtMTE2NjcxOTkxNyw0Nz
-U4NjU2NzYsLTEwNTcxMDM2NDMsMTIxMzM1MjYzNiwtMTE2MDY4
-NDMzOV19
+eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
+U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
 -->
