@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.5.0.0.1 The ALMOST Released but still un-released version 04-Nov-2019"
+version = __version__ = "4.5.0 Released version 04-Nov-2019"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
