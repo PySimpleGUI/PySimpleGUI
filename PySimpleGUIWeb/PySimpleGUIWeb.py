@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0.9 Unreleased No flicker, fixed multiline not in values, Oct 17"
+version = __version__ = "0.31.0.10 Unreleased No flicker FOR REAL, fixed multiline not in values, Oct 29"
 
 import sys
 import datetime
@@ -1536,66 +1536,6 @@ class SuperImage(remi.gui.Image):
         headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
         return [self.imagedata, headers]
 
-
-
-class SuperImage_OLD(remi.gui.Image):
-    def __init__(self, file_path_name=None, **kwargs):
-        """
-        This new app_instance variable is causing lots of problems.  I do not know the value of the App
-        when I create this image.
-        :param app_instance:
-        :param file_path_name:
-        :param kwargs:
-        """
-        # self.app_instance = app_instance
-        image = file_path_name
-        super(SuperImage, self).__init__(image, **kwargs)
-
-        self.imagedata = None
-        self.mimetype = None
-        self.encoding = None
-        if not image: return
-        self.load(image)
-
-    def load(self, file_path_name):
-        if type(file_path_name) is bytes or len(file_path_name) > 200:
-            try:
-                #here a base64 image is received
-                self.imagedata = base64.b64decode(file_path_name, validate=True)
-                self.attributes['src'] = "/%s/get_image_data?update_index=%s" % (id(self), str(time.time()))
-            except binascii.Error:
-                #here an image data is received (opencv image)
-                self.imagedata = file_path_name
-                self.refresh()
-            self.refresh()
-        else:
-            #here a filename is received
-            print(f'***** Loading file = {file_path_name}')
-            self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
-            with open(file_path_name, 'rb') as f:
-                self.imagedata = f.read()
-            self.refresh()
-
-    def refresh(self):
-        i = int(time.time() * 1e6)
-        # self.app_instance.execute_javascript("""
-        if Window.App is not None:
-            Window.App.execute_javascript("""
-                var url = '/%(id)s/get_image_data?update_index=%(frame_index)s';
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', url, true);
-                xhr.responseType = 'blob'
-                xhr.onload = function(e){
-                    var urlCreator = window.URL || window.webkitURL;
-                    var imageUrl = urlCreator.createObjectURL(this.response);
-                    document.getElementById('%(id)s').src = imageUrl;
-                }
-                xhr.send();
-                """ % {'id': id(self), 'frame_index':i})
-
-    def get_image_data(self, update_index):
-        headers = {'Content-type': self.mimetype if self.mimetype else 'application/octet-stream'}
-        return [self.imagedata, headers]
 
 # ---------------------------------------------------------------------- #
 #                           Graph                                        #
@@ -6885,7 +6825,7 @@ def main():
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=False, key='_MULTI_IN_')],
-        # [Output(size=(60,10))],
+        [Output(size=(60,10))],
         [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
         [Checkbox('Checkbox 1', enable_events=False, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=False)],
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=False,
