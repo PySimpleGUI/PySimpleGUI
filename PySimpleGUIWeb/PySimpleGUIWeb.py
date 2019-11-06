@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0.10 Unreleased No flicker FOR REAL, fixed multiline not in values, Oct 29"
+version = __version__ = "0.31.0 Released 06 Nov 2019"
 
 import sys
 import datetime
@@ -3809,23 +3809,22 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                             value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     element = element  # type: Combo
-                    value = element.DefaultValue
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
                     # value = element.TKStringVar.get()
                     value = None
                 elif element.Type == ELEM_TYPE_INPUT_LISTBOX:
                     element = element  # type: Listbox
-                    value = element.DefaultValues
-                    # value = [value,]
+                    value = element.Widget.get_value()
+                    value = [value,]
                     # items = element.TKListbox.curselection()
                     # value = [element.Values[int(item)] for item in items]
                 elif element.Type == ELEM_TYPE_INPUT_SPIN:
                     element = element       # type: Spin
-                    value = element.DefaultValue
-                    # value = element.Widget.get_value()
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_SLIDER:
                     element = element       # type: Slider
-                    value = element.DefaultValue
+                    value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     element = element # type: Multiline
                     value = element.Widget.get_value()
@@ -4561,7 +4560,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # element.Widget = remi.gui.Image(element.Filename)
                 element.Widget = SuperImage(element.Filename if element.Filename is not None else element.Data)
                 if element.Filename is not None:
-                    print(f'loading image filename in pack frame {element.Filename}')
+                    # print(f'loading image filename in pack frame {element.Filename}')
                     element.Widget.load(element.Filename)
                 do_font_and_color(element.Widget)
                 if element.EnableEvents:
