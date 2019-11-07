@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.5.0 Released version 04-Nov-2019"
+version = __version__ = "4.6.0.2 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -1582,14 +1582,17 @@ class Spin(Element):
             except:
                 pass
         self.DefaultValue = value
-        if disabled == True:
-            self.TKSpinBox.configure(state='disabled')
-        elif disabled == False:
-            self.TKSpinBox.configure(state='normal')
+        if disabled is not None:
+            self.TKSpinBox.configure(state='disabled' if disabled else 'normal')
+        # if disabled == True:
+        #     self.TKSpinBox.configure(state='disabled')
+        # elif disabled == False:
+        #     self.TKSpinBox.configure(state='normal')
         if visible is False:
             self.TKSpinBox.pack_forget()
         elif visible is True:
             self.TKSpinBox.pack()
+
 
     def _SpinChangedHandler(self, event):
         """
@@ -2727,11 +2730,12 @@ class Image(Element):
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
         :param filename: (str) filename to the new image to display.
-        :param data: (str) Base64 encoded string
+        :param data: Union[str, tkPhotoImage] Base64 encoded string OR a tk.PhotoImage object
         :param size: Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high
         :param visible: (bool) control visibility of element
         """
 
+        image = None
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
@@ -2741,16 +2745,18 @@ class Image(Element):
             # if type(data) is bytes:
             try:
                 image = tk.PhotoImage(data=data)
-            except:
-                return  # an error likely means the window has closed so exit
+            except Exception as e:
+                image = data
+                # return  # an error likely means the window has closed so exit
         else:
             return
-        width, height = size[0] or image.width(), size[1] or image.height()
-        try:  # sometimes crashes if user closed with X
-            self.tktext_label.configure(image=image, width=width, height=height)
-        except:
-            pass
-        self.tktext_label.image = image
+        if image is not None:
+            width, height = size[0] or image.width(), size[1] or image.height()
+            try:  # sometimes crashes if user closed with X
+                self.tktext_label.configure(image=image, width=width, height=height)
+            except:
+                pass
+            self.tktext_label.image = image
         if visible is False:
             self.tktext_label.pack_forget()
         elif visible is True:
@@ -3067,7 +3073,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
+    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=None):
         """
         Draw a rectangle given 2 points. Can control the line and fill colors
 
@@ -3084,10 +3090,12 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
+        if line_width is None:
+            line_width = 1
         try:  # in case closed with X
             id = self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1],
                                                   converted_bottom_right[0],
-                                                  converted_bottom_right[1], fill=fill_color, outline=line_color)
+                                                  converted_bottom_right[1], fill=fill_color, outline=line_color, width=line_width)
         except:
             id = None
         return id
