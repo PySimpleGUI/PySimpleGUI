@@ -76,7 +76,7 @@ col = [[filename_display_elem],
 col_files = [[sg.Listbox(values=fnames, change_submits=True, size=(60, 30), key='listbox')],
              [sg.Button('Next', size=(8, 2)), sg.Button('Prev', size=(8, 2)), file_num_display_elem]]
 
-layout = [[sg.Col(col_files), sg.Col(col)]]
+layout = [[sg.Column(col_files), sg.Column(col)]]
 
 window = sg.Window('Image Browser', layout, return_keyboard_events=True,
                    location=(0, 0), use_default_focus=False)
@@ -108,7 +108,7 @@ while True:
         filename = os.path.join(folder, fnames[i])
 
     # update window with new image
-    image_elem.update(data=get_img_data(filename))
+    image_elem.update(data=get_img_data(filename, first=True))
     # update window with filename
     filename_display_elem.update(filename)
     # update page display
