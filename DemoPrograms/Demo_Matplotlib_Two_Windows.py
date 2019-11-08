@@ -10,10 +10,10 @@ import matplotlib.pyplot as plt
 
 
 layout = [[sg.Button('Plot'), sg.Cancel(), sg.Button('Popup')]]
-main_window = sg.Window('Have some Matplotlib....', layout)
+window = sg.Window('Have some Matplotlib....', layout)
 
 while True:
-    event, values = main_window.Read()
+    event, values = window.read()
     if event in (None, 'Cancel'):
         break
     elif event == 'Plot':
@@ -22,4 +22,4 @@ while True:
         plt.show(block=False)
     elif event == 'Popup':
         sg.popup('Yes, your application is still running')
-main_window.close()
+window.close()
