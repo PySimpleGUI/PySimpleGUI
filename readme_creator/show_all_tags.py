@@ -9,7 +9,7 @@ import PySimpleGUIlib
 
 """
 
-layout = [[PySimpleGUIlib.Output(size=(80,20))]]
+layout = [[PySimpleGUIlib.Output(size=(80,50))]]
 window = PySimpleGUIlib.Window('Dump of tags', layout, resizable=True).Finalize()
 
 psg_members = inspect.getmembers(PySimpleGUIlib)
