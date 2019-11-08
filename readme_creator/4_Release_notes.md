@@ -714,11 +714,11 @@ However, your code will look weird and ancient.  ;-)  (i.e. readable)
 MORE Docstring and main doc updates!
 
 * Finally 2.7 gets an upgrade and with it doc strings.  It however doesn't get a full-version bump like main PySimpleGUI as this may be its last release.
-* New window[key] == window.FindElement(key)
+* New `window[key] == window.FindElement(key)`
 * New Update calling method. Can directly call an Element and it will call its Update method
-	* window[key](value=new_value)    ==     window.FindElement(key).Update(value=new_value)
+	* `window[key](value=new_value)    ==     window.FindElement(key).Update(value=new_value)`
 * Made Tearoff part of element so anything can be a menu in theory
-* Removed a bunch of __del__ calls. Hoping it doesn't bite me in memory leaks
+* Removed a bunch of `__del__` calls. Hoping it doesn't bite me in memory leaks
 * Combo.Get method added
 * Combo.GetSelectedItemsIndexes removed
 * New Graph methods SendFigureToBack, BringFigureToFront
@@ -802,7 +802,37 @@ Let's hope it doesn't all blow up in our faces!
 * Frame - Trying to set the size but doesn't seem to be setting it correctly
 * Tabs will now expand & fill now (I hope this is OK!!!)
 
+## 4.5 PySimpleGUI Release 04-Nov-2019
 
+* Metadata!
+	* All elements have a NEW metadata parameter that you can set to anything and access with Element.metadata
+	* Windows can have metadata too
+* Window.finalize() - changed internally to do a fully window.read with timeout=1 so that it will complete all initializations correctly
+* Removed typing import
+* ButtonReboundCallback - Used with tkinter's Widget.bind method. Use this as a "target" for your bind and you'll get the event back via window.read()
+* NEW Element methods that will work on a variety of elements:
+	* set_size - sets width, height. Can set one or both
+	* get_size - returns width, heigh of Element (underlying Widget), usually in PIXELS
+	* hide_row - hides the entire row that an element occupies
+	* unhide_row - makes visible the entire row that an element occupies
+	* expand - causes element to expand to fill available space in X or Y or both directions
+* InputText Element - Update got new parameters: text_color=None, background_color=None, move_cursor_to='end'
+* RadioButton - fix in Update. Was causing problems with loading a window from disk
+* Text Element - new border width parameter that is used when there's a relief set for the text element
+* Output Element - special expand method like the one for all other elements
+* Frame element - Can change the text for the frame using Update method
+* Slider element - can change range. Previously had to change value to change the range
+* Scrollable frame / column - change to how mousewheel scrolls.  Was causing all things to scroll when scrolling a single column
+	* NOTE - may have a bad side effect for scrolling tables with a mouse wheel
+* Fix for icon setting when creating window.  Wasn't defaulting to correct icon
+* Window.get_screen_size() returns the screen width and height.  Does not have to be a window that's created already as this is a class method
+* Window.GetScreenDimensions - will return size even if the window has been destroyed by using get_screen_size
+* Now deleting window read timers every time done with them
+* Combo no longer defaults to first entry
+* New Material1 and Material2 look and feel color schemes
+* change_look_and_feel has new "force" parameter.  Set to True to force colors when using a Mac
+* Fix in popup_get_files when 0 length of filename
+* Fix in Window.SetIcon - properly sets icon using file with Linux now. Was always defaulting
 
 ### Upcoming
 Make suggestions people!  Future release features
@@ -831,7 +861,7 @@ While not the best programming practice, the implementation resulted in a single
 In Python, functions behave just like object. When you're placing a Text Element into your form, you may be sometimes calling a function and other times declaring an object.  If you use the word Text, then you're getting an object.  If you're using `Txt`, then you're calling a function that returns a `Text` object.
 
 **Lists**
-It seemed quite natural to use Python's powerful list constructs when possible.  The form is specified as a series of lists.  Each "row" of the GUI is represented as a list of Elements. When the form read returns the results to the user, all of the results are presented as a single list.  This makes reading a form's values super-simple to do in a single line of Python code.
+It seemed quite natural to use Python's powerful list constructs when possible.  The form is specified as a series of lists.  Each "row" of the GUI is represented as a list of Elements. 
 
 **Dictionaries**
 Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.

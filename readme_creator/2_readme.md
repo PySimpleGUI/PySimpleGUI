@@ -340,7 +340,7 @@ This is the FUN part of the programming of this GUI.  In order to really get the
 This first section on custom windows is for your typical, blocking, non-persistent window.  By this I mean, when you "show" the window, the function will not return until the user has clicked a button or closed the window with an X.
 
 Two other types of windows exist.
-1. Persistent window - the `Window.Read()` method returns and the window continues to be visible.  This is good for applications like a chat window or a timer or anything that stays active on the screen for a while.
+1. Persistent window - the `Window.read()` method returns and the window continues to be visible.  This is good for applications like a chat window or a timer or anything that stays active on the screen for a while.
 2. Asynchronous window - the trickiest of the lot. Great care must be exercised.  Examples are an MP3 player or status dashboard.  Async windows are updated (refreshed) on a periodic basis.  You can spot them easily as they will have a `timeout` parameter on the call to read.     `event, values = window.Read(timeout=100)`
 
 It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.  Make some simple windows.  Use the Cookbook and the Demo Programs as a way to learn and as a "starting point".
@@ -433,7 +433,9 @@ layout = [[sg.Text('Filename')],
 			[sg.Input(), sg.FileBrowse()],
 			[sg.OK(), sg.Cancel()] ]
 
-event, values = sg.Window('Get filename example', layout).Read()
+window sg.Window('Get filename example', layout)
+event, values = window.read()
+window.close()
 
 sg.Popup(event, values[0])
 ```
@@ -459,8 +461,8 @@ layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 
 window = sg.Window('SHA-1 & 256 Hash', layout)
 
-event, values = window.Read()
-window.Close()
+event, values = window.read()
+window.close()
 
 source_filename = values[0]     # the first input element is values[0]
 ```
@@ -481,12 +483,12 @@ layout = [[sg.Text('Persistent window')],
 window = sg.Window('Window that stays open', layout)
 
 while True:
-	event, values = window.Read()
+	event, values = window.read()
 	if event is None or event == 'Exit':
 		break
 	print(event, values)
 
-window.Close()
+window.close()
 ```
 
 ## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)
@@ -500,28 +502,26 @@ A final note... the parameter `do_not_clear` in the input call determines the ac
 This example introduces the concept of "keys".  Keys are super important in PySimpleGUI as they enable you to identify and work with Elements using names you want to use.  Keys can be ANYTHING, except `None`.  To access an input element's data that is read in the example below, you will use `values['_IN_']` instead of `values[0]` like before.  
 
 ```python
-import sys
-if sys.version_info[0] >= 3:
-	import PySimpleGUI as sg
-else:
-	import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_') ],
-		  [sg.Input(key='_IN_')],
-		  [sg.Button('Show'), sg.Button('Exit')]]
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
+          [sg.Input(key='_IN_')],
+          [sg.Button('Show'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout)
 
-while True:                 # Event Loop
-  event, values = window.Read()
-  print(event, values)
-  if event is None or event == 'Exit':
-	  break
-  if event == 'Show':
-	  # change the "output" element to be the value of "input" element
-	  window.Element('_OUTPUT_').Update(values['_IN_'])
+while True:  # Event Loop
+    event, values = window.read()       # can also be written as event, values = window()
+    print(event, values)
+    if event is None or event == 'Exit':
+        break
+    if event == 'Show':
+        # change the "output" element to be the value of "input" element
+        window['_OUTPUT_'].update(values['_IN_'])
+        # above line can also be written without the update specified
+        window['_OUTPUT_'](values['_IN_'])
 
-window.Close()
+window.close()
 ```
 
 ### Qt Designer
@@ -548,8 +548,8 @@ layout = [[sg.Text('Rename files or folders')],
 
 window = sg.Window('Rename Files or Folders', layout)
 
-event, values = window.Read()
-
+event, values = window.read()
+window.close()
 folder_path, file_path = values[0], values[1]       # get the data from the values dictionary
 print(folder_path, file_path)
 ```
@@ -566,9 +566,9 @@ Now let's look at how those 2 rows and the other two row from Python code:
 
 ```python
 layout = [[sg.Text('Rename files or folders')],
-			[sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
-			[sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
-			[sg.Submit(), sg.Cancel()]]
+          [sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+          [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+          [sg.Submit(), sg.Cancel()]]
 ```
 
 See how the source code mirrors the layout?  You simply make lists for each row, then submit that table to PySimpleGUI to show and get values from.
@@ -580,7 +580,7 @@ For return values the window is scanned from top to bottom, left to right.  Each
 In our example window, there are 2 fields, so the return values from this window will be a dictionary with 2 values in it.  Remember, if you do not specify a `key` when creating an element, one will be created for you.  They are ints starting with 0.  In this example, we have 2 input elements.  They will be addressable as values[0] and values[1]
 
 ```python
-event, values = window.Read()
+event, values = window.read()
 folder_path, file_path = values[0], values[1]
 ```
 
@@ -591,14 +591,14 @@ Isn't this what a Python programmer looking for a GUI wants? Something easy to w
 
 ## Return values
 
-There are 2 return values from a call to `Window.Read()`, an `event` that caused the `Read` to return and `values` a list or dictionary of values.  If there are no elements with keys in the layout, then it will be a list.  However, some elements, like some buttons, have a key automatically added to them.  **It's best to use keys on all of your input type elements.**
+There are 2 return values from a call to `Window.read()`, an `event` that caused the `Read` to return and `values` a list or dictionary of values.  If there are no elements with keys in the layout, then it will be a list.  However, some elements, like some buttons, have a key automatically added to them.  **It's best to use keys on all of your input type elements.**
 
 ### Two Return Values
 
 All Window Read calls return 2 values.  By convention a read statement is written:
 
 ```python
-event, values = window.Read()
+event, values = window.read()
 ```
 
 You don't HAVE to write your reads in this way. You can name your variables however you want.  But if you want to code them in a way that other programmers using PySimpleGUI are used to, then use this statement.
@@ -644,7 +644,7 @@ Putting it all together we end up with an "event loop" that looks something like
 
 ```python
 while True:
-	event, values = window.Read()
+	event, values = window.read()
 	if event is None:
 		break
 window.Close()
@@ -653,7 +653,7 @@ window.Close()
 You will very often see the examples and demo programs write this check as:
 
 ```python
-	event, values = window.Read()
+	event, values = window.read()
 	if event in (None, 'Exit'):
 		break
 ```
@@ -685,7 +685,7 @@ If your window has an event loop where it is read over and over, remember to giv
 
 ```python
 while True:
-	event, values = window.Read()
+	event, values = window.read()
 	if event is None or event == 'Quit':
 		break
 ```
@@ -694,7 +694,7 @@ Actually, the more "Pythonic version" is used in most Demo Programs and examples
 
 ```python
 while True:
-	event, values = window.Read()
+	event, values = window.read()
 	if event in (None, 'Quit'):
 		break
 ```
@@ -711,7 +711,6 @@ Some elements are capable of generating events when something happens to them.  
 | ---  | --- |
 | InputText | any change |
 | Combo | item chosen |
-| Option menu | item chosen |
 | Listbox | selection changed |
 | Radio | selection changed |
 | Checkbox | selection changed |
@@ -720,12 +719,15 @@ Some elements are capable of generating events when something happens to them.  
 | Text | clicked |
 | Status Bar | clicked |
 | Graph | clicked |
+| Graph | dragged |
+| Graph | drag ended (mouse up) |
 | TabGroup | tab clicked |
 | Slider | slider moved |
 | Table | row selected |
 | Tree | node selected |
 | ButtonMenu | menu item chosen |
 | Right click menu | menu item chosen |
+
 
 ### Other Events
 
@@ -761,7 +763,7 @@ Or, more commonly, you can unpack the return results separately.  This is the pr
 
 ```python
 event, values = sg.Window('My title', window_rows).Read()
-event, value_list = window.Read()
+event, value_list = window.read()
 value1 = value_list[0]
 value2 = value_list[1]
 	 ...
@@ -800,7 +802,7 @@ layout = [
 			]
 
 window = sg.Window('Simple data entry window', layout)
-event, values = window.Read()
+event, values = window.read()
 window.Close()
 
 sg.Popup(event, values, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])
@@ -881,7 +883,7 @@ layout = [
     [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]]
 
 window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
-event, values = window.Read()
+event, values = window.read()
 
 sg.Popup('Title',
          'The results of the window.',
@@ -970,7 +972,7 @@ You've already seen a number of examples above that use blocking windows.  You'l
 A blocking Read (one that waits until an event happens) look like this:
 
 ```python
-event, values = window.Read()
+event, values = window.read()
 ```
 
 A non-blocking / Async Read call looks like this:
@@ -985,12 +987,21 @@ You can learn more about these async / non-blocking windows toward the end of th
 
 The first step is to create the window object using the desired window customizations.  
 
+Note - There is no direct support for "**modal windows**" in PySimpleGUI.  All windows are accessable at all times unless you manually change the windows' settings.
+
+
 **IMPORTANT** - Many of the `Window` methods require you to either call `Window.Read` or `Window.Finalize` (or set `finalize=True` in your `Window` call) before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
 
 
 ### Window Location
 
 PySimpleGUI computes the exact center of your window and centers the window on the screen.  If you want to locate your window elsewhere, such as the system default of (0,0), if you have 2 ways of doing this. The first is when the window is created.  Use the `location` parameter to set where the window.  The second way of doing this is to use the `SetOptions` call which will set the default window location for all windows in the future.
+
+#### Multiple Monitors and Linux
+
+The auto-centering (default) location for your PySimpleGUI window may not be correct if you have multiple monitors on a Linux system.  On Windows multiple monitors appear to work ok as the primary monitor the tkinter utilizes and reports on.  
+ 
+Linux users with multiple monitors that have a problem when running with the default location will need to specify the location the window should be placed when creating the window by setting the `location` parameter.
 
 ### Window Size
 
@@ -1057,6 +1068,17 @@ To keep a window on top of all other windows on the screen, set keep_on_top = Tr
 PySimpleGUI will set a default focus location for you.  This generally means the first input field.  You can set the focus to a particular element.  If you are going to set the focus yourself, then you should turn off the automatic focus by setting `use_default_focus=False` in your Window call.
 
 
+## Closing Windows
+
+When you are completely done with a window, you should close it and then delete it so that the resources, in particular the tkinter resources, are properly cleaned up.
+
+If you wish to do this in 1 line of code, here's your line:
+
+```python
+window.close(); del window
+```
+
+The delete helps with a problem multi-threaded application encounter where tkinter complains that it is being called from the wrong thread (not the program's main thread)
 
 ## Window Methods That Complete Formation of Window
 
@@ -1080,7 +1102,7 @@ window.Layout(layout)
 window.Finalize()
 ```
 
-### Chaining The Calls
+### Chaining The Calls (the old method)
 
 The next level  of compression that was done was to chain the calls together into a single line of code.
 
@@ -1173,7 +1195,7 @@ layout = [
          ]
 
 window = sg.Window('To Do List Example', layout)
-event, values = window.Read()
+event, values = window.read()
 ```
 
 The output from this script was this window:
@@ -1197,7 +1219,7 @@ for i in range(1,6):
 layout += [[sg.Button('Save'), sg.Button('Exit')]]
 
 window = sg.Window('To Do List Example', layout)
-event, values = window.Read()
+event, values = window.read()
 ```
 
 It produces the exact same window of course.  That's progress.... went from writing out every row of the GUI to generating every row. If we want 48 items as suggested, change the range(1,6) to range(1,48).  Each time through the list another row is added onto the layout.
@@ -1357,7 +1379,7 @@ input_rows = [[sg.Input(size=(15,1), pad=(0,0)) for col in range(4)] for row in 
 layout = header + input_rows
 
 window = sg.Window('Table Simulation', layout, font='Courier 12')
-event, values = window.Read()
+event, values = window.read()
 ```
 
 
@@ -1634,6 +1656,16 @@ Later when you want to make that Element visible you simply call the Element's `
 
 This feature works best on Qt, but does work on the tkinter version as well.  The visible parameter can also be used with the Column and Frame "container" Elements.
 
+Note - Tkiner elements behave differently than Qt elements in how they arrange themselves when going from invisible to visible.
+
+Tkinet elements tend to STACK themselves.  
+
+One workaround is to place the element in a Column with other elements on its row.  This will hold the place of the row it is to be placed on.  It will move the element to the end of the row however.  
+
+If you want to not only make the element invisible, on tkinter you can call `Element.
+
+Qt elements tend to hold their place really well and the window resizes itself nicely.  It is more precise and less klunky.
+
 
 ## Shortcut Functions / Multiple Function Names
 
@@ -1641,10 +1673,11 @@ Perhaps not the best idea, but one that's done none the less is the naming of me
 
 In other words, I am lazy and don't like to type. The result is multiple ways to do exactly the same thing.  Typically, the Demo Programs and other examples use the full name, or at least a longer name.  Thankfully PyCharm will show you the same documentation regardless which you use.
 
-This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.  
+This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  
 
-It's an ongoing thing.  If you don't stay up to date and one of the newer shortcuts is used, you'll need to simply rename that shortcut. 
+The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.  BUT,even that has now been shortened.  
 
+It's an ongoing thing.  If you don't stay up to date and one of the newer shortcuts is used, you'll need to simply rename that shortcut in the code.  For examples Replace sg.T with sg.Text if your version doesn't have sg.T in it.
 
 
 <!-- %!% -->
@@ -1659,7 +1692,16 @@ layout = [
             [sg.Text('This is what a Text Element looks like')],
          ]
 ```
+
 ![simple text](https://user-images.githubusercontent.com/13696193/44959877-e9d97b00-aec3-11e8-9d24-b4405ee4a148.jpg)
+
+
+When creating a Text Element that you will later update, make sure you reserve enough characters for the new text.  When a Text Element is created without a size parameter, it is created to exactly fit the characters provided. 
+
+With proportional spaced fonts (normally the default) the pixel size of one set of characters will differ from the pixel size of a different set of characters even though the set is of the same number of characters.  In other words, not all letters use the same number of pixels.  Look at the text you're reading right now and you will see this.  An "i" takes up a less space then an "A".
+
+
+
 
 ---
 
@@ -1679,16 +1721,23 @@ window[key].Update(new_value)
  ```
 
 This change has been released to PyPI for PySimpleGUI
-It **has not yet been released to PyPI** for the other ports of PySimpleGUI (Qt, Wx, Web).  You'll find the change on GitHub however for Qt and Web (still working on Wx).
 
 MANY Thanks is owed to the person that suggested and showed me how to do this.  It's an incredible find.
 
 
-## `Element.Update()` Shortcut `Element()`
+## `Element.Update()` ->  `Element()` shortcut
 
 This has to be one of the strangest syntactical contructs I've ever written.  
 
-It is best used in combination with `FindElement` (see prior section on how to shortcut `FindElement`).  When used with the `FindElement` shortcut, the code to update an element can be shortened to this unusual looking call:
+It is best used in combination with `FindElement` (see prior section on how to shortcut `FindElement`).  
+
+Normally to change an element, you "find" it, then call its `update` method.  The code usually looks like this, as you saw in the previous section:
+
+```python
+window[key].update(new_value)
+```
+
+The code can be further compressed by removing the `.update` characters, resulting in this very compact looking call:
 
 ```python
 window[key](new_value)
@@ -1696,9 +1745,29 @@ window[key](new_value)
 
 Yes, that's a valid statement in Python.
 
+What's happening is that the element itself is being called.   You can also writing it like this:
+
+```python
+elem = sg.Text('Some text', key='-TEXT-')
+elem('new text value')
+```
+
+Side note - you can also call your `window` variable directly.  If you "call" it it will actually call `Window.read`.
+
+```python
+window = sg.Window(....)
+event, values = window()
+
+# is the same as
+window = sg.Window(....)
+event, values = window.read()
+```
+
+
+
 It is confusing looking however so when used, it might be a good idea to write a comment at the end of the statement to help out the poor beginner programmer coming along behind you.
 
-Still debating whether to begin to immediately use this for all demos going forward and also if should go back and change the docs and demo programs, essentially removing the other technique for doing an update.
+Because it's such a foreign construct that someone with 1 week of Python classes will not reconize, the demos will continue to use the `.update` method.  
 
 It does not have to be used in conjuction with `FindElement`.  The call works on any previously made Element.  Sometimes elements are created, stored into a variable and then that variable is used in the layout.  For example.
 
@@ -2241,22 +2310,22 @@ import PySimpleGUI as sg
 
 # layout the window
 layout = [[sg.Text('A custom progress meter')],
-          [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progressbar')],
+          [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='progressbar')],
           [sg.Cancel()]]
 
 # create the window`
 window = sg.Window('Custom Progress Meter', layout)
-progress_bar = window.FindElement('progressbar')
+progress_bar = window['progressbar']
 # loop that would normally do something useful
-for i in range(10000):
+for i in range(1000):
     # check to see if the cancel button was clicked and exit loop if clicked
-  event, values = window.Read(timeout=0)
+    event, values = window.read(timeout=10)
     if event == 'Cancel'  or event is None:
         break
   # update bar with loop value +1 so that bar eventually reaches the maximum
-  progress_bar.UpdateBar(i + 1)
+    progress_bar.UpdateBar(i + 1)
 # done with loop... need to destroy the window as it's still open
-window.Close()
+window.close()
 ```
 
 ![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
@@ -2291,7 +2360,6 @@ Here's a complete solution for a chat-window using an Output Element.  To displa
 ```python
 import PySimpleGUI as sg
 
-# Blocking window that doesn't close
 def ChatBot():
     layout = [[(sg.Text('This is where standard out is being routed', size=[40, 1]))],
               [sg.Output(size=(80, 20))],
@@ -2299,21 +2367,23 @@ def ChatBot():
                sg.Button('SEND', button_color=(sg.YELLOWS[0], sg.BLUES[0])),
                sg.Button('EXIT', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]]
 
-  window = sg.Window('Chat Window', layout, default_element_size=(30, 2))
+    window = sg.Window('Chat Window', layout, default_element_size=(30, 2))
 
     # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
-  while True:
-        event, value = window.Read()
+    while True:
+        event, value = window.read()
         if event == 'SEND':
             print(value)
         else:
             break
-
+    window.close()
 ChatBot()
 ```
 
 
-## Column Element
+## Column Element & Frame, Tab "Container" Elements
+
+Columns and Frames and Tabs are all "Container Elements" and behave similarly.  This section focuses on Columns but can be applied elsewhere.
 
 Starting in version 2.9 you'll be able to do more complex layouts by using the Column Element.  Think of a Column as a window within a window.  And, yes, you can have a Column within a Column if you want.
 
@@ -2355,16 +2425,18 @@ layout = [[sg.Slider(range=(1,100), default_value=10, orientation='v', size=(8,2
 # Display the window and get values
 
 window = sg.Window('Compact 1-line window with column', layout)
-event, values = window.Read()
+event, values = window.read()
 window.Close()
 
 sg.Popup(event, values, line_width=200)
 
 ```
 
-### Column Justification
+### Column, Frame, Tab, Window element_justification
 
-Beginning in Release 4.3 you can justify the `Column` element's row by setting the `Column`'s `justification` parameter.
+Beginning in Release 4.3 you can set the justification for any container element.  This is done through the `element_justification` parameter.  This will greatly help anyone that wants to center all of their content in a window.  Previously it was difficult to do these kinds of layouts, if not impossible.
+
+justify the `Column` element's row by setting the `Column`'s `justification` parameter.
 
 You can also justify the entire contents within a `Column` by using the Column's `element_justification` parameter.
 
@@ -2464,7 +2536,7 @@ The order of operations to obtain a tkinter Canvas Widget is:
     fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)
 
     # show it all again and get buttons
-    event, values = window.Read()
+    event, values = window.read()
 ```
 
 
@@ -2475,7 +2547,7 @@ To get a tkinter Canvas Widget from PySimpleGUI, follow these steps:
 * Find the Canvas Element by looking up using key
 * Your Canvas Widget Object will be the found_element.TKCanvas
 * Draw on your canvas to your heart's content
-* Call `window.Read()` - Nothing will appear on your canvas until you call Read
+* Call `window.read()` - Nothing will appear on your canvas until you call Read
 
 See `Demo_Matplotlib.py` for a Recipe you can copy.
 
@@ -2552,10 +2624,9 @@ graph+UP {'graph': (154, 254)}
 
 ## Table Element
 
-Out of all of the Elements, it's the Table and the Tree that are the most "problematic" in the tkinter inter and Qt implementations.  They have been difficult implementation.  (yea.... get of over it)
+Table and Tree Elements are of the most complex in PySimpleGUI.  They have a lot of options and a lot of unusual characteristics.
 
-
-### `window.Read()` return values from Table Element
+### `window.read()` return values from Table Element
 
 The values returned from a `Window.Read` call for the Table Element are a list of row numbers that are currently highlighted.
 
@@ -2571,6 +2642,24 @@ For the tkinter port, it will return the same values that was passed in when the
 There has been an elusive problem where clicking on or near the table's header caused tkinter to go crazy and resize the columns continuously as you moved the mouse.
 
 This problem has existed since the first release of the `Table` element.  It was fixed in release 4.3.
+
+### Known table colors in Python 3.7.3, 3.7.4, 3.8, ?
+
+The tkinter that's been released in the past several releases of Python has a bug.  Table colors of all types are not working, at all.  The background of the rows never change.  If that's important to you, you'll need to **downgrade** your Python version.  3.6 works really well with PySimpleGUI and tkinter.
+
+### Empty Tables
+
+If you wish to start your table as being an empty one, you will need to specify an empty table.  This list comprehension will create an empty table with 15 rows and 6 columns.
+
+```python
+data = [['' for row in range(15)]for col in range(6)]
+```
+
+### Events from Tables
+
+There are two ways to get events generated from Table Element.  
+`change_submits` event generated as soon as a row is clicked on
+`bind_return_key` event generate when a row is double clicked or the return key is press while on a row.
 
 ## Tree Element
 
@@ -2628,6 +2717,8 @@ Just like windows and the other container elements, the `Tab` Element has a layo
 `Tab` layouts look exactly like Window layouts, that is they are **a list of lists of Elements**.
 
 *How you place a Tab element into a window is different than all other elements.*  You cannot place a Tab directly into a Window's layout.  
+
+Also, tabs cannot be made invisible at this time.  They have a visibily parameter but calling update will not change it.
 
 Tabs are contained in TabGroups.  They are **not** placed into other layouts.  To get a Tab into your window, first place the `Tab` Element into a `TabGroup` Element and then place the `TabGroup` Element into the Window layout.
 
@@ -2963,7 +3054,7 @@ layout = [[sg.Text('Persistent window')],
 window = sg.Window('Window that stays open', layout)
 
 while True:
-    event, values = window.Read()
+    event, values = window.read()
     if event is None or event == 'Exit':
         break
     print(event, values)
@@ -3145,7 +3236,7 @@ layout = [ [sg.Text('My layout', key='_TEXT_')],
 window = sg.Window('My new window', layout)
 
 while True:             # Event Loop
-    event, values = window.Read()
+    event, values = window.read()
     if event is None:
         break
     window.Element('_TEXT_').Update('My new text value')
@@ -3166,7 +3257,7 @@ window = sg.Window('My new window', layout).Finalize()
 window.Element('_TEXT_').Update('My new text value')
 
 while True:             # Event Loop
-  event, values = window.Read()
+  event, values = window.read()
     if event is None:
         break
 ```
@@ -3206,7 +3297,7 @@ sz = fontSize
 window = sg.Window("Font size selector", layout, grab_anywhere=False)
 # Event Loop
 while True:
-    event, values= window.Read()
+    event, values= window.read()
     if event is None:
         break
     sz_spin = int(values['spin'])
@@ -3293,7 +3384,7 @@ window = sg.Window("Keyboard Test", layout,  return_keyboard_events=True, use_de
 
 # ---===--- Loop taking in user input --- #
 while True:
-    event, value = window.Read()
+    event, value = window.read()
 
     if event == "OK" or event is None:
         print(event, "exiting")
@@ -3331,22 +3422,28 @@ To add a menu to a Window place the `Menu` or `MenuBar` element into your layout
 
 It doesn't really matter where you place the Menu Element in your layout as it will always be located at the top of the window.
 
+When the user selects an item, it's returns as the event (along with the menu item's key if one was specified in the menu definition)
+
 ## ButtonMenus
 
 Button menus were introduced in version 3.21, having been previously released in PySimpleGUIQt.  They work exactly the same and are source code compatible between PySimpleGUI and PySimpleGUIQt.  These types of menus take a single menu entry where a Menu Bar takes a list of menu entries.
+
+**Return values for ButtonMenus are different than Menu Bars.**
+
+You will get back the ButtonMenu's KEY as the event.  To get the actual item selected, you will look it up in the values dictionary.  This can be done with the expression `values[event]`
 
 ## Right Click Menus
 
 Right Click Menus were introduced in version 3.21.  Almost every element has a right_click_menu parameter and there is a window-level setting for rich click menu that will attach a right click menu to all elements in the window.
 
-The menu definition is the same a s the button menu definition, a single menu entry.
+The menu definition is the same as the button menu definition, a single menu entry.
 
 ```python
 right_click_menu = ['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']]
 ```
 The first string in a right click menu and a button menu is ***ignored***.  It is not used.  Normally you would put the string that is shown on the menu bar in that location.
 
-**Return values for right click menus are different than menu bars and button menus.**  Instead of the value being returned through the values dictionary, it is instead sent back as an Event.  You will not
+**Return values for right click menus are the same as MenuBars.**  The value chosen is returned as the event.
 
 ## Menu Shortcut keys
 You have used ALT-key in other Windows programs to navigate menus.  For example Alt-F+X exits the program.  The Alt-F pulls down the File menu.  The X selects the entry marked Exit.
@@ -3385,6 +3482,22 @@ To add the `key` `_MY_KEY_` to the Special menu entry, the code would be:
 `['&Edit', ['Paste', ['Special::_MY_KEY_', 'Normal',], 'Undo'],]`
 
  If you want to change the characters that indicate a key follows from '::' to something else, change the variable `MENU_KEY_SEPARATOR`
+
+
+## The Menu Definitions
+
+Having read through the Menu section, you may have noticed that the right click menu and the button menu have a format that is a little odd as there is a part of it that is not utilized (the first very string).  Perhaps the words "Not Used" should be in the examples.... But, there's a reason to retain words there that make sense.
+
+The reason for this is an architectural one, but it also has a convienence for the user.  You can put the individual menu items (button and right click) into a list and you'll have a menu bar definition.
+
+This would work to make a menu bar from a series of these individual menu defintions:
+
+```python
+menu_bar = [right_click_menu_1, right_click_menu_2, button_menu_def ]
+```
+
+And, of course, the direction works the opposite too.  You can take a Menu Bar definition and pull out an individual menu item to create a right click or button menu. 
+
 
 
 # Running Multiple Windows
@@ -3536,7 +3649,7 @@ If your program is running with blocking `Read` calls, then you will want to add
 Your event loop will be modified from this blocking:
 ```python
 while True:
-    event, values = window.Read()
+    event, values = window.read()
 ```
 
 To this non-blocking:
@@ -3863,6 +3976,58 @@ Either way you'll access it using the same `Window` variable `sg.Window.TKroot`
 Watch this space in the future for the more standardized variable name for this object.  It may be something like `Window.Widget` as the Elements use or something like `Window.GUIWindow`.
 
 
+## Binding tkiner "events"
+
+If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then there's a particular way at the moment to make this happen.  
+
+tkinter performs a callback into user code when an event happens, but that's not how PySimpleGUI works.  Instead of callbacks, a PySimpleGUI user's program simply returns an event via the `window.read()` call.  In order for your "event" to generate an event that will be returned to you via your read call, follow these instructions:
+
+1. Create a Button for each event you wish to receive
+2. Set visible=False when creating the buttons
+3. Make the Button text be the event you want to see returned to you or set the button's Key to that value
+4. After creating / finalizing the window, make the tkinter bind call, passing `element.ButtonReboundCallback` as the function to call.
+
+This sample code binds not an element events but events from the window itself.  In this case, Focus events.
+
+```python
+import PySimpleGUI as sg
+
+layout = [  [sg.Text('My Window')],
+            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
+            [sg.Button('Do Something'), sg.Button('Exit'),
+             sg.Button('-FOCUS-IN-', visible=False), sg.Button('-FOCUS-OUT-', visible=False)]  ]
+
+window = sg.Window('Window Title', layout, finalize=True)
+
+window.TKroot.bind("<FocusIn>", window['-FOCUS-IN-'].ButtonReboundCallback)
+window.TKroot.bind("<FocusOut>", window['-FOCUS-OUT-'].ButtonReboundCallback)
+```
+
+This code binds the right mouse button to a button so that you can right click a button and get a different event than if you left clicked it.
+
+```python
+import PySimpleGUI as sg
+
+layout = [  [sg.Text('My Window')],
+            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
+            [sg.Button('Do Something'), sg.Button('Right Click Me')],
+            [sg.Button('-RIGHT-', visible=False)]
+            ]
+
+window = sg.Window('Window Title', layout, finalize=True)
+
+window['Right Click Me'].Widget.bind("<Button-3>", window['-RIGHT-'].ButtonReboundCallback)
+
+has_focus = True
+while True:             # Event Loop
+    event, values = window.read()
+    print(event, values)
+    if event in (None, 'Exit'):
+        break
+window.close()
+```
+
+
 ---
 
 
@@ -3876,7 +4041,11 @@ Hoping this is a change for the better and that users will be able to find the i
 
 NOTE that this documentatiuopn section is created using the ***GitHUB released PySimpleGUI.py file***.  Some of the calls may not be available to you or your port (Qt, Wx, Web).  And some of the parameters may be different.  We're working on adding docstrings to all the ports which will enable this kind of document to be available for each port.
 
-Without further delay... here are all of the Elements
+## Caution - Some functions / methods may be internal only yet exposed in this documenation
+
+This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidently shown in this documentation.  Hopefully these accidents don't happen often.
+
+Without further delay... here are all of the Elements and the Window class
 
 
 
@@ -3884,8 +4053,23 @@ Without further delay... here are all of the Elements
 ### Button Element
 
 <!-- <+Button.doc+> -->
-
 <!-- <+Button.__init__+> -->
+
+#### ButtonCallBack
+
+<!-- <+Button.ButtonCallBack+> -->
+
+#### ButtonPressCallBack
+
+<!-- <+Button.ButtonPressCallBack+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Button.ButtonReboundCallback+> -->
+
+#### ButtonReleaseCallBack
+
+<!-- <+Button.ButtonReleaseCallBack+> -->
 
 #### Click
 
@@ -3907,10 +4091,30 @@ Without further delay... here are all of the Elements
 
 <!-- <+Button.Update+> -->
 
+#### click
+
+<!-- <+Button.click+> -->
+
+#### expand
+
+<!-- <+Button.expand+> -->
+
+#### update
+
+<!-- <+Button.update+> -->
+
 ### ButtonMenu Element
 
 <!-- <+ButtonMenu.doc+> -->
 <!-- <+ButtonMenu.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+ButtonMenu.ButtonReboundCallback+> -->
+
+#### Click
+
+<!-- <+ButtonMenu.Click+> -->
 
 #### SetFocus
 
@@ -3924,10 +4128,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+ButtonMenu.Update+> -->
 
+#### expand
+
+<!-- <+ButtonMenu.expand+> -->
+
+#### update
+
+<!-- <+ButtonMenu.update+> -->
+
 ### Canvas Element
 
 <!-- <+Canvas.doc+> -->
 <!-- <+Canvas.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Canvas.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -3941,10 +4157,18 @@ Without further delay... here are all of the Elements
 
 <!-- <+Canvas.TKCanvas+> -->
 
+#### expand
+
+<!-- <+Canvas.expand+> -->
+
 ### Checkbox Element
 
 <!-- <+Checkbox.doc+> -->
 <!-- <+Checkbox.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Checkbox.ButtonReboundCallback+> -->
 
 #### Get
 
@@ -3962,6 +4186,18 @@ Without further delay... here are all of the Elements
 
 <!-- <+Checkbox.Update+> -->
 
+#### expand
+
+<!-- <+Checkbox.expand+> -->
+
+#### get
+
+<!-- <+Checkbox.get+> -->
+
+#### update
+
+<!-- <+Checkbox.update+> -->
+
 ### Column Element
 
 <!-- <+Column.doc+> -->
@@ -3970,6 +4206,10 @@ Without further delay... here are all of the Elements
 #### AddRow
 
 <!-- <+Column.AddRow+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Column.ButtonReboundCallback+> -->
 
 #### Layout
 
@@ -3987,10 +4227,26 @@ Without further delay... here are all of the Elements
 
 <!-- <+Column.Update+> -->
 
+#### expand
+
+<!-- <+Column.expand+> -->
+
+#### layout
+
+<!-- <+Column.layout+> -->
+
+#### update
+
+<!-- <+Column.update+> -->
+
 ### Combo Element
 
 <!-- <+Combo.doc+> -->
 <!-- <+Combo.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Combo.ButtonReboundCallback+> -->
 
 #### Get
 
@@ -4008,6 +4264,55 @@ Without further delay... here are all of the Elements
 
 <!-- <+Combo.Update+> -->
 
+#### expand
+
+<!-- <+Combo.expand+> -->
+
+#### get
+
+<!-- <+Combo.get+> -->
+
+#### update
+
+<!-- <+Combo.update+> -->
+
+
+### ErrorElement Element
+
+<!-- <+ErrorElement.doc+> -->
+<!-- <+ErrorElement.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+ErrorElement.ButtonReboundCallback+> -->
+
+#### Get
+
+<!-- <+ErrorElement.Get+> -->
+
+#### SetFocus
+
+<!-- <+ErrorElement.SetFocus+> -->
+
+#### SetTooltip
+
+<!-- <+ErrorElement.SetTooltip+> -->
+
+#### Update
+
+<!-- <+ErrorElement.Update+> -->
+
+#### expand
+
+<!-- <+ErrorElement.expand+> -->
+
+#### get
+
+<!-- <+ErrorElement.get+> -->
+
+#### update
+
+<!-- <+ErrorElement.update+> -->
 
 ### Frame Element
 
@@ -4017,6 +4322,10 @@ Without further delay... here are all of the Elements
 #### AddRow
 
 <!-- <+Frame.AddRow+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Frame.ButtonReboundCallback+> -->
 
 #### Layout
 
@@ -4034,6 +4343,18 @@ Without further delay... here are all of the Elements
 
 <!-- <+Frame.Update+> -->
 
+#### expand
+
+<!-- <+Frame.expand+> -->
+
+#### layout
+
+<!-- <+Frame.layout+> -->
+
+#### update
+
+<!-- <+Frame.update+> -->
+
 ### Graph Element
 
 <!-- <+Graph.doc+> -->
@@ -4046,6 +4367,10 @@ Without further delay... here are all of the Elements
 #### ButtonPressCallBack
 
 <!-- <+Graph.ButtonPressCallBack+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Graph.ButtonReboundCallback+> -->
 
 #### ButtonReleaseCallBack
 
@@ -4127,10 +4452,30 @@ Without further delay... here are all of the Elements
 
 <!-- <+Graph.Update+> -->
 
+#### erase
+
+<!-- <+Graph.erase+> -->
+
+#### expand
+
+<!-- <+Graph.expand+> -->
+
+#### move
+
+<!-- <+Graph.move+> -->
+
+#### update
+
+<!-- <+Graph.update+> -->
+
 ### Image Element
 
 <!-- <+Image.doc+> -->
 <!-- <+Image.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Image.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4148,10 +4493,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+Image.UpdateAnimation+> -->
 
+#### expand
+
+<!-- <+Image.expand+> -->
+
+#### update
+
+<!-- <+Image.update+> -->
+
 ### InputText Element
 
 <!-- <+InputText.doc+> -->
 <!-- <+InputText.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+InputText.ButtonReboundCallback+> -->
 
 #### Get
 
@@ -4169,10 +4526,30 @@ Without further delay... here are all of the Elements
 
 <!-- <+InputText.Update+> -->
 
+#### expand
+
+<!-- <+InputText.expand+> -->
+
+#### get
+
+<!-- <+InputText.get+> -->
+
+#### update
+
+<!-- <+InputText.update+> -->
+
 ### Listbox Element
 
 <!-- <+Listbox.doc+> -->
 <!-- <+Listbox.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Listbox.ButtonReboundCallback+> -->
+
+#### GetIndexes
+
+<!-- <+Listbox.GetIndexes+> -->
 
 #### GetListValues
 
@@ -4194,10 +4571,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+Listbox.Update+> -->
 
+#### expand
+
+<!-- <+Listbox.expand+> -->
+
+#### update
+
+<!-- <+Listbox.update+> -->
+
 ### Menu Element
 
 <!-- <+Menu.doc+> -->
 <!-- <+Menu.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Menu.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4211,10 +4600,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+Menu.Update+> -->
 
+#### expand
+
+<!-- <+Menu.expand+> -->
+
+#### update
+
+<!-- <+Menu.update+> -->
+
 ### Multiline Element
 
 <!-- <+Multiline.doc+> -->
 <!-- <+Multiline.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Multiline.ButtonReboundCallback+> -->
 
 #### Get
 
@@ -4232,10 +4633,26 @@ Without further delay... here are all of the Elements
 
 <!-- <+Multiline.Update+> -->
 
+#### expand
+
+<!-- <+Multiline.expand+> -->
+
+#### get
+
+<!-- <+Multiline.get+> -->
+
+#### update
+
+<!-- <+Multiline.update+> -->
+
 ### OptionMenu Element
 
 <!-- <+OptionMenu.doc+> -->
 <!-- <+OptionMenu.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+OptionMenu.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4249,10 +4666,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+OptionMenu.Update+> -->
 
+#### expand
+
+<!-- <+OptionMenu.expand+> -->
+
+#### update
+
+<!-- <+OptionMenu.update+> -->
+
 ### Output Element
 
 <!-- <+Output.doc+> -->
 <!-- <+Output.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Output.ButtonReboundCallback+> -->
 
 #### Get
 
@@ -4266,18 +4695,27 @@ Without further delay... here are all of the Elements
 
 <!-- <+Output.SetTooltip+> -->
 
-#### TKOut
-
-<!-- <+Output.TKOut+> -->
 
 #### Update
 
 <!-- <+Output.Update+> -->
 
+#### expand
+
+<!-- <+Output.expand+> -->
+
+#### update
+
+<!-- <+Output.update+> -->
+
 ### Pane Element
 
 <!-- <+Pane.doc+> -->
 <!-- <+Pane.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Pane.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4291,10 +4729,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+Pane.Update+> -->
 
+#### expand
+
+<!-- <+Pane.expand+> -->
+
+#### update
+
+<!-- <+Pane.update+> -->
+
 ### ProgressBar Element
 
 <!-- <+ProgressBar.doc+> -->
 <!-- <+ProgressBar.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+ProgressBar.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4312,10 +4762,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+ProgressBar.UpdateBar+> -->
 
+#### expand
+
+<!-- <+ProgressBar.expand+> -->
+
+#### update
+
+<!-- <+ProgressBar.update+> -->
+
 ### Radio Element
 
 <!-- <+Radio.doc+> -->
 <!-- <+Radio.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Radio.ButtonReboundCallback+> -->
 
 #### Get
 
@@ -4337,10 +4799,26 @@ Without further delay... here are all of the Elements
 
 <!-- <+Radio.Update+> -->
 
+#### expand
+
+<!-- <+Radio.expand+> -->
+
+#### get
+
+<!-- <+Radio.get+> -->
+
+#### update
+
+<!-- <+Radio.update+> -->
+
 ### Slider Element
 
 <!-- <+Slider.doc+> -->
 <!-- <+Slider.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Slider.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4354,10 +4832,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+Slider.Update+> -->
 
+#### expand
+
+<!-- <+Slider.expand+> -->
+
+#### update
+
+<!-- <+Slider.update+> -->
+
 ### Spin Element
 
 <!-- <+Spin.doc+> -->
 <!-- <+Spin.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Spin.ButtonReboundCallback+> -->
 
 #### Get
 
@@ -4375,10 +4865,26 @@ Without further delay... here are all of the Elements
 
 <!-- <+Spin.Update+> -->
 
+#### expand
+
+<!-- <+Spin.expand+> -->
+
+#### get
+
+<!-- <+Spin.get+> -->
+
+#### update
+
+<!-- <+Spin.update+> -->
+
 ### StatusBar Element
 
 <!-- <+StatusBar.doc+> -->
 <!-- <+StatusBar.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+StatusBar.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4392,6 +4898,14 @@ Without further delay... here are all of the Elements
 
 <!-- <+StatusBar.Update+> -->
 
+#### expand
+
+<!-- <+StatusBar.expand+> -->
+
+#### update
+
+<!-- <+StatusBar.update+> -->
+
 ### Tab Element
 
 <!-- <+Tab.doc+> -->
@@ -4400,6 +4914,10 @@ Without further delay... here are all of the Elements
 #### AddRow
 
 <!-- <+Tab.AddRow+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Tab.ButtonReboundCallback+> -->
 
 #### Layout
 
@@ -4421,6 +4939,22 @@ Without further delay... here are all of the Elements
 
 <!-- <+Tab.Update+> -->
 
+#### expand
+
+<!-- <+Tab.expand+> -->
+
+#### layout
+
+<!-- <+Tab.layout+> -->
+
+#### select
+
+<!-- <+Tab.select+> -->
+
+#### update
+
+<!-- <+Tab.update+> -->
+
 ### TabGroup Element
 
 <!-- <+TabGroup.doc+> -->
@@ -4429,6 +4963,10 @@ Without further delay... here are all of the Elements
 #### AddRow
 
 <!-- <+TabGroup.AddRow+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+TabGroup.ButtonReboundCallback+> -->
 
 #### FindKeyFromTabName
 
@@ -4450,10 +4988,30 @@ Without further delay... here are all of the Elements
 
 <!-- <+TabGroup.SetTooltip+> -->
 
+#### expand
+
+<!-- <+TabGroup.expand+> -->
+
+#### get
+
+<!-- <+TabGroup.get+> -->
+
+#### layout
+
+<!-- <+TabGroup.layout+> -->
+
 ### Table Element
 
 <!-- <+Table.doc+> -->
 <!-- <+Table.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Table.ButtonReboundCallback+> -->
+
+#### Get
+
+<!-- <+Table.Get+> -->
 
 #### SetFocus
 
@@ -4467,10 +5025,26 @@ Without further delay... here are all of the Elements
 
 <!-- <+Table.Update+> -->
 
+#### expand
+
+<!-- <+Table.expand+> -->
+
+#### get
+
+<!-- <+Table.get+> -->
+
+#### update
+
+<!-- <+Table.update+> -->
+
 ### Text Element
 
 <!-- <+Text.doc+> -->
 <!-- <+Text.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Text.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4484,10 +5058,23 @@ Without further delay... here are all of the Elements
 
 <!-- <+Text.Update+> -->
 
+#### expand
+
+<!-- <+Text.expand+> -->
+
+#### update
+
+<!-- <+Text.update+> -->
+
+
 ### Tree Element
 
 <!-- <+Tree.doc+> -->
 <!-- <+Tree.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+Tree.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4501,7 +5088,15 @@ Without further delay... here are all of the Elements
 
 <!-- <+Tree.Update+> -->
 
-### TreeData Class For Tree Element
+#### expand
+
+<!-- <+Tree.expand+> -->
+
+#### update
+
+<!-- <+Tree.update+> -->
+
+### TreeData Element
 
 <!-- <+TreeData.doc+> -->
 <!-- <+TreeData.__init__+> -->
@@ -4510,14 +5105,15 @@ Without further delay... here are all of the Elements
 
 <!-- <+TreeData.Insert+> -->
 
-#### Node
-
-<!-- <+TreeData.Node+> -->
 
 ### VerticalSeparator Element
 
 <!-- <+VerticalSeparator.doc+> -->
 <!-- <+VerticalSeparator.__init__+> -->
+
+#### ButtonReboundCallback
+
+<!-- <+VerticalSeparator.ButtonReboundCallback+> -->
 
 #### SetFocus
 
@@ -4526,6 +5122,10 @@ Without further delay... here are all of the Elements
 #### SetTooltip
 
 <!-- <+VerticalSeparator.SetTooltip+> -->
+
+#### expand
+
+<!-- <+VerticalSeparator.expand+> -->
 
 ### Window
 
@@ -4552,13 +5152,10 @@ Without further delay... here are all of the Elements
 
 <!-- <+Window.Close+> -->
 
+
 #### CurrentLocation
 
 <!-- <+Window.CurrentLocation+> -->
-
-#### DecrementOpenCount
-
-<!-- <+Window.DecrementOpenCount+> -->
 
 #### Disable
 
@@ -4608,6 +5205,7 @@ Without further delay... here are all of the Elements
 
 <!-- <+Window.FindElementWithFocus+> -->
 
+
 #### GetScreenDimensions
 
 <!-- <+Window.GetScreenDimensions+> -->
@@ -4624,21 +5222,10 @@ Without further delay... here are all of the Elements
 
 <!-- <+Window.Hide+> -->
 
-#### IncrementOpenCount
-
-<!-- <+Window.IncrementOpenCount+> -->
 
 #### Layout
 
 <!-- <+Window.Layout+> -->
-
-#### LayoutAndRead
-
-<!-- <+Window.LayoutAndRead+> -->
-
-#### LayoutAndShow
-
-<!-- <+Window.LayoutAndShow+> -->
 
 #### LoadFromDisk
 
@@ -4659,6 +5246,7 @@ Without further delay... here are all of the Elements
 #### Normal
 
 <!-- <+Window.Normal+> -->
+
 
 #### Read
 
@@ -4690,6 +5278,8 @@ Without further delay... here are all of the Elements
 
 #### Size
 
+Note the `Window.Size` can be used for both reading and writing
+
 <!-- <+Window.Size+> -->
 
 #### UnHide
@@ -4700,6 +5290,81 @@ Without further delay... here are all of the Elements
 
 <!-- <+Window.VisibilityChanged+> -->
 
+#### close
+
+<!-- <+Window.close+> -->
+
+#### disable
+
+<!-- <+Window.disable+> -->
+
+#### disappear
+
+<!-- <+Window.disappear+> -->
+
+#### elem
+
+<!-- <+Window.elem+> -->
+
+#### element
+
+<!-- <+Window.element+> -->
+
+#### enable
+
+<!-- <+Window.enable+> -->
+
+#### fill
+
+<!-- <+Window.fill+> -->
+
+#### finalize
+
+<!-- <+Window.finalize+> -->
+
+#### find
+
+<!-- <+Window.find+> -->
+
+#### hide
+
+<!-- <+Window.hide+> -->
+
+#### layout
+
+<!-- <+Window.layout+> -->
+
+#### maximize
+
+<!-- <+Window.maximize+> -->
+
+#### minimize
+
+<!-- <+Window.minimize+> -->
+
+#### move
+
+<!-- <+Window.move+> -->
+
+#### normal
+
+<!-- <+Window.normal+> -->
+
+#### read
+
+<!-- <+Window.read+> -->
+
+#### reappear
+
+<!-- <+Window.reappear+> -->
+
+#### refresh
+
+<!-- <+Window.refresh+> -->
+
+#### size
+
+<!-- <+Window.size+> -->
 
 <!-- <+func.CButton+> -->
 <!-- <+func.CalendarButton+> -->
@@ -4747,8 +5412,44 @@ Without further delay... here are all of the Elements
 <!-- <+func.TimerStart+> -->
 <!-- <+func.TimerStop+> -->
 <!-- <+func.Yes+> -->
+<!-- <+func.change_look_and_feel+> -->
+<!-- <+func.easy_print+> -->
+<!-- <+func.easy_print_close+> -->
 <!-- <+func.eprint+> -->
+<!-- <+func.fill_form_with_values+> -->
+<!-- <+func.list_of_look_and_feel_values+> -->
 <!-- <+func.main+> -->
+<!-- <+func.obj_to_string+> -->
+<!-- <+func.obj_to_string_single_obj+> -->
+<!-- <+func.one_line_progress_meter+> -->
+<!-- <+func.one_line_progress_meter_cancel+> -->
+<!-- <+func.popup+> -->
+<!-- <+func.popup_animated+> -->
+<!-- <+func.popup_annoying+> -->
+<!-- <+func.popup_auto_close+> -->
+<!-- <+func.popup_cancel+> -->
+<!-- <+func.popup_error+> -->
+<!-- <+func.popup_get_file+> -->
+<!-- <+func.popup_get_folder+> -->
+<!-- <+func.popup_get_text+> -->
+<!-- <+func.popup_no_border+> -->
+<!-- <+func.popup_no_buttons+> -->
+<!-- <+func.popup_no_frame+> -->
+<!-- <+func.popup_no_titlebar+> -->
+<!-- <+func.popup_no_wait+> -->
+<!-- <+func.popup_non_blocking+> -->
+<!-- <+func.popup_ok+> -->
+<!-- <+func.popup_quick+> -->
+<!-- <+func.popup_quick_message+> -->
+<!-- <+func.popup_scrolled+> -->
+<!-- <+func.popup_timed+> -->
+<!-- <+func.popup_yes_no+> -->
+<!-- <+func.quit+> -->
+<!-- <+func.set_global_icon+> -->
+<!-- <+func.set_options+> -->
+<!-- <+func.sgprint+> -->
+<!-- <+func.sgprint_close+> -->
 <!-- <+func.show_debugger_popout_window+> -->
 <!-- <+func.show_debugger_window+> -->
 <!-- <+func.sprint+> -->
+<!-- <+func.test+> -->
