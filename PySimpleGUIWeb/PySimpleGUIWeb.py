@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.31.0 Released 06 Nov 2019"
+version = __version__ = "0.32.0 Unreleased Fix for scrolling of Output & Multline Output. Nice!"
 
 import sys
 import datetime
@@ -976,11 +976,11 @@ class MultilineOutput(Element):
         elif value is not None and append:
             self.CurrentValue = self.CurrentValue + '\n' + str(value)
             self.Widget.set_value(self.CurrentValue)
-        if self.Autoscroll:
+            self.Widget._set_updated()
             app = self.ParentForm.App
             if hasattr(app, "websockets"):
-                app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
-                    self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+                app.execute_javascript('element=document.getElementById("%(id)s"); element.innerHTML=`%(content)s`; if(%(autoscroll)s){element.scrollTop=999999;} ' % {
+                    "id":self.Widget.identifier, "content":self.Widget.get_value(), "autoscroll":'true' if self.Autoscroll else 'false'})
 
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
@@ -1084,11 +1084,11 @@ class Output(Element):
         elif value is not None and append:
             self.CurrentValue = self.CurrentValue + '\n' + str(value)
             self.Widget.set_value(self.CurrentValue)
-        # do autoscroll
+        self.Widget._set_updated()
         app = self.ParentForm.App
         if hasattr(app, "websockets"):
-            app.execute_javascript("document.getElementById('%s').scrollTop=%s;" % (
-                self.Widget.identifier, 9999))  # 9999 number of pixel to scroll
+            app.execute_javascript('element=document.getElementById("%(id)s"); element.innerHTML=`%(content)s`; element.scrollTop=999999; ' % {
+                "id":self.Widget.identifier, "content":self.Widget.get_value()})
 
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
@@ -6825,8 +6825,8 @@ def main():
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=False, key='_MULTI_IN_')],
         [Output(size=(60,10))],
-        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
-        [Checkbox('Checkbox 1', enable_events=False, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=False)],
+        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=False)],
+        [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=False,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
