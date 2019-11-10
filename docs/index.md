@@ -21,6 +21,8 @@
 
 ## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
+## For people that want to get from Point A to Point B, and have fun along the way.
+
 ### This manual is crammed full of answers so start your search for answers here. Read/Search this prior to opening an Issue on GitHub.  Press Control F and type.
 ---
 
@@ -3854,7 +3856,7 @@ window = sg.Window('Frame with buttons', layout, font=("Helvetica", 12))
 
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.
 
-However, there's another way to get that power and that's through the Graph Element, an even MORE powerful Element as it uses a Canvas that you can directly access if needed.  The Graph Element has a large number of drawing methods that the Canvas Element does not have.
+However, there's another way to get that power and that's through the Graph Element, an even MORE powerful Element as it uses a Canvas that you can directly access if needed.  The Graph Element has a large number of drawing methods that the Canvas Element does not have.  Plus, if you need to, you can access the Graph Element's "Canvas" through a member variable.
 
 ### Matplotlib, Pyplot Integration
 
@@ -5312,7 +5314,7 @@ This section of the documentation is generated directly from the source code.  A
 
 Without further delay... here are all of the Elements and the Window class
 
-### Button Element
+## Button Element
 
     Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
 
@@ -5372,7 +5374,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonCallBack
+### ButtonCallBack
 
 Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
 
@@ -5380,7 +5382,7 @@ Not user callable! Called by tkinter when a button is clicked.  This is where al
 ButtonCallBack()
 ```
 
-#### ButtonPressCallBack
+### ButtonPressCallBack
 
 Not a user callable method. Callback called by tkinter when a "realtime" button is pressed
 
@@ -5394,7 +5396,7 @@ Parameter Descriptions:
 |---|---|
 |parm|Event info passed in by tkinter|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -5410,7 +5412,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### ButtonReleaseCallBack
+### ButtonReleaseCallBack
 
 Not a user callable function.  Called by tkinter when a "realtime" button is released
 
@@ -5424,7 +5426,7 @@ Parameter Descriptions:
 |---|---|
 |parm|the event info from tkinter|
 
-#### Click
+### Click
 
 Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -5433,7 +5435,7 @@ Generates a click of the button as if the user clicked the button
 Click()
 ```
 
-#### GetText
+### GetText
 
 Returns the current text shown on a button
 
@@ -5443,7 +5445,7 @@ Returns the current text shown on a button
 |---|---|
 | **return** | (str) The text currently displayed on the button |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -5457,7 +5459,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5471,7 +5473,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5499,7 +5501,7 @@ Parameter Descriptions:
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
 
-#### click
+### click
 
 Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -5508,7 +5510,7 @@ Generates a click of the button as if the user clicked the button
 click()
 ```
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -5523,7 +5525,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5551,7 +5553,7 @@ Parameter Descriptions:
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
 
-### ButtonMenu Element
+## ButtonMenu Element
 
     The Button Menu Element.  Creates a button that when clicked will show a menu similar to right click menu
 
@@ -5599,7 +5601,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -5615,7 +5617,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Click
+### Click
 
 Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -5624,7 +5626,7 @@ Generates a click of the button as if the user clicked the button
 Click()
 ```
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -5638,7 +5640,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5652,7 +5654,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5667,7 +5669,7 @@ Parameter Descriptions:
 |menu_definition|(List[List]) New menu definition (in menu definition format)|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -5682,7 +5684,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5697,7 +5699,7 @@ Parameter Descriptions:
 |menu_definition|(List[List]) New menu definition (in menu definition format)|
 |visible|(bool) control visibility of element|
 
-### Canvas Element
+## Canvas Element
 
 ```
 Canvas(canvas=None,
@@ -5725,7 +5727,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -5741,7 +5743,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -5755,7 +5757,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5769,11 +5771,11 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### TKCanvas
+### TKCanvas
 
 #### property: TKCanvas
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -5788,7 +5790,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-### Checkbox Element
+## Checkbox Element
 
     Checkbox Element - Displays a checkbox and text next to it
 
@@ -5830,7 +5832,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -5846,7 +5848,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 Return the current state of this checkbox
 
@@ -5856,7 +5858,7 @@ Return the current state of this checkbox
 |---|---|
 | **return** | (bool) Current state of checkbox |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -5870,7 +5872,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5884,7 +5886,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
@@ -5903,7 +5905,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable element|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -5918,7 +5920,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 Return the current state of this checkbox
 
@@ -5928,7 +5930,7 @@ Return the current state of this checkbox
 |---|---|
 | **return** | (bool) Current state of checkbox |
 
-#### update
+### update
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
@@ -5947,7 +5949,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable element|
 |visible|(bool) control visibility of element|
 
-### Column Element
+## Column Element
 
     A container element that is used to create a layout within your window's layout
 
@@ -5983,7 +5985,7 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### AddRow
+### AddRow
 
 Not recommended user call.  Used to add rows of Elements to the Column Element.
 
@@ -5997,7 +5999,7 @@ Parameter Descriptions:
 |---|---|
 |*args|List[Element] The list of elements for this row|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -6013,7 +6015,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Layout
+### Layout
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -6029,7 +6031,7 @@ Parameter Descriptions:
 |||
 | **return** | (Column) Used for chaining |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -6043,7 +6045,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6057,7 +6059,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6071,7 +6073,7 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -6086,7 +6088,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### layout
+### layout
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -6102,7 +6104,7 @@ Parameter Descriptions:
 |||
 | **return** | (Column) Used for chaining |
 
-#### update
+### update
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6116,7 +6118,7 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
-### Combo Element
+## Combo Element
 
     ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
 
@@ -6160,7 +6162,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -6176,7 +6178,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
 You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
@@ -6187,7 +6189,7 @@ You should be using values from your call to window.Read instead.  Know what you
 |---|---|
 | **return** | Union[Any, None] Returns the value of what is currently chosen |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -6201,7 +6203,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6215,7 +6217,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6241,7 +6243,7 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -6256,7 +6258,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
 You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
@@ -6267,7 +6269,7 @@ You should be using values from your call to window.Read instead.  Know what you
 |---|---|
 | **return** | Union[Any, None] Returns the value of what is currently chosen |
 
-#### update
+### update
 
 Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6293,7 +6295,7 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) control visibility of element|
 
-### ErrorElement Element
+## ErrorElement Element
 
     A "dummy Element" that is returned when there are error conditions, like trying to find an element that's invalid
 
@@ -6307,7 +6309,7 @@ Parameter Descriptions:
 |---|---|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -6323,7 +6325,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 One of the method names found in other Elements. Used here to return an error string in case it's called
 
@@ -6333,7 +6335,7 @@ One of the method names found in other Elements. Used here to return an error st
 |---|---|
 | **return** | (str) A warning text string. |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -6347,7 +6349,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6361,7 +6363,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Update method for the Error Element, an element that should not be directly used by developer
 
@@ -6381,7 +6383,7 @@ Parameter Descriptions:
 |||
 | **return** | (ErrorElement) returns 'self' so call can be chained |
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -6396,7 +6398,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 One of the method names found in other Elements. Used here to return an error string in case it's called
 
@@ -6406,7 +6408,7 @@ One of the method names found in other Elements. Used here to return an error st
 |---|---|
 | **return** | (str) A warning text string. |
 
-#### update
+### update
 
 Update method for the Error Element, an element that should not be directly used by developer
 
@@ -6426,7 +6428,7 @@ Parameter Descriptions:
 |||
 | **return** | (ErrorElement) returns 'self' so call can be chained |
 
-### Frame Element
+## Frame Element
 
     A Frame Element that contains other Elements. Encloses with a line around elements and a text label.
 
@@ -6470,7 +6472,7 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### AddRow
+### AddRow
 
 Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
@@ -6484,7 +6486,7 @@ Parameter Descriptions:
 |---|---|
 |*args|List[Element] The list of elements for this row|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -6500,7 +6502,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Layout
+### Layout
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -6516,7 +6518,7 @@ Parameter Descriptions:
 |||
 | **return** | (Frame) Used for chaining |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -6530,7 +6532,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6544,7 +6546,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6559,7 +6561,7 @@ Parameter Descriptions:
 |value|(Any) New text value to show on frame|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -6574,7 +6576,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### layout
+### layout
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -6590,7 +6592,7 @@ Parameter Descriptions:
 |||
 | **return** | (Frame) Used for chaining |
 
-#### update
+### update
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6605,7 +6607,7 @@ Parameter Descriptions:
 |value|(Any) New text value to show on frame|
 |visible|(bool) control visibility of element|
 
-### Graph Element
+## Graph Element
 
     Creates an area for you to draw on.  The MAGICAL property this Element has is that you interact
     with the element using your own coordinate system.  This is an important point!!  YOU define where the location
@@ -6653,7 +6655,7 @@ Parameter Descriptions:
 |float_values|(bool) If True x,y coordinates are returned as floats, not ints|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### BringFigureToFront
+### BringFigureToFront
 
 Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
 
@@ -6667,7 +6669,7 @@ Parameter Descriptions:
 |---|---|
 |figure|(int) value returned by tkinter when creating the figure / drawing|
 
-#### ButtonPressCallBack
+### ButtonPressCallBack
 
 Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
@@ -6681,7 +6683,7 @@ Parameter Descriptions:
 |---|---|
 |event|(event) event info from tkinter. Contains the x and y coordinates of a click|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -6697,7 +6699,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### ButtonReleaseCallBack
+### ButtonReleaseCallBack
 
 Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
@@ -6711,7 +6713,7 @@ Parameter Descriptions:
 |---|---|
 |event|(event) event info from tkinter. Note not used in this method|
 
-#### DeleteFigure
+### DeleteFigure
 
 Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
 
@@ -6725,7 +6727,7 @@ Parameter Descriptions:
 |---|---|
 |id|(int) the id returned to you when calling one of the drawing methods|
 
-#### DrawArc
+### DrawArc
 
 Draws different types of arcs.  Uses a "bounding box" to define location
 
@@ -6751,7 +6753,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the arc |
 
-#### DrawCircle
+### DrawCircle
 
 Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
 
@@ -6773,7 +6775,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
 
-#### DrawImage
+### DrawImage
 
 Places an image onto your canvas.  It's a really important method for this element as it enables so much
 
@@ -6799,7 +6801,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image |
 
-#### DrawLine
+### DrawLine
 
 Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
 
@@ -6821,7 +6823,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br> want to manipulate the line |
 
-#### DrawOval
+### DrawOval
 
 Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
 
@@ -6843,7 +6845,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
 
-#### DrawPoint
+### DrawPoint
 
 Draws a "dot" at the point you specify using the USER'S coordinate system
 
@@ -6863,7 +6865,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point |
 
-#### DrawRectangle
+### DrawRectangle
 
 Draw a rectangle given 2 points. Can control the line and fill colors
 
@@ -6885,7 +6887,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
 
-#### DrawText
+### DrawText
 
 Draw some text on your graph.  This is how you label graph number lines for example
 
@@ -6911,7 +6913,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text |
 
-#### Erase
+### Erase
 
 Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
 
@@ -6919,7 +6921,7 @@ Erase the Graph - Removes all figures previously "drawn" using the Graph methods
 Erase()
 ```
 
-#### MotionCallBack
+### MotionCallBack
 
 Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
 
@@ -6933,7 +6935,7 @@ Parameter Descriptions:
 |---|---|
 |event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
 
-#### Move
+### Move
 
 Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
 
@@ -6948,7 +6950,7 @@ Parameter Descriptions:
 |x_direction|Union[int, float] how far to move in the "X" direction in your coordinates|
 |y_direction|Union[int, float] how far to move in the "Y" direction in your coordinates|
 
-#### MoveFigure
+### MoveFigure
 
 Moves a previously drawn figure using a "delta" from current position
 
@@ -6966,7 +6968,7 @@ Parameter Descriptions:
 |x_direction|Union[int, float] delta to apply to position in the X direction|
 |y_direction|Union[int, float] delta to apply to position in the Y direction|
 
-#### RelocateFigure
+### RelocateFigure
 
 Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
 uses absolute coordinates versus relative for Move
@@ -6985,7 +6987,7 @@ Parameter Descriptions:
 |x|Union[int, float] location on X axis (in user coords) to move the upper left corner of the figure|
 |y|Union[int, float] location on Y axis (in user coords) to move the upper left corner of the figure|
 
-#### SendFigureToBack
+### SendFigureToBack
 
 Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
 
@@ -6999,7 +7001,7 @@ Parameter Descriptions:
 |---|---|
 |figure|(int) value returned by tkinter when creating the figure / drawing|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -7013,7 +7015,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7027,11 +7029,11 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### TKCanvas
+### TKCanvas
 
 #### property: TKCanvas
 
-#### Update
+### Update
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7046,7 +7048,7 @@ Parameter Descriptions:
 |background_color|color of background|
 |visible|(bool) control visibility of element|
 
-#### erase
+### erase
 
 Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
 
@@ -7054,7 +7056,7 @@ Erase the Graph - Removes all figures previously "drawn" using the Graph methods
 erase()
 ```
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7069,7 +7071,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### move
+### move
 
 Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
 
@@ -7084,7 +7086,7 @@ Parameter Descriptions:
 |x_direction|Union[int, float] how far to move in the "X" direction in your coordinates|
 |y_direction|Union[int, float] how far to move in the "Y" direction in your coordinates|
 
-#### update
+### update
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7099,7 +7101,7 @@ Parameter Descriptions:
 |background_color|color of background|
 |visible|(bool) control visibility of element|
 
-### Image Element
+## Image Element
 
     Image Element - show an image in the window. Should be a GIF or a PNG only
 
@@ -7133,7 +7135,7 @@ Parameter Descriptions:
 |enable_events|(bool) Turns on the element specific events. For an Image element, the event is "image clicked"|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -7149,7 +7151,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -7163,7 +7165,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7177,7 +7179,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7197,7 +7199,7 @@ Parameter Descriptions:
 |size|Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high|
 |visible|(bool) control visibility of element|
 
-#### UpdateAnimation
+### UpdateAnimation
 
 Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
 NOTE - does NOT perform a sleep call to delay
@@ -7213,7 +7215,7 @@ Parameter Descriptions:
 |source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
 |time_between_frames|(int) Number of milliseconds to wait between showing frames|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7228,7 +7230,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7248,7 +7250,7 @@ Parameter Descriptions:
 |size|Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high|
 |visible|(bool) control visibility of element|
 
-### InputText Element
+## InputText Element
 
     Display a single text input field.  Based on the tkinter Widget `Entry`
 
@@ -7296,7 +7298,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element (Default = True)|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -7312,7 +7314,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7322,7 +7324,7 @@ Read and return the current value of the input element. Must call `Window.Read` 
 |---|---|
 | **return** | (str) current value of Input field or '' if error encountered |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -7336,7 +7338,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7350,7 +7352,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7376,7 +7378,7 @@ Parameter Descriptions:
 |background_color|(str) change color of the background|
 |move_cursor_to|Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7391,7 +7393,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7401,7 +7403,7 @@ Read and return the current value of the input element. Must call `Window.Read` 
 |---|---|
 | **return** | (str) current value of Input field or '' if error encountered |
 
-#### update
+### update
 
 Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7427,7 +7429,7 @@ Parameter Descriptions:
 |background_color|(str) change color of the background|
 |move_cursor_to|Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'|
 
-### Listbox Element
+## Listbox Element
 
     A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
     when a window.Read() is executed.
@@ -7477,7 +7479,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -7493,7 +7495,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### GetIndexes
+### GetIndexes
 
 Returns the items currently selected as a list of indexes
 
@@ -7503,7 +7505,7 @@ Returns the items currently selected as a list of indexes
 |---|---|
 | **return** | List[int] A list of offsets into values that is currently selected |
 
-#### GetListValues
+### GetListValues
 
 Returns list of Values provided by the user in the user's format
 
@@ -7513,7 +7515,7 @@ Returns list of Values provided by the user in the user's format
 |---|---|
 | **return** | List[Any]. List of values. Can be any / mixed types -> [] |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -7527,7 +7529,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7541,7 +7543,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### SetValue
+### SetValue
 
 Set listbox highlighted choices
 
@@ -7555,7 +7557,7 @@ Parameter Descriptions:
 |---|---|
 |values|List[Any] new values to choose based on previously set values|
 
-#### Update
+### Update
 
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7577,7 +7579,7 @@ Parameter Descriptions:
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7592,7 +7594,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7614,7 +7616,7 @@ Parameter Descriptions:
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
 |visible|(bool) control visibility of element|
 
-### Menu Element
+## Menu Element
 
     Menu Element is the Element that provides a Menu Bar that goes across the top of the window, just below titlebar.
     Here is an example layout.  The "&" are shortcut keys ALT+key.
@@ -7655,7 +7657,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -7671,7 +7673,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -7685,7 +7687,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7699,7 +7701,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
 
@@ -7714,7 +7716,7 @@ Parameter Descriptions:
 |menu_definition|List[List[Tuple[str, List[str]]]|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7729,7 +7731,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
 
@@ -7744,7 +7746,7 @@ Parameter Descriptions:
 |menu_definition|List[List[Tuple[str, List[str]]]|
 |visible|(bool) control visibility of element|
 
-### Multiline Element
+## Multiline Element
 
     Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
     Other PySimpleGUI ports have a separate MultilineInput and MultilineOutput elements.  May want to split this
@@ -7798,7 +7800,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -7814,7 +7816,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 Return current contents of the Multiline Element
 
@@ -7824,7 +7826,7 @@ Return current contents of the Multiline Element
 |---|---|
 | **return** | (str) current contents of the Multiline Element (used as an input type of Multiline |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -7838,7 +7840,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7852,7 +7854,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7880,7 +7882,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |autoscroll|(bool) if True then contents of element are scrolled down when new text is added to the end|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7895,7 +7897,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 Return current contents of the Multiline Element
 
@@ -7905,7 +7907,7 @@ Return current contents of the Multiline Element
 |---|---|
 | **return** | (str) current contents of the Multiline Element (used as an input type of Multiline |
 
-#### update
+### update
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7933,7 +7935,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |autoscroll|(bool) if True then contents of element are scrolled down when new text is added to the end|
 
-### OptionMenu Element
+## OptionMenu Element
 
     Option Menu is an Element available ONLY on the tkinter port of PySimpleGUI.  It's is a widget that is unique
     to tkinter.  However, it looks much like a ComboBox.  Instead of an arrow to click to pull down the list of
@@ -7972,7 +7974,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -7988,7 +7990,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -8002,7 +8004,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8016,7 +8018,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8036,7 +8038,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8051,7 +8053,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8071,7 +8073,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-### Output Element
+## Output Element
 
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
 
@@ -8103,7 +8105,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -8119,7 +8121,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 Returns the current contents of the output.  Similar to Get method other Elements
 
@@ -8129,7 +8131,7 @@ Returns the current contents of the output.  Similar to Get method other Element
 |---|---|
 | **return** | (str) the current value of the output |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -8143,7 +8145,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8157,7 +8159,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8172,7 +8174,7 @@ Parameter Descriptions:
 |value|(str) string that will replace current contents of the output area|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8187,7 +8189,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8202,7 +8204,7 @@ Parameter Descriptions:
 |value|(str) string that will replace current contents of the output area|
 |visible|(bool) control visibility of element|
 
-### Pane Element
+## Pane Element
 
     A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
 
@@ -8238,7 +8240,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -8254,7 +8256,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -8268,7 +8270,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8282,7 +8284,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8296,7 +8298,7 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8311,7 +8313,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8325,7 +8327,7 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
-### ProgressBar Element
+## ProgressBar Element
 
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
 
@@ -8361,7 +8363,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -8377,7 +8379,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -8391,7 +8393,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8405,7 +8407,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8419,7 +8421,7 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
-#### UpdateBar
+### UpdateBar
 
 Change what the bar shows by changing the current count and optionally the max count
 
@@ -8434,7 +8436,7 @@ Parameter Descriptions:
 |current_count|(int) sets the current value|
 |max|(int) changes the max value|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8449,7 +8451,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8463,7 +8465,7 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
-### Radio Element
+## Radio Element
 
     Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
     1 choice in a list of choices.
@@ -8508,7 +8510,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -8524,7 +8526,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 A snapshot of the value of Radio Button -> (bool)
 
@@ -8534,7 +8536,7 @@ A snapshot of the value of Radio Button -> (bool)
 |---|---|
 | **return** | (bool) True if this radio button is selected |
 
-#### ResetGroup
+### ResetGroup
 
 Sets all Radio Buttons in the group to not selected
 
@@ -8542,7 +8544,7 @@ Sets all Radio Buttons in the group to not selected
 ResetGroup()
 ```
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -8556,7 +8558,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8570,7 +8572,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8588,7 +8590,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8603,7 +8605,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 A snapshot of the value of Radio Button -> (bool)
 
@@ -8613,7 +8615,7 @@ A snapshot of the value of Radio Button -> (bool)
 |---|---|
 | **return** | (bool) True if this radio button is selected |
 
-#### update
+### update
 
 Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8631,7 +8633,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-### Slider Element
+## Slider Element
 
     A slider, horizontal or vertical
 
@@ -8683,7 +8685,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -8699,7 +8701,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -8713,7 +8715,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8727,7 +8729,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8747,7 +8749,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8762,7 +8764,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8782,7 +8784,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-### Spin Element
+## Spin Element
 
     A spinner with up/down buttons and a single line of text. Choose 1 values from list
 
@@ -8824,7 +8826,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -8840,7 +8842,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 Return the current chosen value showing in spinbox.
 This value will be the same as what was provided as list of choices.  If list items are ints, then the
@@ -8852,7 +8854,7 @@ item returned will be an int (not a string)
 |---|---|
 | **return** | (Any) The currently visible entry |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -8866,7 +8868,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8880,7 +8882,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8900,7 +8902,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8915,7 +8917,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 Return the current chosen value showing in spinbox.
 This value will be the same as what was provided as list of choices.  If list items are ints, then the
@@ -8927,7 +8929,7 @@ item returned will be an int (not a string)
 |---|---|
 | **return** | (Any) The currently visible entry |
 
-#### update
+### update
 
 Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8947,7 +8949,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-### StatusBar Element
+## StatusBar Element
 
     A StatusBar Element creates the sunken text-filled strip at the bottom. Many Windows programs have this line
 
@@ -8989,7 +8991,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -9005,7 +9007,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -9019,7 +9021,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9033,7 +9035,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9055,7 +9057,7 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9070,7 +9072,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9092,7 +9094,7 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
-### Tab Element
+## Tab Element
 
     Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
     Tabs are never placed directly into a layout.  They are always "Contained" in a TabGroup layout
@@ -9133,7 +9135,7 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### AddRow
+### AddRow
 
 Not recommended use call.  Used to add rows of Elements to the Frame Element.
 
@@ -9147,7 +9149,7 @@ Parameter Descriptions:
 |---|---|
 |*args|List[Element] The list of elements for this row|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -9163,7 +9165,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Layout
+### Layout
 
 Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
@@ -9179,7 +9181,7 @@ Parameter Descriptions:
 |||
 | **return** | (Tab) used for chaining |
 
-#### Select
+### Select
 
 Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
 
@@ -9187,7 +9189,7 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 Select()
 ```
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -9201,7 +9203,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9215,7 +9217,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9230,7 +9232,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9245,7 +9247,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### layout
+### layout
 
 Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
@@ -9261,7 +9263,7 @@ Parameter Descriptions:
 |||
 | **return** | (Tab) used for chaining |
 
-#### select
+### select
 
 Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
 
@@ -9269,7 +9271,7 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 select()
 ```
 
-#### update
+### update
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9284,7 +9286,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-### TabGroup Element
+## TabGroup Element
 
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
 
@@ -9326,7 +9328,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### AddRow
+### AddRow
 
 Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
@@ -9340,7 +9342,7 @@ Parameter Descriptions:
 |---|---|
 |*args|List[Element] The list of elements for this row|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -9356,7 +9358,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### FindKeyFromTabName
+### FindKeyFromTabName
 
 Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
 
@@ -9372,7 +9374,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[key, None] Returns the key or None if no key found |
 
-#### Get
+### Get
 
 Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
 the tab if no key is defined.  Returns None if an error occurs.
@@ -9385,7 +9387,7 @@ are using this method correctly?
 |---|---|
 | **return** | Union[Any, None] The key of the currently selected tab or the tab's text if it has no key |
 
-#### Layout
+### Layout
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -9401,7 +9403,7 @@ Parameter Descriptions:
 |||
 | **return** | (Frame) Used for chaining |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -9415,7 +9417,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9429,7 +9431,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9444,7 +9446,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
 the tab if no key is defined.  Returns None if an error occurs.
@@ -9457,7 +9459,7 @@ are using this method correctly?
 |---|---|
 | **return** | Union[Any, None] The key of the currently selected tab or the tab's text if it has no key |
 
-#### layout
+### layout
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -9473,7 +9475,7 @@ Parameter Descriptions:
 |||
 | **return** | (Frame) Used for chaining |
 
-### Table Element
+## Table Element
 
 ```
 Table(values,
@@ -9541,7 +9543,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -9557,7 +9559,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### Get
+### Get
 
 Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
 edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
@@ -9569,7 +9571,7 @@ user when Table was created or Updated.
 |---|---|
 | **return** | List[List[Any]] the current table values (for now what was originally provided up updated) |
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -9583,7 +9585,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9597,7 +9599,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9621,7 +9623,7 @@ Parameter Descriptions:
 |alternating_row_color|(str) the color to make every other row|
 |row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9636,7 +9638,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### get
+### get
 
 Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
 edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
@@ -9648,7 +9650,7 @@ user when Table was created or Updated.
 |---|---|
 | **return** | List[List[Any]] the current table values (for now what was originally provided up updated) |
 
-#### update
+### update
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9672,7 +9674,7 @@ Parameter Descriptions:
 |alternating_row_color|(str) the color to make every other row|
 |row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)|
 
-### Text Element
+## Text Element
 
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
 
@@ -9718,7 +9720,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -9734,7 +9736,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -9748,7 +9750,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9762,7 +9764,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9784,7 +9786,7 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9799,7 +9801,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9821,7 +9823,7 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
-### Tree Element
+## Tree Element
 
     Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
     to hold the user's data and pass to the element for display.
@@ -9882,7 +9884,7 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -9898,7 +9900,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -9912,7 +9914,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9926,7 +9928,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### Update
+### Update
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9950,7 +9952,7 @@ Parameter Descriptions:
 |icon|Union[bytes, str] can be either a base64 icon or a filename for the icon|
 |visible|(bool) control visibility of element|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9965,7 +9967,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-#### update
+### update
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9989,7 +9991,7 @@ Parameter Descriptions:
 |icon|Union[bytes, str] can be either a base64 icon or a filename for the icon|
 |visible|(bool) control visibility of element|
 
-### TreeData Element
+## TreeData Element
 
     Class that user fills in to represent their tree data. It's a very simple tree representation with a root "Node"
     with possibly one or more children "Nodes".  Each Node contains a key, text to display, list of values to display
@@ -10001,7 +10003,7 @@ Instantiate the object, initializes the Tree Data, creates a root node for you
 TreeData()
 ```
 
-#### Insert
+### Insert
 
 Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
 This is the ONLY user callable method in the TreeData class
@@ -10024,7 +10026,7 @@ Parameter Descriptions:
 |values|List[Any] The list of values that are displayed at this node|
 |icon|Union[str, bytes]|
 
-### VerticalSeparator Element
+## VerticalSeparator Element
 
     Vertical Separator Element draws a vertical line at the given location. It will span 1 "row". Usually paired with
     Column Element if extra height is needed
@@ -10039,7 +10041,7 @@ Parameter Descriptions:
 |---|---|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
 callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
@@ -10055,7 +10057,7 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
-#### SetFocus
+### SetFocus
 
 Sets the current focus to be on this element
 
@@ -10069,7 +10071,7 @@ Parameter Descriptions:
 |---|---|
 |force|(bool) if True will call focus_force otherwise calls focus_set|
 
-#### SetTooltip
+### SetTooltip
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -10083,7 +10085,7 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-#### expand
+### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -10098,7 +10100,7 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
-### Window
+## Window
 
     Represents a single Window
 
@@ -10180,7 +10182,7 @@ Parameter Descriptions:
 |element_justification|(str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-#### AddRow
+### AddRow
 
 Adds a single row of elements to a window's self.Rows variables.
 Generally speaking this is NOT how users should be building Window layouts.
@@ -10196,7 +10198,7 @@ Parameter Descriptions:
 |---|---|
 |*args|List[Elements]|
 
-#### AddRows
+### AddRows
 
 Loops through a list of lists of elements and adds each row, list, to the layout.
 This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
@@ -10212,7 +10214,7 @@ Parameter Descriptions:
 |---|---|
 |rows|List[List[Elements]] A list of a list of elements|
 
-#### AlphaChannel
+### AlphaChannel
 
 #### property: AlphaChannel
 
@@ -10222,7 +10224,7 @@ A property that changes the current alpha channel value (internal value)
 |---|---|
 | **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
 
-#### BringToFront
+### BringToFront
 
 Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
         on top")
@@ -10231,7 +10233,7 @@ Brings this window to the top of all other windows (perhaps may not be brought b
 BringToFront()
 ```
 
-#### Close
+### Close
 
 Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
@@ -10240,7 +10242,7 @@ Closes window.  Users can safely call even if window has been destroyed.   Shoul
 Close()
 ```
 
-#### CurrentLocation
+### CurrentLocation
 
 Get the current location of the window's top left corner
 
@@ -10250,7 +10252,7 @@ Get the current location of the window's top left corner
 |---|---|
 | **return** | Tuple[(int), (int)] The x and y location in tuple form (x,y) |
 
-#### Disable
+### Disable
 
 Disables window from taking any input from the user
 
@@ -10258,7 +10260,7 @@ Disables window from taking any input from the user
 Disable()
 ```
 
-#### DisableDebugger
+### DisableDebugger
 
 Disable the internal debugger. By default the debugger is ENABLED
 
@@ -10266,7 +10268,7 @@ Disable the internal debugger. By default the debugger is ENABLED
 DisableDebugger()
 ```
 
-#### Disappear
+### Disappear
 
 Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
         channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
@@ -10276,7 +10278,7 @@ Causes a window to "disappear" from the screen, but remain on the taskbar. It do
 Disappear()
 ```
 
-#### Elem
+### Elem
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10310,7 +10312,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
-#### Element
+### Element
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10344,7 +10346,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
-#### Enable
+### Enable
 
 Re-enables window to take user input after having it be Disabled previously
 
@@ -10352,7 +10354,7 @@ Re-enables window to take user input after having it be Disabled previously
 Enable()
 ```
 
-#### EnableDebugger
+### EnableDebugger
 
 Enables the internal debugger. By default, the debugger IS enabled
 
@@ -10360,7 +10362,7 @@ Enables the internal debugger. By default, the debugger IS enabled
 EnableDebugger()
 ```
 
-#### Fill
+### Fill
 
 Fill in elements that are input fields with data based on a 'values dictionary'
 
@@ -10376,7 +10378,7 @@ Parameter Descriptions:
 |||
 | **return** | (Window) returns self so can be chained with other methods |
 
-#### Finalize
+### Finalize
 
 Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
 Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
@@ -10388,7 +10390,7 @@ Lots of action!
 |---|---|
 | **return** | (Window) Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
 
-#### Find
+### Find
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10422,7 +10424,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
-#### FindElement
+### FindElement
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10456,7 +10458,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
-#### FindElementWithFocus
+### FindElementWithFocus
 
 Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
 
@@ -10466,7 +10468,7 @@ Returns the Element that currently has focus as reported by tkinter. If no eleme
 |---|---|
 | **return** | Union[Element, None] An Element if one has been found with focus or None if no element found |
 
-#### GetScreenDimensions
+### GetScreenDimensions
 
 Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
 
@@ -10476,7 +10478,7 @@ Get the screen dimensions.  NOTE - you must have a window already open for this 
 |---|---|
 | **return** | Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels |
 
-#### GrabAnyWhereOff
+### GrabAnyWhereOff
 
 Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -10485,7 +10487,7 @@ Turns off Grab Anywhere functionality AFTER a window has been created.  Don't tr
 GrabAnyWhereOff()
 ```
 
-#### GrabAnyWhereOn
+### GrabAnyWhereOn
 
 Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -10494,7 +10496,7 @@ Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try
 GrabAnyWhereOn()
 ```
 
-#### Hide
+### Hide
 
 Hides the window from the screen and the task bar
 
@@ -10502,7 +10504,7 @@ Hides the window from the screen and the task bar
 Hide()
 ```
 
-#### Layout
+### Layout
 
 Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
 a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
@@ -10521,7 +10523,7 @@ Parameter Descriptions:
 |||
 | **return** | (Window} self so that you can chain method calls |
 
-#### LoadFromDisk
+### LoadFromDisk
 
 Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
 
@@ -10535,7 +10537,7 @@ Parameter Descriptions:
 |---|---|
 |filename|(str) Pickle Filename to load|
 
-#### Maximize
+### Maximize
 
 Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
         the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
@@ -10545,7 +10547,7 @@ Maximize the window. This is done differently on a windows system versus a linux
 Maximize()
 ```
 
-#### Minimize
+### Minimize
 
 Minimize this window to the task bar
 
@@ -10553,7 +10555,7 @@ Minimize this window to the task bar
 Minimize()
 ```
 
-#### Move
+### Move
 
 Move the upper left corner of this window to the x,y coordinates provided
 
@@ -10568,7 +10570,7 @@ Parameter Descriptions:
 |x|(int) x coordinate in pixels|
 |y|(int) y coordinate in pixels|
 
-#### Normal
+### Normal
 
 Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
 
@@ -10576,7 +10578,7 @@ Restore a window to a non-maximized state.  Does different things depending on p
 Normal()
 ```
 
-#### Read
+### Read
 
 THE biggest deal method in the Window class! This is how you get all of your data from your Window.
 Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -10595,7 +10597,7 @@ Parameter Descriptions:
 |||
 | **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) <br>  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window) |
 
-#### Reappear
+### Reappear
 
 Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
 
@@ -10603,7 +10605,7 @@ Causes a window previously made to "Disappear" (using that method). Does this by
 Reappear()
 ```
 
-#### Refresh
+### Refresh
 
 Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
 Use this call when you want something to appear in your Window immediately (as soon as this function is called).
@@ -10615,7 +10617,7 @@ Without this call your changes to a Window will not be visible to the user until
 |---|---|
 | **return** | (Window) `self` so that method calls can be easily "chained" |
 
-#### SaveToDisk
+### SaveToDisk
 
 Saves the values contained in each of the input areas of the form. Basically saves what would be returned
 from a call to Read.  It takes these results and saves them to disk using pickle
@@ -10630,7 +10632,7 @@ Parameter Descriptions:
 |---|---|
 |filename|(str) Filename to save the values to in pickled form|
 
-#### SetAlpha
+### SetAlpha
 
 Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
 
@@ -10644,7 +10646,7 @@ Parameter Descriptions:
 |---|---|
 |alpha|(float) 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through)|
 
-#### SetIcon
+### SetIcon
 
 Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
 * a filename which must be a .ICO icon file for windows
@@ -10662,7 +10664,7 @@ Parameter Descriptions:
 |icon|(str) Filename or bytes object|
 |pngbase64|(str) Base64 encoded GIF or PNG file|
 
-#### SetTransparentColor
+### SetTransparentColor
 
 Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
 
@@ -10676,7 +10678,7 @@ Parameter Descriptions:
 |---|---|
 |color|(str) Color string that defines the transparent color|
 
-#### Size
+### Size
 
 Note the `Window.Size` can be used for both reading and writing
 
@@ -10688,7 +10690,7 @@ Return the current size of the window in pixels
 |---|---|
 | **return** | Tuple[(int), (int)] the (width, height) of the window |
 
-#### UnHide
+### UnHide
 
 Used to bring back a window that was previously hidden using the Hide method
 
@@ -10696,7 +10698,7 @@ Used to bring back a window that was previously hidden using the Hide method
 UnHide()
 ```
 
-#### VisibilityChanged
+### VisibilityChanged
 
 This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
 call and then have that same source run on plain PySimpleGUI.
@@ -10707,7 +10709,7 @@ call and then have that same source run on plain PySimpleGUI.
 |---|---|
 | **return** |  |
 
-#### close
+### close
 
 Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
@@ -10716,7 +10718,7 @@ Closes window.  Users can safely call even if window has been destroyed.   Shoul
 close()
 ```
 
-#### disable
+### disable
 
 Disables window from taking any input from the user
 
@@ -10724,7 +10726,7 @@ Disables window from taking any input from the user
 disable()
 ```
 
-#### disappear
+### disappear
 
 Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
         channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
@@ -10734,7 +10736,7 @@ Causes a window to "disappear" from the screen, but remain on the taskbar. It do
 disappear()
 ```
 
-#### elem
+### elem
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10768,7 +10770,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
-#### element
+### element
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10802,7 +10804,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
-#### enable
+### enable
 
 Re-enables window to take user input after having it be Disabled previously
 
@@ -10810,7 +10812,7 @@ Re-enables window to take user input after having it be Disabled previously
 enable()
 ```
 
-#### fill
+### fill
 
 Fill in elements that are input fields with data based on a 'values dictionary'
 
@@ -10826,7 +10828,7 @@ Parameter Descriptions:
 |||
 | **return** | (Window) returns self so can be chained with other methods |
 
-#### finalize
+### finalize
 
 Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
 Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
@@ -10838,7 +10840,7 @@ Lots of action!
 |---|---|
 | **return** | (Window) Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
 
-#### find
+### find
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10872,7 +10874,7 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
-#### hide
+### hide
 
 Hides the window from the screen and the task bar
 
@@ -10880,7 +10882,7 @@ Hides the window from the screen and the task bar
 hide()
 ```
 
-#### layout
+### layout
 
 Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
 a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
@@ -10899,7 +10901,7 @@ Parameter Descriptions:
 |||
 | **return** | (Window} self so that you can chain method calls |
 
-#### maximize
+### maximize
 
 Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
         the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
@@ -10909,7 +10911,7 @@ Maximize the window. This is done differently on a windows system versus a linux
 maximize()
 ```
 
-#### minimize
+### minimize
 
 Minimize this window to the task bar
 
@@ -10917,7 +10919,7 @@ Minimize this window to the task bar
 minimize()
 ```
 
-#### move
+### move
 
 Move the upper left corner of this window to the x,y coordinates provided
 
@@ -10932,7 +10934,7 @@ Parameter Descriptions:
 |x|(int) x coordinate in pixels|
 |y|(int) y coordinate in pixels|
 
-#### normal
+### normal
 
 Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
 
@@ -10940,7 +10942,7 @@ Restore a window to a non-maximized state.  Does different things depending on p
 normal()
 ```
 
-#### read
+### read
 
 THE biggest deal method in the Window class! This is how you get all of your data from your Window.
 Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -10959,7 +10961,7 @@ Parameter Descriptions:
 |||
 | **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) <br>  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window) |
 
-#### reappear
+### reappear
 
 Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
 
@@ -10967,7 +10969,7 @@ Causes a window previously made to "Disappear" (using that method). Does this by
 reappear()
 ```
 
-#### refresh
+### refresh
 
 Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
 Use this call when you want something to appear in your Window immediately (as soon as this function is called).
@@ -10979,7 +10981,7 @@ Without this call your changes to a Window will not be visible to the user until
 |---|---|
 | **return** | (Window) `self` so that method calls can be easily "chained" |
 
-#### size
+### size
 
 #### property: size
 
