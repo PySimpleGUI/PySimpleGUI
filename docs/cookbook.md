@@ -642,6 +642,51 @@ This recipe shows just how easy it is to add a progress meter to your code.
         sg.OneLineProgressMeter('One Line Meter Example', i+1, 1000, 'key')      
 ```      
       
+     
+ -------
+
+## Minesweeper-style Grid of Buttons
+
+There are a number of applications built using a GUI that involve a grid of buttons.  The games Minesweeper and Battleship can both be thought of as a grid of buttons.
+
+![image](https://user-images.githubusercontent.com/46163555/68539259-b5c2db00-034e-11ea-965a-16bd7f877f5b.png)
+
+Here is the code for the above window
+
+```python
+import PySimpleGUIWeb as sg
+from random import randint
+
+MAX_ROWS = MAX_COL = 10
+board = [[randint(0,1) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
+
+layout =  [[sg.Button('?', size=(4, 2), key=(i,j), pad=(0,0)) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
+
+window = sg.Window('Minesweeper', layout)
+
+while True:
+    event, values = window.read()
+    if event in (None, 'Exit'):
+        break
+    # window[(row, col)].update('New text')   # To change a button's text, use this pattern
+    # For this example, change the text of the button to the board's value and turn color black
+    window[event].update(board[event[0]][event[1]], button_color=('white','black'))
+window.close()
+
+```
+
+
+The **most important** thing for you to learn from this recipe is that keys and events can be **any type**, not just strings.  
+
+Thinking about this grid of buttons, doesn't it make the most sense for you to get row, column information when a button is pressed.  Well, that's exactly what setting your keys for these buttons to be tuples does for you.  It gives you the abilty to read events and finding the button row and column, and it makes updating text or color of buttons using a row, column designation.
+
+This program also runs on PySimpleGUIWeb really well.  Change the import to PySimpleGUIWeb and you'll see this in your web browser (assuming you've installed PySimpleGUIWeb)
+
+![image](https://user-images.githubusercontent.com/46163555/68539298-3eda1200-034f-11ea-82bd-9f2ad479465b.png)
+
+---
+
+
 
 ## Button Graphics (Media Player)      
 Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4 images in order to function correctly.  The background is set to the same color as the button background so that they blend together.      
@@ -857,33 +902,8 @@ window.close()
 ``` 
       
       
-   ----      
-      
-## The One-Line GUI      
-      
-For those of you into super-compact code, a complete customized GUI can be specified, shown, and received the results using a single line of Python code.    
-      
-      
-![simple](https://user-images.githubusercontent.com/13696193/44227935-ecb53b80-a161-11e8-968b-b3f963404dec.jpg)      
-      
-      
-Instead of      
-```python      
-    import PySimpleGUI as sg      
-      
-    layout = [[sg.Text('Filename')],      
-              [sg.Input(), sg.FileBrowse()],      
-              [sg.OK(), sg.Cancel()]]      
-      
-    event, (number,) = sg.Window('Get filename example', layout).Read()  
-```      
-you can write this line of code for the exact same result (OK, two lines with the import):      
-```python      
-    import PySimpleGUI as sg      
-      
-    event, (filename,) = sg.Window('Get filename example').Layout(      
-        [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()  
-```      
+----      
+
 
    
 ## Multiple Columns      
@@ -922,6 +942,9 @@ To make it easier to see the Column in the window, the Column background has bee
       
     sg.popup(event, values, line_width=200)      
 ```      
+
+----
+
       
 ## Persistent Window With Text Element Updates    
       
@@ -930,7 +953,7 @@ This simple program keep a window open, taking input values until the user termi
 ![math game](https://user-images.githubusercontent.com/13696193/44537842-c9444080-a6cd-11e8-94bc-6cdf1b765dd8.jpg)      
       
       
- ```python     
+```python     
 import PySimpleGUI as sg      
     
 layout = [ [sg.Txt('Enter values to calculate')],      
@@ -1042,7 +1065,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
       
 ![canvas](https://user-images.githubusercontent.com/13696193/44632429-5266ac00-a948-11e8-9ee0-664103c40178.jpg)      
       
-  ```python    
+```python    
     import PySimpleGUI as sg      
       
     layout = [      
@@ -1119,7 +1142,7 @@ There are a number of features used in this Recipe including:
 ![image](https://user-images.githubusercontent.com/46163555/68538641-ece0be80-0345-11ea-86b2-35c6208e2840.png)
 
       
-  ```python    
+```python    
 import PySimpleGUI as sg
 
 layout = [[sg.Text('Enter Your Passcode')],
@@ -1266,49 +1289,7 @@ for i in range(len(dpts)):
     tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)      
 
 ```
-      
- -------
-
-## Minesweeper-style Grid of Buttons
-
-There are a number of applications built using a GUI that involve a grid of buttons.  The games Minesweeper and Battleship can both be thought of as a grid of buttons.
-
-![image](https://user-images.githubusercontent.com/46163555/68539259-b5c2db00-034e-11ea-965a-16bd7f877f5b.png)
-
-Here is the code for the above window
-
-```python
-import PySimpleGUIWeb as sg
-from random import randint
-
-MAX_ROWS = MAX_COL = 10
-board = [[randint(0,1) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
-
-layout =  [[sg.Button('?', size=(4, 2), key=(i,j), pad=(0,0)) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
-
-window = sg.Window('Minesweeper', layout)
-
-while True:
-    event, values = window.read()
-    if event in (None, 'Exit'):
-        break
-    # window[(row, col)].update('New text')   # To change a button's text, use this pattern
-    # For this example, change the text of the button to the board's value and turn color black
-    window[event].update(board[event[0]][event[1]], button_color=('white','black'))
-window.close()
-
-```
-
-
-The **most important** thing for you to learn from this recipe is that keys and events can be **any type**, not just strings.  
-
-Thinking about this grid of buttons, doesn't it make the most sense for you to get row, column information when a button is pressed.  Well, that's exactly what setting your keys for these buttons to be tuples does for you.  It gives you the abilty to read events and finding the button row and column, and it makes updating text or color of buttons using a row, column designation.
-
-This program also runs on PySimpleGUIWeb really well.  Change the import to PySimpleGUIWeb and you'll see this in your web browser (assuming you've installed PySimpleGUIWeb)
-
-![image](https://user-images.githubusercontent.com/46163555/68539298-3eda1200-034f-11ea-82bd-9f2ad479465b.png)
-
-
+ 
  ---------
 
 
