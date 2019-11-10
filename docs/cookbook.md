@@ -365,6 +365,10 @@ Why recreate the wheel?  There's a `Popup` function that will get a Filename for
 fname = sg.popup_get_file('Document to open')
 ```
 
+Shows this window and returns the results from the user interaction with it.
+
+![image](https://user-images.githubusercontent.com/46163555/68537518-6c18c700-0333-11ea-9798-270c7f6bec1c.png)
+
 The entire Popup based solution for this get filename example is:
 
 
@@ -546,6 +550,7 @@ import PySimpleGUI as sg
 # Note that callbacks are NOT a part of the package's interface to the
 # caller intentionally.  The underlying implementation actually does use
 # tkinter callbacks.  They are simply hidden from the user.
+# This implementation uses a simple "Dispatch Dictionary" to store events and functions
 
 # The callback functions
 def button1():
@@ -555,11 +560,11 @@ def button2():
     print('Button 2 callback')
 
 # Lookup dictionary that maps button to function to call
-func_dict = {'1':button1, '2':button2}
+dispatch_dictionary = {'1':button1, '2':button2}
 
 # Layout the design of the GUI
 layout = [[sg.Text('Please click a button', auto_size_text=True)],
-          [sg.Button('1'), sg.Button('2'), sg.Quit()]]
+          [sg.Button('1'), sg.Button('2'), sg.Button('3'), sg.Quit()]]
 
 # Show the Window to the user
 window = sg.Window('Button callback example', layout)
@@ -571,20 +576,23 @@ while True:
     if event in ('Quit', None):
         break
     # Lookup event in function dictionary
-    try:
-        func_to_call = func_dict[event]   # look for a match in the function dictionary
-        func_to_call()                    # if successfully found a match, call the function found
-    except:
-        pass
+    if event in dispatch_dictionary:
+        func_to_call = dispatch_dictionary[event]   # get function from dispatch dictionary
+        func_to_call()
+    else:
+        print('Event {} not in dispatch dictionary'.format(event))
 
 window.close()
 
     # All done!
-sg.popup_ok('Done')     
+sg.popup_ok('Done')
 ```
       
    
 ## Realtime Buttons (Good For Raspberry Pi)      
+
+Nov 2019 - There is currently a bug in this part of PySimpleGUI... it's being worked on...
+
 This recipe implements a remote control interface for a robot.  There are 4 directions, forward, reverse, left, right.  When a button is clicked, PySimpleGUI immediately returns button events for as long as the buttons is held down.  When released, the button events stop.  This is an async/non-blocking window.      
       
 ![robot control](https://user-images.githubusercontent.com/13696193/44006710-d227f23e-9e56-11e8-89a3-2be5b2726199.jpg)      
@@ -642,13 +650,8 @@ Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4
       
 
 ```python
-
 #!/usr/bin/env python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
+import PySimpleGUI as sg
 
 #
 # An Async Demonstration of a media player
@@ -671,7 +674,7 @@ def MediaPlayerGUI():
 
     # define layout of the rows
     layout= [[sg.Text('Media File Player',size=(17,1), font=("Helvetica", 25))],
-             [sg.Text('', size=(15, 2), font=("Helvetica", 14), key='output')],
+             [sg.Text(size=(15, 2), font=("Helvetica", 14), key='output')],
              [sg.Button('', button_color=(background,background),
                                 image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0, key='Restart Song'),
                                 sg.Text(' ' * 2),
@@ -696,7 +699,7 @@ def MediaPlayerGUI():
              ]
 
     # Open a form, note that context manager can't be used generally speaking for async forms
-    window = sg.Window('Media File Player', layout, auto_size_text=True, default_element_size=(20, 1),
+    window = sg.Window('Media File Player', layout, default_element_size=(20, 1),
                        font=("Helvetica", 25))
     # Our event loop
     while(True):
@@ -769,7 +772,7 @@ CHROME = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
   
   
 layout = [  [sg.Text('Text area', key='_TEXT_')],  
-            [sg.Input(do_not_clear=True, key='_URL_')],  
+            [sg.Input(key='_URL_')],  
             [sg.Button('Chrome'), sg.Button('Exit')]]  
   
 window = sg.Window('Window Title', layuout)  
@@ -997,7 +1000,7 @@ import PySimpleGUI as sg
 # Design pattern 1 - First window does not remain active  
   
 layout = [[ sg.Text('Window 1'),],  
-          [sg.Input(do_not_clear=True)],  
+          [sg.Input()],  
           [sg.Text('', key='_OUTPUT_')],  
           [sg.Button('Launch 2')]]  
   
@@ -1110,53 +1113,95 @@ There are a number of features used in this Recipe including:
 * auto_size_buttons      
 * Button      
 * Dictionary Return values      
-* Update of Elements in window (Input, Text)    
-* do_not_clear of Input Elements      
+* Update of Elements in window (Input, Text)     
       
       
-![keypad 2](https://user-images.githubusercontent.com/13696193/44640891-57504d80-a992-11e8-93f4-4e97e586505e.jpg)      
-      
+![image](https://user-images.githubusercontent.com/46163555/68538641-ece0be80-0345-11ea-86b2-35c6208e2840.png)
+
       
   ```python    
-    import PySimpleGUI as sg      
-      
-    # Demonstrates a number of PySimpleGUI features including:      
-    #   Default element size      
-    #   auto_size_buttons      
-    #   Button      
-    #   Dictionary return values      
-    #   Update of elements in window (Text, Input)    
-    #   do_not_clear of Input elements      
-      
-    layout = [[sg.Text('Enter Your Passcode')],      
-              [sg.Input(size=(10, 1), do_not_clear=True, justification='right', key='input')],      
-              [sg.Button('1'), sg.Button('2'), sg.Button('3')],      
-              [sg.Button('4'), sg.Button('5'), sg.Button('6')],      
-              [sg.Button('7'), sg.Button('8'), sg.Button('9')],      
-              [sg.Button('Submit'), sg.Button('0'), sg.Button('Clear')],      
-              [sg.Text('', size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')],      
-              ]      
-      
-    window = sg.Window('Keypad', layout, default_button_element_size=(5, 2), auto_size_buttons=False, grab_anywhere=False)
-      
-    # Loop forever reading the window's values, updating the Input field    
-    keys_entered = ''      
-    while True:      
-        event, values = window.read()  # read the window    
-        if event is None:  # if the X button clicked, just exit      
-            break      
-        if event == 'Clear':  # clear keys if clear button      
-           keys_entered = ''      
-        elif event in '1234567890':      
-           keys_entered = values['input']  # get what's been entered so far      
-           keys_entered += event  # add the new digit      
-        elif event == 'Submit':      
-           keys_entered = values['input']      
-           window['out'].update(keys_entered)  # output the final string      
-      
-        window['input'].update(keys_entered)  # change the window to reflect current key string    
+import PySimpleGUI as sg
+
+layout = [[sg.Text('Enter Your Passcode')],
+          [sg.Input(size=(10, 1), justification='right', key='input')],
+          [sg.Button('1'), sg.Button('2'), sg.Button('3')],
+          [sg.Button('4'), sg.Button('5'), sg.Button('6')],
+          [sg.Button('7'), sg.Button('8'), sg.Button('9')],
+          [sg.Button('Submit'), sg.Button('0'), sg.Button('Clear')],
+          [sg.Text(size=(15, 1), font=('Helvetica', 18), text_color='red', key='out')]]
+
+window = sg.Window('Keypad', layout, default_button_element_size=(5,2), auto_size_buttons=False)
+
+# Loop forever reading the window's values, updating the Input field
+keys_entered = ''
+while True:
+    event, values = window.read()  # read the window
+    if event is None:  # if the X button clicked, just exit
+        break
+    if event == 'Clear':  # clear keys if clear button
+        keys_entered = ''
+    elif event in '1234567890':
+        keys_entered = values['input']  # get what's been entered so far
+        keys_entered += event  # add the new digit
+    elif event == 'Submit':
+        keys_entered = values['input']
+        window['out'].update(keys_entered)  # output the final string
+
+    window['input'].update(keys_entered)  # change the window to reflect current key string   
 ```
 
+----
+
+## Matplotlib Window With GUI Window
+
+There are 2 ways to use PySimpleGUI with Matplotlib.  Both use the standard tkinter based Matplotlib.
+
+The simplest is when both the interactive Matplotlib window and a PySimpleGUI window are running at the same time.  
+
+First the PySimpleGUI window appears giving you 3 options.
+
+![image](https://user-images.githubusercontent.com/46163555/68538920-23203d00-034a-11ea-9e3d-9b2a87d47824.png)
+
+Clicking "Plot" will create the Matplotlib window
+
+![image](https://user-images.githubusercontent.com/46163555/68538926-2a474b00-034a-11ea-8da4-772498314656.png)
+
+You can click the "Popup" button in the PySimpleGUI window and you'll see a popup window, proving the your GUI is still alive and operational.
+
+
+```python
+import PySimpleGUI as sg
+import matplotlib.pyplot as plt
+
+"""
+    Simultaneous PySimpleGUI Window AND a Matplotlib Interactive Window
+    A number of people have requested the ability to run a normal PySimpleGUI window that
+    launches a MatplotLib window that is interactive with the usual Matplotlib controls.
+    It turns out to be a rather simple thing to do.  The secret is to add parameter block=False to plt.show()
+"""
+
+def draw_plot():
+    plt.plot([0.1, 0.2, 0.5, 0.7])
+    plt.show(block=False)
+
+layout = [[sg.Button('Plot'), sg.Cancel(), sg.Button('Popup')]]
+
+window = sg.Window('Have some Matplotlib....', layout)
+
+while True:
+    event, values = window.read()
+    if event in (None, 'Cancel'):
+        break
+    elif event == 'Plot':
+        draw_plot()
+    elif event == 'Popup':
+        sg.popup('Yes, your application is still running')
+window.close()
+
+```
+
+
+----
 
       
 ## Animated Matplotlib Graph      
@@ -1222,7 +1267,52 @@ for i in range(len(dpts)):
 
 ```
       
-      
+ -------
+
+## Minesweeper-style Grid of Buttons
+
+There are a number of applications built using a GUI that involve a grid of buttons.  The games Minesweeper and Battleship can both be thought of as a grid of buttons.
+
+![image](https://user-images.githubusercontent.com/46163555/68539259-b5c2db00-034e-11ea-965a-16bd7f877f5b.png)
+
+Here is the code for the above window
+
+```python
+import PySimpleGUIWeb as sg
+from random import randint
+
+MAX_ROWS = MAX_COL = 10
+board = [[randint(0,1) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
+
+layout =  [[sg.Button('?', size=(4, 2), key=(i,j), pad=(0,0)) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
+
+window = sg.Window('Minesweeper', layout)
+
+while True:
+    event, values = window.read()
+    if event in (None, 'Exit'):
+        break
+    # window[(row, col)].update('New text')   # To change a button's text, use this pattern
+    # For this example, change the text of the button to the board's value and turn color black
+    window[event].update(board[event[0]][event[1]], button_color=('white','black'))
+window.close()
+
+```
+
+
+The **most important** thing for you to learn from this recipe is that keys and events can be **any type**, not just strings.  
+
+Thinking about this grid of buttons, doesn't it make the most sense for you to get row, column information when a button is pressed.  Well, that's exactly what setting your keys for these buttons to be tuples does for you.  It gives you the abilty to read events and finding the button row and column, and it makes updating text or color of buttons using a row, column designation.
+
+This program also runs on PySimpleGUIWeb really well.  Change the import to PySimpleGUIWeb and you'll see this in your web browser (assuming you've installed PySimpleGUIWeb)
+
+![image](https://user-images.githubusercontent.com/46163555/68539298-3eda1200-034f-11ea-82bd-9f2ad479465b.png)
+
+
+ ---------
+
+
+
 ## Tight Layout with Button States      
       
 Saw this example layout written in tkinter and liked it so much I duplicated the interface.  It's "tight", clean, and has a nice dark look and feel.      
