@@ -5,33 +5,72 @@
       
 # The PySimpleGUI Cookbook      
       
-      
-You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.  Study them to get an idea of what design patterns to follow.    
-  
-The Recipes in this Cookbook all assume you're running on a Python3 machine.  If you are running Python 2.7 then your code will differ by 2 characters.  Replace the import statement:  
-  
-    import PySimpleGUI as sg  
-  
-with  
-  
-    import PySimpleGUI27 as sg  
-  
-There is a short section in the main documentation at http://www.PySimpleGUI.org with instructions on installing PySimpleGUI.  
-  
-If you like this Cookbook, then you'll LOVE the 170+ sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  
+Welcome to the PySimpleGUI Cookbook!  It's provided as but one component of a larger documentation effort for the PySimpleGUI package.  It's purpose is to give you a jump start.      
 
+You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.  Study them to get an idea of some design patterns to follow.    
+  
+There is a short section in the main documentation at http://www.PySimpleGUI.org with instructions on installing PySimpleGUI. Typically it's `pip install pysimplegui` to install.
+  
+If you like this Cookbook, then you'll LOVE the 200 sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  They are located in the folder `DemoPrograms` and there is also a `Demo Programs` folder for each of the PySimpleGUI ports. 
+
+# 2019 - Updates are in Progress
+
+It's been a little while getting back around to the Cookbook.  As a result, some of the information was using older design patterns and some better examples need to be included.  There have been about 1/3 of the changes made so far that need to get made, so be patient.  
+
+# Trinket, the Online PySimpleGUI Cookbook
+
+In addition to this document, you'll find a number of "recipes" running on Trinket.  The PySimpleGUI [Trinket Demo Programs](https://pysimplegui.trinket.io/demo-programs) are often accompanied by explanatory text.  Because it's an actively used educational capability, you'll find newer PySimpleGUI features demonstrated there.
+
+The advantage to "live", online PySimpleGUI demos is that you can examine the source code, run it, and see the GUI in your browser window, without installing *anything* on your local machine.  No Python, no PySimpleGUI, only your browser is needed to get going.  
+
+# [Repl.it](https://repl.it/@PySimpleGUI)... another online resource
+
+The [PySimpleGUI repl.it repository](https://repl.it/@PySimpleGUI) is also used, but it doesn't provide the same kind of capability to provide some explanatory text and screenshots with the examples.  It does, however, automatically install the latest version of PySimpleGUI for many of the examples.  It also enables the demo programs to access any package that can be pip installed.  Trinket does not have this more expansive capability.
       
+
+# Cookbook Purpose
+
+A quick explanation about this document. The PySimpleGUI Cookbook is meant to get you started quickly.  But that's only part of the purpose.  The other, probably more important one, is *coding conventions*.  The more of these examples and the programs you see in the [Demo Programs](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/DemoPrograms) section on the GitHub, the more familiar certain patterns will emerge.
+
+It's through the Cookbook and the Demo Programs that new PySimpleGUI constructs and naming conventions are "rolled out" to the user community.  If you are brand new to PySimpleGUI, then you're getting your foundation here.  That foundation changes over time as the package improves.  The old code still runs, but it's been improved. 
+
+PEP8 names are a really good example.  Previously many of the method names for the Elements were done with CamelCase which is not a PEP8 compliant way of naming those functions.  They should have been snake_case.  Now that a complete set of PEP8 bindings is available, the method names are being changed here, in the primary documentation and in the demo programs.  `window.Read()` became `window.read()`.  It's better that you see examples using the newer `windows.read()` names.
+
+In short, it's brainwashing you to program PySimpleGUI a certain way.  The effect is that one person has no problem picking up the code from another PySimpleGUI programmer and recognizing it.  If you stick with variable names shown here, like many other PySimpleGUI users have, then you'll understand other people's code (and the demos too) quicker.
+
+# Another Resource For Code
+
+The best place for you to grab lots of different pieces of sample code to run is on the PySimpleGUI GitHub site.  Each port of PySimpleGUI has a "Demo Programs" folder.  The primary port's folder is [here](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/DemoPrograms).  The PySimpleGUIWeb port's demos are [here](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb/Demo%20Programs).  The other ports also have demo program folders to be sure and check your port's folder out.
+
+These short programs fall into 2 categories:
+
+1. Demonstrate a particular Element
+2. Integration with another package (e.g. Matplotlib, OpenCV, etc)
+
+So, for example, if you're trying to use the Graph Element to create a line graph, check out the demo programs... there are 8 different demos for the Graph Element alone.
+
+
 # Copy these design patterns!      
       
-All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.     The two types of windows are:
-1. One-shot window
-2. Persistent window
+All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.  The two types of windows are:
 
-The one-shot window is one that pops up, collects some data, and then disappears.  It is more or less a 'form'.
+1. One-shot 
+2. Persistent 
 
-The "Persistent" window is one that sticks around.  With these programs, you loop, reading and processing "events" such as button clicks. 
-      
-NOTE - The concept of "keys" is explained below. While they are shown as strings in the examples, they can be ANYTHING (ints, tuples, lists, objects, ....)
+The **One-shot window** is one that pops up, collects some data, and then disappears.  It is more or less a 'form' meant to quickly grab some information and then be closed.
+
+The **Persistent window** is one that sticks around.  With these programs, you loop, reading and processing "events" such as button clicks. It's more like a typical Windows/Mac/Linux  program.
+
+
+## Keys
+
+Keys are an extremely important concept for you to understand as you learn PySimpleGUI.  They are the "labels" you give Elements.  Keys are used:
+
+* To tell you when one of them generates an event
+* When you want to change them later
+* To communicate their value when performing a `window.read()`
+
+**Important** - while they are shown as strings in many examples, they can be ANYTHING (ints, tuples, lists, objects, ....)
       
 ## Pattern 1 - "One-shot Window" - (The Simplest Pattern)    
 
@@ -45,11 +84,11 @@ This will be the most common pattern you'll follow if you are not using an "even
     
 When you "read" a window, you are returned a tuple consisting of an `event` and a dictionary of `values`.  
 
-The`event` is what caused the read to return. It could be a button press, some text clicked, a list item chosen, etc, or None if the user closes the window.
+The`event` is what caused the read to return. It could be a button press, some text clicked, a list item chosen, etc, or `None` if the user closes the window.
 
 The `values` is a dictionary of values of all the input-style elements.  Dictionaries use keys to define entries. If your elements do not specificy a key, one is provided for you. These auto-numbered keys are ints starting at zero.
 
-This design pattern does not specify a `key` for the `InputText` element, so its key will be auto-numbered and is specifically zero.  Thus the design pattern can get the value of whatever was input by referencing `values[0]`
+This design pattern does not specify a `key` for the `InputText` element, so its key will be auto-numbered and is zero in this case.  Thus the design pattern can get the value of whatever was input by referencing `values[0]`
    
 ```python    
 import PySimpleGUI as sg      
@@ -60,11 +99,11 @@ layout = [[sg.Text('My one-shot window.')],
       
 window = sg.Window('Window Title', layout)    
     
-event, values = window.Read()    
-window.Close()
+event, values = window.read()    
+window.close()
     
 text_input = values[0]    
-sg.Popup('You entered', text_input)
+sg.popup('You entered', text_input)
 ```    
 
 If you want to use a key instead of an auto-generated key:
@@ -78,11 +117,11 @@ layout = [[sg.Text('My one-shot window.')],
       
 window = sg.Window('Window Title', layout)    
     
-event, values = window.Read()    
-window.Close()
+event, values = window.read()    
+window.close()
     
 text_input = values['-IN-']    
-sg.Popup('You entered', text_input)
+sg.popup('You entered', text_input)
 ``` 
 
 
@@ -108,12 +147,12 @@ layout = [[sg.Text('Persistent window')],
 window = sg.Window('Window that stays open', layout)      
       
 while True:      
-    event, values = window.Read() 
+    event, values = window.read() 
     print(event, values)       
     if event in (None, 'Exit'):      
         break      
 
-window.Close()
+window.close()
 ```    
 
 
@@ -135,74 +174,122 @@ If the window was close using the X, then the output of the code will be:
 None {'-IN-': None}
 ```
 
-The `event` returned from the read is set to `None` and so are the input fields in the window.  This `None` event is super-important to check for.  It must be detected in your windows or else you'll be trying to work with a window that's been destroyed and your code will crash.  This is why you will find this check after ***every*** `window.Read()` call you'll find in sample PySimpleGUI code.
+The `event` returned from the read is set to `None` and so are the input fields in the window.  This `None` event is super-important to check for.  It must be detected in your windows or else you'll be trying to work with a window that's been destroyed and your code will crash.  This is why you will find this check after ***every*** `window.read()` call you'll find in sample PySimpleGUI code.
+
+In some cirsumstances when a window is closed with an X, both of the return values from `window.read()` will be `None`.  This is why it's important to check for `event is None` before attempting to access anything in the `values` variable.
 
 
 ## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
 
 ![Pattern2B](https://user-images.githubusercontent.com/46163555/64929632-7c5e6b00-d7f6-11e9-90b3-70e79cd2547c.jpg)
 
-This is a slightly more complex, but maybe more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
+This is a slightly more complex, but more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
 
-Do not worry yet what all of these statements mean.   Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
+Do not worry yet what all of these statements mean.  Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
 
 
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(15,1), key='-OUTPUT-')],
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(15,1), key='-OUTPUT-')],
           [sg.Input(key='-IN-')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
 window = sg.Window('Pattern 2B', layout)
 
 while True:  # Event Loop
-    event, values = window.Read()
+    event, values = window.read()
     print(event, values)
-    if event is None or event == 'Exit':
+    if event in  (None, 'Exit'):
         break
     if event == 'Show':
         # Update the "output" text element to be the value of "input" element
-        window['-OUTPUT-'].Update(values['-IN-'])
+        window['-OUTPUT-'].update(values['-IN-'])
 
-        # A shortened version of this update can be written without the ".Update"
-        # window['-OUTPUT-'](values['-IN-'])     
-        # In older code you'll find it written using FindElement or Element
-        # window.FindElement('-OUTPUT-').Update(values['-IN-'])
-
-window.Close()
+window.close()
 ```
 
-As you can see in the comments, there are multiple ways out "outputting" to an element, or changing an element in some way, in a window.  The way we're achieving output here is by changing a Text Element.
+There are multiple ways out "outputting" to an element, or changing an element in some way, in a window.  The way we're achieving output here is by changing a Text Element with this statement:
+
+```python
+window['-OUTPUT-'].update(values['-IN-'])
+```
+
+`window['-OUTPUT-']` returns the element that has the key `'-OUTPUT-'`.  Then the `update` method for that element is called so that the value of the Text Element is modified.
+
+This construct, `window['-OUTPUT-']` was added in 2019.  
 
 The original / old-style way of doing this was to call `window.FindElement` or the shortened `window.Element`
 
 ```python
-window.FindElement('-OUTPUT-').Update(values['-IN-'])
+window.FindElement('-OUTPUT-').update(values['-IN-'])
 or
-window.Element('-OUTPUT-').Update(values['-IN-'])
+window.Element('-OUTPUT-').update(values['-IN-'])
 ```
 
-That technique has been recently replaced with a shortened version that looks more like a dictionary lookup using the `window` variable.  You can think of the operation as "lookup the element in this window that has this key".  Once you have that element, then this statement is calling that element's `Update` method.
-
-```python
-window['-OUTPUT-'].Update(values['-IN-'])
-```
-
-Even this can be further shortened.  If you "call" an existing element, then it is the same as calling that element's `Update` method.  To do this, you simply delete the `.Update` from the statement and you're left with:
+Even this can be further shortened.  If you "call" an existing element, then it is the same as calling that element's `Update` method.  To do this, you simply delete the `.update` from the statement and you're left with:
 
 ```python
 window['-OUTPUT-'](values['-IN-'])
 ```
 
-Yes, it looks a little strange, but now that you've seen these variations, you'll immediately know that seeing `window[key]` means you're finding an element in that window.  Anything after that part of the statement means you're working directly with an element.  Maybe the element has another method besides `Update` you want to call, like `Get()`.  If so, then it is written simply as:
+Yes, it looks a little strange.
+
+**The Summary**
+
+`window[key]` means you're finding an element in that window.  Anything after that part of the statement means you're working directly with an element.  Maybe the element has another method besides `update` you want to call, like `get()`.  If so, then it is written simply as:
 
 
 ```python
-window[my_key].Get()
+window[my_key].get()
 ```
 
 ----
+
+# Exiting a Window
+
+For persistent windows, you will find this if statement immediately following every `window.read` call you'll find in this document and likely all of the demo programs:
+
+```python
+if event in (None, 'Quit'):
+    break
+```
+
+This is your user's "way out".  **Always** give a way out to your user or else they will be using task manager or something else, all the while cursing you.
+
+Beginners to Python may not understand this statement and it's important to understand it so that you don't simply ignore it because you don't understand the syntax.
+
+The if statment is identical to this if statement:
+```python
+if event is None or event == 'Quit':
+    break
+```
+
+The `event in (None, 'Quit')` simply means is the value of the `event` variable in the list of choices shown, in this case `None` or `Quit`.  If so, then break out of the Event Loop and likely exit the program when that happens for simple programs.
+
+## Close Your Windows.. it's getting cold in here!
+
+When you're done with your window, close it.
+
+```python
+window.close()
+```
+
+The reason is that for some ports, like PySimpleGUIWeb, you cannot exit the program unless the window is closed.  It's nice to clean up after yourself too.
+
+### Closing in Multithreaded Environment
+
+If you've got other threads running in program system in addition to the main program thread, you need to delete the window as well as close it or else you may get an error that tkinter has detected it is not running in the main thread.
+
+```python
+window.close()
+del window
+```
+
+Note that ***you cannot make any PySimpleGUI calls from a thread*** other than the main program thread.
+
+
+-----
 
 
 # 1 Shot - Simple Data Entry - Return Values - Auto Numbered   
@@ -228,50 +315,21 @@ layout = [
 ]
 
 window = sg.Window('Simple data entry window', layout)
-event, values = window.Read()
-window.Close()
+event, values = window.read()
+window.close()
 print(event, values[0], values[1], values[2])    # the input data looks like a simple list when auto numbered
 print(event, values)     
 ```    
-      
+
+
 
 
 --------------------------      
-## Add GUI to Front-End of Script      
-Quickly add a GUI allowing the user to browse for a filename if a filename is not supplied on the command line using this 1-line GUI. It's the best of both worlds.  If you want command line, you can use it.  If you don't specify, then the GUI will fire up.
 
-### The "Single Line GUI" version
+## Add GUI to Front-End of Script 
 
-Here's the "single line GUI" version of a front-end
-      
-![script front-end](https://user-images.githubusercontent.com/13696193/44756573-39e9c380-aaf9-11e8-97b4-6679f9f5bd46.jpg)      
-      
-```python      
-import PySimpleGUI as sg
-import sys
+Quickly add a GUI allowing the user to browse for a filename if a filename is not supplied on the command line using this simple GUI. It's the best of both worlds.  If you want command line, you can use it.  If you don't specify, then the GUI will fire up.
 
-if len(sys.argv) == 1:
-    event, values = sg.Window('My Script').Layout([[sg.Text('Document to open')],
-                                                   [sg.In(), sg.FileBrowse()],
-                                                   [sg.CloseButton('Open'), sg.CloseButton('Cancel')]]).Read()
-    fname = values[0]
-    print(event, values)
-else:
-    fname = sys.argv[1]
-
-if not fname:
-    sg.Popup("Cancel", "No filename supplied")
-    raise SystemExit("Cancelling: no filename supplied")
-    
-```     
-
-### The More "Typical Version"
-
-That's showing off a bit just to crunch things down to a single line of GUI code.
-
-It's unusual to use the `CloseButton` Element.  Typically you use `Button`.  Normally you would not chain together so many calls.  Instead you would create the `Window` and put into `window` variable.  Then `Read` the window and finally `window.Close()`
-
-Using the more "traditional" style PySimpleGUI code:
 
 ```python
 import PySimpleGUI as sg
@@ -283,8 +341,8 @@ if len(sys.argv) == 1:
              [sg.Open(), sg.Cancel()]]
     
     window = sg.Window('My Script', layout)
-    event, values = window.Read()
-    window.Close()
+    event, values = window.read()
+    window.close()
     
     fname = values[0]
     print(event, values)
@@ -292,18 +350,19 @@ else:
     fname = sys.argv[1]
 
 if not fname:
-    sg.Popup("Cancel", "No filename supplied")
+    sg.popup("Cancel", "No filename supplied")
     raise SystemExit("Cancelling: no filename supplied")
 else:
-    sg.Popup('The filename you chose was', fname)
+    sg.popup('The filename you chose was', fname)
 
 ```
       
-### The `PopupGetFile` Version
+### The `popup_get_file` Version
 
-Why recreate the wheel?  There's a `Popup` function that will get a Filename for you.  This truly is a single-line GUI:
+Why recreate the wheel?  There's a `Popup` function that will get a Filename for you.  This is a single-line GUI:
+
 ```python
-fname = sg.PopupGetFile('Document to open')
+fname = sg.popup_get_file('Document to open')
 ```
 
 The entire Popup based solution for this get filename example is:
@@ -314,15 +373,15 @@ import PySimpleGUI as sg
 import sys
 
 if len(sys.argv) == 1:
-    fname = sg.PopupGetFile('Document to open')
+    fname = sg.popup_get_file('Document to open')
 else:
     fname = sys.argv[1]
 
 if not fname:
-    sg.Popup("Cancel", "No filename supplied")
+    sg.popup("Cancel", "No filename supplied")
     raise SystemExit("Cancelling: no filename supplied")
 else:
-    sg.Popup('The filename you chose was', fname)
+    sg.popup('The filename you chose was', fname)
 ```
 
 How about a GUI **_and_** traditional CLI argument in 1 line of code?
@@ -331,17 +390,14 @@ How about a GUI **_and_** traditional CLI argument in 1 line of code?
 import PySimpleGUI as sg
 import sys
 
-fname = sys.argv[1] if len(sys.argv) > 1 else sg.PopupGetFile('Document to open')
+fname = sys.argv[1] if len(sys.argv) > 1 else sg.popup_get_file('Document to open')
 
 if not fname:
-    sg.Popup("Cancel", "No filename supplied")
+    sg.popup("Cancel", "No filename supplied")
     raise SystemExit("Cancelling: no filename supplied")
 else:
-    sg.Popup('The filename you chose was', fname)
+    sg.popup('The filename you chose was', fname)
 ```
-
-
-Really, how much more could you possibly ask for you lazy programmer?
 
 
 --------------      
@@ -362,8 +418,8 @@ Browse to get 2 file names that can be then compared.
       
     window = sg.Window('File Compare', layout)  
       
-    event, values = window.Read()  
-    window.Close()
+    event, values = window.read()  
+    window.close()
     print(event, values)      
 ```      
 ---------------      
@@ -378,64 +434,64 @@ Before scrolling down to the code, guess how many lines of Python code were requ
       
       
 ```python      
-    #!/usr/bin/env Python3      
-    import PySimpleGUI as sg      
-      
-    sg.ChangeLookAndFeel('GreenTan')      
-      
-    # ------ Menu Definition ------ #      
-    menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],      
-                ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],      
-                ['Help', 'About...'], ]      
-      
-    # ------ Column Definition ------ #      
-    column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],      
-               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],      
-               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],      
-               [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]      
-      
-    layout = [      
-        [sg.Menu(menu_def, tearoff=True)],      
-        [sg.Text('All graphic widgets in one window!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],    
-        [sg.Text('Here is some text.... and a place to enter text')],      
-        [sg.InputText('This is my text')],      
-        [sg.Frame(layout=[      
-        [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],      
-        [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],      
-        [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),      
-         sg.Multiline(default_text='A second multi-line', size=(35, 3))],      
-        [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),      
-         sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],      
-        [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],      
-        [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),      
-         sg.Frame('Labelled Group',[[      
-         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),      
-         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),      
-         sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),      
-         sg.Column(column1, background_color='#F7F3EC')]])],      
-        [sg.Text('_'  * 80)],      
-        [sg.Text('Choose A Folder', size=(35, 1))],      
-        [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),      
-         sg.InputText('Default Folder'), sg.FolderBrowse()],      
-        [sg.Submit(tooltip='Click to submit this window'), sg.Cancel()]    
-    ]      
-      
-      
-    window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)      
-      
-    event, values = window.Read()      
-      
-    sg.Popup('Title',      
-             'The results of the window.',      
-             'The button clicked was "{}"'.format(event),      
-             'The values are', values)      
+#!/usr/bin/env Python3      
+import PySimpleGUI as sg      
+    
+sg.ChangeLookAndFeel('GreenTan')      
+    
+# ------ Menu Definition ------ #      
+menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],      
+            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],      
+            ['Help', 'About...'], ]      
+    
+# ------ Column Definition ------ #      
+column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],      
+            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],      
+            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],      
+            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]      
+    
+layout = [      
+    [sg.Menu(menu_def, tearoff=True)],      
+    [sg.Text('All graphic widgets in one window!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],    
+    [sg.Text('Here is some text.... and a place to enter text')],      
+    [sg.InputText('This is my text')],      
+    [sg.Frame(layout=[      
+    [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],      
+    [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],      
+    [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),      
+        sg.Multiline(default_text='A second multi-line', size=(35, 3))],      
+    [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),      
+        sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],      
+    [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],      
+    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),      
+        sg.Frame('Labelled Group',[[      
+        sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),      
+        sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),      
+        sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),      
+        sg.Column(column1, background_color='#F7F3EC')]])],      
+    [sg.Text('_'  * 80)],      
+    [sg.Text('Choose A Folder', size=(35, 1))],      
+    [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),      
+        sg.InputText('Default Folder'), sg.FolderBrowse()],      
+    [sg.Submit(tooltip='Click to submit this window'), sg.Cancel()]    
+]      
+    
+    
+window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)      
+    
+event, values = window.read()      
+    
+sg.popup('Title',      
+            'The results of the window.',      
+            'The button clicked was "{}"'.format(event),      
+            'The values are', values)      
 
 ```
       
       
 #### 35 lines of code
 
-That's what the window definition, creation, display and get values ultimately ended up being when you remove the blank lines above.  Try displaying 13 seperate "GUI Widgets" in any of the GUI frameworks.  There's $20 waiting for the person that can code up the same window in under 35 lines of Python code using tkinter, WxPython, or Qt
+That's what the window definition, creation, display and get values ultimately ended up being when you remove the blank lines above.  Try displaying 13 seperate "GUI Widgets" in any of the GUI frameworks.  There's $20 waiting for the person that can code up the same window in under 35 lines of Python code using tkinter, WxPython, or Qt.  For compactness, it's difficult to beat PySimpleGUI simply because the PySimpleGUI code is running a ton of "boilerplate" code on your behalf.
 
 -------------      
 
@@ -444,7 +500,7 @@ That's what the window definition, creation, display and get values ultimately e
 
 An async Window that has a event loop, and updates a text element at a periodic interval.  In this case, we're outputting the time elapsed into the window. 
 
-Use this design pattern for projects that need to poll or output something on a regular basis.  In this case, we're indicating we want a `timeout=10` on our `window.Read` call.  This will cause the `Read` call to return a "timeout key" as the event when a timeout has happened without some GUI thing happening first (like the user clicking a button).  The timeout key is `PySimpleGUI.TIMEOUT_KEY` usually written as `sg.TIMEOUT_KEY` in normal PySimpleGUI code.
+Use this design pattern for projects that need to poll or output something on a regular basis.  In this case, we're indicating we want a `timeout=10` on our `window.read` call.  This will cause the `Read` call to return a "timeout key" as the event when a timeout has happened without some GUI thing happening first (like the user clicking a button).  The timeout key is `PySimpleGUI.TIMEOUT_KEY` usually written as `sg.TIMEOUT_KEY` in normal PySimpleGUI code.
 
 Use caution when using windows with a timeout.  You should **rarely** need to use a `timeout=0`, non-blocking call, so try not to abuse this design pattern.  Honest, you shouldn't do it unless you're a realtime application and know what you're doing.  Hint - if you have < 1 year programming experience and you're using `timeout=0`, you're doing something wrong.
 
@@ -465,13 +521,13 @@ window = sg.Window('Stopwatch Timer', layout)
 timer_running, i = True, 0
 
 while True:        # Event Loop
-    event, values = window.Read(timeout=10) # Please try and use as high of a timeout value as you can
-    if event is None or event == 'Quit':    # if user closed the window using X or clicked Quit button
+    event, values = window.read(timeout=10) # Please try and use as high of a timeout value as you can
+    if event in (None, 'Quit'):    # if user closed the window using X or clicked Quit button
         break
     elif event == 'Start/Stop':
         timer_running = not timer_running
     if timer_running:
-        window.Element('_OUTPUT_').Update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+        window['_OUTPUT_'].update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
         i += 1
 ```          
 
@@ -511,7 +567,7 @@ window = sg.Window('Button callback example', layout)
 # Event loop. Read buttons, make callbacks
 while True:
     # Read the Window
-    event, value = window.Read()
+    event, value = window.read()
     if event in ('Quit', None):
         break
     # Lookup event in function dictionary
@@ -521,10 +577,10 @@ while True:
     except:
         pass
 
-window.Close()
+window.close()
 
     # All done!
-sg.PopupOK('Done')     
+sg.popup_ok('Done')     
 ```
       
    
@@ -555,13 +611,13 @@ This recipe implements a remote control interface for a robot.  There are 4 dire
     # your program's main loop      
     while (True):      
         # This is the code that reads and updates your window      
-        event, values = window.Read(timeout=10)      
+        event, values = window.read(timeout=10)      
         if event is not None:      
             print(event)      
         if event == 'Quit'  or values is None:      
             break      
       
-    window.Close()   # Don't forget to close your window!      
+    window.close()   # Don't forget to close your window!      
 ```      
    
       
@@ -644,12 +700,12 @@ def MediaPlayerGUI():
                        font=("Helvetica", 25))
     # Our event loop
     while(True):
-        event, values = window.Read(timeout=100)        # Poll every 100 ms
+        event, values = window.read(timeout=100)        # Poll every 100 ms
         if event == 'Exit' or event is None:
             break
         # If a button was pressed, display it on the GUI by updating the text element
         if event != sg.TIMEOUT_KEY:
-            window.Element('output').Update(event)
+            window['output'].update(event)
 
 MediaPlayerGUI()
 ```
@@ -689,7 +745,7 @@ This Window doesn't close after button clicks.  To achieve this the buttons are 
     # ---===--- Loop taking in user input and using it to call scripts --- #      
       
     while True:      
-      (event, value) = window.Read()      
+      (event, value) = window.read()      
       if event == 'EXIT'  or event is None:      
           break # exit button clicked      
       if event == 'script1':      
@@ -719,14 +775,14 @@ layout = [  [sg.Text('Text area', key='_TEXT_')],
 window = sg.Window('Window Title', layuout)  
   
 while True:             # Event Loop  
-  event, values = window.Read()  
+  event, values = window.read()  
     print(event, values)  
     if event is None or event == 'Exit':  
         break  
  if event == 'Chrome':  
         sp = subprocess.Popen([CHROME, values['_URL_']], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)  
   
-window.Close()
+window.close()
 ```
 
 ## Machine Learning GUI      
@@ -765,7 +821,7 @@ A standard non-blocking GUI with lots of inputs.
       
     window = sg.Window('Machine Learning Front End', layout, font=("Helvetica", 12))      
       
-    event, values = window.Read()      
+    event, values = window.read()      
 ```
       
 -------      
@@ -788,13 +844,13 @@ window = sg.Window('Custom Progress Meter', layout)
 # loop that would normally do something useful
 for i in range(1000):
     # check to see if the cancel button was clicked and exit loop if clicked
-    event, values = window.Read(timeout=0)
+    event, values = window.read(timeout=0)
     if event == 'Cancel' or event is None:
         break
         # update bar with loop value +1 so that bar eventually reaches the maximum
-    window.Element('progbar').UpdateBar(i + 1)
+    window['progbar'].update_bar(i + 1)
 # done with loop... need to destroy the window as it's still open
-window.Close()
+window.close()
 ``` 
       
       
@@ -861,7 +917,7 @@ To make it easier to see the Column in the window, the Column background has bee
       
     event, values = sg.Window('Compact 1-line Window with column', layout).Read()  
       
-    sg.Popup(event, values, line_width=200)      
+    sg.popup(event, values, line_width=200)      
 ```      
       
 ## Persistent Window With Text Element Updates    
@@ -872,31 +928,31 @@ This simple program keep a window open, taking input values until the user termi
       
       
  ```python     
-    import PySimpleGUI as sg      
-      
-    layout = [ [sg.Txt('Enter values to calculate')],      
-               [sg.In(size=(8,1), key='numerator')],      
-               [sg.Txt('_'  * 10)],      
-               [sg.In(size=(8,1), key='denominator')],      
-               [sg.Txt('', size=(8,1), key='output')  ],      
-               [sg.Button('Calculate', bind_return_key=True)]]      
-      
-    window = sg.Window('Math', layout)      
-      
-    while True:      
-        event, values = window.Read()      
-      
-        if event is not None:      
-            try:      
-                numerator = float(values['numerator'])      
-                denominator = float(values['denominator'])      
-                calc = numerator / denominator      
-            except:      
-                calc = 'Invalid'      
-      
-            window.Element('output').Update(calc)      
-        else:      
-            break      
+import PySimpleGUI as sg      
+    
+layout = [ [sg.Txt('Enter values to calculate')],      
+            [sg.In(size=(8,1), key='numerator')],      
+            [sg.Txt('_'  * 10)],      
+            [sg.In(size=(8,1), key='denominator')],      
+            [sg.Txt('', size=(8,1), key='output')  ],      
+            [sg.Button('Calculate', bind_return_key=True)]]      
+    
+window = sg.Window('Math', layout)      
+    
+while True:      
+    event, values = window.read()      
+    
+    if event is not None:      
+        try:      
+            numerator = float(values['numerator'])      
+            denominator = float(values['denominator'])      
+            calc = numerator / denominator      
+        except:      
+            calc = 'Invalid'      
+    
+        window['output'].update(calc)      
+    else:      
+        break      
 ```      
       
 ## One Element Updating  Another - Compound Elements
@@ -917,14 +973,14 @@ layout = [[sg.Text('Slider Demonstration'), sg.Text('', key='_OUTPUT_')],
 window = sg.Window('Window Title', layout)  
   
 while True:             # Event Loop  
-  event, values = window.Read()  
+  event, values = window.read()  
     print(event, values)  
     if event is None or event == 'Exit':  
         break  
-  window.Element('_LEFT_').Update(values['_SLIDER_'])  
-    window.Element('_RIGHT_').Update(values['_SLIDER_'])  
+  window['_LEFT_'].update(values['_SLIDER_'])  
+    window['_RIGHT_'].update(values['_SLIDER_'])  
   
-window.Close()
+window.close()
 ```
 
 
@@ -951,7 +1007,7 @@ while True:
     ev1, vals1 = win1.Read(timeout=100)  
     if ev1 is None:  
         break  
-  win1.Element('_OUTPUT_').Update(vals1[0])  
+  win1.['_OUTPUT_'].update(vals1[0])  
   
     if ev1 == 'Launch 2'  and not win2_active:  
         win2_active = True  
@@ -994,11 +1050,11 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
     window = sg.Window('Canvas test', layout)      
     window.Finalize()      
       
-    canvas = window.Element('canvas')      
+    canvas = window['canvas')      
     cir = canvas.TKCanvas.create_oval(50, 50, 100, 100)      
       
     while True:      
-        event, values = window.Read()      
+        event, values = window.read()      
         if event is None:      
             break      
         if event == 'Blue':      
@@ -1024,7 +1080,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
     window = sg.Window('Graph test', layout)      
     window.Finalize()      
       
-    graph = window.Element('graph')      
+    graph = window['graph')      
     circle = graph.DrawCircle((75,75), 25, fill_color='black',line_color='white')      
     point = graph.DrawPoint((75,75), 10, color='green')      
     oval = graph.DrawOval((25,300), (100,280), fill_color='purple', line_color='purple'  )      
@@ -1032,7 +1088,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
     line = graph.DrawLine((0,0), (100,100))      
       
     while True:      
-        event, values = window.Read()      
+        event, values = window.read()      
         if event is None:      
             break      
         if event is 'Blue':      
@@ -1086,7 +1142,7 @@ There are a number of features used in this Recipe including:
     # Loop forever reading the window's values, updating the Input field    
     keys_entered = ''      
     while True:      
-        event, values = window.Read()  # read the window    
+        event, values = window.read()  # read the window    
         if event is None:  # if the X button clicked, just exit      
             break      
         if event == 'Clear':  # clear keys if clear button      
@@ -1096,9 +1152,9 @@ There are a number of features used in this Recipe including:
            keys_entered += event  # add the new digit      
         elif event == 'Submit':      
            keys_entered = values['input']      
-           window.Element('out').Update(keys_entered)  # output the final string      
+           window['out'].update(keys_entered)  # output the final string      
       
-        window.Element('input').Update(keys_entered)  # change the window to reflect current key string    
+        window['input'].update(keys_entered)  # change the window to reflect current key string    
 ```
 
 
@@ -1136,7 +1192,7 @@ layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', 
 window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout)
 window.Finalize()  # needed to access the canvas element prior to reading the window
 
-canvas_elem = window.Element('canvas')
+canvas_elem = window['canvas')
 
 graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
 canvas = canvas_elem.TKCanvas
@@ -1144,7 +1200,7 @@ canvas = canvas_elem.TKCanvas
 dpts = [randint(0, 10) for x in range(10000)]
 # Our event loop      
 for i in range(len(dpts)):
-    event, values = window.Read(timeout=20)
+    event, values = window.read(timeout=20)
     if event == 'Exit' or event is None:
         exit(69)
 
@@ -1173,7 +1229,7 @@ Saw this example layout written in tkinter and liked it so much I duplicated the
       
 This Recipe also contains code that implements the button interactions so that you'll have a template to build from.      
       
-In other GUI frameworks this program would be most likely "event driven" with callback functions being used to communicate button events.  The "event loop" would be handled by the GUI engine.  If code already existed that used a call-back mechanism, the loop in the example code below could simply call these callback functions directly based on the button text it receives in the window.Read call.      
+In other GUI frameworks this program would be most likely "event driven" with callback functions being used to communicate button events.  The "event loop" would be handled by the GUI engine.  If code already existed that used a call-back mechanism, the loop in the example code below could simply call these callback functions directly based on the button text it receives in the window.read call.      
       
 ![timemanagement](https://user-images.githubusercontent.com/13696193/44996818-0f27c100-af78-11e8-8836-9ef6164efe3b.jpg)      
       
@@ -1200,39 +1256,39 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     window = sg.Window("Time Tracker", layout, default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,      
                        default_button_element_size=(12,1))      
     window.Finalize()      
-    window.Element('Stop').Update(disabled=True)      
-    window.Element('Reset').Update(disabled=True)      
-    window.Element('Submit').Update(disabled=True)      
+    window['Stop'].update(disabled=True)      
+    window['Reset'].update(disabled=True)      
+    window['Submit'].update(disabled=True)      
     recording = have_data = False      
     while True:      
-        event, values = window.Read()      
+        event, values = window.read()      
         print(event)      
         if event is None:      
             exit(69)      
         if event is 'Start':      
-            window.Element('Start').Update(disabled=True)      
-            window.Element('Stop').Update(disabled=False)      
-            window.Element('Reset').Update(disabled=False)      
-            window.Element('Submit').Update(disabled=True)      
+            window['Start'].update(disabled=True)      
+            window['Stop'].update(disabled=False)      
+            window['Reset'].update(disabled=False)      
+            window['Submit'].update(disabled=True)      
             recording = True      
          elif event is 'Stop'  and recording:      
-            window.Element('Stop').Update(disabled=True)      
-            window.Element('Start').Update(disabled=False)      
-            window.Element('Submit').Update(disabled=False)      
+            window['Stop'].update(disabled=True)      
+            window['Start'].update(disabled=False)      
+            window['Submit'].update(disabled=False)      
             recording = False      
             have_data = True      
          elif event is 'Reset':      
-            window.Element('Stop').Update(disabled=True)      
-            window.Element('Start').Update(disabled=False)      
-            window.Element('Submit').Update(disabled=True)      
-            window.Element('Reset').Update(disabled=False)      
+            window['Stop'].update(disabled=True)      
+            window['Start'].update(disabled=False)      
+            window['Submit'].update(disabled=True)      
+            window['Reset'].update(disabled=False)      
             recording = False      
             have_data = False      
          elif event is 'Submit'  and have_data:      
-            window.Element('Stop').Update(disabled=True)      
-            window.Element('Start').Update(disabled=False)      
-            window.Element('Submit').Update(disabled=True)      
-            window.Element('Reset').Update(disabled=False)      
+            window['Stop'].update(disabled=True)      
+            window['Start'].update(disabled=False)      
+            window['Submit'].update(disabled=True)      
+            window['Reset'].update(disabled=False)      
             recording = False      
 ```      
       
@@ -1271,7 +1327,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
       
       
         while True:      
-            event, values = window.Read()      
+            event, values = window.read()      
             if event is None:      
                   exit(69)      
       
@@ -1281,7 +1337,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
                 sha1hash = hashlib.sha1()      
                 sha1hash.update(password_utf)      
                 password_hash = sha1hash.hexdigest()      
-                window.Element('hash').Update(password_hash)      
+                window['hash'].update(password_hash)      
             except:      
                 pass      
       
@@ -1298,7 +1354,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
             return False      
       
     login_password_hash = '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8'      
-    password = sg.PopupGetText('Password', password_char='*')      
+    password = sg.popup_get_text('Password', password_char='*')      
     if password == 'gui':                # Remove when pasting into your program      
       HashGeneratorGUI()               # Remove when pasting into your program      
       exit(69)                         # Remove when pasting into your program      
@@ -1348,7 +1404,7 @@ You can easily change colors to match your background by changing a couple of pa
     def Launcher():      
       
         def print(line):      
-            window.Element('output').Update(line)      
+            window['output'].update(line)      
       
         sg.ChangeLookAndFeel('Dark')      
       
@@ -1367,7 +1423,7 @@ You can easily change colors to match your background by changing a couple of pa
       
         # ---===--- Loop taking in user input (events) --- #      
         while True:      
-            (event, value) = window.Read()      
+            (event, value) = window.read()      
             if event ==  'EXIT'  or event is None:      
                 break # exit button clicked      
             if event ==  'Program 1':      
@@ -1456,12 +1512,12 @@ start_time = int(round(time.time() * 100))
 while (True):
     # --------- Read and update window --------
     if not paused:
-        event, values = window.Read(timeout=10)
+        event, values = window.read(timeout=10)
         current_time = int(round(time.time() * 100)) - start_time
     else:
-        event, values = window.Read()
+        event, values = window.read()
     if event == 'button':
-        event = window.Element(event).GetText()
+        event = window[event).GetText()
     # --------- Do Button Operations --------
     if event is None or event == 'Exit':        # ALWAYS give a way out of program
         break
@@ -1472,16 +1528,16 @@ while (True):
     elif event == 'Pause':
         paused = True
         paused_time = int(round(time.time() * 100))
-        element = window.Element('button')
-        element.Update(text='Run')
+        element = window['button')
+        element.update(text='Run')
     elif event == 'Run':
         paused = False
         start_time = start_time + int(round(time.time() * 100)) - paused_time
-        element = window.Element('button')
-        element.Update(text='Pause')
+        element = window['button')
+        element.update(text='Pause')
 
     # --------- Display timer in window --------
-    window.Element('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+    window['text'].update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
                                                                   (current_time // 100) % 60,
                                                                   current_time % 100))
 ```
@@ -1515,7 +1571,7 @@ window = sg.Window('Running Timer', layout, no_titlebar=True, auto_size_buttons=
 # ----------------  main loop  ----------------
 while (True):
     # --------- Read and update window --------
-    event, values = window.Read(timeout=0)
+    event, values = window.read(timeout=0)
 
     # --------- Do Button Operations --------
     if event is None or event == 'Exit':
@@ -1529,10 +1585,10 @@ while (True):
 
     # --------- Display timer in window --------
 
-    window.Element('text').Update(f'CPU {cpu_percent:02.0f}%')
+    window['text'].update(f'CPU {cpu_percent:02.0f}%')
 
 # Broke out of main loop. Close the window.
-window.Close()
+window.close()
 ``` 
       
 ## Menus      
@@ -1569,15 +1625,15 @@ If you double click the dashed line at the top of the list of choices, that menu
       
     # ------ Loop & Process button menu choices ------ #      
     while True:      
-        event, values = window.Read()      
+        event, values = window.read()      
         if event == None or event == 'Exit':      
             break      
         print('Button = ', event)      
         # ------ Process menu choices ------ #      
         if event == 'About...':      
-            sg.Popup('About this program', 'Version 1.0', 'PySimpleGUI rocks...')      
+            sg.popup('About this program', 'Version 1.0', 'PySimpleGUI rocks...')      
         elif event == 'Open':      
-            filename = sg.PopupGetFile('file to open', no_window=True)      
+            filename = sg.popup_get_file('file to open', no_window=True)      
             print(filename)      
 ```
       
@@ -1598,7 +1654,7 @@ import PySimpleGUI as sg
 layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]    
     
 window = sg.Window('Graph of Sine Function', layout, grab_anywhere=True).Finalize()    
-graph = window.Element('graph')    
+graph = window['graph')    
     
 # Draw axis    
 graph.DrawLine((-100,0), (100,0))    
@@ -1619,7 +1675,7 @@ for x in range(-100,100):
     y = math.sin(x/20)*50    
     graph.DrawCircle((x,y), 1, line_color='red', fill_color='red')    
     
-event, values = window.Read()  
+event, values = window.read()  
 ```
   
     
@@ -1647,7 +1703,7 @@ layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, tooltip='tip'), sg.Tab('Ta
 window = sg.Window('My window with tabs', layout, default_element_size=(12,1))    
     
 while True:    
-    event, values = window.Read()    
+    event, values = window.read()    
     print(event,values)    
     if event is None:           # always,  always give a way out!    
         break  
