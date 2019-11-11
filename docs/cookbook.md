@@ -2,20 +2,29 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
     
-      
+# 2019 - Updates are in Progress
+
+It's been a little while getting back around to the Cookbook.  As a result, some of the information was using older design patterns and some better examples need to be included.  There have been about 1/3 of the changes made so far that need to get made, so be patient.        
 # The PySimpleGUI Cookbook      
       
 Welcome to the PySimpleGUI Cookbook!  It's provided as but one component of a larger documentation effort for the PySimpleGUI package.  It's purpose is to give you a jump start.      
-
 You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.  Study them to get an idea of some design patterns to follow.    
   
 There is a short section in the main documentation at http://www.PySimpleGUI.org with instructions on installing PySimpleGUI. Typically it's `pip install pysimplegui` to install.
   
-If you like this Cookbook, then you'll LOVE the 200 sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  These Recipes are simply several of those programs displayed in document format.  They are located in the folder `DemoPrograms` and there is also a `Demo Programs` folder for each of the PySimpleGUI ports. 
+# The "Demo Programs" Are Also Recipes
 
-# 2019 - Updates are in Progress
+If you like this Cookbook, then you'll LOVE the 200 sample programs that are just like these.  You'll find them in the GitHub at http://www.PySimpleGUI.com.  They are located in the folder `DemoPrograms` and there is also a `Demo Programs` folder for each of the PySimpleGUI ports. 
 
-It's been a little while getting back around to the Cookbook.  As a result, some of the information was using older design patterns and some better examples need to be included.  There have been about 1/3 of the changes made so far that need to get made, so be patient.  
+These programs are updated frequently, much more so than this Cookbook document.  It's there that you'll find the largest potential for a big jump-start on your project.
+
+These short Demo Programs fall into 2 categories:
+
+1. Demonstrate a particular Element
+2. Integration with another package (e.g. Matplotlib, OpenCV, etc)
+
+So, for example, if you're trying to use the Graph Element to create a line graph, check out the demo programs... there are 8 different demos for the Graph Element alone.
+
 
 # Trinket, the Online PySimpleGUI Cookbook
 
@@ -38,19 +47,8 @@ PEP8 names are a really good example.  Previously many of the method names for t
 
 In short, it's brainwashing you to program PySimpleGUI a certain way.  The effect is that one person has no problem picking up the code from another PySimpleGUI programmer and recognizing it.  If you stick with variable names shown here, like many other PySimpleGUI users have, then you'll understand other people's code (and the demos too) quicker.
 
-# Another Resource For Code
 
-The best place for you to grab lots of different pieces of sample code to run is on the PySimpleGUI GitHub site.  Each port of PySimpleGUI has a "Demo Programs" folder.  The primary port's folder is [here](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/DemoPrograms).  The PySimpleGUIWeb port's demos are [here](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb/Demo%20Programs).  The other ports also have demo program folders to be sure and check your port's folder out.
-
-These short programs fall into 2 categories:
-
-1. Demonstrate a particular Element
-2. Integration with another package (e.g. Matplotlib, OpenCV, etc)
-
-So, for example, if you're trying to use the Graph Element to create a line graph, check out the demo programs... there are 8 different demos for the Graph Element alone.
-
-
-# Copy these design patterns!      
+# GETTING STARTED - Copy these design patterns!      
       
 All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.  The two types of windows are:
 
@@ -267,7 +265,7 @@ if event is None or event == 'Quit':
 
 The `event in (None, 'Quit')` simply means is the value of the `event` variable in the list of choices shown, in this case `None` or `Quit`.  If so, then break out of the Event Loop and likely exit the program when that happens for simple programs.
 
-## Close Your Windows.. it's getting cold in here!
+## Close Your Windows
 
 When you're done with your window, close it.
 
@@ -291,18 +289,91 @@ Note that ***you cannot make any PySimpleGUI calls from a thread*** other than t
 
 -----
 
+# Colors Other Than Gray... Use them!
+
+One complaint about tkinter that is often heard is how "ugly" it looks.  You can do something about that in 1 line of PySimpleGUI code. A call to `change_look_and_feel` will set the colors to be used when creating windows.  It sets text color, background colork, input field colors, button color, etc.  
+
+Even windows that are created for you, such as popups, will use the color settings.
+
+In this example, "GreenTan" was chosen.  This causes all elements created in the future to use a specific set of colors for the background, text colors, button color, etc.
+
+```python
+sg.change_look_and_feel('GreenTan')
+```
+
+The list of valid look and feel settings includes:
+
+SystemDefault, Material1, Material2, Reddit, Topanga, GreenTan, Dark, LightGreen, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green, BluePurple, Purple, BlueMono, GreenMono, BrownBlue, BrightColors, NeutralBlue, Kayak, SandyBeach, TealMono
+
+***Mac users*** - Unfortunately tkinter and the Mac haven't been playing well together when it comes to colors, in particular button colors.  For this reason the change_look_and_feel is "disabled" for Macs, however you can force it by assing the parameter to the call `force=True`.  You may be able to get away with the change if you change the button settings back to the default setting by calling `set_options`.
+
+
+## Look and Feel Browser
+
+This Recipe is a "Look and Feel Browser" that enables you to see the different color schemes.
+
+You're first shown this window that lists all of the available "Look and Feel" settings.  This window was created after the Look and Feel were set to "GreenTan".
+
+![SNAG-0548](https://user-images.githubusercontent.com/46163555/68547124-a8880980-03ab-11ea-9302-388da5777979.jpg)
+
+
+If you click on an item in the list, you will immediately get a popup window that is created using the new Look and Feel.
+
+![SNAG-0549](https://user-images.githubusercontent.com/46163555/68547123-a8880980-03ab-11ea-92f3-cb8d3136ae07.jpg)
+
+
+So, **please**, add one of these `change_look_and_feel` calls to the top of your programs so they are more colorful!
+
+Also, if you come up with your own colors, post them on the project's GitHub so they can be included in future releases.  More choices == better.
+
+
+```python
+import PySimpleGUI as sg
+
+"""
+    Allows you to "browse" through the look and feel settings.  Click on one and you'll see a 
+    Popup window using the color scheme you chose.  It's a simply little program that demonstrates
+    how snappy a GUI can feel if you enable an element's events rather than waiting on a button click.
+    In this program, as soon as a listbox entry is clicked, the read returns.
+"""
+
+sg.change_look_and_feel('GreenTan')
+
+layout = [[sg.Text('Look and Feel Browser')],
+          [sg.Text('Click a look and feel color to see demo window')],
+          [sg.Listbox(values=sg.list_of_look_and_feel_values(),
+                      size=(20, 12), key='-LIST-', enable_events=True)],
+          [sg.Button('Exit')]]
+
+window = sg.Window('Look and Feel Browser', layout)
+
+while True:  # Event Loop
+    event, values = window.read()
+    if event in (None, 'Exit'):
+        break
+    sg.change_look_and_feel(values['-LIST-'][0])
+    sg.popup_get_text('This is {}'.format(values['-LIST-'][0]))
+
+window.close()
+```
+
+
+----
+
 
 # 1 Shot - Simple Data Entry - Return Values - Auto Numbered   
 
-An Element's key will be automatically numbered, starting at 0, if you do not use the `key` parameter when creating an element and it's an element that will return values to you via the `Window.Read()` call.
+An Element's key will be automatically numbered, starting at 0, if you do not use the `key` parameter when creating an element and it's an element that will return values to you via the `Window.read()` call.
 
 This example has no keys specified.  The 3 input fields will have keys 0, 1, 2.  Keys like this make the return values look like a list rather than a dictionary.  Your first input element will be accessed as `values[0]`, just like a list would look.
 
 
-![super simple 2](https://user-images.githubusercontent.com/13696193/43934091-8100e29a-9c1b-11e8-8d0a-9bd2d13e6d8e.jpg)      
+![SNAG-0550](https://user-images.githubusercontent.com/46163555/68547201-cace5700-03ac-11ea-81d6-cb171629e81b.jpg)    
       
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('Topanga')      # Add some color to the window
 
 # Very basic window.  Return values using auto numbered keys
 
@@ -318,10 +389,7 @@ window = sg.Window('Simple data entry window', layout)
 event, values = window.read()
 window.close()
 print(event, values[0], values[1], values[2])    # the input data looks like a simple list when auto numbered
-print(event, values)     
 ```    
-
-
 
 
 --------------------------      
@@ -354,7 +422,6 @@ if not fname:
     raise SystemExit("Cancelling: no filename supplied")
 else:
     sg.popup('The filename you chose was', fname)
-
 ```
       
 ### The `popup_get_file` Version
@@ -588,46 +655,7 @@ window.close()
 sg.popup_ok('Done')
 ```
       
-   
-## Realtime Buttons (Good For Raspberry Pi)      
 
-Nov 2019 - There is currently a bug in this part of PySimpleGUI... it's being worked on...
-
-This recipe implements a remote control interface for a robot.  There are 4 directions, forward, reverse, left, right.  When a button is clicked, PySimpleGUI immediately returns button events for as long as the buttons is held down.  When released, the button events stop.  This is an async/non-blocking window.      
-      
-![robot control](https://user-images.githubusercontent.com/13696193/44006710-d227f23e-9e56-11e8-89a3-2be5b2726199.jpg)      
-
-```python      
-    import PySimpleGUI as sg      
-      
-      
-    layout = [[sg.Text('Robotics Remote Control')],    
-                 [sg.T(' '  * 10), sg.RealtimeButton('Forward')],      
-                 [sg.RealtimeButton('Left'), sg.T(' '  * 15), sg.RealtimeButton('Right')],      
-                 [sg.T(' '  * 10), sg.RealtimeButton('Reverse')],      
-                 [sg.T('')],      
-                 [sg.Quit(button_color=('black', 'orange'))]      
-                 ]      
-      
-    window = sg.Window('Robotics Remote Control', layout, auto_size_text=True)    
-      
-    #      
-    # Some place later in your code...      
-    # You need to perform a Read or Refresh on your window every now and then or    
-    # else it will appear your program has hung      
-    #      
-    # your program's main loop      
-    while (True):      
-        # This is the code that reads and updates your window      
-        event, values = window.read(timeout=10)      
-        if event is not None:      
-            print(event)      
-        if event == 'Quit'  or values is None:      
-            break      
-      
-    window.close()   # Don't forget to close your window!      
-```      
-   
       
 ## OneLineProgressMeter      
       
